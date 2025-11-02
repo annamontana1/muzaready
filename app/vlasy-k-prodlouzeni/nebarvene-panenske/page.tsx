@@ -9,7 +9,7 @@ type FilterState = {
   tier: ProductTier | 'all';
   shades: number[];
   structures: string[];
-  lengthRange: [number, number];
+  lengths: number[];
   weightRange: string;
   availability: 'all' | 'in_stock' | 'on_order';
 };
@@ -19,7 +19,7 @@ export default function NebarvenePanenskePage() {
     tier: 'all',
     shades: [],
     structures: [],
-    lengthRange: [35, 90],
+    lengths: [],
     weightRange: 'all',
     availability: 'all',
   });
@@ -32,6 +32,14 @@ export default function NebarvenePanenskePage() {
     if (filters.tier === 'Platinum edition') return [1, 2, 3, 4, 5, 6, 7, 8, 9];
     if (filters.tier === 'all') return [1, 2, 3, 4, 5, 6, 7, 8, 9];
     return [1, 2, 3, 4]; // Standard a LUXE
+  }, [filters.tier]);
+
+  // Dostupné délky podle tieru
+  const availableLengths = useMemo(() => {
+    if (filters.tier === 'Standard') return [35, 40, 45, 50, 55, 60, 65, 70, 75];
+    if (filters.tier === 'LUXE') return [40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
+    if (filters.tier === 'Platinum edition') return [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+    return [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]; // Všechny
   }, [filters.tier]);
 
   // Aplikuj filtry
@@ -53,9 +61,9 @@ export default function NebarvenePanenskePage() {
       }
 
       // Délka filtr
-      const productLength = product.variants[0]?.length_cm || 0;
-      if (productLength < filters.lengthRange[0] || productLength > filters.lengthRange[1]) {
-        return false;
+      if (filters.lengths.length > 0) {
+        const productLength = product.variants[0]?.length_cm;
+        if (!productLength || !filters.lengths.includes(productLength)) return false;
       }
 
       return true;
@@ -88,12 +96,21 @@ export default function NebarvenePanenskePage() {
     }));
   };
 
+  const toggleLength = (length: number) => {
+    setFilters((prev) => ({
+      ...prev,
+      lengths: prev.lengths.includes(length)
+        ? prev.lengths.filter((l) => l !== length)
+        : [...prev.lengths, length],
+    }));
+  };
+
   const resetFilters = () => {
     setFilters({
       tier: 'all',
       shades: [],
       structures: [],
-      lengthRange: [35, 90],
+      lengths: [],
       weightRange: 'all',
       availability: 'all',
     });
@@ -229,45 +246,30 @@ export default function NebarvenePanenskePage() {
             </div>
           </div>
 
-          {/* Délka slider */}
+          {/* Délka */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
-              Délka: {filters.lengthRange[0]} – {filters.lengthRange[1]} cm
+              Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
             </label>
-            <div className="flex gap-4 items-center">
-              <input
-                type="range"
-                min="35"
-                max="90"
-                step="5"
-                value={filters.lengthRange[0]}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    lengthRange: [parseInt(e.target.value), prev.lengthRange[1]],
-                  }))
-                }
-                className="flex-1"
-              />
-              <input
-                type="range"
-                min="35"
-                max="90"
-                step="5"
-                value={filters.lengthRange[1]}
-                onChange={(e) =>
-                  setFilters((prev) => ({
-                    ...prev,
-                    lengthRange: [prev.lengthRange[0], parseInt(e.target.value)],
-                  }))
-                }
-                className="flex-1"
-              />
+            <div className="grid grid-cols-6 gap-2 max-w-2xl">
+              {availableLengths.map((length) => (
+                <button
+                  key={length}
+                  onClick={() => toggleLength(length)}
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition ${
+                    filters.lengths.includes(length)
+                      ? 'bg-burgundy text-white'
+                      : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
+                  }`}
+                >
+                  {length}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Aktivní filtry */}
-          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0) && (
+          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
@@ -284,6 +286,11 @@ export default function NebarvenePanenskePage() {
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
                     {structure}
+                  </span>
+                ))}
+                {filters.lengths.map((length) => (
+                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                    {length} cm
                   </span>
                 ))}
               </div>
