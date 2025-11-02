@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primární burgundy/maroon */
+    --color-burgundy: 52 12 13;
+    --color-maroon: 93 31 32;
+    --color-terracotta: 139 71 85;
+
+    /* Neutrální */
+    --color-ivory: 233 224 215;
+    --color-warm-beige: 212 196 176;
+    --color-light-taupe: 201 184 168;
+    --color-soft-cream: 245 241 237;
+
+    /* Akcenty */
+    --color-dusty-rose: 184 155 155;
+    --color-muted-mauve: 160 121 130;
+
+    /* Systémové */
+    --color-success: 74 124 89;
+    --color-warning: 212 165 116;
+    --color-error: 139 58 58;
+    --color-info: 107 122 143;
+  }
+
+  * {
+    @apply border-light-taupe;
+  }
+
+  body {
+    @apply bg-soft-cream text-gray-900 font-inter;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply px-8 py-3 rounded-full font-semibold transition-all duration-300 inline-block text-center;
+  }
+
+  .btn-primary {
+    @apply btn bg-burgundy text-white hover:bg-maroon hover:shadow-medium hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply btn bg-transparent text-burgundy border-2 border-burgundy hover:bg-burgundy hover:text-white;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-burgundy hover:text-maroon hover:underline;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  /* Form Elements */
+  .form-input {
+    @apply w-full px-4 py-3 border-2 border-warm-beige rounded-lg text-base transition-all duration-300 bg-white focus:border-burgundy focus:outline-none focus:ring-2 focus:ring-burgundy/10;
+  }
+
+  .form-label {
+    @apply block font-semibold text-burgundy mb-2 text-sm;
+  }
+
+  .form-error {
+    @apply text-error text-xs mt-1;
+  }
+
+  /* Product Card */
+  .product-card {
+    @apply relative bg-warm-beige rounded-lg overflow-hidden shadow-light hover:shadow-card-hover transition-all duration-300;
+  }
+
+  /* Tier Badge */
+  .tier-badge {
+    @apply inline-block px-3 py-1 text-xs font-semibold rounded-full bg-burgundy text-white;
+  }
+
+  /* Empty State */
+  .empty-state {
+    @apply text-center py-12 px-4;
+  }
+
+  /* Filter Section */
+  .filter-section {
+    @apply mb-6 pb-6 border-b border-warm-beige last:border-b-0;
+  }
+
+  /* Measurement Note */
+  .measurement-note {
+    @apply bg-soft-cream p-4 rounded-lg border-l-4 border-burgundy text-sm;
+  }
+
+  /* Cross Nav Card */
+  .cross-nav-card {
+    @apply block p-4 bg-white rounded-lg border border-warm-beige hover:border-burgundy hover:shadow-medium transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-ivory;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-burgundy/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-burgundy/50;
+}
+
+/* Playfair Display & Inter Fonts - Import from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
