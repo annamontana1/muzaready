@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { mockProducts } from '@/lib/mock-products';
+import ProductCard from '@/components/ProductCard';
 
 export const metadata: Metadata = {
   title: 'Vlasy k prodloužení - Mùza Hair Praha',
@@ -98,6 +100,22 @@ export default function VlasyKProdlouzeniPage() {
               Zobrazit produkty →
             </span>
           </Link>
+        </div>
+
+        {/* Všechny produkty */}
+        <div className="mt-20">
+          <h2 className="text-3xl md:text-4xl font-playfair text-burgundy mb-4">
+            Všechny produkty vlasy k prodloužení
+          </h2>
+          <p className="text-gray-700 mb-8">
+            Kompletní nabídka našich vlasů - nebarvené panenské i barvené blond vlasy ve třech úrovních kvality.
+          </p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {mockProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
