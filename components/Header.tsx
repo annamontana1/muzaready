@@ -18,13 +18,16 @@ export default function Header() {
 
           {/* Navigation */}
           <nav className="flex items-center gap-6 text-sm">
-            <Link href="/o-nas" className="text-burgundy font-medium hover:text-maroon transition">
-              O nás
+            <Link href="/" className="text-burgundy font-medium hover:text-maroon transition">
+              Domů
             </Link>
 
             <div className="relative group">
-              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition">
-                Vlasy k prodloužení ▼
+              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+                Vlasy k prodloužení
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
@@ -61,40 +64,58 @@ export default function Header() {
             </div>
 
             <div className="relative group">
-              <Link href="/pricesky-a-paruky" className="text-burgundy font-medium hover:text-maroon transition">
-                Příčesky a paruky ▼
+              <Link href="/pricesky-a-paruky" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+                Příčesky a paruky
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
-                  href="/pricesky-a-paruky/clip-in-ofiny"
+                  href="/pricesky-a-paruky/ofiny"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
-                  Clip-in ofiny
+                  Ofiny
                 </Link>
                 <Link
-                  href="/pricesky-a-paruky/clip-in-culiky"
+                  href="/pricesky-a-paruky/toupee"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
-                  Clip-in culíky
+                  Toupee/tupé
                 </Link>
                 <Link
-                  href="/pricesky-a-paruky/pricesek-na-temeno"
+                  href="/pricesky-a-paruky/tresy-sewing-weft"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
-                  Příčešek na temeno (toupee)
+                  Tresy sewing weft
                 </Link>
                 <Link
-                  href="/pricesky-a-paruky/paruky-na-miru"
+                  href="/pricesky-a-paruky/prave-paruky"
+                  className="block px-6 py-3 hover:bg-ivory transition"
+                >
+                  Pravé paruky
+                </Link>
+                <Link
+                  href="/pricesky-a-paruky/clip-in-vlasy"
+                  className="block px-6 py-3 hover:bg-ivory transition"
+                >
+                  Clip in vlasy
+                </Link>
+                <Link
+                  href="/pricesky-a-paruky/clip-in-culik"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
-                  Paruky na míru
+                  Clip in culík
                 </Link>
               </div>
             </div>
 
             <div className="relative group">
-              <Link href="/prislusenstvi" className="text-burgundy font-medium hover:text-maroon transition">
-                Příslušenství ▼
+              <Link href="/prislusenstvi" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+                Příslušenství
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
@@ -149,8 +170,11 @@ export default function Header() {
             </Link>
 
             <div className="relative group">
-              <Link href="/informace" className="text-burgundy font-medium hover:text-maroon transition">
-                Informace ▼
+              <Link href="/informace" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+                Informace
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
@@ -198,15 +222,23 @@ export default function Header() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
-            <button className="text-burgundy hover:text-maroon transition" aria-label="Hledat">
-              🔍
+          <div className="flex items-center gap-6">
+            <button className="text-burgundy hover:text-maroon transition p-2" aria-label="Hledat">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </button>
-            <button className="text-burgundy hover:text-maroon transition" aria-label="Oblíbené">
-              ❤️ <span className="text-xs">(0)</span>
+            <button className="text-burgundy hover:text-maroon transition p-2 relative" aria-label="Oblíbené">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <span className="absolute -top-1 -right-1 bg-burgundy text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
             </button>
-            <button className="text-burgundy hover:text-maroon transition" aria-label="Košík">
-              🛒 <span className="text-xs">(0)</span>
+            <button className="text-burgundy hover:text-maroon transition p-2 relative" aria-label="Košík">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <span className="absolute -top-1 -right-1 bg-burgundy text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
             </button>
           </div>
         </div>
@@ -225,8 +257,11 @@ export default function Header() {
             MÙZA
           </Link>
 
-          <button className="text-burgundy" aria-label="Košík">
-            🛒
+          <button className="text-burgundy p-2 relative" aria-label="Košík">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span className="absolute -top-1 -right-1 bg-burgundy text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
           </button>
         </div>
 
@@ -235,11 +270,11 @@ export default function Header() {
           <div className="lg:hidden border-t border-warm-beige py-4 max-h-[70vh] overflow-y-auto">
             <nav className="flex flex-col gap-3 text-sm">
               <Link
-                href="/o-nas"
+                href="/"
                 className="text-burgundy font-medium py-2 border-b border-warm-beige/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                O nás
+                Domů
               </Link>
 
               <div className="border-b border-warm-beige/50 pb-2">
@@ -287,32 +322,46 @@ export default function Header() {
                 <div className="font-semibold text-burgundy mb-2">Příčesky a paruky</div>
                 <div className="pl-4 space-y-2">
                   <Link
-                    href="/pricesky-a-paruky/clip-in-ofiny"
+                    href="/pricesky-a-paruky/ofiny"
                     className="block text-burgundy"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Clip-in ofiny
+                    Ofiny
                   </Link>
                   <Link
-                    href="/pricesky-a-paruky/clip-in-culiky"
+                    href="/pricesky-a-paruky/toupee"
                     className="block text-burgundy"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Clip-in culíky
+                    Toupee/tupé
                   </Link>
                   <Link
-                    href="/pricesky-a-paruky/pricesek-na-temeno"
+                    href="/pricesky-a-paruky/tresy-sewing-weft"
                     className="block text-burgundy"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Příčešek na temeno
+                    Tresy sewing weft
                   </Link>
                   <Link
-                    href="/pricesky-a-paruky/paruky-na-miru"
+                    href="/pricesky-a-paruky/prave-paruky"
                     className="block text-burgundy"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Paruky na míru
+                    Pravé paruky
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/clip-in-vlasy"
+                    className="block text-burgundy"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Clip in vlasy
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/clip-in-culik"
+                    className="block text-burgundy"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Clip in culík
                   </Link>
                 </div>
               </div>
