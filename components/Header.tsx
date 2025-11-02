@@ -5,6 +5,10 @@ import { useState } from 'react';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [vlasySubmenuOpen, setVlasySubmenuOpen] = useState(false);
+  const [priceskySubmenuOpen, setPriceskySubmenuOpen] = useState(false);
+  const [prislusenstviSubmenuOpen, setPrislusenstviSubmenuOpen] = useState(false);
+  const [informaceSubmenuOpen, setInformaceSubmenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-medium">
@@ -278,119 +282,164 @@ export default function Header() {
               </Link>
 
               <div className="border-b border-warm-beige/50 pb-2">
-                <div className="font-semibold text-burgundy mb-2">Vlasy k prodloužení</div>
-                <div className="pl-4 space-y-2">
-                  <Link
-                    href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
+                <button
+                  onClick={() => setVlasySubmenuOpen(!vlasySubmenuOpen)}
+                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
+                >
+                  <span>Vlasy k prodloužení</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${vlasySubmenuOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    Nebarvené panenské
-                  </Link>
-                  <Link
-                    href="/vlasy-k-prodlouzeni/barvene-blond"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Barvené blond
-                  </Link>
-                  <Link
-                    href="/vlasy-k-prodlouzeni/vlasy-na-keratin"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Vlasy na keratin
-                  </Link>
-                  <Link
-                    href="/vlasy-k-prodlouzeni/pasky-nano-tapes"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Pásky (nano tapes)
-                  </Link>
-                  <Link
-                    href="/vlasy-k-prodlouzeni/vlasove-tresy"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Vlasové tresy
-                  </Link>
-                </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {vlasySubmenuOpen && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    <Link
+                      href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Nebarvené panenské
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/barvene-blond"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Barvené blond
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/vlasy-na-keratin"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Vlasy na keratin
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/pasky-nano-tapes"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Pásky (nano tapes)
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/vlasove-tresy"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Vlasové tresy
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <div className="border-b border-warm-beige/50 pb-2">
-                <div className="font-semibold text-burgundy mb-2">Příčesky a paruky</div>
-                <div className="pl-4 space-y-2">
-                  <Link
-                    href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
+                <button
+                  onClick={() => setPriceskySubmenuOpen(!priceskySubmenuOpen)}
+                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
+                >
+                  <span>Příčesky a paruky</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${priceskySubmenuOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    Ofiny
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/toupee"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Toupee/tupé
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/tresy-sewing-weft"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Tresy sewing weft
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/prave-paruky"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Pravé paruky
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/clip-in-vlasy"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Clip in vlasy
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/clip-in-culik"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Clip in culík
-                  </Link>
-                </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {priceskySubmenuOpen && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    <Link
+                      href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Ofiny
+                    </Link>
+                    <Link
+                      href="/pricesky-a-paruky/toupee"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Toupee/tupé
+                    </Link>
+                    <Link
+                      href="/pricesky-a-paruky/tresy-sewing-weft"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Tresy sewing weft
+                    </Link>
+                    <Link
+                      href="/pricesky-a-paruky/prave-paruky"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Pravé paruky
+                    </Link>
+                    <Link
+                      href="/pricesky-a-paruky/clip-in-vlasy"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Clip in vlasy
+                    </Link>
+                    <Link
+                      href="/pricesky-a-paruky/clip-in-culik"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Clip in culík
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <div className="border-b border-warm-beige/50 pb-2">
-                <div className="font-semibold text-burgundy mb-2">Příslušenství</div>
-                <div className="pl-4 space-y-2">
-                  <Link
-                    href="/prislusenstvi/tavici-kleste"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
+                <button
+                  onClick={() => setPrislusenstviSubmenuOpen(!prislusenstviSubmenuOpen)}
+                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
+                >
+                  <span>Příslušenství</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${prislusenstviSubmenuOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    Tavicí kleště
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/keratin"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Keratin
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/kosmetika"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Kosmetika
-                  </Link>
-                </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {prislusenstviSubmenuOpen && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    <Link
+                      href="/prislusenstvi/tavici-kleste"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Tavicí kleště
+                    </Link>
+                    <Link
+                      href="/prislusenstvi/keratin"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Keratin
+                    </Link>
+                    <Link
+                      href="/prislusenstvi/kosmetika"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Kosmetika
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <Link
@@ -418,30 +467,45 @@ export default function Header() {
               </Link>
 
               <div className="border-b border-warm-beige/50 pb-2">
-                <div className="font-semibold text-burgundy mb-2">Informace</div>
-                <div className="pl-4 space-y-2">
-                  <Link
-                    href="/informace/jak-nakupovat"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
+                <button
+                  onClick={() => setInformaceSubmenuOpen(!informaceSubmenuOpen)}
+                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
+                >
+                  <span>Informace</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${informaceSubmenuOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    Jak nakupovat
-                  </Link>
-                  <Link
-                    href="/informace/platba-a-vraceni"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Platba a vrácení
-                  </Link>
-                  <Link
-                    href="/informace/faq"
-                    className="block text-burgundy"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    FAQ
-                  </Link>
-                </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {informaceSubmenuOpen && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    <Link
+                      href="/informace/jak-nakupovat"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Jak nakupovat
+                    </Link>
+                    <Link
+                      href="/informace/platba-a-vraceni"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Platba a vrácení
+                    </Link>
+                    <Link
+                      href="/informace/faq"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      FAQ
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <Link
