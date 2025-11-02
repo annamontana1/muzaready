@@ -23,9 +23,9 @@ export default function Header() {
             </Link>
 
             <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition">
+              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition">
                 Vlasy k prodloužení ▼
-              </button>
+              </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
@@ -61,9 +61,9 @@ export default function Header() {
             </div>
 
             <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition">
+              <Link href="/pricesky-a-paruky" className="text-burgundy font-medium hover:text-maroon transition">
                 Příčesky a paruky ▼
-              </button>
+              </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
                   href="/pricesky-a-paruky/clip-in-ofiny"
@@ -93,9 +93,9 @@ export default function Header() {
             </div>
 
             <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition">
+              <Link href="/prislusenstvi" className="text-burgundy font-medium hover:text-maroon transition">
                 Příslušenství ▼
-              </button>
+              </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
                   href="/prislusenstvi/tavici-kleste"
@@ -149,9 +149,9 @@ export default function Header() {
             </Link>
 
             <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition">
+              <Link href="/informace" className="text-burgundy font-medium hover:text-maroon transition">
                 Informace ▼
-              </button>
+              </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
                   href="/informace/jak-nakupovat"
