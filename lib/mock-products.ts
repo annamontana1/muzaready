@@ -2,297 +2,163 @@
  * Mock produkty pro development a ukázku
  */
 
-import { Product } from '@/types/product';
+import { Product, HAIR_COLORS, ProductTier } from '@/types/product';
 
-export const mockProducts: Product[] = [
-  {
-    id: '1',
-    sku: 'NB-LX-04-60-120',
-    slug: 'nebarvene-luxe-odstin-4',
-    category: 'nebarvene_panenske',
-    tier: 'LUXE',
-    name: 'Nebarvené panenské vlasy LUXE',
-    description: '100% panenské vlasy nejvyšší kvality bez chemického ošetření. Přirozený odstín 4 (Chestnut).',
-    measurement_note: 'Měříme tak, jak jsou (nenatažené)',
-    variants: [
-      {
-        id: 'v1',
-        sku: 'NB-LX-04-60-120-MV-KER-A25',
-        shade: 4,
-        shade_name: 'Chestnut',
-        shade_hex: '#6B5444',
-        length_cm: 60,
-        weight_g: 120,
-        structure: 'mírně vlnité',
-        ending: 'keratin',
-        price_czk: 11250,
-        in_stock: true,
-        stock_quantity: 15,
-        ribbon_color: '#6B5444',
-      },
-    ],
-    images: {
-      main: '/images/placeholder.jpg',
-      hover: '/images/placeholder-hover.jpg',
-      gallery: [],
-    },
-    base_price_per_100g_45cm: 8900,
-    in_stock: true,
-    stock_quantity: 15,
-    meta_title: 'Nebarvené panenské vlasy LUXE - odstín 4',
-    meta_description: '100% panenské vlasy bez chemie. LUXE kvalita.',
-    features: [
-      '100% přírodní vlasy',
-      'Bez chemického ošetření',
-      'Tepelně odolné do 180°C',
-      'Opakovaně použitelné',
-    ],
-    care_instructions: 'Šetrné mytí, sušení přirozenou cestou.',
-    how_to_use: 'Aplikace keratinovou metodou.',
-    average_rating: 4.8,
-    review_count: 24,
-    batch: 'A25',
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: '2',
-    sku: 'NB-ST-02-55-100',
-    slug: 'nebarvene-standard-odstin-2',
-    category: 'nebarvene_panenske',
-    tier: 'Standard',
-    name: 'Nebarvené panenské vlasy Standard',
-    description: '100% panenské vlasy. Standard kvalita, odstín 2 (Dark Brown).',
-    measurement_note: 'Měříme tak, jak jsou (nenatažené)',
-    variants: [
-      {
-        id: 'v2',
-        sku: 'NB-ST-02-55-100-R-KER-A23',
-        shade: 2,
-        shade_name: 'Dark Brown',
-        shade_hex: '#2C2416',
-        length_cm: 55,
-        weight_g: 100,
-        structure: 'rovné',
-        ending: 'keratin',
-        price_czk: 8500,
-        in_stock: true,
-        stock_quantity: 20,
-        ribbon_color: '#2C2416',
-      },
-    ],
-    images: {
-      main: '/images/placeholder.jpg',
-      hover: '/images/placeholder-hover.jpg',
-      gallery: [],
-    },
-    base_price_per_100g_45cm: 6900,
-    in_stock: true,
-    meta_title: 'Nebarvené panenské vlasy Standard - odstín 2',
-    meta_description: '100% panenské vlasy. Standard kvalita.',
-    features: [
-      '100% přírodní vlasy',
-      'Výhodná cena',
-      'Tepelně odolné',
-    ],
-    care_instructions: 'Šetrné mytí.',
-    how_to_use: 'Aplikace keratinovou metodou.',
-    average_rating: 4.5,
-    review_count: 12,
-    batch: 'A23',
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: '3',
-    sku: 'NB-PL-07-70-150',
-    slug: 'nebarvene-platinum-odstin-7',
-    category: 'nebarvene_panenske',
-    tier: 'Platinum edition',
-    name: 'Nebarvené panenské vlasy Platinum',
-    description: 'Prémiové panenské vlasy Platinum edition. Odstín 7 (Sandy Blonde).',
-    measurement_note: 'Měříme tak, jak jsou (nenatažené)',
-    variants: [
-      {
-        id: 'v3',
-        sku: 'NB-PL-07-70-150-V-NTP-A26',
-        shade: 7,
-        shade_name: 'Sandy Blonde',
-        shade_hex: '#B39B7A',
-        length_cm: 70,
-        weight_g: 150,
-        structure: 'vlnité',
-        ending: 'nano_tapes',
-        price_czk: 18900,
-        in_stock: true,
-        stock_quantity: 8,
-        ribbon_color: '#B39B7A',
-      },
-    ],
-    images: {
-      main: '/images/placeholder.jpg',
-      hover: '/images/placeholder-hover.jpg',
-      gallery: [],
-    },
-    base_price_per_100g_45cm: 10900,
-    in_stock: true,
-    meta_title: 'Nebarvené panenské vlasy Platinum - odstín 7',
-    meta_description: 'Prémiové panenské vlasy Platinum edition.',
-    features: [
-      'Nejvyšší kvalita',
-      'Platinum edition',
-      'Dlouhá životnost',
-    ],
-    care_instructions: 'Prémiová péče.',
-    how_to_use: 'Nano tapes aplikace.',
-    average_rating: 5.0,
-    review_count: 8,
-    batch: 'A26',
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: '4',
-    sku: 'BB-LX-09-65-120',
-    slug: 'barvene-luxe-odstin-9',
-    category: 'barvene_blond',
-    tier: 'LUXE',
-    name: 'Barvené blond vlasy LUXE',
-    description: 'Profesionálně barvené blond vlasy. LUXE kvalita, odstín 9 (Ash Blonde).',
-    measurement_note: 'Měříme tak, jak jsou (nenatažené)',
-    variants: [
-      {
-        id: 'v4',
-        sku: 'BB-LX-09-65-120-R-KER-B12',
-        shade: 9,
-        shade_name: 'Ash Blonde',
-        shade_hex: '#D5C5A8',
-        length_cm: 65,
-        weight_g: 120,
-        structure: 'rovné',
-        ending: 'keratin',
-        price_czk: 12800,
-        in_stock: true,
-        stock_quantity: 12,
-        ribbon_color: '#D5C5A8',
-      },
-    ],
-    images: {
-      main: '/images/placeholder.jpg',
-      hover: '/images/placeholder-hover.jpg',
-      gallery: [],
-    },
-    base_price_per_100g_45cm: 7900,
-    in_stock: true,
-    meta_title: 'Barvené blond vlasy LUXE - odstín 9',
-    meta_description: 'Profesionálně barvené blond vlasy.',
-    features: [
-      'Profesionální barvení',
-      'Krásný blond odstín',
-      'LUXE kvalita',
-    ],
-    care_instructions: 'Speciální péče pro barvené vlasy.',
-    how_to_use: 'Keratinová aplikace.',
-    average_rating: 4.9,
-    review_count: 18,
-    batch: 'B12',
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: '5',
-    sku: 'BB-PL-10-75-140',
-    slug: 'barvene-platinum-odstin-10',
-    category: 'barvene_blond',
-    tier: 'Platinum edition',
-    name: 'Barvené blond vlasy Platinum',
-    description: 'Prémiové barvené blond vlasy. Platinum edition, odstín 10 (Platinum Blonde).',
-    measurement_note: 'Měříme tak, jak jsou (nenatažené)',
-    variants: [
-      {
-        id: 'v5',
-        sku: 'BB-PL-10-75-140-MV-SWT-B15',
-        shade: 10,
-        shade_name: 'Platinum Blonde',
-        shade_hex: '#E5D5B7',
-        length_cm: 75,
-        weight_g: 140,
-        structure: 'mírně vlnité',
-        ending: 'sewing_weft',
-        price_czk: 22500,
-        in_stock: true,
-        stock_quantity: 5,
-        ribbon_color: '#E5D5B7',
-      },
-    ],
-    images: {
-      main: '/images/placeholder.jpg',
-      hover: '/images/placeholder-hover.jpg',
-      gallery: [],
-    },
-    base_price_per_100g_45cm: 9900,
-    in_stock: true,
-    meta_title: 'Barvené blond vlasy Platinum - odstín 10',
-    meta_description: 'Prémiové barvené blond vlasy Platinum.',
-    features: [
-      'Nejsvětlejší blond',
-      'Platinum edition',
-      'Ručně šité tresy',
-    ],
-    care_instructions: 'Prémiová péče pro světlé vlasy.',
-    how_to_use: 'Sewing weft aplikace.',
-    average_rating: 5.0,
-    review_count: 6,
-    batch: 'B15',
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: '6',
-    sku: 'NB-LX-01-50-90',
-    slug: 'nebarvene-luxe-odstin-1',
-    category: 'nebarvene_panenske',
-    tier: 'LUXE',
-    name: 'Nebarvené panenské vlasy LUXE - Jet Black',
-    description: '100% panenské vlasy. LUXE kvalita, odstín 1 (Jet Black).',
-    measurement_note: 'Měříme tak, jak jsou (nenatažené)',
-    variants: [
-      {
-        id: 'v6',
-        sku: 'NB-LX-01-50-090-R-KER-A27',
-        shade: 1,
-        shade_name: 'Jet Black',
-        shade_hex: '#1A1A1A',
-        length_cm: 50,
-        weight_g: 90,
-        structure: 'rovné',
-        ending: 'keratin',
-        price_czk: 8600,
-        in_stock: true,
-        stock_quantity: 18,
-        ribbon_color: '#1A1A1A',
-      },
-    ],
-    images: {
-      main: '/images/placeholder.jpg',
-      hover: '/images/placeholder-hover.jpg',
-      gallery: [],
-    },
-    base_price_per_100g_45cm: 8900,
-    in_stock: true,
-    meta_title: 'Nebarvené panenské vlasy LUXE - Jet Black',
-    meta_description: '100% panenské vlasy v odstínu Jet Black.',
-    features: [
-      'Hluboká černá barva',
-      'LUXE kvalita',
-      '100% přírodní',
-    ],
-    care_instructions: 'Standardní péče.',
-    how_to_use: 'Keratinová aplikace.',
-    average_rating: 4.7,
-    review_count: 15,
-    batch: 'A27',
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-];
+// Generátor mock produktů
+function generateMockProducts(): Product[] {
+  const products: Product[] = [];
+  let idCounter = 1;
+
+  const tiers: ProductTier[] = ['Standard', 'LUXE', 'Platinum edition'];
+  const structures = ['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'] as const;
+  const endings = ['keratin', 'nano_tapes', 'sewing_weft'] as const;
+
+  // Nebarvené panenské vlasy - různé kombinace
+  tiers.forEach((tier) => {
+    // Určíme dostupné odstíny podle tieru
+    const shades = tier === 'Platinum edition' ? [1, 2, 3, 4, 5, 6, 7, 8, 9] : [1, 2, 3, 4];
+    // Určíme rozsahy délek
+    const lengths = tier === 'Standard' ? [35, 40, 45, 50, 55, 60, 65, 70, 75]
+                  : tier === 'LUXE' ? [40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
+                  : [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+
+    shades.forEach((shade) => {
+      const color = HAIR_COLORS[shade];
+      lengths.forEach((length, lengthIdx) => {
+        // Vytvoříme cca 2 produkty pro každou kombinaci tier+shade+length
+        structures.slice(0, lengthIdx % 3 === 0 ? 2 : 1).forEach((structure) => {
+          const basePrice = tier === 'Standard' ? 6900 : tier === 'LUXE' ? 8900 : 10900;
+          const weight = 100 + (lengthIdx * 10);
+          const ending = endings[idCounter % 3];
+
+          const product: Product = {
+            id: String(idCounter),
+            sku: `NB-${tier === 'Standard' ? 'ST' : tier === 'LUXE' ? 'LX' : 'PL'}-${String(shade).padStart(2, '0')}-${length}-${weight}`,
+            slug: `nebarvene-${tier.toLowerCase().replace(' ', '-')}-odstin-${shade}-${length}cm`,
+            category: 'nebarvene_panenske',
+            tier,
+            name: `Nebarvené panenské vlasy ${tier} - ${color.name}`,
+            description: `100% panenské vlasy ${tier} kvality. Odstín ${shade} (${color.name}), ${structure}, délka ${length} cm.`,
+            measurement_note: 'Měříme tak, jak jsou (nenatažené)',
+            variants: [
+              {
+                id: `v${idCounter}`,
+                sku: `NB-${tier === 'Standard' ? 'ST' : tier === 'LUXE' ? 'LX' : 'PL'}-${String(shade).padStart(2, '0')}-${length}-${weight}-${structure === 'rovné' ? 'R' : structure === 'mírně vlnité' ? 'MV' : structure === 'vlnité' ? 'V' : 'K'}-${ending === 'keratin' ? 'KER' : ending === 'nano_tapes' ? 'NTP' : 'SWT'}-A${idCounter}`,
+                shade,
+                shade_name: color.name,
+                shade_hex: color.hex,
+                length_cm: length,
+                weight_g: weight,
+                structure,
+                ending,
+                price_czk: Math.round(basePrice * (length / 45) * (weight / 100)),
+                in_stock: idCounter % 5 !== 0, // 80% skladem
+                stock_quantity: idCounter % 5 !== 0 ? Math.floor(Math.random() * 20) + 5 : 0,
+                ribbon_color: color.hex,
+              },
+            ],
+            images: {
+              main: '/images/placeholder.jpg',
+              hover: '/images/placeholder-hover.jpg',
+              gallery: [],
+            },
+            base_price_per_100g_45cm: basePrice,
+            in_stock: idCounter % 5 !== 0,
+            stock_quantity: idCounter % 5 !== 0 ? Math.floor(Math.random() * 20) + 5 : 0,
+            meta_title: `Nebarvené panenské vlasy ${tier} - odstín ${shade}`,
+            meta_description: `100% panenské vlasy ${tier}. Odstín ${color.name}, ${structure}, ${length} cm.`,
+            features: [
+              '100% přírodní vlasy',
+              'Bez chemického ošetření',
+              'Tepelně odolné do 180°C',
+              'Opakovaně použitelné',
+            ],
+            care_instructions: 'Šetrné mytí, sušení přirozenou cestou.',
+            how_to_use: `Aplikace ${ending === 'keratin' ? 'keratinovou metodou' : ending === 'nano_tapes' ? 'nano tapes' : 'ručně šitými tresy'}.`,
+            average_rating: 4.5 + Math.random() * 0.5,
+            review_count: Math.floor(Math.random() * 30),
+            batch: `A${idCounter}`,
+            created_at: new Date(),
+            updated_at: new Date(),
+          };
+
+          products.push(product);
+          idCounter++;
+
+          // Omezíme počet produktů na cca 60
+          if (idCounter > 60) return;
+        });
+        if (idCounter > 60) return;
+      });
+      if (idCounter > 60) return;
+    });
+    if (idCounter > 60) return;
+  });
+
+  // Přidáme pár barvených blond produktů
+  [9, 10].forEach((shade) => {
+    const color = HAIR_COLORS[shade];
+    ['LUXE', 'Platinum edition'].forEach((tier) => {
+      [60, 65, 70, 75].forEach((length) => {
+        const basePrice = tier === 'LUXE' ? 7900 : 9900;
+        const weight = 120;
+
+        const product: Product = {
+          id: String(idCounter),
+          sku: `BB-${tier === 'LUXE' ? 'LX' : 'PL'}-${String(shade).padStart(2, '0')}-${length}-${weight}`,
+          slug: `barvene-${tier.toLowerCase().replace(' ', '-')}-odstin-${shade}`,
+          category: 'barvene_blond',
+          tier: tier as ProductTier,
+          name: `Barvené blond vlasy ${tier}`,
+          description: `Profesionálně barvené blond vlasy. ${tier} kvalita, odstín ${shade} (${color.name}).`,
+          measurement_note: 'Měříme tak, jak jsou (nenatažené)',
+          variants: [
+            {
+              id: `v${idCounter}`,
+              sku: `BB-${tier === 'LUXE' ? 'LX' : 'PL'}-${String(shade).padStart(2, '0')}-${length}-${weight}-R-KER-B${idCounter}`,
+              shade,
+              shade_name: color.name,
+              shade_hex: color.hex,
+              length_cm: length,
+              weight_g: weight,
+              structure: 'rovné',
+              ending: 'keratin',
+              price_czk: Math.round(basePrice * (length / 45) * (weight / 100)),
+              in_stock: true,
+              stock_quantity: Math.floor(Math.random() * 15) + 3,
+              ribbon_color: color.hex,
+            },
+          ],
+          images: {
+            main: '/images/placeholder.jpg',
+            hover: '/images/placeholder-hover.jpg',
+            gallery: [],
+          },
+          base_price_per_100g_45cm: basePrice,
+          in_stock: true,
+          meta_title: `Barvené blond vlasy ${tier} - odstín ${shade}`,
+          meta_description: 'Profesionálně barvené blond vlasy.',
+          features: [
+            'Profesionální barvení',
+            'Krásný blond odstín',
+            `${tier} kvalita`,
+          ],
+          care_instructions: 'Speciální péče pro barvené vlasy.',
+          how_to_use: 'Keratinová aplikace.',
+          average_rating: 4.7 + Math.random() * 0.3,
+          review_count: Math.floor(Math.random() * 20),
+          batch: `B${idCounter}`,
+          created_at: new Date(),
+          updated_at: new Date(),
+        };
+
+        products.push(product);
+        idCounter++;
+      });
+    });
+  });
+
+  return products;
+}
+
+export const mockProducts: Product[] = generateMockProducts();

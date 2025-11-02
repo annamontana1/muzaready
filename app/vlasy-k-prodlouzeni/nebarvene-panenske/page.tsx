@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
-import { ProductTier } from '@/types/product';
+import { ProductTier, HAIR_COLORS } from '@/types/product';
 
 type FilterState = {
   tier: ProductTier | 'all';
@@ -183,19 +183,27 @@ export default function NebarvenePanenskePage() {
               Odstín {filters.shades.length > 0 && `(${filters.shades.length} vybráno)`}
             </label>
             <div className="flex flex-wrap gap-2">
-              {availableShades.map((shade) => (
-                <button
-                  key={shade}
-                  onClick={() => toggleShade(shade)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                    filters.shades.includes(shade)
-                      ? 'bg-burgundy text-white'
-                      : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
-                  }`}
-                >
-                  {shade}
-                </button>
-              ))}
+              {availableShades.map((shade) => {
+                const color = HAIR_COLORS[shade];
+                return (
+                  <button
+                    key={shade}
+                    onClick={() => toggleShade(shade)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-2 ${
+                      filters.shades.includes(shade)
+                        ? 'bg-burgundy text-white'
+                        : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
+                    }`}
+                  >
+                    <div
+                      className="w-5 h-5 rounded-full border border-gray-300"
+                      style={{ backgroundColor: color?.hex }}
+                      title={color?.name}
+                    />
+                    <span>{shade}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -292,7 +300,7 @@ export default function NebarvenePanenskePage() {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
