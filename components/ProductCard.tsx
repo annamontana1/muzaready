@@ -44,20 +44,37 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
       {/* Product Image */}
       <div className="aspect-square overflow-hidden relative">
-        <div className="w-full h-full bg-gradient-to-br from-ivory to-warm-beige flex items-center justify-center">
-          {/* Placeholder pro obrázek */}
-          <span className="text-6xl">💇‍♀️</span>
+        <div
+          className="w-full h-full flex items-center justify-center relative"
+          style={{
+            background: `linear-gradient(135deg, ${shadeColor.hex} 0%, ${shadeColor.hex}dd 50%, ${shadeColor.hex}bb 100%)`
+          }}
+        >
+          {/* Texture overlay */}
+          <div className="absolute inset-0 opacity-20" style={{
+            backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
+          }} />
+
+          {/* Hair icon/text overlay */}
+          <div className="relative z-10 text-center">
+            <div className="text-white/90 text-sm font-medium mb-1">
+              {displayVariant?.structure || 'Vlasy'}
+            </div>
+            <div className="text-white/70 text-xs">
+              {displayVariant?.length_cm} cm
+            </div>
+          </div>
         </div>
 
         {/* Hover overlay */}
         {isHovered && (
-          <div className="absolute inset-0 bg-burgundy/10 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-black/10 transition-opacity duration-300" />
         )}
 
         {/* Out of stock overlay */}
         {displayVariant && !displayVariant.in_stock && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <span className="text-white font-semibold">Dočasně vyprodáno</span>
+            <span className="text-white text-sm font-semibold">Dočasně vyprodáno</span>
           </div>
         )}
       </div>
@@ -120,7 +137,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           href={`/produkt/${product.slug}`}
           className="w-full mt-3 block text-center px-4 py-2 bg-burgundy text-white rounded-lg text-sm font-medium hover:bg-maroon transition-colors"
         >
-          Zobrazit detail
+          Koupit
         </Link>
       </div>
     </div>
