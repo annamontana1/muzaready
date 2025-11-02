@@ -70,11 +70,10 @@ export default function NebarvenePanenskePage() {
     });
   }, [nebarveneProdukty, filters]);
 
-  const handleTierBoxClick = (tier: ProductTier, shades: number[]) => {
+  const handleTierBoxClick = (tier: ProductTier) => {
     setFilters((prev) => ({
       ...prev,
       tier,
-      shades,
     }));
   };
 
@@ -135,7 +134,7 @@ export default function NebarvenePanenskePage() {
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {/* Standard */}
           <button
-            onClick={() => handleTierBoxClick('Standard', [1, 2, 3, 4])}
+            onClick={() => handleTierBoxClick('Standard')}
             className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'Standard'
                 ? 'border-burgundy bg-burgundy/5'
@@ -151,7 +150,7 @@ export default function NebarvenePanenskePage() {
 
           {/* LUXE */}
           <button
-            onClick={() => handleTierBoxClick('LUXE', [1, 2, 3, 4])}
+            onClick={() => handleTierBoxClick('LUXE')}
             className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'LUXE'
                 ? 'border-burgundy bg-burgundy/5'
@@ -167,7 +166,7 @@ export default function NebarvenePanenskePage() {
 
           {/* Platinum Edition */}
           <button
-            onClick={() => handleTierBoxClick('Platinum edition', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
+            onClick={() => handleTierBoxClick('Platinum edition')}
             className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'Platinum edition'
                 ? 'border-burgundy bg-burgundy/5'
