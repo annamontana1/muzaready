@@ -96,21 +96,21 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         )}
 
         {/* Name */}
-        <h3 className="font-playfair text-lg text-burgundy mb-1">
+        <h3 className="font-playfair text-base text-burgundy mb-1 line-clamp-2">
           {product.name}
         </h3>
 
         {/* Specs */}
         {displayVariant && (
-          <p className="text-sm text-gray-600">
+          <p className="text-xs text-gray-600">
             {displayVariant.structure}
           </p>
         )}
 
         {/* Price display */}
-        <div className="mt-3">
+        <div className="mt-2">
           <p className="text-xs text-gray-500">Cena za 100 g / 45 cm</p>
-          <p className="text-xl font-semibold text-burgundy">
+          <p className="text-lg font-semibold text-burgundy">
             {priceCalculator.formatPrice(displayPrice)}
           </p>
         </div>
@@ -118,9 +118,9 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         {/* CTA */}
         <Link
           href={`/produkt/${product.slug}`}
-          className="btn-primary w-full mt-4 block text-center"
+          className="w-full mt-3 block text-center px-4 py-2 bg-burgundy text-white rounded-lg text-sm font-medium hover:bg-maroon transition-colors"
         >
-          Vybrat variantu
+          Zobrazit detail
         </Link>
       </div>
     </div>

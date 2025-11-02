@@ -104,10 +104,10 @@ export default function NebarvenePanenskePage() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
+          <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
             Nebarvené panenské vlasy
           </h1>
-          <p className="text-lg text-gray-700 max-w-4xl leading-relaxed">
+          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
             100 % panenské vlasy bez chemického ošetření. Přirozené odstíny, vysoká životnost, krásné konce.
             Délku měříme tak, jak vlasy leží (nenatahujeme). Na přání zakončíme: keratin / mikro-keratin /
             nano tapes / ručně šité tresy (sewing weft).
@@ -119,14 +119,14 @@ export default function NebarvenePanenskePage() {
           {/* Standard */}
           <button
             onClick={() => handleTierBoxClick('Standard', [1, 2, 3, 4])}
-            className={`p-6 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
+            className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'Standard'
                 ? 'border-burgundy bg-burgundy/5'
                 : 'border-warm-beige bg-white hover:border-burgundy/50'
             }`}
           >
-            <h3 className="text-2xl font-playfair text-burgundy mb-3">Standard</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
+            <p className="text-xs text-gray-700 leading-relaxed">
               Skvělý poměr cena / životnost. Pečlivě vybrané copánky, přirozené odstíny 1–4,
               délky 35–75 cm.
             </p>
@@ -135,14 +135,14 @@ export default function NebarvenePanenskePage() {
           {/* LUXE */}
           <button
             onClick={() => handleTierBoxClick('LUXE', [1, 2, 3, 4])}
-            className={`p-6 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
+            className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'LUXE'
                 ? 'border-burgundy bg-burgundy/5'
                 : 'border-warm-beige bg-white hover:border-burgundy/50'
             }`}
           >
-            <h3 className="text-2xl font-playfair text-burgundy mb-3">LUXE</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
+            <p className="text-xs text-gray-700 leading-relaxed">
               Hustší konce, vyšší selekce, konzistentní struktura. Přirozené odstíny 1–4,
               délky 40–85 cm.
             </p>
@@ -151,14 +151,14 @@ export default function NebarvenePanenskePage() {
           {/* Platinum Edition */}
           <button
             onClick={() => handleTierBoxClick('Platinum edition', [1, 2, 3, 4, 5, 6, 7, 8, 9])}
-            className={`p-6 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
+            className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'Platinum edition'
                 ? 'border-burgundy bg-burgundy/5'
                 : 'border-warm-beige bg-white hover:border-burgundy/50'
             }`}
           >
-            <h3 className="text-2xl font-playfair text-burgundy mb-3">Platinum Edition</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
+            <p className="text-xs text-gray-700 leading-relaxed">
               Náš nejvyšší výběr: extra husté konce, unikátní délky, limitované šarže.
               Přirozené odstíny 1–9, délky 45–90 cm.
             </p>
@@ -182,21 +182,21 @@ export default function NebarvenePanenskePage() {
             <label className="block text-sm font-medium text-burgundy mb-3">
               Odstín {filters.shades.length > 0 && `(${filters.shades.length} vybráno)`}
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-5 gap-2 max-w-xl">
               {availableShades.map((shade) => {
                 const color = HAIR_COLORS[shade];
                 return (
                   <button
                     key={shade}
                     onClick={() => toggleShade(shade)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-2 ${
+                    className={`px-3 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center gap-1.5 ${
                       filters.shades.includes(shade)
                         ? 'bg-burgundy text-white'
                         : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
                     }`}
                   >
                     <div
-                      className="w-5 h-5 rounded-full border border-gray-300"
+                      className="w-4 h-4 rounded-full border border-gray-300 flex-shrink-0"
                       style={{ backgroundColor: color?.hex }}
                       title={color?.name}
                     />
@@ -212,12 +212,12 @@ export default function NebarvenePanenskePage() {
             <label className="block text-sm font-medium text-burgundy mb-3">
               Struktura {filters.structures.length > 0 && `(${filters.structures.length} vybráno)`}
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2 max-w-xl">
               {['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'].map((structure) => (
                 <button
                   key={structure}
                   onClick={() => toggleStructure(structure)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition ${
                     filters.structures.includes(structure)
                       ? 'bg-burgundy text-white'
                       : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
