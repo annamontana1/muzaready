@@ -2,7 +2,7 @@
  * Mock produkty pro development a ukázku
  */
 
-import { Product, ProductVariant } from '@/types/product';
+import { Product } from '@/types/product';
 
 export const mockProducts: Product[] = [
   {

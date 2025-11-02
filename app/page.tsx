@@ -192,7 +192,7 @@ export default function Home() {
             Kompletní řešení pro každou potřebu - od ofin přes toupee až po pravé paruky z lidských vlasů.
           </p>
           <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
-            <Link href="/pricesky-a-paruky/ofiny" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
+            <Link href="/pricesky-a-paruky/ofiny-z-pravych-vlasu" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">👱‍♀️</div>
               <h4 className="font-semibold text-burgundy text-sm">Ofiny</h4>
             </Link>

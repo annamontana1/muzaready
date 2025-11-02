@@ -76,19 +76,19 @@ export function parseSKU(sku: string): SKUParams | null {
 
   // Reverse lookup
   const category = Object.entries(SKU_TOKENS.category).find(
-    ([_, v]) => v === cat
+    ([, v]) => v === cat
   )?.[0] as ProductCategory | undefined;
 
   const tierFull = Object.entries(SKU_TOKENS.tier).find(
-    ([_, v]) => v === tier
+    ([, v]) => v === tier
   )?.[0] as ProductTier | undefined;
 
   const structureFull = Object.entries(SKU_TOKENS.structure).find(
-    ([_, v]) => v === structure
+    ([, v]) => v === structure
   )?.[0] as HairStructure | undefined;
 
   const endingFull = Object.entries(SKU_TOKENS.ending).find(
-    ([_, v]) => v === ending
+    ([, v]) => v === ending
   )?.[0] as HairEnding | undefined;
 
   if (!category || !tierFull || !structureFull || !endingFull) return null;

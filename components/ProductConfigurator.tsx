@@ -60,7 +60,7 @@ export default function ProductConfigurator({ product }: ProductConfiguratorProp
     if (!availableShades.includes(config.shade)) {
       setConfig((prev) => ({ ...prev, shade: availableShades[0] }));
     }
-  }, [availableShades]);
+  }, [availableShades, config.shade]);
 
   const handleAddToCart = () => {
     console.log('Adding to cart:', { sku, config, price });

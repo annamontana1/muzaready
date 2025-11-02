@@ -72,7 +72,7 @@ export default function Header() {
               </Link>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
-                  href="/pricesky-a-paruky/ofiny"
+                  href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
                   Ofiny
@@ -322,7 +322,7 @@ export default function Header() {
                 <div className="font-semibold text-burgundy mb-2">Příčesky a paruky</div>
                 <div className="pl-4 space-y-2">
                   <Link
-                    href="/pricesky-a-paruky/ofiny"
+                    href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block text-burgundy"
                     onClick={() => setMobileMenuOpen(false)}
                   >
