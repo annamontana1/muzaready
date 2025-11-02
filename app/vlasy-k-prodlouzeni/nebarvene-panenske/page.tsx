@@ -29,8 +29,8 @@ export default function NebarvenePanenskePage() {
 
   // Dostupné odstíny podle tieru
   const availableShades = useMemo(() => {
-    if (filters.tier === 'Platinum edition') return [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    if (filters.tier === 'all') return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    if (filters.tier === 'Platinum edition') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    if (filters.tier === 'all') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return [1, 2, 3, 4]; // Standard a LUXE
   }, [filters.tier]);
 
@@ -167,7 +167,7 @@ export default function NebarvenePanenskePage() {
 
           {/* Platinum Edition */}
           <button
-            onClick={() => handleTierBoxClick('Platinum edition', [1, 2, 3, 4, 5, 6, 7, 8, 9])}
+            onClick={() => handleTierBoxClick('Platinum edition', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
             className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
               filters.tier === 'Platinum edition'
                 ? 'border-burgundy bg-burgundy/5'
@@ -177,7 +177,7 @@ export default function NebarvenePanenskePage() {
             <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
             <p className="text-xs text-gray-700 leading-relaxed">
               Náš nejvyšší výběr: extra husté konce, unikátní délky, limitované šarže.
-              Přirozené odstíny 1–9, délky 45–90 cm.
+              Přirozené odstíny 1–10, délky 45–90 cm.
             </p>
           </button>
         </div>
