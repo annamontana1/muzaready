@@ -1,0 +1,22 @@
+# Mùza Hair - Robots.txt
+# https://muza-hair-shop.vercel.app
+
+User-agent: *
+Allow: /
+
+# Disallow admin/internal pages
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+
+# Allow all product and category pages
+Allow: /vlasy-k-prodlouzeni/
+Allow: /pricesky-a-paruky/
+Allow: /produkt/
+
+# Sitemap location
+Sitemap: https://muza-hair-shop.vercel.app/sitemap.xml
+
+# Crawl delay for polite crawling
+Crawl-delay: 1

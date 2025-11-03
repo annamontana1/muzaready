@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Mùza Hair Praha – pravé vlasy k prodloužení, příčesky, paruky | Český výrobce",
@@ -74,6 +75,8 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <body className="antialiased">
+        <OrganizationSchema />
+        <WebSiteSchema />
         <Header />
         <main className="min-h-screen">
           {children}
