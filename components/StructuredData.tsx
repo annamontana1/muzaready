@@ -127,7 +127,7 @@ export function ProductSchema({
   url,
   rating,
 }: ProductSchemaProps) {
-  const schema: any = {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name,
