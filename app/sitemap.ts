@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { mockProducts } from '@/lib/mock-products';
+import { blogArticles } from '@/lib/blog-articles';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://muza-hair-shop.vercel.app';
@@ -138,6 +139,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
   ];
 
   // Dynamic product pages
@@ -148,5 +155,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...productPages];
+  // Blog articles
+  const blogPages = blogArticles.map((article) => ({
+    url: `${baseUrl}/blog/${article.slug}`,
+    lastModified: new Date(article.updatedAt),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...productPages, ...blogPages];
 }

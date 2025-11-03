@@ -267,6 +267,118 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Customer Reviews Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
+              Co říkají naše zákaznice
+            </h2>
+            <p className="text-gray-700 max-w-2xl mx-auto">
+              Přečtěte si zkušenosti žen, které si vybraly vlasy Mùza Hair
+            </p>
+          </div>
+
+          {/* Reviews Grid */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-8">
+            {/* Review 1 */}
+            <div className="bg-ivory rounded-xl p-6 shadow-medium">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-full bg-burgundy/20 flex items-center justify-center text-burgundy text-xl font-bold">
+                  K
+                </div>
+                <div>
+                  <div className="font-semibold text-burgundy">Karolína P.</div>
+                  <div className="text-xs text-gray-600">Praha</div>
+                </div>
+              </div>
+              <div className="flex gap-1 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-gold text-lg">⭐</span>
+                ))}
+              </div>
+              <p className="text-sm text-gray-700 mb-3">
+                "LUXE kvalita je naprosto skvělá! Vlasy jsou krásně lesklé, hebké a vypadají úplně přirozeně.
+                Nosím je už 8 měsíců a stále vypadají jako nové. Určitě si objednám znovu!"
+              </p>
+              <div className="text-xs text-gray-500">
+                Produkt: <span className="text-burgundy font-medium">LUXE Nebarvené 60cm</span>
+              </div>
+            </div>
+
+            {/* Review 2 */}
+            <div className="bg-ivory rounded-xl p-6 shadow-medium">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-full bg-burgundy/20 flex items-center justify-center text-burgundy text-xl font-bold">
+                  M
+                </div>
+                <div>
+                  <div className="font-semibold text-burgundy">Michaela Š.</div>
+                  <div className="text-xs text-gray-600">Brno</div>
+                </div>
+              </div>
+              <div className="flex gap-1 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-gold text-lg">⭐</span>
+                ))}
+              </div>
+              <p className="text-sm text-gray-700 mb-3">
+                "Byla jsem nadšená z Platinum edice! Koupila jsem si je na svatbu a bylo to nejlepší rozhodnutí.
+                Krásný lesk, žádné zamotávání. Profesionální kadeřnice byla úplně nadšená z kvality."
+              </p>
+              <div className="text-xs text-gray-500">
+                Produkt: <span className="text-burgundy font-medium">Platinum Blond #9, 65cm</span>
+              </div>
+            </div>
+
+            {/* Review 3 */}
+            <div className="bg-ivory rounded-xl p-6 shadow-medium">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-full bg-burgundy/20 flex items-center justify-center text-burgundy text-xl font-bold">
+                  L
+                </div>
+                <div>
+                  <div className="font-semibold text-burgundy">Lucie V.</div>
+                  <div className="text-xs text-gray-600">Ostrava</div>
+                </div>
+              </div>
+              <div className="flex gap-1 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-gold text-lg">⭐</span>
+                ))}
+              </div>
+              <p className="text-sm text-gray-700 mb-3">
+                "Vybrala jsem si Standard kvalitu na zkoušku a jsem mile překvapená! Za tu cenu je to úžasná kvalita.
+                Vlasy jsou hustě, dají se perfektně stylovat. Příště určitě zkusím LUXE!"
+              </p>
+              <div className="text-xs text-gray-500">
+                Produkt: <span className="text-burgundy font-medium">Standard Nebarvené 55cm</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-burgundy mb-2">4.9/5</div>
+              <div className="text-sm text-gray-600">Průměrné hodnocení</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-burgundy mb-2">500+</div>
+              <div className="text-sm text-gray-600">Spokojených zákaznic</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-burgundy mb-2">98%</div>
+              <div className="text-sm text-gray-600">Doporučuje přátelům</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-burgundy mb-2">8+</div>
+              <div className="text-sm text-gray-600">Let na trhu</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-20 bg-ivory">
         <div className="container mx-auto px-4 max-w-4xl">

@@ -173,6 +173,10 @@ export default function Header() {
               Výkup vlasů
             </Link>
 
+            <Link href="/blog" className="text-burgundy font-medium hover:text-maroon transition">
+              Blog
+            </Link>
+
             <div className="relative group">
               <Link href="/informace" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
                 Informace
