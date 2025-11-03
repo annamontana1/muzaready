@@ -24,6 +24,8 @@ export default function NebarvenePanenskePage() {
     availability: 'all',
   });
 
+  const [activeModal, setActiveModal] = useState<'keratin' | 'tape' | 'wefts' | null>(null);
+
   // Filtruj pouze nebarvené produkty
   const nebarveneProdukty = mockProducts.filter((p) => p.category === 'nebarvene_panenske');
 
@@ -118,16 +120,162 @@ export default function NebarvenePanenskePage() {
   return (
     <div className="py-12">
       <div className="container mx-auto px-4">
+        {/* Modaly pro metody */}
+        {activeModal === 'keratin' && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
+            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Keratin / Mikrokeratin</h2>
+              <div className="space-y-4 text-gray-700">
+                <p><strong>Nejpopulárnější metoda prodlužování vlasů v ČR.</strong></p>
+                <p>
+                  Vlasy jsou připevněny pomocí keratinových pramínků (bonding), které se tepelně
+                  přitaví k vlastním vlasům. Mikrokeratin používá menší bondingy pro jemnější výsledek.
+                </p>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Výhody:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Velmi trvanlivé (3–6 měsíců)</li>
+                    <li>Přirozený vzhled</li>
+                    <li>Vhodné pro aktivní životní styl</li>
+                    <li>Možnost stylingu (žehlení, kulma)</li>
+                  </ul>
+                </div>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
+                  <p className="text-sm">
+                    Zákaznice s hustějšími vlasy, které chtějí dlouhodobé řešení. Salony s profesionální
+                    keratin pistolí.
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600 italic">
+                  Cena aplikace v salonu: 2 500–6 000 Kč (dle délky a množství)
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeModal === 'tape' && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
+            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Tape-in (nano tapes)</h2>
+              <div className="space-y-4 text-gray-700">
+                <p><strong>Nejšetrnější a nejrychlejší metoda aplikace.</strong></p>
+                <p>
+                  Vlasy jsou připevněny pomocí tenkých oboustranných pásek mezi vlastní vlasy.
+                  Nano tapes jsou extra tenké pro maximální diskrétnost.
+                </p>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Výhody:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Rychlá aplikace (30–60 minut)</li>
+                    <li>Velmi šetrná k vlasům</li>
+                    <li>Snadná údržba a repositioning</li>
+                    <li>Ideální pro jemné vlasy</li>
+                    <li>Opakovaně použitelné (3–5× repositioning)</li>
+                  </ul>
+                </div>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
+                  <p className="text-sm">
+                    Zákaznice s jemnými vlasy, které potřebují šetrnou metodu. Klientky, které chtějí
+                    pravidelně měnit look (repositioning každé 6–8 týdnů).
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600 italic">
+                  Cena aplikace v salonu: 2 000–4 500 Kč (dle délky a množství)
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeModal === 'wefts' && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
+            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Ručně šité vlasové tresy (sewing wefts)</h2>
+              <div className="space-y-4 text-gray-700">
+                <p><strong>Tradiční metoda používaná profesionály po celém světě.</strong></p>
+                <p>
+                  Vlasové tresy jsou ručně přišity ke copánkům upleteným z vlastních vlasů.
+                  Metoda známá také jako &quot;weaving&quot; nebo &quot;brading&quot;.
+                </p>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Výhody:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Žádná chemie ani teplo</li>
+                    <li>Nejvíce šetrná metoda</li>
+                    <li>Ideální pro afro vlasy a dready</li>
+                    <li>Dlouhotrvající (2–3 měsíce)</li>
+                    <li>Přidání objemu po celé hlavě</li>
+                  </ul>
+                </div>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
+                  <p className="text-sm">
+                    Afro salony, klientky s kudrnatými vlasy, tanečnice, umělkyně. Zákaznice,
+                    které chtějí 100% přírodní metodu bez chemie.
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600 italic">
+                  Cena aplikace v salonu: 3 000–8 000 Kč (dle složitosti a množství)
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
-            Nebarvené panenské vlasy
+            Nebarvené panenské vlasy – vlasy k prodloužení
           </h1>
-          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
-            100 % panenské vlasy bez chemického ošetření. Přirozené odstíny, vysoká životnost, krásné konce.
-            Délku měříme tak, jak vlasy leží (nenatahujeme). Na přání zakončíme: keratin / mikro-keratin /
-            nano tapes / ručně šité tresy (sewing weft).
+          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed mb-4">
+            <strong>100 % nebarvené panenské vlasy z našeho výkupu.</strong> Přirozené odstíny, dlouhá životnost,
+            vhodné pro profesionální barvení a odbarvování. Prémiové vlasy k prodloužení pro salony i koncové
+            klientky – Praha i celá ČR.
           </p>
+          <div className="bg-ivory p-4 rounded-lg">
+            <p className="text-sm text-gray-700 mb-2"><strong>Zvolte si surové copy, nebo je pro vás připravíme na metodu:</strong></p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setActiveModal('keratin')}
+                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition cursor-pointer"
+              >
+                Keratin / Mikrokeratin
+              </button>
+              <button
+                onClick={() => setActiveModal('tape')}
+                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition cursor-pointer"
+              >
+                Tape-in (nano tapes)
+              </button>
+              <button
+                onClick={() => setActiveModal('wefts')}
+                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition cursor-pointer"
+              >
+                Ručně šité vlasové tresy — sewing wefts
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Tier Kategorie - 3 boxy */}
@@ -141,11 +289,21 @@ export default function NebarvenePanenskePage() {
                 : 'border-warm-beige bg-white hover:border-burgundy/50'
             }`}
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Skvělý poměr cena / životnost. Pečlivě vybrané copánky, přirozené odstíny 1–4,
-              délky 35–75 cm.
+            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard — nebarvené</h3>
+            <p className="text-xs text-gray-700 leading-relaxed mb-3">
+              Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy. <strong>Původ:</strong> Indie,
+              Kambodža, Uzbekistán. Přirozeně pevnější a odolné, skvěle drží tvar účesu a přidají objem.
+              Každý culík je ustřižený z jedné hlavy (originální barva a struktura), nemíchané z více culíků.
+              Přírodní odstíny 1–4. Vhodné pro prodloužení vlasů i profesionální tónování/odbarvování.
             </p>
+            <div className="text-xs text-gray-600 space-y-1">
+              <p className="font-semibold text-burgundy mb-1">Pro koho:</p>
+              <ul className="list-disc list-inside space-y-0.5">
+                <li>Máte spíše pevnější a hustší vlastní vlasy a chcete větší objem.</li>
+                <li>Hledáte cenově dostupné, ale kvalitní vlasy pro častější styling.</li>
+                <li>Preferujete méně náročnou údržbu než u extra jemných vlasů.</li>
+              </ul>
+            </div>
           </button>
 
           {/* LUXE */}
@@ -157,11 +315,21 @@ export default function NebarvenePanenskePage() {
                 : 'border-warm-beige bg-white hover:border-burgundy/50'
             }`}
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Hustší konce, vyšší selekce, konzistentní struktura. Přirozené odstíny 1–4,
-              délky 40–85 cm.
+            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE — nebarvené</h3>
+            <p className="text-xs text-gray-700 leading-relaxed mb-3">
+              Luxusní evropské nebarvené vlasy z výkupu. <strong>Původ:</strong> Ukrajina, Polsko, Bělorusko.
+              Jemné a lesklé, &ldquo;zlatá střední cesta&rdquo; – jemnější než východoevropské, ale pevnější než dětské;
+              nesplihnou a dodají nadýchaný objem. Husté konce, přírodní odstíny 1–4. Vhodné pro prodloužení
+              i profesionální tónování/odbarvování.
             </p>
+            <div className="text-xs text-gray-600 space-y-1">
+              <p className="font-semibold text-burgundy mb-1">Pro koho:</p>
+              <ul className="list-disc list-inside space-y-0.5">
+                <li>Máte středně pevné a středně husté vlasy a chcete objem bez zatížení.</li>
+                <li>Hledáte vyvážený poměr kvality a ceny.</li>
+                <li>Plánujete barvení/zesvětlení.</li>
+              </ul>
+            </div>
           </button>
 
           {/* Platinum Edition */}
@@ -173,11 +341,20 @@ export default function NebarvenePanenskePage() {
                 : 'border-warm-beige bg-white hover:border-burgundy/50'
             }`}
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Náš nejvyšší výběr: extra husté konce, unikátní délky, limitované šarže.
-              Přirozené odstíny 1–10, délky 45–90 cm.
+            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition — nebarvené</h3>
+            <p className="text-xs text-gray-700 leading-relaxed mb-3">
+              Nejvzácnější culíky z našeho výkupu v ČR a SR. Panenské vlasy nejvyšší kvality – mimořádně hebké
+              a lesklé, s hustými konci. Přirozené textury od extra jemných rovných po normální až pevnější.
+              Dostupné v omezeném množství.
             </p>
+            <div className="text-xs text-gray-600 space-y-1">
+              <p className="font-semibold text-burgundy mb-1">Pro koho:</p>
+              <ul className="list-disc list-inside space-y-0.5">
+                <li>Máte jemné, křehké, snadno lámavé vlasy a potřebujete minimální zátěž na kořínky.</li>
+                <li>Vyžadujete nejvyšší kvalitu a maximálně přirozený vzhled.</li>
+                <li>Plánujete barvit/zesvětlovat s důrazem na jemnost a lesk.</li>
+              </ul>
+            </div>
           </button>
         </div>
 
