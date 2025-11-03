@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import TopContactBar from './TopContactBar';
+import SearchOverlay from './SearchOverlay';
+import Badge from './Badge';
+import { useFavorites } from '@/hooks/useFavorites';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,9 +14,15 @@ export default function Header() {
   const [prislusenstviSubmenuOpen, setPrislusenstviSubmenuOpen] = useState(false);
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
   const [informaceSubmenuOpen, setInformaceSubmenuOpen] = useState(false);
+  const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
+
+  const { favoriteCount } = useFavorites();
+  const cartCount = 0; // TODO: Replace with actual cart count from cart context
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-medium">
+    <>
+      <TopContactBar />
+      <header className="sticky top-0 z-50 bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
       <div className="container mx-auto px-4">
         {/* Desktop Header */}
         <div className="hidden lg:flex items-center justify-between py-4">
@@ -239,22 +249,30 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-6">
-            <button className="text-burgundy hover:text-maroon transition p-2" aria-label="Hledat">
+            <button
+              onClick={() => setSearchOverlayOpen(true)}
+              className="text-burgundy hover:text-maroon transition p-2"
+              aria-label="Hledat"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
-            <button className="text-burgundy hover:text-maroon transition p-2 relative" aria-label="Oblíbené">
+            <Link
+              href="/oblibene"
+              className="text-burgundy hover:text-maroon transition p-2 relative"
+              aria-label="Oblíbené"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
-              <span className="absolute -top-1 -right-1 bg-burgundy text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-            </button>
+              <Badge count={favoriteCount} />
+            </Link>
             <button className="text-burgundy hover:text-maroon transition p-2 relative" aria-label="Košík">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span className="absolute -top-1 -right-1 bg-burgundy text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+              <Badge count={cartCount} />
             </button>
           </div>
         </div>
@@ -274,35 +292,32 @@ export default function Header() {
               MÙZA
             </Link>
 
-            <div className="flex items-center gap-3">
-              <button className="text-burgundy p-2" aria-label="Hledat">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setSearchOverlayOpen(true)}
+                className="text-burgundy p-2"
+                aria-label="Hledat"
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
+              <Link
+                href="/oblibene"
+                className="text-burgundy p-2 relative"
+                aria-label="Oblíbené"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <Badge count={favoriteCount} variant="small" />
+              </Link>
               <button className="text-burgundy p-2 relative" aria-label="Košík">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span className="absolute -top-1 -right-1 bg-burgundy text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                <Badge count={cartCount} variant="small" />
               </button>
-            </div>
-          </div>
-
-          {/* Contact Info Bar */}
-          <div className="bg-ivory py-2 px-4 flex items-center justify-between text-xs border-y border-warm-beige">
-            <a href="tel:728722880" className="flex items-center gap-1 text-burgundy hover:text-maroon">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              <span>728 722 880</span>
-            </a>
-            <div className="flex items-center gap-1 text-gray-600">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>Revoluční 8, Praha</span>
             </div>
           </div>
         </div>
@@ -571,5 +586,7 @@ export default function Header() {
         )}
       </div>
     </header>
+    <SearchOverlay isOpen={searchOverlayOpen} onClose={() => setSearchOverlayOpen(false)} />
+    </>
   );
 }
