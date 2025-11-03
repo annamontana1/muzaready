@@ -6,8 +6,10 @@
 // Category Types
 export type ProductCategory = "nebarvene_panenske" | "barvene_blond";
 export type ProductTier = "Standard" | "LUXE" | "Platinum edition";
+export type ProductTierNormalized = "standard" | "luxe" | "platinum";
 export type HairStructure = "rovné" | "mírně vlnité" | "vlnité" | "kudrnaté";
 export type HairEnding = "keratin" | "microkeratin" | "nano_tapes" | "vlasove_tresy";
+export type SoftnessScale = 1 | 2 | 3;
 
 // Product Interface
 export interface Product {
@@ -65,6 +67,12 @@ export interface Product {
   supplier?: string;
   processing_location?: string;
   batch?: string;
+
+  // Search fields (denormalized for efficient search)
+  tier_normalized: ProductTierNormalized;
+  tier_keywords: string[]; // includes synonyms and typos
+  softness_scale: SoftnessScale;
+  search_text: string; // normalized text without diacritics for full-text search
 
   // Timestamps
   created_at: Date;
@@ -166,6 +174,25 @@ export const CATEGORY_RULES: CategoryConfig = {
     endings: ["keratin", "microkeratin", "nano_tapes", "vlasove_tresy"],
     tiers: ["Standard", "LUXE", "Platinum edition"],
   },
+};
+
+// Tier Keywords and Synonyms
+export const TIER_KEYWORDS: Record<ProductTierNormalized, string[]> = {
+  standard: ["standard", "standart", "std", "zakladni"],
+  luxe: ["luxe", "lux", "luxusni", "luxury"],
+  platinum: ["platinum", "platinova", "platinum edition", "plat"],
+};
+
+// Search Synonyms Map
+export const SEARCH_SYNONYMS: Record<string, string> = {
+  standart: "standard",
+  platinova: "platinum",
+  lux: "luxe",
+  luxusni: "luxe",
+  luxury: "luxe",
+  plat: "platinum",
+  std: "standard",
+  zakladni: "standard",
 };
 
 // Filter Types

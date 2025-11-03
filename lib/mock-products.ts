@@ -2,7 +2,47 @@
  * Mock produkty pro development a ukázku
  */
 
-import { Product, HAIR_COLORS, ProductTier } from '@/types/product';
+import {
+  Product,
+  HAIR_COLORS,
+  ProductTier,
+  ProductTierNormalized,
+  TIER_KEYWORDS,
+  SoftnessScale,
+} from '@/types/product';
+import { normalizeText } from './search-utils';
+
+// Helper pro generování search polí
+function generateSearchFields(tier: ProductTier, name: string, description: string, category: string) {
+  const tier_normalized: ProductTierNormalized =
+    tier === 'Standard' ? 'standard' :
+    tier === 'LUXE' ? 'luxe' :
+    'platinum';
+
+  const tier_keywords = TIER_KEYWORDS[tier_normalized];
+
+  const softness_scale: SoftnessScale =
+    tier === 'Standard' ? 1 :
+    tier === 'LUXE' ? 2 :
+    3;
+
+  // Combine all searchable text
+  const searchText = normalizeText([
+    name,
+    description,
+    tier,
+    tier_normalized,
+    ...tier_keywords,
+    category,
+  ].join(' '));
+
+  return {
+    tier_normalized,
+    tier_keywords,
+    softness_scale,
+    search_text: searchText,
+  };
+}
 
 // Generátor mock produktů
 function generateMockProducts(): Product[] {
@@ -78,6 +118,7 @@ function generateMockProducts(): Product[] {
             average_rating: 4.5 + Math.random() * 0.5,
             review_count: Math.floor(Math.random() * 30),
             batch: `A${idCounter}`,
+            ...generateSearchFields(tier, `Nebarvené panenské vlasy ${tier} - ${color.name}`, `100% panenské vlasy ${tier} kvality. Odstín ${shade} (${color.name}), ${structure}, délka ${length} cm.`, 'nebarvene panenske vlasy'),
             created_at: new Date(),
             updated_at: new Date(),
           };
@@ -148,6 +189,7 @@ function generateMockProducts(): Product[] {
           average_rating: 4.7 + Math.random() * 0.3,
           review_count: Math.floor(Math.random() * 20),
           batch: `B${idCounter}`,
+          ...generateSearchFields(tier as ProductTier, `Barvené blond vlasy ${tier}`, `Profesionálně barvené blond vlasy. ${tier} kvalita, odstín ${shade} (${color.name}).`, 'barvene blond vlasy'),
           created_at: new Date(),
           updated_at: new Date(),
         };

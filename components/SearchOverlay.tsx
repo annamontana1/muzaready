@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { searchProducts, SearchResult, getFallbackCTA } from '@/lib/product-search';
+import { mockProducts } from '@/lib/mock-products';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -10,15 +13,17 @@ interface SearchOverlayProps {
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Rychlé návrhy
   const quickSuggestions = [
-    'Nebarvené vlasy',
-    'Vlasové tresy',
-    'Nano tapes',
-    'Keratin',
-    'Barvené blond',
+    'Standard',
+    'Luxe',
+    'Platinum',
+    'Standard 50 cm',
+    'Luxe rovné',
   ];
 
   // Auto focus při otevření
@@ -57,7 +62,12 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   }, [isOpen]);
 
   const handleSearch = (query: string) => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      setSearchResults(null);
+      return;
+    }
+
+    setIsSearching(true);
 
     // Uložit do historie
     const newHistory = [query, ...searchHistory.filter(q => q !== query)].slice(0, 5);
@@ -72,8 +82,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       });
     }
 
-    // TODO: Implementovat skutečné vyhledávání
-    console.log('Searching for:', query);
+    // Perform search
+    const results = searchProducts(mockProducts, query, { limit: 10 });
+    setSearchResults(results);
+    setIsSearching(false);
   };
 
   const handleQuickSearch = (query: string) => {
@@ -166,18 +178,97 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         )}
 
         {/* Výsledky vyhledávání */}
-        {searchQuery && (
+        {searchQuery && searchResults && (
           <div>
             <p className="text-sm text-gray-500 mb-4">
-              Vyhledávání pro: <strong>{searchQuery}</strong>
+              {searchResults.totalCount > 0 ? (
+                <>Nalezeno <strong>{searchResults.totalCount}</strong> {searchResults.totalCount === 1 ? 'produkt' : searchResults.totalCount < 5 ? 'produkty' : 'produktů'} pro: <strong>{searchQuery}</strong></>
+              ) : (
+                <>Žádné výsledky pro: <strong>{searchQuery}</strong></>
+              )}
             </p>
-            {/* TODO: Zde zobrazit skutečné výsledky */}
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-2">Produkty</h3>
-                <p className="text-sm text-gray-500">Funkce vyhledávání bude brzy k dispozici...</p>
+
+            {/* Products */}
+            {searchResults.products.length > 0 && (
+              <div className="space-y-3 mb-6">
+                <h3 className="text-sm font-semibold text-gray-700">Produkty</h3>
+                {searchResults.products.map((product) => (
+                  <Link
+                    key={product.id}
+                    href={`/produkt/${product.slug}`}
+                    onClick={onClose}
+                    className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-burgundy hover:shadow-sm transition"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-16 h-16 bg-gray-100 rounded"></div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-semibold text-burgundy truncate">
+                          {product.name}
+                        </h4>
+                        <p className="text-xs text-gray-600 line-clamp-2 mt-1">
+                          {product.description}
+                        </p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xs font-semibold text-burgundy">
+                            od {Math.round(product.base_price_per_100g_45cm).toLocaleString('cs-CZ')} Kč
+                          </span>
+                          {product.in_stock && (
+                            <span className="text-xs text-green-600">Skladem</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            </div>
+            )}
+
+            {/* No results - fallback CTA */}
+            {searchResults.totalCount === 0 && (
+              <div className="bg-ivory rounded-lg p-6 text-center">
+                <p className="text-gray-600 mb-4">Nenašli jsme žádné produkty odpovídající vašemu dotazu.</p>
+
+                {/* Fallback CTA */}
+                {(() => {
+                  const fallback = getFallbackCTA(searchResults.query);
+                  return (
+                    <Link
+                      href={fallback.url}
+                      onClick={onClose}
+                      className="btn-primary inline-block mb-4"
+                    >
+                      {fallback.text}
+                    </Link>
+                  );
+                })()}
+
+                {/* Suggested queries */}
+                {searchResults.suggestedQueries && searchResults.suggestedQueries.length > 0 && (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Zkuste hledat:</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {searchResults.suggestedQueries.map((suggestion, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleQuickSearch(suggestion)}
+                          className="px-3 py-1.5 bg-white border border-burgundy/20 text-burgundy text-sm rounded-full hover:bg-burgundy hover:text-white transition"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Loading state */}
+        {searchQuery && isSearching && (
+          <div className="text-center py-8">
+            <div className="inline-block w-8 h-8 border-4 border-burgundy/20 border-t-burgundy rounded-full animate-spin"></div>
+            <p className="text-sm text-gray-500 mt-3">Hledám...</p>
           </div>
         )}
 
