@@ -11,7 +11,7 @@ function generateMockProducts(): Product[] {
 
   const tiers: ProductTier[] = ['Standard', 'LUXE', 'Platinum edition'];
   const structures = ['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'] as const;
-  const endings = ['keratin', 'nano_tapes', 'sewing_weft'] as const;
+  const endings = ['keratin', 'nano_tapes', 'vlasove_tresy'] as const;
 
   // Nebarvené panenské vlasy - různé kombinace
   tiers.forEach((tier) => {

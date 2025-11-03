@@ -226,7 +226,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                           ? 'Keratin'
                           : variant.ending === 'nano_tapes'
                           ? 'Nano tapes'
-                          : 'Sewing weft'}
+                          : 'Vlasové tresy'}
                       </dd>
                     </div>
                     <div>

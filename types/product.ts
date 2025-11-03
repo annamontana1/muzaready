@@ -7,7 +7,7 @@
 export type ProductCategory = "nebarvene_panenske" | "barvene_blond";
 export type ProductTier = "Standard" | "LUXE" | "Platinum edition";
 export type HairStructure = "rovné" | "mírně vlnité" | "vlnité" | "kudrnaté";
-export type HairEnding = "keratin" | "microkeratin" | "nano_tapes" | "sewing_weft";
+export type HairEnding = "keratin" | "microkeratin" | "nano_tapes" | "vlasove_tresy";
 
 // Product Interface
 export interface Product {
@@ -155,7 +155,7 @@ export const CATEGORY_RULES: CategoryConfig = {
     lengths_cm: [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90],
     weights_g: ["50-100", "100-120", "120-150", "150-180", "180-230", "230+"],
     structures: ["rovné", "mírně vlnité", "vlnité", "kudrnaté"],
-    endings: ["keratin", "microkeratin", "nano_tapes", "sewing_weft"],
+    endings: ["keratin", "microkeratin", "nano_tapes", "vlasove_tresy"],
     tiers: ["Standard", "LUXE", "Platinum edition"],
   },
   barvene_blond: {
@@ -163,7 +163,7 @@ export const CATEGORY_RULES: CategoryConfig = {
     lengths_cm: [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90],
     weights_g: ["50-100", "100-120", "120-150", "150-180", "180-230", "230+"],
     structures: ["rovné", "mírně vlnité", "vlnité", "kudrnaté"],
-    endings: ["keratin", "microkeratin", "nano_tapes", "sewing_weft"],
+    endings: ["keratin", "microkeratin", "nano_tapes", "vlasove_tresy"],
     tiers: ["Standard", "LUXE", "Platinum edition"],
   },
 };

@@ -48,13 +48,13 @@ export default function Header() {
                   Barvené blond vlasy
                 </Link>
                 <Link
-                  href="/vlasy-k-prodlouzeni/vlasy-na-keratin"
+                  href="/vlasy-k-prodlouzeni/keratin"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
                   Vlasy na keratin
                 </Link>
                 <Link
-                  href="/vlasy-k-prodlouzeni/pasky-nano-tapes"
+                  href="/vlasy-k-prodlouzeni/nano-tapes"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
                   Pásky (nano tapes)
@@ -89,10 +89,10 @@ export default function Header() {
                   Toupee/tupé
                 </Link>
                 <Link
-                  href="/pricesky-a-paruky/tresy-sewing-weft"
+                  href="/pricesky-a-paruky/vlasove-tresy"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
-                  Tresy sewing weft
+                  Vlasové tresy
                 </Link>
                 <Link
                   href="/pricesky-a-paruky/prave-paruky"
@@ -171,19 +171,19 @@ export default function Header() {
               </span>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
-                  href="/metody-zakonceni/keratin"
+                  href="/vlasy-k-prodlouzeni/keratin"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
                   Keratin / Mikrokeratin
                 </Link>
                 <Link
-                  href="/metody-zakonceni/tape-in"
+                  href="/vlasy-k-prodlouzeni/nano-tapes"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
                   Tape-in (nano tapes)
                 </Link>
                 <Link
-                  href="/metody-zakonceni/sewing-weft"
+                  href="/vlasy-k-prodlouzeni/vlasove-tresy"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
                   Ručně šité vlasové tresy
@@ -369,14 +369,14 @@ export default function Header() {
                       Barvené blond
                     </Link>
                     <Link
-                      href="/vlasy-k-prodlouzeni/vlasy-na-keratin"
+                      href="/vlasy-k-prodlouzeni/keratin"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Vlasy na keratin
                     </Link>
                     <Link
-                      href="/vlasy-k-prodlouzeni/pasky-nano-tapes"
+                      href="/vlasy-k-prodlouzeni/nano-tapes"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -425,11 +425,11 @@ export default function Header() {
                       Toupee/tupé
                     </Link>
                     <Link
-                      href="/pricesky-a-paruky/tresy-sewing-weft"
+                      href="/pricesky-a-paruky/vlasove-tresy"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Tresy sewing weft
+                      Vlasové tresy
                     </Link>
                     <Link
                       href="/pricesky-a-paruky/prave-paruky"
@@ -516,21 +516,21 @@ export default function Header() {
                 {metodySubmenuOpen && (
                   <div className="pl-4 space-y-2 mt-2">
                     <Link
-                      href="/metody-zakonceni/keratin"
+                      href="/vlasy-k-prodlouzeni/keratin"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Keratin / Mikrokeratin
                     </Link>
                     <Link
-                      href="/metody-zakonceni/tape-in"
+                      href="/vlasy-k-prodlouzeni/nano-tapes"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Tape-in (nano tapes)
                     </Link>
                     <Link
-                      href="/metody-zakonceni/sewing-weft"
+                      href="/vlasy-k-prodlouzeni/vlasove-tresy"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >

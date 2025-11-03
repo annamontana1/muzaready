@@ -81,7 +81,7 @@ export const PRICING_CONFIG: PricingConfig = {
     keratin: 0,
     microkeratin: 0,
     nano_tapes: 450,
-    sewing_weft: 650,
+    vlasove_tresy: 650,
   },
 
   weight_step_g: 10,

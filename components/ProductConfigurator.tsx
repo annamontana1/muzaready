@@ -162,7 +162,7 @@ export default function ProductConfigurator({ product }: ProductConfiguratorProp
       <div className="config-section">
         <label className="form-label">Zakončení</label>
         <div className="grid grid-cols-2 gap-3">
-          {(['keratin', 'microkeratin', 'nano_tapes', 'sewing_weft'] as HairEnding[]).map(
+          {(['keratin', 'microkeratin', 'nano_tapes', 'vlasove_tresy'] as HairEnding[]).map(
             (ending) => (
               <button
                 key={ending}
@@ -178,7 +178,7 @@ export default function ProductConfigurator({ product }: ProductConfiguratorProp
               >
                 {ending === 'nano_tapes'
                   ? 'Nano tapes'
-                  : ending === 'sewing_weft'
+                  : ending === 'vlasove_tresy'
                   ? 'Vlasové tresy'
                   : ending.charAt(0).toUpperCase() + ending.slice(1)}
               </button>

@@ -14,7 +14,7 @@ export default function KeratinPage() {
         <div className="text-sm text-gray-600 mb-6">
           <Link href="/" className="hover:text-burgundy">Domů</Link>
           {' / '}
-          <Link href="/metody" className="hover:text-burgundy">Metody</Link>
+          <Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link>
           {' / '}
           <span className="text-burgundy">Keratin / Mikrokeratin</span>
         </div>

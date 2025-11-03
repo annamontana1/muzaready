@@ -42,7 +42,7 @@ const SKU_TOKENS = {
     keratin: "KER",
     microkeratin: "MKR",
     nano_tapes: "NTP",
-    sewing_weft: "SWT",
+    vlasove_tresy: "VTR",
   },
 };
 

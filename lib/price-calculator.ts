@@ -88,13 +88,13 @@ export class PriceCalculator {
     // Min: nejkratší, nejlehčí, rovné, keratin
     const minPrice = this.calculate(baseParams);
 
-    // Max: nejdelší, nejtěžší, kudrnaté, sewing weft
+    // Max: nejdelší, nejtěžší, kudrnaté, vlasové tresy
     const maxParams: PriceCalculationInput = {
       ...baseParams,
       lengthCm: maxLength,
       weightG: maxWeight,
       structure: "kudrnaté",
-      ending: "sewing_weft",
+      ending: "vlasove_tresy",
       shade: category === "barvene_blond" ? 10 : 1,
     };
 

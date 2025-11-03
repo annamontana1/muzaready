@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'Nejšetrnější a nejrychlejší metoda aplikace. Tape-in pásky jsou opakovaně použitelné a ideální pro jemné vlasy.',
 };
 
-export default function TapeInPage() {
+export default function NanoTapesPage() {
   return (
     <div className="py-12 bg-ivory min-h-screen">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -14,7 +14,7 @@ export default function TapeInPage() {
         <div className="text-sm text-gray-600 mb-6">
           <Link href="/" className="hover:text-burgundy">Domů</Link>
           {' / '}
-          <Link href="/metody-zakonceni" className="hover:text-burgundy">Metody zakončení</Link>
+          <Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link>
           {' / '}
           <span className="text-burgundy">Tape-in (nano tapes)</span>
         </div>
@@ -110,7 +110,7 @@ export default function TapeInPage() {
           {/* CTA */}
           <div className="pt-6 border-t border-gray-200">
             <Link
-              href="/vlasy-k-prodlouzeni/pasky-nano-tapes"
+              href="/vlasy-k-prodlouzeni/nebarvene-panenske"
               className="btn-primary inline-block"
             >
               Prohlédnout vlasy připravené na tape-in →

@@ -200,9 +200,9 @@ export default function Home() {
               <div className="text-3xl mb-2">💇‍♂️</div>
               <h4 className="font-semibold text-burgundy text-sm">Toupee/tupé</h4>
             </Link>
-            <Link href="/pricesky-a-paruky/tresy-sewing-weft" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
+            <Link href="/pricesky-a-paruky/vlasove-tresy" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">🧵</div>
-              <h4 className="font-semibold text-burgundy text-sm">Tresy sewing weft</h4>
+              <h4 className="font-semibold text-burgundy text-sm">Vlasové tresy</h4>
             </Link>
             <Link href="/pricesky-a-paruky/prave-paruky" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">✨</div>

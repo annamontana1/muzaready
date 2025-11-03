@@ -226,22 +226,22 @@ export default function NebarvenePanenskePage() {
             <p className="text-sm text-gray-700 mb-2"><strong>Zvolte si surové copy, nebo je pro vás připravíme na metodu:</strong></p>
             <div className="flex flex-wrap gap-2">
               <Link
-                href="/metody-zakonceni/keratin"
+                href="/vlasy-k-prodlouzeni/keratin"
                 className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
               >
                 Keratin / Mikrokeratin
               </Link>
               <Link
-                href="/metody-zakonceni/tape-in"
+                href="/vlasy-k-prodlouzeni/nano-tapes"
                 className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
               >
                 Tape-in (nano tapes)
               </Link>
               <Link
-                href="/metody-zakonceni/sewing-weft"
+                href="/vlasy-k-prodlouzeni/vlasove-tresy"
                 className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
               >
-                Ručně šité vlasové tresy — sewing wefts
+                Ručně šité vlasové tresy
               </Link>
             </div>
           </div>
