@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
 import { ProductTier, HAIR_COLORS } from '@/types/product';
@@ -24,7 +25,7 @@ export default function NebarvenePanenskePage() {
     availability: 'all',
   });
 
-  const [activeModal, setActiveModal] = useState<'keratin' | 'tape' | 'wefts' | 'standard' | 'luxe' | 'platinum' | null>(null);
+  const [activeModal, setActiveModal] = useState<'standard' | 'luxe' | 'platinum' | null>(null);
 
   // Filtruj pouze nebarvené produkty
   const nebarveneProdukty = mockProducts.filter((p) => p.category === 'nebarvene_panenske');
@@ -120,128 +121,6 @@ export default function NebarvenePanenskePage() {
   return (
     <div className="py-12">
       <div className="container mx-auto px-4">
-        {/* Modaly pro metody */}
-        {activeModal === 'keratin' && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
-            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative" onClick={(e) => e.stopPropagation()}>
-              <button
-                onClick={() => setActiveModal(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
-              >
-                ×
-              </button>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Keratin / Mikrokeratin</h2>
-              <div className="space-y-4 text-gray-700">
-                <p><strong>Nejpopulárnější metoda prodlužování vlasů v ČR.</strong></p>
-                <p>
-                  Vlasy jsou připevněny pomocí keratinových pramínků (bonding), které se tepelně
-                  přitaví k vlastním vlasům. Mikrokeratin používá menší bondingy pro jemnější výsledek.
-                </p>
-                <div className="bg-ivory p-4 rounded-lg">
-                  <p className="font-semibold text-burgundy mb-2">Výhody:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>Velmi trvanlivé (3–6 měsíců)</li>
-                    <li>Přirozený vzhled</li>
-                    <li>Vhodné pro aktivní životní styl</li>
-                    <li>Možnost stylingu (žehlení, kulma)</li>
-                  </ul>
-                </div>
-                <div className="bg-ivory p-4 rounded-lg">
-                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
-                  <p className="text-sm">
-                    Zákaznice s hustějšími vlasy, které chtějí dlouhodobé řešení. Salony s profesionální
-                    keratin pistolí.
-                  </p>
-                </div>
-                <p className="text-sm text-gray-600 italic">
-                  Cena aplikace v salonu: 2 500–6 000 Kč (dle délky a množství)
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeModal === 'tape' && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
-            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative" onClick={(e) => e.stopPropagation()}>
-              <button
-                onClick={() => setActiveModal(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
-              >
-                ×
-              </button>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Tape-in (nano tapes)</h2>
-              <div className="space-y-4 text-gray-700">
-                <p><strong>Nejšetrnější a nejrychlejší metoda aplikace.</strong></p>
-                <p>
-                  Vlasy jsou připevněny pomocí tenkých oboustranných pásek mezi vlastní vlasy.
-                  Nano tapes jsou extra tenké pro maximální diskrétnost.
-                </p>
-                <div className="bg-ivory p-4 rounded-lg">
-                  <p className="font-semibold text-burgundy mb-2">Výhody:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>Rychlá aplikace (30–60 minut)</li>
-                    <li>Velmi šetrná k vlasům</li>
-                    <li>Snadná údržba a repositioning</li>
-                    <li>Ideální pro jemné vlasy</li>
-                    <li>Opakovaně použitelné (3–5× repositioning)</li>
-                  </ul>
-                </div>
-                <div className="bg-ivory p-4 rounded-lg">
-                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
-                  <p className="text-sm">
-                    Zákaznice s jemnými vlasy, které potřebují šetrnou metodu. Klientky, které chtějí
-                    pravidelně měnit look (repositioning každé 6–8 týdnů).
-                  </p>
-                </div>
-                <p className="text-sm text-gray-600 italic">
-                  Cena aplikace v salonu: 2 000–4 500 Kč (dle délky a množství)
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeModal === 'wefts' && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
-            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative" onClick={(e) => e.stopPropagation()}>
-              <button
-                onClick={() => setActiveModal(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
-              >
-                ×
-              </button>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Ručně šité vlasové tresy (sewing wefts)</h2>
-              <div className="space-y-4 text-gray-700">
-                <p><strong>Tradiční metoda používaná profesionály po celém světě.</strong></p>
-                <p>
-                  Vlasové tresy jsou ručně přišity ke copánkům upleteným z vlastních vlasů.
-                  Metoda známá také jako &quot;weaving&quot; nebo &quot;brading&quot;.
-                </p>
-                <div className="bg-ivory p-4 rounded-lg">
-                  <p className="font-semibold text-burgundy mb-2">Výhody:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li>Žádná chemie ani teplo</li>
-                    <li>Nejvíce šetrná metoda</li>
-                    <li>Ideální pro afro vlasy a dready</li>
-                    <li>Dlouhotrvající (2–3 měsíce)</li>
-                    <li>Přidání objemu po celé hlavě</li>
-                  </ul>
-                </div>
-                <div className="bg-ivory p-4 rounded-lg">
-                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
-                  <p className="text-sm">
-                    Afro salony, klientky s kudrnatými vlasy, tanečnice, umělkyně. Zákaznice,
-                    které chtějí 100% přírodní metodu bez chemie.
-                  </p>
-                </div>
-                <p className="text-sm text-gray-600 italic">
-                  Cena aplikace v salonu: 3 000–8 000 Kč (dle složitosti a množství)
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Tier modaly */}
         {activeModal === 'standard' && (
@@ -346,24 +225,24 @@ export default function NebarvenePanenskePage() {
           <div className="bg-ivory p-4 rounded-lg">
             <p className="text-sm text-gray-700 mb-2"><strong>Zvolte si surové copy, nebo je pro vás připravíme na metodu:</strong></p>
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveModal('keratin')}
-                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition cursor-pointer"
+              <Link
+                href="/metody/keratin"
+                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
               >
                 Keratin / Mikrokeratin
-              </button>
-              <button
-                onClick={() => setActiveModal('tape')}
-                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition cursor-pointer"
+              </Link>
+              <Link
+                href="/metody/tape-in"
+                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
               >
                 Tape-in (nano tapes)
-              </button>
-              <button
-                onClick={() => setActiveModal('wefts')}
-                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition cursor-pointer"
+              </Link>
+              <Link
+                href="/metody/vlasove-tresy"
+                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
               >
                 Ručně šité vlasové tresy — sewing wefts
-              </button>
+              </Link>
             </div>
           </div>
         </div>
