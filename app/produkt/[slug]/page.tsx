@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     openGraph: {
       title,
       description,
-      type: 'product',
+      type: 'website',
       url: `https://muza-hair-shop.vercel.app/produkt/${params.slug}`,
       images: [
         {
