@@ -313,31 +313,45 @@ export default function NebarvenePanenskePage() {
           {/* Odstíny */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
-              Odstín {filters.shades.length > 0 && `(${filters.shades.length} vybráno)`}
+              Odstín {filters.shades.length > 0 && `(${filters.shades.map(s => HAIR_COLORS[s]?.name).join(', ')} vybráno)`}
             </label>
-            <div className="grid grid-cols-5 gap-2 max-w-xl">
+            <div className="grid grid-cols-5 gap-3 max-w-xl">
               {availableShades.map((shade) => {
                 const color = HAIR_COLORS[shade];
+                const tooltipText = `${color?.name} (#${shade})${color?.synonyms ? '\nSynonyma: ' + color.synonyms.slice(0, 3).join(', ') : ''}`;
                 return (
                   <button
                     key={shade}
                     onClick={() => toggleShade(shade)}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition flex items-center justify-center gap-1.5 ${
+                    title={tooltipText}
+                    className={`px-2 py-2.5 rounded-lg text-xs font-semibold transition flex flex-col items-center justify-center gap-1.5 ${
                       filters.shades.includes(shade)
-                        ? 'bg-burgundy text-white'
-                        : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
+                        ? 'bg-burgundy text-white ring-2 ring-burgundy ring-offset-2'
+                        : 'bg-white text-burgundy border-2 border-gray-300 hover:border-burgundy hover:shadow-md'
                     }`}
                   >
                     <div
-                      className="w-4 h-4 rounded-full border border-gray-300 flex-shrink-0"
+                      className="w-7 h-7 rounded-full border-2 border-white shadow-md flex-shrink-0"
                       style={{ backgroundColor: color?.hex }}
-                      title={color?.name}
                     />
-                    <span>{shade}</span>
+                    <span className="text-[10px]">#{shade}</span>
                   </button>
                 );
               })}
             </div>
+            {/* Varování pro nedostupné odstíny */}
+            {filters.shades.some(s => !availableShades.includes(s)) && (
+              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-xs text-amber-800">
+                  ⚠️ Některé vybrané odstíny nejsou dostupné v aktuálním tieru.
+                  {filters.shades.filter(s => s >= 5 && s <= 10).length > 0 && (
+                    <span className="block mt-1">
+                      Pro odstíny 5-10 zkuste: <a href="/vlasy-k-prodlouzeni/barvene-blond" className="font-semibold underline hover:text-amber-900">Barvené blond</a>
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Struktura */}
@@ -390,22 +404,26 @@ export default function NebarvenePanenskePage() {
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
                 {filters.tier !== 'all' && (
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {filters.tier}
                   </span>
                 )}
                 {filters.shades.map((shade) => (
-                  <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
-                    Odstín {shade}
+                  <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium flex items-center gap-1.5">
+                    <div
+                      className="w-3 h-3 rounded-full border border-white/50"
+                      style={{ backgroundColor: HAIR_COLORS[shade]?.hex }}
+                    />
+                    Odstín: {HAIR_COLORS[shade]?.name}
                   </span>
                 ))}
                 {filters.structures.map((structure) => (
-                  <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                  <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {structure}
                   </span>
                 ))}
                 {filters.lengths.map((length) => (
-                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {length} cm
                   </span>
                 ))}
