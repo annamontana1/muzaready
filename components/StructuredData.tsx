@@ -6,22 +6,36 @@
 export function OrganizationSchema() {
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': ['Organization', 'LocalBusiness', 'Store'],
     name: 'Mùza Hair',
     alternateName: 'Muza Hair Praha',
     url: 'https://muza-hair-shop.vercel.app',
     logo: 'https://muza-hair-shop.vercel.app/logo.png',
-    description: 'Prémiové vlasy k prodloužení, příčesky a paruky v Praze. 100% panenské vlasy, profesionální barvení.',
+    description: 'Prémiové vlasy k prodloužení, příčesky a paruky v Praze. 100% panenské vlasy, profesionální barvení. Vlastní barvírna.',
+    image: 'https://muza-hair-shop.vercel.app/og-image.jpg',
+    priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Praha',
       addressLocality: 'Praha',
       addressCountry: 'CZ',
     },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 50.0755,
+      longitude: 14.4378,
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
       availableLanguage: ['Czech', 'Slovak'],
+    },
+    openingHours: 'Mo-Fr 09:00-18:00',
+    paymentAccepted: 'Cash, Credit Card, Bank Transfer',
+    currenciesAccepted: 'CZK',
+    areaServed: {
+      '@type': 'Country',
+      name: 'Czech Republic',
     },
     sameAs: [
       // Přidat Instagram, Facebook atd. až budou dostupné

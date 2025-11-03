@@ -5,8 +5,8 @@ import Footer from "@/components/Footer";
 import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Mùza Hair Praha – pravé vlasy k prodloužení, příčesky, paruky | Český výrobce",
-  description: "Český výrobce pravých a panenských vlasů od roku 2016. Vlastní barvírna, ruční výroba. Nebarvené panenské, barvené blond vlasy, keratin, pásky, tresy. Prémiová kvalita Standard, LUXE, Platinum edition.",
+  title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna",
+  description: "Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. Nebarvené panenské, barvené blond, keratin, pásky, tresy. LUXE & Platinum kvalita. Dodání do 48h.",
   keywords: [
     "vlasy k prodloužení",
     "panenské vlasy",
@@ -43,23 +43,23 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'cs_CZ',
-    url: 'https://muzahair.cz',
-    siteName: 'Mùza Hair Shop',
-    title: 'Mùza Hair Praha – pravé vlasy k prodloužení, příčesky, paruky',
-    description: 'Český výrobce pravých a panenských vlasů od roku 2016. Vlastní barvírna, ruční výroba v Praze. Standard, LUXE, Platinum edition.',
+    url: 'https://muza-hair-shop.vercel.app',
+    siteName: 'Mùza Hair',
+    title: '💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení',
+    description: 'Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. LUXE & Platinum kvalita. Dodání do 48h.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Mùza Hair Shop - Pravé vlasy k prodloužení',
+        alt: 'Mùza Hair - Pravé panenské vlasy k prodloužení',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mùza Hair Praha – pravé vlasy k prodloužení',
-    description: 'Český výrobce pravých a panenských vlasů. Vlastní barvírna, ruční výroba v Praze.',
+    title: '💎 Mùza Hair Praha | Panenské Vlasy',
+    description: 'Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. LUXE & Platinum kvalita.',
     images: ['/og-image.jpg'],
   },
   verification: {
