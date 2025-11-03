@@ -298,8 +298,8 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-sm text-gray-700 mb-3">
-                "LUXE kvalita je naprosto skvělá! Vlasy jsou krásně lesklé, hebké a vypadají úplně přirozeně.
-                Nosím je už 8 měsíců a stále vypadají jako nové. Určitě si objednám znovu!"
+                &ldquo;LUXE kvalita je naprosto skvělá! Vlasy jsou krásně lesklé, hebké a vypadají úplně přirozeně.
+                Nosím je už 8 měsíců a stále vypadají jako nové. Určitě si objednám znovu!&rdquo;
               </p>
               <div className="text-xs text-gray-500">
                 Produkt: <span className="text-burgundy font-medium">LUXE Nebarvené 60cm</span>
@@ -323,8 +323,8 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-sm text-gray-700 mb-3">
-                "Byla jsem nadšená z Platinum edice! Koupila jsem si je na svatbu a bylo to nejlepší rozhodnutí.
-                Krásný lesk, žádné zamotávání. Profesionální kadeřnice byla úplně nadšená z kvality."
+                &ldquo;Byla jsem nadšená z Platinum edice! Koupila jsem si je na svatbu a bylo to nejlepší rozhodnutí.
+                Krásný lesk, žádné zamotávání. Profesionální kadeřnice byla úplně nadšená z kvality.&rdquo;
               </p>
               <div className="text-xs text-gray-500">
                 Produkt: <span className="text-burgundy font-medium">Platinum Blond #9, 65cm</span>
@@ -348,8 +348,8 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-sm text-gray-700 mb-3">
-                "Vybrala jsem si Standard kvalitu na zkoušku a jsem mile překvapená! Za tu cenu je to úžasná kvalita.
-                Vlasy jsou hustě, dají se perfektně stylovat. Příště určitě zkusím LUXE!"
+                &ldquo;Vybrala jsem si Standard kvalitu na zkoušku a jsem mile překvapená! Za tu cenu je to úžasná kvalita.
+                Vlasy jsou hustě, dají se perfektně stylovat. Příště určitě zkusím LUXE!&rdquo;
               </p>
               <div className="text-xs text-gray-500">
                 Produkt: <span className="text-burgundy font-medium">Standard Nebarvené 55cm</span>
