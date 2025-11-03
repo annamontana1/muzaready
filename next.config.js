@@ -7,6 +7,20 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@/components'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/metody',
+        destination: '/metody-zakonceni',
+        permanent: true,
+      },
+      {
+        source: '/metody/:path*',
+        destination: '/metody-zakonceni/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

@@ -171,19 +171,19 @@ export default function Header() {
               </span>
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
-                  href="/metody/keratin"
+                  href="/metody-zakonceni/keratin"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
                   Keratin / Mikrokeratin
                 </Link>
                 <Link
-                  href="/metody/tape-in"
+                  href="/metody-zakonceni/tape-in"
                   className="block px-6 py-3 hover:bg-ivory transition"
                 >
                   Tape-in (nano tapes)
                 </Link>
                 <Link
-                  href="/metody/vlasove-tresy"
+                  href="/metody-zakonceni/sewing-weft"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
                   Ručně šité vlasové tresy
@@ -490,21 +490,21 @@ export default function Header() {
                 {metodySubmenuOpen && (
                   <div className="pl-4 space-y-2 mt-2">
                     <Link
-                      href="/metody/keratin"
+                      href="/metody-zakonceni/keratin"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Keratin / Mikrokeratin
                     </Link>
                     <Link
-                      href="/metody/tape-in"
+                      href="/metody-zakonceni/tape-in"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Tape-in (nano tapes)
                     </Link>
                     <Link
-                      href="/metody/vlasove-tresy"
+                      href="/metody-zakonceni/sewing-weft"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
