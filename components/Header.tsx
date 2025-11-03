@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
@@ -18,6 +18,40 @@ export default function Header() {
 
   const { favoriteCount } = useFavorites();
   const cartCount = 0; // TODO: Replace with actual cart count from cart context
+
+  // Body scroll lock pro mobilní menu
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      // Lock scroll
+      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.position = 'fixed';
+      document.documentElement.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.overscrollBehavior = 'none';
+    } else {
+      // Unlock scroll
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.position = '';
+      document.documentElement.style.width = '';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.overscrollBehavior = '';
+    }
+
+    return () => {
+      // Cleanup on unmount
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.position = '';
+      document.documentElement.style.width = '';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.overscrollBehavior = '';
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <>
@@ -322,10 +356,65 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-warm-beige py-4 max-h-[70vh] overflow-y-auto">
-            <nav className="flex flex-col gap-3 text-sm">
+      </div>
+    </header>
+
+    {/* Mobile Menu Overlay + Panel */}
+    {mobileMenuOpen && (
+      <>
+        {/* Overlay */}
+        <div
+          className="fixed inset-0 bg-black/40 z-[60] lg:hidden"
+          style={{
+            height: '100dvh',
+            minHeight: '100dvh',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+          }}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Menu Panel */}
+        <div
+          className="fixed left-0 top-0 w-[85%] bg-white z-[70] lg:hidden shadow-2xl"
+          style={{
+            height: '100dvh',
+            minHeight: '100dvh',
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobilní navigace"
+        >
+          {/* Panel Content with Scroll */}
+          <div
+            className="h-full overflow-y-auto -webkit-overflow-scrolling-touch"
+            style={{
+              paddingBottom: 'env(safe-area-inset-bottom)',
+              overscrollBehavior: 'contain',
+            }}
+          >
+            {/* Header uvnitř panelu */}
+            <div className="sticky top-0 bg-white border-b border-warm-beige px-4 py-4 flex items-center justify-between z-10">
+              <Link
+                href="/"
+                className="text-xl font-playfair text-burgundy font-bold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                MÙZA
+              </Link>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                aria-label="Zavřít menu"
+              >
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex flex-col gap-3 text-sm px-4 py-4">
               <Link
                 href="/"
                 className="text-burgundy font-medium py-2 border-b border-warm-beige/50"
@@ -583,9 +672,10 @@ export default function Header() {
               </Link>
             </nav>
           </div>
-        )}
-      </div>
-    </header>
+        </div>
+      </>
+    )}
+
     <SearchOverlay isOpen={searchOverlayOpen} onClose={() => setSearchOverlayOpen(false)} />
     </>
   );
