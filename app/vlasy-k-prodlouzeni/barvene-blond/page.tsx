@@ -191,31 +191,38 @@ export default function BarveneBlondPage() {
             </button>
           </div>
 
-          {/* Odstíny */}
+          {/* Odstíny - kolečka s číslem NAD */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Odstín {filters.shades.length > 0 && `(${filters.shades.map(s => HAIR_COLORS[s]?.name).join(', ')} vybráno)`}
             </label>
-            <div className="grid grid-cols-5 gap-3 max-w-xl">
+            <div className="flex flex-wrap gap-3 max-w-xl">
               {availableShades.map((shade) => {
                 const color = HAIR_COLORS[shade];
-                const tooltipText = `${color?.name} (#${shade})${color?.synonyms ? '\nSynonyma: ' + color.synonyms.slice(0, 3).join(', ') : ''}`;
+                const isSelected = filters.shades.includes(shade);
                 return (
                   <button
                     key={shade}
                     onClick={() => toggleShade(shade)}
-                    title={tooltipText}
-                    className={`px-2 py-2.5 rounded-lg text-xs font-semibold transition flex flex-col items-center justify-center gap-1.5 ${
-                      filters.shades.includes(shade)
-                        ? 'bg-burgundy text-white ring-2 ring-burgundy ring-offset-2'
-                        : 'bg-white text-burgundy border-2 border-gray-300 hover:border-burgundy hover:shadow-md'
-                    }`}
+                    title={`#${shade} – ${color?.name}`}
+                    aria-label={`#${shade} – ${color?.name}`}
+                    className="flex flex-col items-center gap-1.5 transition cursor-pointer group"
                   >
+                    {/* Číslo NAD kolečkem */}
+                    <span className={`text-xs font-bold transition ${
+                      isSelected ? 'text-burgundy' : 'text-gray-600 group-hover:text-burgundy'
+                    }`}>
+                      #{shade}
+                    </span>
+                    {/* Kolečko */}
                     <div
-                      className="w-7 h-7 rounded-full border-2 border-white shadow-md flex-shrink-0"
+                      className={`w-14 h-14 sm:w-10 sm:h-10 md:w-14 md:h-14 rounded-full transition ${
+                        isSelected
+                          ? 'ring-2 ring-burgundy shadow-md'
+                          : 'ring-1 ring-gray-300 group-hover:ring-burgundy group-hover:shadow-sm'
+                      }`}
                       style={{ backgroundColor: color?.hex }}
                     />
-                    <span className="text-[10px]">#{shade}</span>
                   </button>
                 );
               })}
@@ -236,76 +243,85 @@ export default function BarveneBlondPage() {
             )}
           </div>
 
-          {/* Struktura */}
+          {/* Struktura - s vizuálními ikonami */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Struktura {filters.structures.length > 0 && `(${filters.structures.length} vybráno)`}
             </label>
-            <div className="flex gap-2 max-w-xl">
-              {['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'].map((structure) => (
-                <button
-                  key={structure}
-                  onClick={() => toggleStructure(structure)}
-                  className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition ${
-                    filters.structures.includes(structure)
-                      ? 'bg-burgundy text-white'
-                      : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
-                  }`}
-                >
-                  {structure.charAt(0).toUpperCase() + structure.slice(1)}
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-3 max-w-xl">
+              {[
+                { name: 'rovné', icon: '——' },
+                { name: 'mírně vlnité', icon: '∼' },
+                { name: 'vlnité', icon: '〜〜' },
+                { name: 'kudrnaté', icon: '⟲' }
+              ].map(({ name, icon }) => {
+                const isSelected = filters.structures.includes(name);
+                return (
+                  <button
+                    key={name}
+                    onClick={() => toggleStructure(name)}
+                    className={`flex items-center gap-2 px-3 h-9 rounded-lg text-base font-medium transition ${
+                      isSelected
+                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
+                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                    }`}
+                  >
+                    <span className="text-lg leading-none">{icon}</span>
+                    <span>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Délka */}
+          {/* Délka - menší chipy s větším textem */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
             </label>
-            <div className="grid grid-cols-6 gap-2 max-w-2xl">
-              {availableLengths.map((length) => (
-                <button
-                  key={length}
-                  onClick={() => toggleLength(length)}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium transition ${
-                    filters.lengths.includes(length)
-                      ? 'bg-burgundy text-white'
-                      : 'bg-white text-burgundy border border-burgundy hover:bg-burgundy/10'
-                  }`}
-                >
-                  {length}
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-2 max-w-2xl">
+              {availableLengths.map((length) => {
+                const isSelected = filters.lengths.includes(length);
+                return (
+                  <button
+                    key={length}
+                    onClick={() => toggleLength(length)}
+                    className={`px-3 h-9 rounded-lg text-base font-medium transition ${
+                      isSelected
+                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
+                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                    }`}
+                  >
+                    {length}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Aktivní filtry */}
+          {/* Aktivní filtry - sjednocené odstíny */}
           {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
                 {filters.tier !== 'all' && (
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {filters.tier}
                   </span>
                 )}
-                {filters.shades.map((shade) => (
-                  <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium flex items-center gap-1.5">
-                    <div
-                      className="w-3 h-3 rounded-full border border-white/50"
-                      style={{ backgroundColor: HAIR_COLORS[shade]?.hex }}
-                    />
-                    Odstín: {HAIR_COLORS[shade]?.name}
+                {/* Sjednocená značka pro všechny odstíny */}
+                {filters.shades.length > 0 && (
+                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
+                    Odstín: {filters.shades.map(s => `#${s} – ${HAIR_COLORS[s]?.name}`).join(', ')}
                   </span>
-                ))}
+                )}
                 {filters.structures.map((structure) => (
-                  <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                  <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {structure}
                   </span>
                 ))}
                 {filters.lengths.map((length) => (
-                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs">
+                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {length} cm
                   </span>
                 ))}
