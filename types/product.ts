@@ -112,20 +112,109 @@ export interface HairColor {
   name: string;
   hex: string;
   ribbonColor: string;
+  synonyms: string[]; // CZ + EN synonyma
 }
 
 // Hair Colors Database
 export const HAIR_COLORS: Record<number, HairColor> = {
-  1: { code: 1, name: "Jet Black", hex: "#1A1A1A", ribbonColor: "#1A1A1A" },
-  2: { code: 2, name: "Dark Brown", hex: "#2C2416", ribbonColor: "#2C2416" },
-  3: { code: 3, name: "Medium Brown", hex: "#4A3728", ribbonColor: "#4A3728" },
-  4: { code: 4, name: "Chestnut", hex: "#6B5444", ribbonColor: "#6B5444" },
-  5: { code: 5, name: "Light Brown", hex: "#8B7355", ribbonColor: "#8B7355" },
-  6: { code: 6, name: "Caramel", hex: "#A68A5E", ribbonColor: "#A68A5E" },
-  7: { code: 7, name: "Sandy Blonde", hex: "#B39B7A", ribbonColor: "#B39B7A" },
-  8: { code: 8, name: "Honey Blonde", hex: "#C9B089", ribbonColor: "#C9B089" },
-  9: { code: 9, name: "Ash Blonde", hex: "#D5C5A8", ribbonColor: "#D5C5A8" },
-  10: { code: 10, name: "Platinum Blonde", hex: "#E5D5B7", ribbonColor: "#E5D5B7" },
+  1: {
+    code: 1,
+    name: "Černá",
+    hex: "#1A1A1A",
+    ribbonColor: "#1A1A1A",
+    synonyms: ["uhlová", "ebenová", "jet black", "black", "cerna"],
+  },
+  2: {
+    code: 2,
+    name: "Velmi tmavá hnědá",
+    hex: "#2C2416",
+    ribbonColor: "#2C2416",
+    synonyms: ["espresso", "moka", "téměř černá", "temer cerna", "velmi tmava hneda"],
+  },
+  3: {
+    code: 3,
+    name: "Tmavá hnědá",
+    hex: "#4A3728",
+    ribbonColor: "#4A3728",
+    synonyms: ["čokoládová", "kakaová", "tmavě kaštanová", "cokoladova", "tmave kaštanova", "tmava hneda"],
+  },
+  4: {
+    code: 4,
+    name: "Hnědá",
+    hex: "#6B5444",
+    ribbonColor: "#6B5444",
+    synonyms: ["kaštanová", "ořechová", "čokoládová hnědá", "kastanova", "orechova", "hneda"],
+  },
+  5: {
+    code: 5,
+    name: "Světlá hnědá",
+    hex: "#8B7355",
+    ribbonColor: "#8B7355",
+    synonyms: ["karamelová", "medová hnědá", "skořicová", "karamelova", "medova hneda", "skoricova", "svetla hneda"],
+  },
+  6: {
+    code: 6,
+    name: "Tmavá blond",
+    hex: "#A68A5E",
+    ribbonColor: "#A68A5E",
+    synonyms: ["špinavá blond", "dark blonde", "popelavě blond tmavá", "spinava blond", "popelave blond tmava", "tmava blond"],
+  },
+  7: {
+    code: 7,
+    name: "Blond",
+    hex: "#B39B7A",
+    ribbonColor: "#B39B7A",
+    synonyms: ["přírodní blond", "zlatá blond", "medová blond", "prirodni blond", "zlata blond", "medova blond", "blonde"],
+  },
+  8: {
+    code: 8,
+    name: "Světlá blond",
+    hex: "#C9B089",
+    ribbonColor: "#C9B089",
+    synonyms: ["light blonde", "vanilková blond", "skandinávská blond", "vanilkova blond", "skandinavska blond", "svetla blond"],
+  },
+  9: {
+    code: 9,
+    name: "Velmi světlá blond",
+    hex: "#D5C5A8",
+    ribbonColor: "#D5C5A8",
+    synonyms: ["písková blond", "champagne blond", "icy blond", "piskova blond", "champagne", "velmi svetla blond"],
+  },
+  10: {
+    code: 10,
+    name: "Ultra světlá blond / platinová blond",
+    hex: "#E5D5B7",
+    ribbonColor: "#E5D5B7",
+    synonyms: ["platinová", "platinum", "nordic blond", "platinova", "ultra svetla blond"],
+  },
+};
+
+// Color Families - rodiny barev pro vyhledávání
+export const COLOR_FAMILIES: Record<string, number[]> = {
+  "hneda": [2, 3, 4, 5],
+  "hnědá": [2, 3, 4, 5],
+  "brown": [2, 3, 4, 5],
+  "blond": [6, 7, 8, 9, 10],
+  "blonde": [6, 7, 8, 9, 10],
+  "platinova": [10],
+  "platinová": [10],
+  "platinum": [10],
+  "nordic": [10],
+  "piskova": [9],
+  "písková": [9],
+  "champagne": [9],
+  "icy": [9],
+  "spinava blond": [6, 7],
+  "špinavá blond": [6, 7],
+  "dirty blond": [6, 7],
+};
+
+// Method Synonyms - synonyma metod pro vyhledávání
+export const METHOD_SYNONYMS: Record<string, string[]> = {
+  keratin: ["keratinové prameny", "keratin na prodloužení", "keratinove prameny"],
+  mikrokeratin: ["micro keratin", "mikro keratin", "microkeratin"],
+  "nano_tapes": ["vlasové pásky", "pásky do vlasů", "nano pásky", "vlasove pasky", "pasky do vlasu", "tape-in", "tape in"],
+  vlasove_tresy: ["tresy", "šitý tres", "ručně šitý tres", "sity tres", "rucne sity tres", "sewing weft", "hand-tied weft"],
 };
 
 // Category Configuration

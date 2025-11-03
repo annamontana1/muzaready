@@ -53,20 +53,23 @@ function generateMockProducts(): Product[] {
   const structures = ['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'] as const;
   const endings = ['keratin', 'nano_tapes', 'vlasove_tresy'] as const;
 
-  // Nebarvené panenské vlasy - různé kombinace
+  // Nebarvené panenské vlasy - všechny odstíny 1-10
+  // Generujeme alespoň jeden produkt pro každý odstín 1-10
+  const allShades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   tiers.forEach((tier) => {
     // Určíme dostupné odstíny podle tieru
-    const shades = tier === 'Platinum edition' ? [1, 2, 3, 4, 5, 6, 7, 8, 9] : [1, 2, 3, 4];
+    const shades = tier === 'Platinum edition' ? allShades : [1, 2, 3, 4, 5];
     // Určíme rozsahy délek
-    const lengths = tier === 'Standard' ? [35, 40, 45, 50, 55, 60, 65, 70, 75]
-                  : tier === 'LUXE' ? [40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
-                  : [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+    const lengths = tier === 'Standard' ? [45, 50, 55, 60]
+                  : tier === 'LUXE' ? [50, 55, 60, 65, 70]
+                  : [55, 60, 65, 70, 75, 80];
 
     shades.forEach((shade) => {
       const color = HAIR_COLORS[shade];
       lengths.forEach((length, lengthIdx) => {
-        // Vytvoříme cca 2 produkty pro každou kombinaci tier+shade+length
-        structures.slice(0, lengthIdx % 3 === 0 ? 2 : 1).forEach((structure) => {
+        // Vytvoříme 1-2 produkty pro každou kombinaci tier+shade+length
+        structures.slice(0, lengthIdx % 2 === 0 ? 1 : 2).forEach((structure) => {
           const basePrice = tier === 'Standard' ? 6900 : tier === 'LUXE' ? 8900 : 10900;
           const weight = 100 + (lengthIdx * 10);
           const ending = endings[idCounter % 3];
@@ -125,22 +128,16 @@ function generateMockProducts(): Product[] {
 
           products.push(product);
           idCounter++;
-
-          // Omezíme počet produktů na cca 60
-          if (idCounter > 60) return;
         });
-        if (idCounter > 60) return;
       });
-      if (idCounter > 60) return;
     });
-    if (idCounter > 60) return;
   });
 
-  // Přidáme pár barvených blond produktů
-  [9, 10].forEach((shade) => {
+  // Přidáme barvené blond produkty (odstíny 5-10)
+  [5, 6, 7, 8, 9, 10].forEach((shade) => {
     const color = HAIR_COLORS[shade];
     ['LUXE', 'Platinum edition'].forEach((tier) => {
-      [60, 65, 70, 75].forEach((length) => {
+      [60, 65, 70].forEach((length) => {
         const basePrice = tier === 'LUXE' ? 7900 : 9900;
         const weight = 120;
 
@@ -150,7 +147,7 @@ function generateMockProducts(): Product[] {
           slug: `barvene-${tier.toLowerCase().replace(' ', '-')}-odstin-${shade}`,
           category: 'barvene_blond',
           tier: tier as ProductTier,
-          name: `Barvené blond vlasy ${tier}`,
+          name: `Barvené blond vlasy ${tier} - ${color.name}`,
           description: `Profesionálně barvené blond vlasy. ${tier} kvalita, odstín ${shade} (${color.name}).`,
           measurement_note: 'Měříme tak, jak jsou (nenatažené)',
           variants: [
@@ -189,7 +186,7 @@ function generateMockProducts(): Product[] {
           average_rating: 4.7 + Math.random() * 0.3,
           review_count: Math.floor(Math.random() * 20),
           batch: `B${idCounter}`,
-          ...generateSearchFields(tier as ProductTier, `Barvené blond vlasy ${tier}`, `Profesionálně barvené blond vlasy. ${tier} kvalita, odstín ${shade} (${color.name}).`, 'barvene blond vlasy'),
+          ...generateSearchFields(tier as ProductTier, `Barvené blond vlasy ${tier} - ${color.name}`, `Profesionálně barvené blond vlasy. ${tier} kvalita, odstín ${shade} (${color.name}).`, 'barvene blond vlasy'),
           created_at: new Date(),
           updated_at: new Date(),
         };

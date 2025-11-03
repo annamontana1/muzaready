@@ -49,10 +49,33 @@ export function searchProducts(
       }
     }
 
-    // Shade filter (check if any variant has this shade)
-    if (parsedQuery.shade !== null) {
-      const hasShade = product.variants.some(
-        v => v.shade === parsedQuery.shade
+    // Shade filter - PRIORITY: exact code > actual name > broad family > synonym > narrow family
+    let requestedShades: number[] = [];
+
+    // Exact shade code (highest priority)
+    if (parsedQuery.shadeCode !== null) {
+      requestedShades = [parsedQuery.shadeCode];
+    }
+    // If matched actual shade name (not synonym), use it (even if family also detected)
+    else if (parsedQuery.shadesByName.length > 0 && parsedQuery.shadeNameMatchedActualName) {
+      requestedShades = parsedQuery.shadesByName;
+    }
+    // If matched synonym AND broad family (4+ shades), prefer family
+    else if (parsedQuery.shadesByName.length > 0 && parsedQuery.shadesByFamily.length >= 4) {
+      requestedShades = parsedQuery.shadesByFamily;
+    }
+    // Shades by name/synonyms
+    else if (parsedQuery.shadesByName.length > 0) {
+      requestedShades = parsedQuery.shadesByName;
+    }
+    // Shades by family
+    else if (parsedQuery.shadesByFamily.length > 0) {
+      requestedShades = parsedQuery.shadesByFamily;
+    }
+
+    if (requestedShades.length > 0) {
+      const hasShade = product.variants.some(v =>
+        requestedShades.includes(v.shade)
       );
       if (!hasShade) {
         return false;
@@ -96,9 +119,37 @@ export function searchProducts(
     return true;
   });
 
-  // Score results for relevance (simple scoring)
+  // Score results for relevance (with shade priority)
   const scored = filtered.map(product => {
     let score = 0;
+
+    // Shade code exact match (highest priority)
+    if (parsedQuery.shadeCode !== null) {
+      const hasExactShade = product.variants.some(v => v.shade === parsedQuery.shadeCode);
+      if (hasExactShade) {
+        score += 50;
+      }
+    }
+
+    // Shade by name/synonym match
+    if (parsedQuery.shadesByName.length > 0) {
+      const hasNameShade = product.variants.some(v =>
+        parsedQuery.shadesByName.includes(v.shade)
+      );
+      if (hasNameShade) {
+        score += 30;
+      }
+    }
+
+    // Shade by family match
+    if (parsedQuery.shadesByFamily.length > 0) {
+      const hasFamilyShade = product.variants.some(v =>
+        parsedQuery.shadesByFamily.includes(v.shade)
+      );
+      if (hasFamilyShade) {
+        score += 15;
+      }
+    }
 
     // Exact tier match
     if (parsedQuery.tier && product.tier_normalized === parsedQuery.tier) {
