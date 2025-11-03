@@ -442,7 +442,7 @@ export default function NebarvenePanenskePage() {
                 ))}
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    Struktura: {structure.charAt(0).toUpperCase() + structure.slice(1)}
+                    {structure.charAt(0).toUpperCase() + structure.slice(1)}
                   </span>
                 ))}
                 {filters.lengths.map((length) => (
