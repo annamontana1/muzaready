@@ -8,7 +8,6 @@ export default function Header() {
   const [vlasySubmenuOpen, setVlasySubmenuOpen] = useState(false);
   const [priceskySubmenuOpen, setPriceskySubmenuOpen] = useState(false);
   const [prislusenstviSubmenuOpen, setPrislusenstviSubmenuOpen] = useState(false);
-  const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
   const [informaceSubmenuOpen, setInformaceSubmenuOpen] = useState(false);
 
   return (
@@ -43,27 +42,9 @@ export default function Header() {
                 </Link>
                 <Link
                   href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Barvené blond vlasy
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/keratin"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Vlasy na keratin
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/nano-tapes"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Pásky (nano tapes)
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/vlasove-tresy"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
-                  Vlasové tresy (ručně šité)
+                  Barvené blond vlasy
                 </Link>
               </div>
             </div>
@@ -158,35 +139,6 @@ export default function Header() {
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
                   Ostatní
-                </Link>
-              </div>
-            </div>
-
-            <div className="relative group">
-              <span className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer">
-                Metody zakončení
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </span>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <Link
-                  href="/vlasy-k-prodlouzeni/keratin"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Keratin / Mikrokeratin
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/nano-tapes"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Tape-in (nano tapes)
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/vlasove-tresy"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Ručně šité vlasové tresy
                 </Link>
               </div>
             </div>
@@ -368,27 +320,6 @@ export default function Header() {
                     >
                       Barvené blond
                     </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/keratin"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Vlasy na keratin
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nano-tapes"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Pásky (nano tapes)
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/vlasove-tresy"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Vlasové tresy
-                    </Link>
                   </div>
                 )}
               </div>
@@ -493,48 +424,6 @@ export default function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Kosmetika
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setMetodySubmenuOpen(!metodySubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>Metody zakončení</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${metodySubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {metodySubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/vlasy-k-prodlouzeni/keratin"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Keratin / Mikrokeratin
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nano-tapes"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Tape-in (nano tapes)
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/vlasove-tresy"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Ručně šité vlasové tresy
                     </Link>
                   </div>
                 )}

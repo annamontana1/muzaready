@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
 import { ProductTier, HAIR_COLORS } from '@/types/product';
@@ -217,34 +216,11 @@ export default function NebarvenePanenskePage() {
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
             Nebarvené panenské vlasy – vlasy k prodloužení
           </h1>
-          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed mb-4">
+          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
             <strong>100 % nebarvené panenské vlasy z našeho výkupu.</strong> Přirozené odstíny, dlouhá životnost,
             vhodné pro profesionální barvení a odbarvování. Prémiové vlasy k prodloužení pro salony i koncové
-            klientky – Praha i celá ČR.
+            klientky – Praha i celá ČR. Zvolte si surové copy, nebo je pro vás připravíme na jakoukoli metodu zakončení (keratin, mikrokeratin, nano tapes, vlasové tresy).
           </p>
-          <div className="bg-ivory p-4 rounded-lg">
-            <p className="text-sm text-gray-700 mb-2"><strong>Zvolte si surové copy, nebo je pro vás připravíme na metodu:</strong></p>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href="/vlasy-k-prodlouzeni/keratin"
-                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
-              >
-                Keratin / Mikrokeratin
-              </Link>
-              <Link
-                href="/vlasy-k-prodlouzeni/nano-tapes"
-                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
-              >
-                Tape-in (nano tapes)
-              </Link>
-              <Link
-                href="/vlasy-k-prodlouzeni/vlasove-tresy"
-                className="px-3 py-1 bg-white rounded-full text-xs font-medium text-burgundy border border-burgundy/20 hover:bg-burgundy hover:text-white transition"
-              >
-                Ručně šité vlasové tresy
-              </Link>
-            </div>
-          </div>
         </div>
 
         {/* Tier Kategorie - 3 boxy */}
