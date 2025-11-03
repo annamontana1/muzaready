@@ -313,7 +313,7 @@ export default function NebarvenePanenskePage() {
           {/* Odstíny - mřížka 5×2, bordó outline */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
-              Odstín {filters.shades.length > 0 && `(${filters.shades.map(s => HAIR_COLORS[s]?.name).join(', ')} vybráno)`}
+              Odstín {filters.shades.length > 0 && `(${filters.shades.sort((a, b) => a - b).map(s => HAIR_COLORS[s]?.name).join(', ')})`}
             </label>
             <div className="grid grid-cols-5 gap-2.5 max-w-md">
               {availableShades.map((shade) => {
@@ -434,12 +434,12 @@ export default function NebarvenePanenskePage() {
                     {filters.tier}
                   </span>
                 )}
-                {/* Sjednocená značka pro všechny odstíny */}
-                {filters.shades.length > 0 && (
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    Odstín: {filters.shades.map(s => `#${s} – ${HAIR_COLORS[s]?.name}`).join(', ')}
+                {/* Odstíny - jen slovní názvy */}
+                {filters.shades.sort((a, b) => a - b).map((shade) => (
+                  <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
+                    {HAIR_COLORS[shade]?.name}
                   </span>
-                )}
+                ))}
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     Struktura: {structure.charAt(0).toUpperCase() + structure.slice(1)}
