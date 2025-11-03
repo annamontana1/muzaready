@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna",
+  title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna 🇨🇿",
   description: "Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. Nebarvené panenské, barvené blond, keratin, pásky, tresy. LUXE & Platinum kvalita. Dodání do 48h.",
   keywords: [
     "vlasy k prodloužení",
