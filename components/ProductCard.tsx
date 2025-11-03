@@ -102,12 +102,12 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         {displayVariant && (
           <div className="flex items-center gap-2 mb-2">
             <div
-              className="w-4 h-4 rounded-full border border-gray-300"
+              className="w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
               style={{ backgroundColor: shadeColor.hex }}
               title={shadeColor.name}
             />
-            <span className="text-xs text-gray-600">
-              Odstín {displayVariant.shade}
+            <span className="text-xs text-gray-700 font-medium">
+              #{displayVariant.shade} - {shadeColor.name}
             </span>
           </div>
         )}

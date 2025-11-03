@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { searchProducts, SearchResult, getFallbackCTA } from '@/lib/product-search';
 import { mockProducts } from '@/lib/mock-products';
+import { HAIR_COLORS } from '@/types/product';
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -187,6 +188,52 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 <>Žádné výsledky pro: <strong>{searchQuery}</strong></>
               )}
             </p>
+
+            {/* Aktivní filtry */}
+            {searchResults.totalCount > 0 && (searchResults.query.tier || searchResults.query.shadeCode !== null || searchResults.query.shadesByName.length > 0 || searchResults.query.shadesByFamily.length > 0 || searchResults.query.length || searchResults.query.structure || searchResults.query.ending) && (
+              <div className="mb-4">
+                <p className="text-xs text-gray-500 mb-2">Aktivní filtry:</p>
+                <div className="flex flex-wrap gap-2">
+                  {searchResults.query.tier && (
+                    <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                      {searchResults.query.tier === 'standard' ? 'Standard' : searchResults.query.tier === 'luxe' ? 'LUXE' : 'Platinum edition'}
+                    </span>
+                  )}
+                  {searchResults.query.shadeCode !== null && (
+                    <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                      #{searchResults.query.shadeCode} - {HAIR_COLORS[searchResults.query.shadeCode].name}
+                    </span>
+                  )}
+                  {searchResults.query.shadeCode === null && searchResults.query.shadesByName.length > 0 && (
+                    searchResults.query.shadesByName.map(shade => (
+                      <span key={shade} className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                        #{shade} - {HAIR_COLORS[shade].name}
+                      </span>
+                    ))
+                  )}
+                  {searchResults.query.shadeCode === null && searchResults.query.shadesByName.length === 0 && searchResults.query.shadesByFamily.length > 0 && (
+                    <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                      Odstíny: {searchResults.query.shadesByFamily.map(s => `#${s}`).join(', ')}
+                    </span>
+                  )}
+                  {searchResults.query.length && (
+                    <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                      {searchResults.query.length} cm
+                    </span>
+                  )}
+                  {searchResults.query.structure && (
+                    <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                      {searchResults.query.structure}
+                    </span>
+                  )}
+                  {searchResults.query.ending && (
+                    <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
+                      {searchResults.query.ending === 'keratin' ? 'Keratin' : searchResults.query.ending === 'microkeratin' ? 'Mikrokeratin' : searchResults.query.ending === 'nano_tapes' ? 'Nano tapes' : 'Vlasové tresy'}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Products */}
             {searchResults.products.length > 0 && (
