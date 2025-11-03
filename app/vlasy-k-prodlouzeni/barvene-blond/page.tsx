@@ -191,12 +191,12 @@ export default function BarveneBlondPage() {
             </button>
           </div>
 
-          {/* Odstíny - kolečka s číslem NAD */}
+          {/* Odstíny - mřížka 5×2, bordó outline */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Odstín {filters.shades.length > 0 && `(${filters.shades.map(s => HAIR_COLORS[s]?.name).join(', ')} vybráno)`}
             </label>
-            <div className="flex flex-wrap gap-3 max-w-xl">
+            <div className="grid grid-cols-5 gap-2.5 max-w-md">
               {availableShades.map((shade) => {
                 const color = HAIR_COLORS[shade];
                 const isSelected = filters.shades.includes(shade);
@@ -204,24 +204,27 @@ export default function BarveneBlondPage() {
                   <button
                     key={shade}
                     onClick={() => toggleShade(shade)}
-                    title={`#${shade} – ${color?.name}`}
                     aria-label={`#${shade} – ${color?.name}`}
                     className="flex flex-col items-center gap-1.5 transition cursor-pointer group"
                   >
                     {/* Číslo NAD kolečkem */}
-                    <span className={`text-xs font-bold transition ${
-                      isSelected ? 'text-burgundy' : 'text-gray-600 group-hover:text-burgundy'
+                    <span className={`text-xs font-semibold transition ${
+                      isSelected ? 'text-[#6E2A2A]' : 'text-gray-600 group-hover:text-[#6E2A2A]'
                     }`}>
                       #{shade}
                     </span>
-                    {/* Kolečko */}
+                    {/* Kolečko s bordó outline */}
                     <div
-                      className={`w-14 h-14 sm:w-10 sm:h-10 md:w-14 md:h-14 rounded-full transition ${
+                      className={`w-10 h-10 rounded-full transition ${
                         isSelected
-                          ? 'ring-2 ring-burgundy shadow-md'
-                          : 'ring-1 ring-gray-300 group-hover:ring-burgundy group-hover:shadow-sm'
+                          ? 'shadow-md'
+                          : 'group-hover:shadow-sm'
                       }`}
-                      style={{ backgroundColor: color?.hex }}
+                      style={{
+                        backgroundColor: color?.hex,
+                        outline: isSelected ? '2px solid #6E2A2A' : 'none',
+                        outlineOffset: isSelected ? '2px' : '0'
+                      }}
                     />
                   </button>
                 );
@@ -243,7 +246,7 @@ export default function BarveneBlondPage() {
             )}
           </div>
 
-          {/* Struktura - s vizuálními ikonami */}
+          {/* Struktura - JEN ikony, větší ploška */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Struktura {filters.structures.length > 0 && `(${filters.structures.length} vybráno)`}
@@ -260,14 +263,18 @@ export default function BarveneBlondPage() {
                   <button
                     key={name}
                     onClick={() => toggleStructure(name)}
-                    className={`flex items-center gap-2 px-3 h-9 rounded-lg text-base font-medium transition ${
+                    aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
+                    className={`flex items-center justify-center w-14 h-11 rounded-lg transition ${
                       isSelected
-                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
-                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                        ? 'bg-burgundy/5 shadow-md'
+                        : 'bg-white hover:bg-burgundy/5 hover:shadow-sm'
                     }`}
+                    style={{
+                      outline: isSelected ? '2px solid #6E2A2A' : 'none',
+                      outlineOffset: isSelected ? '2px' : '0'
+                    }}
                   >
-                    <span className="text-lg leading-none">{icon}</span>
-                    <span>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                    <span className="text-2xl leading-none text-burgundy">{icon}</span>
                   </button>
                 );
               })}
@@ -317,7 +324,7 @@ export default function BarveneBlondPage() {
                 )}
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {structure}
+                    Struktura: {structure.charAt(0).toUpperCase() + structure.slice(1)}
                   </span>
                 ))}
                 {filters.lengths.map((length) => (
