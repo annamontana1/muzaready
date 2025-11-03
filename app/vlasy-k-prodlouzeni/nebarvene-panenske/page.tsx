@@ -24,7 +24,7 @@ export default function NebarvenePanenskePage() {
     availability: 'all',
   });
 
-  const [activeModal, setActiveModal] = useState<'keratin' | 'tape' | 'wefts' | null>(null);
+  const [activeModal, setActiveModal] = useState<'keratin' | 'tape' | 'wefts' | 'standard' | 'luxe' | 'platinum' | null>(null);
 
   // Filtruj pouze nebarvené produkty
   const nebarveneProdukty = mockProducts.filter((p) => p.category === 'nebarvene_panenske');
@@ -243,6 +243,96 @@ export default function NebarvenePanenskePage() {
           </div>
         )}
 
+        {/* Tier modaly */}
+        {activeModal === 'standard' && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
+            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Standard — nebarvené</h2>
+              <div className="space-y-4 text-gray-700">
+                <p className="text-sm">
+                  Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy. <strong>Původ:</strong> Indie,
+                  Kambodža, Uzbekistán. Přirozeně pevnější a odolné, skvěle drží tvar účesu a přidají objem.
+                  Každý culík je ustřižený z jedné hlavy (originální barva a struktura), nemíchané z více culíků.
+                  Přírodní odstíny 1–4. Vhodné pro prodloužení vlasů i profesionální tónování/odbarvování.
+                </p>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Máte spíše pevnější a hustší vlastní vlasy a chcete větší objem.</li>
+                    <li>Hledáte cenově dostupné, ale kvalitní vlasy pro častější styling.</li>
+                    <li>Preferujete méně náročnou údržbu než u extra jemných vlasů.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeModal === 'luxe' && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
+            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">LUXE — nebarvené</h2>
+              <div className="space-y-4 text-gray-700">
+                <p className="text-sm">
+                  Luxusní evropské nebarvené vlasy z výkupu. <strong>Původ:</strong> Ukrajina, Polsko, Bělorusko.
+                  Jemné a lesklé, &ldquo;zlatá střední cesta&rdquo; – jemnější než východoevropské, ale pevnější než dětské;
+                  nesplihnou a dodají nadýchaný objem. Husté konce, přírodní odstíny 1–4. Vhodné pro prodloužení
+                  i profesionální tónování/odbarvování.
+                </p>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Máte středně pevné a středně husté vlasy a chcete objem bez zatížení.</li>
+                    <li>Hledáte vyvážený poměr kvality a ceny.</li>
+                    <li>Plánujete barvení/zesvětlení.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeModal === 'platinum' && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setActiveModal(null)}>
+            <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Platinum Edition — nebarvené</h2>
+              <div className="space-y-4 text-gray-700">
+                <p className="text-sm">
+                  Nejvzácnější culíky z našeho výkupu v ČR a SR. Panenské vlasy nejvyšší kvality – mimořádně hebké
+                  a lesklé, s hustými konci. Přirozené textury od extra jemných rovných po normální až pevnější.
+                  Dostupné v omezeném množství.
+                </p>
+                <div className="bg-ivory p-4 rounded-lg">
+                  <p className="font-semibold text-burgundy mb-2">Pro koho:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li>Máte jemné, křehké, snadno lámavé vlasy a potřebujete minimální zátěž na kořínky.</li>
+                    <li>Vyžadujete nejvyšší kvalitu a maximálně přirozený vzhled.</li>
+                    <li>Plánujete barvit/zesvětlovat s důrazem na jemnost a lesk.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
@@ -291,19 +381,17 @@ export default function NebarvenePanenskePage() {
           >
             <h3 className="text-xl font-playfair text-burgundy mb-2">Standard — nebarvené</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
-              Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy. <strong>Původ:</strong> Indie,
-              Kambodža, Uzbekistán. Přirozeně pevnější a odolné, skvěle drží tvar účesu a přidají objem.
-              Každý culík je ustřižený z jedné hlavy (originální barva a struktura), nemíchané z více culíků.
-              Přírodní odstíny 1–4. Vhodné pro prodloužení vlasů i profesionální tónování/odbarvování.
+              Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy.
             </p>
-            <div className="text-xs text-gray-600 space-y-1">
-              <p className="font-semibold text-burgundy mb-1">Pro koho:</p>
-              <ul className="list-disc list-inside space-y-0.5">
-                <li>Máte spíše pevnější a hustší vlastní vlasy a chcete větší objem.</li>
-                <li>Hledáte cenově dostupné, ale kvalitní vlasy pro častější styling.</li>
-                <li>Preferujete méně náročnou údržbu než u extra jemných vlasů.</li>
-              </ul>
-            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveModal('standard');
+              }}
+              className="text-xs text-burgundy font-semibold hover:underline"
+            >
+              Pro koho? →
+            </button>
           </button>
 
           {/* LUXE */}
@@ -317,19 +405,17 @@ export default function NebarvenePanenskePage() {
           >
             <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE — nebarvené</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
-              Luxusní evropské nebarvené vlasy z výkupu. <strong>Původ:</strong> Ukrajina, Polsko, Bělorusko.
-              Jemné a lesklé, &ldquo;zlatá střední cesta&rdquo; – jemnější než východoevropské, ale pevnější než dětské;
-              nesplihnou a dodají nadýchaný objem. Husté konce, přírodní odstíny 1–4. Vhodné pro prodloužení
-              i profesionální tónování/odbarvování.
+              Luxusní evropské nebarvené vlasy z výkupu.
             </p>
-            <div className="text-xs text-gray-600 space-y-1">
-              <p className="font-semibold text-burgundy mb-1">Pro koho:</p>
-              <ul className="list-disc list-inside space-y-0.5">
-                <li>Máte středně pevné a středně husté vlasy a chcete objem bez zatížení.</li>
-                <li>Hledáte vyvážený poměr kvality a ceny.</li>
-                <li>Plánujete barvení/zesvětlení.</li>
-              </ul>
-            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveModal('luxe');
+              }}
+              className="text-xs text-burgundy font-semibold hover:underline"
+            >
+              Pro koho? →
+            </button>
           </button>
 
           {/* Platinum Edition */}
@@ -343,18 +429,17 @@ export default function NebarvenePanenskePage() {
           >
             <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition — nebarvené</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
-              Nejvzácnější culíky z našeho výkupu v ČR a SR. Panenské vlasy nejvyšší kvality – mimořádně hebké
-              a lesklé, s hustými konci. Přirozené textury od extra jemných rovných po normální až pevnější.
-              Dostupné v omezeném množství.
+              Nejvzácnější culíky z našeho výkupu v ČR a SR.
             </p>
-            <div className="text-xs text-gray-600 space-y-1">
-              <p className="font-semibold text-burgundy mb-1">Pro koho:</p>
-              <ul className="list-disc list-inside space-y-0.5">
-                <li>Máte jemné, křehké, snadno lámavé vlasy a potřebujete minimální zátěž na kořínky.</li>
-                <li>Vyžadujete nejvyšší kvalitu a maximálně přirozený vzhled.</li>
-                <li>Plánujete barvit/zesvětlovat s důrazem na jemnost a lesk.</li>
-              </ul>
-            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveModal('platinum');
+              }}
+              className="text-xs text-burgundy font-semibold hover:underline"
+            >
+              Pro koho? →
+            </button>
           </button>
         </div>
 
