@@ -9,16 +9,36 @@ interface ProductCardProps {
   variant?: ProductVariant;
 }
 
-export default function ProductCard({ product, variant }: ProductCardProps) {
-  // Použij první variantu pokud není zadána
-  const displayVariant = variant || product.variants[0];
+/**
+ * Generate listing title in format:
+ * {{shade name}} #{{shade code}} {{hair type}} {{tier}}
+ *
+ * Examples:
+ * - "Černá #1 panenské vlasy Standart"
+ * - "Světlá hnědá #5 barvené vlasy LUXE"
+ */
+function getListingTitle(product: Product, displayVariant: ProductVariant): string {
+  // Shade name and code
+  const shadeName = HAIR_COLORS[displayVariant.shade]?.name || 'Neznámá';
+  const shadeCode = displayVariant.shade;
 
-  // Cena: Standard a LUXE zobrazují cenu, Platinum Edition "Na dotaz"
+  // Hair type based on category
+  const hairType = product.category === 'nebarvene_panenske'
+    ? 'panenské vlasy'
+    : 'barvené vlasy';
+
+  // Tier - convert "Standard" to "Standart" for display
+  const tierDisplay = product.tier === 'Standard' ? 'Standart' : product.tier;
+
+  return `${shadeName} #${shadeCode} ${hairType} ${tierDisplay}`;
+}
+
+export default function ProductCard({ product, variant }: ProductCardProps) {
+  const displayVariant = variant || product.variants[0];
   const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
-
-  // Získání barvy odstínu
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
+  const listingTitle = getListingTitle(product, displayVariant);
 
   return (
     <Link href={`/produkt/${product.slug}`} className="product-card group block">
@@ -71,54 +91,43 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         )}
       </div>
 
-      {/* Product Info */}
+      {/* Product Info - 4 řádky v přesném pořadí */}
       <div className="p-4 bg-ivory">
-        {/* Color Swatch Mini */}
         {displayVariant && (
-          <div className="flex items-center gap-2 mb-2">
-            <div
-              className="w-6 h-6 rounded-full border-2 border-gray-300 shadow-sm"
-              style={{ backgroundColor: shadeColor.hex }}
-              title={shadeColor.name}
-            />
-            <span className="text-xs text-gray-700 font-medium">
-              #{displayVariant.shade} - {shadeColor.name}
-            </span>
-          </div>
-        )}
+          <div className="space-y-1">
+            {/* Řádek 1: Název */}
+            <h3 className="text-sm font-medium text-burgundy line-clamp-2">
+              {listingTitle}
+            </h3>
 
-        {/* Name */}
-        <h3 className="font-playfair text-base text-burgundy mb-1 line-clamp-2">
-          {product.name}
-        </h3>
-
-        {/* Specs */}
-        {displayVariant && (
-          <div>
+            {/* Řádek 2: Struktura */}
             <p className="text-xs text-gray-600">
               {displayVariant.structure}
             </p>
-            {/* Show "100 g" for Standard and LUXE only */}
-            {!isPlatinum && (
-              <p className="text-xs text-gray-500 mt-1">
+
+            {/* Řádek 3: Gramáž (pouze pro Standard/LUXE) */}
+            {!isPlatinum ? (
+              <p className="text-xs text-gray-500">
                 100 g
               </p>
+            ) : (
+              <div className="h-4" />
             )}
+
+            {/* Řádek 4: Cena */}
+            <div className="pt-2">
+              {isPlatinum ? (
+                <p className="text-sm font-semibold text-burgundy">
+                  Individuální cena
+                </p>
+              ) : (
+                <p className="text-base font-semibold text-burgundy">
+                  {priceCalculator.formatPrice(displayPrice)}
+                </p>
+              )}
+            </div>
           </div>
         )}
-
-        {/* Price display */}
-        <div className="mt-3">
-          {isPlatinum ? (
-            <p className="text-base font-semibold text-burgundy">
-              Individuální cena
-            </p>
-          ) : (
-            <p className="text-lg font-semibold text-burgundy">
-              {priceCalculator.formatPrice(displayPrice)}
-            </p>
-          )}
-        </div>
       </div>
     </Link>
   );
