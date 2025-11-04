@@ -9,7 +9,6 @@ import { useFavorites } from '@/hooks/useFavorites';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [vlasySubmenuOpen, setVlasySubmenuOpen] = useState(false);
   const [priceskySubmenuOpen, setPriceskySubmenuOpen] = useState(false);
   const [prislusenstviSubmenuOpen, setPrislusenstviSubmenuOpen] = useState(false);
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
@@ -61,7 +60,7 @@ export default function Header() {
         {/* Desktop Header */}
         <div className="hidden lg:flex items-center justify-between py-4">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-playfair text-burgundy font-bold">
+          <Link href="/" className="text-2xl font-playfair text-burgundy font-bold" aria-label="Domů">
             MÙZA
           </Link>
 
@@ -358,7 +357,7 @@ export default function Header() {
               ☰
             </button>
 
-            <Link href="/" className="text-xl font-playfair text-burgundy font-bold">
+            <Link href="/" className="text-xl font-playfair text-burgundy font-bold" aria-label="Domů">
               MÙZA
             </Link>
 
@@ -435,6 +434,7 @@ export default function Header() {
                 href="/"
                 className="text-xl font-playfair text-burgundy font-bold"
                 onClick={() => setMobileMenuOpen(false)}
+                aria-label="Domů"
               >
                 MÙZA
               </Link>
@@ -451,89 +451,26 @@ export default function Header() {
 
             {/* Navigation */}
             <nav className="flex flex-col gap-3 text-sm px-4 py-4">
-              <Link
-                href="/"
-                className="text-burgundy font-medium py-2 border-b border-warm-beige/50"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Domů
-              </Link>
-
               <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setVlasySubmenuOpen(!vlasySubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>Vlasy k prodloužení</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${vlasySubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <div className="font-semibold text-burgundy py-2 text-xs uppercase tracking-wide text-gray-500">
+                  Vlasy k prodloužení
+                </div>
+                <div className="space-y-1 mt-1">
+                  <Link
+                    href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                    className="block text-burgundy font-medium py-2 hover:bg-burgundy/5 rounded px-2 -mx-2 transition"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {vlasySubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                      className="block text-burgundy py-1 font-semibold"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Nebarvené panenské
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
-                      className="block text-burgundy py-1 pl-4 text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      → Standard
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
-                      className="block text-burgundy py-1 pl-4 text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      → LUXE
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
-                      className="block text-burgundy py-1 pl-4 text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      → Platinum Edition
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/barvene-blond"
-                      className="block text-burgundy py-1 font-semibold mt-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Barvené blond
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/barvene-blond/standard"
-                      className="block text-burgundy py-1 pl-4 text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      → Standard
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
-                      className="block text-burgundy py-1 pl-4 text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      → LUXE
-                    </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
-                      className="block text-burgundy py-1 pl-4 text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      → Platinum Edition
-                    </Link>
-                  </div>
-                )}
+                    Nebarvené panenské
+                  </Link>
+                  <Link
+                    href="/vlasy-k-prodlouzeni/barvene-blond"
+                    className="block text-burgundy font-medium py-2 hover:bg-burgundy/5 rounded px-2 -mx-2 transition"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Barvené blond
+                  </Link>
+                </div>
               </div>
 
               <div className="border-b border-warm-beige/50 pb-2">
