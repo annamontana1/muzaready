@@ -4,6 +4,8 @@ import { mockProducts } from '@/lib/mock-products';
 import { ProductSchema, BreadcrumbSchema } from '@/components/StructuredData';
 import { HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
+import ProductConfigurator from '@/components/ProductConfigurator';
+import { FINISHING_ADDONS } from '@/lib/finishing-addons';
 
 interface ProductPageProps {
   params: {
@@ -181,23 +183,15 @@ export default function ProductPage({ params }: ProductPageProps) {
             <div>
               <h1 className="text-4xl font-playfair text-burgundy mb-4">{product.name}</h1>
 
-              {/* Price */}
-              <div className="mb-6">
-                <p className="text-sm text-gray-600 mb-1">Cena za 100 g / 45 cm</p>
-                <p className="text-3xl font-semibold text-burgundy">
-                  {priceCalculator.formatPrice(product.base_price_per_100g_45cm)}
-                </p>
-              </div>
-
               {/* Description */}
               <div className="mb-6">
                 <p className="text-gray-700 leading-relaxed">{product.description}</p>
               </div>
 
-              {/* Specifications */}
-              {variant && (
+              {/* Specifications - Platinum zobrazuje jen jako info, Standard/LUXE umožňuje výběr */}
+              {variant && product.tier === 'Platinum edition' && (
                 <div className="mb-8 p-6 bg-ivory rounded-xl">
-                  <h3 className="text-lg font-semibold text-burgundy mb-4">Specifikace</h3>
+                  <h3 className="text-lg font-semibold text-burgundy mb-4">Specifikace culíku</h3>
                   <dl className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <dt className="text-gray-600 mb-1">Odstín</dt>
@@ -220,18 +214,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                       <dd className="font-medium capitalize">{variant.structure}</dd>
                     </div>
                     <div>
-                      <dt className="text-gray-600 mb-1">Zakončení</dt>
-                      <dd className="font-medium capitalize">
-                        {variant.ending === 'keratin'
-                          ? 'Keratin'
-                          : variant.ending === 'nano_tapes'
-                          ? 'Nano tapes'
-                          : 'Vlasové tresy'}
-                      </dd>
-                    </div>
-                    <div>
                       <dt className="text-gray-600 mb-1">Gramáž</dt>
                       <dd className="font-medium">{variant.weight_g} g</dd>
+                    </div>
+                    <div>
+                      <dt className="text-gray-600 mb-1">Škála jemnosti</dt>
+                      <dd className="font-medium">{product.softness_scale}/3</dd>
                     </div>
                     <div>
                       <dt className="text-gray-600 mb-1">SKU</dt>
@@ -256,34 +244,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                 </div>
               )}
 
-              {/* CTA */}
-              <button className="w-full btn-primary flex items-center justify-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-                Do košíku
-              </button>
-
-              {/* Stock info */}
-              <div className="mt-4 text-sm text-center">
-                {product.in_stock ? (
-                  <p className="text-green-600 font-medium">✓ Skladem ({product.stock_quantity} ks)</p>
-                ) : (
-                  <p className="text-orange-600 font-medium">
-                    Na objednávku (dodání {product.lead_time_days || 14} dnů)
-                  </p>
-                )}
+              {/* Product Configurator */}
+              <div className="mb-8 p-6 bg-ivory rounded-xl">
+                <h3 className="text-lg font-semibold text-burgundy mb-4">
+                  {product.tier === 'Platinum edition' ? 'Konfigurace' : 'Vyberte variantu'}
+                </h3>
+                <ProductConfigurator product={product} finishing_addons={FINISHING_ADDONS} />
               </div>
             </div>
           </div>

@@ -1,227 +1,278 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Product, HairStructure, HairEnding, CATEGORY_RULES } from '@/types/product';
-import { PriceCalculator } from '@/lib/price-calculator';
-import { generateSKU } from '@/lib/sku-generator';
-import ColorSwatchSelector from './ColorSwatchSelector';
-import { PRICING_CONFIG } from '@/types/pricing';
+import { useState, useMemo } from 'react';
+import { Product } from '@/types/product';
+import { priceCalculator } from '@/lib/price-calculator';
+
+interface FinishingAddon {
+  code: string;
+  label: string;
+  price_add: number;
+}
 
 interface ProductConfiguratorProps {
   product: Product;
+  finishing_addons: FinishingAddon[];
 }
 
-export default function ProductConfigurator({ product }: ProductConfiguratorProps) {
-  const [config, setConfig] = useState({
-    shade: 1,
-    lengthCm: 45,
-    weightG: 100,
-    structure: 'rovné' as HairStructure,
-    ending: 'keratin' as HairEnding,
-  });
+export default function ProductConfigurator({ product, finishing_addons }: ProductConfiguratorProps) {
+  const isPlatinum = product.tier === 'Platinum edition';
 
-  const [price, setPrice] = useState(0);
-  const [sku, setSku] = useState('');
+  const [selectedLength, setSelectedLength] = useState<number | null>(null);
+  const [selectedWeight, setSelectedWeight] = useState<number | null>(null);
+  const [selectedFinishing, setSelectedFinishing] = useState<string>('raw');
 
-  // Získání dostupných odstínů podle kategorie a tieru
-  const getAvailableShades = () => {
-    if (product.category === 'nebarvene_panenske') {
-      const tierKey = product.tier.toLowerCase() as 'standard' | 'luxe' | 'platinum';
-      return CATEGORY_RULES.nebarvene_panenske.shades[tierKey] || [1, 2, 3, 4, 5];
-    } else {
-      return CATEGORY_RULES.barvene_blond.shades;
+  const availableLengths = useMemo(() => {
+    const lengths = Array.from(new Set(product.variants.map(v => v.length_cm)));
+    return lengths.sort((a, b) => a - b);
+  }, [product.variants]);
+
+  const availableWeights = useMemo(() => {
+    if (!selectedLength) return [];
+    const weights = product.variants
+      .filter(v => v.length_cm === selectedLength)
+      .map(v => v.weight_g);
+    return Array.from(new Set(weights)).sort((a, b) => a - b);
+  }, [product.variants, selectedLength]);
+
+  const selectedVariant = useMemo(() => {
+    if (!selectedLength || !selectedWeight) return null;
+    return product.variants.find(
+      v => v.length_cm === selectedLength && v.weight_g === selectedWeight
+    );
+  }, [product.variants, selectedLength, selectedWeight]);
+
+  const finalPrice = useMemo(() => {
+    if (isPlatinum) {
+      const finishingAddon = finishing_addons.find(f => f.code === selectedFinishing);
+      const addonPrice = finishingAddon?.price_add || 0;
+      if (product.base_price_per_100g_45cm > 0) {
+        return product.base_price_per_100g_45cm + addonPrice;
+      }
+      return null;
     }
-  };
 
-  const availableShades = getAvailableShades();
+    if (!selectedLength || !selectedWeight) return null;
 
-  // Kalkulace ceny při změně konfigurace
-  useEffect(() => {
-    const calculator = new PriceCalculator();
-    const newPrice = calculator.calculate({
-      category: product.category,
-      tier: product.tier,
-      ...config,
-    });
-    setPrice(newPrice);
+    const priceFor100g = priceCalculator.getPricePerWeight(
+      product.tier,
+      selectedLength,
+      product.category
+    );
 
-    // Generování SKU
-    const newSku = generateSKU({
-      category: product.category,
-      tier: product.tier,
-      ...config,
-      batch: product.batch,
-    });
-    setSku(newSku);
-  }, [config, product]);
+    const basePrice = (priceFor100g * selectedWeight) / 100;
+    const finishingAddon = finishing_addons.find(f => f.code === selectedFinishing);
+    const addonPrice = finishingAddon?.price_add || 0;
 
-  // Nastavení prvního dostupného odstínu při načtení
-  useEffect(() => {
-    if (!availableShades.includes(config.shade)) {
-      setConfig((prev) => ({ ...prev, shade: availableShades[0] }));
-    }
-  }, [availableShades, config.shade]);
+    return basePrice + addonPrice;
+  }, [product, selectedLength, selectedWeight, selectedFinishing, finishing_addons, isPlatinum]);
 
-  const handleAddToCart = () => {
-    console.log('Adding to cart:', { sku, config, price });
-    // TODO: Implement cart functionality
-    alert(`Přidáno do košíku!\nSKU: ${sku}\nCena: ${price} Kč`);
+  const isConfigComplete = isPlatinum ? true : selectedLength !== null && selectedWeight !== null;
+
+  const handleLengthChange = (length: number) => {
+    setSelectedLength(length);
+    setSelectedWeight(null);
   };
 
   return (
-    <div className="configurator space-y-6">
-      {/* Odstín selector */}
-      <div className="config-section">
-        <label className="form-label">Odstín</label>
-        <ColorSwatchSelector
-          shades={availableShades}
-          selectedShade={config.shade}
-          category={product.category}
-          tier={product.tier}
-          onSelect={(shade) => setConfig({ ...config, shade })}
-        />
-      </div>
-
-      {/* Délka */}
-      <div className="config-section">
-        <label className="form-label">Délka (cm)</label>
-        <div className="space-y-3">
-          <input
-            type="range"
-            min={35}
-            max={90}
-            step={5}
-            value={config.lengthCm}
-            onChange={(e) => setConfig({ ...config, lengthCm: parseInt(e.target.value) })}
-            className="w-full h-2 bg-warm-beige rounded-lg appearance-none cursor-pointer accent-burgundy"
-          />
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">35 cm</span>
-            <span className="font-semibold text-burgundy text-lg">{config.lengthCm} cm</span>
-            <span className="text-gray-600">90 cm</span>
+    <div className="space-y-6">
+      {isPlatinum ? (
+        <>
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-sm text-amber-800">
+              <strong>Platinum Edition</strong> - Culík na míru s individuální cenou.
+            </p>
           </div>
-          <div className="measurement-note">
-            <div className="flex items-start gap-3">
-              <span className="text-burgundy">📏</span>
-              <div>
-                <h4 className="font-semibold text-burgundy mb-1">Jak měříme vlasy</h4>
-                <p className="text-sm text-gray-700">
-                  Všechny délky měříme <strong>tak, jak vlasy leží</strong> – nic nenatahujeme.
-                </p>
-              </div>
+          <div>
+            <label className="block text-sm font-medium text-burgundy mb-3">Zakončení</label>
+            <div className="space-y-2">
+              {finishing_addons.map((addon) => (
+                <label
+                  key={addon.code}
+                  className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition ${
+                    selectedFinishing === addon.code
+                      ? 'border-burgundy bg-burgundy/5'
+                      : 'border-gray-200 hover:border-burgundy/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="finishing"
+                      value={addon.code}
+                      checked={selectedFinishing === addon.code}
+                      onChange={(e) => setSelectedFinishing(e.target.value)}
+                      className="w-4 h-4 text-burgundy"
+                    />
+                    <span className="font-medium">{addon.label}</span>
+                  </div>
+                  {addon.price_add > 0 && (
+                    <span className="text-sm text-burgundy font-medium">
+                      +{priceCalculator.formatPrice(addon.price_add)}
+                    </span>
+                  )}
+                </label>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Zakončení připravíme na míru vybranému culíku.
+            </p>
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <label className="block text-sm font-medium text-burgundy mb-3">Délka (cm)</label>
+            <div className="flex flex-wrap gap-2">
+              {availableLengths.map((length) => (
+                <button
+                  key={length}
+                  onClick={() => handleLengthChange(length)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                    selectedLength === length
+                      ? 'bg-burgundy text-white'
+                      : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                  }`}
+                >
+                  {length} cm
+                </button>
+              ))}
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Gramáž */}
-      <div className="config-section">
-        <label className="form-label">Gramáž (g)</label>
-        <input
-          type="number"
-          min={50}
-          max={300}
-          step={10}
-          value={config.weightG}
-          onChange={(e) => setConfig({ ...config, weightG: parseInt(e.target.value) })}
-          className="form-input"
-        />
-        <p className="text-xs text-gray-600 mt-2">Krok: 10 g (50-300 g)</p>
-      </div>
-
-      {/* Struktura */}
-      <div className="config-section">
-        <label className="form-label">Struktura</label>
-        <div className="grid grid-cols-2 gap-3">
-          {(['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'] as HairStructure[]).map((structure) => (
-            <button
-              key={structure}
-              onClick={() => setConfig({ ...config, structure })}
-              className={`
-                px-4 py-3 rounded-lg border-2 transition-all font-medium
-                ${
-                  config.structure === structure
-                    ? 'border-burgundy bg-burgundy text-white'
-                    : 'border-warm-beige bg-white text-burgundy hover:border-burgundy'
-                }
-              `}
-            >
-              {structure.charAt(0).toUpperCase() + structure.slice(1)}
-            </button>
-          ))}
-        </div>
-        {config.structure !== 'rovné' && (
-          <p className="text-xs text-gray-600 mt-2">
-            Příplatek: +{' '}
-            {Math.round((PRICING_CONFIG.structure_multiplier[config.structure] - 1) * 100)}%
-          </p>
-        )}
-      </div>
-
-      {/* Zakončení */}
-      <div className="config-section">
-        <label className="form-label">Zakončení</label>
-        <div className="grid grid-cols-2 gap-3">
-          {(['keratin', 'microkeratin', 'nano_tapes', 'vlasove_tresy'] as HairEnding[]).map(
-            (ending) => (
-              <button
-                key={ending}
-                onClick={() => setConfig({ ...config, ending })}
-                className={`
-                  px-4 py-3 rounded-lg border-2 transition-all font-medium
-                  ${
-                    config.ending === ending
-                      ? 'border-burgundy bg-burgundy text-white'
-                      : 'border-warm-beige bg-white text-burgundy hover:border-burgundy'
-                  }
-                `}
-              >
-                {ending === 'nano_tapes'
-                  ? 'Nano tapes'
-                  : ending === 'vlasove_tresy'
-                  ? 'Vlasové tresy'
-                  : ending.charAt(0).toUpperCase() + ending.slice(1)}
-              </button>
-            )
+          {selectedLength && (
+            <div>
+              <label className="block text-sm font-medium text-burgundy mb-3">Gramáž (g)</label>
+              <div className="flex flex-wrap gap-2">
+                {availableWeights.map((weight) => (
+                  <button
+                    key={weight}
+                    onClick={() => setSelectedWeight(weight)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                      selectedWeight === weight
+                        ? 'bg-burgundy text-white'
+                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                    }`}
+                  >
+                    {weight} g
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
-        </div>
-        {PRICING_CONFIG.ending_surcharge_czk[config.ending] > 0 && (
-          <p className="text-xs text-gray-600 mt-2">
-            Příplatek: +{PRICING_CONFIG.ending_surcharge_czk[config.ending]} Kč
-          </p>
-        )}
-      </div>
 
-      {/* Cena & CTA */}
-      <div className="config-summary bg-ivory p-6 rounded-lg border-2 border-burgundy">
-        <div className="price-display mb-4">
-          <span className="text-sm text-gray-600">Celková cena:</span>
-          <div className="text-4xl font-bold text-burgundy mt-2">
-            {price.toLocaleString('cs-CZ')} Kč
+          <div>
+            <label className="block text-sm font-medium text-burgundy mb-3">Zakončení</label>
+            <div className="space-y-2">
+              {finishing_addons.map((addon) => (
+                <label
+                  key={addon.code}
+                  className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition ${
+                    selectedFinishing === addon.code
+                      ? 'border-burgundy bg-burgundy/5'
+                      : 'border-gray-200 hover:border-burgundy/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="finishing"
+                      value={addon.code}
+                      checked={selectedFinishing === addon.code}
+                      onChange={(e) => setSelectedFinishing(e.target.value)}
+                      className="w-4 h-4 text-burgundy"
+                    />
+                    <span className="font-medium">{addon.label}</span>
+                  </div>
+                  {addon.price_add > 0 && (
+                    <span className="text-sm text-burgundy font-medium">
+                      +{priceCalculator.formatPrice(addon.price_add)}
+                    </span>
+                  )}
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
+      )}
 
-        <div className="text-xs text-gray-500 mb-4 font-mono">SKU: {sku}</div>
+      <div className="border-t pt-6">
+        {isPlatinum ? (
+          <div className="mb-4">
+            {finalPrice !== null && finalPrice > 0 ? (
+              <>
+                <p className="text-3xl font-semibold text-burgundy">
+                  {priceCalculator.formatPrice(finalPrice)}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Finální cena včetně zvoleného zakončení
+                </p>
+              </>
+            ) : (
+              <p className="text-2xl font-semibold text-burgundy">Cena individuální</p>
+            )}
+          </div>
+        ) : (
+          <div className="mb-4">
+            {finalPrice !== null ? (
+              <>
+                <p className="text-3xl font-semibold text-burgundy">
+                  {priceCalculator.formatPrice(finalPrice)}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Cena je za tento culík ({selectedWeight} g / {selectedLength} cm)
+                </p>
+              </>
+            ) : (
+              <p className="text-lg text-gray-500">Vyberte délku a gramáž pro zobrazení ceny</p>
+            )}
+          </div>
+        )}
 
-        <button onClick={handleAddToCart} className="btn-primary w-full text-lg">
-          Vložit do košíku
+        {!isPlatinum && selectedVariant && (
+          <div className="mb-4">
+            {selectedVariant.in_stock ? (
+              <p className="text-sm text-green-600 font-medium">
+                ✓ Skladem ({selectedVariant.stock_quantity} ks)
+              </p>
+            ) : (
+              <p className="text-sm text-orange-600 font-medium">
+                Nedostupné – zvol jinou kombinaci
+              </p>
+            )}
+          </div>
+        )}
+
+        <button
+          disabled={!isConfigComplete || (!isPlatinum && !selectedVariant?.in_stock)}
+          className={`w-full py-3 px-6 rounded-lg font-medium text-white transition flex items-center justify-center gap-2 ${
+            !isConfigComplete || (!isPlatinum && !selectedVariant?.in_stock)
+              ? 'bg-gray-300 cursor-not-allowed'
+              : 'bg-burgundy hover:bg-maroon'
+          }`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          {isPlatinum && (finalPrice === null || finalPrice === 0) ? 'Rezervovat culík' : 'Do košíku'}
         </button>
 
-        {/* Features */}
-        <div className="mt-6 space-y-2 text-sm text-gray-700">
-          <div className="flex items-center gap-2">
-            <span className="text-success">✓</span>
-            <span>Doprava zdarma nad 2000 Kč</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-success">✓</span>
-            <span>30 denní vrácení</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-success">✓</span>
-            <span>100% přírodní vlasy</span>
-          </div>
-        </div>
+        {!isPlatinum && !isConfigComplete && (
+          <p className="mt-3 text-xs text-center text-gray-500">
+            Vyberte délku a gramáž pro aktivaci tlačítka
+          </p>
+        )}
       </div>
     </div>
   );

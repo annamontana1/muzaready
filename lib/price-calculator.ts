@@ -58,6 +58,23 @@ export class PriceCalculator {
   }
 
   /**
+   * Helper: Cena za 100g pro danou délku a tier (pro konfigurátor)
+   */
+  getPricePerWeight(tier: string, lengthCm: number, category: string): number {
+    // 1. Base price za 100g @ 45cm
+    const basePrice =
+      this.config.base_price_per_100g_45cm_czk[
+        category as keyof typeof this.config.base_price_per_100g_45cm_czk
+      ][tier as keyof (typeof this.config.base_price_per_100g_45cm_czk)[keyof typeof this.config.base_price_per_100g_45cm_czk]];
+
+    // 2. Length multiplier
+    const lengthMult = this.config.length_multiplier[lengthCm] || 1.0;
+
+    // 3. Výsledná cena za 100g při dané délce
+    return basePrice * lengthMult;
+  }
+
+  /**
    * Formátuje cenu s českými tisícovými oddělovači
    */
   formatPrice(price: number): string {
