@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Product } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
-import { CONFIGURATOR_RANGES, SKLAD_REZIM } from '@/lib/config';
+import { CONFIGURATOR_RANGES } from '@/lib/config';
 import ScrollPicker from './ScrollPicker';
 
 interface FinishingAddon {
