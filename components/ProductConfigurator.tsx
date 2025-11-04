@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Product } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
+import ScrollPicker from './ScrollPicker';
 
 interface FinishingAddon {
   code: string;
@@ -22,17 +23,37 @@ export default function ProductConfigurator({ product, finishing_addons }: Produ
   const [selectedWeight, setSelectedWeight] = useState<number | null>(null);
   const [selectedFinishing, setSelectedFinishing] = useState<string>('raw');
 
-  const availableLengths = useMemo(() => {
-    const lengths = Array.from(new Set(product.variants.map(v => v.length_cm)));
-    return lengths.sort((a, b) => a - b);
+  // Generate length options (35-90 cm, step 5)
+  const lengthOptions = useMemo(() => {
+    const options = [];
+    for (let length = 35; length <= 90; length += 5) {
+      const hasVariants = product.variants.some(v => v.length_cm === length);
+      options.push({
+        value: length,
+        label: length.toString(),
+        disabled: !hasVariants,
+        tooltip: !hasVariants ? 'Není skladem pro zvolenou kombinaci' : undefined
+      });
+    }
+    return options;
   }, [product.variants]);
 
-  const availableWeights = useMemo(() => {
-    if (!selectedLength) return [];
-    const weights = product.variants
-      .filter(v => v.length_cm === selectedLength)
-      .map(v => v.weight_g);
-    return Array.from(new Set(weights)).sort((a, b) => a - b);
+  // Generate weight options (50-300 g, step 10) - filtered by selected length
+  const weightOptions = useMemo(() => {
+    const options = [];
+    for (let weight = 50; weight <= 300; weight += 10) {
+      const hasVariants = selectedLength
+        ? product.variants.some(v => v.length_cm === selectedLength && v.weight_g === weight)
+        : product.variants.some(v => v.weight_g === weight);
+      
+      options.push({
+        value: weight,
+        label: weight.toString(),
+        disabled: selectedLength ? !hasVariants : false,
+        tooltip: selectedLength && !hasVariants ? 'Není skladem pro zvolenou kombinaci' : undefined
+      });
+    }
+    return options;
   }, [product.variants, selectedLength]);
 
   const selectedVariant = useMemo(() => {
@@ -69,9 +90,13 @@ export default function ProductConfigurator({ product, finishing_addons }: Produ
 
   const isConfigComplete = isPlatinum ? true : selectedLength !== null && selectedWeight !== null;
 
-  const handleLengthChange = (length: number) => {
-    setSelectedLength(length);
+  const handleLengthChange = (value: number | string) => {
+    setSelectedLength(value as number);
     setSelectedWeight(null);
+  };
+
+  const handleWeightChange = (value: number | string) => {
+    setSelectedWeight(value as number);
   };
 
   return (
@@ -83,119 +108,70 @@ export default function ProductConfigurator({ product, finishing_addons }: Produ
               <strong>Platinum Edition</strong> - Culík na míru s individuální cenou.
             </p>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-burgundy mb-3">Zakončení</label>
-            <div className="space-y-2">
-              {finishing_addons.map((addon) => (
-                <label
-                  key={addon.code}
-                  className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition ${
-                    selectedFinishing === addon.code
-                      ? 'border-burgundy bg-burgundy/5'
-                      : 'border-gray-200 hover:border-burgundy/30'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="finishing"
-                      value={addon.code}
-                      checked={selectedFinishing === addon.code}
-                      onChange={(e) => setSelectedFinishing(e.target.value)}
-                      className="w-4 h-4 text-burgundy"
-                    />
-                    <span className="font-medium">{addon.label}</span>
-                  </div>
-                  {addon.price_add > 0 && (
-                    <span className="text-sm text-burgundy font-medium">
-                      +{priceCalculator.formatPrice(addon.price_add)}
-                    </span>
-                  )}
-                </label>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-gray-500">
-              Zakončení připravíme na míru vybranému culíku.
-            </p>
-          </div>
         </>
       ) : (
         <>
-          <div>
-            <label className="block text-sm font-medium text-burgundy mb-3">Délka (cm)</label>
-            <div className="flex flex-wrap gap-2">
-              {availableLengths.map((length) => (
-                <button
-                  key={length}
-                  onClick={() => handleLengthChange(length)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                    selectedLength === length
-                      ? 'bg-burgundy text-white'
-                      : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
-                  }`}
-                >
-                  {length} cm
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Délka Picker */}
+          <ScrollPicker
+            label="Délka"
+            options={lengthOptions}
+            value={selectedLength}
+            onChange={handleLengthChange}
+            placeholder="Vyberte délku"
+            unit="cm"
+          />
 
+          {/* Gramáž Picker - shown only after length selected */}
           {selectedLength && (
-            <div>
-              <label className="block text-sm font-medium text-burgundy mb-3">Gramáž (g)</label>
-              <div className="flex flex-wrap gap-2">
-                {availableWeights.map((weight) => (
-                  <button
-                    key={weight}
-                    onClick={() => setSelectedWeight(weight)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
-                      selectedWeight === weight
-                        ? 'bg-burgundy text-white'
-                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
-                    }`}
-                  >
-                    {weight} g
-                  </button>
-                ))}
-              </div>
-            </div>
+            <ScrollPicker
+              label="Gramáž"
+              options={weightOptions}
+              value={selectedWeight}
+              onChange={handleWeightChange}
+              placeholder="Vyberte gramáž"
+              unit="g"
+            />
           )}
-
-          <div>
-            <label className="block text-sm font-medium text-burgundy mb-3">Zakončení</label>
-            <div className="space-y-2">
-              {finishing_addons.map((addon) => (
-                <label
-                  key={addon.code}
-                  className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition ${
-                    selectedFinishing === addon.code
-                      ? 'border-burgundy bg-burgundy/5'
-                      : 'border-gray-200 hover:border-burgundy/30'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="finishing"
-                      value={addon.code}
-                      checked={selectedFinishing === addon.code}
-                      onChange={(e) => setSelectedFinishing(e.target.value)}
-                      className="w-4 h-4 text-burgundy"
-                    />
-                    <span className="font-medium">{addon.label}</span>
-                  </div>
-                  {addon.price_add > 0 && (
-                    <span className="text-sm text-burgundy font-medium">
-                      +{priceCalculator.formatPrice(addon.price_add)}
-                    </span>
-                  )}
-                </label>
-              ))}
-            </div>
-          </div>
         </>
       )}
 
+      {/* Zakončení - Radio buttons for all tiers */}
+      <div>
+        <label className="block text-sm font-medium text-burgundy mb-3">Zakončení</label>
+        <div className="space-y-2" role="radiogroup" aria-label="Zakončení">
+          {finishing_addons.map((addon) => (
+            <label
+              key={addon.code}
+              className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition ${
+                selectedFinishing === addon.code
+                  ? 'border-burgundy bg-burgundy/5'
+                  : 'border-gray-200 hover:border-burgundy/30'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <input
+                  type="radio"
+                  name="finishing"
+                  value={addon.code}
+                  checked={selectedFinishing === addon.code}
+                  onChange={(e) => setSelectedFinishing(e.target.value)}
+                  className="w-4 h-4 text-burgundy focus:ring-burgundy focus:ring-2"
+                  role="radio"
+                  aria-checked={selectedFinishing === addon.code}
+                />
+                <span className="font-medium">{addon.label}</span>
+              </div>
+              {addon.price_add > 0 && (
+                <span className="text-sm text-burgundy font-medium">
+                  +{priceCalculator.formatPrice(addon.price_add)}
+                </span>
+              )}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Price and CTA */}
       <div className="border-t pt-6">
         {isPlatinum ? (
           <div className="mb-4">

@@ -61,6 +61,15 @@ const config: Config = {
         'heavy': '0 8px 24px rgba(52, 12, 13, 0.16)',
         'card-hover': '0 12px 32px rgba(52, 12, 13, 0.20)',
       },
+      animation: {
+        'slide-up': 'slide-up 0.3s ease-out',
+      },
+      keyframes: {
+        'slide-up': {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
+      },
     },
   },
   plugins: [],

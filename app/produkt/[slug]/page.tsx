@@ -181,14 +181,38 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Product Info */}
             <div>
+              {/* 1. Title */}
               <h1 className="text-4xl font-playfair text-burgundy mb-4">{product.name}</h1>
 
-              {/* Description */}
+              {/* 2. Description */}
               <div className="mb-6">
                 <p className="text-gray-700 leading-relaxed">{product.description}</p>
               </div>
 
-              {/* Specifications - Platinum zobrazuje jen jako info, Standard/LUXE umožňuje výběr */}
+              {/* 3. Configurator - moved here after description */}
+              <div className="mb-8 p-6 bg-ivory rounded-xl">
+                <h3 className="text-lg font-semibold text-burgundy mb-4">
+                  Vyberte variantu
+                </h3>
+                <ProductConfigurator product={product} finishing_addons={FINISHING_ADDONS} />
+              </div>
+
+              {/* 4. Features */}
+              {product.features && product.features.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-burgundy mb-3">Vlastnosti</h3>
+                  <ul className="space-y-2">
+                    {product.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-burgundy mt-1">✓</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* 5. Specifications - Platinum ONLY (no softness_scale) */}
               {variant && product.tier === 'Platinum edition' && (
                 <div className="mb-8 p-6 bg-ivory rounded-xl">
                   <h3 className="text-lg font-semibold text-burgundy mb-4">Specifikace culíku</h3>
@@ -218,39 +242,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                       <dd className="font-medium">{variant.weight_g} g</dd>
                     </div>
                     <div>
-                      <dt className="text-gray-600 mb-1">Škála jemnosti</dt>
-                      <dd className="font-medium">{product.softness_scale}/3</dd>
-                    </div>
-                    <div>
                       <dt className="text-gray-600 mb-1">SKU</dt>
                       <dd className="font-medium text-xs">{variant.sku}</dd>
                     </div>
                   </dl>
                 </div>
               )}
-
-              {/* Features */}
-              {product.features && product.features.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-burgundy mb-3">Vlastnosti</h3>
-                  <ul className="space-y-2">
-                    {product.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                        <span className="text-burgundy mt-1">✓</span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Product Configurator */}
-              <div className="mb-8 p-6 bg-ivory rounded-xl">
-                <h3 className="text-lg font-semibold text-burgundy mb-4">
-                  {product.tier === 'Platinum edition' ? 'Konfigurace' : 'Vyberte variantu'}
-                </h3>
-                <ProductConfigurator product={product} finishing_addons={FINISHING_ADDONS} />
-              </div>
             </div>
           </div>
 
