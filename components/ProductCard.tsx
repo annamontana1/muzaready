@@ -94,9 +94,17 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
         {/* Specs */}
         {displayVariant && (
-          <p className="text-xs text-gray-600">
-            {displayVariant.structure}
-          </p>
+          <div>
+            <p className="text-xs text-gray-600">
+              {displayVariant.structure}
+            </p>
+            {/* Show "100 g" for Standard and LUXE only */}
+            {!isPlatinum && (
+              <p className="text-xs text-gray-500 mt-1">
+                100 g
+              </p>
+            )}
+          </div>
         )}
 
         {/* Price display */}
@@ -107,7 +115,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
             </p>
           ) : (
             <p className="text-lg font-semibold text-burgundy">
-              od {priceCalculator.formatPrice(displayPrice)}
+              {priceCalculator.formatPrice(displayPrice)}
             </p>
           )}
         </div>
