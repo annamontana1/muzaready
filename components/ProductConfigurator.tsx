@@ -14,13 +14,20 @@ interface FinishingAddon {
 interface ProductConfiguratorProps {
   product: Product;
   finishing_addons: FinishingAddon[];
+  initialLength?: number | null;
+  initialWeight?: number | null;
 }
 
-export default function ProductConfigurator({ product, finishing_addons }: ProductConfiguratorProps) {
+export default function ProductConfigurator({
+  product,
+  finishing_addons,
+  initialLength = null,
+  initialWeight = null
+}: ProductConfiguratorProps) {
   const isPlatinum = product.tier === 'Platinum edition';
 
-  const [selectedLength, setSelectedLength] = useState<number | null>(null);
-  const [selectedWeight, setSelectedWeight] = useState<number | null>(null);
+  const [selectedLength, setSelectedLength] = useState<number | null>(initialLength);
+  const [selectedWeight, setSelectedWeight] = useState<number | null>(initialWeight);
   const [selectedFinishing, setSelectedFinishing] = useState<string>('raw');
 
   // Generate length options (35-90 cm, step 5)

@@ -11,6 +11,10 @@ interface ProductPageProps {
   params: {
     slug: string;
   };
+  searchParams: {
+    len?: string;
+    g?: string;
+  };
 }
 
 // Generate metadata for SEO
@@ -61,12 +65,16 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
+export default function ProductPage({ params, searchParams }: ProductPageProps) {
   const product = mockProducts.find((p) => p.slug === params.slug);
 
   if (!product) {
     notFound();
   }
+
+  // Parse query params for pre-filling configurator
+  const initialLength = searchParams.len ? parseInt(searchParams.len, 10) : null;
+  const initialWeight = searchParams.g ? parseInt(searchParams.g, 10) : null;
 
   const variant = product.variants[0];
   const color = variant ? HAIR_COLORS[variant.shade] : null;
@@ -194,7 +202,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <h3 className="text-lg font-semibold text-burgundy mb-4">
                   Vyberte variantu
                 </h3>
-                <ProductConfigurator product={product} finishing_addons={FINISHING_ADDONS} />
+                <ProductConfigurator
+                  product={product}
+                  finishing_addons={FINISHING_ADDONS}
+                  initialLength={initialLength}
+                  initialWeight={initialWeight}
+                />
               </div>
 
               {/* 4. Features */}
