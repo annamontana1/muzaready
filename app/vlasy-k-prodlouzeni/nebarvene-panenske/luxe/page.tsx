@@ -9,7 +9,6 @@ import { HAIR_COLORS } from '@/types/product';
 type FilterState = {
   shades: number[];
   structures: string[];
-  lengths: number[];
   endings: string[];
 };
 
@@ -17,7 +16,6 @@ export default function LuxeCategoryPage() {
   const [filters, setFilters] = useState<FilterState>({
     shades: [],
     structures: [],
-    lengths: [],
     endings: [],
   });
 
@@ -30,10 +28,6 @@ export default function LuxeCategoryPage() {
 
   // Dostupné odstíny pro LUXE: 1-4
   const availableShades = [1, 2, 3, 4];
-
-  // Dostupné délky pro LUXE: 40-85
-  const availableLengths = [40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
-
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -45,11 +39,6 @@ export default function LuxeCategoryPage() {
       if (filters.structures.length > 0) {
         const productStructure = product.variants[0]?.structure;
         if (!productStructure || !filters.structures.includes(productStructure)) return false;
-      }
-
-      if (filters.lengths.length > 0) {
-        const productLength = product.variants[0]?.length_cm;
-        if (!productLength || !filters.lengths.includes(productLength)) return false;
       }
 
       return true;
@@ -74,20 +63,11 @@ export default function LuxeCategoryPage() {
     }));
   };
 
-  const toggleLength = (length: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      lengths: prev.lengths.includes(length)
-        ? prev.lengths.filter((l) => l !== length)
-        : [...prev.lengths, length],
-    }));
-  };
 
   const resetFilters = () => {
     setFilters({
       shades: [],
       structures: [],
-      lengths: [],
       endings: [],
     });
   };
@@ -201,33 +181,8 @@ export default function LuxeCategoryPage() {
             </div>
           </div>
 
-          {/* Délka */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-burgundy mb-3">
-              Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
-            </label>
-            <div className="flex flex-wrap gap-2 max-w-2xl">
-              {availableLengths.map((length) => {
-                const isSelected = filters.lengths.includes(length);
-                return (
-                  <button
-                    key={length}
-                    onClick={() => toggleLength(length)}
-                    className={`px-3 h-9 rounded-lg text-base font-medium transition ${
-                      isSelected
-                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
-                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
-                    }`}
-                  >
-                    {length}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Aktivní filtry */}
-          {(filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
+          {(filters.shades.length > 0 || filters.structures.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
@@ -239,11 +194,6 @@ export default function LuxeCategoryPage() {
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {structure.charAt(0).toUpperCase() + structure.slice(1)}
-                  </span>
-                ))}
-                {filters.lengths.map((length) => (
-                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {length} cm
                   </span>
                 ))}
               </div>
