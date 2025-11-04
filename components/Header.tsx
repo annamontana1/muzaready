@@ -481,7 +481,7 @@ export default function Header() {
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Barvené blond
+                      Barvené
                     </Link>
                   </div>
                 )}
