@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
@@ -11,41 +12,86 @@ interface ProductCardProps {
 
 /**
  * Generate listing title in format:
- * {{shade name}} #{{shade code}} {{hair type}} {{tier}}
+ * {{shade name}} #{{shade code}}
  *
  * Examples:
- * - "Černá #1 panenské vlasy Standart"
- * - "Světlá hnědá #5 barvené vlasy LUXE"
+ * - "Černá #1"
+ * - "Světlá hnědá #5"
  */
-function getListingTitle(product: Product, displayVariant: ProductVariant): string {
-  // Shade name and code
+function getListingTitle(displayVariant: ProductVariant): string {
   const shadeName = HAIR_COLORS[displayVariant.shade]?.name || 'Neznámá';
   const shadeCode = displayVariant.shade;
+  return `${shadeName} #${shadeCode}`;
+}
 
-  // Hair type based on category
-  const hairType = product.category === 'nebarvene_panenske'
-    ? 'panenské vlasy'
-    : 'barvené vlasy';
-
-  // Tier - convert "Standard" to "Standart" for display
-  const tierDisplay = product.tier === 'Standard' ? 'Standart' : product.tier;
-
-  return `${shadeName} #${shadeCode} ${hairType} ${tierDisplay}`;
+/**
+ * Get tier explanation text
+ */
+function getTierExplanation(tier: string): { title: string; description: string; forWho: string } {
+  switch (tier) {
+    case 'Standard':
+      return {
+        title: 'Standard vlasy',
+        description: 'Základní kvalita panenských vlasů s přirozeným zakončením. Ideální pro každodenní nošení s výborným poměrem ceny a kvality.',
+        forWho: 'Pro běžné nošení, začátečníky a ty, kteří hledají spolehlivou kvalitu za dostupnou cenu.'
+      };
+    case 'LUXE':
+      return {
+        title: 'LUXE vlasy',
+        description: 'Prémiová kvalita s hustšími konci a vyšší hustotou. Luxusní vzhled a delší životnost díky pečlivému výběru vlasů.',
+        forWho: 'Pro náročné zákaznice, které chtějí luxusní vzhled a jsou ochotny investovat do kvality.'
+      };
+    case 'Platinum edition':
+      return {
+        title: 'Platinum Edition',
+        description: 'Nejkvalitnější panenské vlasy na míru. Maximální hustota, perfektní zakončení a individuální péče při výrobě.',
+        forWho: 'Pro VIP klientky, které požadují absolutně nejlepší kvalitu a jsou ochotny investovat do prémiových vlasů.'
+      };
+    default:
+      return {
+        title: tier,
+        description: 'Kvalitní panenské vlasy',
+        forWho: 'Pro všechny typy zákaznic'
+      };
+  }
 }
 
 export default function ProductCard({ product, variant }: ProductCardProps) {
+  const [showTierModal, setShowTierModal] = useState(false);
   const displayVariant = variant || product.variants[0];
   const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
-  const listingTitle = getListingTitle(product, displayVariant);
+  const listingTitle = getListingTitle(displayVariant);
+  const tierInfo = getTierExplanation(product.tier);
+
+  const handleTierClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowTierModal(true);
+  };
+
+  const closeTierModal = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setShowTierModal(false);
+  };
 
   return (
-    <Link href={`/produkt/${product.slug}`} className="product-card group block">
-      {/* Tier Badge */}
-      <div className="absolute top-3 left-3 z-10">
-        <span className="tier-badge">{product.tier}</span>
-      </div>
+    <>
+      <Link href={`/produkt/${product.slug}`} className="product-card group block">
+        {/* Clickable Tier Badge */}
+        <div className="absolute top-3 left-3 z-10">
+          <button
+            onClick={handleTierClick}
+            className="tier-badge hover:opacity-80 transition cursor-pointer"
+            aria-label={`Zobrazit informace o ${product.tier}`}
+          >
+            {product.tier}
+          </button>
+        </div>
 
       {/* Ribbon Bow (dekorace) */}
       {displayVariant && (
@@ -130,5 +176,54 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         )}
       </div>
     </Link>
+
+    {/* Tier Information Modal */}
+    {showTierModal && (
+      <div
+        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+        onClick={closeTierModal}
+      >
+        <div
+          className="bg-white rounded-lg max-w-md w-full p-6 relative"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close button */}
+          <button
+            onClick={closeTierModal}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            aria-label="Zavřít"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Content */}
+          <div className="pr-8">
+            <h3 className="text-xl font-playfair text-burgundy mb-4">{tierInfo.title}</h3>
+
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Co to je?</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">{tierInfo.description}</p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Pro koho?</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">{tierInfo.forWho}</p>
+              </div>
+            </div>
+
+            <button
+              onClick={closeTierModal}
+              className="mt-6 w-full py-2 px-4 bg-burgundy text-white rounded-lg hover:bg-maroon transition"
+            >
+              Rozumím
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
