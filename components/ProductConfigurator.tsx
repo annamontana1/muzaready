@@ -27,9 +27,14 @@ export default function ProductConfigurator({
 }: ProductConfiguratorProps) {
   const isPlatinum = product.tier === 'Platinum edition';
 
-  const [selectedLength, setSelectedLength] = useState<number | null>(initialLength);
-  const [selectedWeight, setSelectedWeight] = useState<number | null>(initialWeight);
-  const [selectedFinishing, setSelectedFinishing] = useState<string | null>(null);
+  // Default values: 40cm, 100g, 'raw' (surový cop)
+  const [selectedLength, setSelectedLength] = useState<number | null>(
+    isPlatinum ? null : (initialLength ?? 40)
+  );
+  const [selectedWeight, setSelectedWeight] = useState<number | null>(
+    isPlatinum ? null : (initialWeight ?? 100)
+  );
+  const [selectedFinishing, setSelectedFinishing] = useState<string | null>('raw');
 
   // Generate length options (35-90 cm, step 5)
   // SKLAD_REZIM = OFF: všechny kombinace jsou vždy vybratelné (on-demand výroba)
@@ -95,7 +100,7 @@ export default function ProductConfigurator({
 
   const handleLengthChange = (value: number | string) => {
     setSelectedLength(value as number);
-    setSelectedWeight(null);
+    // Nechat gramáž jak je - všechny kombinace jsou dostupné
   };
 
   const handleWeightChange = (value: number | string) => {
