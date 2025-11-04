@@ -105,9 +105,27 @@ export default function Header() {
                 </Link>
                 <Link
                   href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg font-semibold"
+                  className="block px-6 py-3 hover:bg-ivory transition font-semibold"
                 >
                   Barvené blond vlasy
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/barvene-blond/standard"
+                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
+                >
+                  → Standard
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
+                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
+                >
+                  → LUXE
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
+                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm rounded-b-lg"
+                >
+                  → Platinum Edition
                 </Link>
               </div>
             </div>
@@ -492,6 +510,27 @@ export default function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Barvené blond
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/barvene-blond/standard"
+                      className="block text-burgundy py-1 pl-4 text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      → Standard
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
+                      className="block text-burgundy py-1 pl-4 text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      → LUXE
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
+                      className="block text-burgundy py-1 pl-4 text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      → Platinum Edition
                     </Link>
                   </div>
                 )}

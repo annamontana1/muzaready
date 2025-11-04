@@ -4,45 +4,39 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
-import { ProductTier, HAIR_COLORS } from '@/types/product';
+import { HAIR_COLORS } from '@/types/product';
 
 type FilterState = {
-  tier: ProductTier | 'all';
   shades: number[];
   structures: string[];
   lengths: number[];
-  availability: 'all' | 'in_stock' | 'on_order';
+  endings: string[];
 };
 
-export default function BarveneBlondPage() {
+export default function BarveneBlondPlatinumPage() {
   const [filters, setFilters] = useState<FilterState>({
-    tier: 'all',
     shades: [],
     structures: [],
     lengths: [],
-    availability: 'all',
+    endings: [],
   });
 
-  // Filtruj pouze barvené produkty
-  const barveneProdukty = mockProducts.filter((p) => p.category === 'barvene_blond');
+  // Filtruj produkty: barvené blond + tier Platinum edition
+  const products = useMemo(() => {
+    return mockProducts.filter((p) =>
+      p.category === 'barvene_blond' && p.tier === 'Platinum edition'
+    );
+  }, []);
 
-  // Dostupné odstíny pro barvené (5-10)
+  // Dostupné odstíny pro Platinum barvené: 5-10
   const availableShades = [5, 6, 7, 8, 9, 10];
 
-  // Dostupné délky podle tieru
-  const availableLengths = useMemo(() => {
-    if (filters.tier === 'Standard') return [35, 40, 45, 50, 55, 60, 65, 70, 75];
-    if (filters.tier === 'LUXE') return [40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
-    if (filters.tier === 'Platinum edition') return [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
-    return [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]; // Všechny
-  }, [filters.tier]);
+  // Dostupné délky pro Platinum: 45-90
+  const availableLengths = [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
 
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
-    return barveneProdukty.filter((product) => {
-      // Tier filtr
-      if (filters.tier !== 'all' && product.tier !== filters.tier) return false;
-
+    return products.filter((product) => {
       // Odstín filtr
       if (filters.shades.length > 0) {
         const productShade = product.variants[0]?.shade;
@@ -63,7 +57,7 @@ export default function BarveneBlondPage() {
 
       return true;
     });
-  }, [barveneProdukty, filters]);
+  }, [products, filters]);
 
   const toggleShade = (shade: number) => {
     setFilters((prev) => ({
@@ -94,71 +88,38 @@ export default function BarveneBlondPage() {
 
   const resetFilters = () => {
     setFilters({
-      tier: 'all',
       shades: [],
       structures: [],
       lengths: [],
-      availability: 'all',
+      endings: [],
     });
   };
 
   return (
     <div className="py-12">
       <div className="container mx-auto px-4">
+        {/* Breadcrumbs */}
+        <nav className="text-sm mb-6" aria-label="Breadcrumb">
+          <ol className="flex items-center space-x-2 text-gray-600">
+            <li><Link href="/" className="hover:text-burgundy">Domů</Link></li>
+            <li><span className="mx-2">›</span></li>
+            <li><Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link></li>
+            <li><span className="mx-2">›</span></li>
+            <li><Link href="/vlasy-k-prodlouzeni/barvene-blond" className="hover:text-burgundy">Barvené blond</Link></li>
+            <li><span className="mx-2">›</span></li>
+            <li className="text-burgundy font-medium">Platinum Edition</li>
+          </ol>
+        </nav>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
-            Barvené blond vlasy
+            Barvené blond vlasy — Platinum Edition
           </h1>
           <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
-            Profesionálně odbarvené blond vlasy v odstínech 5-10. Dostupné ve všech kvalitách:
-            Standard, LUXE, Platinum edition.
+            Exkluzivní Platinum Edition barvených blond vlasů. Odstíny 5–10, délky 45–90 cm.
+            Nejvyšší kvalita barvení, nejhustší konce, profesionální výsledek.
           </p>
-        </div>
-
-        {/* Info banner */}
-        <div className="mb-8 p-5 bg-ivory rounded-lg border-l-4 border-burgundy">
-          <h3 className="text-base font-semibold text-burgundy mb-2">✨ Vlastní barvírna</h3>
-          <p className="text-xs text-gray-700">
-            Všechny blond vlasy jsou profesionálně obarvené v naší pražské barvírně.
-            Garantujeme krásné, rovnoměrné odstíny a dlouhou životnost.
-          </p>
-        </div>
-
-        {/* Tier Kategorie - 3 boxy */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {/* Standard */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond/standard"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
-          >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Profesionálně barvené vlasy s krásným blond odstínem. Délky 35–75 cm.
-            </p>
-          </Link>
-
-          {/* LUXE */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
-          >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Vyšší kvalita barvení, hustší konce. Délky 40–85 cm.
-            </p>
-          </Link>
-
-          {/* Platinum Edition */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
-          >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Premium barvené vlasy, exkluzivní kvalita. Délky 45–90 cm.
-            </p>
-          </Link>
         </div>
 
         {/* Filtr Lišta */}
@@ -189,18 +150,14 @@ export default function BarveneBlondPage() {
                     aria-label={`#${shade} – ${color?.name}`}
                     className="flex flex-col items-center gap-1.5 transition cursor-pointer group"
                   >
-                    {/* Číslo NAD kolečkem */}
                     <span className={`text-xs font-semibold transition ${
                       isSelected ? 'text-[#6E2A2A]' : 'text-gray-600 group-hover:text-[#6E2A2A]'
                     }`}>
                       #{shade}
                     </span>
-                    {/* Kolečko s bordó outline */}
                     <div
                       className={`w-10 h-10 rounded-full transition ${
-                        isSelected
-                          ? 'shadow-md'
-                          : 'group-hover:shadow-sm'
+                        isSelected ? 'shadow-md' : 'group-hover:shadow-sm'
                       }`}
                       style={{
                         backgroundColor: color?.hex,
@@ -212,20 +169,6 @@ export default function BarveneBlondPage() {
                 );
               })}
             </div>
-
-            {/* Warning pro odstíny 1-4 */}
-            {filters.shades.some(s => s >= 1 && s <= 4) && (
-              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                <p className="text-xs text-amber-800">
-                  ⚠️ Některé vybrané odstíny nejsou dostupné v barvených vlasech.
-                  {filters.shades.filter(s => s >= 1 && s <= 4).length > 0 && (
-                    <span className="block mt-1">
-                      Pro odstíny 1-4 zkuste: <a href="/vlasy-k-prodlouzeni/nebarvene-panenske" className="font-semibold underline hover:text-amber-900">Nebarvené panenské vlasy</a>
-                    </span>
-                  )}
-                </p>
-              </div>
-            )}
           </div>
 
           {/* Struktura - JEN ikony, větší ploška */}
@@ -288,17 +231,11 @@ export default function BarveneBlondPage() {
             </div>
           </div>
 
-          {/* Aktivní filtry - sjednocené odstíny */}
-          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
+          {/* Aktivní filtry */}
+          {(filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
-                {filters.tier !== 'all' && (
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {filters.tier}
-                  </span>
-                )}
-                {/* Odstíny - jen slovní názvy */}
                 {filters.shades.sort((a, b) => a - b).map((shade) => (
                   <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {HAIR_COLORS[shade]?.name}
