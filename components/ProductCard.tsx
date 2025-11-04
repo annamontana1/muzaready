@@ -54,9 +54,12 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
             <div className="text-white/90 text-sm font-medium mb-1">
               {displayVariant?.structure || 'Vlasy'}
             </div>
-            <div className="text-white/70 text-xs">
-              {displayVariant?.length_cm} cm
-            </div>
+            {/* Show length only for Platinum Edition */}
+            {isPlatinum && displayVariant?.length_cm && (
+              <div className="text-white/70 text-xs">
+                {displayVariant.length_cm} cm
+              </div>
+            )}
           </div>
         </div>
 

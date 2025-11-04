@@ -239,13 +239,22 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             {searchResults.products.length > 0 && (
               <div className="space-y-3 mb-6">
                 <h3 className="text-sm font-semibold text-gray-700">Produkty</h3>
-                {searchResults.products.map((product) => (
-                  <Link
-                    key={product.id}
-                    href={`/produkt/${product.slug}`}
-                    onClick={onClose}
-                    className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-burgundy hover:shadow-sm transition"
-                  >
+                {searchResults.products.map((product) => {
+                  // Add ?len=X query param for Standard/LUXE products when length is in search query
+                  const isPlatinum = product.tier === 'Platinum edition';
+                  const queryParams = !isPlatinum && searchResults.query.length
+                    ? `?len=${searchResults.query.length}`
+                    : '';
+                  const productHref = `/produkt/${product.slug}${queryParams}`;
+
+                  return (
+                    <Link
+                      key={product.id}
+                      href={productHref}
+                      onClick={onClose}
+                      className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-burgundy hover:shadow-sm transition"
+                    >
+
                     <div className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-16 h-16 bg-gray-100 rounded"></div>
                       <div className="flex-1 min-w-0">
@@ -266,7 +275,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                       </div>
                     </div>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             )}
 

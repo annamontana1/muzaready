@@ -39,8 +39,10 @@ export function searchProducts(
       return false;
     }
 
-    // Length filter (check if any variant has this length)
-    if (parsedQuery.length) {
+    // Length filter
+    // For Platinum: filter by length (exact match)
+    // For Standard/LUXE: include all products (length will be passed as query param to PDP)
+    if (parsedQuery.length && product.tier === 'Platinum edition') {
       const hasLength = product.variants.some(
         v => v.length_cm === parsedQuery.length
       );
