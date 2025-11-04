@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
 import { ProductTier, HAIR_COLORS } from '@/types/product';
@@ -71,13 +72,6 @@ export default function NebarvenePanenskePage() {
       return true;
     });
   }, [nebarveneProdukty, filters]);
-
-  const handleTierBoxClick = (tier: ProductTier) => {
-    setFilters((prev) => ({
-      ...prev,
-      tier,
-    }));
-  };
 
   const toggleShade = (shade: number) => {
     setFilters((prev) => ({
@@ -223,16 +217,12 @@ export default function NebarvenePanenskePage() {
           </p>
         </div>
 
-        {/* Tier Kategorie - 3 boxy */}
+        {/* Tier Kategorie - 3 boxy jako odkazy */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {/* Standard */}
-          <button
-            onClick={() => handleTierBoxClick('Standard')}
-            className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
-              filters.tier === 'Standard'
-                ? 'border-burgundy bg-burgundy/5'
-                : 'border-warm-beige bg-white hover:border-burgundy/50'
-            }`}
+          <Link
+            href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
+            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
           >
             <h3 className="text-xl font-playfair text-burgundy mb-2">Standard — nebarvené</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -240,6 +230,7 @@ export default function NebarvenePanenskePage() {
             </p>
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setActiveModal('standard');
               }}
@@ -247,16 +238,12 @@ export default function NebarvenePanenskePage() {
             >
               Pro koho? →
             </button>
-          </button>
+          </Link>
 
           {/* LUXE */}
-          <button
-            onClick={() => handleTierBoxClick('LUXE')}
-            className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
-              filters.tier === 'LUXE'
-                ? 'border-burgundy bg-burgundy/5'
-                : 'border-warm-beige bg-white hover:border-burgundy/50'
-            }`}
+          <Link
+            href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
+            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
           >
             <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE — nebarvené</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -264,6 +251,7 @@ export default function NebarvenePanenskePage() {
             </p>
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setActiveModal('luxe');
               }}
@@ -271,16 +259,12 @@ export default function NebarvenePanenskePage() {
             >
               Pro koho? →
             </button>
-          </button>
+          </Link>
 
           {/* Platinum Edition */}
-          <button
-            onClick={() => handleTierBoxClick('Platinum edition')}
-            className={`p-5 rounded-xl border-2 transition-all text-left hover:shadow-lg ${
-              filters.tier === 'Platinum edition'
-                ? 'border-burgundy bg-burgundy/5'
-                : 'border-warm-beige bg-white hover:border-burgundy/50'
-            }`}
+          <Link
+            href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
+            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
           >
             <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition — nebarvené</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -288,6 +272,7 @@ export default function NebarvenePanenskePage() {
             </p>
             <button
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setActiveModal('platinum');
               }}
@@ -295,7 +280,7 @@ export default function NebarvenePanenskePage() {
             >
               Pro koho? →
             </button>
-          </button>
+          </Link>
         </div>
 
         {/* Filtr Lišta */}
