@@ -81,13 +81,31 @@ export default function Header() {
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg font-semibold"
                 >
                   Nebarvené panenské vlasy
                 </Link>
                 <Link
+                  href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
+                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
+                >
+                  → Standard
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
+                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
+                >
+                  → LUXE
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
+                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm border-b border-warm-beige"
+                >
+                  → Platinum Edition
+                </Link>
+                <Link
                   href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg font-semibold"
                 >
                   Barvené blond vlasy
                 </Link>
@@ -442,14 +460,35 @@ export default function Header() {
                   <div className="pl-4 space-y-2 mt-2">
                     <Link
                       href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                      className="block text-burgundy py-1"
+                      className="block text-burgundy py-1 font-semibold"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Nebarvené panenské
                     </Link>
                     <Link
+                      href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
+                      className="block text-burgundy py-1 pl-4 text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      → Standard
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
+                      className="block text-burgundy py-1 pl-4 text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      → LUXE
+                    </Link>
+                    <Link
+                      href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
+                      className="block text-burgundy py-1 pl-4 text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      → Platinum Edition
+                    </Link>
+                    <Link
                       href="/vlasy-k-prodlouzeni/barvene-blond"
-                      className="block text-burgundy py-1"
+                      className="block text-burgundy py-1 font-semibold mt-2"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Barvené blond
