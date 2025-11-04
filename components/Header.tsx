@@ -107,7 +107,7 @@ export default function Header() {
                   href="/vlasy-k-prodlouzeni/barvene-blond"
                   className="block px-6 py-3 hover:bg-ivory transition font-semibold"
                 >
-                  Barvené blond vlasy
+                  Barvené
                 </Link>
                 <Link
                   href="/vlasy-k-prodlouzeni/barvene-blond/standard"
