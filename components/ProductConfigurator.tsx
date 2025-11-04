@@ -28,7 +28,7 @@ export default function ProductConfigurator({
 
   const [selectedLength, setSelectedLength] = useState<number | null>(initialLength);
   const [selectedWeight, setSelectedWeight] = useState<number | null>(initialWeight);
-  const [selectedFinishing, setSelectedFinishing] = useState<string>('raw');
+  const [selectedFinishing, setSelectedFinishing] = useState<string | null>(null);
 
   // Generate length options (35-90 cm, step 5)
   const lengthOptions = useMemo(() => {
@@ -52,7 +52,7 @@ export default function ProductConfigurator({
       const hasVariants = selectedLength
         ? product.variants.some(v => v.length_cm === selectedLength && v.weight_g === weight)
         : product.variants.some(v => v.weight_g === weight);
-      
+
       options.push({
         value: weight,
         label: weight.toString(),
@@ -62,6 +62,15 @@ export default function ProductConfigurator({
     }
     return options;
   }, [product.variants, selectedLength]);
+
+  // Generate finishing options
+  const finishingOptions = useMemo(() => {
+    return finishing_addons.map(addon => ({
+      value: addon.code,
+      label: addon.label + (addon.price_add > 0 ? ` (+${priceCalculator.formatPrice(addon.price_add)})` : ''),
+      disabled: false
+    }));
+  }, [finishing_addons]);
 
   const selectedVariant = useMemo(() => {
     if (!selectedLength || !selectedWeight) return null;
@@ -95,7 +104,9 @@ export default function ProductConfigurator({
     return basePrice + addonPrice;
   }, [product, selectedLength, selectedWeight, selectedFinishing, finishing_addons, isPlatinum]);
 
-  const isConfigComplete = isPlatinum ? true : selectedLength !== null && selectedWeight !== null;
+  const isConfigComplete = isPlatinum
+    ? selectedFinishing !== null
+    : selectedLength !== null && selectedWeight !== null && selectedFinishing !== null;
 
   const handleLengthChange = (value: number | string) => {
     setSelectedLength(value as number);
@@ -104,6 +115,10 @@ export default function ProductConfigurator({
 
   const handleWeightChange = (value: number | string) => {
     setSelectedWeight(value as number);
+  };
+
+  const handleFinishingChange = (value: number | string) => {
+    setSelectedFinishing(value as string);
   };
 
   return (
@@ -142,41 +157,14 @@ export default function ProductConfigurator({
         </>
       )}
 
-      {/* Zakončení - Radio buttons for all tiers */}
-      <div>
-        <label className="block text-sm font-medium text-burgundy mb-3">Zakončení</label>
-        <div className="space-y-2" role="radiogroup" aria-label="Zakončení">
-          {finishing_addons.map((addon) => (
-            <label
-              key={addon.code}
-              className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition ${
-                selectedFinishing === addon.code
-                  ? 'border-burgundy bg-burgundy/5'
-                  : 'border-gray-200 hover:border-burgundy/30'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  type="radio"
-                  name="finishing"
-                  value={addon.code}
-                  checked={selectedFinishing === addon.code}
-                  onChange={(e) => setSelectedFinishing(e.target.value)}
-                  className="w-4 h-4 text-burgundy focus:ring-burgundy focus:ring-2"
-                  role="radio"
-                  aria-checked={selectedFinishing === addon.code}
-                />
-                <span className="font-medium">{addon.label}</span>
-              </div>
-              {addon.price_add > 0 && (
-                <span className="text-sm text-burgundy font-medium">
-                  +{priceCalculator.formatPrice(addon.price_add)}
-                </span>
-              )}
-            </label>
-          ))}
-        </div>
-      </div>
+      {/* Zakončení - ScrollPicker for all tiers */}
+      <ScrollPicker
+        label="Zakončení"
+        options={finishingOptions}
+        value={selectedFinishing}
+        onChange={handleFinishingChange}
+        placeholder="Vyberte zakončení"
+      />
 
       {/* Price and CTA */}
       <div className="border-t pt-6">
@@ -207,7 +195,7 @@ export default function ProductConfigurator({
                 </p>
               </>
             ) : (
-              <p className="text-lg text-gray-500">Vyberte délku a gramáž pro zobrazení ceny</p>
+              <p className="text-lg text-gray-500">Vyberte všechny možnosti pro zobrazení ceny</p>
             )}
           </div>
         )}
@@ -251,9 +239,11 @@ export default function ProductConfigurator({
           {isPlatinum && (finalPrice === null || finalPrice === 0) ? 'Rezervovat culík' : 'Do košíku'}
         </button>
 
-        {!isPlatinum && !isConfigComplete && (
+        {!isConfigComplete && (
           <p className="mt-3 text-xs text-center text-gray-500">
-            Vyberte délku a gramáž pro aktivaci tlačítka
+            {isPlatinum
+              ? 'Vyberte zakončení pro aktivaci tlačítka'
+              : 'Vyberte délku, gramáž a zakončení pro aktivaci tlačítka'}
           </p>
         )}
       </div>
