@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
@@ -11,23 +10,18 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, variant }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   // Použij první variantu pokud není zadána
   const displayVariant = variant || product.variants[0];
 
-  // Zobrazujeme "Cena za 100g / 45cm"
+  // Cena: Standard a LUXE zobrazují cenu, Platinum Edition "Na dotaz"
+  const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
 
   // Získání barvy odstínu
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
 
   return (
-    <div
-      className="product-card group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <Link href={`/produkt/${product.slug}`} className="product-card group block">
       {/* Tier Badge */}
       <div className="absolute top-3 left-3 z-10">
         <span className="tier-badge">{product.tier}</span>
@@ -66,11 +60,6 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           </div>
         </div>
 
-        {/* Hover overlay */}
-        {isHovered && (
-          <div className="absolute inset-0 bg-black/10 transition-opacity duration-300" />
-        )}
-
         {/* Out of stock overlay */}
         {displayVariant && !displayVariant.in_stock && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -78,23 +67,6 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           </div>
         )}
       </div>
-
-      {/* Wishlist Button */}
-      <button
-        className="absolute top-14 left-3 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-burgundy hover:text-white transition z-10"
-        aria-label="Přidat do oblíbených"
-      >
-        ❤️
-      </button>
-
-      {/* Quick View Button */}
-      <button
-        className={`absolute bottom-20 left-1/2 -translate-x-1/2 transition-all duration-300 ${
-          isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-        } bg-white px-6 py-2 rounded-full shadow-md hover:bg-burgundy hover:text-white z-10`}
-      >
-        Rychlý náhled
-      </button>
 
       {/* Product Info */}
       <div className="p-4 bg-ivory">
@@ -125,35 +97,18 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         )}
 
         {/* Price display */}
-        <div className="mt-2">
-          <p className="text-xs text-gray-500">Cena za 100 g / 45 cm</p>
-          <p className="text-lg font-semibold text-burgundy">
-            {priceCalculator.formatPrice(displayPrice)}
-          </p>
+        <div className="mt-3">
+          {isPlatinum ? (
+            <p className="text-base font-semibold text-burgundy">
+              Na dotaz
+            </p>
+          ) : (
+            <p className="text-lg font-semibold text-burgundy">
+              {priceCalculator.formatPrice(displayPrice)}
+            </p>
+          )}
         </div>
-
-        {/* CTA */}
-        <Link
-          href={`/produkt/${product.slug}`}
-          className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2 bg-burgundy text-white rounded-lg text-sm font-medium hover:bg-maroon transition-colors"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-          Do košíku
-        </Link>
       </div>
-    </div>
+    </Link>
   );
 }
