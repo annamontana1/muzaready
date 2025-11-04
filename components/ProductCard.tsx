@@ -103,11 +103,11 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         <div className="mt-3">
           {isPlatinum ? (
             <p className="text-base font-semibold text-burgundy">
-              Na dotaz
+              Individuální cena
             </p>
           ) : (
             <p className="text-lg font-semibold text-burgundy">
-              {priceCalculator.formatPrice(displayPrice)}
+              od {priceCalculator.formatPrice(displayPrice)}
             </p>
           )}
         </div>
