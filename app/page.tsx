@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   // Schema.org structured data for SEO
@@ -50,6 +53,33 @@ export default function Home() {
     },
   };
 
+  // Animation variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.3
+      }
+    }
+  };
+
   return (
     <div>
       {/* Schema.org JSON-LD */}
@@ -60,69 +90,120 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center bg-gradient-to-br from-burgundy to-maroon text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-playfair mb-6">
+        <motion.div
+          className="container mx-auto px-4 text-center"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.h1
+            className="text-5xl md:text-7xl font-playfair mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             Pravé vlasy k prodloužení Praha
-          </h1>
-          <p className="text-xl md:text-2xl mb-4 text-ivory font-playfair">
+          </motion.h1>
+          <motion.p
+            className="text-xl md:text-2xl mb-4 text-ivory font-playfair"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             Objevte svou přirozenou krásu s prémiovou kvalitou
-          </p>
-          <p className="text-base md:text-lg mb-8 text-warm-beige max-w-3xl mx-auto">
+          </motion.p>
+          <motion.p
+            className="text-base md:text-lg mb-8 text-warm-beige max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             Český výrobce panenských a pravých vlasů od roku 2016. Vlastní barvírna v Praze,
             ruční výroba, nejkvalitnější vlasy na trhu. Standard • LUXE • Platinum edition
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          </motion.p>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             <Link href="/vlasy-k-prodlouzeni" className="btn-primary text-lg px-8 py-3">
               Prozkoumat kolekci
             </Link>
             <Link href="/cenik" className="bg-white/10 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-medium hover:bg-white/20 transition">
               Zobrazit ceník
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* USP Section */}
       <section className="py-16 bg-white border-b border-warm-beige">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
+          <motion.div
+            className="grid md:grid-cols-4 gap-8 text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={staggerContainer}
+          >
+            <motion.div variants={scaleIn}>
               <div className="text-4xl mb-3 text-burgundy">8+</div>
               <h3 className="font-semibold text-burgundy mb-2">Let zkušeností</h3>
               <p className="text-sm text-gray-600">Dlouholeté know-how v oboru</p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div variants={scaleIn}>
               <div className="text-4xl mb-3 text-burgundy">100%</div>
               <h3 className="font-semibold text-burgundy mb-2">Pravé vlasy</h3>
               <p className="text-sm text-gray-600">Žádné syntetické materiály</p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div variants={scaleIn}>
               <div className="text-4xl mb-3 text-burgundy">🇨🇿</div>
               <h3 className="font-semibold text-burgundy mb-2">Český výrobce</h3>
               <p className="text-sm text-gray-600">Výroba a barvení v Praze</p>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div variants={scaleIn}>
               <div className="text-4xl mb-3 text-burgundy">⚡</div>
               <h3 className="font-semibold text-burgundy mb-2">Vlastní barvírna</h3>
               <p className="text-sm text-gray-600">Profesionální odbarvování</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Featured Categories */}
       <section className="py-20 bg-ivory">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-playfair text-burgundy text-center mb-4">
+          <motion.h2
+            className="text-4xl md:text-5xl font-playfair text-burgundy text-center mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             Naše kolekce vlasů k prodloužení
-          </h2>
-          <p className="text-center text-gray-700 mb-12 max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p
+            className="text-center text-gray-700 mb-12 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             Nabízíme kompletní sortiment pravých vlasů - od nebarvených panenských po profesionálně
             odbarvené blond vlasy. Vše ve třech úrovních kvality.
-          </p>
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+          </motion.p>
+          <motion.div
+            className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={staggerContainer}
+          >
             {/* Nebarvené panenské */}
-            <Link
+            <motion.div variants={scaleIn}>
+              <Link
               href="/vlasy-k-prodlouzeni/nebarvene-panenske"
               className="group relative h-96 rounded-xl overflow-hidden shadow-medium hover:shadow-heavy transition-all duration-300"
             >
@@ -140,10 +221,12 @@ export default function Home() {
                   <span className="px-3 py-1 bg-white/20 rounded-full">Platinum od 10 900 Kč</span>
                 </div>
               </div>
-            </Link>
+              </Link>
+            </motion.div>
 
             {/* Barvené blond */}
-            <Link
+            <motion.div variants={scaleIn}>
+              <Link
               href="/vlasy-k-prodlouzeni/barvene-blond"
               className="group relative h-96 rounded-xl overflow-hidden shadow-medium hover:shadow-heavy transition-all duration-300"
             >
@@ -161,8 +244,9 @@ export default function Home() {
                   <span className="px-3 py-1 bg-white/20 rounded-full">Platinum od 10 900 Kč</span>
                 </div>
               </div>
-            </Link>
-          </div>
+              </Link>
+            </motion.div>
+          </motion.div>
 
           {/* Additional categories grid */}
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
