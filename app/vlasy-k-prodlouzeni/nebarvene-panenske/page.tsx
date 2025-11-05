@@ -185,11 +185,36 @@ export default function NebarvenePanenskePage() {
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
             Nebarvené panenské vlasy
           </h1>
-          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
+          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed mb-4">
             <strong>100 % nebarvené panenské vlasy z našeho výkupu.</strong> Přirozené odstíny, dlouhá životnost,
             vhodné pro profesionální barvení a odbarvování. Prémiové vlasy k prodloužení pro salony i koncové
-            klientky – Praha i celá ČR. Zvolte si surové copy, nebo je pro vás připravíme na jakoukoli metodu zakončení (keratin, mikrokeratin, nano tapes, vlasové tresy).
+            klientky – Praha i celá ČR.
           </p>
+          <p className="text-sm md:text-base text-gray-700 mb-3">
+            Zvolte si surové copy, nebo je pro vás připravíme na jakoukoli metodu zakončení:
+          </p>
+
+          {/* Metody zakončení - klikací karty */}
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/metody-zakonceni/keratin"
+              className="px-4 py-2 bg-white border-2 border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-sm font-medium text-burgundy"
+            >
+              Keratin / Mikrokeratin
+            </Link>
+            <Link
+              href="/metody-zakonceni/pasky"
+              className="px-4 py-2 bg-white border-2 border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-sm font-medium text-burgundy"
+            >
+              Pásky (nano tapes)
+            </Link>
+            <Link
+              href="/metody-zakonceni/vlasove-tresy"
+              className="px-4 py-2 bg-white border-2 border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-sm font-medium text-burgundy"
+            >
+              Vlasové tresy
+            </Link>
+          </div>
         </div>
 
         {/* Tier Kategorie - 3 boxy jako odkazy */}
