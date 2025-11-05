@@ -85,13 +85,10 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         {/* Clickable Tier Badge with Info Icon */}
         <button
           onClick={handleTierClick}
-          className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer flex items-center gap-1"
+          className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer"
           aria-label={`Zobrazit informace o ${product.tier}`}
         >
-          <span>{product.tier}</span>
-          <span className="w-4 h-4 rounded-full bg-burgundy text-white flex items-center justify-center text-xs font-bold" style={{ minWidth: '16px', minHeight: '16px' }}>
-            ?
-          </span>
+          {product.tier}<sup className="text-[0.6em] ml-0.5">?</sup>
         </button>
 
       {/* Ribbon Bow (dekorace) */}
