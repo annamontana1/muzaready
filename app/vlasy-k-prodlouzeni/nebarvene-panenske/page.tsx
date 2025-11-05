@@ -99,7 +99,7 @@ export default function NebarvenePanenskePage() {
               >
                 ×
               </button>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Standard — nebarvené</h2>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Standard</h2>
               <div className="space-y-4 text-gray-700">
                 <p className="text-sm">
                   Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy. <strong>Původ:</strong> Indie,
@@ -129,7 +129,7 @@ export default function NebarvenePanenskePage() {
               >
                 ×
               </button>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">LUXE — nebarvené</h2>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">LUXE</h2>
               <div className="space-y-4 text-gray-700">
                 <p className="text-sm">
                   Luxusní evropské nebarvené vlasy z výkupu. <strong>Původ:</strong> Ukrajina, Polsko, Bělorusko.
@@ -159,7 +159,7 @@ export default function NebarvenePanenskePage() {
               >
                 ×
               </button>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Platinum Edition — nebarvené</h2>
+              <h2 className="text-3xl font-playfair text-burgundy mb-4">Platinum Edition</h2>
               <div className="space-y-4 text-gray-700">
                 <p className="text-sm">
                   Nejvzácnější culíky z našeho výkupu v ČR a SR. Panenské vlasy nejvyšší kvality – mimořádně hebké
@@ -198,7 +198,7 @@ export default function NebarvenePanenskePage() {
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
             className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard — nebarvené</h3>
+            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
               Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy.
             </p>
@@ -219,7 +219,7 @@ export default function NebarvenePanenskePage() {
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
             className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE — nebarvené</h3>
+            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
               Luxusní evropské nebarvené vlasy z výkupu.
             </p>
@@ -240,7 +240,7 @@ export default function NebarvenePanenskePage() {
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
             className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition — nebarvené</h3>
+            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
             <p className="text-xs text-gray-700 leading-relaxed mb-3">
               Nejvzácnější culíky z našeho výkupu v ČR a SR.
             </p>
