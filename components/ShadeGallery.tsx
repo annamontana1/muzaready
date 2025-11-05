@@ -98,30 +98,31 @@ export default function ShadeGallery({
                       }}
                     />
 
-                    {/* Overlay s ikonou zvětšení při hoveru (jen desktop) */}
-                    <div
-                      className="hidden md:flex absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none"
+                    {/* Ikona lupy v levém horním rohu */}
+                    <button
+                      onClick={(e) => handleImageClick(shade, e)}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleImageClick(shade, e);
+                      }}
+                      className="absolute top-2 left-2 z-10 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-md transition pointer-events-auto"
+                      aria-label="Zobrazit detail"
                     >
-                      <button
-                        onClick={(e) => handleImageClick(shade, e)}
-                        className="pointer-events-auto p-2 rounded-full hover:bg-white/10 transition"
-                        aria-label="Zobrazit detail"
+                      <svg
+                        className="w-4 h-4 text-[#4A1E1A]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <svg
-                          className="w-6 h-6 text-white drop-shadow-lg"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                        />
+                      </svg>
+                    </button>
                   </div>
 
                   {/* Název odstínu */}
