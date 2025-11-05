@@ -91,15 +91,6 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
         </button>
 
-      {/* Ribbon Bow (dekorace) */}
-      {displayVariant && (
-        <div
-          className="absolute top-3 right-3 z-10 w-12 h-12 rounded-full"
-          style={{ backgroundColor: shadeColor.hex }}
-          title={`Odstín ${displayVariant.shade}`}
-        />
-      )}
-
       {/* Product Image */}
       <div className="aspect-square overflow-hidden relative">
         <div
