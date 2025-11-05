@@ -88,7 +88,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer"
           aria-label={`Zobrazit informace o ${product.tier}`}
         >
-          {product.tier}<sup className="text-[0.6em] ml-0.5">?</sup>
+          {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
         </button>
 
       {/* Ribbon Bow (dekorace) */}
