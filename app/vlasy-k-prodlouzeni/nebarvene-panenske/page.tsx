@@ -29,11 +29,11 @@ export default function NebarvenePanenskePage() {
   // Filtruj pouze nebarvené produkty
   const nebarveneProdukty = mockProducts.filter((p) => p.category === 'nebarvene_panenske');
 
-  // Dostupné odstíny podle tieru
+  // Dostupné odstíny podle tieru (bez #2)
   const availableShades = useMemo(() => {
-    if (filters.tier === 'Platinum edition') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    if (filters.tier === 'all') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    return [1, 2, 3, 4]; // Standard a LUXE
+    if (filters.tier === 'Platinum edition') return [1, 3, 4, 5, 6, 7, 8, 9, 10];
+    if (filters.tier === 'all') return [1, 3, 4, 5, 6, 7, 8, 9, 10];
+    return [1, 3, 4]; // Standard a LUXE
   }, [filters.tier]);
 
   // Aplikuj filtry
