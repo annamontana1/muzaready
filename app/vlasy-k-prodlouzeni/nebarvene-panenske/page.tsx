@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { mockProducts } from '@/lib/mock-products';
@@ -84,6 +85,33 @@ export default function NebarvenePanenskePage() {
       weightRange: 'all',
       availability: 'all',
     });
+  };
+
+  // Animation variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.3
+      }
+    }
   };
 
   return (
@@ -181,7 +209,13 @@ export default function NebarvenePanenskePage() {
         )}
 
         {/* Header */}
-        <div className="mb-8">
+        <motion.div
+          className="mb-8"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          transition={{ duration: 0.6 }}
+        >
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
             Nebarvené panenské vlasy
           </h1>
@@ -191,7 +225,12 @@ export default function NebarvenePanenskePage() {
             klientky – Praha i celá ČR.
           </p>
           {/* Metody zakončení - kompaktní verze */}
-          <div className="mt-5 p-4 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-lg border border-warm-beige/60 max-w-3xl mx-auto">
+          <motion.div
+            className="mt-5 p-4 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-lg border border-warm-beige/60 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
             <p className="text-xs text-gray-600 mb-3">
               Připravíme na metodu zakončení:
             </p>
@@ -223,16 +262,22 @@ export default function NebarvenePanenskePage() {
                 </div>
               </Link>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Tier Kategorie - 3 boxy jako odkazy */}
-        <div className="grid md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
+        <motion.div
+          className="grid md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
           {/* Standard */}
-          <Link
-            href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
-            className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg transition-all block overflow-hidden group"
-          >
+          <motion.div variants={scaleIn}>
+            <Link
+              href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
+              className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg hover:scale-105 transition-all block overflow-hidden group"
+            >
             {/* Pro koho v rohu */}
             <button
               onClick={(e) => {
@@ -254,13 +299,15 @@ export default function NebarvenePanenskePage() {
             <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
               Výběrové východoevropské vlasy z výkupu
             </p>
-          </Link>
+            </Link>
+          </motion.div>
 
           {/* LUXE */}
-          <Link
-            href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
-            className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg transition-all block overflow-hidden group"
-          >
+          <motion.div variants={scaleIn}>
+            <Link
+              href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
+              className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg hover:scale-105 transition-all block overflow-hidden group"
+            >
             {/* Pro koho v rohu */}
             <button
               onClick={(e) => {
@@ -282,13 +329,15 @@ export default function NebarvenePanenskePage() {
             <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
               Výběrové evropské vlasy z výkupu
             </p>
-          </Link>
+            </Link>
+          </motion.div>
 
           {/* Platinum Edition */}
-          <Link
-            href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
-            className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg transition-all block overflow-hidden group"
-          >
+          <motion.div variants={scaleIn}>
+            <Link
+              href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
+              className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg hover:scale-105 transition-all block overflow-hidden group"
+            >
             {/* Pro koho v rohu */}
             <button
               onClick={(e) => {
@@ -310,11 +359,17 @@ export default function NebarvenePanenskePage() {
             <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
               Nejvzácnější culíky na trhu z výkupu ČR
             </p>
-          </Link>
-        </div>
+            </Link>
+          </motion.div>
+        </motion.div>
 
         {/* Filtr Lišta */}
-        <div className="mb-8 p-6 bg-ivory rounded-xl border border-warm-beige">
+        <motion.div
+          className="mb-8 p-6 bg-ivory rounded-xl border border-warm-beige"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-burgundy">Filtrovat produkty</h3>
             <button
@@ -409,7 +464,7 @@ export default function NebarvenePanenskePage() {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Počet výsledků */}
         <div className="mb-6">
@@ -420,11 +475,23 @@ export default function NebarvenePanenskePage() {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <motion.div
+            className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+          >
             {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div
+                key={product.id}
+                variants={scaleIn}
+                whileHover={{ scale: 1.03, y: -5 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="text-center py-16 px-4">
             <div className="text-6xl mb-4">🔍</div>
