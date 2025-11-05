@@ -63,8 +63,12 @@ export default function ShadeGallery({
               <button
                 key={shade}
                 onClick={() => handleShadeClick(shade)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  handleShadeClick(shade);
+                }}
                 className={`flex-shrink-0 snap-start group transition-transform duration-200 ${
-                  isSelected ? 'scale-105' : 'hover:scale-105'
+                  isSelected ? 'scale-105' : 'hover:scale-105 active:scale-105'
                 }`}
               >
                 <div className="flex flex-col items-center gap-1 md:gap-2">
@@ -94,9 +98,9 @@ export default function ShadeGallery({
                       }}
                     />
 
-                    {/* Overlay s ikonou zvětšení při hoveru */}
+                    {/* Overlay s ikonou zvětšení při hoveru (jen desktop) */}
                     <div
-                      className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none"
+                      className="hidden md:flex absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none"
                     >
                       <button
                         onClick={(e) => handleImageClick(shade, e)}
