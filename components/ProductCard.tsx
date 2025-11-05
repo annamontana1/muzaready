@@ -129,7 +129,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
     <>
       <Link href={`/produkt/${product.slug}`} className="product-card group block">
         {/* Clickable Tier Badge with Info Icon */}
-        <div className="absolute top-3 left-3 z-10 flex items-start gap-2">
+        <div className="absolute top-3 left-3 z-10 flex items-start gap-1">
           <button
             onClick={handleTierClick}
             className="tier-badge hover:opacity-80 transition cursor-pointer"
