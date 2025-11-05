@@ -101,10 +101,9 @@ export default function ShadeGallery({
                     {/* Ikona lupy v levém horním rohu */}
                     <button
                       onClick={(e) => handleImageClick(shade, e)}
-                      onTouchEnd={(e) => {
-                        e.preventDefault();
+                      onTouchStart={(e) => {
                         e.stopPropagation();
-                        handleImageClick(shade, e);
+                        setShowModal(shade);
                       }}
                       className="absolute top-2 left-2 z-10 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-md transition pointer-events-auto"
                       aria-label="Zobrazit detail"
