@@ -190,96 +190,129 @@ export default function NebarvenePanenskePage() {
             vhodné pro profesionální barvení a odbarvování. Prémiové vlasy k prodloužení pro salony i koncové
             klientky – Praha i celá ČR.
           </p>
-          <p className="text-sm md:text-base text-gray-700 mb-3">
-            Zvolte si surové copy, nebo je pro vás připravíme na jakoukoli metodu zakončení:
-          </p>
+          {/* Metody zakončení - vizuálně oddělená sekce */}
+          <div className="mt-6 p-5 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-xl border border-warm-beige/60">
+            <p className="text-sm md:text-base text-gray-700 mb-4 font-medium">
+              Zvolte si surové copy, nebo je pro vás připravíme na jakoukoli metodu zakončení:
+            </p>
 
-          {/* Metody zakončení - klikací karty */}
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/metody-zakonceni/keratin"
-              className="px-4 py-2 bg-white border-2 border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-sm font-medium text-burgundy"
-            >
-              Keratin / Mikrokeratin
-            </Link>
-            <Link
-              href="/metody-zakonceni/pasky"
-              className="px-4 py-2 bg-white border-2 border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-sm font-medium text-burgundy"
-            >
-              Pásky (nano tapes)
-            </Link>
-            <Link
-              href="/metody-zakonceni/vlasove-tresy"
-              className="px-4 py-2 bg-white border-2 border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-sm font-medium text-burgundy"
-            >
-              Vlasové tresy
-            </Link>
+            {/* Metody zakončení - klikací karty vedle sebe */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Link
+                href="/metody-zakonceni/keratin"
+                className="group p-4 bg-white border-2 border-warm-beige rounded-xl hover:border-burgundy hover:shadow-lg transition-all text-center"
+              >
+                <div className="text-2xl mb-2">✨</div>
+                <div className="text-base font-semibold text-burgundy group-hover:text-[#6E2A2A]">
+                  Keratin / Mikrokeratin
+                </div>
+              </Link>
+              <Link
+                href="/metody-zakonceni/pasky"
+                className="group p-4 bg-white border-2 border-warm-beige rounded-xl hover:border-burgundy hover:shadow-lg transition-all text-center"
+              >
+                <div className="text-2xl mb-2">📎</div>
+                <div className="text-base font-semibold text-burgundy group-hover:text-[#6E2A2A]">
+                  Pásky (nano tapes)
+                </div>
+              </Link>
+              <Link
+                href="/metody-zakonceni/vlasove-tresy"
+                className="group p-4 bg-white border-2 border-warm-beige rounded-xl hover:border-burgundy hover:shadow-lg transition-all text-center"
+              >
+                <div className="text-2xl mb-2">🧵</div>
+                <div className="text-base font-semibold text-burgundy group-hover:text-[#6E2A2A]">
+                  Vlasové tresy
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Tier Kategorie - 3 boxy jako odkazy */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6 mb-12 max-w-5xl mx-auto">
           {/* Standard */}
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
+            className="relative p-6 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-xl transition-all block overflow-hidden group"
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
-            <p className="text-xs text-gray-700 leading-relaxed mb-3">
-              Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy.
-            </p>
+            {/* Pro koho v rohu */}
             <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setActiveModal('standard');
               }}
-              className="text-xs text-burgundy font-semibold hover:underline"
+              className="absolute top-3 right-3 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
             >
               Pro koho? →
             </button>
+
+            {/* Název uprostřed, větší */}
+            <div className="text-center mb-4 mt-2">
+              <h3 className="text-2xl md:text-3xl font-playfair text-burgundy font-bold">Standard</h3>
+            </div>
+
+            {/* Popis větší */}
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed text-center">
+              Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy.
+            </p>
           </Link>
 
           {/* LUXE */}
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
+            className="relative p-6 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-xl transition-all block overflow-hidden group"
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
-            <p className="text-xs text-gray-700 leading-relaxed mb-3">
-              Luxusní evropské nebarvené vlasy z výkupu.
-            </p>
+            {/* Pro koho v rohu */}
             <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setActiveModal('luxe');
               }}
-              className="text-xs text-burgundy font-semibold hover:underline"
+              className="absolute top-3 right-3 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
             >
               Pro koho? →
             </button>
+
+            {/* Název uprostřed, větší */}
+            <div className="text-center mb-4 mt-2">
+              <h3 className="text-2xl md:text-3xl font-playfair text-burgundy font-bold">LUXE</h3>
+            </div>
+
+            {/* Popis větší */}
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed text-center">
+              Luxusní evropské nebarvené vlasy z výkupu.
+            </p>
           </Link>
 
           {/* Platinum Edition */}
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
+            className="relative p-6 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-xl transition-all block overflow-hidden group"
           >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
-            <p className="text-xs text-gray-700 leading-relaxed mb-3">
-              Nejvzácnější culíky z našeho výkupu v ČR a SR.
-            </p>
+            {/* Pro koho v rohu */}
             <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setActiveModal('platinum');
               }}
-              className="text-xs text-burgundy font-semibold hover:underline"
+              className="absolute top-3 right-3 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
             >
               Pro koho? →
             </button>
+
+            {/* Název uprostřed, větší */}
+            <div className="text-center mb-4 mt-2">
+              <h3 className="text-2xl md:text-3xl font-playfair text-burgundy font-bold">Platinum Edition</h3>
+            </div>
+
+            {/* Popis větší */}
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed text-center">
+              Nejvzácnější culíky z našeho výkupu v ČR a SR.
+            </p>
           </Link>
         </div>
 
