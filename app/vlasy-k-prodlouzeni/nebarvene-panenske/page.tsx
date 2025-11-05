@@ -190,39 +190,36 @@ export default function NebarvenePanenskePage() {
             vhodné pro profesionální barvení a odbarvování. Prémiové vlasy k prodloužení pro salony i koncové
             klientky – Praha i celá ČR.
           </p>
-          {/* Metody zakončení - vizuálně oddělená sekce */}
-          <div className="mt-6 p-5 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-xl border border-warm-beige/60">
-            <p className="text-sm md:text-base text-gray-700 mb-4 font-medium">
-              Zvolte si surové copy, nebo je pro vás připravíme na jakoukoli metodu zakončení:
+          {/* Metody zakončení - kompaktní verze */}
+          <div className="mt-5 p-4 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-lg border border-warm-beige/60">
+            <p className="text-xs text-gray-600 mb-3">
+              Připravíme na metodu zakončení:
             </p>
 
-            {/* Metody zakončení - klikací karty vedle sebe */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Metody zakončení - menší karty vždy vedle sebe */}
+            <div className="flex gap-2">
               <Link
                 href="/metody-zakonceni/keratin"
-                className="group p-4 bg-white border-2 border-warm-beige rounded-xl hover:border-burgundy hover:shadow-lg transition-all text-center"
+                className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
               >
-                <div className="text-2xl mb-2">✨</div>
-                <div className="text-base font-semibold text-burgundy group-hover:text-[#6E2A2A]">
-                  Keratin / Mikrokeratin
+                <div className="text-sm font-medium text-burgundy group-hover:text-[#6E2A2A]">
+                  Keratin
                 </div>
               </Link>
               <Link
                 href="/metody-zakonceni/pasky"
-                className="group p-4 bg-white border-2 border-warm-beige rounded-xl hover:border-burgundy hover:shadow-lg transition-all text-center"
+                className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
               >
-                <div className="text-2xl mb-2">📎</div>
-                <div className="text-base font-semibold text-burgundy group-hover:text-[#6E2A2A]">
-                  Pásky (nano tapes)
+                <div className="text-sm font-medium text-burgundy group-hover:text-[#6E2A2A]">
+                  Pásky
                 </div>
               </Link>
               <Link
                 href="/metody-zakonceni/vlasove-tresy"
-                className="group p-4 bg-white border-2 border-warm-beige rounded-xl hover:border-burgundy hover:shadow-lg transition-all text-center"
+                className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
               >
-                <div className="text-2xl mb-2">🧵</div>
-                <div className="text-base font-semibold text-burgundy group-hover:text-[#6E2A2A]">
-                  Vlasové tresy
+                <div className="text-sm font-medium text-burgundy group-hover:text-[#6E2A2A]">
+                  Tresy
                 </div>
               </Link>
             </div>
