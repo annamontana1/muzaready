@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
 import { HAIR_COLORS } from '@/types/product';
+import ShadeGallery from '@/components/ShadeGallery';
 
 type FilterState = {
   shades: number[];
@@ -117,36 +118,11 @@ export default function BarveneBlondLuxePage() {
             <label className="block text-sm font-medium text-burgundy mb-3">
               Odstín {filters.shades.length > 0 && `(${filters.shades.sort((a, b) => a - b).map(s => HAIR_COLORS[s]?.name).join(', ')})`}
             </label>
-            <div className="grid grid-cols-5 gap-2.5 max-w-md">
-              {availableShades.map((shade) => {
-                const color = HAIR_COLORS[shade];
-                const isSelected = filters.shades.includes(shade);
-                return (
-                  <button
-                    key={shade}
-                    onClick={() => toggleShade(shade)}
-                    aria-label={`#${shade} – ${color?.name}`}
-                    className="flex flex-col items-center gap-1.5 transition cursor-pointer group"
-                  >
-                    <span className={`text-xs font-semibold transition ${
-                      isSelected ? 'text-[#6E2A2A]' : 'text-gray-600 group-hover:text-[#6E2A2A]'
-                    }`}>
-                      #{shade}
-                    </span>
-                    <div
-                      className={`w-10 h-10 rounded-full transition ${
-                        isSelected ? 'shadow-md' : 'group-hover:shadow-sm'
-                      }`}
-                      style={{
-                        backgroundColor: color?.hex,
-                        outline: isSelected ? '2px solid #6E2A2A' : 'none',
-                        outlineOffset: isSelected ? '2px' : '0'
-                      }}
-                    />
-                  </button>
-                );
-              })}
-            </div>
+            <ShadeGallery
+              availableShades={availableShades}
+              selectedShades={filters.shades}
+              onToggleShade={toggleShade}
+            />
           </div>
 
           {/* Struktura - JEN ikony, větší ploška */}
