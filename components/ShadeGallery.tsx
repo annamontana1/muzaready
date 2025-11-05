@@ -18,11 +18,16 @@ export default function ShadeGallery({
   const [showModal, setShowModal] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  const removeDiacritics = (str: string) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  };
+
   const getShadeImagePath = (shade: number) => {
     // Formát: /images/shades/01-cerna.jpg, 02-tmave-hneda.jpg, atd.
     const paddedNumber = shade.toString().padStart(2, '0');
-    const shadeName = HAIR_COLORS[shade]?.name.toLowerCase().replace(/\s+/g, '-') || 'unknown';
-    return `/images/shades/${paddedNumber}-${shadeName}.jpg`;
+    const shadeName = HAIR_COLORS[shade]?.name || 'unknown';
+    const nameWithoutDiacritics = removeDiacritics(shadeName.toLowerCase()).replace(/\s+/g, '-');
+    return `/images/shades/${paddedNumber}-${nameWithoutDiacritics}.jpg`;
   };
 
   const handleShadeClick = (shade: number) => {
