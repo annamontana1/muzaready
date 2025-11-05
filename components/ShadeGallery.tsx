@@ -49,7 +49,7 @@ export default function ShadeGallery({
         {/* Scrollovací kontejner */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+          className="flex gap-2 md:gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-2 px-2"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -67,10 +67,10 @@ export default function ShadeGallery({
                   isSelected ? 'scale-105' : 'hover:scale-105'
                 }`}
               >
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-1 md:gap-2">
                   {/* Miniatura fotky */}
                   <div
-                    className={`relative w-[90px] h-[120px] rounded-lg overflow-hidden transition-all ${
+                    className={`relative w-[75px] h-[100px] md:w-[90px] md:h-[120px] rounded-lg overflow-hidden transition-all ${
                       isSelected
                         ? 'ring-2 ring-[#4A1E1A] ring-offset-2 shadow-lg'
                         : 'ring-1 ring-gray-200 hover:ring-[#4A1E1A] hover:shadow-md'
@@ -81,7 +81,7 @@ export default function ShadeGallery({
                       alt={`${color?.name} #${shade}`}
                       fill
                       className="object-cover"
-                      sizes="90px"
+                      sizes="(max-width: 768px) 75px, 90px"
                       unoptimized
                       onError={(e) => {
                         // Fallback na barevný gradient pokud obrázek neexistuje
@@ -139,7 +139,9 @@ export default function ShadeGallery({
         </div>
 
         {/* Scroll hint pro mobil */}
-        <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-[#e8e1d7] to-transparent pointer-events-none md:hidden" />
+        <div className="absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-[#e8e1d7] via-[#e8e1d7]/80 to-transparent pointer-events-none md:hidden flex items-center justify-end pr-2">
+          <div className="text-[#4A1E1A]/40 text-xl animate-pulse">›</div>
+        </div>
       </div>
 
       {/* Modal pro detail fotky */}
