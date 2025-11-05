@@ -17,6 +17,8 @@ export default function ShadeGallery({
 }: ShadeGalleryProps) {
   const [showModal, setShowModal] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const removeDiacritics = (str: string) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -63,9 +65,22 @@ export default function ShadeGallery({
               <button
                 key={shade}
                 onClick={() => handleShadeClick(shade)}
+                onTouchStart={(e) => {
+                  const touch = e.touches[0];
+                  setTouchStart({ x: touch.clientX, y: touch.clientY });
+                  setIsDragging(false);
+                }}
+                onTouchMove={() => {
+                  setIsDragging(true);
+                }}
                 onTouchEnd={(e) => {
                   e.preventDefault();
-                  handleShadeClick(shade);
+                  // Povolit výběr jen pokud uživatel nescrolloval
+                  if (!isDragging && touchStart) {
+                    handleShadeClick(shade);
+                  }
+                  setTouchStart(null);
+                  setIsDragging(false);
                 }}
                 className={`flex-shrink-0 snap-start group transition-transform duration-200 ${
                   isSelected ? 'scale-105' : 'hover:scale-105 active:scale-105'
@@ -148,8 +163,8 @@ export default function ShadeGallery({
         </div>
 
         {/* Scroll hint pro mobil */}
-        <div className="absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-[#e8e1d7] via-[#e8e1d7]/80 to-transparent pointer-events-none md:hidden flex items-center justify-end pr-2">
-          <div className="text-[#4A1E1A]/40 text-xl animate-pulse">›</div>
+        <div className="absolute right-0 top-0 bottom-4 w-20 bg-gradient-to-l from-[#e8e1d7] via-[#e8e1d7]/90 to-transparent pointer-events-none md:hidden flex items-center justify-end pr-3">
+          <div className="text-[#4A1E1A] text-3xl font-bold animate-pulse drop-shadow-sm">›</div>
         </div>
       </div>
 
