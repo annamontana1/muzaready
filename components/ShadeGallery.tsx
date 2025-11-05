@@ -77,7 +77,7 @@ export default function ShadeGallery({
                     className={`relative w-[75px] h-[100px] md:w-[90px] md:h-[120px] rounded-lg overflow-hidden transition-all ${
                       isSelected
                         ? 'ring-2 ring-[#4A1E1A] ring-offset-2 shadow-lg'
-                        : 'ring-1 ring-gray-200 hover:ring-[#4A1E1A] hover:shadow-md'
+                        : 'hover:ring-2 hover:ring-[#4A1E1A] hover:shadow-md'
                     }`}
                   >
                     <Image
