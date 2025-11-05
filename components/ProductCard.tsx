@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
   product: Product;
@@ -58,6 +59,8 @@ function getTierExplanation(tier: string): { title: string; description: string;
 
 export default function ProductCard({ product, variant }: ProductCardProps) {
   const [showTierModal, setShowTierModal] = useState(false);
+  const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const { addToCart } = useCart();
   const displayVariant = variant || product.variants[0];
   const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
@@ -77,6 +80,17 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
       e.stopPropagation();
     }
     setShowTierModal(false);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (displayVariant) {
+      addToCart(product, displayVariant, 1);
+      setShowAddedMessage(true);
+      setTimeout(() => setShowAddedMessage(false), 2000);
+    }
   };
 
   return (
@@ -161,6 +175,40 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                 </p>
               )}
             </div>
+
+            {/* Tlačítko Do košíku */}
+            {!isPlatinum && displayVariant?.in_stock && (
+              <button
+                onClick={handleAddToCart}
+                className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
+              >
+                {showAddedMessage ? '✓ Přidáno!' : 'Do košíku'}
+              </button>
+            )}
+
+            {/* Vyprodáno tlačítko */}
+            {!isPlatinum && displayVariant && !displayVariant.in_stock && (
+              <button
+                disabled
+                className="mt-3 w-full py-2 px-4 bg-gray-300 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+              >
+                Vyprodáno
+              </button>
+            )}
+
+            {/* Platinum - kontaktovat */}
+            {isPlatinum && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.location.href = '/kontakt';
+                }}
+                className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md"
+              >
+                Kontaktovat
+              </button>
+            )}
           </div>
         )}
       </div>

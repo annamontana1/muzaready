@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
+import { CartProvider } from "@/contexts/CartContext";
 
 export const metadata: Metadata = {
   title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna 🇨🇿",
@@ -75,13 +76,15 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <body className="antialiased">
-        <OrganizationSchema />
-        <WebSiteSchema />
-        <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <CartProvider>
+          <OrganizationSchema />
+          <WebSiteSchema />
+          <Header />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );
