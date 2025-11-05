@@ -25,27 +25,6 @@ function getListingTitle(displayVariant: ProductVariant): string {
 }
 
 /**
- * Get tier tooltip text (short version for info icon)
- */
-function getTierTooltipText(tier: string, category: string): string {
-  const isColored = category === 'barvene_blond';
-
-  switch (tier) {
-    case 'Standard':
-      return 'Standard – východoevropské panenské vlasy z výkupu (single-donor). Přirozeně pevnější a nadýchané; skvělé, pokud máš silnější vlastní vlasy.';
-    case 'LUXE':
-      if (isColored) {
-        return 'LUXE (barvené) – šetrně odbarvované a tónované v naší barvírně. Měkké, lesklé, pružné – profesionální technologie, žádné agresivní látky.';
-      }
-      return 'LUXE – evropské nebarvené vlasy z výkupu (single-donor). Jemné až středně pevné, s přirozeným objemem. Univerzální volba pro většinu typů vlasů.';
-    case 'Platinum edition':
-      return 'Platinum Edition – nejvzácnější panenské vlasy (často ultra jemné), omezené množství. Nejlehčí zátěž a nejpřirozenější splynutí.';
-    default:
-      return 'Kvalitní panenské vlasy';
-  }
-}
-
-/**
  * Get tier explanation text
  */
 function getTierExplanation(tier: string): { title: string; description: string; forWho: string } {
@@ -79,14 +58,12 @@ function getTierExplanation(tier: string): { title: string; description: string;
 
 export default function ProductCard({ product, variant }: ProductCardProps) {
   const [showTierModal, setShowTierModal] = useState(false);
-  const [showTierTooltip, setShowTierTooltip] = useState(false);
   const displayVariant = variant || product.variants[0];
   const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
   const listingTitle = getListingTitle(displayVariant);
   const tierInfo = getTierExplanation(product.tier);
-  const tooltipText = getTierTooltipText(product.tier, product.category);
 
   const handleTierClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -102,73 +79,20 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
     setShowTierModal(false);
   };
 
-  const handleTooltipClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowTierTooltip(!showTierTooltip);
-
-    // Analytics event
-    if (!showTierTooltip && typeof window !== 'undefined' && 'gtag' in window) {
-      const gtag = (window as Window & { gtag: (...args: unknown[]) => void }).gtag;
-      gtag('event', 'tooltip_category_info_open', {
-        category: product.tier,
-        productId: product.id
-      });
-    }
-  };
-
-  const handleTooltipMouseEnter = () => {
-    setShowTierTooltip(true);
-  };
-
-  const handleTooltipMouseLeave = () => {
-    setShowTierTooltip(false);
-  };
-
   return (
     <>
       <Link href={`/produkt/${product.slug}`} className="product-card group block">
         {/* Clickable Tier Badge with Info Icon */}
-        <div className="absolute top-3 left-3 z-10 flex items-start gap-1">
-          <button
-            onClick={handleTierClick}
-            className="tier-badge hover:opacity-80 transition cursor-pointer"
-            aria-label={`Zobrazit informace o ${product.tier}`}
-          >
-            {product.tier}
-          </button>
-
-          {/* Info Icon with Tooltip */}
-          <div className="relative">
-            <button
-              onClick={handleTooltipClick}
-              onMouseEnter={handleTooltipMouseEnter}
-              onMouseLeave={handleTooltipMouseLeave}
-              className="w-4 h-4 md:w-4 md:h-4 rounded-full bg-burgundy text-white flex items-center justify-center text-xs font-bold hover:scale-105 hover:shadow-md transition-transform"
-              aria-label="Informace o kategorii"
-              style={{ minWidth: '16px', minHeight: '16px' }}
-            >
-              ?
-            </button>
-
-            {/* Tooltip */}
-            {showTierTooltip && (
-              <div
-                role="tooltip"
-                className="absolute left-0 top-6 bg-white text-gray-800 text-xs p-3 rounded-lg shadow-xl border border-gray-200 z-50"
-                style={{
-                  maxWidth: '280px',
-                  lineHeight: '1.4',
-                  width: 'max-content',
-                  minWidth: '250px'
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <p className="text-xs leading-relaxed">{tooltipText}</p>
-              </div>
-            )}
-          </div>
-        </div>
+        <button
+          onClick={handleTierClick}
+          className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer flex items-center gap-1"
+          aria-label={`Zobrazit informace o ${product.tier}`}
+        >
+          <span>{product.tier}</span>
+          <span className="w-4 h-4 rounded-full bg-burgundy text-white flex items-center justify-center text-xs font-bold" style={{ minWidth: '16px', minHeight: '16px' }}>
+            ?
+          </span>
+        </button>
 
       {/* Ribbon Bow (dekorace) */}
       {displayVariant && (
