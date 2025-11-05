@@ -82,6 +82,7 @@ export default function ShadeGallery({
                       fill
                       className="object-cover"
                       sizes="90px"
+                      unoptimized
                       onError={(e) => {
                         // Fallback na barevný gradient pokud obrázek neexistuje
                         const target = e.target as HTMLImageElement;
@@ -175,6 +176,7 @@ export default function ShadeGallery({
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 672px"
+                unoptimized
                 priority
               />
             </div>
