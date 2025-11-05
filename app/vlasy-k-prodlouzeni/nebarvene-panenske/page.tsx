@@ -227,11 +227,11 @@ export default function NebarvenePanenskePage() {
         </div>
 
         {/* Tier Kategorie - 3 boxy jako odkazy */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto">
           {/* Standard */}
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
-            className="relative p-6 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-xl transition-all block overflow-hidden group"
+            className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg transition-all block overflow-hidden group"
           >
             {/* Pro koho v rohu */}
             <button
@@ -240,26 +240,26 @@ export default function NebarvenePanenskePage() {
                 e.stopPropagation();
                 setActiveModal('standard');
               }}
-              className="absolute top-3 right-3 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
+              className="absolute top-2 right-2 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
             >
               Pro koho? →
             </button>
 
-            {/* Název uprostřed, větší */}
-            <div className="text-center mb-4 mt-2">
-              <h3 className="text-2xl md:text-3xl font-playfair text-burgundy font-bold">Standard</h3>
+            {/* Název uprostřed */}
+            <div className="text-center mb-3 mt-1">
+              <h3 className="text-xl md:text-2xl font-playfair text-burgundy font-bold">Standard</h3>
             </div>
 
-            {/* Popis větší */}
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed text-center">
-              Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy.
+            {/* Popis */}
+            <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
+              Výběrové východoevropské vlasy z výkupu
             </p>
           </Link>
 
           {/* LUXE */}
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
-            className="relative p-6 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-xl transition-all block overflow-hidden group"
+            className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg transition-all block overflow-hidden group"
           >
             {/* Pro koho v rohu */}
             <button
@@ -268,26 +268,26 @@ export default function NebarvenePanenskePage() {
                 e.stopPropagation();
                 setActiveModal('luxe');
               }}
-              className="absolute top-3 right-3 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
+              className="absolute top-2 right-2 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
             >
               Pro koho? →
             </button>
 
-            {/* Název uprostřed, větší */}
-            <div className="text-center mb-4 mt-2">
-              <h3 className="text-2xl md:text-3xl font-playfair text-burgundy font-bold">LUXE</h3>
+            {/* Název uprostřed */}
+            <div className="text-center mb-3 mt-1">
+              <h3 className="text-xl md:text-2xl font-playfair text-burgundy font-bold">LUXE</h3>
             </div>
 
-            {/* Popis větší */}
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed text-center">
-              Luxusní evropské nebarvené vlasy z výkupu.
+            {/* Popis */}
+            <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
+              Výběrové evropské vlasy z výkupu
             </p>
           </Link>
 
           {/* Platinum Edition */}
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
-            className="relative p-6 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-xl transition-all block overflow-hidden group"
+            className="relative p-4 rounded-lg border-2 border-warm-beige bg-white hover:border-burgundy hover:shadow-lg transition-all block overflow-hidden group"
           >
             {/* Pro koho v rohu */}
             <button
@@ -296,19 +296,19 @@ export default function NebarvenePanenskePage() {
                 e.stopPropagation();
                 setActiveModal('platinum');
               }}
-              className="absolute top-3 right-3 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
+              className="absolute top-2 right-2 text-xs text-burgundy/60 hover:text-burgundy font-medium hover:underline"
             >
               Pro koho? →
             </button>
 
-            {/* Název uprostřed, větší */}
-            <div className="text-center mb-4 mt-2">
-              <h3 className="text-2xl md:text-3xl font-playfair text-burgundy font-bold">Platinum Edition</h3>
+            {/* Název uprostřed */}
+            <div className="text-center mb-3 mt-1">
+              <h3 className="text-xl md:text-2xl font-playfair text-burgundy font-bold">Platinum Edition</h3>
             </div>
 
-            {/* Popis větší */}
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed text-center">
-              Nejvzácnější culíky z našeho výkupu v ČR a SR.
+            {/* Popis */}
+            <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
+              Nejvzácnější culíky na trhu z výkupu ČR
             </p>
           </Link>
         </div>
