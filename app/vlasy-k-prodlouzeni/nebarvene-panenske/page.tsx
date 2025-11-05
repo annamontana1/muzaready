@@ -10,7 +10,6 @@ type FilterState = {
   tier: ProductTier | 'all';
   shades: number[];
   structures: string[];
-  lengths: number[];
   weightRange: string;
   availability: 'all' | 'in_stock' | 'on_order';
 };
@@ -20,7 +19,6 @@ export default function NebarvenePanenskePage() {
     tier: 'all',
     shades: [],
     structures: [],
-    lengths: [],
     weightRange: 'all',
     availability: 'all',
   });
@@ -35,14 +33,6 @@ export default function NebarvenePanenskePage() {
     if (filters.tier === 'Platinum edition') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     if (filters.tier === 'all') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     return [1, 2, 3, 4]; // Standard a LUXE
-  }, [filters.tier]);
-
-  // Dostupné délky podle tieru
-  const availableLengths = useMemo(() => {
-    if (filters.tier === 'Standard') return [35, 40, 45, 50, 55, 60, 65, 70, 75];
-    if (filters.tier === 'LUXE') return [40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
-    if (filters.tier === 'Platinum edition') return [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
-    return [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]; // Všechny
   }, [filters.tier]);
 
   // Aplikuj filtry
@@ -61,12 +51,6 @@ export default function NebarvenePanenskePage() {
       if (filters.structures.length > 0) {
         const productStructure = product.variants[0]?.structure;
         if (!productStructure || !filters.structures.includes(productStructure)) return false;
-      }
-
-      // Délka filtr
-      if (filters.lengths.length > 0) {
-        const productLength = product.variants[0]?.length_cm;
-        if (!productLength || !filters.lengths.includes(productLength)) return false;
       }
 
       return true;
@@ -91,21 +75,11 @@ export default function NebarvenePanenskePage() {
     }));
   };
 
-  const toggleLength = (length: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      lengths: prev.lengths.includes(length)
-        ? prev.lengths.filter((l) => l !== length)
-        : [...prev.lengths, length],
-    }));
-  };
-
   const resetFilters = () => {
     setFilters({
       tier: 'all',
       shades: [],
       structures: [],
-      lengths: [],
       weightRange: 'all',
       availability: 'all',
     });
@@ -208,7 +182,7 @@ export default function NebarvenePanenskePage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
-            Nebarvené panenské vlasy – vlasy k prodloužení
+            Nebarvené panenské vlasy
           </h1>
           <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
             <strong>100 % nebarvené panenské vlasy z našeho výkupu.</strong> Přirozené odstíny, dlouhá životnost,
@@ -384,33 +358,8 @@ export default function NebarvenePanenskePage() {
             </div>
           </div>
 
-          {/* Délka - menší chipy s větším textem */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-burgundy mb-3">
-              Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
-            </label>
-            <div className="flex flex-wrap gap-2 max-w-2xl">
-              {availableLengths.map((length) => {
-                const isSelected = filters.lengths.includes(length);
-                return (
-                  <button
-                    key={length}
-                    onClick={() => toggleLength(length)}
-                    className={`px-3 h-9 rounded-lg text-base font-medium transition ${
-                      isSelected
-                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
-                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
-                    }`}
-                  >
-                    {length}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Aktivní filtry - sjednocené odstíny */}
-          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
+          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
@@ -428,11 +377,6 @@ export default function NebarvenePanenskePage() {
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {structure.charAt(0).toUpperCase() + structure.slice(1)}
-                  </span>
-                ))}
-                {filters.lengths.map((length) => (
-                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {length} cm
                   </span>
                 ))}
               </div>
