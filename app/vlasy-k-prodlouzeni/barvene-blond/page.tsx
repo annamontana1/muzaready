@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { mockProducts } from '@/lib/mock-products';
@@ -13,6 +14,29 @@ type FilterState = {
   structures: string[];
   lengths: number[];
   availability: 'all' | 'in_stock' | 'on_order';
+};
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3 }
+  }
 };
 
 export default function BarveneBlondPage() {
@@ -107,60 +131,89 @@ export default function BarveneBlondPage() {
     <div className="py-12">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
+        <motion.div
+          className="mb-8"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          <motion.h1
+            className="text-3xl md:text-4xl font-playfair text-burgundy mb-3"
+            variants={fadeInUp}
+            transition={{ duration: 0.6 }}
+          >
             Barvené blond vlasy
-          </h1>
-          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
+          </motion.h1>
+          <motion.p
+            className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed"
+            variants={fadeInUp}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             Profesionálně odbarvené blond vlasy v odstínech 5-10. Dostupné ve všech kvalitách:
             Standard, LUXE, Platinum edition.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Info banner */}
-        <div className="mb-8 p-5 bg-ivory rounded-lg border-l-4 border-burgundy">
+        <motion.div
+          className="mb-8 p-5 bg-ivory rounded-lg border-l-4 border-burgundy"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <h3 className="text-base font-semibold text-burgundy mb-2">✨ Vlastní barvírna</h3>
           <p className="text-xs text-gray-700">
             Všechny blond vlasy jsou profesionálně obarvené v naší pražské barvírně.
             Garantujeme krásné, rovnoměrné odstíny a dlouhou životnost.
           </p>
-        </div>
+        </motion.div>
 
         {/* Tier Kategorie - 3 boxy */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <motion.div
+          className="grid md:grid-cols-3 gap-6 mb-12"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
           {/* Standard */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond/standard"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
-          >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Profesionálně barvené vlasy s krásným blond odstínem. Délky 35–75 cm.
-            </p>
-          </Link>
+          <motion.div variants={scaleIn}>
+            <Link
+              href="/vlasy-k-prodlouzeni/barvene-blond/standard"
+              className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block h-full"
+            >
+              <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
+              <p className="text-xs text-gray-700 leading-relaxed">
+                Profesionálně barvené vlasy s krásným blond odstínem. Délky 35–75 cm.
+              </p>
+            </Link>
+          </motion.div>
 
           {/* LUXE */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
-          >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Vyšší kvalita barvení, hustší konce. Délky 40–85 cm.
-            </p>
-          </Link>
+          <motion.div variants={scaleIn}>
+            <Link
+              href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
+              className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block h-full"
+            >
+              <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
+              <p className="text-xs text-gray-700 leading-relaxed">
+                Vyšší kvalita barvení, hustší konce. Délky 40–85 cm.
+              </p>
+            </Link>
+          </motion.div>
 
           {/* Platinum Edition */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
-            className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block"
-          >
-            <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
-            <p className="text-xs text-gray-700 leading-relaxed">
-              Premium barvené vlasy, exkluzivní kvalita. Délky 45–90 cm.
-            </p>
-          </Link>
-        </div>
+          <motion.div variants={scaleIn}>
+            <Link
+              href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
+              className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block h-full"
+            >
+              <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
+              <p className="text-xs text-gray-700 leading-relaxed">
+                Premium barvené vlasy, exkluzivní kvalita. Délky 45–90 cm.
+              </p>
+            </Link>
+          </motion.div>
+        </motion.div>
 
         {/* Filtr Lišta */}
         <div className="mb-8 p-6 bg-ivory rounded-xl border border-warm-beige">
@@ -300,11 +353,19 @@ export default function BarveneBlondPage() {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <motion.div
+            className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={staggerContainer}
+          >
             {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div key={product.id} variants={scaleIn}>
+                <ProductCard product={product} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="text-center py-16 px-4">
             <div className="text-6xl mb-4">🔍</div>

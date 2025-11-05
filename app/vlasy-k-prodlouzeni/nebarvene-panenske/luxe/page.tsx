@@ -6,11 +6,35 @@ import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { mockProducts } from '@/lib/mock-products';
 import { HAIR_COLORS } from '@/types/product';
+import { motion } from 'framer-motion';
 
 type FilterState = {
   shades: number[];
   structures: string[];
   endings: string[];
+};
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3 }
+  }
 };
 
 export default function LuxeCategoryPage() {
@@ -99,15 +123,28 @@ export default function LuxeCategoryPage() {
         </nav>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
+        <motion.div
+          className="mb-8"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          <motion.h1
+            className="text-3xl md:text-4xl font-playfair text-burgundy mb-3"
+            variants={fadeInUp}
+            transition={{ duration: 0.6 }}
+          >
             Nebarvené panenské vlasy — LUXE
-          </h1>
-          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed">
+          </motion.h1>
+          <motion.p
+            className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed"
+            variants={fadeInUp}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             Prémiové nebarvené panenské vlasy v LUXE kvalitě. Hustší konce, vyšší kvalita.
             Dostupné v odstínech 1–4, délky 40–85 cm.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Filtr Lišta */}
         <div className="mb-8 p-6 bg-ivory rounded-xl border border-warm-beige">
@@ -195,11 +232,19 @@ export default function LuxeCategoryPage() {
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <motion.div
+            className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={staggerContainer}
+          >
             {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div key={product.id} variants={scaleIn}>
+                <ProductCard product={product} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="text-center py-16 px-4">
             <div className="text-6xl mb-4">🔍</div>
