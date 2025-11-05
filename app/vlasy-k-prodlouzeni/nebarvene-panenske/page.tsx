@@ -191,7 +191,7 @@ export default function NebarvenePanenskePage() {
             klientky – Praha i celá ČR.
           </p>
           {/* Metody zakončení - kompaktní verze */}
-          <div className="mt-5 p-4 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-lg border border-warm-beige/60">
+          <div className="mt-5 p-4 bg-gradient-to-br from-ivory/50 to-warm-beige/20 rounded-lg border border-warm-beige/60 max-w-3xl mx-auto">
             <p className="text-xs text-gray-600 mb-3">
               Připravíme na metodu zakončení:
             </p>
