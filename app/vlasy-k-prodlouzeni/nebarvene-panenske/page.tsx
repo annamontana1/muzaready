@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+import ShadeGallery from '@/components/ShadeGallery';
 import { mockProducts } from '@/lib/mock-products';
 import { ProductTier, HAIR_COLORS } from '@/types/product';
 
@@ -269,45 +270,16 @@ export default function NebarvenePanenskePage() {
             </button>
           </div>
 
-          {/* Odstíny - mřížka 5×2, bordó outline */}
+          {/* Odstíny - Scrollovací galerie s fotografiemi */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Odstín {filters.shades.length > 0 && `(${filters.shades.sort((a, b) => a - b).map(s => HAIR_COLORS[s]?.name).join(', ')})`}
             </label>
-            <div className="grid grid-cols-5 gap-2.5 max-w-md">
-              {availableShades.map((shade) => {
-                const color = HAIR_COLORS[shade];
-                const isSelected = filters.shades.includes(shade);
-                return (
-                  <button
-                    key={shade}
-                    onClick={() => toggleShade(shade)}
-                    aria-label={`#${shade} – ${color?.name}`}
-                    className="flex flex-col items-center gap-1.5 transition cursor-pointer group"
-                  >
-                    {/* Číslo NAD kolečkem */}
-                    <span className={`text-xs font-semibold transition ${
-                      isSelected ? 'text-[#6E2A2A]' : 'text-gray-600 group-hover:text-[#6E2A2A]'
-                    }`}>
-                      #{shade}
-                    </span>
-                    {/* Kolečko s bordó outline */}
-                    <div
-                      className={`w-10 h-10 rounded-full transition ${
-                        isSelected
-                          ? 'shadow-md'
-                          : 'group-hover:shadow-sm'
-                      }`}
-                      style={{
-                        backgroundColor: color?.hex,
-                        outline: isSelected ? '2px solid #6E2A2A' : 'none',
-                        outlineOffset: isSelected ? '2px' : '0'
-                      }}
-                    />
-                  </button>
-                );
-              })}
-            </div>
+            <ShadeGallery
+              availableShades={availableShades}
+              selectedShades={filters.shades}
+              onToggleShade={toggleShade}
+            />
             {/* Varování pro nedostupné odstíny */}
             {filters.shades.some(s => !availableShades.includes(s)) && (
               <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
