@@ -182,7 +182,7 @@ export const HAIR_COLORS: Record<number, HairColor> = {
   },
   10: {
     code: 10,
-    name: "Ultra světlá blond / platinová blond",
+    name: "Platinová blond",
     hex: "#E5D5B7",
     ribbonColor: "#E5D5B7",
     synonyms: ["platinová", "platinum", "nordic blond", "platinova", "ultra svetla blond"],
