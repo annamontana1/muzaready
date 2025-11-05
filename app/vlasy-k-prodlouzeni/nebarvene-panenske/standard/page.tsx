@@ -48,12 +48,21 @@ export default function StandardCategoryPage() {
   }, [products, filters]);
 
   const toggleShade = (shade: number) => {
-    setFilters((prev) => ({
-      ...prev,
-      shades: prev.shades.includes(shade)
+    setFilters((prev) => {
+      const newShades = prev.shades.includes(shade)
         ? prev.shades.filter((s) => s !== shade)
-        : [...prev.shades, shade],
-    }));
+        : [...prev.shades, shade];
+
+      console.log('🔍 Toggle shade:', shade);
+      console.log('📋 New shades:', newShades);
+      console.log('📦 Total products:', products.length);
+      console.log('🎯 Products with selected shades:', products.filter(p => newShades.length === 0 || newShades.includes(p.variants[0]?.shade)));
+
+      return {
+        ...prev,
+        shades: newShades,
+      };
+    });
   };
 
   const toggleStructure = (structure: string) => {
