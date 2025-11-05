@@ -30,7 +30,7 @@ Soubory musí být pojmenovány podle následujícího vzoru:
 - **Zobrazovaná velikost**: 90×120 px (miniatura)
 
 ### Styl fotografie
-- **Pozadí**: Jemná béžová (#F5EBDD) nebo neutrální barva
+- **Pozadí**: Jemná béžová (#e8e1d7) nebo neutrální barva
 - **Póza**: Podobná póza pro všechny fotky (konzistence)
 - **Osvětlení**: Jednotné, profesionální světlo
 - **Fokus**: Důraz na barvu a texturu vlasů

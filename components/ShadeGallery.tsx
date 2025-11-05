@@ -133,7 +133,7 @@ export default function ShadeGallery({
         </div>
 
         {/* Scroll hint pro mobil */}
-        <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-[#F5EBDD] to-transparent pointer-events-none md:hidden" />
+        <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-[#e8e1d7] to-transparent pointer-events-none md:hidden" />
       </div>
 
       {/* Modal pro detail fotky */}
@@ -175,7 +175,7 @@ export default function ShadeGallery({
             </div>
 
             {/* Info panel */}
-            <div className="p-6 bg-[#F5EBDD]">
+            <div className="p-6 bg-[#e8e1d7]">
               <h3 className="text-xl font-playfair text-[#4A1E1A] mb-2">
                 {HAIR_COLORS[showModal]?.name} #{showModal}
               </h3>

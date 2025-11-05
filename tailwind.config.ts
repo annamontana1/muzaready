@@ -19,7 +19,7 @@ const config: Config = {
         terracotta: '#8B4755',
 
         // Neutrální
-        ivory: '#E9E0D7',
+        ivory: '#e8e1d7',
         'warm-beige': '#D4C4B0',
         'light-taupe': '#C9B8A8',
         'soft-cream': '#F5F1ED',
