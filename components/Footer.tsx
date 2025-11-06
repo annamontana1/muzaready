@@ -44,18 +44,28 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Blog */}
+          {/* Column 3: Informace */}
           <div>
-            <h3 className="font-playfair text-xl mb-4">Blog</h3>
+            <h3 className="font-playfair text-xl mb-4">Informace</h3>
             <ul className="space-y-2 text-sm text-ivory">
-              <li>
-                <Link href="/blog" className="hover:text-white transition">
-                  Všechny články
-                </Link>
-              </li>
               <li>
                 <Link href="/informace/jak-nakupovat" className="hover:text-white transition">
                   Jak nakupovat
+                </Link>
+              </li>
+              <li>
+                <Link href="/informace/obchodni-podminky" className="hover:text-white transition">
+                  Obchodní podmínky
+                </Link>
+              </li>
+              <li>
+                <Link href="/informace/platba-a-vraceni" className="hover:text-white transition">
+                  Vracení a výměna
+                </Link>
+              </li>
+              <li>
+                <Link href="/informace/odeslani-a-stav-objednavky" className="hover:text-white transition">
+                  Doprava a platba
                 </Link>
               </li>
               <li>
