@@ -54,7 +54,7 @@ export default function VlasyKProdlouzeniPage() {
           </Link>
 
           <Link
-            href="/metody-zakonceni/keratin"
+            href="/metody-zakonceni/vlasy-na-keratin"
             className="group block p-8 bg-ivory rounded-xl shadow-light hover:shadow-card-hover transition-all duration-300"
           >
             <div className="text-4xl mb-4">🔥</div>
@@ -70,7 +70,7 @@ export default function VlasyKProdlouzeniPage() {
           </Link>
 
           <Link
-            href="/metody-zakonceni/pasky"
+            href="/metody-zakonceni/pasky-nano-tapes"
             className="group block p-8 bg-ivory rounded-xl shadow-light hover:shadow-card-hover transition-all duration-300"
           >
             <div className="text-4xl mb-4">📏</div>
