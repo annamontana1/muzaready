@@ -81,51 +81,15 @@ export default function Header() {
               <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg font-semibold"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
                   Nebarvené panenské vlasy
                 </Link>
                 <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske/standard"
-                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
-                >
-                  → Standard
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske/luxe"
-                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
-                >
-                  → LUXE
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition"
-                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm border-b border-warm-beige"
-                >
-                  → Platinum Edition
-                </Link>
-                <Link
                   href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition font-semibold"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
-                  Barvené
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/barvene-blond/standard"
-                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
-                >
-                  → Standard
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/barvene-blond/luxe"
-                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm"
-                >
-                  → LUXE
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/barvene-blond/platinum-edition"
-                  className="block px-6 py-2 pl-10 hover:bg-ivory/70 transition text-sm rounded-b-lg"
-                >
-                  → Platinum Edition
+                  Barvené blond vlasy
                 </Link>
               </div>
             </div>
