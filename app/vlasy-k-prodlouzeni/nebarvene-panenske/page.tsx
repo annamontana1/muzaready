@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -17,6 +17,8 @@ type FilterState = {
   availability: 'all' | 'in_stock' | 'on_order';
 };
 
+const PRODUCTS_PER_PAGE = 14;
+
 export default function NebarvenePanenskePage() {
   const [filters, setFilters] = useState<FilterState>({
     tier: 'all',
@@ -25,6 +27,7 @@ export default function NebarvenePanenskePage() {
     weightRange: 'all',
     availability: 'all',
   });
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [activeModal, setActiveModal] = useState<'standard' | 'luxe' | 'platinum' | null>(null);
 
