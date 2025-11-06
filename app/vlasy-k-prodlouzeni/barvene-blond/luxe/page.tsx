@@ -272,20 +272,55 @@ export default function BarveneBlondLuxePage() {
                   Předchozí
                 </button>
 
-                <div className="flex gap-2">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-10 h-10 rounded-lg font-medium transition ${
-                        currentPage === page
-                          ? 'bg-burgundy text-white'
-                          : 'border border-burgundy text-burgundy hover:bg-burgundy hover:text-white'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
+                <div className="flex gap-2 items-center">
+                  {/* První 3 stránky nebo aktuální okolí */}
+                  {currentPage > 3 && (
+                    <>
+                      <button
+                        onClick={() => setCurrentPage(1)}
+                        className="w-10 h-10 rounded-lg font-medium transition border border-burgundy text-burgundy hover:bg-burgundy hover:text-white"
+                      >
+                        1
+                      </button>
+                      <span className="text-burgundy px-2">...</span>
+                    </>
+                  )}
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(page => {
+                      if (totalPages <= 5) return true;
+                      if (page === 1 && currentPage <= 3) return true;
+                      if (page === 2 && currentPage <= 3) return true;
+                      if (page === 3 && currentPage <= 3) return true;
+                      if (Math.abs(currentPage - page) <= 1) return true;
+                      if (page === totalPages && currentPage >= totalPages - 2) return true;
+                      return false;
+                    })
+                    .map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 rounded-lg font-medium transition ${
+                          currentPage === page
+                            ? 'bg-burgundy text-white'
+                            : 'border border-burgundy text-burgundy hover:bg-burgundy hover:text-white'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+
+                  {currentPage < totalPages - 2 && (
+                    <>
+                      <span className="text-burgundy px-2">...</span>
+                      <button
+                        onClick={() => setCurrentPage(totalPages)}
+                        className="w-10 h-10 rounded-lg font-medium transition border border-burgundy text-burgundy hover:bg-burgundy hover:text-white"
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
                 </div>
 
                 <button
