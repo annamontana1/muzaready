@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { mockProducts } from '@/lib/mock-products';
@@ -190,33 +191,37 @@ export default function PlatinumCategoryPage() {
             />
           </div>
 
-          {/* Struktura */}
+          {/* Struktura - fotky vlasů */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">
               Struktura {filters.structures.length > 0 && `(${filters.structures.length} vybráno)`}
             </label>
             <div className="flex flex-wrap gap-3 max-w-xl">
               {[
-                { name: 'rovné', icon: '——' },
-                { name: 'mírně vlnité', icon: '∼' },
-                { name: 'vlnité', icon: '〜〜' },
-                { name: 'kudrnaté', icon: '⟲' }
-              ].map(({ name, icon }) => {
+                { name: 'rovné', image: '/images/structures/rovne.png' },
+                { name: 'mírně vlnité', image: '/images/structures/mirne-vlnite.png' },
+                { name: 'vlnité', image: '/images/structures/vlnite.png' },
+                { name: 'kudrnaté', image: '/images/structures/kudrnate.png' }
+              ].map(({ name, image }) => {
                 const isSelected = filters.structures.includes(name);
                 return (
                   <button
                     key={name}
                     onClick={() => toggleStructure(name)}
                     aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                    className={`flex items-center justify-center w-14 h-11 rounded-lg transition ${
-                      isSelected ? 'bg-burgundy/5 shadow-md' : 'bg-white hover:bg-burgundy/5 hover:shadow-sm'
+                    className={`relative w-20 h-20 rounded-lg transition overflow-hidden ${
+                      isSelected
+                        ? 'ring-2 ring-burgundy ring-offset-2 shadow-md'
+                        : 'ring-1 ring-warm-beige hover:ring-burgundy hover:shadow-sm'
                     }`}
-                    style={{
-                      outline: isSelected ? '2px solid #6E2A2A' : 'none',
-                      outlineOffset: isSelected ? '2px' : '0'
-                    }}
                   >
-                    <span className="text-2xl leading-none text-burgundy">{icon}</span>
+                    <Image
+                      src={image}
+                      alt={name}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
                   </button>
                 );
               })}
