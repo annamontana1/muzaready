@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
@@ -60,8 +61,15 @@ export default function Header() {
         {/* Desktop Header */}
         <div className="hidden lg:flex items-center justify-between py-4">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-playfair text-burgundy font-bold" aria-label="Domů">
-            MÙZA
+          <Link href="/" className="flex items-center" aria-label="Domů">
+            <Image
+              src="/images/logo/muza-logo.png"
+              alt="Mùza Hair Shop"
+              width={120}
+              height={40}
+              priority
+              className="h-10 w-auto"
+            />
           </Link>
 
           {/* Navigation */}
@@ -266,8 +274,15 @@ export default function Header() {
               ☰
             </button>
 
-            <Link href="/" className="text-xl font-playfair text-burgundy font-bold" aria-label="Domů">
-              MÙZA
+            <Link href="/" className="flex items-center" aria-label="Domů">
+              <Image
+                src="/images/logo/muza-logo.png"
+                alt="Mùza Hair Shop"
+                width={100}
+                height={33}
+                priority
+                className="h-8 w-auto"
+              />
             </Link>
 
             <div className="flex items-center gap-2">
@@ -341,11 +356,17 @@ export default function Header() {
             <div className="sticky top-0 bg-white border-b border-warm-beige px-4 py-4 flex items-center justify-between z-10">
               <Link
                 href="/"
-                className="text-xl font-playfair text-burgundy font-bold"
+                className="flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label="Domů"
               >
-                MÙZA
+                <Image
+                  src="/images/logo/muza-logo.png"
+                  alt="Mùza Hair Shop"
+                  width={100}
+                  height={33}
+                  className="h-8 w-auto"
+                />
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
