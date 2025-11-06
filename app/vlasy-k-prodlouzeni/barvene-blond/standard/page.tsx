@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -38,12 +38,15 @@ const scaleIn = {
   }
 };
 
+const PRODUCTS_PER_PAGE = 14;
+
 export default function BarveneBlondStandardPage() {
   const [filters, setFilters] = useState<FilterState>({
     shades: [],
     structures: [],
     endings: [],
   });
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Filtruj produkty: barvené blond + tier Standard
   const products = useMemo(() => {
@@ -72,6 +75,18 @@ export default function BarveneBlondStandardPage() {
     });
   }, [products, filters]);
 
+  // Pagination
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    return filteredProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  // Reset stránky při změně filtrů
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
   const toggleShade = (shade: number) => {
     setFilters((prev) => ({
       ...prev,
@@ -97,6 +112,7 @@ export default function BarveneBlondStandardPage() {
       structures: [],
       endings: [],
     });
+    setCurrentPage(1);
   };
 
   return (
@@ -223,25 +239,65 @@ export default function BarveneBlondStandardPage() {
         {/* Počet výsledků */}
         <div className="mb-6">
           <p className="text-gray-600">
-            Zobrazeno <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produkt' : filteredProducts.length < 5 ? 'produkty' : 'produktů'}
+            Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
+            {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
           </p>
         </div>
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
-          <motion.div
-            className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            variants={staggerContainer}
-          >
-            {filteredProducts.map((product) => (
-              <motion.div key={product.id} variants={scaleIn}>
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </motion.div>
+          <>
+            <motion.div
+              className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              variants={staggerContainer}
+            >
+              {paginatedProducts.map((product) => (
+                <motion.div key={product.id} variants={scaleIn}>
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg border border-burgundy text-burgundy disabled:opacity-30 disabled:cursor-not-allowed hover:bg-burgundy hover:text-white transition"
+                >
+                  Předchozí
+                </button>
+
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-10 h-10 rounded-lg font-medium transition ${
+                        currentPage === page
+                          ? 'bg-burgundy text-white'
+                          : 'border border-burgundy text-burgundy hover:bg-burgundy hover:text-white'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg border border-burgundy text-burgundy disabled:opacity-30 disabled:cursor-not-allowed hover:bg-burgundy hover:text-white transition"
+                >
+                  Další
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-16 px-4">
             <div className="text-6xl mb-4">🔍</div>
