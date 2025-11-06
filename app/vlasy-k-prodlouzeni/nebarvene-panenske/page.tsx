@@ -238,7 +238,7 @@ export default function NebarvenePanenskePage() {
             {/* Metody zakončení - menší karty vždy vedle sebe */}
             <div className="flex gap-2">
               <Link
-                href="/metody-zakonceni/keratin"
+                href="/metody-zakonceni/vlasy-na-keratin"
                 className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
               >
                 <div className="text-sm font-medium text-burgundy group-hover:text-[#6E2A2A]">
@@ -246,11 +246,11 @@ export default function NebarvenePanenskePage() {
                 </div>
               </Link>
               <Link
-                href="/metody-zakonceni/pasky"
+                href="/metody-zakonceni/pasky-nano-tapes"
                 className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
               >
                 <div className="text-sm font-medium text-burgundy group-hover:text-[#6E2A2A]">
-                  Pásky
+                  Tape in
                 </div>
               </Link>
               <Link
