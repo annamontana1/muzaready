@@ -54,7 +54,7 @@ export default function VlasyKProdlouzeniPage() {
           </Link>
 
           <Link
-            href="/vlasy-k-prodlouzeni/vlasy-na-keratin"
+            href="/metody-zakonceni/keratin"
             className="group block p-8 bg-ivory rounded-xl shadow-light hover:shadow-card-hover transition-all duration-300"
           >
             <div className="text-4xl mb-4">🔥</div>
@@ -65,12 +65,12 @@ export default function VlasyKProdlouzeniPage() {
               Prémiové vlasy vhodné pro keratinovou metodu prodlužování.
             </p>
             <span className="text-burgundy font-medium group-hover:underline">
-              Zobrazit produkty →
+              Zobrazit více →
             </span>
           </Link>
 
           <Link
-            href="/vlasy-k-prodlouzeni/pasky-nano-tapes"
+            href="/metody-zakonceni/tape-in"
             className="group block p-8 bg-ivory rounded-xl shadow-light hover:shadow-card-hover transition-all duration-300"
           >
             <div className="text-4xl mb-4">📏</div>
@@ -81,12 +81,12 @@ export default function VlasyKProdlouzeniPage() {
               Profesionální nano tapes. Rychlá aplikace, šetrné k vlasům.
             </p>
             <span className="text-burgundy font-medium group-hover:underline">
-              Zobrazit produkty →
+              Zobrazit více →
             </span>
           </Link>
 
           <Link
-            href="/vlasy-k-prodlouzeni/vlasove-tresy"
+            href="/metody-zakonceni/vlasove-tresy"
             className="group block p-8 bg-ivory rounded-xl shadow-light hover:shadow-card-hover transition-all duration-300"
           >
             <div className="text-4xl mb-4">🧵</div>
@@ -97,7 +97,7 @@ export default function VlasyKProdlouzeniPage() {
               Ručně šité vlasové tresy. Pevné, pohodlné, dlouhá životnost.
             </p>
             <span className="text-burgundy font-medium group-hover:underline">
-              Zobrazit produkty →
+              Zobrazit více →
             </span>
           </Link>
         </div>
