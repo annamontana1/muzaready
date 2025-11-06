@@ -184,7 +184,7 @@ export default function BarveneBlondStandardPage() {
             <label className="block text-sm font-medium text-burgundy mb-3">
               Struktura {filters.structures.length > 0 && `(${filters.structures.length} vybráno)`}
             </label>
-            <div className="flex flex-wrap gap-3 max-w-xl">
+            <div className="flex flex-wrap gap-2 max-w-xl">
               {[
                 { name: 'rovné', image: '/images/structures/rovne.png' },
                 { name: 'mírně vlnité', image: '/images/structures/mirne-vlnite.png' },
@@ -197,7 +197,7 @@ export default function BarveneBlondStandardPage() {
                     key={name}
                     onClick={() => toggleStructure(name)}
                     aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                    className={`relative w-20 h-20 rounded-lg transition overflow-hidden ${
+                    className={`relative w-16 h-16 rounded-lg transition overflow-hidden ${
                       isSelected
                         ? 'ring-2 ring-burgundy ring-offset-2 shadow-md'
                         : 'ring-1 ring-warm-beige hover:ring-burgundy hover:shadow-sm'
@@ -208,7 +208,7 @@ export default function BarveneBlondStandardPage() {
                       alt={name}
                       fill
                       className="object-cover"
-                      sizes="80px"
+                      sizes="64px"
                     />
                   </button>
                 );
