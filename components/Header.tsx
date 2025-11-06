@@ -13,7 +13,6 @@ export default function Header() {
   const [priceskySubmenuOpen, setPriceskySubmenuOpen] = useState(false);
   const [prislusenstviSubmenuOpen, setPrislusenstviSubmenuOpen] = useState(false);
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
-  const [informaceSubmenuOpen, setInformaceSubmenuOpen] = useState(false);
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
 
   const { favoriteCount } = useFavorites();
@@ -221,63 +220,8 @@ export default function Header() {
               Velkoobchod
             </Link>
 
-            <Link href="/vykup-vlasu-pro-nemocne" className="text-burgundy font-medium hover:text-maroon transition">
-              Výkup vlasů
-            </Link>
-
-            <Link href="/blog" className="text-burgundy font-medium hover:text-maroon transition">
-              Blog
-            </Link>
-
-            <div className="relative group">
-              <Link href="/informace" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                Informace
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                <Link
-                  href="/informace/jak-nakupovat"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Jak nakupovat
-                </Link>
-                <Link
-                  href="/informace/odeslani-a-stav-objednavky"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Odeslání a stav objednávky
-                </Link>
-                <Link
-                  href="/informace/platba-a-vraceni"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Platba a vrácení
-                </Link>
-                <Link
-                  href="/informace/obchodni-podminky"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Obchodní podmínky
-                </Link>
-                <Link
-                  href="/informace/faq"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  FAQ
-                </Link>
-                <Link
-                  href="/informace/nas-pribeh"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Náš příběh
-                </Link>
-              </div>
-            </div>
-
             <Link href="/kontakt" className="text-burgundy font-medium hover:text-maroon transition">
-              Kontakt
+              Showroom
             </Link>
           </nav>
 
@@ -607,61 +551,11 @@ export default function Header() {
               </Link>
 
               <Link
-                href="/vykup-vlasu-pro-nemocne"
-                className="text-burgundy font-medium py-2 border-b border-warm-beige/50"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Výkup vlasů pro nemocné
-              </Link>
-
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setInformaceSubmenuOpen(!informaceSubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>Informace</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${informaceSubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {informaceSubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/informace/jak-nakupovat"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Jak nakupovat
-                    </Link>
-                    <Link
-                      href="/informace/platba-a-vraceni"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Platba a vrácení
-                    </Link>
-                    <Link
-                      href="/informace/faq"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      FAQ
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <Link
                 href="/kontakt"
                 className="text-burgundy font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Kontakt
+                Showroom
               </Link>
             </nav>
           </div>

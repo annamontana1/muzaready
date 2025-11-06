@@ -20,67 +20,42 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/vykup-vlasu-pro-nemocne" className="hover:text-white transition">
-                  Výkup vlasů pro nemocné
+                <Link href="/kontakt" className="hover:text-white transition">
+                  Kontakt
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 2: Zákaznický servis */}
+          {/* Column 2: Výkup vlasů pro nemocné */}
           <div>
-            <h3 className="font-playfair text-xl mb-4">Zákaznický servis</h3>
+            <h3 className="font-playfair text-xl mb-4">Výkup vlasů pro nemocné</h3>
             <ul className="space-y-2 text-sm text-ivory">
+              <li>
+                <Link href="/vykup-vlasu-pro-nemocne" className="hover:text-white transition">
+                  Výkup vlasů
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Blog */}
+          <div>
+            <h3 className="font-playfair text-xl mb-4">Blog</h3>
+            <ul className="space-y-2 text-sm text-ivory">
+              <li>
+                <Link href="/blog" className="hover:text-white transition">
+                  Všechny články
+                </Link>
+              </li>
               <li>
                 <Link href="/informace/jak-nakupovat" className="hover:text-white transition">
                   Jak nakupovat
                 </Link>
               </li>
               <li>
-                <Link href="/informace/odeslani-a-stav-objednavky" className="hover:text-white transition">
-                  Odeslání a stav objednávky
-                </Link>
-              </li>
-              <li>
-                <Link href="/informace/platba-a-vraceni" className="hover:text-white transition">
-                  Platba a vrácení
-                </Link>
-              </li>
-              <li>
                 <Link href="/informace/faq" className="hover:text-white transition">
                   FAQ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Produkty */}
-          <div>
-            <h3 className="font-playfair text-xl mb-4">Produkty</h3>
-            <ul className="space-y-2 text-sm text-ivory">
-              <li>
-                <Link href="/vlasy-k-prodlouzeni/nebarvene-panenske" className="hover:text-white transition">
-                  Nebarvené panenské vlasy
-                </Link>
-              </li>
-              <li>
-                <Link href="/vlasy-k-prodlouzeni/barvene-blond" className="hover:text-white transition">
-                  Barvené blond vlasy
-                </Link>
-              </li>
-              <li>
-                <Link href="/vlasy-k-prodlouzeni/vlasy-na-keratin" className="hover:text-white transition">
-                  Vlasy na keratin
-                </Link>
-              </li>
-              <li>
-                <Link href="/cenik" className="hover:text-white transition">
-                  Ceník
-                </Link>
-              </li>
-              <li>
-                <Link href="/velkoobchod" className="hover:text-white transition">
-                  Velkoobchod
                 </Link>
               </li>
             </ul>
