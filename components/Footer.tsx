@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-burgundy text-white">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-5 gap-8">
           {/* Column 1: O Mùza Hair */}
           <div>
             <h3 className="font-playfair text-xl mb-4">O Mùza Hair</h3>
@@ -76,7 +76,29 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Newsletter */}
+          {/* Column 4: Blog */}
+          <div>
+            <h3 className="font-playfair text-xl mb-4">Blog</h3>
+            <ul className="space-y-2 text-sm text-ivory">
+              <li>
+                <Link href="/metody-zakonceni/vlasy-na-keratin" className="hover:text-white transition">
+                  Vlasy na keratin
+                </Link>
+              </li>
+              <li>
+                <Link href="/metody-zakonceni/pasky-nano-tapes" className="hover:text-white transition">
+                  Tape-in nano pásky
+                </Link>
+              </li>
+              <li>
+                <Link href="/metody-zakonceni/vlasove-tresy" className="hover:text-white transition">
+                  Vlasové tresy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 5: Newsletter */}
           <div>
             <h3 className="font-playfair text-xl mb-4">Newsletter</h3>
             <p className="text-sm text-ivory mb-4">
