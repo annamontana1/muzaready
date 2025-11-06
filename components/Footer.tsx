@@ -5,9 +5,9 @@ export default function Footer() {
     <footer className="bg-burgundy text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-4 gap-8">
-          {/* Column 1: O nás */}
+          {/* Column 1: O Mùza Hair */}
           <div>
-            <h3 className="font-playfair text-xl mb-4">O nás</h3>
+            <h3 className="font-playfair text-xl mb-4">O Mùza Hair</h3>
             <ul className="space-y-2 text-sm text-ivory">
               <li>
                 <Link href="/o-nas" className="hover:text-white transition">
@@ -15,13 +15,18 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/informace/nas-pribeh" className="hover:text-white transition">
-                  8 let na trhu
+                <Link href="/recenze" className="hover:text-white transition">
+                  Recenze
+                </Link>
+              </li>
+              <li>
+                <Link href="/velkoobchod" className="hover:text-white transition">
+                  Velkoobchod
                 </Link>
               </li>
               <li>
                 <Link href="/kontakt" className="hover:text-white transition">
-                  Kontakt
+                  Kontaktujte nás
                 </Link>
               </li>
             </ul>
