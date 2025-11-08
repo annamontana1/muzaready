@@ -2,9 +2,17 @@
 
 import { useFavorites } from '@/hooks/useFavorites';
 import Link from 'next/link';
+import { mockProducts } from '@/lib/mock-products';
+import { HAIR_COLORS } from '@/types/product';
+import { priceCalculator } from '@/lib/price-calculator';
 
 export default function OblibeneePage() {
   const { favorites, favoriteCount, removeFromFavorites } = useFavorites();
+
+  // Get actual products from favorites
+  const favoriteProducts = mockProducts.filter((product) =>
+    favorites.includes(product.id)
+  );
 
   return (
     <div className="py-12 bg-ivory min-h-screen">
@@ -53,63 +61,123 @@ export default function OblibeneePage() {
           </div>
         )}
 
-        {/* Favorites List - Placeholder for product integration */}
+        {/* Favorites Grid */}
         {favoriteCount > 0 && (
-          <div className="space-y-4">
-            <div className="bg-white rounded-xl p-8 shadow-medium">
-              <h2 className="text-xl font-playfair text-burgundy mb-4">
-                Oblíbené produkty (ID)
-              </h2>
-              <p className="text-sm text-gray-500 mb-6">
-                Toto je dočasné zobrazení. Po integraci produktového katalogu zde budou zobrazeny karty produktů.
-              </p>
-              <div className="space-y-3">
-                {favorites.map((productId) => (
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {favoriteProducts.map((product) => {
+                const variant = product.variants[0];
+                const color = variant ? HAIR_COLORS[variant.shade] : null;
+
+                return (
                   <div
-                    key={productId}
-                    className="flex items-center justify-between p-4 bg-ivory rounded-lg"
+                    key={product.id}
+                    className="bg-white rounded-xl overflow-hidden shadow-medium hover:shadow-large transition-all duration-300"
                   >
-                    <div>
-                      <p className="font-medium text-burgundy">Produkt ID: {productId}</p>
-                      <p className="text-sm text-gray-500">
-                        Detail produktu bude zobrazen po integraci katalogu
+                    {/* Product Image */}
+                    <Link href={`/produkt/${product.slug}`}>
+                      <div className="aspect-square relative">
+                        <div
+                          className="w-full h-full flex items-center justify-center"
+                          style={{
+                            background: color
+                              ? `linear-gradient(135deg, ${color.hex} 0%, ${color.hex}dd 50%, ${color.hex}bb 100%)`
+                              : 'linear-gradient(135deg, #8B7355 0%, #8B7355dd 50%, #8B7355bb 100%)',
+                          }}
+                        >
+                          <div
+                            className="absolute inset-0 opacity-20"
+                            style={{
+                              backgroundImage:
+                                'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
+                            }}
+                          />
+                          <div className="relative z-10 text-center text-white">
+                            <div className="text-xl font-playfair mb-2">
+                              {product.tier}
+                            </div>
+                            <div className="text-sm">{variant?.structure}</div>
+                            <div className="text-xs mt-1">
+                              {variant?.length_cm} cm
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Tier Badge */}
+                        <div className="absolute top-3 left-3">
+                          <span className="tier-badge text-xs px-2 py-1">
+                            {product.tier}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Product Info */}
+                    <div className="p-4">
+                      <Link href={`/produkt/${product.slug}`}>
+                        <h3 className="text-lg font-playfair text-burgundy mb-2 hover:text-maroon transition">
+                          {product.name}
+                        </h3>
+                      </Link>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {product.description}
                       </p>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-burgundy font-semibold">
+                          Od {priceCalculator.formatPrice(product.base_price_per_100g_45cm)}
+                        </span>
+                        {variant && (
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <div
+                              className="w-3 h-3 rounded-full border border-gray-300"
+                              style={{ backgroundColor: color?.hex }}
+                            />
+                            <span>{variant.shade}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-2">
+                        <Link
+                          href={`/produkt/${product.slug}`}
+                          className="flex-1 btn-primary text-center text-sm py-2"
+                        >
+                          Do košíku
+                        </Link>
+                        <button
+                          onClick={() => removeFromFavorites(product.id)}
+                          className="px-4 py-2 border border-burgundy text-burgundy rounded-lg hover:bg-burgundy/5 transition-colors"
+                          aria-label="Odebrat z vybraných"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => removeFromFavorites(productId)}
-                      className="text-burgundy hover:text-maroon transition p-2"
-                      aria-label="Odebrat z oblíbených"
-                    >
-                      <svg
-                        className="w-6 h-6"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-                      </svg>
-                    </button>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
 
-            {/* Integration TODO */}
-            <div className="bg-burgundy/5 rounded-xl p-6 border border-burgundy/20">
-              <h3 className="font-semibold text-burgundy mb-2">
-                💡 Pro vývojáře
-              </h3>
-              <p className="text-sm text-gray-700">
-                Po integraci produktového katalogu nahraďte seznam ID produktů za plnohodnotné produktové karty
-                s obrázky, cenami a odkazy na detail produktu.
-              </p>
-            </div>
-
-            <div className="text-center pt-6">
+            {/* Continue Shopping */}
+            <div className="text-center">
               <Link
                 href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                 className="btn-secondary inline-block"
               >
-                Pokračovat v nákupu
+                Pokračovat v nákupu →
               </Link>
             </div>
           </div>

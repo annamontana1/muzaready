@@ -6,6 +6,7 @@ import { HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
 import ProductConfigurator from '@/components/ProductConfigurator';
 import { FINISHING_ADDONS } from '@/lib/finishing-addons';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface ProductPageProps {
   params: {
@@ -179,6 +180,16 @@ export default function ProductPage({ params, searchParams }: ProductPageProps) 
                 {/* Tier Badge */}
                 <div className="absolute top-4 left-4">
                   <span className="tier-badge">{product.tier}</span>
+                </div>
+
+                {/* Favorite Button */}
+                <div className="absolute top-4 right-4 z-20">
+                  <FavoriteButton
+                    productId={product.id}
+                    productName={product.name}
+                    size="lg"
+                    variant="icon"
+                  />
                 </div>
 
                 {/* Out of stock */}
