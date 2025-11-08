@@ -516,59 +516,158 @@ export default function NebarvenePanenskePage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-12 flex justify-center items-center gap-2">
+              <div className="mt-12 flex justify-center items-center gap-3">
+                {/* Levá šipka */}
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg border border-burgundy text-burgundy disabled:opacity-30 disabled:cursor-not-allowed hover:bg-burgundy hover:text-white transition"
+                  aria-label="Předchozí stránka"
+                  className="w-10 h-10 md:w-10 md:h-10 rounded-full flex items-center justify-center border border-burgundy text-burgundy disabled:opacity-40 disabled:cursor-not-allowed hover:bg-burgundy/10 transition"
                 >
-                  Předchozí
+                  ←
                 </button>
 
                 <div className="flex gap-2 items-center">
-                  {/* První 3 stránky nebo aktuální okolí */}
-                  {currentPage > 3 && (
-                    <>
-                      <button
-                        onClick={() => setCurrentPage(1)}
-                        className="w-10 h-10 rounded-lg font-medium transition border border-burgundy text-burgundy hover:bg-burgundy hover:text-white"
-                      >
-                        1
-                      </button>
-                      <span className="text-burgundy px-2">...</span>
-                    </>
-                  )}
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter(page => {
-                      if (totalPages <= 5) return true;
-                      if (page === 1 && currentPage <= 3) return true;
-                      if (page === 2 && currentPage <= 3) return true;
-                      if (page === 3 && currentPage <= 3) return true;
-                      if (Math.abs(currentPage - page) <= 1) return true;
-                      if (page === totalPages && currentPage >= totalPages - 2) return true;
-                      return false;
-                    })
-                    .map((page) => (
+                  {totalPages <= 7 ? (
+                    // Zobraz všechna čísla když je ≤7 stránek
+                    Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                       <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
-                        className={`w-10 h-10 rounded-lg font-medium transition ${
+                        aria-label={`Stránka ${page}`}
+                        aria-current={currentPage === page ? 'page' : undefined}
+                        className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
                           currentPage === page
-                            ? 'bg-burgundy text-white'
-                            : 'border border-burgundy text-burgundy hover:bg-burgundy hover:text-white'
+                            ? 'bg-[#4A2B29] text-white'
+                            : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
                         }`}
                       >
                         {page}
                       </button>
-                    ))}
-
-                  {currentPage < totalPages - 2 && (
+                    ))
+                  ) : (
+                    // Komplexní logika pro > 7 stránek
                     <>
-                      <span className="text-burgundy px-2">...</span>
+                      {/* Vždy zobraz 1 */}
+                      <button
+                        onClick={() => setCurrentPage(1)}
+                        aria-label="Stránka 1"
+                        aria-current={currentPage === 1 ? 'page' : undefined}
+                        className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                          currentPage === 1
+                            ? 'bg-[#4A2B29] text-white'
+                            : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                        }`}
+                      >
+                        1
+                      </button>
+
+                      {/* Vždy zobraz 2 */}
+                      <button
+                        onClick={() => setCurrentPage(2)}
+                        aria-label="Stránka 2"
+                        aria-current={currentPage === 2 ? 'page' : undefined}
+                        className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                          currentPage === 2
+                            ? 'bg-[#4A2B29] text-white'
+                            : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                        }`}
+                      >
+                        2
+                      </button>
+
+                      {/* Vždy zobraz 3 */}
+                      <button
+                        onClick={() => setCurrentPage(3)}
+                        aria-label="Stránka 3"
+                        aria-current={currentPage === 3 ? 'page' : undefined}
+                        className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                          currentPage === 3
+                            ? 'bg-[#4A2B29] text-white'
+                            : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                        }`}
+                      >
+                        3
+                      </button>
+
+                      {/* Tři tečky ... */}
+                      {currentPage > 4 && currentPage < totalPages - 2 ? (
+                        <span className="text-burgundy px-1">…</span>
+                      ) : currentPage <= 4 && totalPages > 4 ? (
+                        <span className="text-burgundy px-1">…</span>
+                      ) : null}
+
+                      {/* Aktuální stránka pokud je uprostřed (4 až N-3) */}
+                      {currentPage > 4 && currentPage < totalPages - 2 && (
+                        <button
+                          onClick={() => setCurrentPage(currentPage)}
+                          aria-label={`Stránka ${currentPage}`}
+                          aria-current="page"
+                          className="w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition bg-[#4A2B29] text-white"
+                        >
+                          {currentPage}
+                        </button>
+                      )}
+
+                      {/* Tři tečky před koncem pokud nejsme u konce */}
+                      {currentPage < totalPages - 3 && (
+                        <span className="text-burgundy px-1">…</span>
+                      )}
+
+                      {/* Poslední 3 stránky když jsme blízko konce */}
+                      {currentPage >= totalPages - 3 && totalPages > 5 && (
+                        <>
+                          {totalPages - 3 > 3 && (
+                            <button
+                              onClick={() => setCurrentPage(totalPages - 3)}
+                              aria-label={`Stránka ${totalPages - 3}`}
+                              aria-current={currentPage === totalPages - 3 ? 'page' : undefined}
+                              className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                                currentPage === totalPages - 3
+                                  ? 'bg-[#4A2B29] text-white'
+                                  : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                              }`}
+                            >
+                              {totalPages - 3}
+                            </button>
+                          )}
+                          <button
+                            onClick={() => setCurrentPage(totalPages - 2)}
+                            aria-label={`Stránka ${totalPages - 2}`}
+                            aria-current={currentPage === totalPages - 2 ? 'page' : undefined}
+                            className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                              currentPage === totalPages - 2
+                                ? 'bg-[#4A2B29] text-white'
+                                : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                            }`}
+                          >
+                            {totalPages - 2}
+                          </button>
+                          <button
+                            onClick={() => setCurrentPage(totalPages - 1)}
+                            aria-label={`Stránka ${totalPages - 1}`}
+                            aria-current={currentPage === totalPages - 1 ? 'page' : undefined}
+                            className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                              currentPage === totalPages - 1
+                                ? 'bg-[#4A2B29] text-white'
+                                : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                            }`}
+                          >
+                            {totalPages - 1}
+                          </button>
+                        </>
+                      )}
+
+                      {/* Vždy zobraz poslední stránku */}
                       <button
                         onClick={() => setCurrentPage(totalPages)}
-                        className="w-10 h-10 rounded-lg font-medium transition border border-burgundy text-burgundy hover:bg-burgundy hover:text-white"
+                        aria-label={`Stránka ${totalPages}`}
+                        aria-current={currentPage === totalPages ? 'page' : undefined}
+                        className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
+                          currentPage === totalPages
+                            ? 'bg-[#4A2B29] text-white'
+                            : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                        }`}
                       >
                         {totalPages}
                       </button>
@@ -576,12 +675,14 @@ export default function NebarvenePanenskePage() {
                   )}
                 </div>
 
+                {/* Pravá šipka */}
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg border border-burgundy text-burgundy disabled:opacity-30 disabled:cursor-not-allowed hover:bg-burgundy hover:text-white transition"
+                  aria-label="Další stránka"
+                  className="w-10 h-10 md:w-10 md:h-10 rounded-full flex items-center justify-center border border-burgundy text-burgundy disabled:opacity-40 disabled:cursor-not-allowed hover:bg-burgundy/10 transition"
                 >
-                  Další
+                  →
                 </button>
               </div>
             )}
