@@ -150,41 +150,64 @@ export default function ProductPage({ params, searchParams }: ProductPageProps) 
           </nav>
 
           <div className="grid md:grid-cols-2 gap-12">
-            {/* Product Image */}
-            <div className="aspect-square rounded-xl overflow-hidden relative">
-              <div
-                className="w-full h-full flex items-center justify-center relative"
-                style={{
-                  background: color
-                    ? `linear-gradient(135deg, ${color.hex} 0%, ${color.hex}dd 50%, ${color.hex}bb 100%)`
-                    : 'linear-gradient(135deg, #8B7355 0%, #8B7355dd 50%, #8B7355bb 100%)',
-                }}
-              >
+            {/* Left column: Image + B2B Banner */}
+            <div>
+              {/* Product Image */}
+              <div className="aspect-square rounded-xl overflow-hidden relative mb-6">
                 <div
-                  className="absolute inset-0 opacity-20"
+                  className="w-full h-full flex items-center justify-center relative"
                   style={{
-                    backgroundImage:
-                      'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
+                    background: color
+                      ? `linear-gradient(135deg, ${color.hex} 0%, ${color.hex}dd 50%, ${color.hex}bb 100%)`
+                      : 'linear-gradient(135deg, #8B7355 0%, #8B7355dd 50%, #8B7355bb 100%)',
                   }}
-                />
-                <div className="relative z-10 text-center text-white">
-                  <div className="text-2xl font-playfair mb-4">{product.tier}</div>
-                  <div className="text-lg mb-2">{variant?.structure}</div>
-                  <div className="text-sm">{variant?.length_cm} cm</div>
+                >
+                  <div
+                    className="absolute inset-0 opacity-20"
+                    style={{
+                      backgroundImage:
+                        'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
+                    }}
+                  />
+                  <div className="relative z-10 text-center text-white">
+                    <div className="text-2xl font-playfair mb-4">{product.tier}</div>
+                    <div className="text-lg mb-2">{variant?.structure}</div>
+                    <div className="text-sm">{variant?.length_cm} cm</div>
+                  </div>
                 </div>
+
+                {/* Tier Badge */}
+                <div className="absolute top-4 left-4">
+                  <span className="tier-badge">{product.tier}</span>
+                </div>
+
+                {/* Out of stock */}
+                {!product.in_stock && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <span className="text-white text-lg font-semibold">Dočasně vyprodáno</span>
+                  </div>
+                )}
               </div>
 
-              {/* Tier Badge */}
-              <div className="absolute top-4 left-4">
-                <span className="tier-badge">{product.tier}</span>
-              </div>
-
-              {/* Out of stock */}
-              {!product.in_stock && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                  <span className="text-white text-lg font-semibold">Dočasně vyprodáno</span>
+              {/* B2B Banner */}
+              <a
+                href="/velkoobchod"
+                className="block p-6 bg-gradient-to-br from-burgundy to-maroon text-white rounded-xl hover:shadow-lg transition-all duration-300 group"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm md:text-base font-semibold mb-1">
+                      Jste profesionál?
+                    </div>
+                    <div className="text-xs md:text-sm opacity-90">
+                      Získejte velkoobchodní ceny
+                    </div>
+                  </div>
+                  <div className="bg-white/20 group-hover:bg-white/30 transition px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ml-4">
+                    Registrovat B2B →
+                  </div>
                 </div>
-              )}
+              </a>
             </div>
 
             {/* Product Info */}
