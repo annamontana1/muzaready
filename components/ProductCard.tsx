@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
 import { useCart } from '@/contexts/CartContext';
+import FavoriteButton from './FavoriteButton';
 
 interface ProductCardProps {
   product: Product;
@@ -104,6 +105,18 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         >
           {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
         </button>
+
+        {/* Favorite Button */}
+        <div
+          className="absolute top-3 right-3 z-10"
+          onClick={(e) => e.preventDefault()}
+        >
+          <FavoriteButton
+            productId={product.id}
+            size="md"
+            variant="icon"
+          />
+        </div>
 
       {/* Product Image */}
       <div className="aspect-square overflow-hidden relative">

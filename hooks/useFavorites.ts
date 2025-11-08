@@ -12,6 +12,7 @@ export interface UseFavoritesReturn {
 }
 
 const STORAGE_KEY = 'favorites';
+const FAVORITES_UPDATE_EVENT = 'favorites-updated';
 
 export function useFavorites(): UseFavoritesReturn {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -35,11 +36,40 @@ export function useFavorites(): UseFavoritesReturn {
     }
   }, []);
 
+  // Listen for favorites updates from other components
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleFavoritesUpdate = () => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            setFavorites(parsed);
+          }
+        } else {
+          setFavorites([]);
+        }
+      } catch (error) {
+        console.error('Error syncing favorites:', error);
+      }
+    };
+
+    window.addEventListener(FAVORITES_UPDATE_EVENT, handleFavoritesUpdate);
+    return () => {
+      window.removeEventListener(FAVORITES_UPDATE_EVENT, handleFavoritesUpdate);
+    };
+  }, []);
+
   // Uložit do localStorage při změně
   useEffect(() => {
     if (isHydrated && typeof window !== 'undefined') {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+
+        // Notify other components
+        window.dispatchEvent(new Event(FAVORITES_UPDATE_EVENT));
 
         // Analytika
         if ('gtag' in window) {
