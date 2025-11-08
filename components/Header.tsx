@@ -79,148 +79,156 @@ export default function Header() {
             </Link>
 
             <div className="relative group">
-              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 py-2">
                 Vlasy k prodloužení
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
-                <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Nebarvené panenské vlasy
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Barvené blond vlasy
-                </Link>
+              <div className="absolute top-full left-0 pt-2 z-[250]">
+                <div className="w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  <Link
+                    href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                  >
+                    Nebarvené panenské vlasy
+                  </Link>
+                  <Link
+                    href="/vlasy-k-prodlouzeni/barvene-blond"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                  >
+                    Barvené blond vlasy
+                  </Link>
+                </div>
               </div>
             </div>
 
             <div className="relative group">
-              <Link href="/pricesky-a-paruky" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+              <Link href="/pricesky-a-paruky" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 py-2">
                 Příčesky a paruky
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
-                <Link
-                  href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Ofiny
-                </Link>
-                <Link
-                  href="/pricesky-a-paruky/toupee"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Toupee/tupé
-                </Link>
-                <Link
-                  href="/pricesky-a-paruky/vlasove-tresy"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Vlasové tresy
-                </Link>
-                <Link
-                  href="/pricesky-a-paruky/prave-paruky"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Pravé paruky
-                </Link>
-                <Link
-                  href="/pricesky-a-paruky/clip-in-vlasy"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Clip in vlasy
-                </Link>
-                <Link
-                  href="/pricesky-a-paruky/clip-in-culik"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Clip in culík
-                </Link>
+              <div className="absolute top-full left-0 pt-2 z-[250]">
+                <div className="w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  <Link
+                    href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                  >
+                    Ofiny
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/toupee"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Toupee/tupé
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/vlasove-tresy"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Vlasové tresy
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/prave-paruky"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Pravé paruky
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/clip-in-vlasy"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Clip in vlasy
+                  </Link>
+                  <Link
+                    href="/pricesky-a-paruky/clip-in-culik"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                  >
+                    Clip in culík
+                  </Link>
+                </div>
               </div>
             </div>
 
             <div className="relative group">
-              <Link href="/prislusenstvi" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+              <Link href="/prislusenstvi" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 py-2">
                 Příslušenství
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
-                <Link
-                  href="/prislusenstvi/tavici-kleste"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Tavicí kleště
-                </Link>
-                <Link
-                  href="/prislusenstvi/keratin"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Keratin
-                </Link>
-                <Link
-                  href="/prislusenstvi/pomykadlo"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Pomykadlo
-                </Link>
-                <Link
-                  href="/prislusenstvi/hrebeny"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Hřebeny
-                </Link>
-                <Link
-                  href="/prislusenstvi/kosmetika"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Kosmetika
-                </Link>
-                <Link
-                  href="/prislusenstvi/ostatni"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Ostatní
-                </Link>
+              <div className="absolute top-full left-0 pt-2 z-[250]">
+                <div className="w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  <Link
+                    href="/prislusenstvi/tavici-kleste"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                  >
+                    Tavicí kleště
+                  </Link>
+                  <Link
+                    href="/prislusenstvi/keratin"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Keratin
+                  </Link>
+                  <Link
+                    href="/prislusenstvi/pomykadlo"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Pomykadlo
+                  </Link>
+                  <Link
+                    href="/prislusenstvi/hrebeny"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Hřebeny
+                  </Link>
+                  <Link
+                    href="/prislusenstvi/kosmetika"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Kosmetika
+                  </Link>
+                  <Link
+                    href="/prislusenstvi/ostatni"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                  >
+                    Ostatní
+                  </Link>
+                </div>
               </div>
             </div>
 
             <div className="relative group">
-              <span className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer">
+              <span className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer py-2">
                 Metody zakončení
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </span>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
-                <Link
-                  href="/metody-zakonceni/vlasy-na-keratin"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Keratin / Mikrokeratin
-                </Link>
-                <Link
-                  href="/metody-zakonceni/pasky-nano-tapes"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Tape-in (nano tapes)
-                </Link>
-                <Link
-                  href="/metody-zakonceni/vlasove-tresy"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Ručně šité vlasové tresy
-                </Link>
+              <div className="absolute top-full left-0 pt-2 z-[250]">
+                <div className="w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                  <Link
+                    href="/metody-zakonceni/vlasy-na-keratin"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                  >
+                    Keratin / Mikrokeratin
+                  </Link>
+                  <Link
+                    href="/metody-zakonceni/pasky-nano-tapes"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Tape-in (nano tapes)
+                  </Link>
+                  <Link
+                    href="/metody-zakonceni/vlasove-tresy"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                  >
+                    Ručně šité vlasové tresy
+                  </Link>
+                </div>
               </div>
             </div>
 
