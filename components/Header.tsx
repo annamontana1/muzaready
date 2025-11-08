@@ -56,7 +56,7 @@ export default function Header() {
   return (
     <>
       <TopContactBar />
-      <header className="sticky top-0 z-50 bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
+      <header className="sticky top-0 z-[200] bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
       <div className="container mx-auto px-4">
         {/* Desktop Header */}
         <div className="hidden lg:flex items-center justify-between py-4">
@@ -85,7 +85,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -108,7 +108,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
                 <Link
                   href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -155,7 +155,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
                 <Link
                   href="/prislusenstvi/tavici-kleste"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -202,7 +202,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </span>
-              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[250]">
                 <Link
                   href="/metody-zakonceni/vlasy-na-keratin"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
