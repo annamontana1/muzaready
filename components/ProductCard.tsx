@@ -109,7 +109,10 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         {/* Favorite Button */}
         <div
           className="absolute top-3 right-3 z-10"
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
         >
           <FavoriteButton
             productId={product.id}
@@ -230,7 +233,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
     {/* Tier Information Modal */}
     {showTierModal && (
       <div
-        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4"
         onClick={closeTierModal}
       >
         <div

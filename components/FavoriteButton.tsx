@@ -89,7 +89,7 @@ export default function FavoriteButton({
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
-              className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-burgundy text-white px-6 py-3 rounded-lg shadow-2xl"
+              className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] bg-burgundy text-white px-6 py-3 rounded-lg shadow-2xl pointer-events-none"
             >
               <p className="text-sm font-medium">
                 {isActive ? 'Uloženo do vybraných' : 'Odebráno z vybraných'}
@@ -135,7 +135,7 @@ export default function FavoriteButton({
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-burgundy text-white px-6 py-3 rounded-lg shadow-2xl"
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] bg-burgundy text-white px-6 py-3 rounded-lg shadow-2xl pointer-events-none"
           >
             <p className="text-sm font-medium">
               {isActive ? 'Uloženo do vybraných' : 'Odebráno z vybraných'}
