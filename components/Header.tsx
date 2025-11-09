@@ -7,6 +7,7 @@ import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useCart } from '@/contexts/CartContext';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -23,7 +24,8 @@ export default function Header() {
   const [desktopMetodyOpen, setDesktopMetodyOpen] = useState(false);
 
   const { favoriteCount } = useFavorites();
-  const cartCount = 0; // TODO: Replace with actual cart count from cart context
+  const { getTotalItems } = useCart();
+  const cartCount = getTotalItems();
 
   // Close dropdown when clicking outside
   useEffect(() => {
