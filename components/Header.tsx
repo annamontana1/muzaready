@@ -87,7 +87,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-50 pt-2">
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -110,7 +110,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-50 pt-2">
                   <Link
                     href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -157,7 +157,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-50 pt-2">
                   <Link
                     href="/prislusenstvi/tavici-kleste"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -204,7 +204,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-50 pt-2">
                   <Link
                     href="/metody-zakonceni/vlasy-na-keratin"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
