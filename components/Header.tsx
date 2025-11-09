@@ -16,8 +16,26 @@ export default function Header() {
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
 
+  // Desktop dropdowns (click-based)
+  const [desktopVlasyOpen, setDesktopVlasyOpen] = useState(false);
+  const [desktopPriceskyOpen, setDesktopPriceskyOpen] = useState(false);
+  const [desktopPrislusenstviOpen, setDesktopPrislusenstviOpen] = useState(false);
+  const [desktopMetodyOpen, setDesktopMetodyOpen] = useState(false);
+
   const { favoriteCount } = useFavorites();
   const cartCount = 0; // TODO: Replace with actual cart count from cart context
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClick = () => {
+      setDesktopVlasyOpen(false);
+      setDesktopPriceskyOpen(false);
+      setDesktopPrislusenstviOpen(false);
+      setDesktopMetodyOpen(false);
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
 
   // Body scroll lock pro mobilní menu
   useEffect(() => {
@@ -56,7 +74,7 @@ export default function Header() {
   return (
     <>
       <TopContactBar />
-      <header className="sticky top-0 z-[200] bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
+      <header className="sticky top-0 z-50 bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
       <div className="container mx-auto px-4">
         {/* Desktop Header */}
         <div className="hidden lg:flex items-center justify-between py-4">
@@ -78,43 +96,58 @@ export default function Header() {
               Domů
             </Link>
 
-            <div className="relative py-2 group">
-              <Link
-                href="/vlasy-k-prodlouzeni"
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDesktopVlasyOpen(!desktopVlasyOpen);
+                  setDesktopPriceskyOpen(false);
+                  setDesktopPrislusenstviOpen(false);
+                  setDesktopMetodyOpen(false);
+                }}
                 className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1"
               >
                 Vlasy k prodloužení
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-              </Link>
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
-                <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Nebarvené panenské vlasy
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Barvené blond vlasy
-                </Link>
-              </div>
+              </button>
+              {desktopVlasyOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
+                  <Link
+                    href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                  >
+                    Nebarvené panenské vlasy
+                  </Link>
+                  <Link
+                    href="/vlasy-k-prodlouzeni/barvene-blond"
+                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                  >
+                    Barvené blond vlasy
+                  </Link>
+                </div>
+              )}
             </div>
 
-            <div className="relative py-2 group">
-              <Link
-                href="/pricesky-a-paruky"
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDesktopPriceskyOpen(!desktopPriceskyOpen);
+                  setDesktopVlasyOpen(false);
+                  setDesktopPrislusenstviOpen(false);
+                  setDesktopMetodyOpen(false);
+                }}
                 className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1"
               >
                 Příčesky a paruky
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-              </Link>
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
+              </button>
+              {desktopPriceskyOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
                   <Link
                     href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -152,19 +185,27 @@ export default function Header() {
                     Clip in culík
                   </Link>
                 </div>
+              )}
             </div>
 
-            <div className="relative py-2 group">
-              <Link
-                href="/prislusenstvi"
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDesktopPrislusenstviOpen(!desktopPrislusenstviOpen);
+                  setDesktopVlasyOpen(false);
+                  setDesktopPriceskyOpen(false);
+                  setDesktopMetodyOpen(false);
+                }}
                 className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1"
               >
                 Příslušenství
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-              </Link>
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
+              </button>
+              {desktopPrislusenstviOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
                   <Link
                     href="/prislusenstvi/tavici-kleste"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -202,16 +243,27 @@ export default function Header() {
                     Ostatní
                   </Link>
                 </div>
+              )}
             </div>
 
-            <div className="relative py-2 group">
-              <span className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer">
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDesktopMetodyOpen(!desktopMetodyOpen);
+                  setDesktopVlasyOpen(false);
+                  setDesktopPriceskyOpen(false);
+                  setDesktopPrislusenstviOpen(false);
+                }}
+                className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer"
+              >
                 Metody zakončení
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-              </span>
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
+              </button>
+              {desktopMetodyOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
                   <Link
                     href="/metody-zakonceni/vlasy-na-keratin"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -231,6 +283,7 @@ export default function Header() {
                     Ručně šité vlasové tresy
                   </Link>
                 </div>
+              )}
             </div>
 
             <Link href="/velkoobchod" className="text-burgundy font-medium hover:text-maroon transition">
