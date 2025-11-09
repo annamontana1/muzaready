@@ -87,7 +87,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: 'calc(100% + 8px)' }}>
+              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -101,8 +101,6 @@ export default function Header() {
                   Barvené blond vlasy
                 </Link>
               </div>
-              {/* Invisible bridge for hover */}
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 h-2 z-40"></div>
             </div>
 
             <div className="relative group">
@@ -112,7 +110,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: 'calc(100% + 8px)' }}>
+              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
                   <Link
                     href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -150,8 +148,6 @@ export default function Header() {
                     Clip in culík
                   </Link>
                 </div>
-              {/* Invisible bridge for hover */}
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 h-2 z-40"></div>
             </div>
 
             <div className="relative group">
@@ -161,7 +157,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: 'calc(100% + 8px)' }}>
+              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
                   <Link
                     href="/prislusenstvi/tavici-kleste"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -199,8 +195,6 @@ export default function Header() {
                     Ostatní
                   </Link>
                 </div>
-              {/* Invisible bridge for hover */}
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 h-2 z-40"></div>
             </div>
 
             <div className="relative group">
@@ -210,7 +204,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: 'calc(100% + 8px)' }}>
+              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
                   <Link
                     href="/metody-zakonceni/vlasy-na-keratin"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -230,8 +224,6 @@ export default function Header() {
                     Ručně šité vlasové tresy
                   </Link>
                 </div>
-              {/* Invisible bridge for hover */}
-              <div className="hidden group-hover:block absolute top-full left-0 w-64 h-2 z-40"></div>
             </div>
 
             <Link href="/velkoobchod" className="text-burgundy font-medium hover:text-maroon transition">
