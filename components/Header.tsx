@@ -16,12 +16,6 @@ export default function Header() {
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
 
-  // Desktop dropdown states
-  const [desktopVlasyOpen, setDesktopVlasyOpen] = useState(false);
-  const [desktopPriceskyOpen, setDesktopPriceskyOpen] = useState(false);
-  const [desktopPrislusenstviOpen, setDesktopPrislusenstviOpen] = useState(false);
-  const [desktopMetodyOpen, setDesktopMetodyOpen] = useState(false);
-
   const { favoriteCount } = useFavorites();
   const cartCount = 0; // TODO: Replace with actual cart count from cart context
 
@@ -84,48 +78,43 @@ export default function Header() {
               Domů
             </Link>
 
-            <div
-              className="relative"
-              onMouseEnter={() => setDesktopVlasyOpen(true)}
-              onMouseLeave={() => setDesktopVlasyOpen(false)}
-            >
-              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 py-2">
+            <div className="relative py-2 group">
+              <Link
+                href="/vlasy-k-prodlouzeni"
+                className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1"
+              >
                 Vlasy k prodloužení
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              {desktopVlasyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-[250]">
-                  <Link
-                    href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                  >
-                    Nebarvené panenské vlasy
-                  </Link>
-                  <Link
-                    href="/vlasy-k-prodlouzeni/barvene-blond"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                  >
-                    Barvené blond vlasy
-                  </Link>
-                </div>
-              )}
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
+                <Link
+                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                >
+                  Nebarvené panenské vlasy
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/barvene-blond"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                >
+                  Barvené blond vlasy
+                </Link>
+              </div>
             </div>
 
-            <div
-              className="relative"
-              onMouseEnter={() => setDesktopPriceskyOpen(true)}
-              onMouseLeave={() => setDesktopPriceskyOpen(false)}
-            >
-              <Link href="/pricesky-a-paruky" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 py-2">
+            <div className="relative py-2 group">
+              <Link
+                href="/pricesky-a-paruky"
+                className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1"
+              >
                 Příčesky a paruky
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              {desktopPriceskyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-[250]">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
                   <Link
                     href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -163,22 +152,19 @@ export default function Header() {
                     Clip in culík
                   </Link>
                 </div>
-              )}
             </div>
 
-            <div
-              className="relative"
-              onMouseEnter={() => setDesktopPrislusenstviOpen(true)}
-              onMouseLeave={() => setDesktopPrislusenstviOpen(false)}
-            >
-              <Link href="/prislusenstvi" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 py-2">
+            <div className="relative py-2 group">
+              <Link
+                href="/prislusenstvi"
+                className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1"
+              >
                 Příslušenství
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </Link>
-              {desktopPrislusenstviOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-[250]">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
                   <Link
                     href="/prislusenstvi/tavici-kleste"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -216,22 +202,16 @@ export default function Header() {
                     Ostatní
                   </Link>
                 </div>
-              )}
             </div>
 
-            <div
-              className="relative"
-              onMouseEnter={() => setDesktopMetodyOpen(true)}
-              onMouseLeave={() => setDesktopMetodyOpen(false)}
-            >
-              <span className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer py-2">
+            <div className="relative py-2 group">
+              <span className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer">
                 Metody zakončení
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </span>
-              {desktopMetodyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-[250]">
+              <div className="hidden group-hover:block absolute top-full left-0 w-64 bg-white shadow-heavy rounded-lg z-[250] pt-2">
                   <Link
                     href="/metody-zakonceni/vlasy-na-keratin"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -251,7 +231,6 @@ export default function Header() {
                     Ručně šité vlasové tresy
                   </Link>
                 </div>
-              )}
             </div>
 
             <Link href="/velkoobchod" className="text-burgundy font-medium hover:text-maroon transition">
