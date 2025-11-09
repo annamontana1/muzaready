@@ -113,7 +113,7 @@ export default function Header() {
                 </svg>
               </button>
               {desktopVlasyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
                   <Link
                     href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -147,7 +147,7 @@ export default function Header() {
                 </svg>
               </button>
               {desktopPriceskyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
                   <Link
                     href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -205,7 +205,7 @@ export default function Header() {
                 </svg>
               </button>
               {desktopPrislusenstviOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
                   <Link
                     href="/prislusenstvi/tavici-kleste"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
@@ -263,7 +263,7 @@ export default function Header() {
                 </svg>
               </button>
               {desktopMetodyOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50" onClick={(e) => e.stopPropagation()}>
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-heavy rounded-lg z-50">
                   <Link
                     href="/metody-zakonceni/vlasy-na-keratin"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
