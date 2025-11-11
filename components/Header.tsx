@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
@@ -17,41 +17,26 @@ export default function Header() {
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
 
-  const { favoriteCount } = useFavorites();
-  const { getTotalItems } = useCart();
-  const cartCount = getTotalItems();
+  const { favorites } = useFavorites();
+  const { items } = useCart();
 
-  // Body scroll lock pro mobilní menu
+  const favoriteCount = favorites.length;
+  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
+
+  // Memoize search overlay close handler - DEPENDENCY: []
+  const handleSearchOverlayClose = useCallback(() => {
+    setSearchOverlayOpen(false);
+  }, []);
+
+  // Body scroll lock pro mobilní menu - DEPENDENCY: [mobileMenuOpen]
   useEffect(() => {
     if (mobileMenuOpen) {
-      // Lock scroll
-      document.documentElement.style.overflow = 'hidden';
-      document.documentElement.style.position = 'fixed';
-      document.documentElement.style.width = '100%';
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.overscrollBehavior = 'none';
     } else {
-      // Unlock scroll
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.position = '';
-      document.documentElement.style.width = '';
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.overscrollBehavior = '';
     }
-
     return () => {
-      // Cleanup on unmount
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.position = '';
-      document.documentElement.style.width = '';
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.overscrollBehavior = '';
     };
   }, [mobileMenuOpen]);
 
@@ -256,12 +241,16 @@ export default function Header() {
               </svg>
               <Badge count={favoriteCount} />
             </Link>
-            <button className="text-burgundy hover:text-maroon transition p-2 relative" aria-label="Košík">
+            <Link
+              href="/kosik"
+              className="text-burgundy hover:text-maroon transition p-2 relative"
+              aria-label="Košík"
+            >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               <Badge count={cartCount} />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -307,12 +296,16 @@ export default function Header() {
                 </svg>
                 <Badge count={favoriteCount} variant="small" />
               </Link>
-              <button className="text-burgundy p-2 relative" aria-label="Košík">
+              <Link
+                href="/kosik"
+                className="text-burgundy p-2 relative"
+                aria-label="Košík"
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 <Badge count={cartCount} variant="small" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -586,7 +579,7 @@ export default function Header() {
       </>
     )}
 
-    <SearchOverlay isOpen={searchOverlayOpen} onClose={() => setSearchOverlayOpen(false)} />
+    <SearchOverlay isOpen={searchOverlayOpen} onClose={handleSearchOverlayClose} />
     </>
   );
 }

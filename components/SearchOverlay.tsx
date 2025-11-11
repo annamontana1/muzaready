@@ -17,6 +17,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const onCloseRef = useRef(onClose);
 
   // Rychlé návrhy
   const quickSuggestions = [
@@ -26,6 +27,11 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     'Standard 50 cm',
     'Luxe rovné',
   ];
+
+  // Keep onClose ref in sync - DEPENDENCY: [onClose]
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   // Auto focus při otevření
   useEffect(() => {
@@ -39,16 +45,18 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     }
   }, [isOpen]);
 
-  // Zavření na Esc
+  // Zavření na Esc - DEPENDENCY: [isOpen] (uses ref for stable closure)
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
+      if (e.key === 'Escape') {
+        onCloseRef.current();
       }
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   // Blokovat scroll při otevřeném overlay
   useEffect(() => {

@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin Users
+model AdminUser {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String   // Should be hashed in production
+  role      String   @default("editor") // admin, manager, editor
+  status    String   @default("active") // active, inactive
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+// Products
+model Product {
+  id                        String   @id @default(cuid())
+  name                      String
+  category                  String?
+  tier                      String   // Standard, LUXE, Platinum edition
+  base_price_per_100g_45cm  Float
+  set_id                    String?
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  variants Variant[]
+  favorites Favorite[]
+  cartItems CartItem[]
+
+  @@map("products")
+}
+
+// Product Variants
+model Variant {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String   // e.g., "45cm", "60cm", "65cm"
+  price     Float
+  createdAt DateTime @default(now())
+
+  @@map("variants")
+}
+
+// Orders
+model Order {
+  id        String   @id @default(cuid())
+  email     String
+  status    String   @default("pending") // pending, shipped, delivered, cancelled
+  total     Float
+  items     OrderItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("orders")
+}
+
+// Order Items
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  quantity  Int
+  price     Float
+  variant   String?
+
+  @@map("order_items")
+}
+
+// Shopping Cart
+model CartItem {
+  id        String   @id @default(cuid())
+  sessionId String   // Anonymous session or user ID
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  variant   String?  // e.g., "45cm", "60cm"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sessionId, productId])
+  @@map("cart_items")
+}
+
+// Favorites/Wishlist
+model Favorite {
+  id        String   @id @default(cuid())
+  sessionId String   // Anonymous session or user ID
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([sessionId, productId])
+  @@map("favorites")
+}

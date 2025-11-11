@@ -62,7 +62,7 @@ export default function ShadeGallery({
             const isSelected = selectedShades.includes(shade);
 
             return (
-              <button
+              <div
                 key={shade}
                 onClick={() => handleShadeClick(shade)}
                 onTouchStart={(e) => {
@@ -82,9 +82,11 @@ export default function ShadeGallery({
                   setTouchStart(null);
                   setIsDragging(false);
                 }}
-                className={`flex-shrink-0 snap-start group transition-transform duration-200 ${
+                className={`flex-shrink-0 snap-start group transition-transform duration-200 cursor-pointer ${
                   isSelected ? 'scale-105' : 'hover:scale-105 active:scale-105'
                 }`}
+                role="button"
+                tabIndex={0}
               >
                 <div className="flex flex-col items-center gap-1 md:gap-2">
                   {/* Miniatura fotky */}
@@ -157,7 +159,7 @@ export default function ShadeGallery({
                     </p>
                   </div>
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>

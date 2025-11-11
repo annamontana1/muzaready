@@ -18,16 +18,22 @@ export default function FavoriteButton({
   variant = 'icon',
   className = ''
 }: FavoriteButtonProps) {
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
   const [showToast, setShowToast] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
+  // Check if product is in favorites
   useEffect(() => {
-    setIsActive(isFavorite(productId));
-  }, [isFavorite, productId]);
+    const isFav = favorites.some(fav => fav.id === productId);
+    setIsActive(isFav);
+  }, [productId, favorites]);
 
   const handleClick = () => {
-    toggleFavorite(productId);
+    if (isActive) {
+      removeFavorite(productId);
+    } else {
+      addFavorite({ id: productId });
+    }
     const newState = !isActive;
     setIsActive(newState);
 

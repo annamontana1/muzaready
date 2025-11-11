@@ -7,11 +7,13 @@ import { HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
 
 export default function OblibeneePage() {
-  const { favorites, favoriteCount, removeFromFavorites } = useFavorites();
+  const { favorites, removeFavorite } = useFavorites();
+
+  const favoriteCount = favorites.length;
 
   // Get actual products from favorites
   const favoriteProducts = mockProducts.filter((product) =>
-    favorites.includes(product.id)
+    favorites.some(fav => fav.id === product.id)
   );
 
   return (
@@ -146,7 +148,7 @@ export default function OblibeneePage() {
                           Do košíku
                         </Link>
                         <button
-                          onClick={() => removeFromFavorites(product.id)}
+                          onClick={() => removeFavorite(product.id)}
                           className="px-4 py-2 border border-burgundy text-burgundy rounded-lg hover:bg-burgundy/5 transition-colors"
                           aria-label="Odebrat z vybraných"
                         >

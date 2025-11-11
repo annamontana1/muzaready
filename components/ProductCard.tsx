@@ -69,7 +69,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   const listingTitle = getListingTitle(displayVariant);
   const tierInfo = getTierExplanation(product.tier);
 
-  const handleTierClick = (e: React.MouseEvent) => {
+  const handleTierClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setShowTierModal(true);
@@ -98,13 +98,20 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
     <>
       <Link href={`/produkt/${product.slug}`} className="product-card group block">
         {/* Clickable Tier Badge with Info Icon */}
-        <button
+        <div
           onClick={handleTierClick}
           className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer"
+          role="button"
+          tabIndex={0}
           aria-label={`Zobrazit informace o ${product.tier}`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              handleTierClick(e);
+            }
+          }}
         >
           {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
-        </button>
+        </div>
 
         {/* Favorite Button */}
         <div

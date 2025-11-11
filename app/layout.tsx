@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 import { CartProvider } from "@/contexts/CartContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://muza-hair-shop.vercel.app'),
@@ -77,15 +78,17 @@ export default function RootLayout({
   return (
     <html lang="cs">
       <body className="antialiased">
-        <CartProvider>
-          <OrganizationSchema />
-          <WebSiteSchema />
-          <Header />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-        </CartProvider>
+        <FavoritesProvider>
+          <CartProvider>
+            <OrganizationSchema />
+            <WebSiteSchema />
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </CartProvider>
+        </FavoritesProvider>
       </body>
     </html>
   );
