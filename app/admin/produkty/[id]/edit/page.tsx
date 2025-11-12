@@ -3,8 +3,16 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { mockProducts } from '@/lib/mock-products';
-import { Product } from '@/types/product';
+
+interface Product {
+  id: string;
+  name: string;
+  tier: string;
+  base_price_per_100g_45cm: number;
+  category: string;
+  set_id?: string;
+  variants: any[];
+}
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -24,19 +32,34 @@ export default function EditProductPage() {
   });
 
   useEffect(() => {
-    // Load product from mock data
-    const foundProduct = mockProducts.find((p) => p.id === productId);
-    if (foundProduct) {
-      setProduct(foundProduct);
-      setFormData({
-        name: foundProduct.name,
-        tier: foundProduct.tier,
-        base_price_per_100g_45cm: foundProduct.base_price_per_100g_45cm,
-      });
-    } else {
-      setError('Produkt nebyl nalezen');
+    // Fetch product from API
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`/api/products/${productId}`);
+        if (!response.ok) {
+          setError('Produkt nebyl nalezen');
+          setLoading(false);
+          return;
+        }
+
+        const foundProduct = await response.json();
+        setProduct(foundProduct);
+        setFormData({
+          name: foundProduct.name,
+          tier: foundProduct.tier,
+          base_price_per_100g_45cm: foundProduct.base_price_per_100g_45cm,
+        });
+        setLoading(false);
+      } catch (err) {
+        setError('Chyba při načítání produktu');
+        console.error(err);
+        setLoading(false);
+      }
+    };
+
+    if (productId) {
+      fetchProduct();
     }
-    setLoading(false);
   }, [productId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -55,15 +78,18 @@ export default function EditProductPage() {
     setSuccess('');
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-      // In real app, this would be an API call like:
-      // const response = await fetch(`/api/admin/products/${productId}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || 'Chyba při ukládání produktu');
+        setSaving(false);
+        return;
+      }
 
       setSuccess('Produkt byl úspěšně aktualizován');
       setTimeout(() => {
@@ -72,7 +98,6 @@ export default function EditProductPage() {
     } catch (err) {
       setError('Chyba při ukládání produktu');
       console.error(err);
-    } finally {
       setSaving(false);
     }
   };

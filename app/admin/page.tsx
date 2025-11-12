@@ -1,25 +1,59 @@
-'use client';
+import prisma from '@/lib/prisma';
+import { formatDistanceToNow } from 'date-fns';
+import { cs } from 'date-fns/locale';
 
-import { useState, useEffect } from 'react';
-import { mockProducts } from '@/lib/mock-products';
+export const dynamic = 'force-dynamic';
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    totalOrders: 0,
-    totalRevenue: 0,
-    pendingOrders: 0,
-  });
+export default async function AdminDashboard() {
+  // Fetch data from database
+  const [products, orders] = await Promise.all([
+    prisma.product.findMany(),
+    prisma.order.findMany({
+      include: { items: true },
+      orderBy: { createdAt: 'desc' },
+      take: 5, // Get last 5 orders
+    }),
+  ]);
 
-  useEffect(() => {
-    // Mock data - v realné aplikaci by to byla data z DB
-    setStats({
-      totalProducts: mockProducts.length,
-      totalOrders: 12,
-      totalRevenue: 45600,
-      pendingOrders: 3,
-    });
-  }, []);
+  // Calculate statistics
+  const totalProducts = products.length;
+  const totalOrders = orders.length;
+  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+  const pendingOrders = orders.filter((o) => o.status === 'pending').length;
+
+  const formatCzech = (date: Date) => {
+    return formatDistanceToNow(new Date(date), { addSuffix: true, locale: cs });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'bg-orange-100 text-orange-800';
+      case 'paid':
+        return 'bg-blue-100 text-blue-800';
+      case 'shipped':
+        return 'bg-purple-100 text-purple-800';
+      case 'delivered':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Čeká na platbu';
+      case 'paid':
+        return 'Zaplaceno';
+      case 'shipped':
+        return 'Odesláno';
+      case 'delivered':
+        return 'Doručeno';
+      default:
+        return status;
+    }
+  };
 
   return (
     <div>
@@ -32,7 +66,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Produkty</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalProducts}</p>
+              <p className="text-3xl font-bold text-gray-900">{totalProducts}</p>
             </div>
             <div className="text-4xl">📦</div>
           </div>
@@ -43,7 +77,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Objednávky</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalOrders}</p>
+              <p className="text-3xl font-bold text-gray-900">{totalOrders}</p>
             </div>
             <div className="text-4xl">🛒</div>
           </div>
@@ -54,7 +88,9 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Příjmy (Kč)</p>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalRevenue.toLocaleString('cs-CZ')}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {totalRevenue.toLocaleString('cs-CZ')}
+              </p>
             </div>
             <div className="text-4xl">💰</div>
           </div>
@@ -65,7 +101,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">Čeká zpracování</p>
-              <p className="text-3xl font-bold text-orange-600">{stats.pendingOrders}</p>
+              <p className="text-3xl font-bold text-orange-600">{pendingOrders}</p>
             </div>
             <div className="text-4xl">⏳</div>
           </div>
@@ -81,36 +117,55 @@ export default function AdminDashboard() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Zákazník</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Cena</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Datum</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Cena
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Datum
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900">#1001</td>
-                <td className="px-6 py-4 text-sm text-gray-900">Jana Nováková</td>
-                <td className="px-6 py-4 text-sm text-gray-900">5 200 Kč</td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">
-                    Čeká
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">11. listopadu 2025</td>
-              </tr>
-              <tr className="border-b border-gray-200 hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900">#1000</td>
-                <td className="px-6 py-4 text-sm text-gray-900">Marie Svobodová</td>
-                <td className="px-6 py-4 text-sm text-gray-900">3 800 Kč</td>
-                <td className="px-6 py-4 text-sm">
-                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                    Poslána
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">10. listopadu 2025</td>
-              </tr>
+              {orders.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-4 text-center text-gray-600">
+                    Zatím nejsou žádné objednávky
+                  </td>
+                </tr>
+              ) : (
+                orders.map((order) => (
+                  <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900 font-mono">
+                      {order.id.substring(0, 8)}...
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{order.email}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {order.total.toLocaleString('cs-CZ')} Kč
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          order.status
+                        )}`}
+                      >
+                        {getStatusLabel(order.status)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {formatCzech(order.createdAt)}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
