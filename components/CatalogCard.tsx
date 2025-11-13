@@ -79,18 +79,6 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
   };
 
   const isBulk = props.type === 'BULK';
-  const isPlatinum = props.tier === 'Platinum edition';
-
-  /**
-   * CTA Logic for BULK items:
-   * - If in stock and we have valid default combo → "Do košíku" (direct add with defaults)
-   * - Otherwise → "Zadat poptávku" (request quote)
-   * - Link to /produkt/[slug] only if user clicks to configure
-   */
-  const handleBulkCardClick = (e: React.MouseEvent) => {
-    // Default behavior: navigate to product page
-    // User can customize there if needed
-  };
 
   // BULK: Self-contained card with CTA logic
   if (isBulk && props.slug) {

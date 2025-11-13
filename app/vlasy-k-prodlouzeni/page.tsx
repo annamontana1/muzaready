@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Product } from '@/types/product';
 import { mockProducts } from '@/lib/mock-products';
@@ -12,32 +12,86 @@ import { pickDefaultBulkCombo } from '@/lib/bulk-pick';
  * Primary entry point for browsing BULK products
  * Tabs: Nebarvené (uncolored) | Barvené (colored)
  * Grid: Same as /katalog using CatalogCard components
+ *
+ * NEW: Line filter (Standard/Luxe/Platinum) with conditional length filter
+ * - Length filter only visible when exactly Platinum is selected
  */
 
 type ShadeGroup = 'nebarvene' | 'barvene';
+type LineType = 'standard' | 'luxe' | 'platinum';
+
+// Helper: normalize tier name to line type
+const normalizeTierToLine = (tier: string): LineType => {
+  if (tier === 'Standard') return 'standard';
+  if (tier === 'LUXE') return 'luxe';
+  if (tier === 'Platinum edition') return 'platinum';
+  return 'standard';
+};
 
 export default function VlasyKProdlouzenPage() {
   const [selectedTab, setSelectedTab] = useState<ShadeGroup>('nebarvene');
+  const [lineFilter, setLineFilter] = useState<LineType[]>([]);
+  const [lengthFilter, setLengthFilter] = useState<number[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Load and filter BULK products
-    const filtered = mockProducts.filter(p => {
-      // Skip Platinum edition (those are PIECE items)
-      if (p.tier === 'Platinum edition') return false;
+  // Compute if length filter should be shown
+  const showLengthFilter = lineFilter.length === 1 && lineFilter[0] === 'platinum';
 
-      // Filter by shade group
+  // Get all unfiltered products for this tab
+  const allProducts = useMemo(() => {
+    return mockProducts.filter(p => {
+      // Include both BULK (Standard/Luxe) and PIECE (Platinum)
       const isUncolored = p.category === 'nebarvene_panenske';
       if (selectedTab === 'nebarvene') return isUncolored;
       if (selectedTab === 'barvene') return !isUncolored;
+      return true;
+    });
+  }, [selectedTab]);
+
+  // Apply filters
+  useEffect(() => {
+    const filtered = allProducts.filter(p => {
+      // Line filter (tier)
+      if (lineFilter.length > 0) {
+        const productLine = normalizeTierToLine(p.tier);
+        if (!lineFilter.includes(productLine)) return false;
+      }
+
+      // Length filter (only applies when showLengthFilter is true)
+      if (showLengthFilter && lengthFilter.length > 0) {
+        // For Platinum items, check if any variant matches the length
+        const hasMatchingLength = p.variants?.some(v => lengthFilter.includes(v.length_cm));
+        if (!hasMatchingLength) return false;
+      }
 
       return true;
     });
 
     setProducts(filtered);
     setLoading(false);
-  }, [selectedTab]);
+  }, [selectedTab, allProducts, lineFilter, lengthFilter, showLengthFilter]);
+
+  // Reset pagination when filters change
+  const resetLength = () => {
+    setLengthFilter([]);
+  };
+
+  const toggleLine = (line: LineType) => {
+    setLineFilter(prev =>
+      prev.includes(line)
+        ? prev.filter(l => l !== line)
+        : [...prev, line]
+    );
+  };
+
+  const toggleLength = (cm: number) => {
+    setLengthFilter(prev =>
+      prev.includes(cm)
+        ? prev.filter(l => l !== cm)
+        : [...prev, cm]
+    );
+  };
 
   return (
     <div className="min-h-screen bg-soft-cream py-12">
@@ -80,6 +134,58 @@ export default function VlasyKProdlouzenPage() {
               {tab === 'nebarvene' ? 'Nebarvené' : 'Barvené'}
             </button>
           ))}
+        </div>
+
+        {/* Filter Section */}
+        <div className="mb-10 bg-white rounded-xl shadow-light p-6 border border-gray-200">
+          {/* Line Filter Chips */}
+          <div className="mb-6">
+            <p className="text-xs font-semibold text-gray-600 mb-3 uppercase">Linie</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { value: 'standard' as LineType, label: 'Standard' },
+                { value: 'luxe' as LineType, label: 'LUXE' },
+                { value: 'platinum' as LineType, label: 'Platinum Edition' }
+              ].map(({ value, label }) => (
+                <button
+                  key={value}
+                  onClick={() => toggleLine(value)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                    lineFilter.includes(value)
+                      ? 'bg-burgundy text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Length Filter (Conditional - only for Platinum) */}
+          {showLengthFilter && (
+            <div className="mb-0 pt-4 border-t border-gray-200">
+              <p className="text-xs font-semibold text-gray-600 mb-3 uppercase">Délka (cm)</p>
+              <div className="flex flex-wrap gap-2">
+                {[35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90].map((cm) => (
+                  <button
+                    key={cm}
+                    onClick={() => toggleLength(cm)}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+                      lengthFilter.includes(cm)
+                        ? 'bg-burgundy text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
+                    }`}
+                  >
+                    {cm}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Délka je filtrovací parametr jen pro Platinum Edition.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Loading State */}

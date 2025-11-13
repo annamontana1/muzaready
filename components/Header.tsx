@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
