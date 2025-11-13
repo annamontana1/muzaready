@@ -96,7 +96,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
-      const price = item.product.base_price_per_100g_45cm || 0;
+      // Use variant price (price_czk) if available (accounts for length/weight configuration)
+      // Fall back to product base price if variant price not set
+      const price = item.variant.price_czk || item.product.base_price_per_100g_45cm || 0;
       return total + price * item.quantity;
     }, 0);
   };

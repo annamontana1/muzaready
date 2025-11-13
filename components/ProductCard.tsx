@@ -96,37 +96,38 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
   return (
     <>
-      <Link href={`/produkt/${product.slug}`} className="product-card group block">
-        {/* Clickable Tier Badge with Info Icon */}
-        <div
-          onClick={handleTierClick}
-          className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer"
-          role="button"
-          tabIndex={0}
-          aria-label={`Zobrazit informace o ${product.tier}`}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              handleTierClick(e);
-            }
-          }}
-        >
-          {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
-        </div>
+      <div className="product-card group block relative">
+        <Link href={`/produkt/${product.slug}`} className="block">
+          {/* Clickable Tier Badge with Info Icon */}
+          <div
+            onClick={handleTierClick}
+            className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer"
+            role="button"
+            tabIndex={0}
+            aria-label={`Zobrazit informace o ${product.tier}`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleTierClick(e);
+              }
+            }}
+          >
+            {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
+          </div>
 
-        {/* Favorite Button */}
-        <div
-          className="absolute top-3 right-3 z-10"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <FavoriteButton
-            productId={product.id}
-            size="md"
-            variant="icon"
-          />
-        </div>
+          {/* Favorite Button */}
+          <div
+            className="absolute top-3 right-3 z-10"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <FavoriteButton
+              productId={product.id}
+              size="md"
+              variant="icon"
+            />
+          </div>
 
       {/* Product Image */}
       <div className="aspect-square overflow-hidden relative">
@@ -199,43 +200,47 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
               )}
             </div>
 
-            {/* Tlačítko Do košíku */}
-            {!isPlatinum && displayVariant?.in_stock && (
-              <button
-                onClick={handleAddToCart}
-                className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
-              >
-                {showAddedMessage ? '✓ Přidáno!' : 'Do košíku'}
-              </button>
-            )}
-
-            {/* Vyprodáno tlačítko */}
-            {!isPlatinum && displayVariant && !displayVariant.in_stock && (
-              <button
-                disabled
-                className="mt-3 w-full py-2 px-4 bg-gray-300 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
-              >
-                Vyprodáno
-              </button>
-            )}
-
-            {/* Platinum - kontaktovat */}
-            {isPlatinum && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  window.location.href = '/kontakt';
-                }}
-                className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md"
-              >
-                Kontaktovat
-              </button>
-            )}
           </div>
         )}
       </div>
-    </Link>
+        </Link>
+
+        {/* CTA Buttons - outside Link to avoid hydration issues */}
+        <div className="p-4 bg-ivory pt-0">
+          {!isPlatinum && displayVariant?.in_stock && (
+            <button
+              onClick={handleAddToCart}
+              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
+            >
+              {showAddedMessage ? '✓ Přidáno!' : 'Do košíku'}
+            </button>
+          )}
+
+          {/* Vyprodáno tlačítko */}
+          {!isPlatinum && displayVariant && !displayVariant.in_stock && (
+            <button
+              disabled
+              className="mt-3 w-full py-2 px-4 bg-gray-300 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+            >
+              Vyprodáno
+            </button>
+          )}
+
+          {/* Platinum - kontaktovat */}
+          {isPlatinum && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = '/kontakt';
+              }}
+              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md"
+            >
+              Kontaktovat
+            </button>
+          )}
+        </div>
+      </div>
 
     {/* Tier Information Modal */}
     {showTierModal && (

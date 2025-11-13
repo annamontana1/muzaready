@@ -4,9 +4,17 @@ import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { cs } from 'date-fns/locale';
 
+interface Order {
+  id: string;
+  email: string;
+  total: number;
+  status: string;
+  createdAt: string;
+}
+
 export default function AdminDashboard() {
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,10 +24,18 @@ export default function AdminDashboard() {
           fetch('/api/admin/products'),
           fetch('/api/admin/orders'),
         ]);
+        
+        if (!productsRes.ok || !ordersRes.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        
         const productsData = await productsRes.json();
         const ordersData = await ordersRes.json();
+        
+        // Handle new orders format (with pagination)
+        const ordersList = ordersData.orders || ordersData;
         setProducts(productsData);
-        setOrders(ordersData);
+        setOrders(ordersList);
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -31,8 +47,8 @@ export default function AdminDashboard() {
 
   const totalProducts = products.length;
   const totalOrders = orders.length;
-  const totalRevenue = orders.reduce((sum: number, order: any) => sum + (order.total || 0), 0);
-  const pendingOrders = orders.filter((o: any) => o.status === 'pending').length;
+  const totalRevenue = orders.reduce((sum: number, order: Order) => sum + (order.total || 0), 0);
+  const pendingOrders = orders.filter((o: Order) => o.status === 'pending').length;
 
   const formatCzech = (date: string | Date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true, locale: cs });

@@ -28,6 +28,18 @@ export function middleware(request: NextRequest) {
       // Redirect to login if no session
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
+
+    // Basic validation of session structure
+    try {
+      const sessionData = JSON.parse(adminSession.value);
+      if (!sessionData.email || !sessionData.token) {
+        // Invalid session structure, redirect to login
+        return NextResponse.redirect(new URL('/admin/login', request.url));
+      }
+    } catch (error) {
+      // Invalid JSON in session, redirect to login
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
   }
 
   // Product URL redirects

@@ -1,10 +1,18 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Product } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
 import { CONFIGURATOR_RANGES } from '@/lib/config';
 import ScrollPicker from './ScrollPicker';
+
+interface PriceMatrixEntry {
+  id: string;
+  category: string;
+  tier: string;
+  lengthCm: number;
+  pricePerGramCzk: number;
+}
 
 interface FinishingAddon {
   code: string;
@@ -27,14 +35,37 @@ export default function ProductConfigurator({
 }: ProductConfiguratorProps) {
   const isPlatinum = product.tier === 'Platinum edition';
 
-  // Default values: 40cm, 100g, 'raw' (surový cop)
+  // Default values: 40cm, 100g for Standard/LUXE; 'raw' (surový cop) for all
   const [selectedLength, setSelectedLength] = useState<number | null>(
     isPlatinum ? null : (initialLength ?? 40)
   );
   const [selectedWeight, setSelectedWeight] = useState<number | null>(
     isPlatinum ? null : (initialWeight ?? 100)
   );
+  // Platinum: Default to 'raw', Standard/LUXE: also default to 'raw'
   const [selectedFinishing, setSelectedFinishing] = useState<string | null>('raw');
+
+  // Load price matrix
+  const [priceMatrix, setPriceMatrix] = useState<PriceMatrixEntry[]>([]);
+  const [loadingMatrix, setLoadingMatrix] = useState(true);
+
+  useEffect(() => {
+    const fetchMatrix = async () => {
+      try {
+        const res = await fetch('/api/price-matrix');
+        if (!res.ok) throw new Error('Failed to load price matrix');
+        const data = await res.json();
+        setPriceMatrix(data);
+      } catch (err) {
+        console.error('Error loading price matrix:', err);
+        // Fall back to static calculator if matrix fails
+      } finally {
+        setLoadingMatrix(false);
+      }
+    };
+
+    fetchMatrix();
+  }, []);
 
   // Generate length options (35-90 cm, step 5)
   // SKLAD_REZIM = OFF: všechny kombinace jsou vždy vybratelné (on-demand výroba)
@@ -81,19 +112,45 @@ export default function ProductConfigurator({
 
     if (!selectedLength || !selectedWeight) return null;
 
-    const priceFor100g = priceCalculator.getPricePerWeight(
-      product.tier,
-      selectedLength,
-      product.category
+    // Map product tier to ceníkový tier
+    let matrixTier = product.tier?.toLowerCase() || 'standard';
+    if (matrixTier === 'luxe edition') matrixTier = 'luxe';
+    if (matrixTier === 'standard edition') matrixTier = 'standard';
+
+    // Map product category to matrix category
+    const matrixCategory = product.category === 'barvene_blond' ? 'barvene' : 'nebarvene';
+
+    // Look up price from matrix
+    const matrixEntry = priceMatrix.find(
+      (entry) =>
+        entry.tier === matrixTier &&
+        entry.category === matrixCategory &&
+        entry.lengthCm === selectedLength
     );
+
+    // Use matrix price if available, fall back to static calculator
+    let priceFor100g: number;
+    if (matrixEntry) {
+      // Convert per-gram price back to per-100g for calculation
+      priceFor100g = matrixEntry.pricePerGramCzk * 100;
+    } else {
+      // Fallback to static calculator
+      priceFor100g = priceCalculator.getPricePerWeight(
+        product.tier,
+        selectedLength,
+        product.category
+      );
+    }
 
     const basePrice = (priceFor100g * selectedWeight) / 100;
     const finishingAddon = finishing_addons.find(f => f.code === selectedFinishing);
     const addonPrice = finishingAddon?.price_add || 0;
 
     return basePrice + addonPrice;
-  }, [product, selectedLength, selectedWeight, selectedFinishing, finishing_addons, isPlatinum]);
+  }, [product, selectedLength, selectedWeight, selectedFinishing, finishing_addons, isPlatinum, priceMatrix]);
 
+  // Platinum: jen zakončení je povinné
+  // Standard/LUXE: délka, gramáž a zakončení jsou povinné
   const isConfigComplete = isPlatinum
     ? selectedFinishing !== null
     : selectedLength !== null && selectedWeight !== null && selectedFinishing !== null;
@@ -113,15 +170,8 @@ export default function ProductConfigurator({
 
   return (
     <div className="space-y-6">
-      {isPlatinum ? (
-        <>
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-sm text-amber-800">
-              <strong>Platinum Edition</strong> - Culík na míru s individuální cenou.
-            </p>
-          </div>
-        </>
-      ) : (
+      {/* Délka a Gramáž - POUZE pro Standard/LUXE */}
+      {!isPlatinum && (
         <>
           {/* Délka Picker */}
           <ScrollPicker
@@ -159,13 +209,14 @@ export default function ProductConfigurator({
       {/* Price and CTA */}
       <div className="border-t pt-6">
         {isPlatinum ? (
+          // Platinum: Bez zobrazení ceny, jen "Surový cop" info
           <div className="mb-4">
-            <p className="text-2xl font-semibold text-burgundy">Individuální cena</p>
-            <p className="text-sm text-gray-600 mt-1">
-              Cena bude upřesněna individuálně
+            <p className="text-base text-gray-600">
+              Platinum culík - cena se určí po konzultaci
             </p>
           </div>
         ) : (
+          // Standard/LUXE: Zobrazit vypočítanou cenu
           <div className="mb-4">
             {finalPrice !== null ? (
               <>
@@ -204,7 +255,7 @@ export default function ProductConfigurator({
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-          {isPlatinum ? 'Rezervovat culík' : 'Do košíku'}
+          Do košíku
         </button>
 
         {!isConfigComplete && (

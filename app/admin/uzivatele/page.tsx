@@ -114,7 +114,7 @@ export default function AdminUsersPage() {
     setFormData({
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: user.role as 'editor',
       password: '',
     });
     setShowEditModal(true);

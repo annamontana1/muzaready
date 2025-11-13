@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
       include: {
         items: {
           include: {
-            product: true,
+            sku: true,
           },
         },
       },
@@ -41,9 +41,11 @@ export async function POST(request: NextRequest) {
     // Import the quote function at runtime to avoid circular dependencies
     const { quoteCartLines } = await import('@/lib/stock');
 
-    // Validate and quote the cart lines
+    // Validate and quote the cart lines - recalculate all prices to ensure freshness
     let quotedLines;
     try {
+      // Note: This recalculates ALL prices from the database/matrix
+      // This prevents price discrepancies from stale cart items
       const quote = await quoteCartLines(cartLines);
       quotedLines = quote.items;
     } catch (quoteError: any) {
@@ -61,13 +63,17 @@ export async function POST(request: NextRequest) {
         total: quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0),
         items: {
           create: quotedLines.map((item) => ({
-            skuId: item.sku.id,
+            sku: {
+              connect: {
+                id: item.sku.id,
+              },
+            },
             saleMode: item.sku.saleMode,
             grams: item.grams,
             pricePerGram: item.pricePerGram,
             lineTotal: item.lineTotal,
             nameSnapshot: item.snapshotName,
-            ending: item.ending,
+            ending: item.ending as any,
             assemblyFeeType: item.assemblyFeeType,
             assemblyFeeCzk: item.assemblyFeeCzk,
             assemblyFeeTotal: item.assemblyFeeTotal,

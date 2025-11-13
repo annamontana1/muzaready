@@ -62,11 +62,12 @@ export default function SkuDetailPage() {
 
   const fetchSku = async () => {
     try {
-      const res = await fetch(`/api/admin/skus`);
-      if (!res.ok) throw new Error('Failed to fetch SKUs');
-      const data: Sku[] = await res.json();
-      const found = data.find((s) => s.id === skuId);
-      if (!found) throw new Error('SKU nenalezeno');
+      const res = await fetch(`/api/admin/skus/${skuId}`);
+      if (!res.ok) {
+        if (res.status === 404) throw new Error('SKU nenalezeno');
+        throw new Error('Failed to fetch SKU');
+      }
+      const found: Sku = await res.json();
       setSku(found);
       // Set default grams for BULK_G
       if (found.saleMode === 'BULK_G' && found.minOrderG) {
@@ -118,8 +119,9 @@ export default function SkuDetailPage() {
       return;
     }
 
-    // Store in localStorage (simple cart for now)
+    // Store in localStorage with timestamp to detect stale prices
     const cart = JSON.parse(localStorage.getItem('sku-cart') || '[]');
+    const timestamp = new Date().getTime();
     for (let i = 0; i < quantity; i++) {
       cart.push({
         skuId: sku!.id,
@@ -134,6 +136,7 @@ export default function SkuDetailPage() {
         assemblyFeeCzk: quote.assemblyFeeCzk,
         assemblyFeeTotal: quote.assemblyFeeTotal,
         lineGrandTotal: quote.lineGrandTotal,
+        addedAt: timestamp, // Store when item was added
       });
     }
     localStorage.setItem('sku-cart', JSON.stringify(cart));
@@ -298,10 +301,10 @@ export default function SkuDetailPage() {
                   </label>
                   <input
                     type="number"
-                    min={sku.minOrderG}
-                    max={sku.availableGrams}
-                    step={sku.stepG}
-                    value={selectedGrams}
+                    min={sku.minOrderG || undefined}
+                    max={sku.availableGrams || undefined}
+                    step={sku.stepG || undefined}
+                    value={selectedGrams || ''}
                     onChange={(e) => setSelectedGrams(e.target.value)}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy outline-none transition text-lg"
                     placeholder={`Min: ${sku.minOrderG}g, krok: ${sku.stepG}g`}

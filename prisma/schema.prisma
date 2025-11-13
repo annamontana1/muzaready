@@ -210,3 +210,18 @@ model StockMovement {
 
   @@map("stock_movements")
 }
+
+// Ceníková matice – jediný zdroj pravdy pro ceny za gram
+model PriceMatrix {
+  id              String   @id @default(cuid())
+  category        String   // "nebarvene" | "barvene"
+  tier            String   // "standard" | "luxe" | "platinum"
+  lengthCm        Int      // 40, 45, 50, 55, 60, 65, 70, 75, 80
+  pricePerGramCzk Decimal  // cena za 1 gram v Kč (s desetinným místem)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([category, tier, lengthCm])
+  @@map("price_matrix")
+  @@index([category, tier])
+}
