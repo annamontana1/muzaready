@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Sku {
   id: string;
@@ -25,9 +26,11 @@ interface Sku {
 }
 
 export default function CatalogPage() {
+  const router = useRouter();
   const [skus, setSkus] = useState<Sku[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSkus();
@@ -73,6 +76,60 @@ export default function CatalogPage() {
         return '⭐ Standard';
       default:
         return category;
+    }
+  };
+
+  const handleAddToCart = async (sku: Sku) => {
+    setAddingToCart(sku.id);
+    try {
+      // Get quote for default configuration (no ending = NONE)
+      const quoteRes = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lines: [
+            {
+              skuId: sku.id,
+              wantedGrams: sku.saleMode === 'BULK_G' ? sku.minOrderG : undefined,
+              ending: 'NONE',
+            },
+          ],
+        }),
+      });
+
+      if (!quoteRes.ok) {
+        const err = await quoteRes.json();
+        alert(`Chyba: ${err.error || 'Nelze vypočítat cenu'}`);
+        setAddingToCart(null);
+        return;
+      }
+
+      const quoteData = await quoteRes.json();
+      const quote = quoteData.items[0];
+
+      // Add to localStorage cart
+      const cart = JSON.parse(localStorage.getItem('sku-cart') || '[]');
+      cart.push({
+        skuId: sku.id,
+        skuName: sku.name,
+        customerCategory: sku.customerCategory,
+        saleMode: sku.saleMode,
+        grams: quote.grams,
+        pricePerGram: quote.pricePerGram,
+        lineTotal: quote.lineTotal,
+        ending: 'NONE',
+        assemblyFeeType: quote.assemblyFeeType,
+        assemblyFeeCzk: quote.assemblyFeeCzk,
+        assemblyFeeTotal: quote.assemblyFeeTotal,
+        lineGrandTotal: quote.lineGrandTotal,
+      });
+      localStorage.setItem('sku-cart', JSON.stringify(cart));
+
+      // Navigate to cart
+      router.push('/sku-kosik');
+    } catch (err: any) {
+      alert(`Chyba: ${err.message}`);
+      setAddingToCart(null);
     }
   };
 
@@ -235,12 +292,13 @@ export default function CatalogPage() {
                   </div>
 
                   {/* CTA Button */}
-                  <Link
-                    href={`/sku-detail/${sku.id}`}
-                    className="mt-4 block w-full bg-burgundy text-white text-center py-3 rounded-lg font-semibold hover:bg-maroon transition shadow-medium"
+                  <button
+                    onClick={() => handleAddToCart(sku)}
+                    disabled={addingToCart === sku.id}
+                    className="mt-4 w-full bg-burgundy text-white text-center py-3 rounded-lg font-semibold hover:bg-maroon transition shadow-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Nakonfigurovat a koupit
-                  </Link>
+                    {addingToCart === sku.id ? '⏳ Přidávám...' : '🛒 Do košíku'}
+                  </button>
                 </div>
               </div>
             ))}
