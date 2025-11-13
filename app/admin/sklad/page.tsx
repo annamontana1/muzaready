@@ -11,14 +11,18 @@ interface Sku {
   shadeName: string | null;
   lengthCm: number | null;
   structure: string | null;
+  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
   saleMode: string;
   pricePerGramCzk: number;
   weightTotalG: number | null;
   availableGrams: number | null;
   minOrderG: number | null;
   stepG: number | null;
+  isListed: boolean;
+  listingPriority: number | null;
   inStock: boolean;
   soldOut: boolean;
+  reservedUntil: string | null;
 }
 
 export default function SkuListPage() {
@@ -32,12 +36,15 @@ export default function SkuListPage() {
     shadeName: '',
     lengthCm: '',
     structure: '',
+    customerCategory: 'STANDARD',
     saleMode: 'PIECE_BY_WEIGHT',
     pricePerGramCzk: '',
     weightTotalG: '',
     availableGrams: '',
     minOrderG: '',
     stepG: '',
+    isListed: false,
+    listingPriority: '',
     inStock: false,
   });
 
@@ -78,6 +85,7 @@ export default function SkuListPage() {
         minOrderG: formData.minOrderG ? parseInt(formData.minOrderG) : null,
         stepG: formData.stepG ? parseInt(formData.stepG) : null,
         lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
+        listingPriority: formData.listingPriority ? parseInt(formData.listingPriority) : null,
       };
 
       const res = await fetch('/api/admin/skus', {
@@ -99,12 +107,15 @@ export default function SkuListPage() {
         shadeName: '',
         lengthCm: '',
         structure: '',
+        customerCategory: 'STANDARD',
         saleMode: 'PIECE_BY_WEIGHT',
         pricePerGramCzk: '',
         weightTotalG: '',
         availableGrams: '',
         minOrderG: '',
         stepG: '',
+        isListed: false,
+        listingPriority: '',
         inStock: false,
       });
       setShowForm(false);
@@ -187,6 +198,17 @@ export default function SkuListPage() {
           </select>
 
           <select
+            name="customerCategory"
+            value={formData.customerCategory}
+            onChange={handleInputChange}
+            className="border rounded px-3 py-2"
+          >
+            <option value="STANDARD">STANDARD</option>
+            <option value="LUXE">LUXE</option>
+            <option value="PLATINUM_EDITION">PLATINUM EDITION</option>
+          </select>
+
+          <select
             name="saleMode"
             value={formData.saleMode}
             onChange={handleInputChange}
@@ -257,6 +279,26 @@ export default function SkuListPage() {
             Na skladě
           </label>
 
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="isListed"
+              checked={formData.isListed}
+              onChange={handleInputChange}
+              className="w-4 h-4"
+            />
+            Zobrazit v katalogu
+          </label>
+
+          <input
+            type="number"
+            name="listingPriority"
+            placeholder="Priorita zobrazení (1-10)"
+            value={formData.listingPriority}
+            onChange={handleInputChange}
+            className="border rounded px-3 py-2"
+          />
+
           <button type="submit" className="col-span-2 bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
             Vytvořit SKU
           </button>
@@ -269,11 +311,14 @@ export default function SkuListPage() {
             <tr>
               <th className="px-4 py-2 text-left">SKU</th>
               <th className="px-4 py-2 text-left">Název</th>
+              <th className="px-4 py-2 text-left">Kategorie</th>
               <th className="px-4 py-2 text-left">Odstín</th>
               <th className="px-4 py-2 text-left">Délka</th>
               <th className="px-4 py-2 text-left">Cena/g</th>
               <th className="px-4 py-2 text-left">Typ</th>
               <th className="px-4 py-2 text-left">Stav</th>
+              <th className="px-4 py-2 text-left">Katalog</th>
+              <th className="px-4 py-2 text-left">Priorita</th>
               <th className="px-4 py-2 text-left">Skladové info</th>
             </tr>
           </thead>
@@ -282,6 +327,15 @@ export default function SkuListPage() {
               <tr key={sku.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-2 font-mono text-xs">{sku.sku}</td>
                 <td className="px-4 py-2">{sku.name || '-'}</td>
+                <td className="px-4 py-2 text-xs">
+                  <span className={`px-2 py-1 rounded ${
+                    sku.customerCategory === 'PLATINUM_EDITION' ? 'bg-yellow-100' :
+                    sku.customerCategory === 'LUXE' ? 'bg-pink-100' :
+                    'bg-gray-100'
+                  }`}>
+                    {sku.customerCategory || '-'}
+                  </span>
+                </td>
                 <td className="px-4 py-2">{sku.shadeName || sku.shade || '-'}</td>
                 <td className="px-4 py-2">{sku.lengthCm ? `${sku.lengthCm} cm` : '-'}</td>
                 <td className="px-4 py-2">{sku.pricePerGramCzk} Kč</td>
@@ -298,6 +352,16 @@ export default function SkuListPage() {
                   ) : (
                     <span className="text-gray-500">Vyprodáno</span>
                   )}
+                </td>
+                <td className="px-4 py-2 text-xs">
+                  {sku.isListed ? (
+                    <span className="text-blue-600 font-bold">✓ Ano</span>
+                  ) : (
+                    <span className="text-gray-500">-</span>
+                  )}
+                </td>
+                <td className="px-4 py-2 text-xs">
+                  {sku.listingPriority || '-'}
                 </td>
                 <td className="px-4 py-2 text-xs">
                   {sku.saleMode === 'PIECE_BY_WEIGHT' ? (
