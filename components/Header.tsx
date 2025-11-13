@@ -65,28 +65,9 @@ export default function Header() {
               Domů
             </Link>
 
-            <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                Vlasy k prodloužení
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
-                <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Nebarvené panenské vlasy
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/barvene-blond"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Barvené blond vlasy
-                </Link>
-              </div>
-            </div>
+            <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition">
+              Vlasy k prodloužení
+            </Link>
 
             <div className="relative group">
               <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">

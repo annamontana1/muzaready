@@ -81,10 +81,41 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
   const isBulk = props.type === 'BULK';
   const isPlatinum = props.tier === 'Platinum edition';
 
-  // BULK: Link to /produkt/[slug]
+  /**
+   * CTA Logic for BULK items:
+   * - If in stock and we have valid default combo → "Do košíku" (direct add with defaults)
+   * - Otherwise → "Zadat poptávku" (request quote)
+   * - Link to /produkt/[slug] only if user clicks to configure
+   */
+  const handleBulkCardClick = (e: React.MouseEvent) => {
+    // Default behavior: navigate to product page
+    // User can customize there if needed
+  };
+
+  // BULK: Self-contained card with CTA logic
   if (isBulk && props.slug) {
+    const hasValidCombo = props.lengthCm && props.inStock;
+    const bulkCta = hasValidCombo ? (
+      <button
+        className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
+        onClick={(e) => {
+          e.preventDefault();
+          // TODO: Implement add to cart with default combo
+        }}
+      >
+        🛒 Do košíku
+      </button>
+    ) : (
+      <Link
+        href={`/produkt/${props.slug}`}
+        className="mt-3 w-full py-2 px-4 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-all text-center block"
+      >
+        Zadat poptávku
+      </Link>
+    );
+
     return (
-      <Link href={`/produkt/${props.slug}`} className="product-card group block h-full">
+      <div className="product-card group h-full">
         <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-gray-200">
           {/* Image Section */}
           <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
@@ -150,12 +181,10 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </div>
 
             {/* CTA */}
-            <button className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95">
-              Vybrat parametry
-            </button>
+            {bulkCta}
           </div>
         </div>
-      </Link>
+      </div>
     );
   }
 
