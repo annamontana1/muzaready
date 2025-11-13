@@ -106,3 +106,67 @@ model Favorite {
   @@unique([sessionId, productId])
   @@map("favorites")
 }
+
+// SKU - skladová jednotka
+enum SaleMode {
+  PIECE_BY_WEIGHT  // culík s pevnou váhou
+  BULK_G           // prodej na gramy
+}
+
+model Sku {
+  id           String   @id @default(cuid())
+  sku          String   @unique
+  name         String?
+  productId    String?
+
+  // Vlasová metadata
+  shade        String?
+  shadeName    String?
+  shadeHex     String?
+  lengthCm     Int?
+  structure    String?   // rovné / vlna / kudrna
+  ending       String?
+  ribbonColor  String?
+
+  // Prodej a sklad
+  saleMode         SaleMode
+  pricePerGramCzk  Int        // cena za 1 g v Kč (95 = 95 Kč)
+
+  // PIECE_BY_WEIGHT
+  weightTotalG     Int?       // celková váha kusu (např. 124 g)
+  soldOut          Boolean    @default(false)
+
+  // BULK_G
+  availableGrams   Int?       // aktuálně dostupné gramy
+  minOrderG        Int?       // např. 50
+  stepG            Int?       // např. 10
+
+  // Stav
+  inStock       Boolean  @default(false)
+  inStockSince  DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  movements     StockMovement[]
+
+  @@map("skus")
+}
+
+enum MoveType {
+  IN
+  OUT
+  ADJUST
+}
+
+model StockMovement {
+  id         String   @id @default(cuid())
+  skuId      String
+  sku        Sku      @relation(fields: [skuId], references: [id], onDelete: Cascade)
+  type       MoveType
+  grams      Int
+  note       String?
+  refOrderId String?
+  createdAt  DateTime @default(now())
+
+  @@map("stock_movements")
+}
