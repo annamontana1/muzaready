@@ -72,10 +72,23 @@ model OrderItem {
   id        String   @id @default(cuid())
   orderId   String
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  quantity  Int
-  price     Float
-  variant   String?
+  skuId     String
+  sku       Sku      @relation(fields: [skuId], references: [id], onDelete: Restrict)
+
+  // Prodejní údaje (snapshot při vytvoření objednávky)
+  saleMode       SaleMode
+  grams          Int                 // u PIECE = weightTotalG, u BULK = uživatelem vybrané gramy
+  pricePerGram   Int
+  lineTotal      Int                 // grams * pricePerGram
+  nameSnapshot   String?
+
+  // Zakončení a práce
+  ending             EndingOption @default(NONE)
+  assemblyFeeType    String?      // "FLAT" | "PER_GRAM" | null
+  assemblyFeeCzk     Int?         // cena zakončení v Kč
+  assemblyFeeTotal   Int?         // assemblyFeeCzk * grams (pro PER_GRAM) nebo sam assemblyFeeCzk (FLAT)
+
+  createdAt     DateTime @default(now())
 
   @@map("order_items")
 }
@@ -107,10 +120,28 @@ model Favorite {
   @@map("favorites")
 }
 
-// SKU - skladová jednotka
+// Enums pro sklad a prodej
+enum HairTreatment {
+  PANENSKE_NEBARVENE
+  BARVENE
+}
+
+enum CustomerCategory {
+  STANDARD
+  LUXE
+  PLATINUM_EDITION
+}
+
 enum SaleMode {
   PIECE_BY_WEIGHT  // culík s pevnou váhou
   BULK_G           // prodej na gramy
+}
+
+enum EndingOption {
+  KERATIN
+  PASKY
+  TRESSY
+  NONE
 }
 
 model Sku {
@@ -118,6 +149,9 @@ model Sku {
   sku          String   @unique
   name         String?
   productId    String?
+
+  // Kategorie zákazníka (určuje saleMode)
+  customerCategory  CustomerCategory?
 
   // Vlasová metadata
   shade        String?
@@ -132,14 +166,19 @@ model Sku {
   saleMode         SaleMode
   pricePerGramCzk  Int        // cena za 1 g v Kč (95 = 95 Kč)
 
-  // PIECE_BY_WEIGHT
+  // PIECE_BY_WEIGHT (PLATINUM)
   weightTotalG     Int?       // celková váha kusu (např. 124 g)
   soldOut          Boolean    @default(false)
+  reservedUntil    DateTime?  // rezervace např. pro quick-offer
 
-  // BULK_G
+  // BULK_G (STANDARD/LUXE)
   availableGrams   Int?       // aktuálně dostupné gramy
   minOrderG        Int?       // např. 50
   stepG            Int?       // např. 10
+
+  // Viditelnost a řazení
+  isListed         Boolean    @default(false)
+  listingPriority  Int?
 
   // Stav
   inStock       Boolean  @default(false)
@@ -148,6 +187,7 @@ model Sku {
   updatedAt     DateTime @updatedAt
 
   movements     StockMovement[]
+  orderItems    OrderItem[]
 
   @@map("skus")
 }

@@ -68,6 +68,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             {sidebarOpen ? '👥 Uživatelé' : '👥'}
           </Link>
+          <Link
+            href="/admin/sklad"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '📦 Sklad (SKU)' : '📦'}
+          </Link>
         </nav>
 
         <div className="p-4 border-t border-gray-700 space-y-2">

@@ -1,27 +1,40 @@
-import prisma from '@/lib/prisma';
+'use client';
+
+import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { cs } from 'date-fns/locale';
 
-export const dynamic = 'force-dynamic';
+export default function AdminDashboard() {
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function AdminDashboard() {
-  // Fetch data from database
-  const [products, orders] = await Promise.all([
-    prisma.product.findMany(),
-    prisma.order.findMany({
-      include: { items: true },
-      orderBy: { createdAt: 'desc' },
-      take: 5, // Get last 5 orders
-    }),
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productsRes, ordersRes] = await Promise.all([
+          fetch('/api/admin/products'),
+          fetch('/api/admin/orders'),
+        ]);
+        const productsData = await productsRes.json();
+        const ordersData = await ordersRes.json();
+        setProducts(productsData);
+        setOrders(ordersData);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-  // Calculate statistics
   const totalProducts = products.length;
   const totalOrders = orders.length;
-  const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
-  const pendingOrders = orders.filter((o) => o.status === 'pending').length;
+  const totalRevenue = orders.reduce((sum: number, order: any) => sum + (order.total || 0), 0);
+  const pendingOrders = orders.filter((o: any) => o.status === 'pending').length;
 
-  const formatCzech = (date: Date) => {
+  const formatCzech = (date: string | Date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true, locale: cs });
   };
 
