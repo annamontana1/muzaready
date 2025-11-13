@@ -193,8 +193,9 @@ export default function SkuListPage() {
           >
             <option value="">Struktura</option>
             <option value="rovné">rovné</option>
-            <option value="vlna">vlna</option>
-            <option value="kudrna">kudrna</option>
+            <option value="mírně vlnité">mírně vlnité</option>
+            <option value="vlnité">vlnité</option>
+            <option value="kudrnaté">kudrnaté</option>
           </select>
 
           <select
