@@ -29,34 +29,75 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, status, total, items } = body;
+    const { email, items: cartLines, shippingInfo } = body;
 
-    if (!email || !items || items.length === 0) {
+    if (!email || !cartLines || cartLines.length === 0) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Email a položky objednávky jsou povinné' },
         { status: 400 }
       );
     }
 
+    // Import the quote function at runtime to avoid circular dependencies
+    const { quoteCartLines } = await import('@/lib/stock');
+
+    // Validate and quote the cart lines
+    let quotedLines;
+    try {
+      const quote = await quoteCartLines(cartLines);
+      quotedLines = quote.items;
+    } catch (quoteError: any) {
+      return NextResponse.json(
+        { error: quoteError.message || 'Chyba při kalkulaci ceny' },
+        { status: 400 }
+      );
+    }
+
+    // Create order with OrderItem records (NO stock deduction yet - waiting for payment confirmation)
     const order = await prisma.order.create({
       data: {
         email,
-        status: status || 'pending',
-        total,
+        status: 'pending', // Waiting for GoPay payment confirmation
+        total: quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0),
         items: {
-          create: items,
+          create: quotedLines.map((item) => ({
+            skuId: item.sku.id,
+            saleMode: item.sku.saleMode,
+            grams: item.grams,
+            pricePerGram: item.pricePerGram,
+            lineTotal: item.lineTotal,
+            nameSnapshot: item.snapshotName,
+            ending: item.ending,
+            assemblyFeeType: item.assemblyFeeType,
+            assemblyFeeCzk: item.assemblyFeeCzk,
+            assemblyFeeTotal: item.assemblyFeeTotal,
+          })),
         },
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            sku: true,
+          },
+        },
       },
     });
 
-    return NextResponse.json(order, { status: 201 });
+    return NextResponse.json(
+      {
+        orderId: order.id,
+        email: order.email,
+        total: order.total,
+        status: order.status,
+        message: 'Objednávka vytvořena. Čeká na platbu přes GoPay.',
+        items: order.items,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error creating order:', error);
     return NextResponse.json(
-      { error: 'Failed to create order' },
+      { error: 'Chyba při vytvoření objednávky' },
       { status: 500 }
     );
   }
