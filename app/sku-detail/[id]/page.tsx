@@ -137,7 +137,7 @@ export default function SkuDetailPage() {
       });
     }
     localStorage.setItem('sku-cart', JSON.stringify(cart));
-    alert('Přidáno do košíku! Jdi na /sku-kosik');
+    router.push('/sku-kosik');
   };
 
   const formatPrice = (price: number) => {
