@@ -81,6 +81,7 @@ export default function CatalogPage() {
 
   const handleAddToCart = async (sku: Sku) => {
     setAddingToCart(sku.id);
+
     try {
       // Get quote for default configuration (no ending = NONE)
       const quoteRes = await fetch('/api/quote', {
@@ -97,14 +98,14 @@ export default function CatalogPage() {
         }),
       });
 
+      const quoteData = await quoteRes.json();
+
       if (!quoteRes.ok) {
-        const err = await quoteRes.json();
-        alert(`Chyba: ${err.error || 'Nelze vypočítat cenu'}`);
+        alert(`Chyba: ${quoteData.error || 'Nelze vypočítat cenu'}`);
         setAddingToCart(null);
         return;
       }
 
-      const quoteData = await quoteRes.json();
       const quote = quoteData.items[0];
 
       // Add to localStorage cart
@@ -124,10 +125,12 @@ export default function CatalogPage() {
         lineGrandTotal: quote.lineGrandTotal,
       });
       localStorage.setItem('sku-cart', JSON.stringify(cart));
+      setAddingToCart(null);
 
       // Navigate to cart
       router.push('/sku-kosik');
     } catch (err: any) {
+      console.error('Cart error:', err);
       alert(`Chyba: ${err.message}`);
       setAddingToCart(null);
     }
