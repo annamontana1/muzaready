@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,117 +7,163 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Admin Users
 model AdminUser {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
-  password  String   // Should be hashed in production
-  role      String   @default("editor") // admin, manager, editor
-  status    String   @default("active") // active, inactive
+  password  String
+  role      String   @default("editor")
+  status    String   @default("active")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("admin_users")
 }
 
-// Products
 model Product {
-  id                        String   @id @default(cuid())
-  name                      String
-  category                  String?
-  tier                      String   // Standard, LUXE, Platinum edition
-  base_price_per_100g_45cm  Float
-  set_id                    String?
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
-
-  variants Variant[]
-  favorites Favorite[]
-  cartItems CartItem[]
+  id                       String     @id @default(cuid())
+  name                     String
+  category                 String?
+  tier                     String
+  base_price_per_100g_45cm Float
+  set_id                   String?
+  createdAt                DateTime   @default(now())
+  updatedAt                DateTime   @updatedAt
+  cartItems                CartItem[]
+  favorites                Favorite[]
+  variants                 Variant[]
 
   @@map("products")
 }
 
-// Product Variants
 model Variant {
   id        String   @id @default(cuid())
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name      String   // e.g., "45cm", "60cm", "65cm"
+  name      String
   price     Float
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("variants")
 }
 
-// Orders
 model Order {
-  id        String   @id @default(cuid())
+  id        String      @id @default(cuid())
   email     String
-  status    String   @default("pending") // pending, shipped, delivered, cancelled
+  status    String      @default("pending")
   total     Float
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   items     OrderItem[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@map("orders")
 }
 
-// Order Items
 model OrderItem {
-  id        String   @id @default(cuid())
-  orderId   String
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  skuId     String
-  sku       Sku      @relation(fields: [skuId], references: [id], onDelete: Restrict)
-
-  // Prodejní údaje (snapshot při vytvoření objednávky)
-  saleMode       SaleMode
-  grams          Int                 // u PIECE = weightTotalG, u BULK = uživatelem vybrané gramy
-  pricePerGram   Int
-  lineTotal      Int                 // grams * pricePerGram
-  nameSnapshot   String?
-
-  // Zakončení a práce
-  ending             EndingOption @default(NONE)
-  assemblyFeeType    String?      // "FLAT" | "PER_GRAM" | null
-  assemblyFeeCzk     Int?         // cena zakončení v Kč
-  assemblyFeeTotal   Int?         // assemblyFeeCzk * grams (pro PER_GRAM) nebo sam assemblyFeeCzk (FLAT)
-
-  createdAt     DateTime @default(now())
+  id               String       @id @default(cuid())
+  orderId          String
+  assemblyFeeCzk   Int?
+  assemblyFeeTotal Int?
+  assemblyFeeType  String?
+  createdAt        DateTime     @default(now())
+  ending           EndingOption @default(NONE)
+  grams            Int
+  lineTotal        Int
+  nameSnapshot     String?
+  pricePerGram     Int
+  saleMode         SaleMode
+  skuId            String
+  order            Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  sku              Sku          @relation(fields: [skuId], references: [id])
 
   @@map("order_items")
 }
 
-// Shopping Cart
 model CartItem {
   id        String   @id @default(cuid())
-  sessionId String   // Anonymous session or user ID
+  sessionId String
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
-  variant   String?  // e.g., "45cm", "60cm"
+  variant   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([sessionId, productId])
   @@map("cart_items")
 }
 
-// Favorites/Wishlist
 model Favorite {
   id        String   @id @default(cuid())
-  sessionId String   // Anonymous session or user ID
+  sessionId String
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([sessionId, productId])
   @@map("favorites")
 }
 
-// Enums pro sklad a prodej
+model Sku {
+  id               String            @id @default(cuid())
+  sku              String            @unique
+  name             String?
+  productId        String?
+  shade            String?
+  shadeName        String?
+  shadeHex         String?
+  lengthCm         Int?
+  structure        String?
+  ending           String?
+  ribbonColor      String?
+  saleMode         SaleMode
+  pricePerGramCzk  Int
+  weightTotalG     Int?
+  soldOut          Boolean           @default(false)
+  availableGrams   Int?
+  minOrderG        Int?
+  stepG            Int?
+  inStock          Boolean           @default(false)
+  inStockSince     DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  customerCategory CustomerCategory?
+  isListed         Boolean           @default(false)
+  listingPriority  Int?
+  reservedUntil    DateTime?
+  orderItems       OrderItem[]
+  movements        StockMovement[]
+
+  @@map("skus")
+}
+
+model StockMovement {
+  id         String   @id @default(cuid())
+  skuId      String
+  type       MoveType
+  grams      Int
+  note       String?
+  refOrderId String?
+  createdAt  DateTime @default(now())
+  sku        Sku      @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  @@map("stock_movements")
+}
+
+model PriceMatrix {
+  id              String   @id @default(cuid())
+  category        String
+  tier            String
+  lengthCm        Int
+  pricePerGramCzk Decimal
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([category, tier, lengthCm])
+  @@index([category, tier])
+  @@map("price_matrix")
+}
+
 enum HairTreatment {
   PANENSKE_NEBARVENE
   BARVENE
@@ -133,8 +176,8 @@ enum CustomerCategory {
 }
 
 enum SaleMode {
-  PIECE_BY_WEIGHT  // culík s pevnou váhou
-  BULK_G           // prodej na gramy
+  PIECE_BY_WEIGHT
+  BULK_G
 }
 
 enum EndingOption {
@@ -144,84 +187,8 @@ enum EndingOption {
   NONE
 }
 
-model Sku {
-  id           String   @id @default(cuid())
-  sku          String   @unique
-  name         String?
-  productId    String?
-
-  // Kategorie zákazníka (určuje saleMode)
-  customerCategory  CustomerCategory?
-
-  // Vlasová metadata
-  shade        String?
-  shadeName    String?
-  shadeHex     String?
-  lengthCm     Int?
-  structure    String?   // rovné / vlna / kudrna
-  ending       String?
-  ribbonColor  String?
-
-  // Prodej a sklad
-  saleMode         SaleMode
-  pricePerGramCzk  Int        // cena za 1 g v Kč (95 = 95 Kč)
-
-  // PIECE_BY_WEIGHT (PLATINUM)
-  weightTotalG     Int?       // celková váha kusu (např. 124 g)
-  soldOut          Boolean    @default(false)
-  reservedUntil    DateTime?  // rezervace např. pro quick-offer
-
-  // BULK_G (STANDARD/LUXE)
-  availableGrams   Int?       // aktuálně dostupné gramy
-  minOrderG        Int?       // např. 50
-  stepG            Int?       // např. 10
-
-  // Viditelnost a řazení
-  isListed         Boolean    @default(false)
-  listingPriority  Int?
-
-  // Stav
-  inStock       Boolean  @default(false)
-  inStockSince  DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  movements     StockMovement[]
-  orderItems    OrderItem[]
-
-  @@map("skus")
-}
-
 enum MoveType {
   IN
   OUT
   ADJUST
-}
-
-model StockMovement {
-  id         String   @id @default(cuid())
-  skuId      String
-  sku        Sku      @relation(fields: [skuId], references: [id], onDelete: Cascade)
-  type       MoveType
-  grams      Int
-  note       String?
-  refOrderId String?
-  createdAt  DateTime @default(now())
-
-  @@map("stock_movements")
-}
-
-// Ceníková matice – jediný zdroj pravdy pro ceny za gram
-model PriceMatrix {
-  id              String   @id @default(cuid())
-  category        String   // "nebarvene" | "barvene"
-  tier            String   // "standard" | "luxe" | "platinum"
-  lengthCm        Int      // 40, 45, 50, 55, 60, 65, 70, 75, 80
-  pricePerGramCzk Decimal  // cena za 1 gram v Kč (s desetinným místem)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@unique([category, tier, lengthCm])
-  @@map("price_matrix")
-  @@index([category, tier])
 }

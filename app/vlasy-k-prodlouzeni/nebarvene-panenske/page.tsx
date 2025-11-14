@@ -6,13 +6,13 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
-import { mockProducts } from '@/lib/mock-products';
-import { ProductTier, HAIR_COLORS } from '@/types/product';
+import { Product, ProductTier, HAIR_COLORS } from '@/types/product';
 
 type FilterState = {
   tier: ProductTier | 'all';
   shades: number[];
   structures: string[];
+  lengths: number[]; // Pro Platinum
   weightRange: string;
   availability: 'all' | 'in_stock' | 'on_order';
 };
@@ -20,10 +20,13 @@ type FilterState = {
 const PRODUCTS_PER_PAGE = 14;
 
 export default function NebarvenePanenskePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>({
     tier: 'all',
     shades: [],
     structures: [],
+    lengths: [],
     weightRange: 'all',
     availability: 'all',
   });
@@ -31,8 +34,27 @@ export default function NebarvenePanenskePage() {
 
   const [activeModal, setActiveModal] = useState<'standard' | 'luxe' | 'platinum' | null>(null);
 
+  // Načti produkty z API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/catalog?category=nebarvene_panenske');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   // Filtruj pouze nebarvené produkty
-  const nebarveneProdukty = mockProducts.filter((p) => p.category === 'nebarvene_panenske');
+  const nebarveneProdukty = products;
 
   // Dostupné odstíny podle tieru (bez #2)
   const availableShades = useMemo(() => {
@@ -40,6 +62,19 @@ export default function NebarvenePanenskePage() {
     if (filters.tier === 'all') return [1, 3, 4, 5, 6, 7, 8, 9, 10];
     return [1, 3, 4]; // Standard a LUXE
   }, [filters.tier]);
+
+  // Dostupné délky - POUZE pro Platinum
+  const availableLengths = useMemo(() => {
+    if (filters.tier !== 'Platinum edition' && filters.tier !== 'all') return [];
+    const platinumProducts = nebarveneProdukty.filter(p => p.tier === 'Platinum edition');
+    const lengths = new Set<number>();
+    platinumProducts.forEach(p => {
+      p.variants.forEach(v => {
+        if (v.length_cm) lengths.add(v.length_cm);
+      });
+    });
+    return Array.from(lengths).sort((a, b) => a - b);
+  }, [nebarveneProdukty, filters.tier]);
 
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
@@ -57,6 +92,13 @@ export default function NebarvenePanenskePage() {
       if (filters.structures.length > 0) {
         const productStructure = product.variants[0]?.structure;
         if (!productStructure || !filters.structures.includes(productStructure)) return false;
+      }
+
+      // Délka filtr - POUZE pro Platinum
+      if (filters.lengths.length > 0 && product.tier === 'Platinum edition') {
+        const productLengths = product.variants.map(v => v.length_cm).filter(Boolean) as number[];
+        const hasMatchingLength = productLengths.some(len => filters.lengths.includes(len));
+        if (!hasMatchingLength) return false;
       }
 
       return true;
@@ -93,16 +135,33 @@ export default function NebarvenePanenskePage() {
     }));
   };
 
+  const toggleLength = (length: number) => {
+    setFilters((prev) => ({
+      ...prev,
+      lengths: prev.lengths.includes(length)
+        ? prev.lengths.filter((l) => l !== length)
+        : [...prev.lengths, length],
+    }));
+  };
+
   const resetFilters = () => {
     setFilters({
       tier: 'all',
       shades: [],
       structures: [],
+      lengths: [],
       weightRange: 'all',
       availability: 'all',
     });
     setCurrentPage(1);
   };
+
+  // Vyčisti délkové filtry při přepnutí z Platinum
+  useEffect(() => {
+    if (filters.tier !== 'Platinum edition' && filters.tier !== 'all') {
+      setFilters(prev => ({ ...prev, lengths: [] }));
+    }
+  }, [filters.tier]);
 
   // Animation variants
   const fadeInUp = {
@@ -459,8 +518,35 @@ export default function NebarvenePanenskePage() {
             </div>
           </div>
 
+          {/* Délka filtr - POUZE pro Platinum */}
+          {availableLengths.length > 0 && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-burgundy mb-3">
+                Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
+              </label>
+              <div className="flex flex-wrap gap-2 max-w-2xl">
+                {availableLengths.map((length) => {
+                  const isSelected = filters.lengths.includes(length);
+                  return (
+                    <button
+                      key={length}
+                      onClick={() => toggleLength(length)}
+                      className={`px-3 h-9 rounded-lg text-base font-medium transition ${
+                        isSelected
+                          ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
+                          : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                      }`}
+                    >
+                      {length}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Aktivní filtry - sjednocené odstíny */}
-          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0) && (
+          {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
@@ -480,21 +566,36 @@ export default function NebarvenePanenskePage() {
                     {structure.charAt(0).toUpperCase() + structure.slice(1)}
                   </span>
                 ))}
+                {filters.lengths.map((length) => (
+                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
+                    {length} cm
+                  </span>
+                ))}
               </div>
             </div>
           )}
         </motion.div>
 
+        {/* Loading state */}
+        {loading && (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy mx-auto mb-4"></div>
+            <p className="text-gray-600">Načítám produkty...</p>
+          </div>
+        )}
+
         {/* Počet výsledků */}
-        <div className="mb-6">
-          <p className="text-gray-600">
-            Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
-            {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
-          </p>
-        </div>
+        {!loading && (
+          <div className="mb-6">
+            <p className="text-gray-600">
+              Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
+              {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
+            </p>
+          </div>
+        )}
 
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
+        {!loading && filteredProducts.length > 0 ? (
           <>
             <motion.div
               className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"

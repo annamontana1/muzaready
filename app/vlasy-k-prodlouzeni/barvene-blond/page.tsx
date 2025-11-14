@@ -6,8 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
-import { mockProducts } from '@/lib/mock-products';
-import { ProductTier, HAIR_COLORS } from '@/types/product';
+import { Product, ProductTier, HAIR_COLORS } from '@/types/product';
 
 type FilterState = {
   tier: ProductTier | 'all';
@@ -43,6 +42,8 @@ const scaleIn = {
 const PRODUCTS_PER_PAGE = 14;
 
 export default function BarveneBlondPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>({
     tier: 'all',
     shades: [],
@@ -52,19 +53,43 @@ export default function BarveneBlondPage() {
   });
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Načti produkty z API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/catalog?category=barvene_blond');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   // Filtruj pouze barvené produkty
-  const barveneProdukty = mockProducts.filter((p) => p.category === 'barvene_blond');
+  const barveneProdukty = products;
 
   // Dostupné odstíny pro barvené (5-10)
   const availableShades = [5, 6, 7, 8, 9, 10];
 
-  // Dostupné délky podle tieru
+  // Dostupné délky - POUZE pro Platinum
   const availableLengths = useMemo(() => {
-    if (filters.tier === 'Standard') return [35, 40, 45, 50, 55, 60, 65, 70, 75];
-    if (filters.tier === 'LUXE') return [40, 45, 50, 55, 60, 65, 70, 75, 80, 85];
-    if (filters.tier === 'Platinum edition') return [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
-    return [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]; // Všechny
-  }, [filters.tier]);
+    if (filters.tier !== 'Platinum edition' && filters.tier !== 'all') return [];
+    const platinumProducts = barveneProdukty.filter(p => p.tier === 'Platinum edition');
+    const lengths = new Set<number>();
+    platinumProducts.forEach(p => {
+      p.variants.forEach(v => {
+        if (v.length_cm) lengths.add(v.length_cm);
+      });
+    });
+    return Array.from(lengths).sort((a, b) => a - b);
+  }, [barveneProdukty, filters.tier]);
 
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
@@ -84,10 +109,11 @@ export default function BarveneBlondPage() {
         if (!productStructure || !filters.structures.includes(productStructure)) return false;
       }
 
-      // Délka filtr
-      if (filters.lengths.length > 0) {
-        const productLength = product.variants[0]?.length_cm;
-        if (!productLength || !filters.lengths.includes(productLength)) return false;
+      // Délka filtr - POUZE pro Platinum
+      if (filters.lengths.length > 0 && product.tier === 'Platinum edition') {
+        const productLengths = product.variants.map(v => v.length_cm).filter(Boolean) as number[];
+        const hasMatchingLength = productLengths.some(len => filters.lengths.includes(len));
+        if (!hasMatchingLength) return false;
       }
 
       return true;
@@ -143,6 +169,13 @@ export default function BarveneBlondPage() {
     });
     setCurrentPage(1);
   };
+
+  // Vyčisti délkové filtry při přepnutí z Platinum
+  useEffect(() => {
+    if (filters.tier !== 'Platinum edition' && filters.tier !== 'all') {
+      setFilters(prev => ({ ...prev, lengths: [] }));
+    }
+  }, [filters.tier]);
 
   return (
     <div className="py-12">
@@ -307,30 +340,32 @@ export default function BarveneBlondPage() {
             </div>
           </div>
 
-          {/* Délka - menší chipy s větším textem */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-burgundy mb-3">
-              Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
-            </label>
-            <div className="flex flex-wrap gap-2 max-w-2xl">
-              {availableLengths.map((length) => {
-                const isSelected = filters.lengths.includes(length);
-                return (
-                  <button
-                    key={length}
-                    onClick={() => toggleLength(length)}
-                    className={`px-3 h-9 rounded-lg text-base font-medium transition ${
-                      isSelected
-                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
-                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
-                    }`}
-                  >
-                    {length}
-                  </button>
-                );
-              })}
+          {/* Délka - POUZE pro Platinum */}
+          {availableLengths.length > 0 && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-burgundy mb-3">
+                Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
+              </label>
+              <div className="flex flex-wrap gap-2 max-w-2xl">
+                {availableLengths.map((length) => {
+                  const isSelected = filters.lengths.includes(length);
+                  return (
+                    <button
+                      key={length}
+                      onClick={() => toggleLength(length)}
+                      className={`px-3 h-9 rounded-lg text-base font-medium transition ${
+                        isSelected
+                          ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
+                          : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                      }`}
+                    >
+                      {length}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Aktivní filtry - sjednocené odstíny */}
           {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
@@ -363,16 +398,26 @@ export default function BarveneBlondPage() {
           )}
         </div>
 
+        {/* Loading state */}
+        {loading && (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy mx-auto mb-4"></div>
+            <p className="text-gray-600">Načítám produkty...</p>
+          </div>
+        )}
+
         {/* Počet výsledků */}
-        <div className="mb-6">
-          <p className="text-gray-600">
-            Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
-            {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
-          </p>
-        </div>
+        {!loading && (
+          <div className="mb-6">
+            <p className="text-gray-600">
+              Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
+              {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
+            </p>
+          </div>
+        )}
 
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
+        {!loading && filteredProducts.length > 0 ? (
           <>
             <motion.div
               className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"

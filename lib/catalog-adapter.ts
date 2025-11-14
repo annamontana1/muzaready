@@ -105,7 +105,7 @@ function createSlug(
  * Načte SKU ze skladu a převede na Product Card View Model
  */
 export async function getCatalogProducts(
-  category?: ProductCategory,
+  categoryParam?: ProductCategory,
   tier?: ProductTier
 ): Promise<Product[]> {
   const where: any = {
@@ -114,11 +114,27 @@ export async function getCatalogProducts(
   };
 
   // Filtrování podle kategorie
-  if (category) {
-    const categoryFilter = category === 'nebarvene_panenske' 
-      ? { shade: { not: { contains: 'BLONDE' } } }
-      : { shade: { contains: 'BLONDE' } };
-    Object.assign(where, categoryFilter);
+  // Pro nebarvené: shade 1-4 nebo shade není 5-10
+  // Pro barvené: shade 5-10 nebo shadeName obsahuje "blond"
+  if (categoryParam) {
+    if (categoryParam === 'nebarvene_panenske') {
+      // Nebarvené: shade 1-4 nebo shadeName neobsahuje "blond"
+      where.OR = [
+        { shade: { in: ['1', '2', '3', '4'] } },
+        { 
+          AND: [
+            { shade: { not: { in: ['5', '6', '7', '8', '9', '10'] } } },
+            { shadeName: { not: { contains: 'blond' } } },
+          ]
+        },
+      ];
+    } else {
+      // Barvené: shade 5-10 nebo shadeName obsahuje "blond"
+      where.OR = [
+        { shade: { in: ['5', '6', '7', '8', '9', '10'] } },
+        { shadeName: { contains: 'blond' } },
+      ];
+    }
   }
 
   // Filtrování podle tieru
@@ -175,9 +191,17 @@ export async function getCatalogProducts(
     const firstSku = skuGroup[0];
     const shadeCode = parseShadeCode(firstSku.shade) || 1;
     const tier = mapCustomerCategoryToTier(firstSku.customerCategory);
-    const category: ProductCategory = firstSku.shade?.includes('BLONDE') 
-      ? 'barvene_blond' 
-      : 'nebarvene_panenske';
+    
+    // Urči kategorii - pokud je předána jako parametr, použij ji, jinak podle shade
+    let category: ProductCategory;
+    if (categoryParam) {
+      category = categoryParam;
+    } else {
+      // Fallback: podle shade (shade 5-10 = barvené, 1-4 = nebarvené)
+      category = (shadeCode >= 5 && shadeCode <= 10) 
+        ? 'barvene_blond' 
+        : 'nebarvene_panenske';
+    }
     
     const isPlatinum = tier === 'Platinum edition';
     const structure = firstSku.structure || 'rovné';
