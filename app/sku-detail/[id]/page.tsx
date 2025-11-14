@@ -62,7 +62,7 @@ export default function SkuDetailPage() {
 
   const fetchSku = async () => {
     try {
-      const res = await fetch(`/api/admin/skus/${skuId}`);
+      const res = await fetch(`/api/sku/public/${skuId}`);
       if (!res.ok) {
         if (res.status === 404) throw new Error('SKU nenalezeno');
         throw new Error('Failed to fetch SKU');
