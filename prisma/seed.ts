@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { hashPassword } from '@/lib/admin-auth';
 
 async function main() {
   console.log('🌱 Starting database seed...\n');
@@ -9,7 +10,22 @@ async function main() {
   await prisma.order.deleteMany();
   await prisma.priceMatrix.deleteMany();
   await prisma.sku.deleteMany();
+  await prisma.adminUser.deleteMany();
   console.log('✓ Cleared existing data\n');
+
+  // Create test admin user
+  console.log('👤 Creating test admin user...');
+  const hashedPassword = await hashPassword('admin123');
+  const adminUser = await prisma.adminUser.create({
+    data: {
+      name: 'Test Admin',
+      email: 'admin@example.com',
+      password: hashedPassword,
+      role: 'admin',
+      status: 'active',
+    },
+  });
+  console.log(`✓ Created admin user: ${adminUser.email}\n`);
 
   // Create Price Matrix entries
   console.log('📊 Creating price matrix entries...');
@@ -65,36 +81,18 @@ async function main() {
   // Create SKUs
   console.log('📦 Creating SKU items...');
   const skus = [
-    // Uncolored PIECE_BY_WEIGHT items (Standard)
+    // Nebarvené - Standard BULK_G (shade 1 = Černá)
     {
-      sku: 'STANDARD-VIRGIN-35-45CM',
-      name: '45cm Panenské vlasy - Přírodní',
+      sku: 'STD-NEB-1-45-BULK',
+      name: '45cm Standard - Černá',
       customerCategory: 'STANDARD' as const,
-      shade: 'nebarvene_natural',
-      shadeName: 'Přírodní barva',
+      shade: '1',
+      shadeName: 'Černá',
+      shadeHex: '#1A1A1A',
       lengthCm: 45,
-      structure: 'straight',
-      saleMode: 'PIECE_BY_WEIGHT' as const,
-      pricePerGramCzk: 65.0,
-      weightTotalG: 100,
-      availableGrams: null,
-      minOrderG: null,
-      stepG: null,
-      inStock: true,
-      soldOut: false,
-      isListed: true,
-    },
-    // Uncolored BULK_G items (Luxe)
-    {
-      sku: 'LUXE-VIRGIN-60CM-BULK',
-      name: '60cm Luxusní vlasy na míru - Přírodní',
-      customerCategory: 'LUXE' as const,
-      shade: 'nebarvene_natural',
-      shadeName: 'Přírodní barva',
-      lengthCm: 60,
-      structure: 'straight',
+      structure: 'rovné',
       saleMode: 'BULK_G' as const,
-      pricePerGramCzk: 95.0, // Fallback price
+      pricePerGramCzk: 65,
       weightTotalG: null,
       availableGrams: 1000,
       minOrderG: 50,
@@ -102,56 +100,20 @@ async function main() {
       inStock: true,
       soldOut: false,
       isListed: true,
+      listingPriority: 10,
     },
-    // Colored PIECE_BY_WEIGHT (Platinum)
+    // Nebarvené - LUXE BULK_G (shade 3 = Tmavá hnědá)
     {
-      sku: 'PLATINUM-BLOND-45-60CM',
-      name: '60cm Platinum Edition - Světlá blond',
-      customerCategory: 'PLATINUM_EDITION' as const,
-      shade: 'barvene_blond',
-      shadeName: 'Světlá blond',
-      lengthCm: 60,
-      structure: 'straight',
-      saleMode: 'PIECE_BY_WEIGHT' as const,
-      pricePerGramCzk: 110.0,
-      weightTotalG: 120,
-      availableGrams: null,
-      minOrderG: null,
-      stepG: null,
-      inStock: true,
-      soldOut: false,
-      isListed: true,
-    },
-    // Colored BULK_G (Standard)
-    {
-      sku: 'STANDARD-BLOND-35-BULK',
-      name: '35cm Stříbřitá blond na míru',
-      customerCategory: 'STANDARD' as const,
-      shade: 'barvene_blond',
-      shadeName: 'Stříbřitá blond',
-      lengthCm: 35,
-      structure: 'wavy',
-      saleMode: 'BULK_G' as const,
-      pricePerGramCzk: 50.0, // Fallback price
-      weightTotalG: null,
-      availableGrams: 500,
-      minOrderG: 30,
-      stepG: 10,
-      inStock: true,
-      soldOut: false,
-      isListed: true,
-    },
-    // Additional test SKUs
-    {
-      sku: 'LUXE-VIRGIN-75-BULK',
-      name: '75cm Luxusní panenské vlasy',
+      sku: 'LUX-NEB-3-60-BULK',
+      name: '60cm LUXE - Tmavá hnědá',
       customerCategory: 'LUXE' as const,
-      shade: 'nebarvene_dark',
-      shadeName: 'Tmavě hnědá',
-      lengthCm: 75,
-      structure: 'straight',
+      shade: '3',
+      shadeName: 'Tmavá hnědá',
+      shadeHex: '#4A3728',
+      lengthCm: 60,
+      structure: 'mírně vlnité',
       saleMode: 'BULK_G' as const,
-      pricePerGramCzk: 115.0, // Fallback price
+      pricePerGramCzk: 95,
       weightTotalG: null,
       availableGrams: 800,
       minOrderG: 50,
@@ -159,42 +121,133 @@ async function main() {
       inStock: true,
       soldOut: false,
       isListed: true,
+      listingPriority: 9,
     },
+    // Nebarvené - Platinum PIECE_BY_WEIGHT (shade 1 = Černá, 60cm)
     {
-      sku: 'PLATINUM-BALAYAGE-45-PIECE',
-      name: '45cm Platinum - Balayage',
+      sku: 'PLAT-NEB-1-60-PIECE',
+      name: '60cm Platinum Edition - Černá',
       customerCategory: 'PLATINUM_EDITION' as const,
-      shade: 'barvene_balayage',
-      shadeName: 'Balayage - tmavá/blond',
-      lengthCm: 45,
-      structure: 'straight',
+      shade: '1',
+      shadeName: 'Černá',
+      shadeHex: '#1A1A1A',
+      lengthCm: 60,
+      structure: 'rovné',
       saleMode: 'PIECE_BY_WEIGHT' as const,
-      pricePerGramCzk: 90.0,
-      weightTotalG: 110,
+      pricePerGramCzk: 105,
+      weightTotalG: 120,
       availableGrams: null,
       minOrderG: null,
       stepG: null,
       inStock: true,
       soldOut: false,
       isListed: true,
+      listingPriority: 10,
     },
+    // Nebarvené - Platinum PIECE_BY_WEIGHT (shade 1 = Černá, 45cm)
     {
-      sku: 'STANDARD-CURLY-60-BULK',
-      name: '60cm Kudrnaté vlasy Standard',
+      sku: 'PLAT-NEB-1-45-PIECE',
+      name: '45cm Platinum Edition - Černá',
+      customerCategory: 'PLATINUM_EDITION' as const,
+      shade: '1',
+      shadeName: 'Černá',
+      shadeHex: '#1A1A1A',
+      lengthCm: 45,
+      structure: 'rovné',
+      saleMode: 'PIECE_BY_WEIGHT' as const,
+      pricePerGramCzk: 85,
+      weightTotalG: 100,
+      availableGrams: null,
+      minOrderG: null,
+      stepG: null,
+      inStock: true,
+      soldOut: false,
+      isListed: true,
+      listingPriority: 10,
+    },
+    // Barvené - Standard BULK_G (shade 7 = Blond)
+    {
+      sku: 'STD-BAR-7-45-BULK',
+      name: '45cm Standard - Blond',
       customerCategory: 'STANDARD' as const,
-      shade: 'nebarvene_natural',
-      shadeName: 'Přírodní barva',
-      lengthCm: 60,
-      structure: 'curly',
+      shade: '7',
+      shadeName: 'Blond',
+      shadeHex: '#B39B7A',
+      lengthCm: 45,
+      structure: 'vlnité',
       saleMode: 'BULK_G' as const,
-      pricePerGramCzk: 85.0, // Fallback price
+      pricePerGramCzk: 70,
       weightTotalG: null,
-      availableGrams: 600,
-      minOrderG: 40,
+      availableGrams: 900,
+      minOrderG: 50,
       stepG: 10,
       inStock: true,
       soldOut: false,
       isListed: true,
+      listingPriority: 8,
+    },
+    // Barvené - LUXE BULK_G (shade 8 = Světlá blond)
+    {
+      sku: 'LUX-BAR-8-60-BULK',
+      name: '60cm LUXE - Světlá blond',
+      customerCategory: 'LUXE' as const,
+      shade: '8',
+      shadeName: 'Světlá blond',
+      shadeHex: '#C9B089',
+      lengthCm: 60,
+      structure: 'rovné',
+      saleMode: 'BULK_G' as const,
+      pricePerGramCzk: 100,
+      weightTotalG: null,
+      availableGrams: 750,
+      minOrderG: 50,
+      stepG: 10,
+      inStock: true,
+      soldOut: false,
+      isListed: true,
+      listingPriority: 9,
+    },
+    // Barvené - Platinum PIECE_BY_WEIGHT (shade 10 = Platinová blond, 60cm)
+    {
+      sku: 'PLAT-BAR-10-60-PIECE',
+      name: '60cm Platinum Edition - Platinová blond',
+      customerCategory: 'PLATINUM_EDITION' as const,
+      shade: '10',
+      shadeName: 'Platinová blond',
+      shadeHex: '#E5D5B7',
+      lengthCm: 60,
+      structure: 'rovné',
+      saleMode: 'PIECE_BY_WEIGHT' as const,
+      pricePerGramCzk: 110,
+      weightTotalG: 115,
+      availableGrams: null,
+      minOrderG: null,
+      stepG: null,
+      inStock: true,
+      soldOut: false,
+      isListed: true,
+      listingPriority: 10,
+    },
+    // Barvené - Platinum PIECE_BY_WEIGHT (shade 10 = Platinová blond, 45cm)
+    {
+      sku: 'PLAT-BAR-10-45-PIECE',
+      name: '45cm Platinum Edition - Platinová blond',
+      customerCategory: 'PLATINUM_EDITION' as const,
+      shade: '10',
+      shadeName: 'Platinová blond',
+      shadeHex: '#E5D5B7',
+      lengthCm: 45,
+      structure: 'rovné',
+      saleMode: 'PIECE_BY_WEIGHT' as const,
+      pricePerGramCzk: 90,
+      weightTotalG: 95,
+      availableGrams: null,
+      minOrderG: null,
+      stepG: null,
+      inStock: true,
+      soldOut: false,
+      isListed: true,
+      listingPriority: 10,
     },
   ];
 

@@ -176,9 +176,9 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
     );
   }
 
-  // PIECE: Self-contained card (not a link, but with CTA buttons)
+  // PIECE: Self-contained card (clickable to detail page)
   return (
-    <div className="product-card group h-full">
+    <Link href={`/sku-detail/${props.id}`} className="product-card group h-full block">
       <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-gray-200">
         {/* Image Section */}
         <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
@@ -272,6 +272,6 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

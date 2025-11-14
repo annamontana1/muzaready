@@ -114,25 +114,17 @@ export async function getCatalogProducts(
   };
 
   // Filtrování podle kategorie
-  // Pro nebarvené: shade 1-4 nebo shade není 5-10
-  // Pro barvené: shade 5-10 nebo shadeName obsahuje "blond"
+  // Pro nebarvené: shade 1-4 (nebo shade není 5-10 a shadeName neobsahuje "blond")
+  // Pro barvené: shade 5-10 (nebo shadeName obsahuje "blond")
   if (categoryParam) {
     if (categoryParam === 'nebarvene_panenske') {
-      // Nebarvené: shade 1-4 nebo shadeName neobsahuje "blond"
-      where.OR = [
-        { shade: { in: ['1', '2', '3', '4'] } },
-        { 
-          AND: [
-            { shade: { not: { in: ['5', '6', '7', '8', '9', '10'] } } },
-            { shadeName: { not: { contains: 'blond' } } },
-          ]
-        },
-      ];
+      // Nebarvené: shade 1-4
+      where.shade = { in: ['1', '2', '3', '4'] };
     } else {
       // Barvené: shade 5-10 nebo shadeName obsahuje "blond"
       where.OR = [
         { shade: { in: ['5', '6', '7', '8', '9', '10'] } },
-        { shadeName: { contains: 'blond' } },
+        { shadeName: { contains: 'blond', mode: 'insensitive' } },
       ];
     }
   }

@@ -49,18 +49,21 @@ export async function verifyAdminSession(request: NextRequest): Promise<{
 }
 
 /**
- * Middleware helper to protect admin routes
- * Returns NextResponse.redirect if not authenticated, null if authenticated
+ * Middleware helper to protect admin API routes
+ * Returns NextResponse with 401 if not authenticated, null if authenticated
  */
 export async function requireAdmin(
   request: NextRequest
 ): Promise<NextResponse | null> {
   const session = await verifyAdminSession(request);
-  
+
   if (!session.valid) {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin session required' },
+      { status: 401 }
+    );
   }
-  
+
   return null;
 }
 
