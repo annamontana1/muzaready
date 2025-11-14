@@ -161,6 +161,9 @@ export async function getCatalogProducts(
     ],
   });
 
+  // Debug logging
+  console.log(`[Catalog Adapter] Found ${skus.length} SKUs with filters:`, JSON.stringify(where, null, 2));
+
   // Seskupení SKU podle kombinace: category + tier + shade + structure
   // Pro VlasyX (Standard/LUXE): jedna karta pro všechny délky
   // Pro VlasyY (Platinum): jedna karta pro každou délku
