@@ -230,7 +230,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectEle
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Slug (automaticky generovaný)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Slug (read‑only, generovaný automaticky)</label>
           <input
             type="text"
             value={slugPreview}
