@@ -153,7 +153,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectEle
       };
     }
 
-    setFormData(next);
+    setFormData(updateAutoFields(next));
   };
 
   const handleCreateSKU = async () => {
