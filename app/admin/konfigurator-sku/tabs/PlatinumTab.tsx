@@ -8,7 +8,9 @@ interface FormData {
   shadeName: string;
   structure: string;
   lengthCm: number;
-  weightG: number;
+  weightGrams: number;
+  name: string;
+  slug: string;
   priceMode: 'matrix' | 'fixed';
   fixedPrice: string;
   isListed: boolean;
@@ -43,6 +45,16 @@ const STRUCTURES = [
 
 const LENGTHS = [40, 45, 50, 55, 60, 65, 70, 75, 80];
 
+const generatePlatinumName = (lengthCm: number, shade: number, weightGrams: number) => {
+  if (!lengthCm || !shade || !weightGrams) return '';
+  return `${lengthCm} cm · Platinum · odstín #${shade} · ${weightGrams} g`;
+};
+
+const generatePlatinumSlug = (lengthCm: number, shade: number, weightGrams: number) => {
+  if (!lengthCm || !shade || !weightGrams) return '';
+  return `platinum-odstin-${shade}-${lengthCm}cm-${weightGrams}g`;
+};
+
 export default function PlatinumTab() {
   const [formData, setFormData] = useState<FormData>({
     category: 'nebarvene',
@@ -50,7 +62,9 @@ export default function PlatinumTab() {
     shadeName: 'Černá',
     structure: 'RO',
     lengthCm: 45,
-    weightG: 100,
+    weightGrams: 100,
+    name: '',
+    slug: '',
     priceMode: 'matrix',
     fixedPrice: '',
     isListed: false,
@@ -89,7 +103,7 @@ export default function PlatinumTab() {
 
       if (entry) {
         const ppg = parseFloat(entry.pricePerGramCzk.toString());
-        const totalPrice = Math.round(ppg * formData.weightG);
+        const totalPrice = Math.round(ppg * formData.weightGrams);
         setCalculatedPrice(totalPrice);
         setError('');
       } else {
@@ -100,14 +114,46 @@ export default function PlatinumTab() {
       const price = parseFloat(formData.fixedPrice);
       setCalculatedPrice(isNaN(price) ? null : price);
     }
-  }, [formData.priceMode, formData.category, formData.lengthCm, formData.weightG, formData.fixedPrice, priceMatrix]);
+  }, [formData.priceMode, formData.category, formData.lengthCm, formData.weightGrams, formData.fixedPrice, priceMatrix]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const updateAutoFields = (data: FormData): FormData => {
+  const length = Number(data.lengthCm);
+  const shadeCode = Number(data.shade);
+  const weight = Number(data.weightGrams);
+  return {
+    ...data,
+    name: generatePlatinumName(length, shadeCode, weight),
+    slug: generatePlatinumSlug(length, shadeCode, weight),
+  };
+};
+
+useEffect(() => {
+    setFormData((prev) => updateAutoFields(prev));
+  }, []);
+
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    setFormData({
+    let next: FormData = {
       ...formData,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
-    });
+    };
+
+    if (name === 'lengthCm' || name === 'weightGrams') {
+      next = { ...next, [name]: Number(value) };
+    }
+
+    if (['lengthCm', 'shade', 'weightGrams'].includes(name)) {
+      const length = Number(next.lengthCm);
+      const shadeCode = Number(next.shade);
+      const weight = Number(next.weightGrams);
+      next = {
+        ...next,
+        name: generatePlatinumName(length, shadeCode, weight),
+        slug: generatePlatinumSlug(length, shadeCode, weight),
+      };
+    }
+
+    setFormData(next);
   };
 
   const handleCreateSKU = async () => {
@@ -121,14 +167,14 @@ export default function PlatinumTab() {
     setSuccess('');
 
     try {
-      const skuCode = `PCS-PL-${formData.category.slice(0, 2).toUpperCase()}-${formData.shade}-${formData.structure}-${formData.lengthCm}-${formData.weightG}`;
+      const skuCode = `PCS-PL-${formData.category.slice(0, 2).toUpperCase()}-${formData.shade}-${formData.structure}-${formData.lengthCm}-${formData.weightGrams}`;
 
       const response = await fetch('/api/sku', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           skuCode,
-          name: `Platinum ${formData.category === 'nebarvene' ? 'nebarvené' : 'barvené'} ${formData.shadeName} ${formData.lengthCm}cm ${formData.weightG}g`,
+          name: formData.name || `Platinum ${formData.category === 'nebarvene' ? 'nebarvené' : 'barvené'} ${formData.shadeName} ${formData.lengthCm}cm ${formData.weightGrams}g`,
           category: formData.category,
           tier: 'platinum',
           shade: formData.shade,
@@ -139,7 +185,7 @@ export default function PlatinumTab() {
           pricePerGramCzk: formData.priceMode === 'matrix'
             ? priceMatrix.find((p) => p.category === formData.category && p.tier === 'platinum' && p.lengthCm === formData.lengthCm)?.pricePerGramCzk || 0
             : 0,
-          weightTotalG: formData.weightG,
+          weightTotalG: formData.weightGrams,
           isListed: formData.isListed,
           listingPriority: formData.priority,
         }),
@@ -152,10 +198,9 @@ export default function PlatinumTab() {
       setSuccess(`✅ SKU vytvořen: ${skuCode}`);
       setTimeout(() => {
         setSuccess('');
-        // Pre-fill for next entry with incremented weight
-        setFormData((prev) => ({
+        setFormData((prev) => updateAutoFields({
           ...prev,
-          weightG: prev.weightG + 10,
+          weightGrams: prev.weightGrams + 10,
         }));
       }, 2000);
     } catch (err) {
@@ -166,8 +211,8 @@ export default function PlatinumTab() {
     }
   };
 
-  const skuCodePreview = `PCS-PL-${formData.category.slice(0, 2).toUpperCase()}-${formData.shade}-${formData.structure}-${formData.lengthCm}-${formData.weightG}`;
-  const slugPreview = `platinum-odstin-${formData.shade}-${formData.structure.toLowerCase()}-${formData.lengthCm}cm-${formData.weightG}g`;
+  const skuCodePreview = `PCS-PL-${formData.category.slice(0, 2).toUpperCase()}-${formData.shade}-${formData.structure}-${formData.lengthCm}-${formData.weightGrams}`;
+  const slugPreview = formData.slug || generatePlatinumSlug(formData.lengthCm, Number(formData.shade), formData.weightGrams);
 
   return (
     <div className="space-y-8">
@@ -176,6 +221,23 @@ export default function PlatinumTab() {
 
       <div className="bg-white rounded-lg shadow p-6 space-y-6">
         <h2 className="text-xl font-semibold text-gray-900">Nový SKU – Platinum (PIECE)</h2>
+
+        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
+          <div className="text-xs text-gray-600">Náhled názvu</div>
+          <div className="text-lg font-bold text-burgundy">
+            {formData.name || '(Vyplň délku, odstín a váhu)'}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Slug (automaticky generovaný)</label>
+          <input
+            type="text"
+            value={slugPreview}
+            readOnly
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 font-mono text-sm"
+          />
+        </div>
 
         {/* Category */}
         <div>
@@ -199,11 +261,12 @@ export default function PlatinumTab() {
             value={formData.shade}
             onChange={(e) => {
               const selected = SHADES.find((s) => s.id === e.target.value);
-              setFormData({
+              const next = updateAutoFields({
                 ...formData,
                 shade: e.target.value,
                 shadeName: selected?.name || '',
               });
+              setFormData(next);
             }}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy"
           >
@@ -238,7 +301,7 @@ export default function PlatinumTab() {
           <select
             name="lengthCm"
             value={formData.lengthCm}
-            onChange={(e) => setFormData({ ...formData, lengthCm: parseInt(e.target.value) })}
+            onChange={handleInputChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy"
           >
             {LENGTHS.map((len) => (
@@ -254,8 +317,8 @@ export default function PlatinumTab() {
           <label className="block text-sm font-medium text-gray-700 mb-2">Váha (g)</label>
           <input
             type="number"
-            name="weightG"
-            value={formData.weightG}
+            name="weightGrams"
+            value={formData.weightGrams}
             onChange={handleInputChange}
             min="1"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy"
@@ -341,6 +404,9 @@ export default function PlatinumTab() {
             </div>
           )}
         </div>
+        <input type="hidden" name="name" value={formData.name} />
+        <input type="hidden" name="slug" value={formData.slug} />
+
       </div>
 
       {/* Preview */}
@@ -351,7 +417,7 @@ export default function PlatinumTab() {
           <div className="p-3 bg-gray-50 rounded-lg">
             <div className="text-xs text-gray-600">Délka × Váha</div>
             <div className="text-lg font-semibold text-gray-900">
-              {formData.lengthCm} cm × {formData.weightG} g
+              {formData.lengthCm} cm × {formData.weightGrams} g
             </div>
           </div>
 
