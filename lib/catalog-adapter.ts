@@ -8,6 +8,8 @@
 
 import prisma from './prisma';
 import { Product, ProductVariant, ProductCategory, ProductTier, HAIR_COLORS } from '@/types/product';
+import { normalizeSlug } from './slug-normalizer';
+import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
 
 // Fallback délky pro rychlé "Do košíku" (100g)
 const FALLBACK_LENGTHS = [45, 40, 50, 55, 60, 65, 70, 75, 80];
@@ -25,6 +27,7 @@ interface SkuWithStock {
   saleMode: 'PIECE_BY_WEIGHT' | 'BULK_G';
   pricePerGramCzk: number;
   weightTotalG: number | null;
+  weightGrams?: number | null;
   availableGrams: number | null;
   minOrderG: number | null;
   stepG: number | null;
@@ -51,7 +54,7 @@ async function calculateStockByLength(skuId: string): Promise<Map<number, number
   
   // Pro BULK_G potřebujeme seskupit podle délky
   // Pro jednoduchost použijeme availableGrams z SKU, pokud není délka specifikována
-  // TODO: Pokud máme v movements informaci o délce, použijeme ji
+  // Poznámka: Pokud máme v movements informaci o délce, použijeme ji (zatím není implementováno)
   
   return stockMap;
 }
@@ -83,7 +86,7 @@ function parseShadeCode(shade: string | null): number | null {
 }
 
 /**
- * Vytvoří slug z produktu
+ * Vytvoří slug z produktu (normalizovaný na ASCII bez diakritiky)
  */
 function createSlug(
   category: ProductCategory,
@@ -95,10 +98,15 @@ function createSlug(
   const categorySlug = category === 'nebarvene_panenske' ? 'nebarvene' : 'barvene';
   const tierSlug = tier === 'Standard' ? 'standard' : tier === 'LUXE' ? 'luxe' : 'platinum-edition';
   const shadeSlug = shade ? `odstin-${shade}` : 'odstin-1';
-  const structureSlug = structure ? structure.replace(/\s+/g, '-') : 'rovne';
+  
+  // Normalizovat strukturu (může obsahovat diakritiku: "rovné", "mírně vlnité")
+  const structureSlug = structure ? normalizeSlug(structure) : 'rovne';
+  
   const lengthSlug = lengthCm ? `-${lengthCm}cm` : '';
   
-  return `${categorySlug}-${tierSlug}-${shadeSlug}-${structureSlug}${lengthSlug}`;
+  // Sestavit a normalizovat celý slug (pro případ, že by některá část obsahovala diakritiku)
+  const rawSlug = `${categorySlug}-${tierSlug}-${shadeSlug}-${structureSlug}${lengthSlug}`;
+  return normalizeSlug(rawSlug);
 }
 
 /**
@@ -209,7 +217,8 @@ export async function getCatalogProducts(
       for (const sku of skuGroup) {
         if (!sku.lengthCm || sku.soldOut || !sku.inStock) continue;
 
-        const slug = createSlug(category, tier, shadeCode, structure, sku.lengthCm);
+        const weightGrams = sku.weightGrams ?? sku.weightTotalG ?? 0;
+        const slug = formatPlatinumSlug(sku.lengthCm, shadeCode, weightGrams) || createSlug(category, tier, shadeCode, structure, sku.lengthCm);
         const tierNormalized: 'standard' | 'luxe' | 'platinum' = 'platinum';
         const softnessScale: 1 | 2 | 3 = 3;
         const product: Product = {
@@ -218,7 +227,7 @@ export async function getCatalogProducts(
           slug,
           category,
           tier,
-          name: `${shadeName} #${shadeCode}`,
+          name: formatPlatinumName(sku.lengthCm, shadeCode, weightGrams) || `${shadeName} #${shadeCode}`,
           description: `${tier} panenské vlasy, odstín ${shadeName}, ${structure}, ${sku.lengthCm} cm`,
           measurement_note: 'Měříme tak, jak jsou (nenatažené)',
           variants: [{
@@ -228,10 +237,10 @@ export async function getCatalogProducts(
             shade_name: shadeName,
             shade_hex: shadeHex,
             length_cm: sku.lengthCm,
-            weight_g: sku.weightTotalG || 0,
+            weight_g: weightGrams,
             structure: structure as any,
             ending: 'keratin' as any, // Default, lze změnit na PDP
-            price_czk: (sku.pricePerGramCzk * (sku.weightTotalG || 0)) / 100, // Cena za 100g
+            price_czk: sku.pricePerGramCzk * weightGrams,
             in_stock: sku.inStock && !sku.soldOut,
             stock_quantity: 1, // Platinum = 1 kus
             ribbon_color: shadeHex,
@@ -281,7 +290,7 @@ export async function getCatalogProducts(
 
       const slug = createSlug(category, tier, shadeCode, structure, null);
       const product: Product = {
-        id: `bulk-${key}`,
+        id: displaySku.id, // Použijeme skutečné SKU ID z prvního dostupného SKU
         sku: firstSku.sku,
         slug,
         category,

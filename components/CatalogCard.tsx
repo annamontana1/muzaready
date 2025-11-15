@@ -22,7 +22,7 @@ interface CatalogCardProps {
   shadeName?: string;
   structure?: string;
   lengthCm?: number;
-  weightG?: number; // For PIECE items
+  weightGrams?: number; // For PIECE items
   pricePerGramCzk?: number; // BULK: price per gram
   priceCzk?: number; // PIECE: fixed price
   inStock: boolean;
@@ -66,6 +66,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
   const shadeColor = getShadeColor(props.shade);
   const tierLabel = getTierLabel(props.tier);
   const tierColorClass = getTierColor(props.tier);
+  const inquirySlug = props.slug || props.id;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -204,8 +205,8 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
               {props.lengthCm && (
                 <div className="text-white/70 text-xs">{props.lengthCm} cm</div>
               )}
-              {props.weightG && (
-                <div className="text-white/70 text-xs">{props.weightG} g</div>
+              {props.weightGrams && (
+                <div className="text-white/70 text-xs">{props.weightGrams} g</div>
               )}
             </div>
           </div>
@@ -240,7 +241,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             {props.shadeName && <div>{props.shadeName}</div>}
             {props.structure && <div>{props.structure}</div>}
             {props.lengthCm && <div>{props.lengthCm} cm</div>}
-            {props.weightG && <div>Váha: {props.weightG} g</div>}
+            {props.weightGrams && <div>Váha: {props.weightGrams} g</div>}
           </div>
 
           {/* Price section */}
