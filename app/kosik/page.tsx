@@ -2,11 +2,17 @@
 
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState } from 'react';
 
+const ENDING_LABELS: Record<string, string> = {
+  keratin: 'Keratin',
+  microkeratin: 'Mikrokeratin',
+  nano_tapes: 'Nano tapes',
+  vlasove_tresy: 'Vlasové tresy',
+};
+
 export default function CartPage() {
-  const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const { items, updateQuantity, updateGrams, removeFromCart, getTotalPrice, clearCart } = useCart();
   const [isClearing, setIsClearing] = useState(false);
 
   const formatPrice = (price: number) => {
@@ -124,102 +130,113 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
               <div
-                key={`${item.product.id}-${item.variant.id}`}
+                key={item.skuId}
                 className="bg-white rounded-xl shadow-soft p-6 hover:shadow-medium transition"
               >
                 <div className="flex gap-6">
-                  {/* Product Image */}
-                  <div className="flex-shrink-0">
-                    <Link href={`/produkt/${item.product.slug}`}>
-                      <Image
-                        src={item.product.images.main}
-                        alt={item.product.name}
-                        width={120}
-                        height={120}
-                        className="rounded-lg object-cover w-28 h-28 hover:opacity-80 transition"
-                      />
-                    </Link>
-                  </div>
-
-                  {/* Product Info */}
+                  {/* SKU Info */}
                   <div className="flex-1">
-                    <Link
-                      href={`/produkt/${item.product.slug}`}
-                      className="text-lg font-semibold text-burgundy hover:text-maroon transition mb-2 block"
-                    >
-                      {item.product.name}
-                    </Link>
+                    <h3 className="text-lg font-semibold text-burgundy hover:text-maroon transition mb-2">
+                      {item.skuName}
+                    </h3>
 
-                    {/* Variant Details */}
+                    {/* Product Details */}
                     <div className="space-y-1 text-sm text-gray-600 mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">Odstín:</span>
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-4 h-4 rounded-full border border-gray-300"
-                            style={{ backgroundColor: item.variant.shade_hex }}
-                          />
-                          <span>{item.variant.shade_name}</span>
+                      <div>
+                        <span className="font-medium">Kategorie:</span>{' '}
+                        {item.customerCategory === 'UNCOLORED_VIRGIN'
+                          ? 'Nebarvené panenské'
+                          : 'Barvené vlasy'}
+                      </div>
+                      <div>
+                        <span className="font-medium">Zakončení:</span> {ENDING_LABELS[item.ending] || item.ending}
+                      </div>
+
+                      {/* Show grams for BULK items or quantity for PIECE items */}
+                      {item.saleMode === 'BULK_G' ? (
+                        <div>
+                          <span className="font-medium">Gramáž:</span> {item.grams}g @ {formatPrice(item.pricePerGram)}/g
                         </div>
-                      </div>
-                      <div>
-                        <span className="font-medium">Délka:</span> {item.variant.length_cm} cm
-                      </div>
-                      <div>
-                        <span className="font-medium">Gramáž:</span> {item.variant.weight_g}g
-                      </div>
-                      <div>
-                        <span className="font-medium">Struktura:</span> {item.variant.structure}
-                      </div>
-                      <div>
-                        <span className="font-medium">Zakončení:</span>{' '}
-                        {item.variant.ending === 'keratin'
-                          ? 'Keratin'
-                          : item.variant.ending === 'microkeratin'
-                          ? 'Mikrokeratin'
-                          : item.variant.ending === 'nano_tapes'
-                          ? 'Nano tapes'
-                          : 'Vlasové tresy'}
-                      </div>
+                      ) : (
+                        <div>
+                          <span className="font-medium">Množství:</span> {item.quantity} ks @{' '}
+                          {formatPrice(item.lineTotal / item.quantity)}/ks
+                        </div>
+                      )}
+
+                      {/* Assembly Fee Info */}
+                      {item.assemblyFeeTotal > 0 && (
+                        <div>
+                          <span className="font-medium">Servisní poplatek:</span>{' '}
+                          {item.assemblyFeeType === 'PER_GRAM'
+                            ? `${formatPrice(item.assemblyFeeCzk)}/g = ${formatPrice(item.assemblyFeeTotal)}`
+                            : formatPrice(item.assemblyFeeTotal)}
+                        </div>
+                      )}
                     </div>
 
-                    {/* Quantity & Price */}
+                    {/* Quantity & Price Controls */}
                     <div className="flex items-center justify-between">
-                      {/* Quantity Selector */}
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm text-gray-600">Množství:</span>
-                        <div className="flex items-center border border-gray-300 rounded-lg">
-                          <button
-                            onClick={() =>
-                              item.quantity > 1 &&
-                              updateQuantity(item.product.id, item.variant.id, item.quantity - 1)
-                            }
-                            disabled={item.quantity <= 1}
-                            className="px-3 py-1 text-burgundy hover:bg-ivory transition disabled:opacity-30 disabled:cursor-not-allowed"
-                          >
-                            −
-                          </button>
-                          <span className="px-4 py-1 min-w-[3rem] text-center font-medium">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              updateQuantity(item.product.id, item.variant.id, item.quantity + 1)
-                            }
-                            className="px-3 py-1 text-burgundy hover:bg-ivory transition"
-                          >
-                            +
-                          </button>
+                      {/* Quantity/Grams Selector */}
+                      {item.saleMode === 'BULK_G' ? (
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-gray-600">Gramáž:</span>
+                          <div className="flex items-center border border-gray-300 rounded-lg">
+                            <button
+                              onClick={() =>
+                                item.grams > 50 && updateGrams(item.skuId, item.grams - 50)
+                              }
+                              disabled={item.grams <= 50}
+                              className="px-3 py-1 text-burgundy hover:bg-ivory transition disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                              −50g
+                            </button>
+                            <span className="px-4 py-1 min-w-[4rem] text-center font-medium">
+                              {item.grams}g
+                            </span>
+                            <button
+                              onClick={() => updateGrams(item.skuId, item.grams + 50)}
+                              className="px-3 py-1 text-burgundy hover:bg-ivory transition"
+                            >
+                              +50g
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-gray-600">Ks:</span>
+                          <div className="flex items-center border border-gray-300 rounded-lg">
+                            <button
+                              onClick={() =>
+                                item.quantity > 1 && updateQuantity(item.skuId, item.quantity - 1)
+                              }
+                              disabled={item.quantity <= 1}
+                              className="px-3 py-1 text-burgundy hover:bg-ivory transition disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                              −
+                            </button>
+                            <span className="px-4 py-1 min-w-[3rem] text-center font-medium">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => updateQuantity(item.skuId, item.quantity + 1)}
+                              className="px-3 py-1 text-burgundy hover:bg-ivory transition"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      )}
 
                       {/* Price */}
                       <div className="text-right">
                         <div className="text-sm text-gray-500">
-                          {formatPrice(item.variant.price_czk)} / ks
+                          {item.saleMode === 'BULK_G'
+                            ? `${formatPrice(item.pricePerGram)}/g`
+                            : `${formatPrice(item.lineTotal / item.quantity)}/ks`}
                         </div>
                         <div className="text-xl font-bold text-burgundy">
-                          {formatPrice(item.variant.price_czk * item.quantity)}
+                          {formatPrice(item.lineGrandTotal)}
                         </div>
                       </div>
                     </div>
@@ -231,7 +248,7 @@ export default function CartPage() {
                   <button
                     onClick={() => {
                       if (confirm('Opravdu chcete odstranit tuto položku z košíku?')) {
-                        removeFromCart(item.product.id, item.variant.id);
+                        removeFromCart(item.skuId);
                       }
                     }}
                     className="text-sm text-gray-500 hover:text-red-600 transition flex items-center gap-1"

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function PokladnaPage() {
-  const { items, clearCart } = useCart();
+  const { items, getTotalPrice, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -21,12 +21,8 @@ export default function PokladnaPage() {
     country: 'CZ',
   });
 
-  // spočítat celkem
-  const total = items.reduce((sum, item) => {
-    const price = item.variant.price_czk ?? 0;
-    return sum + price * (item.quantity ?? 1);
-  }, 0);
-
+  // Calculate totals using new cart structure
+  const total = getTotalPrice();
   const shippingThreshold = 3000;
   const shipping = total >= shippingThreshold ? 0 : 150;
 
@@ -52,16 +48,20 @@ export default function PokladnaPage() {
         return;
       }
 
-      // Prepare order data
+      // Prepare order data using new SKU structure
       const orderData = {
         email: formData.email,
         items: items.map((item) => ({
-          productId: item.product.id,
-          quantity: item.quantity,
-          price: item.variant.price_czk,
-          variant: `${item.variant.shade_name} - ${item.variant.length_cm}cm`,
+          skuId: item.skuId,
+          skuName: item.skuName,
+          saleMode: item.saleMode,
+          quantity: item.saleMode === 'PIECE_BY_WEIGHT' ? item.quantity : item.grams,
+          lineGrandTotal: item.lineGrandTotal,
+          ending: item.ending,
         })),
-        total: total,
+        subtotal: total,
+        shipping: shipping,
+        total: total + shipping,
         shippingInfo: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -304,18 +304,22 @@ export default function PokladnaPage() {
 
             <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
               {items.map((item) => (
-                <div key={`${item.product.id}-${item.variant.id}`} className="flex justify-between text-sm">
+                <div key={item.skuId} className="flex justify-between text-sm">
                   <div>
-                    <p className="text-gray-900 font-medium">{item.product.name}</p>
+                    <p className="text-gray-900 font-medium">{item.skuName}</p>
                     <p className="text-gray-600">
-                      {item.variant.shade_name} - {item.variant.length_cm}cm
+                      {item.saleMode === 'BULK_G'
+                        ? `${item.grams}g @ ${item.pricePerGram.toLocaleString('cs-CZ')} Kč/g`
+                        : `${item.quantity}x`}
                     </p>
-                    <p className="text-gray-600">
-                      {item.quantity}x
-                    </p>
+                    {item.assemblyFeeTotal > 0 && (
+                      <p className="text-gray-500 text-xs">
+                        Poplatek: {item.assemblyFeeTotal.toLocaleString('cs-CZ')} Kč
+                      </p>
+                    )}
                   </div>
                   <p className="text-gray-900 font-medium">
-                    {((item.variant.price_czk ?? 0) * item.quantity).toLocaleString('cs-CZ')} Kč
+                    {item.lineGrandTotal.toLocaleString('cs-CZ')} Kč
                   </p>
                 </div>
               ))}
