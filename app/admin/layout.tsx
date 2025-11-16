@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { CartProvider } from '@/contexts/CartContext';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -24,13 +25,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside
-        className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } bg-gray-900 text-white transition-all duration-300 flex flex-col`}
-      >
+    <CartProvider>
+      <div className="flex h-screen bg-gray-100">
+        {/* Sidebar */}
+        <aside
+          className={`${
+            sidebarOpen ? 'w-64' : 'w-20'
+          } bg-gray-900 text-white transition-all duration-300 flex flex-col`}
+        >
         <div className="p-4 border-b border-gray-700 flex items-center justify-between">
           {sidebarOpen && <h1 className="text-xl font-bold">Admin</h1>}
           <button
@@ -104,12 +106,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          {children}
-        </div>
-      </main>
-    </div>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="p-8">
+            {children}
+          </div>
+        </main>
+      </div>
+    </CartProvider>
   );
 }
