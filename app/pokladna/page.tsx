@@ -48,20 +48,15 @@ export default function PokladnaPage() {
         return;
       }
 
-      // Prepare order data using new SKU structure
-      const orderData = {
+      // Prepare order data for creation
+      // Use simpler structure for /api/orders endpoint which expects quoteCartLines format
+      const orderCreationData = {
         email: formData.email,
-        items: items.map((item) => ({
+        cartLines: items.map((item) => ({
           skuId: item.skuId,
-          skuName: item.skuName,
-          saleMode: item.saleMode,
-          quantity: item.saleMode === 'PIECE_BY_WEIGHT' ? item.quantity : item.grams,
-          lineGrandTotal: item.lineGrandTotal,
+          wantedGrams: item.saleMode === 'BULK_G' ? item.grams : undefined,
           ending: item.ending,
         })),
-        subtotal: total,
-        shipping: shipping,
-        total: total + shipping,
         shippingInfo: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -73,35 +68,79 @@ export default function PokladnaPage() {
         },
       };
 
-      // Send to API
-      const response = await fetch('/api/checkout', {
+      // Step 1: Create order in database (status: pending)
+      console.log('📝 Creating order...');
+      const orderResponse = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(orderCreationData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || 'Chyba při vytváření objednávky');
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        setError(errorData.error || 'Chyba při vytváření objednávky');
         setLoading(false);
         return;
       }
 
-      const { orderId } = await response.json();
-      setSuccess('Objednávka byla vytvořena! Přesměrování...');
+      const orderResult = await orderResponse.json();
+      const { orderId, total: orderTotal } = orderResult;
 
-      // Clear cart after successful order
+      console.log(`✅ Order created: ${orderId}, total: ${orderTotal} CZK`);
+      setSuccess('Objednávka vytvořena. Přesměrování na platbu...');
+
+      // Step 2: Create payment session with GoPay
+      console.log('💳 Creating GoPay payment session...');
+      const paymentResponse = await fetch('/api/gopay/create-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          amount: orderTotal,
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+        }),
+      });
+
+      if (!paymentResponse.ok) {
+        const paymentError = await paymentResponse.json();
+        console.error('❌ Payment creation failed:', paymentError);
+        setError(
+          paymentError.error ||
+            'Chyba při vytváření platební relace. Objednávka byla vytvořena, prosím zkuste to znovu.'
+        );
+        setLoading(false);
+        return;
+      }
+
+      const paymentData = await paymentResponse.json();
+      const { paymentUrl } = paymentData;
+
+      if (!paymentUrl) {
+        setError('Chyba: Nebylo možné získat odkaz na platbu');
+        setLoading(false);
+        return;
+      }
+
+      console.log(`✅ Payment session created, redirecting to GoPay...`);
+
+      // Clear cart after successful order creation (before redirect)
       clearCart();
 
-      // Redirect to confirmation after 2 seconds
-      setTimeout(() => {
-        window.location.href = `/pokladna/potvrzeni?orderId=${orderId}`;
-      }, 2000);
+      // Step 3: Redirect to GoPay payment gateway
+      // The customer completes payment, then GoPay redirects them back to confirmation page
+      // A webhook will be called to confirm payment and deduct stock
+      window.location.href = paymentUrl;
     } catch (err) {
-      setError('Chyba při zpracování objednávky. Zkuste to prosím později.');
-      console.error(err);
+      const errorMessage = err instanceof Error ? err.message : 'Neznámá chyba';
+      setError(`Chyba při zpracování objednávky: ${errorMessage}`);
+      console.error('❌ Checkout error:', err);
       setLoading(false);
     }
   };
