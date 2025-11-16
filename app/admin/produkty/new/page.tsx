@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+// Don't pre-render this page during build
+export const dynamic = 'force-dynamic';
+
 export default function NewProductPage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);

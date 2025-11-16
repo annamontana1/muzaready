@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 
+// Don't pre-render this page during build
+export const dynamic = 'force-dynamic';
+
 interface AdminUser {
   id: string;
   name: string;

@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
+// Don't pre-render this page during build
+export const dynamic = 'force-dynamic';
+
 interface WholesaleRequest {
   id: string;
   email: string;

@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import PriceMatrixTab from '../konfigurator-sku/tabs/PriceMatrixTab';
 
+// Don't pre-render this page during build
+export const dynamic = 'force-dynamic';
+
 export default function CenikPage() {
   return (
     <div className="max-w-6xl mx-auto p-8 space-y-6">
