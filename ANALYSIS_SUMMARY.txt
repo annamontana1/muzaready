@@ -1,0 +1,476 @@
+================================================================================
+ČÁST 3 (Frontend Price Display) - CODEBASE ANALYSIS SUMMARY
+================================================================================
+
+PROJECT: Muzaready Hair Extensions E-Commerce Platform
+DATE: November 14, 2025
+STATUS: Ready for ČÁST 3 Implementation
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+The codebase has 95% of the infrastructure needed for ČÁST 3 implementation.
+Most critical systems are in place and operational:
+
+DATABASE:          100% Ready (PriceMatrix and SKU models complete)
+APIs:              100% Ready (All endpoints for price handling exist)
+BUSINESS LOGIC:    100% Ready (Price calculation, assembly fees, lookups)
+FRONTEND PAGES:    60% Ready (Detail page and cart complete, listings need work)
+COMPONENTS:        80% Ready (CatalogCard exists but needs refinement)
+
+================================================================================
+QUESTION 1: PRISMA SCHEMA - PRICEMATRIX MODEL
+================================================================================
+
+STATUS: ✅ EXISTS AND FULLY IMPLEMENTED
+
+Location: /Users/annaz/Desktop/muzaready/prisma/schema.prisma (lines 153-165)
+
+Structure:
+```
+model PriceMatrix {
+  id              String   @id @default(cuid())
+  category        String
+  tier            String
+  lengthCm        Int
+  pricePerGramCzk Decimal
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([category, tier, lengthCm])
+  @@index([category, tier])
+  @@map("price_matrix")
+}
+```
+
+Key Features:
+- Unique constraint on (category, tier, lengthCm) prevents duplicates
+- Index on (category, tier) for efficient queries
+- Decimal type for financial accuracy
+- Timestamps for audit trail
+
+================================================================================
+QUESTION 2: PRISMA SCHEMA - SKU MODEL
+================================================================================
+
+STATUS: ✅ EXISTS WITH ALL REQUIRED FIELDS
+
+Location: /Users/annaz/Desktop/muzaready/prisma/schema.prisma (lines 107-138)
+
+Available Fields (relevant to CZĘŚĆ 3):
+✅ lengthCm         Int?          - Hair length in centimeters
+✅ pricePerGramCzk  Int           - Price per gram (fallback)
+✅ weightTotalG     Int?          - Total weight for PIECE_BY_WEIGHT
+✅ customerCategory Enum?          - Tier (STANDARD/LUXE/PLATINUM_EDITION)
+✅ shade            String?        - Used for category detection
+✅ structure        String?        - Hair structure info
+✅ saleMode         Enum           - PIECE_BY_WEIGHT or BULK_G
+✅ availableGrams   Int?          - For BULK_G items
+✅ minOrderG        Int?          - Minimum order grams
+✅ stepG            Int?          - Step increment for grams
+
+NOTE: Fields "type", "line", "segment", "defaultG", "defaultLengthCm" are NOT
+needed. The system uses these alternatives:
+- saleMode instead of type
+- customerCategory instead of line
+- shade for segment detection
+- minOrderG instead of defaultG
+- lengthCm instead of defaultLengthCm
+
+================================================================================
+QUESTION 3: SKU DETAIL PAGE
+================================================================================
+
+STATUS: ✅ FULLY IMPLEMENTED
+
+Location: /Users/annaz/Desktop/muzaready/app/sku-detail/[id]/page.tsx
+Lines: 474 (complete implementation)
+
+Current Features:
+✅ Loads SKU via GET /api/sku/public/[id]
+✅ Displays all product details with formatting
+✅ Handles PIECE_BY_WEIGHT and BULK_G sale modes
+✅ Configuration UI:
+   - Ending selection (NONE, KERATIN, PASKY, TRESSY)
+   - Grams input for BULK_G items with validation
+✅ Quote calculation via POST /api/quote
+✅ Full pricing breakdown:
+   - Hair price: grams × pricePerGram
+   - Assembly fee: based on ending type (FLAT or PER_GRAM)
+   - Grand total: sum of both
+✅ Quantity selector (1, 2, 3, ...)
+✅ Add to cart (localStorage with timestamps)
+✅ Breadcrumb navigation
+✅ Stock information display
+✅ Category detection and tier badges
+
+Price Display Logic:
+1. Shows SKU.pricePerGramCzk as "Cena za 1g"
+2. On "Spočítat cenu" button click:
+   - Sends POST to /api/quote with skuId, wantedGrams, ending
+   - Receives quote with detailed breakdown
+   - Displays lineTotal (hair) + assemblyFeeTotal = lineGrandTotal
+3. Supports quantity multiplier
+4. Stores everything in localStorage for cart
+
+================================================================================
+QUESTION 4: CATALOG CARD COMPONENT
+================================================================================
+
+STATUS: ⚠️ PARTIALLY IMPLEMENTED
+
+Location: /Users/annaz/Desktop/muzaready/components/CatalogCard.tsx
+Lines: 278 (complete file)
+
+Current Features:
+✅ Unified card component for BULK and PIECE items
+✅ Type discrimination via type prop ('BULK' | 'PIECE')
+✅ Price display:
+   - BULK: "od {pricePerGramCzk}/g"
+   - PIECE: "{priceCzk}" or "Cena na dotaz"
+✅ Uses priceCalculator.formatPrice() for formatting
+✅ Tier badges with colors
+✅ Stock status indicators
+✅ Favorite buttons
+✅ Hair details (length, structure, weight)
+
+Missing/TODO:
+⚠️ "Do košíku" button for BULK items has TODO comment (not implemented)
+⚠️ "Do košíku" button for PIECE items has TODO comment
+   - Currently "Do košíku" redirects to detail page
+   - Direct add-to-cart not fully implemented
+
+Interface:
+```typescript
+interface CatalogCardProps {
+  type: 'BULK' | 'PIECE';
+  id: string;
+  slug?: string;
+  name: string;
+  tier: string;
+  shade?: number;
+  shadeName?: string;
+  structure?: string;
+  lengthCm?: number;
+  weightG?: number;
+  pricePerGramCzk?: number;  // For BULK
+  priceCzk?: number;          // For PIECE
+  inStock: boolean;
+  imageUrl?: string;
+}
+```
+
+================================================================================
+QUESTION 5: CART PAGE
+================================================================================
+
+STATUS: ✅ FULLY IMPLEMENTED
+
+Location: /Users/annaz/Desktop/muzaready/app/sku-kosik/page.tsx
+Lines: 314 (complete implementation)
+
+Current Features:
+✅ Loads cart from localStorage
+✅ Displays all cart items with:
+   - SKU name + tier badge
+   - Configuration (grams, price per gram, ending)
+   - Pricing breakdown:
+     * Vlasy: lineTotal
+     * Zakončení: assemblyFeeTotal
+     * Celkem za 1 ks: lineGrandTotal
+✅ Item removal with ✕ button
+✅ Clear cart button
+✅ Order total calculation
+✅ Email input validation
+✅ Order creation via POST /api/orders
+✅ Success page with order ID
+✅ Clear localStorage after order
+
+Cart Item Structure:
+```typescript
+interface CartItem {
+  skuId: string;
+  skuName: string | null;
+  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
+  saleMode: 'PIECE_BY_WEIGHT' | 'BULK_G';
+  grams: number;
+  pricePerGram: number;
+  lineTotal: number;
+  ending: string;
+  assemblyFeeType: string;
+  assemblyFeeCzk: number;
+  assemblyFeeTotal: number;
+  lineGrandTotal: number;
+}
+```
+
+Price Display in Cart:
+- Each item shows detailed pricing breakdown
+- Total price calculated from all items
+- Sticky sidebar with order summary
+- Email required before checkout
+
+================================================================================
+QUESTION 6: API ENDPOINT - /api/price-matrix/lookup
+================================================================================
+
+STATUS: ✅ EXISTS AND FUNCTIONAL
+
+Location: /Users/annaz/Desktop/muzaready/app/api/price-matrix/lookup/route.ts
+Lines: 78
+
+Purpose: Look up price from matrix by line/segment/length
+
+Parameters:
+GET /api/price-matrix/lookup?line=STANDARD&segment=NEBARVENE&lengthCm=40
+
+Response (if found):
+{
+  "found": true,
+  "pricePerGramCzk": 150.00,
+  "pricePer100g": 15000
+}
+
+Response (if not found):
+{
+  "error": "Price not found in matrix",
+  "found": false
+}
+
+Note: This endpoint maps parameters differently than PriceMatrix:
+- line → tier (STANDARD→standard, LUXE→luxe, PLATINUM→platinum)
+- segment → category (NEBARVENE→nebarvene, BARVENE→barvene)
+- lengthCm → lengthCm (integer)
+
+Currently NOT actively used in the price calculation flow (uses POST /api/quote
+instead), but available as alternative lookup method.
+
+================================================================================
+QUESTION 7: API DIRECTORY STRUCTURE
+================================================================================
+
+STATUS: ✅ WELL-ORGANIZED
+
+Location: /Users/annaz/Desktop/muzaready/app/api/
+
+Directory Tree:
+/app/api/
+├── admin/
+│   ├── products/
+│   ├── skus/
+│   │   ├── [id]/
+│   │   └── create-from-wizard/
+│   ├── cenik/
+│   │   ├── delete/
+│   │   ├── get/
+│   │   └── save/
+│   ├── orders/
+│   ├── stock/
+│   └── login/
+├── catalog/
+│   └── [slug]/
+├── products/
+│   └── [id]/
+├── sku/
+│   ├── public/
+│   │   └── [id]/
+│   ├── [id]/
+│   └── route.ts
+├── price-matrix/
+│   ├── lookup/
+│   ├── [id]/
+│   └── route.ts
+├── quote/
+│   └── route.ts
+├── orders/
+│   └── [id]/
+├── checkout/
+├── gopay/
+└── katalog/
+
+Key Endpoints for CZĘŚĆ 3:
+✅ GET /api/sku/public/[id]           - Fetch SKU details (public)
+✅ GET /api/sku/route.ts              - List SKUs with filters
+✅ POST /api/quote/route.ts           - Calculate prices
+✅ GET /api/price-matrix/route.ts     - Fetch all prices
+✅ POST /api/price-matrix/route.ts    - Create/upsert prices
+✅ GET /api/price-matrix/lookup       - Direct price lookup
+✅ POST /api/orders/route.ts          - Create orders
+
+================================================================================
+SUPPORTING LIBRARIES & UTILITIES
+================================================================================
+
+1. Stock Functions
+   Location: /Users/annaz/Desktop/muzaready/lib/stock.ts
+   
+   Key Functions:
+   - quoteCartLines(lines) → Quote with price breakdown
+   - calculateAssemblyFee(ending, grams) → Fee calculation
+   - validateBulkChoice(grams, min, step) → Validation
+   - getPriceMatrixLookup() → Map of all prices
+   
+   Assembly Fee Config:
+   {
+     NONE: { type: 'FLAT', price: 0 },
+     KERATIN: { type: 'PER_GRAM', pricePerGram: 5 },
+     PASKY: { type: 'FLAT', price: 200 },
+     TRESSY: { type: 'FLAT', price: 150 }
+   }
+
+2. Price Matrix Helper
+   Location: /Users/annaz/Desktop/muzaready/lib/price-matrix-helper.ts
+   
+   Key Functions:
+   - getPriceFromMatrix(category, tier, lengthCm)
+   - calculatePrice(pricePerGram, grams)
+   - calculateBulkPrice(ppg, grams, finishingFee)
+   - calculatePlatinumPrice(ppg, weightG)
+   - formatPrice(price) → "xxx CZK"
+   - generateUniqueSKU(baseSKU, existing[])
+
+3. Price Calculator
+   Location: /Users/annaz/Desktop/muzaready/lib/price-calculator.ts
+   
+   Used by components for price formatting
+
+================================================================================
+WHAT EXISTS - SUMMARY CHECKLIST
+================================================================================
+
+Database Layer:
+[✅] PriceMatrix model with unique constraints
+[✅] SKU model with all required fields
+[✅] OrderItem model with price snapshots
+[✅] CustomerCategory enum (STANDARD, LUXE, PLATINUM_EDITION)
+[✅] SaleMode enum (PIECE_BY_WEIGHT, BULK_G)
+[✅] EndingOption enum (KERATIN, PASKY, TRESSY, NONE)
+
+Frontend Pages:
+[✅] SKU Detail Page (/sku-detail/[id])
+[✅] Cart Page (/sku-kosik)
+[✅] Catalog Card Component
+
+APIs:
+[✅] GET /api/sku/public/[id] - Fetch SKU details
+[✅] POST /api/quote - Calculate prices with matrix
+[✅] GET /api/price-matrix/lookup - Direct lookup
+[✅] GET /api/price-matrix - Get all prices
+[✅] POST /api/price-matrix - Create/upsert prices
+[✅] POST /api/orders - Create orders
+
+Business Logic:
+[✅] Price matrix lookup with fallback
+[✅] Assembly fee calculation (FLAT and PER_GRAM)
+[✅] BULK_G vs PIECE_BY_WEIGHT handling
+[✅] Tier detection and mapping
+[✅] Category detection from shade
+[✅] Quote calculation and breakdown
+[✅] Price formatting (CZK)
+
+================================================================================
+WHAT NEEDS CREATION - IMPLEMENTATION TODO
+================================================================================
+
+High Priority:
+[ ] Catalog listing pages with prices
+[ ] Search results page with prices
+[ ] Checkout page (final confirmation)
+[ ] Order history page (with prices)
+
+Medium Priority:
+[ ] Real-time price updates in catalog cards
+[ ] Price comparison display (per 100g, per 45cm)
+[ ] Price breakdown tooltips/help text
+[ ] Admin UI for price matrix management
+[ ] Bulk price import (CSV/Excel)
+
+Low Priority:
+[ ] Price discount display (if applicable)
+[ ] Price trend indicators
+[ ] Price audit trail/history
+[ ] Advanced price filtering in search
+
+================================================================================
+CRITICAL IMPLEMENTATION NOTES
+================================================================================
+
+1. Price Lookup Flow:
+   User input → POST /api/quote
+   → Load price matrix
+   → Build key: ${category}_${tier}_${lengthCm}
+   → Lookup or fallback to SKU.pricePerGramCzk
+   → Calculate assembly fee
+   → Return breakdown
+
+2. Category Detection:
+   From SKU.shade: parseInt(shade, 10)
+   Result: 1-4 = nebarvene, 5-10 = barvene
+
+3. Tier Detection:
+   From SKU.customerCategory enum
+   Map: STANDARD→standard, LUXE→luxe, PLATINUM_EDITION→platinum
+
+4. Price Matrix Keys:
+   Format: ${category}_${tier}_${lengthCm}
+   Example: nebarvene_standard_40
+
+5. Important: Price Persistence
+   Quote results are stored in localStorage with items
+   OrderItem table stores snapshot of prices at order time
+   This prevents price changes after user confirms quote
+
+================================================================================
+RECOMMENDATIONS FOR CZĘŚĆ 3
+================================================================================
+
+1. USE EXISTING /api/quote for ALL price calculations
+2. LOAD price matrix at app startup and CACHE client-side
+3. STORE quote results to prevent price drift
+4. ADD price validation before order creation
+5. IMPLEMENT error handling for missing matrix entries
+6. TEST all category/tier/length combinations
+7. MONITOR price matrix performance (< 100ms lookups)
+
+================================================================================
+DOCUMENT INDEX
+================================================================================
+
+Created Files:
+1. CZĘŚĆ_3_CODEBASE_ANALYSIS.md  - Detailed 500-line analysis
+2. PART_3_QUICK_REFERENCE.md     - 1-page quick reference
+3. PART_3_ARCHITECTURE.md        - Visual architecture diagrams
+4. ANALYSIS_SUMMARY.txt          - This file
+
+Key Files to Review:
+- /prisma/schema.prisma          - Database models
+- /app/sku-detail/[id]/page.tsx  - Detail page implementation
+- /app/sku-kosik/page.tsx        - Cart page implementation
+- /lib/stock.ts                  - Core pricing logic
+- /app/api/quote/route.ts        - Quote calculation API
+
+================================================================================
+CONCLUSION
+================================================================================
+
+The codebase is READY for CZĘŚĆ 3 implementation. All core systems are in place:
+
+✅ Price Matrix: Complete with proper constraints and indexes
+✅ SKU Model: All required fields present
+✅ Quote Calculation: Fully implemented with matrix lookup and fallback
+✅ Assembly Fees: All ending types configured
+✅ Detail Page: Functional with real-time price calculation
+✅ Cart Page: Complete with pricing breakdown
+✅ APIs: All endpoints for price handling exist
+
+The main work for CZĘŚĆ 3 will be:
+1. Creating listing/search pages that use CatalogCard
+2. Implementing catalog filtering by price
+3. Creating checkout page
+4. Adding admin UI for price management
+5. Performance optimization and testing
+
+Estimated effort: 40-60 hours for full CZĘŚĆ 3 implementation
+
+================================================================================

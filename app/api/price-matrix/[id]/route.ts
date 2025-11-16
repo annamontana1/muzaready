@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+const EXCHANGE_RATE_ID = 'GLOBAL_RATE';
+const FALLBACK_CZK_TO_EUR = 1 / 25.5;
+
+async function resolveCzkToEur() {
+  const rate = await prisma.exchangeRate.findFirst({
+    where: { id: EXCHANGE_RATE_ID },
+  });
+  if (!rate) {
+    console.warn('Exchange rate not set, using fallback 1 EUR = 25.5 CZK');
+    return FALLBACK_CZK_TO_EUR;
+  }
+  return Number(rate.czk_to_eur);
+}
+
 // GET single price matrix entry
 export async function GET(
   request: NextRequest,
@@ -44,9 +58,14 @@ export async function PUT(
       );
     }
 
+    const czkToEur = await resolveCzkToEur();
+
     const updated = await prisma.priceMatrix.update({
       where: { id: params.id },
-      data: { pricePerGramCzk },
+      data: {
+        pricePerGramCzk,
+        pricePerGramEur: Number((pricePerGramCzk * czkToEur).toFixed(3)),
+      },
     });
 
     return NextResponse.json(updated, { status: 200 });

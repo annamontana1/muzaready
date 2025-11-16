@@ -58,6 +58,7 @@ export async function PATCH(
       structure,
       pricePerGramCzk,
       weightTotalG,
+      weightGrams,
       availableGrams,
       minOrderG,
       stepG,
@@ -76,6 +77,7 @@ export async function PATCH(
     if (structure !== undefined) updateData.structure = structure;
     if (pricePerGramCzk !== undefined) updateData.pricePerGramCzk = pricePerGramCzk;
     if (weightTotalG !== undefined) updateData.weightTotalG = weightTotalG;
+    if (weightGrams !== undefined) updateData.weightGrams = weightGrams;
     if (availableGrams !== undefined) updateData.availableGrams = availableGrams;
     if (minOrderG !== undefined) updateData.minOrderG = minOrderG;
     if (stepG !== undefined) updateData.stepG = stepG;

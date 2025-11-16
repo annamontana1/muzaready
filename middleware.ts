@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { normalizeExistingSlug } from '@/lib/slug-normalizer';
 
 /**
  * Middleware for handling:
@@ -44,13 +45,29 @@ export function middleware(request: NextRequest) {
 
   // Product URL redirects
   if (pathname.startsWith('/produkt/')) {
+    const slugPart = pathname.replace('/produkt/', '');
+    
+    // 1. Redirect ze starých URL s diakritikou na nové ASCII
+    // Pokud slug obsahuje diakritiku (á, é, í, ó, ú, ů, ý, č, ď, ě, ň, ř, š, ť, ž)
+    // nebo jiné ne-ASCII znaky, normalizujeme ho
+    const hasDiacritics = /[áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽäöüßàèìòùâêîôûãõñæœ]/i.test(slugPart);
+    
+    if (hasDiacritics) {
+      const normalizedSlug = normalizeExistingSlug(slugPart);
+      const newUrl = request.nextUrl.clone();
+      newUrl.pathname = `/produkt/${normalizedSlug}`;
+      
+      // 301 Permanent Redirect
+      return NextResponse.redirect(newUrl, { status: 301 });
+    }
+
+    // 2. Redirect pro Standard/LUXE produkty s délkou v URL (starý formát)
     // Pattern: /produkt/{category}-{tier}-odstin-{shade}-{length}cm
     // Examples:
     // - /produkt/nebarvene-standard-odstin-1-45cm
     // - /produkt/nebarvene-luxe-odstin-2-60cm
     // - /produkt/barvene-luxe-odstin-6-65cm
 
-    // Match Standard or LUXE products with length suffix
     const standardLuxePattern = /^\/produkt\/(nebarvene|barvene)-(standard|luxe)-odstin-(\d+)-(\d+)cm$/;
     const match = pathname.match(standardLuxePattern);
 
@@ -70,6 +87,23 @@ export function middleware(request: NextRequest) {
     // Platinum Edition URLs remain unchanged (they keep length in slug)
     // e.g., /produkt/nebarvene-platinum-edition-odstin-1-60cm
   }
+  
+  // Redirect from old /barvene-blond to new /barvene-vlasy
+  if (pathname.startsWith('/vlasy-k-prodlouzeni/barvene-blond')) {
+    const newPath = pathname.replace('/vlasy-k-prodlouzeni/barvene-blond', '/vlasy-k-prodlouzeni/barvene-vlasy');
+    const newUrl = request.nextUrl.clone();
+    newUrl.pathname = newPath;
+    return NextResponse.redirect(newUrl, { status: 301 });
+  }
+
+  // SKU detail redirects (pokud by někdo použil starý slug místo ID)
+  if (pathname.startsWith('/sku-detail/')) {
+    const idPart = pathname.replace('/sku-detail/', '');
+    
+    // Pokud ID obsahuje diakritiku nebo ne-ASCII znaky, může to být starý slug
+    // V takovém případě zkusíme najít produkt podle slug a přesměrovat na správné ID
+    // (Toto je volitelné, protože teď používáme ID, ne slug)
+  }
 
   return NextResponse.next();
 }
@@ -79,5 +113,6 @@ export const config = {
   matcher: [
     '/admin/:path*',
     '/produkt/:path*',
+    '/vlasy-k-prodlouzeni/:path*',
   ],
 };

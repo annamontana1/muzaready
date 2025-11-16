@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { mockProducts } from '@/lib/mock-products';
 import { ProductSchema, BreadcrumbSchema } from '@/components/StructuredData';
-import { HAIR_COLORS } from '@/types/product';
+import { HAIR_COLORS, Product } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
 import ProductConfigurator from '@/components/ProductConfigurator';
 import { FINISHING_ADDONS } from '@/lib/finishing-addons';
 import FavoriteButton from '@/components/FavoriteButton';
+import { getCatalogProducts } from '@/lib/catalog-adapter';
+import { normalizeExistingSlug } from '@/lib/slug-normalizer';
 
 interface ProductPageProps {
   params: {
@@ -18,9 +19,42 @@ interface ProductPageProps {
   };
 }
 
+// Fetch product from catalog adapter
+async function getProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    // Decode URL-encoded slug (Next.js should do this automatically, but just in case)
+    const decodedSlug = decodeURIComponent(slug);
+    
+    // Normalizovat slug (pro případ starých URL s diakritikou)
+    const normalizedSlug = normalizeExistingSlug(decodedSlug);
+    
+    // Search in all categories
+    const categories: Array<'nebarvene_panenske' | 'barvene_blond' | undefined> = [
+      undefined, // all
+      'nebarvene_panenske',
+      'barvene_blond',
+    ];
+
+    for (const category of categories) {
+      const products = await getCatalogProducts(category);
+      // Try normalized slug (všechny nové slugs jsou normalizované)
+      const product = products.find((p) => p.slug === normalizedSlug);
+
+      if (product) {
+        return product;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
+}
+
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = mockProducts.find((p) => p.slug === params.slug);
+  const product = await getProductBySlug(params.slug);
 
   if (!product) {
     return {
@@ -60,14 +94,14 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 // Generate static params for all products (for static generation)
+// Note: This is disabled for dynamic catalog - products come from database
 export async function generateStaticParams() {
-  return mockProducts.map((product) => ({
-    slug: product.slug,
-  }));
+  // Return empty array to enable dynamic rendering
+  return [];
 }
 
-export default function ProductPage({ params, searchParams }: ProductPageProps) {
-  const product = mockProducts.find((p) => p.slug === params.slug);
+export default async function ProductPage({ params, searchParams }: ProductPageProps) {
+  const product = await getProductBySlug(params.slug);
 
   if (!product) {
     notFound();
@@ -89,7 +123,7 @@ export default function ProductPage({ params, searchParams }: ProductPageProps) 
     },
     {
       name: product.category === 'nebarvene_panenske' ? 'Nebarvené panenské' : 'Barvené blond',
-      url: `https://muza-hair-shop.vercel.app/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-blond'}`,
+      url: `https://muza-hair-shop.vercel.app/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-vlasy'}`,
     },
     {
       name: product.name,
@@ -139,7 +173,7 @@ export default function ProductPage({ params, searchParams }: ProductPageProps) 
               <li>/</li>
               <li>
                 <a
-                  href={`/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-blond'}`}
+                  href={`/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-vlasy'}`}
                   className="hover:text-burgundy transition"
                 >
                   {product.category === 'nebarvene_panenske' ? 'Nebarvené panenské' : 'Barvené blond'}

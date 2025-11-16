@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export const sendOrderConfirmationEmail = async (
   email: string,
@@ -8,6 +9,11 @@ export const sendOrderConfirmationEmail = async (
   items: any[],
   total: number
 ) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendOrderConfirmationEmail');
+    return;
+  }
+
   try {
     const itemsHtml = items
       .map(
@@ -83,6 +89,26 @@ export const sendOrderConfirmationEmail = async (
       </html>
     `;
 
+    if (!resend) {
+      
+      return;
+    }
+
+    if (!resend) {
+      
+      return;
+    }
+
+    if (!resend) {
+      
+      return;
+    }
+
+    if (!resend) {
+      
+      return;
+    }
+
     const result = await resend.emails.send({
       from: 'objednavky@muzahair.cz',
       to: email,
@@ -103,6 +129,11 @@ export const sendPaymentConfirmationEmail = async (
   orderId: string,
   amount: number
 ) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendPaymentConfirmationEmail');
+    return;
+  }
+
   try {
     const html = `
       <!DOCTYPE html>
@@ -167,6 +198,11 @@ export const sendShippingNotificationEmail = async (
   orderId: string,
   trackingInfo?: string
 ) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendShippingNotificationEmail');
+    return;
+  }
+
   try {
     const html = `
       <!DOCTYPE html>
@@ -230,6 +266,11 @@ export const sendAdminOrderNotificationEmail = async (
   items: any[],
   total: number
 ) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendAdminOrderNotificationEmail');
+    return;
+  }
+
   try {
     const itemsHtml = items
       .map(

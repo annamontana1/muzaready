@@ -26,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/vlasy-k-prodlouzeni/barvene-blond`,
+      url: `${baseUrl}/vlasy-k-prodlouzeni/barvene-vlasy`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.8,

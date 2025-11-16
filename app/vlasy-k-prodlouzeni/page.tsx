@@ -56,7 +56,7 @@ export default function VlasyKProdlouzenLanding() {
 
           {/* Barvené */}
           <Link
-            href="/vlasy-k-prodlouzeni/barvene-blond"
+            href="/vlasy-k-prodlouzeni/barvene-vlasy"
             className="group"
           >
             <div className="bg-white rounded-2xl shadow-light hover:shadow-card-hover transition-all p-12 text-center h-full flex flex-col justify-center items-center border border-gray-200 hover:border-burgundy">

@@ -10,6 +10,7 @@ import prisma from './prisma';
 import { Product, ProductVariant, ProductCategory, ProductTier, HAIR_COLORS } from '@/types/product';
 import { normalizeSlug } from './slug-normalizer';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
+import { generateVlasyXName, generateVlasyXSlug } from '@/lib/vlasyx-format';
 
 // Fallback délky pro rychlé "Do košíku" (100g)
 const FALLBACK_LENGTHS = [45, 40, 50, 55, 60, 65, 70, 75, 80];
@@ -97,14 +98,9 @@ function createSlug(
 ): string {
   const categorySlug = category === 'nebarvene_panenske' ? 'nebarvene' : 'barvene';
   const tierSlug = tier === 'Standard' ? 'standard' : tier === 'LUXE' ? 'luxe' : 'platinum-edition';
-  const shadeSlug = shade ? `odstin-${shade}` : 'odstin-1';
-  
-  // Normalizovat strukturu (může obsahovat diakritiku: "rovné", "mírně vlnité")
+  const shadeSlug = shade && HAIR_COLORS[shade] ? normalizeSlug(HAIR_COLORS[shade].name) : 'odstin';
   const structureSlug = structure ? normalizeSlug(structure) : 'rovne';
-  
   const lengthSlug = lengthCm ? `-${lengthCm}cm` : '';
-  
-  // Sestavit a normalizovat celý slug (pro případ, že by některá část obsahovala diakritiku)
   const rawSlug = `${categorySlug}-${tierSlug}-${shadeSlug}-${structureSlug}${lengthSlug}`;
   return normalizeSlug(rawSlug);
 }
@@ -287,15 +283,26 @@ export async function getCatalogProducts(
       // Použijeme první dostupnou délku pro zobrazení
       const displayLength = availableLengths[0];
       const displaySku = skuGroup.find(s => s.lengthCm === displayLength) || firstSku;
+      const vlasyXCategory = category === 'nebarvene_panenske' ? 'nebarvene' : 'barvene';
+      const vlasyXTier = tier === 'LUXE' ? 'luxe' : 'standard';
+      const gramsForName = displaySku.minOrderG || displaySku.stepG || 100;
+      const generatedProductName = generateVlasyXName(
+        displayLength || displaySku.lengthCm || 0,
+        vlasyXCategory,
+        vlasyXTier,
+        shadeCode,
+        gramsForName
+      );
+      const productName = displaySku.name?.trim().length ? displaySku.name! : generatedProductName;
 
-      const slug = createSlug(category, tier, shadeCode, structure, null);
+      const slug = generateVlasyXSlug(vlasyXCategory, vlasyXTier, shadeCode);
       const product: Product = {
         id: displaySku.id, // Použijeme skutečné SKU ID z prvního dostupného SKU
         sku: firstSku.sku,
         slug,
         category,
         tier,
-        name: `${shadeName} #${shadeCode}`,
+        name: productName,
         description: `${tier} panenské vlasy, odstín ${shadeName}, ${structure}`,
         measurement_note: 'Měříme tak, jak jsou (nenatažené)',
         variants: availableLengths.map(length => {

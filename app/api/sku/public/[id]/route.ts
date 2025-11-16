@@ -34,6 +34,7 @@ export async function GET(
         saleMode: true,
         pricePerGramCzk: true,
         weightTotalG: true,
+        weightGrams: true,
         availableGrams: true,
         minOrderG: true,
         stepG: true,

@@ -142,5 +142,6 @@ export function calculateBulkPrice(
   combo: DefaultBulkCombo | null
 ): number | null {
   if (!combo) return null;
-  return Math.round(pricePerGramCzk * combo.grams);
+  // Ponech přesnost na 2 desetinná místa bez zaokrouhlování
+  return Number((pricePerGramCzk * combo.grams).toFixed(2));
 }

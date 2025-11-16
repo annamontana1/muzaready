@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/components/AuthProvider';
 import FavoriteButton from './FavoriteButton';
 
 interface ProductCardProps {
@@ -62,11 +63,14 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   const [showTierModal, setShowTierModal] = useState(false);
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   const { addToCart } = useCart();
+  const { user } = useAuth();
   const displayVariant = variant || product.variants[0];
   const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
+  const isB2B = user?.isWholesale ?? false;
+  const discountedPrice = priceCalculator.applyB2BDiscount(displayPrice, isB2B);
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
-  const listingTitle = getListingTitle(displayVariant);
+  const listingTitle = product.name?.trim().length ? product.name : getListingTitle(displayVariant);
   const tierInfo = getTierExplanation(product.tier);
 
   const handleTierClick = (e: React.MouseEvent | React.KeyboardEvent) => {
@@ -97,7 +101,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   return (
     <>
       <div className="product-card group block relative">
-        <Link href={`/produkt/${product.slug}`} className="block">
+        <Link href={`/sku-detail/${product.id}`} className="block">
           {/* Clickable Tier Badge with Info Icon */}
           <div
             onClick={handleTierClick}
@@ -194,9 +198,25 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                   Individuální cena
                 </p>
               ) : (
-                <p className="text-base font-semibold text-burgundy">
-                  {priceCalculator.formatPrice(displayPrice)}
-                </p>
+                <>
+                  {isB2B ? (
+                    <div className="space-y-1">
+                      <p className="text-xs line-through text-gray-400">
+                        {priceCalculator.formatPrice(displayPrice)}
+                      </p>
+                      <p className="text-base font-semibold text-burgundy">
+                        {priceCalculator.formatPrice(discountedPrice)}
+                      </p>
+                      <p className="text-xs text-green-600 font-medium">
+                        -10% B2B sleva
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-base font-semibold text-burgundy">
+                      {priceCalculator.formatPrice(displayPrice)}
+                    </p>
+                  )}
+                </>
               )}
             </div>
 

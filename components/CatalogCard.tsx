@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { HAIR_COLORS } from '@/types/product';
 import FavoriteButton from './FavoriteButton';
-import { priceCalculator } from '@/lib/price-calculator';
+import { usePreferences } from '@/lib/preferences-context';
 
 /**
  * Unified catalog card for both BULK (Product) and PIECE (SKU) items
@@ -61,8 +61,21 @@ const getShadeColor = (shade?: number): { hex: string; name: string } => {
   return color ? { hex: color.hex, name: color.name } : { hex: '#e8e1d7', name: 'ivory' };
 };
 
+const DEFAULT_RATE = 1 / 25.5;
+
+const formatCurrencyValue = (value: number, currency: 'CZK' | 'EUR') => {
+  return new Intl.NumberFormat(currency === 'CZK' ? 'cs-CZ' : 'en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: currency === 'CZK' ? 1 : 2,
+    maximumFractionDigits: currency === 'CZK' ? 1 : 2,
+  }).format(value);
+};
+
 export default function CatalogCard({ ...props }: CatalogCardProps) {
   const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const { currency, exchangeRate } = usePreferences();
+  const rate = exchangeRate || DEFAULT_RATE;
   const shadeColor = getShadeColor(props.shade);
   const tierLabel = getTierLabel(props.tier);
   const tierColorClass = getTierColor(props.tier);
@@ -161,9 +174,16 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             {/* Price section */}
             <div className="pt-2 mt-2 border-t border-gray-200">
               {props.pricePerGramCzk ? (
-                <p className="text-base font-semibold text-burgundy">
-                  od {priceCalculator.formatPrice(props.pricePerGramCzk)}/g
-                </p>
+                <>
+                  <p className="text-base font-semibold text-burgundy">
+                    od {formatCurrencyValue(currency === 'CZK' ? props.pricePerGramCzk : props.pricePerGramCzk * rate, currency)}/g
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {currency === 'CZK'
+                      ? `${formatCurrencyValue(props.pricePerGramCzk * rate, 'EUR')}/g`
+                      : `${formatCurrencyValue(props.pricePerGramCzk, 'CZK')}/g`}
+                  </p>
+                </>
               ) : (
                 <p className="text-sm text-gray-500">Cena na dotaz</p>
               )}
@@ -247,9 +267,16 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           {/* Price section */}
           <div className="pt-2 mt-2 border-t border-gray-200">
             {props.priceCzk ? (
-              <p className="text-base font-semibold text-burgundy">
-                {priceCalculator.formatPrice(props.priceCzk)}
-              </p>
+              <>
+                <p className="text-base font-semibold text-burgundy">
+                  {formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency)}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {currency === 'CZK'
+                    ? formatCurrencyValue(props.priceCzk * rate, 'EUR')
+                    : formatCurrencyValue(props.priceCzk, 'CZK')}
+                </p>
+              </>
             ) : (
               <p className="text-sm text-gray-500">Cena na dotaz</p>
             )}

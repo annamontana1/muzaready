@@ -473,7 +473,7 @@ export default function NebarvenePanenskePage() {
                   ⚠️ Některé vybrané odstíny nejsou dostupné v aktuálním tieru.
                   {filters.shades.filter(s => s >= 5 && s <= 10).length > 0 && (
                     <span className="block mt-1">
-                      Pro odstíny 5-10 zkuste: <a href="/vlasy-k-prodlouzeni/barvene-blond" className="font-semibold underline hover:text-amber-900">Barvené blond</a>
+                      Pro odstíny 5-10 zkuste: <a href="/vlasy-k-prodlouzeni/barvene-vlasy" className="font-semibold underline hover:text-amber-900">Barvené vlasy</a>
                     </span>
                   )}
                 </p>

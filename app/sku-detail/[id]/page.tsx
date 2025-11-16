@@ -51,7 +51,8 @@ export default function SkuDetailPage() {
 
   // Configuration state
   const [selectedEnding, setSelectedEnding] = useState('NONE');
-  const [selectedGrams, setSelectedGrams] = useState<number | string>('');
+  const [selectedLength, setSelectedLength] = useState<number>(45);
+  const [selectedGrams, setSelectedGrams] = useState<number>(0);
   const [quote, setQuote] = useState<QuoteItem | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -69,9 +70,14 @@ export default function SkuDetailPage() {
       }
       const found: Sku = await res.json();
       setSku(found);
-      // Set default grams for BULK_G
-      if (found.saleMode === 'BULK_G' && found.minOrderG) {
-        setSelectedGrams(found.minOrderG);
+      if (found.lengthCm) {
+        setSelectedLength(Math.min(Math.max(found.lengthCm, 40), 80));
+      }
+      const initialGrams = found.saleMode === 'BULK_G'
+        ? found.minOrderG ?? found.availableGrams ?? 0
+        : found.weightTotalG ?? found.availableGrams ?? 0;
+      if (initialGrams) {
+        setSelectedGrams(initialGrams);
       }
     } catch (err: any) {
       setError(err.message);
@@ -88,8 +94,9 @@ export default function SkuDetailPage() {
       const lines = [
         {
           skuId: sku.id,
-          wantedGrams: sku.saleMode === 'BULK_G' ? Number(selectedGrams) : undefined,
+          wantedGrams: sku.saleMode === 'BULK_G' ? selectedGrams : undefined,
           ending: selectedEnding,
+          selectedLength,
         },
       ];
 
@@ -176,6 +183,17 @@ export default function SkuDetailPage() {
       </div>
     );
   }
+
+  const BULK_MIN_LENGTH = 40;
+  const BULK_MAX_LENGTH = 80;
+  const bulkMinGrams = sku.saleMode === 'BULK_G' ? (sku.minOrderG ?? 0) : 0;
+  const bulkMaxGrams = sku.saleMode === 'BULK_G' ? (sku.availableGrams ?? Math.max(bulkMinGrams, 0)) : 0;
+  const bulkStepGrams = sku.saleMode === 'BULK_G' ? (sku.stepG ?? 5) : 1;
+  const bulkLengthValue = Math.min(Math.max(selectedLength, BULK_MIN_LENGTH), BULK_MAX_LENGTH);
+  const bulkGramsValue = sku.saleMode === 'BULK_G'
+    ? Math.min(Math.max(selectedGrams || bulkMinGrams, bulkMinGrams), Math.max(bulkMaxGrams, bulkMinGrams))
+    : selectedGrams;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-burgundy/5 to-white py-12">
@@ -295,23 +313,43 @@ export default function SkuDetailPage() {
 
               {/* Grams Selection (for BULK_G only) */}
               {sku.saleMode === 'BULK_G' && (
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
-                    Kolik gramů?
-                  </label>
-                  <input
-                    type="number"
-                    min={sku.minOrderG || undefined}
-                    max={sku.availableGrams || undefined}
-                    step={sku.stepG || undefined}
-                    value={selectedGrams || ''}
-                    onChange={(e) => setSelectedGrams(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy outline-none transition text-lg"
-                    placeholder={`Min: ${sku.minOrderG}g, krok: ${sku.stepG}g`}
-                  />
-                  <p className="text-xs text-gray-500 mt-2">
-                    Zadej hodnotu od {sku.minOrderG}g do {sku.availableGrams}g, v kroku {sku.stepG}g
-                  </p>
+                <div className="mb-6 space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Délka (cm)</label>
+                    <input
+                      type="range"
+                      min={BULK_MIN_LENGTH}
+                      max={BULK_MAX_LENGTH}
+                      step={1}
+                      value={bulkLengthValue}
+                      onChange={(e) => setSelectedLength(Number(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-2">
+                      <span>{BULK_MIN_LENGTH} cm</span>
+                      <span>{BULK_MAX_LENGTH} cm</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2 text-right font-medium">Délka: {bulkLengthValue} cm</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">Kolik gramů?</label>
+                    <input
+                      type="range"
+                      min={bulkMinGrams}
+                      max={Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)}
+                      step={bulkStepGrams}
+                      value={bulkGramsValue}
+                      onChange={(e) => setSelectedGrams(Number(e.target.value))}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy disabled:opacity-50"
+                      disabled={!bulkMaxGrams}
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-2">
+                      <span>{bulkMinGrams} g</span>
+                      <span>{Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)} g</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2 text-right font-medium">Gramáž: {bulkGramsValue} g</p>
+                    <p className="text-xs text-gray-500 mt-1">Rozsah {bulkMinGrams}–{Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)} g · krok {bulkStepGrams} g</p>
+                  </div>
                 </div>
               )}
 
@@ -320,7 +358,7 @@ export default function SkuDetailPage() {
                 onClick={calculateQuote}
                 disabled={
                   quoteLoading ||
-                  (sku.saleMode === 'BULK_G' && (!selectedGrams || Number(selectedGrams) < (sku.minOrderG || 0)))
+                  (sku.saleMode === 'BULK_G' && (!selectedGrams || selectedGrams < (sku.minOrderG || 0)))
                 }
                 className="w-full bg-burgundy text-white py-3 rounded-lg font-semibold hover:bg-maroon transition disabled:opacity-50 disabled:cursor-not-allowed mb-6"
               >

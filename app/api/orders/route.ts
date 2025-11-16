@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
             },
             saleMode: item.sku.saleMode,
             grams: item.grams,
-            pricePerGram: item.pricePerGram,
+            pricePerGram: item.pricePerGram ?? 0,
             lineTotal: item.lineTotal,
             nameSnapshot: item.snapshotName,
             ending: item.ending as any,

@@ -15,7 +15,7 @@ interface SKUParams {
   tier: ProductTier;
   shade: number;
   lengthCm: number;
-  weightG: number;
+  weightGrams: number;
   structure: HairStructure;
   ending: HairEnding;
   batch?: string;
@@ -57,7 +57,7 @@ export function generateSKU(params: SKUParams): string {
   const tier = SKU_TOKENS.tier[params.tier];
   const shade = params.shade.toString().padStart(2, "0"); // 01-10
   const length = params.lengthCm.toString(); // 35-90
-  const weight = params.weightG.toString().padStart(3, "0"); // 050-300
+  const weight = params.weightGrams.toString().padStart(3, "0"); // 050-300
   const structure = SKU_TOKENS.structure[params.structure];
   const ending = SKU_TOKENS.ending[params.ending];
   const batch = params.batch || "A01"; // Default batch
@@ -98,7 +98,7 @@ export function parseSKU(sku: string): SKUParams | null {
     tier: tierFull,
     shade: parseInt(shade, 10),
     lengthCm: parseInt(length, 10),
-    weightG: parseInt(weight, 10),
+    weightGrams: parseInt(weight, 10),
     structure: structureFull,
     ending: endingFull,
     batch,

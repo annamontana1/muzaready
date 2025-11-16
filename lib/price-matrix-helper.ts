@@ -57,8 +57,8 @@ export function calculateBulkPrice(
  * Výpočet ceny za Platinum (PIECE)
  * Vezme PPG z matice a vynásobí vahou kusu
  */
-export function calculatePlatinumPrice(pricePerGram: number, weightG: number): number {
-  return calculatePrice(pricePerGram, weightG);
+export function calculatePlatinumPrice(pricePerGram: number, weightGrams: number): number {
+  return calculatePrice(pricePerGram, weightGrams);
 }
 
 /**

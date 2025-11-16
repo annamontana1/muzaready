@@ -125,7 +125,7 @@ export default function BarveneBlondStandardPage() {
             <li><span className="mx-2">›</span></li>
             <li><Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link></li>
             <li><span className="mx-2">›</span></li>
-            <li><Link href="/vlasy-k-prodlouzeni/barvene-blond" className="hover:text-burgundy">Barvené blond</Link></li>
+            <li><Link href="/vlasy-k-prodlouzeni/barvene-vlasy" className="hover:text-burgundy">Barvené vlasy</Link></li>
             <li><span className="mx-2">›</span></li>
             <li className="text-burgundy font-medium">Standard</li>
           </ol>

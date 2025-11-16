@@ -74,6 +74,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             {sidebarOpen ? '📦 Sklad (SKU)' : '📦'}
           </Link>
+          <Link
+            href="/admin/price-matrix"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '💰 Matice cen' : '💰'}
+          </Link>
+          <Link
+            href="/admin/konfigurator-sku"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '➕ Nový produkt' : '➕'}
+          </Link>
         </nav>
 
         <div className="p-4 border-t border-gray-700 space-y-2">

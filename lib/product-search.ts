@@ -248,7 +248,7 @@ export function getFallbackCTA(parsedQuery: ParsedQuery, category?: ProductCateg
   url: string;
 } {
   const categorySlug = category === 'barvene_blond'
-    ? '/vlasy-k-prodlouzeni/barvene-blond'
+    ? '/vlasy-k-prodlouzeni/barvene-vlasy'
     : '/vlasy-k-prodlouzeni/nebarvene-panenske';
 
   if (parsedQuery.tier) {

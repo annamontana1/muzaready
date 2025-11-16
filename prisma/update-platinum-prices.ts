@@ -8,20 +8,22 @@ async function updatePlatinumPrices() {
   // Platinum Edition - Uncolored (nebarvene) - Shades 8, 9, 10
   const newPrices = [
     // Shade 8, 9, 10
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 45, pricePerGramCzk: 118.90 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 50, pricePerGramCzk: 134.50 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 55, pricePerGramCzk: 144.90 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 60, pricePerGramCzk: 158.90 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 65, pricePerGramCzk: 174.90 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 70, pricePerGramCzk: 194.90 },
+    { category: 'nebarvene', tier: 'platinum', shadeRangeStart: 8, shadeRangeEnd: 10, lengthCm: 45, pricePerGramCzk: 118.9 },
+    { category: 'nebarvene', tier: 'platinum', shadeRangeStart: 8, shadeRangeEnd: 10, lengthCm: 50, pricePerGramCzk: 134.5 },
+    { category: 'nebarvene', tier: 'platinum', shadeRangeStart: 8, shadeRangeEnd: 10, lengthCm: 55, pricePerGramCzk: 144.9 },
+    { category: 'nebarvene', tier: 'platinum', shadeRangeStart: 8, shadeRangeEnd: 10, lengthCm: 60, pricePerGramCzk: 158.9 },
+    { category: 'nebarvene', tier: 'platinum', shadeRangeStart: 8, shadeRangeEnd: 10, lengthCm: 65, pricePerGramCzk: 174.9 },
+    { category: 'nebarvene', tier: 'platinum', shadeRangeStart: 8, shadeRangeEnd: 10, lengthCm: 70, pricePerGramCzk: 194.9 },
   ];
 
   for (const price of newPrices) {
     const updated = await prisma.priceMatrix.upsert({
       where: {
-        category_tier_lengthCm: {
+        category_tier_shadeRangeStart_shadeRangeEnd_lengthCm: {
           category: price.category,
           tier: price.tier,
+          shadeRangeStart: price.shadeRangeStart!,
+          shadeRangeEnd: price.shadeRangeEnd!,
           lengthCm: price.lengthCm,
         },
       },

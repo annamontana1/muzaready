@@ -3,15 +3,16 @@
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import { mockProducts } from '@/lib/mock-products';
 import { HAIR_COLORS } from '@/types/product';
 import ShadeGallery from '@/components/ShadeGallery';
+import { motion } from 'framer-motion';
 
 type FilterState = {
   shades: number[];
   structures: string[];
+  lengths: number[];
   endings: string[];
 };
 
@@ -40,23 +41,28 @@ const scaleIn = {
 
 const PRODUCTS_PER_PAGE = 14;
 
-export default function BarveneBlondLuxePage() {
+export default function BarveneBlondPlatinumPage() {
   const [filters, setFilters] = useState<FilterState>({
     shades: [],
     structures: [],
+    lengths: [],
     endings: [],
   });
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filtruj produkty: barvené blond + tier LUXE
+  // Filtruj produkty: barvené blond + tier Platinum edition
   const products = useMemo(() => {
     return mockProducts.filter((p) =>
-      p.category === 'barvene_blond' && p.tier === 'LUXE'
+      p.category === 'barvene_blond' && p.tier === 'Platinum edition'
     );
   }, []);
 
-  // Dostupné odstíny pro LUXE barvené: 5-10
+  // Dostupné odstíny pro Platinum barvené: 5-10
   const availableShades = [5, 6, 7, 8, 9, 10];
+
+  // Dostupné délky pro Platinum: 45-90
+  const availableLengths = [45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -71,6 +77,13 @@ export default function BarveneBlondLuxePage() {
         const productStructure = product.variants[0]?.structure;
         if (!productStructure || !filters.structures.includes(productStructure)) return false;
       }
+
+      // Délka filtr
+      if (filters.lengths.length > 0) {
+        const productLength = product.variants[0]?.length_cm;
+        if (!productLength || !filters.lengths.includes(productLength)) return false;
+      }
+
       return true;
     });
   }, [products, filters]);
@@ -105,11 +118,20 @@ export default function BarveneBlondLuxePage() {
     }));
   };
 
+  const toggleLength = (length: number) => {
+    setFilters((prev) => ({
+      ...prev,
+      lengths: prev.lengths.includes(length)
+        ? prev.lengths.filter((l) => l !== length)
+        : [...prev.lengths, length],
+    }));
+  };
 
   const resetFilters = () => {
     setFilters({
       shades: [],
       structures: [],
+      lengths: [],
       endings: [],
     });
     setCurrentPage(1);
@@ -125,9 +147,9 @@ export default function BarveneBlondLuxePage() {
             <li><span className="mx-2">›</span></li>
             <li><Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link></li>
             <li><span className="mx-2">›</span></li>
-            <li><Link href="/vlasy-k-prodlouzeni/barvene-blond" className="hover:text-burgundy">Barvené blond</Link></li>
+            <li><Link href="/vlasy-k-prodlouzeni/barvene-vlasy" className="hover:text-burgundy">Barvené vlasy</Link></li>
             <li><span className="mx-2">›</span></li>
-            <li className="text-burgundy font-medium">LUXE</li>
+            <li className="text-burgundy font-medium">Platinum Edition</li>
           </ol>
         </nav>
 
@@ -143,15 +165,15 @@ export default function BarveneBlondLuxePage() {
             variants={fadeInUp}
             transition={{ duration: 0.6 }}
           >
-            Barvené blond vlasy — LUXE
+            Barvené blond vlasy — Platinum Edition
           </motion.h1>
           <motion.p
             className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed"
             variants={fadeInUp}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Prémiové barvené blond vlasy v LUXE kvalitě. Odstíny 5–10, délky 40–85 cm.
-            Vyšší kvalita barvení, hustší konce, krásný a trvanlivý výsledek.
+            Exkluzivní Platinum Edition barvených blond vlasů. Odstíny 5–10, délky 45–90 cm.
+            Nejvyšší kvalita barvení, nejhustší konce, profesionální výsledek.
           </motion.p>
         </motion.div>
 
@@ -216,8 +238,33 @@ export default function BarveneBlondLuxePage() {
             </div>
           </div>
 
+          {/* Délka - menší chipy s větším textem */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-burgundy mb-3">
+              Délka (cm) {filters.lengths.length > 0 && `(${filters.lengths.length} vybráno)`}
+            </label>
+            <div className="flex flex-wrap gap-2 max-w-2xl">
+              {availableLengths.map((length) => {
+                const isSelected = filters.lengths.includes(length);
+                return (
+                  <button
+                    key={length}
+                    onClick={() => toggleLength(length)}
+                    className={`px-3 h-9 rounded-lg text-base font-medium transition ${
+                      isSelected
+                        ? 'bg-burgundy/10 text-burgundy border-2 border-burgundy'
+                        : 'bg-white text-burgundy border border-burgundy/30 hover:border-burgundy hover:bg-burgundy/5'
+                    }`}
+                  >
+                    {length}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Aktivní filtry */}
-          {(filters.shades.length > 0 || filters.structures.length > 0) && (
+          {(filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
@@ -229,6 +276,11 @@ export default function BarveneBlondLuxePage() {
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {structure.charAt(0).toUpperCase() + structure.slice(1)}
+                  </span>
+                ))}
+                {filters.lengths.map((length) => (
+                  <span key={length} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
+                    {length} cm
                   </span>
                 ))}
               </div>

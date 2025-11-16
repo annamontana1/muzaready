@@ -17,7 +17,7 @@
    └─ PIECE (SKU) Items
       └─ /api/katalog/unified
          └─ SKU database
-            └─ Math.round(sku.pricePerGramCzk * weightG)
+            └─ Math.round(sku.pricePerGramCzk * weightGrams)
                └─ Display: "5,678 Kč"
 
 

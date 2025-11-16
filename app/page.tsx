@@ -227,7 +227,7 @@ export default function Home() {
             {/* Barvené blond */}
             <motion.div variants={scaleIn}>
               <Link
-              href="/vlasy-k-prodlouzeni/barvene-blond"
+              href="/vlasy-k-prodlouzeni/barvene-vlasy"
               className="group relative h-96 rounded-xl overflow-hidden shadow-medium hover:shadow-heavy transition-all duration-300"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-terracotta/90 to-dusty-rose/90 group-hover:from-terracotta/80 group-hover:to-dusty-rose/80 transition-all duration-300" />

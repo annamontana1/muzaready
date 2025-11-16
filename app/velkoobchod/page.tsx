@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import WholesaleRegistrationModal from '@/components/WholesaleRegistrationModal';
 
 // Animation variants
 const fadeInUp = {
@@ -249,7 +250,7 @@ export default function VelkoobchodPage() {
 
             {/* Barvené & Blond */}
             <Link
-              href="/vlasy-k-prodlouzeni/barvene-blond"
+              href="/vlasy-k-prodlouzeni/barvene-vlasy"
               className="group bg-ivory border-2 border-warm-beige hover:border-burgundy rounded-xl p-6 md:p-8 transition"
             >
               <h3 className="text-xl md:text-2xl font-playfair text-burgundy mb-3 md:mb-4 group-hover:text-maroon transition">
@@ -395,19 +396,14 @@ export default function VelkoobchodPage() {
             <h3 className="text-xl md:text-2xl font-playfair text-burgundy mb-4">
               B2B Registrace
             </h3>
-            <p className="text-sm md:text-base text-gray-700 mb-6">
-              Registrační formulář bude brzy dostupný. Prozatím nás prosím kontaktujte
-              přímo na <a href="mailto:info@muzahair.cz" className="text-burgundy underline">info@muzahair.cz</a>
-            </p>
-            <button
-              onClick={() => setShowRegistrationModal(false)}
-              className="btn-primary w-full"
-            >
-              Zavřít
-            </button>
           </div>
         </div>
       )}
+
+      <WholesaleRegistrationModal
+        isOpen={showRegistrationModal}
+        onClose={() => setShowRegistrationModal(false)}
+      />
     </div>
   );
 }

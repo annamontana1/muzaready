@@ -112,13 +112,19 @@ model Sku {
   shade            String?
   shadeName        String?
   shadeHex         String?
+  shadeRangeStart  Int?
+  shadeRangeEnd    Int?
   lengthCm         Int?
   structure        String?
   ending           String?
   ribbonColor      String?
   saleMode         SaleMode
-  pricePerGramCzk  Int
+  pricePerGramCzk  Float?
+  pricePerGramEur  Float?
   weightTotalG     Int?
+  weightGrams      Int?
+  priceCzkTotal    Float?
+  priceEurTotal    Float?
   soldOut          Boolean           @default(false)
   availableGrams   Int?
   minOrderG        Int?
@@ -151,15 +157,18 @@ model StockMovement {
 }
 
 model PriceMatrix {
-  id              String   @id @default(cuid())
-  category        String
-  tier            String
-  lengthCm        Int
-  pricePerGramCzk Decimal
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id               String   @id @default(cuid())
+  category         String
+  tier             String
+  shadeRangeStart  Int?
+  shadeRangeEnd    Int?
+  lengthCm         Int
+  pricePerGramCzk  Decimal
+  pricePerGramEur  Decimal?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
-  @@unique([category, tier, lengthCm])
+  @@unique([category, tier, shadeRangeStart, shadeRangeEnd, lengthCm])
   @@index([category, tier])
   @@map("price_matrix")
 }
@@ -191,4 +200,61 @@ enum MoveType {
   IN
   OUT
   ADJUST
+}
+
+model ExchangeRate {
+  id          String   @id @default(cuid())
+  czk_to_eur  Decimal
+  description String?
+  lastUpdated DateTime @default(now())
+  updatedBy   String?
+
+  @@map("exchange_rates")
+}
+
+model User {
+  id                    String   @id @default(cuid())
+  email                 String   @unique
+  password              String
+  firstName             String
+  lastName              String
+  phone                 String?
+
+  // Wholesale specific
+  wholesaleRequested    Boolean  @default(false)
+  isWholesale           Boolean  @default(false)
+  wholesaleRequestedAt  DateTime?
+  wholesaleApprovedAt   DateTime?
+
+  // Business info (for wholesale users)
+  companyName           String?
+  businessType          String?  // "salon", "stylist", "distributor"
+  website               String?
+  instagram             String?
+  country               String?
+  city                  String?
+  zipCode               String?
+  streetAddress         String?
+  taxId                 String?
+
+  // Status
+  status                String   @default("active")  // active, suspended, rejected
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  sessions              Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("sessions")
 }

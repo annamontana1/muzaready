@@ -16,6 +16,7 @@ export interface PricingConfig {
   ending_surcharge_czk: Record<HairEnding, number>;
   weight_step_g: number;
   rounding_rule: string;
+  b2b_discount_percent: number;
 }
 
 // Price Calculation Input
@@ -24,7 +25,7 @@ export interface PriceCalculationInput {
   tier: ProductTier;
   shade: number;
   lengthCm: number;
-  weightG: number;
+  weightGrams: number;
   structure: HairStructure;
   ending: HairEnding;
 }
@@ -86,4 +87,5 @@ export const PRICING_CONFIG: PricingConfig = {
 
   weight_step_g: 10,
   rounding_rule: "round_to_10_czk",
+  b2b_discount_percent: 10,
 };

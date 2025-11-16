@@ -1,6 +1,71 @@
 import prisma from '@/lib/prisma';
 import { hashPassword } from '@/lib/admin-auth';
 
+const LENGTHS = [40, 45, 50, 55, 60, 65, 70, 75, 80];
+const EUR_TO_CZK = 25.5;
+const CZK_TO_EUR = 1 / EUR_TO_CZK;
+
+type ShadeRange = {
+  start: number;
+  end: number;
+};
+
+type PriceMatrixConfig = {
+  category: 'nebarvene' | 'barvene';
+  tier: 'standard' | 'luxe' | 'platinum';
+  ranges: Array<ShadeRange & { base: number; step: number }>;
+};
+
+const priceMatrixConfig: PriceMatrixConfig[] = [
+  {
+    category: 'nebarvene',
+    tier: 'standard',
+    ranges: [{ start: 1, end: 4, base: 60, step: 2 }],
+  },
+  {
+    category: 'nebarvene',
+    tier: 'luxe',
+    ranges: [
+      { start: 1, end: 4, base: 70, step: 2.5 },
+      { start: 5, end: 7, base: 75, step: 2.5 },
+    ],
+  },
+  {
+    category: 'nebarvene',
+    tier: 'platinum',
+    ranges: [
+      { start: 1, end: 4, base: 80, step: 3 },
+      { start: 5, end: 7, base: 85, step: 3 },
+      { start: 8, end: 10, base: 90, step: 3 },
+    ],
+  },
+  {
+    category: 'barvene',
+    tier: 'standard',
+    ranges: [{ start: 5, end: 10, base: 65, step: 2 }],
+  },
+  {
+    category: 'barvene',
+    tier: 'luxe',
+    ranges: [{ start: 5, end: 10, base: 75, step: 2.5 }],
+  },
+  {
+    category: 'barvene',
+    tier: 'platinum',
+    ranges: [{ start: 5, end: 10, base: 85, step: 3 }],
+  },
+];
+
+const getShadeRangeForShade = (shadeNumber: number): ShadeRange => {
+  if (shadeNumber <= 4) {
+    return { start: 1, end: 4 };
+  }
+  if (shadeNumber <= 7) {
+    return { start: 5, end: 7 };
+  }
+  return { start: 8, end: 10 };
+};
+
 async function main() {
   console.log('🌱 Starting database seed...\n');
 
@@ -8,6 +73,7 @@ async function main() {
   console.log('🗑️  Clearing existing data...');
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.exchangeRate.deleteMany();
   await prisma.priceMatrix.deleteMany();
   await prisma.sku.deleteMany();
   await prisma.adminUser.deleteMany();
@@ -29,54 +95,40 @@ async function main() {
 
   // Create Price Matrix entries
   console.log('📊 Creating price matrix entries...');
-  const priceMatrixEntries = [
-    // Uncolored (nebarvene) - Standard tier
-    { category: 'nebarvene', tier: 'standard', lengthCm: 35, pricePerGramCzk: 45.0 },
-    { category: 'nebarvene', tier: 'standard', lengthCm: 45, pricePerGramCzk: 65.0 },
-    { category: 'nebarvene', tier: 'standard', lengthCm: 60, pricePerGramCzk: 85.0 },
-    { category: 'nebarvene', tier: 'standard', lengthCm: 75, pricePerGramCzk: 105.0 },
-    { category: 'nebarvene', tier: 'standard', lengthCm: 90, pricePerGramCzk: 125.0 },
-
-    // Uncolored (nebarvene) - Luxe tier
-    { category: 'nebarvene', tier: 'luxe', lengthCm: 35, pricePerGramCzk: 55.0 },
-    { category: 'nebarvene', tier: 'luxe', lengthCm: 45, pricePerGramCzk: 75.0 },
-    { category: 'nebarvene', tier: 'luxe', lengthCm: 60, pricePerGramCzk: 95.0 },
-    { category: 'nebarvene', tier: 'luxe', lengthCm: 75, pricePerGramCzk: 115.0 },
-    { category: 'nebarvene', tier: 'luxe', lengthCm: 90, pricePerGramCzk: 135.0 },
-
-    // Uncolored (nebarvene) - Platinum tier
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 35, pricePerGramCzk: 65.0 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 45, pricePerGramCzk: 85.0 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 60, pricePerGramCzk: 105.0 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 75, pricePerGramCzk: 125.0 },
-    { category: 'nebarvene', tier: 'platinum', lengthCm: 90, pricePerGramCzk: 145.0 },
-
-    // Colored (barvene) - Standard tier
-    { category: 'barvene', tier: 'standard', lengthCm: 35, pricePerGramCzk: 50.0 },
-    { category: 'barvene', tier: 'standard', lengthCm: 45, pricePerGramCzk: 70.0 },
-    { category: 'barvene', tier: 'standard', lengthCm: 60, pricePerGramCzk: 90.0 },
-    { category: 'barvene', tier: 'standard', lengthCm: 75, pricePerGramCzk: 110.0 },
-    { category: 'barvene', tier: 'standard', lengthCm: 90, pricePerGramCzk: 130.0 },
-
-    // Colored (barvene) - Luxe tier
-    { category: 'barvene', tier: 'luxe', lengthCm: 35, pricePerGramCzk: 60.0 },
-    { category: 'barvene', tier: 'luxe', lengthCm: 45, pricePerGramCzk: 80.0 },
-    { category: 'barvene', tier: 'luxe', lengthCm: 60, pricePerGramCzk: 100.0 },
-    { category: 'barvene', tier: 'luxe', lengthCm: 75, pricePerGramCzk: 120.0 },
-    { category: 'barvene', tier: 'luxe', lengthCm: 90, pricePerGramCzk: 140.0 },
-
-    // Colored (barvene) - Platinum tier
-    { category: 'barvene', tier: 'platinum', lengthCm: 35, pricePerGramCzk: 70.0 },
-    { category: 'barvene', tier: 'platinum', lengthCm: 45, pricePerGramCzk: 90.0 },
-    { category: 'barvene', tier: 'platinum', lengthCm: 60, pricePerGramCzk: 110.0 },
-    { category: 'barvene', tier: 'platinum', lengthCm: 75, pricePerGramCzk: 130.0 },
-    { category: 'barvene', tier: 'platinum', lengthCm: 90, pricePerGramCzk: 150.0 },
-  ];
+  const priceMatrixEntries = priceMatrixConfig.flatMap(({ category, tier, ranges }) => {
+    return ranges.flatMap(({ start, end, base, step }) =>
+      LENGTHS.map((length, index) => {
+        const priceCzk = Number((base + step * index).toFixed(2));
+        return {
+          category,
+          tier,
+          shadeRangeStart: start,
+          shadeRangeEnd: end,
+          lengthCm: length,
+          pricePerGramCzk: priceCzk,
+          pricePerGramEur: Number((priceCzk * CZK_TO_EUR).toFixed(3)),
+        };
+      })
+    );
+  });
 
   await prisma.priceMatrix.createMany({
     data: priceMatrixEntries,
   });
   console.log(`✓ Created ${priceMatrixEntries.length} price matrix entries\n`);
+
+  // Seed exchange rate
+  console.log('💱 Setting initial exchange rate...');
+  const exchangeRate = await prisma.exchangeRate.create({
+    data: {
+      id: 'GLOBAL_RATE',
+      czk_to_eur: CZK_TO_EUR,
+      description: '1 EUR = 25.5 CZK',
+      updatedBy: 'seed-script',
+    },
+  });
+  const rateValue = Number(exchangeRate.czk_to_eur);
+  console.log(`✓ Exchange rate set: 1 EUR = ${(1 / rateValue).toFixed(2)} CZK\n`);
 
   // Create SKUs
   console.log('📦 Creating SKU items...');
@@ -94,6 +146,7 @@ async function main() {
       saleMode: 'BULK_G' as const,
       pricePerGramCzk: 65,
       weightTotalG: null,
+      weightGrams: null,
       availableGrams: 1000,
       minOrderG: 50,
       stepG: 10,
@@ -115,6 +168,7 @@ async function main() {
       saleMode: 'BULK_G' as const,
       pricePerGramCzk: 95,
       weightTotalG: null,
+      weightGrams: null,
       availableGrams: 800,
       minOrderG: 50,
       stepG: 10,
@@ -123,10 +177,10 @@ async function main() {
       isListed: true,
       listingPriority: 9,
     },
-    // Nebarvené - Platinum PIECE_BY_WEIGHT (shade 1 = Černá, 60cm)
+    // Platinum test SKUs (VlasyY)
     {
-      sku: 'PLAT-NEB-1-60-PIECE',
-      name: '60cm Platinum Edition - Černá',
+      sku: 'PLAT-NEB-1-60-168',
+      name: '60 cm · Platinum · odstín #1 · 168 g',
       customerCategory: 'PLATINUM_EDITION' as const,
       shade: '1',
       shadeName: 'Černá',
@@ -135,7 +189,8 @@ async function main() {
       structure: 'rovné',
       saleMode: 'PIECE_BY_WEIGHT' as const,
       pricePerGramCzk: 105,
-      weightTotalG: 120,
+      weightTotalG: 168,
+      weightGrams: 168,
       availableGrams: null,
       minOrderG: null,
       stepG: null,
@@ -144,26 +199,47 @@ async function main() {
       isListed: true,
       listingPriority: 10,
     },
-    // Nebarvené - Platinum PIECE_BY_WEIGHT (shade 1 = Černá, 45cm)
     {
-      sku: 'PLAT-NEB-1-45-PIECE',
-      name: '45cm Platinum Edition - Černá',
+      sku: 'PLAT-BAR-6-55-155',
+      name: '55 cm · Platinum · odstín #6 · 155 g',
       customerCategory: 'PLATINUM_EDITION' as const,
-      shade: '1',
-      shadeName: 'Černá',
-      shadeHex: '#1A1A1A',
-      lengthCm: 45,
+      shade: '6',
+      shadeName: 'Medová blond',
+      shadeHex: '#C6A065',
+      lengthCm: 55,
       structure: 'rovné',
       saleMode: 'PIECE_BY_WEIGHT' as const,
-      pricePerGramCzk: 85,
-      weightTotalG: 100,
+      pricePerGramCzk: 115,
+      weightTotalG: 155,
+      weightGrams: 155,
       availableGrams: null,
       minOrderG: null,
       stepG: null,
       inStock: true,
       soldOut: false,
       isListed: true,
-      listingPriority: 10,
+      listingPriority: 9,
+    },
+    {
+      sku: 'PLAT-BAR-9-50-140',
+      name: '50 cm · Platinum · odstín #9 · 140 g',
+      customerCategory: 'PLATINUM_EDITION' as const,
+      shade: '9',
+      shadeName: 'Perleťová blond',
+      shadeHex: '#E3C9A8',
+      lengthCm: 50,
+      structure: 'rovné',
+      saleMode: 'PIECE_BY_WEIGHT' as const,
+      pricePerGramCzk: 120,
+      weightTotalG: 140,
+      weightGrams: 140,
+      availableGrams: null,
+      minOrderG: null,
+      stepG: null,
+      inStock: false,
+      soldOut: true,
+      isListed: true,
+      listingPriority: 8,
     },
     // Barvené - Standard BULK_G (shade 7 = Blond)
     {
@@ -178,6 +254,7 @@ async function main() {
       saleMode: 'BULK_G' as const,
       pricePerGramCzk: 70,
       weightTotalG: null,
+      weightGrams: null,
       availableGrams: 900,
       minOrderG: 50,
       stepG: 10,
@@ -199,6 +276,7 @@ async function main() {
       saleMode: 'BULK_G' as const,
       pricePerGramCzk: 100,
       weightTotalG: null,
+      weightGrams: null,
       availableGrams: 750,
       minOrderG: 50,
       stepG: 10,
@@ -220,6 +298,7 @@ async function main() {
       saleMode: 'PIECE_BY_WEIGHT' as const,
       pricePerGramCzk: 110,
       weightTotalG: 115,
+      weightGrams: 115,
       availableGrams: null,
       minOrderG: null,
       stepG: null,
@@ -239,8 +318,9 @@ async function main() {
       lengthCm: 45,
       structure: 'rovné',
       saleMode: 'PIECE_BY_WEIGHT' as const,
-      pricePerGramCzk: 90,
+      pricePerGramCzk: 95,
       weightTotalG: 95,
+      weightGrams: 95,
       availableGrams: null,
       minOrderG: null,
       stepG: null,
@@ -249,9 +329,31 @@ async function main() {
       isListed: true,
       listingPriority: 10,
     },
-  ];
+  ].map((sku) => {
+    const shadeNumber = Number(sku.shade);
+    const { start, end } = getShadeRangeForShade(shadeNumber);
+    const pricePerGramEur = sku.pricePerGramCzk
+      ? Number((sku.pricePerGramCzk * CZK_TO_EUR).toFixed(3))
+      : null;
+    const priceCzkTotal =
+      sku.saleMode === 'PIECE_BY_WEIGHT' && sku.weightGrams
+        ? Number((sku.pricePerGramCzk * sku.weightGrams).toFixed(2))
+        : null;
+    const priceEurTotal = priceCzkTotal
+      ? Number((priceCzkTotal * CZK_TO_EUR).toFixed(2))
+      : null;
 
-  const createdSkus = await prisma.sku.createMany({
+    return {
+      ...sku,
+      shadeRangeStart: start,
+      shadeRangeEnd: end,
+      pricePerGramEur,
+      priceCzkTotal,
+      priceEurTotal,
+    };
+  });
+
+  await prisma.sku.createMany({
     data: skus,
   });
   console.log(`✓ Created ${skus.length} SKU items\n`);
@@ -259,22 +361,24 @@ async function main() {
   // Create a test order to show the system works
   console.log('📋 Creating test order...');
   const testSku = await prisma.sku.findFirst({
-    where: { sku: 'STANDARD-VIRGIN-35-45CM' },
+    where: { sku: 'STD-NEB-1-45-BULK' },
   });
 
   if (testSku) {
+    const pricePerGram = testSku.pricePerGramCzk || 65;
+    const grams = 100;
     const order = await prisma.order.create({
       data: {
         email: 'test@example.com',
         status: 'pending',
-        total: 8500,
+        total: grams * pricePerGram,
         items: {
           create: {
             sku: { connect: { id: testSku.id } },
-            saleMode: 'PIECE_BY_WEIGHT',
-            grams: 100,
-            pricePerGram: 65.0,
-            lineTotal: 6500,
+            saleMode: 'BULK_G',
+            grams,
+            pricePerGram,
+            lineTotal: grams * pricePerGram,
             nameSnapshot: testSku.name || testSku.sku,
             ending: 'NONE',
             assemblyFeeType: 'FLAT',
@@ -290,8 +394,9 @@ async function main() {
   console.log('✅ Database seed completed successfully!\n');
   console.log('📊 Summary:');
   console.log(`   - ${priceMatrixEntries.length} price matrix entries`);
+  console.log('   - 1 exchange rate entry');
   console.log(`   - ${skus.length} SKU items`);
-  console.log(`   - Test order created`);
+  console.log(`   - Test order ${testSku ? 'created' : 'skipped (SKU missing)'}`);
   console.log(
     '\n🚀 You can now:\n   1. Visit http://localhost:3000/katalog to see the catalog\n   2. Add items to cart and test pricing\n'
   );

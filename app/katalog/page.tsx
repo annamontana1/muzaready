@@ -22,9 +22,11 @@ interface CatalogItem {
   shadeName?: string;
   structure?: string;
   lengthCm?: number;
-  weightG?: number; // PIECE
+  weightGrams?: number; // PIECE
   pricePerGramCzk?: number; // BULK
+  pricePerGramEur?: number;
   priceCzk?: number; // PIECE
+  priceEur?: number;
   inStock: boolean;
   priority: number;
 }
@@ -154,6 +156,8 @@ export default function CatalogPage() {
           </select>
         </div>
 
+        <div className="text-sm text-gray-600 mb-6">Zobrazeno {sortedItems.length} produktů</div>
+
         {/* Grid */}
         {sortedItems.length === 0 ? (
           <div className="text-center py-16">
@@ -173,7 +177,7 @@ export default function CatalogPage() {
                 shadeName={item.shadeName}
                 structure={item.structure}
                 lengthCm={item.lengthCm}
-                weightG={item.weightG}
+                weightGrams={item.weightGrams}
                 pricePerGramCzk={item.pricePerGramCzk}
                 priceCzk={item.priceCzk}
                 inStock={item.inStock}

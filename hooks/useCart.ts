@@ -1,10 +1,3 @@
-import { useContext } from 'react';
-import { CartContext } from '@/contexts/CartContext';
-
-export function useCart() {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
-}
+// Re-export from SkuCartContext for backward compatibility and modern SKU-based cart
+export { useCart, useSkuCart } from '@/contexts/SkuCartContext';
+export type { SkuCartItem, CartContextType } from '@/contexts/SkuCartContext';

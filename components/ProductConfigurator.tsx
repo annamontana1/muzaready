@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Product } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
+import { useAuth } from '@/components/AuthProvider';
 import { CONFIGURATOR_RANGES } from '@/lib/config';
 import ScrollPicker from './ScrollPicker';
 
@@ -33,7 +34,9 @@ export default function ProductConfigurator({
   initialLength = null,
   initialWeight = null
 }: ProductConfiguratorProps) {
+  const { user } = useAuth();
   const isPlatinum = product.tier === 'Platinum edition';
+  const isB2B = user?.isWholesale ?? false;
 
   // Default values: 40cm, 100g for Standard/LUXE; 'raw' (surový cop) for all
   const [selectedLength, setSelectedLength] = useState<number | null>(
@@ -145,9 +148,11 @@ export default function ProductConfigurator({
     const basePrice = (priceFor100g * selectedWeight) / 100;
     const finishingAddon = finishing_addons.find(f => f.code === selectedFinishing);
     const addonPrice = finishingAddon?.price_add || 0;
+    const subtotal = basePrice + addonPrice;
 
-    return basePrice + addonPrice;
-  }, [product, selectedLength, selectedWeight, selectedFinishing, finishing_addons, isPlatinum, priceMatrix]);
+    // Apply B2B discount if applicable
+    return priceCalculator.applyB2BDiscount(subtotal, isB2B);
+  }, [product, selectedLength, selectedWeight, selectedFinishing, finishing_addons, isPlatinum, priceMatrix, isB2B]);
 
   // Platinum: jen zakončení je povinné
   // Standard/LUXE: délka, gramáž a zakončení jsou povinné
@@ -220,6 +225,16 @@ export default function ProductConfigurator({
           <div className="mb-4">
             {finalPrice !== null ? (
               <>
+                {isB2B && (
+                  <>
+                    <p className="text-sm text-green-600 font-medium mb-2">
+                      ✓ Máte B2B slevu -10%
+                    </p>
+                    <p className="text-sm line-through text-gray-400 mb-1">
+                      Původní cena: {priceCalculator.formatPrice(finalPrice / (1 - priceCalculator.getB2BDiscountPercent() / 100))}
+                    </p>
+                  </>
+                )}
                 <p className="text-3xl font-semibold text-burgundy">
                   {priceCalculator.formatPrice(finalPrice)}
                 </p>

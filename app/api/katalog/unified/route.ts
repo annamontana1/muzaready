@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { mockProducts } from '@/lib/mock-products';
 import { Product } from '@/types/product';
+import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
 
 /**
  * Unified catalog endpoint
@@ -21,9 +22,11 @@ interface UnifiedItem {
   shadeName?: string;
   structure?: string;
   lengthCm?: number;
-  weightG?: number; // PIECE
+  weightGrams?: number; // PIECE
   pricePerGramCzk?: number; // BULK
+  pricePerGramEur?: number;
   priceCzk?: number; // PIECE
+  priceEur?: number;
   inStock: boolean;
   priority: number;
 }
@@ -32,6 +35,15 @@ export async function GET(request: NextRequest) {
   try {
     const items: UnifiedItem[] = [];
     let priority = 0;
+    let czkToEur = 1 / 25.5;
+    try {
+      const rate = await prisma.exchangeRate.findFirst({ where: { id: 'GLOBAL_RATE' } });
+      if (rate) {
+        czkToEur = Number(rate.czk_to_eur);
+      }
+    } catch (err) {
+      console.warn('Exchange rate lookup failed, using fallback', err);
+    }
 
     // ============================================================
     // BULK: Products (Standard/LUXE) - configurable items
@@ -44,6 +56,7 @@ export async function GET(request: NextRequest) {
 
       const firstVariant = product.variants[0];
 
+      const pricePerGram = product.base_price_per_100g_45cm / 100;
       items.push({
         type: 'BULK',
         id: product.id,
@@ -54,7 +67,8 @@ export async function GET(request: NextRequest) {
         shadeName: firstVariant?.shade_name,
         structure: firstVariant?.structure,
         lengthCm: firstVariant?.length_cm,
-        pricePerGramCzk: product.base_price_per_100g_45cm, // per gram
+        pricePerGramCzk: pricePerGram,
+        pricePerGramEur: Number((pricePerGram * czkToEur).toFixed(3)),
         inStock: product.in_stock,
         priority: priority++,
       });
@@ -72,21 +86,37 @@ export async function GET(request: NextRequest) {
       });
 
       for (const sku of skus) {
+        const shadeCode = sku.shade ? parseInt(sku.shade, 10) : undefined;
+        const weight = sku.weightGrams ?? sku.weightTotalG ?? undefined;
+        const isPlatinum = sku.customerCategory === 'PLATINUM_EDITION';
+        const pieceName = isPlatinum
+          ? formatPlatinumName(sku.lengthCm, shadeCode, weight) || sku.name || `Vlasy ${sku.sku}`
+          : sku.name || `Vlasy ${sku.sku}`;
+        const pieceSlug = isPlatinum ? formatPlatinumSlug(sku.lengthCm, shadeCode, weight) : undefined;
+        const tierLabel = isPlatinum
+          ? 'Platinum edition'
+          : sku.customerCategory === 'LUXE'
+          ? 'LUXE'
+          : 'Standard';
+        const computedPriceCzk = weight
+          ? Number(((sku.pricePerGramCzk || 0) * weight).toFixed(2))
+          : Number((sku.pricePerGramCzk || 0).toFixed(2));
+        const priceCzk = sku.priceCzkTotal ?? computedPriceCzk;
+        const priceEur = Number((priceCzk * czkToEur).toFixed(2));
+
         items.push({
           type: 'PIECE',
           id: sku.id,
-          name: sku.name || `Vlasy ${sku.sku}`,
-          tier: sku.customerCategory === 'PLATINUM_EDITION'
-            ? 'Platinum edition'
-            : sku.customerCategory === 'LUXE'
-            ? 'LUXE'
-            : 'Standard',
-          shade: sku.shade ? parseInt(sku.shade) : undefined,
+          slug: pieceSlug,
+          name: pieceName,
+          tier: tierLabel,
+          shade: shadeCode,
           shadeName: sku.shadeName || undefined,
           structure: sku.structure || undefined,
           lengthCm: sku.lengthCm || undefined,
-          weightG: sku.weightTotalG || sku.availableGrams || undefined,
-          priceCzk: Math.round(sku.pricePerGramCzk * (sku.weightTotalG || 100)),
+          weightGrams: weight,
+          priceCzk,
+          priceEur,
           inStock: sku.inStock && !sku.soldOut,
           priority: priority++,
         });

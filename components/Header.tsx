@@ -8,6 +8,7 @@ import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCart } from '@/contexts/CartContext';
+import { usePreferences } from '@/lib/preferences-context';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,6 +20,7 @@ export default function Header() {
 
   const { favorites } = useFavorites();
   const { items } = useCart();
+  const { language, currency, setLanguage, setCurrency } = usePreferences();
 
   const favoriteCount = favorites.length;
   const cartCount = items.reduce((total, item) => total + item.quantity, 0);
@@ -65,9 +67,28 @@ export default function Header() {
               Domů
             </Link>
 
-            <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition">
-              Vlasy k prodloužení
-            </Link>
+            <div className="relative group">
+              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+                Vlasy k prodloužení
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </Link>
+              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
+                <Link
+                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
+                >
+                  Nebarvené panenské vlasy
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/barvene-vlasy"
+                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
+                >
+                  Barvené vlasy
+                </Link>
+              </div>
+            </div>
 
             <div className="relative group">
               <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
@@ -203,6 +224,24 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 text-xs text-gray-600">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as 'cs' | 'en')}
+                className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+              >
+                <option value="cs">🇨🇿 Čeština</option>
+                <option value="en">🇬🇧 English</option>
+              </select>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
+                className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+              >
+                <option value="CZK">Kč</option>
+                <option value="EUR">€</option>
+              </select>
+            </div>
             <button
               onClick={() => setSearchOverlayOpen(true)}
               className="text-burgundy hover:text-maroon transition p-2"
@@ -258,6 +297,24 @@ export default function Header() {
             </Link>
 
             <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as 'cs' | 'en')}
+                  className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-burgundy"
+                >
+                  <option value="cs">CZ</option>
+                  <option value="en">EN</option>
+                </select>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
+                  className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-burgundy"
+                >
+                  <option value="CZK">Kč</option>
+                  <option value="EUR">€</option>
+                </select>
+              </div>
               <button
                 onClick={() => setSearchOverlayOpen(true)}
                 className="text-burgundy p-2"
@@ -382,11 +439,11 @@ export default function Header() {
                       Nebarvené panenské
                     </Link>
                     <Link
-                      href="/vlasy-k-prodlouzeni/barvene-blond"
+                      href="/vlasy-k-prodlouzeni/barvene-vlasy"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Barvené
+                      Barvené vlasy
                     </Link>
                   </div>
                 )}

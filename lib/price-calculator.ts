@@ -39,7 +39,7 @@ export class PriceCalculator {
     const priceFor100g = basePrice * lengthMult * structureMult + shadeSurcharge;
 
     // 7. Přepočet na požadovanou gramáž (lineárně)
-    const priceForWeight = (priceFor100g / 100) * params.weightG;
+    const priceForWeight = (priceFor100g / 100) * params.weightGrams;
 
     // 8. Přidání příplatku za zakončení
     const finalPrice = priceForWeight + endingSurcharge;
@@ -97,7 +97,7 @@ export class PriceCalculator {
       tier: tier as PriceCalculationInput["tier"],
       shade: 1,
       lengthCm: minLength,
-      weightG: minWeight,
+      weightGrams: minWeight,
       structure: "rovné",
       ending: "keratin",
     };
@@ -109,7 +109,7 @@ export class PriceCalculator {
     const maxParams: PriceCalculationInput = {
       ...baseParams,
       lengthCm: maxLength,
-      weightG: maxWeight,
+      weightGrams: maxWeight,
       structure: "kudrnaté",
       ending: "vlasove_tresy",
       shade: category === "barvene_blond" ? 10 : 1,
@@ -118,6 +118,25 @@ export class PriceCalculator {
     const maxPrice = this.calculate(maxParams);
 
     return { min: minPrice, max: maxPrice };
+  }
+
+  /**
+   * Aplikuje B2B slevu na cenu
+   * B2B sleva je 10% pro schválené velkoobchodní partnery
+   */
+  applyB2BDiscount(price: number, isB2B: boolean): number {
+    if (!isB2B) return price;
+    const discountAmount = price * (this.config.b2b_discount_percent / 100);
+    const discountedPrice = price - discountAmount;
+    // Zaokrouhlení na 10 Kč
+    return Math.round(discountedPrice / 10) * 10;
+  }
+
+  /**
+   * Vrací B2B slevu v procentech
+   */
+  getB2BDiscountPercent(): number {
+    return this.config.b2b_discount_percent;
   }
 }
 

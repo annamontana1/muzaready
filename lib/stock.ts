@@ -131,6 +131,10 @@ export async function quoteCartLines(
       grams = wanted;
     }
 
+    if (pricePerGram == null) {
+      throw new Error('Chybí cena v matice pro vybraný produkt');
+    }
+
     const lineTotal = pricePerGram * grams;
 
     // Calculate assembly fee (default to NONE if not specified)
