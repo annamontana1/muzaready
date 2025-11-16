@@ -144,9 +144,9 @@ export default function CartPage() {
                     <div className="space-y-1 text-sm text-gray-600 mb-4">
                       <div>
                         <span className="font-medium">Kategorie:</span>{' '}
-                        {item.customerCategory === 'UNCOLORED_VIRGIN'
-                          ? 'Nebarvené panenské'
-                          : 'Barvené vlasy'}
+                        {item.shade && (item.shade === 'barvene_blond' || item.shade.includes('BLONDE') || item.shade.includes('barvene'))
+                          ? 'Barvené vlasy'
+                          : 'Nebarvené panenské'}
                       </div>
                       <div>
                         <span className="font-medium">Zakončení:</span> {ENDING_LABELS[item.ending] || item.ending}
