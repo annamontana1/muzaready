@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { HAIR_COLORS } from '@/types/product';
 import FavoriteButton from './FavoriteButton';
+import AddToCartModal from './AddToCartModal';
 import { usePreferences } from '@/lib/preferences-context';
 
 /**
@@ -74,6 +75,7 @@ const formatCurrencyValue = (value: number, currency: 'CZK' | 'EUR') => {
 
 export default function CatalogCard({ ...props }: CatalogCardProps) {
   const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const [showAddToCartModal, setShowAddToCartModal] = useState(false);
   const { currency, exchangeRate } = usePreferences();
   const rate = exchangeRate || DEFAULT_RATE;
   const shadeColor = getShadeColor(props.shade);
@@ -81,13 +83,17 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
   const tierColorClass = getTierColor(props.tier);
   const inquirySlug = props.slug || props.id;
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (props.type !== 'PIECE') return;
 
-    // TODO: Implement add to cart logic for PIECE items
+    // Open modal for adding to cart
+    setShowAddToCartModal(true);
+  };
+
+  const handleAddedToCart = () => {
     setShowAddedMessage(true);
     setTimeout(() => setShowAddedMessage(false), 2000);
   };
@@ -197,9 +203,20 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
     );
   }
 
-  // PIECE: Self-contained card (clickable to detail page)
+  // PIECE: Self-contained card with modal add-to-cart
   return (
-    <Link href={`/sku-detail/${props.id}`} className="product-card group h-full block">
+    <>
+      <AddToCartModal
+        isOpen={showAddToCartModal}
+        skuId={props.id}
+        productName={props.name}
+        price={props.priceCzk || 0}
+        weightGrams={props.weightGrams}
+        onClose={() => setShowAddToCartModal(false)}
+        onAdded={handleAddedToCart}
+      />
+
+      <Link href={`/sku-detail/${props.id}`} className="product-card group h-full block">
       <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-gray-200">
         {/* Image Section */}
         <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
@@ -301,5 +318,6 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         </div>
       </div>
     </Link>
+    </>
   );
 }
