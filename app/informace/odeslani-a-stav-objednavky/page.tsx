@@ -1,4 +1,6 @@
-import PagePlaceholder from '@/components/PagePlaceholder';
+import { redirect } from 'next/navigation';
+
 export default function Page() {
-  return <PagePlaceholder title="Odeslání a stav objednávky" description="Informace o dopravě a sledování objednávek." icon="📦" />;
+  // Redirect to the new order tracking page
+  redirect('/sledovani-objednavky');
 }
