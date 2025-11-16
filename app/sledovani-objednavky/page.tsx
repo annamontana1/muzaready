@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import OrderStatusTimeline from '@/components/OrderStatusTimeline';
+import { Button, Card, Input, Alert, OrderStatusTimeline } from '@/components';
 
 interface OrderItem {
   id: string;
@@ -110,64 +110,49 @@ export default function OrderTrackingPage() {
 
         {!isSearching ? (
           // Search Form
-          <div className="bg-white rounded-xl shadow-light p-8 border border-gray-200">
+          <Card variant="default" padding="lg">
             <form onSubmit={handleSearch} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  E-mailová adresa *
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="jmeno@example.com"
-                  disabled={loading}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition"
-                  required
-                />
-              </div>
+              <Input
+                type="email"
+                label="E-mailová adresa *"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="jmeno@example.com"
+                disabled={loading}
+                fullWidth
+                required
+              />
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  ID objednávky *
-                </label>
-                <input
-                  type="text"
-                  value={orderId}
-                  onChange={(e) => setOrderId(e.target.value)}
-                  placeholder="Např. cljr5m2g00000gkqu1a1b2c3d"
-                  disabled={loading}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition"
-                  required
-                />
-                <p className="mt-2 text-sm text-gray-500">
-                  ID objednávky naleznete v potvrzovacím e-mailu
-                </p>
-              </div>
+              <Input
+                type="text"
+                label="ID objednávky *"
+                value={orderId}
+                onChange={(e) => setOrderId(e.target.value)}
+                placeholder="Např. cljr5m2g00000gkqu1a1b2c3d"
+                disabled={loading}
+                hint="ID objednávky naleznete v potvrzovacím e-mailu"
+                fullWidth
+                required
+              />
 
               {error && (
-                <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded text-red-700">
-                  <p className="font-semibold">Chyba</p>
-                  <p className="text-sm">{error}</p>
-                </div>
+                <Alert
+                  variant="error"
+                  title="Chyba"
+                  message={error}
+                />
               )}
 
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
-                className="w-full px-6 py-3 bg-burgundy text-white font-semibold rounded-lg hover:bg-maroon disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                isLoading={loading}
+                fullWidth
               >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="animate-spin">⟳</span>
-                    Vyhledávám...
-                  </span>
-                ) : (
-                  'Hledat objednávku'
-                )}
-              </button>
+                {loading ? 'Vyhledávám...' : 'Hledat objednávku'}
+              </Button>
             </form>
-          </div>
+          </Card>
         ) : order ? (
           // Order Details
           <div className="space-y-8">
@@ -180,7 +165,7 @@ export default function OrderTrackingPage() {
             </button>
 
             {/* Order Header */}
-            <div className="bg-white rounded-xl shadow-light p-8 border border-gray-200">
+            <Card variant="default" padding="lg">
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <p className="text-gray-600 text-sm mb-1">ID objednávky</p>
@@ -199,16 +184,16 @@ export default function OrderTrackingPage() {
                   <p className="text-lg text-gray-900">{formatDate(order.updatedAt)}</p>
                 </div>
               </div>
-            </div>
+            </Card>
 
             {/* Status Timeline */}
-            <div className="bg-white rounded-xl shadow-light p-8 border border-gray-200">
+            <Card variant="default" padding="lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Stav objednávky</h2>
               <OrderStatusTimeline currentStatus={order.status} />
-            </div>
+            </Card>
 
             {/* Order Items */}
-            <div className="bg-white rounded-xl shadow-light p-8 border border-gray-200">
+            <Card variant="default" padding="lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Obsah objednávky</h2>
               <div className="space-y-4">
                 {order.items.map((item) => (
@@ -277,19 +262,21 @@ export default function OrderTrackingPage() {
                   <span className="text-3xl font-bold text-burgundy">{formatPrice(order.total)}</span>
                 </div>
               </div>
-            </div>
+            </Card>
 
             {/* Contact Info */}
-            <div className="bg-blue-50 border-l-4 border-blue-500 rounded p-6">
-              <p className="font-semibold text-blue-900 mb-2">Máte otázky?</p>
-              <p className="text-blue-800 text-sm">
-                Pokud máte jakékoliv dotazy ohledně vaší objednávky, kontaktujte nás prosím na
-                <a href="mailto:info@muzaready.cz" className="font-semibold underline">
-                  {' '}
-                  info@muzaready.cz
-                </a>
-              </p>
-            </div>
+            <Alert
+              variant="info"
+              title="Máte otázky?"
+              message={
+                <>
+                  Pokud máte jakékoliv dotazy ohledně vaší objednávky, kontaktujte nás prosím na{' '}
+                  <a href="mailto:info@muzaready.cz" className="font-semibold underline">
+                    info@muzaready.cz
+                  </a>
+                </>
+              }
+            />
           </div>
         ) : null}
       </div>
