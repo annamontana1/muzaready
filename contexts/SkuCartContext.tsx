@@ -14,8 +14,12 @@ export function SkuCartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<SkuCartItem[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  // Load cart from localStorage on mount
+  const isClient = typeof window !== 'undefined';
+
+  // Load cart from localStorage on mount (SSR-safe)
   useEffect(() => {
+    if (!isClient) return;
+    
     setMounted(true);
     const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (savedCart) {
@@ -30,21 +34,21 @@ export function SkuCartProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(CART_STORAGE_KEY);
       }
     }
-  }, []);
+  }, [isClient]);
 
-  // Save cart to localStorage whenever it changes
+  // Save cart to localStorage whenever it changes (SSR-safe)
   useEffect(() => {
-    if (mounted) {
-      localStorage.setItem(
-        CART_STORAGE_KEY,
-        JSON.stringify({
-          version: CART_VERSION,
-          items,
-          savedAt: new Date().toISOString(),
-        })
-      );
-    }
-  }, [items, mounted]);
+    if (!isClient || !mounted) return;
+    
+    localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify({
+        version: CART_VERSION,
+        items,
+        savedAt: new Date().toISOString(),
+      })
+    );
+  }, [items, mounted, isClient]);
 
   const addToCart = (newItem: Omit<SkuCartItem, 'addedAt'>) => {
     setItems((prevItems) => {
