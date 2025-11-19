@@ -48,13 +48,44 @@ model Variant {
 }
 
 model Order {
-  id        String      @id @default(cuid())
-  email     String
-  status    String      @default("pending")
-  total     Float
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  items     OrderItem[]
+  id                String      @id @default(cuid())
+
+  // Customer info
+  email             String
+  firstName         String
+  lastName          String
+  phone             String?
+
+  // Delivery address
+  streetAddress     String
+  city              String
+  zipCode           String
+  country           String      @default("CZ")
+
+  // Delivery
+  deliveryMethod    String      @default("standard") // standard, express, pickup
+
+  // Payment & Status
+  status            String      @default("awaiting_payment") // awaiting_payment, paid, processing, assembly_in_progress, shipped, cancelled_unpaid, refunded
+  paymentStatus     String      @default("unpaid")      // unpaid, paid, refunded, failed
+  paymentMethod     String?     // gopay, bank_transfer, cash
+
+  // Order details
+  subtotal          Float
+  shippingCost      Float       @default(0)
+  discountAmount    Float       @default(0)
+  total             Float
+
+  // Tracking
+  trackingNumber    String?
+
+  // Timestamps
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  paidAt            DateTime?
+  shippedAt         DateTime?
+
+  items             OrderItem[]
 
   @@map("orders")
 }
