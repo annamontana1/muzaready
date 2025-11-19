@@ -141,16 +141,25 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
                     'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
                 }}
               />
-              {/* Hair info overlay */}
-              <div className="relative z-10 text-center">
-                <div className="text-white/90 text-sm font-medium mb-1">
-                  {props.structure || 'Vlasy'}
-                </div>
-                {props.lengthCm && (
-                  <div className="text-white/70 text-xs">{props.lengthCm} cm</div>
-                )}
+            {/* Hair info overlay */}
+            <div className="relative z-10 text-center">
+              <div className="text-white/90 text-sm font-medium mb-1">
+                {props.structure || 'Vlasy'}
               </div>
+              {props.lengthCm && (
+                <div className="text-white/70 text-xs">{props.lengthCm} cm</div>
+              )}
             </div>
+          </div>
+
+          {/* Struktura label pod fotkou */}
+          {props.structure && (
+            <div className="absolute bottom-2 left-2 right-2 text-center">
+              <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
+                Struktura: {props.structure}
+              </span>
+            </div>
+          )}
 
             {/* Favorite Button */}
             <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
@@ -173,7 +182,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             {/* Specs */}
             <div className="text-xs text-gray-600 space-y-0.5 flex-1">
               {props.shadeName && <div>{props.shadeName}</div>}
-              {props.structure && <div>{props.structure}</div>}
+              {/* Struktura se zobrazuje pod fotkou, ne zde */}
               {props.lengthCm && <div>{props.lengthCm} cm</div>}
             </div>
 
@@ -248,6 +257,15 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </div>
           </div>
 
+          {/* Struktura label pod fotkou */}
+          {props.structure && (
+            <div className="absolute bottom-2 left-2 right-2 text-center">
+              <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
+                Struktura: {props.structure}
+              </span>
+            </div>
+          )}
+
           {/* Out of stock overlay */}
           {!props.inStock && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -276,7 +294,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           {/* Specs */}
           <div className="text-xs text-gray-600 space-y-0.5 flex-1">
             {props.shadeName && <div>{props.shadeName}</div>}
-            {props.structure && <div>{props.structure}</div>}
+            {/* Struktura se zobrazuje pod fotkou, ne zde */}
             {props.lengthCm && <div>{props.lengthCm} cm</div>}
             {props.weightGrams && <div>Váha: {props.weightGrams} g</div>}
           </div>

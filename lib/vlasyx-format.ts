@@ -25,7 +25,8 @@ export const generateVlasyXName = (
     return tierLabel;
   }
 
-  return `#${shadeCode} · ${shadeInfo.name} · ${tierLabel}`;
+  // Formát: {lineLabel} – {shadeName} (bez délky)
+  return `${tierLabel} – ${shadeInfo.name}`;
 };
 
 export const generateVlasyXSlug = (

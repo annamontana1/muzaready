@@ -217,13 +217,15 @@ export async function getCatalogProducts(
         const slug = formatPlatinumSlug(sku.lengthCm, shadeCode, weightGrams) || createSlug(category, tier, shadeCode, structure, sku.lengthCm);
         const tierNormalized: 'standard' | 'luxe' | 'platinum' = 'platinum';
         const softnessScale: 1 | 2 | 3 = 3;
+        // Platinum název: {lengthCm} cm · Platinum · odstín #{shadeNumber} · {weightG} g
+        const platinumName = formatPlatinumName(sku.lengthCm, shadeCode, weightGrams);
         const product: Product = {
           id: sku.id,
           sku: sku.sku,
           slug,
           category,
           tier,
-          name: formatPlatinumName(sku.lengthCm, shadeCode, weightGrams) || `${shadeName} #${shadeCode}`,
+          name: platinumName || `${shadeName} #${shadeCode}`,
           description: `${tier} panenské vlasy, odstín ${shadeName}, ${structure}, ${sku.lengthCm} cm`,
           measurement_note: 'Měříme tak, jak jsou (nenatažené)',
           variants: [{
@@ -285,13 +287,14 @@ export async function getCatalogProducts(
       const displaySku = skuGroup.find(s => s.lengthCm === displayLength) || firstSku;
       const vlasyXCategory = category === 'nebarvene_panenske' ? 'nebarvene' : 'barvene';
       const vlasyXTier = tier === 'LUXE' ? 'luxe' : 'standard';
-      const gramsForName = displaySku.minOrderG || displaySku.stepG || 100;
+      // Standard/LUXE název: {lineLabel} – {shadeName} (bez délky)
+      // generateVlasyXName už nepotřebuje délku a gramáž, jen tier a shade
       const generatedProductName = generateVlasyXName(
-        displayLength || displaySku.lengthCm || 0,
+        null, // délka se nepoužívá
         vlasyXCategory,
         vlasyXTier,
         shadeCode,
-        gramsForName
+        null // gramáž se nepoužívá
       );
       const productName = displaySku.name?.trim().length ? displaySku.name! : generatedProductName;
 

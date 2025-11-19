@@ -15,11 +15,9 @@ export const formatPlatinumName = (
   const length = toNumber(lengthCm);
   const shadeCode = toNumber(shade);
   const weight = toNumber(weightGrams);
-  const shadeInfo = shadeCode ? getShadeInfo(shadeCode) : null;
 
-  if (!length || !shadeCode || !shadeInfo) return '';
-  const weightPart = weight ? ` · ${weight} g` : '';
-  return `${length} cm · #${shadeCode} · ${shadeInfo.name}${weightPart} · Platinum`;
+  if (!length || !shadeCode || !weight) return '';
+  return `${length} cm · Platinum · odstín #${shadeCode} · ${weight} g`;
 };
 
 export const formatPlatinumSlug = (

@@ -207,9 +207,20 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                   <div className="relative z-10 text-center text-white">
                     <div className="text-2xl font-playfair mb-4">{product.tier}</div>
                     <div className="text-lg mb-2">{variant?.structure}</div>
-                    <div className="text-sm">{variant?.length_cm} cm</div>
+                    {product.tier === 'Platinum edition' && variant?.length_cm && (
+                      <div className="text-sm">{variant.length_cm} cm</div>
+                    )}
                   </div>
                 </div>
+
+                {/* Struktura label pod fotkou */}
+                {variant?.structure && (
+                  <div className="absolute bottom-4 left-4 right-4 text-center">
+                    <span className="px-3 py-1.5 bg-white/95 text-gray-800 text-xs font-medium rounded shadow-md">
+                      Struktura: {variant.structure}
+                    </span>
+                  </div>
+                )}
 
                 {/* Tier Badge */}
                 <div className="absolute top-4 left-4">
@@ -354,3 +365,4 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
     </>
   );
 }
+

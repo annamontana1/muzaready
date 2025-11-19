@@ -15,16 +15,21 @@ interface ProductCardProps {
 
 /**
  * Generate listing title in format:
- * {{shade name}} #{{shade code}}
- *
- * Examples:
- * - "Černá #1"
- * - "Světlá hnědá #5"
+ * - Standard/LUXE: {lineLabel} – {shadeName}
+ * - Platinum: {lengthCm} cm · Platinum · odstín #{shadeNumber} · {weightG} g
  */
-function getListingTitle(displayVariant: ProductVariant): string {
+function getListingTitle(displayVariant: ProductVariant, productTier?: string): string {
   const shadeName = HAIR_COLORS[displayVariant.shade]?.name || 'Neznámá';
   const shadeCode = displayVariant.shade;
-  return `${shadeName} #${shadeCode}`;
+  const isPlatinum = productTier === 'Platinum edition';
+  
+  if (isPlatinum && displayVariant.length_cm && displayVariant.weight_g) {
+    return `${displayVariant.length_cm} cm · Platinum · odstín #${shadeCode} · ${displayVariant.weight_g} g`;
+  }
+  
+  // Standard/LUXE: {lineLabel} – {shadeName}
+  const tierLabel = productTier === 'LUXE' ? 'LUXE' : 'Standard';
+  return `${tierLabel} – ${shadeName}`;
 }
 
 /**
@@ -70,7 +75,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   const isB2B = user?.isWholesale ?? false;
   const discountedPrice = priceCalculator.applyB2BDiscount(displayPrice, isB2B);
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
-  const listingTitle = product.name?.trim().length ? product.name : getListingTitle(displayVariant);
+  const listingTitle = product.name?.trim().length ? product.name : getListingTitle(displayVariant, product.tier);
   const tierInfo = getTierExplanation(product.tier);
 
   const handleTierClick = (e: React.MouseEvent | React.KeyboardEvent) => {
@@ -160,6 +165,15 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           </div>
         </div>
 
+        {/* Struktura label pod fotkou */}
+        {displayVariant?.structure && (
+          <div className="absolute bottom-2 left-2 right-2 text-center">
+            <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
+              Struktura: {displayVariant.structure}
+            </span>
+          </div>
+        )}
+
         {/* Out of stock overlay */}
         {displayVariant && !displayVariant.in_stock && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -168,21 +182,16 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         )}
       </div>
 
-      {/* Product Info - 4 řádky v přesném pořadí */}
+      {/* Product Info */}
       <div className="p-4 bg-ivory">
         {displayVariant && (
           <div className="space-y-1">
-            {/* Řádek 1: Název */}
+            {/* Řádek 1: Název (použije product.name, který už je správně formátovaný) */}
             <h3 className="text-sm font-medium text-burgundy line-clamp-2">
               {listingTitle}
             </h3>
 
-            {/* Řádek 2: Struktura */}
-            <p className="text-xs text-gray-600">
-              {displayVariant.structure}
-            </p>
-
-            {/* Řádek 3: Gramáž (pouze pro Standard/LUXE) */}
+            {/* Řádek 2: Gramáž (pouze pro Standard/LUXE) */}
             {!isPlatinum ? (
               <p className="text-xs text-gray-500">
                 100 g

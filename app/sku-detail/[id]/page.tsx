@@ -251,6 +251,14 @@ export default function SkuDetailPage() {
                     <span className="capitalize">{sku.structure}</span>
                   </div>
                 )}
+                {/* Struktura label - zobrazit také jako badge */}
+                {sku.structure && (
+                  <div className="mt-2 pt-2 border-t border-gray-200">
+                    <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
+                      Struktura: {sku.structure}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="font-medium">Typ prodeje:</span>
                   <span>{sku.saleMode === 'PIECE_BY_WEIGHT' ? 'Culík' : 'Gramy'}</span>
