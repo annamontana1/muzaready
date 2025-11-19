@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   try {
     // Test DB connection with simple SELECT 1 query
