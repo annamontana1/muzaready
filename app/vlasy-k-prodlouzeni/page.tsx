@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function VlasyKProdlouzenLanding() {
   return (
-    <div className="min-h-screen bg-soft-cream py-16">
+    <div className="min-h-screen bg-soft-cream py-16" data-testid="vlasy-k-prodlouzeni-page-v1.9">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm">
