@@ -4,12 +4,11 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "public": false,
-  "env": [
-    {
-      "key": "DATABASE_URL",
+  "env": {
+    "DATABASE_URL": {
       "description": "Prisma database connection string"
     }
-  ],
+  },
   "git": {
     "deploymentEnabled": {
       "main": true
