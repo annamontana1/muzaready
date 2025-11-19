@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+// Next.js config with ESLint and TypeScript errors ignored during builds
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
