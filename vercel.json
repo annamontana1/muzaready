@@ -1,7 +1,4 @@
 {
-  "buildCommand": "DISABLE_ESLINT_PLUGIN=true next build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
   "framework": "nextjs",
   "public": false,
   "git": {
