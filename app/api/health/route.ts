@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
   let directResult: { ok: boolean; error?: string } = { ok: false };
   if (directUrl) {
     try {
-      const { PrismaClient } = await import('@prisma/client');
+      const { PrismaClient } = require('@prisma/client');
       const directPrisma = new PrismaClient({
         datasources: {
           db: {
