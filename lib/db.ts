@@ -14,7 +14,10 @@ export function getDbUrl(): string {
   const directUrl = process.env.DIRECT_URL;
 
   // Production: always use pooler (6543) for stability
-  if (process.env.NODE_ENV === 'production') {
+  // Check both NODE_ENV and Vercel's VERCEL_ENV for production detection
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+
+  if (isProduction) {
     if (!poolUrl) {
       throw new Error('DATABASE_URL (pooler) is required in production');
     }
