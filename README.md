@@ -12,21 +12,107 @@ Prémiový e-shop pro prodej vlasových doplňků (vlasy k prodloužení, pří�
 
 ## 🚀 Rychlý start
 
+### 1. Instalace
+
 ```bash
 # Instalace závislostí
 npm install
+```
 
+### 2. Database Setup
+
+#### Supabase Connection Configuration
+
+Supabase poskytuje dva typy připojení:
+
+**DATABASE_URL** (Connection Pooler - Port 6543)
+- ✅ Doporučeno pro aplikační dotazy
+- Používá PgBouncer pro connection pooling
+- Lepší výkon při vysoké zátěži
+
+**DIRECT_URL** (Direct Connection - Port 5432)
+- ✅ Vyžadováno pro Prisma migrace
+- ✅ Vyžadováno pro spolehlivé health checks
+- Přímé připojení k PostgreSQL
+
+#### Nastavení environment variables
+
+```bash
+# Zkopírujte example soubor
+cp .env.example .env.local
+
+# Upravte hodnoty v .env.local:
+# DATABASE_URL - pooled connection (port 6543)
+# DIRECT_URL - direct connection (port 5432)
+```
+
+**Příklad Supabase URLs:**
+
+```bash
+# Pooled connection (recommended for app)
+DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+
+# Direct connection (for migrations & health checks)
+DIRECT_URL="postgresql://postgres.[ref]:[password]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres?sslmode=require"
+```
+
+#### 🔧 Quick Workaround pro Connection Issues
+
+Pokud máte problémy s databázovým připojením:
+
+```bash
+# Dočasně nastavte DATABASE_URL na stejnou hodnotu jako DIRECT_URL (port 5432)
+# To obejde pooler a zajistí okamžité připojení
+DATABASE_URL="postgresql://postgres.[ref]:[password]@host:5432/postgres?sslmode=require"
+DIRECT_URL="postgresql://postgres.[ref]:[password]@host:5432/postgres?sslmode=require"
+```
+
+**⚠️ Poznámka:** Toto je dočasné řešení. Pro produkci doporučujeme:
+- `DATABASE_URL` → port 6543 (pooler)
+- `DIRECT_URL` → port 5432 (direct)
+
+#### Run Database Migrations
+
+```bash
+# Spuštění Prisma migrací
+npx prisma migrate deploy
+
+# Generování Prisma Client
+npx prisma generate
+
+# (Volitelně) Seed databáze
+npm run seed
+```
+
+### 3. Development Server
+
+```bash
 # Spuštění dev serveru
 npm run dev
+```
 
+Aplikace běží na: `http://localhost:3000`
+
+### 4. Health Check
+
+```bash
+# Ověření, že aplikace a databáze běží
+curl http://localhost:3000/api/ok
+# Expected: {"ok":true}
+
+curl http://localhost:3000/api/health
+# Expected: {"ok":true,"db":"up","dbSource":"DIRECT_URL","dbHostPort":"host:5432"}
+```
+
+### 5. Production Build
+
+```bash
 # Build pro produkci
 npm run build
 
 # Start production serveru
 npm start
 ```
-
-Aplikace běží na: `http://localhost:3000`
 
 ## 📁 Struktura projektu
 
@@ -40,6 +126,7 @@ Aplikace běží na: `http://localhost:3000`
 
 ## 🎯 Implementované funkce
 
+### Core Features
 - ✅ Next.js 14 s App Router
 - ✅ Tailwind CSS s custom burgundy designem
 - ✅ TypeScript typy (Product, Variant, Pricing)
@@ -47,6 +134,58 @@ Aplikace běží na: `http://localhost:3000`
 - ✅ SKU Generator (generování SKU podle specifikace)
 - ✅ Základní komponenty (Header, Footer, Layout)
 - ✅ Homepage s Hero section
+
+### Database & API
+- ✅ PostgreSQL + Prisma ORM
+- ✅ Smart database URL selection (automatic fallback)
+- ✅ Health check endpoint (`/api/health`)
+- ✅ Connection pooling support (Supabase PgBouncer)
+- ✅ Secure password masking in logs
+
+## 🏥 Health Monitoring
+
+### API Endpoints
+
+#### `/api/ok` - Simple Health Check
+Rychlá kontrola, že aplikace běží.
+
+```bash
+curl https://your-app.vercel.app/api/ok
+# Response: {"ok": true}
+```
+
+#### `/api/health` - Database Health Check
+Podrob kontrola databázového připojení s automatickým výběrem URL.
+
+**Success Response:**
+```json
+{
+  "ok": true,
+  "db": "up",
+  "dbSource": "DIRECT_URL",
+  "dbHostPort": "db.supabase.co:5432",
+  "dbUrl": "postgresql://postgres:***@db.supabase.co:5432/postgres"
+}
+```
+
+**Smart URL Selection:**
+1. Preferuje `DIRECT_URL` (port 5432) pro spolehlivé testy
+2. Fallback na `DATABASE_URL` (port 6543) pokud `DIRECT_URL` není dostupná
+3. Vrací chybu pokud žádná URL není nastavena
+
+**Error Response:**
+```json
+{
+  "ok": false,
+  "db": "down",
+  "dbSource": "DIRECT_URL",
+  "error": "Can't reach database server...",
+  "debug": {
+    "DATABASE_URL": {"available": true, "hostPort": "host:6543"},
+    "DIRECT_URL": {"available": false, "hostPort": "unknown"}
+  }
+}
+```
 
 ## 📋 TODO
 
@@ -56,7 +195,6 @@ Aplikace běží na: `http://localhost:3000`
 - [ ] Filter Sidebar
 - [ ] Smart Empty States
 - [ ] Katalogové stránky
-- [ ] Prisma schema + databáze
 - [ ] Shopping cart
 - [ ] Checkout flow
 
@@ -75,18 +213,105 @@ Aplikace běží na: `http://localhost:3000`
 - **Nadpisy:** Playfair Display (serif)
 - **Body text:** Inter (sans-serif)
 
+## 🔧 Troubleshooting
+
+### Database Connection Issues
+
+**Problem:** `/api/health` returns `"db": "down"` with port 5434 error
+
+**Cause:** Incorrect port in `DATABASE_URL` or `DIRECT_URL`
+
+**Solution:**
+```bash
+# Check your environment variables in Vercel:
+# Settings → Environment Variables → Production
+
+# Correct ports for Supabase:
+# - Pooler: 6543
+# - Direct: 5432
+
+# Quick fix: Set both to port 5432
+DATABASE_URL="postgresql://...@host:5432/db?sslmode=require"
+DIRECT_URL="postgresql://...@host:5432/db?sslmode=require"
+
+# After changing env vars, redeploy:
+# Deployments → Latest → ... → Redeploy → ☑ Clear build cache
+```
+
+**Problem:** `ECONNREFUSED` or timeout errors
+
+**Cause:** Firewall, incorrect hostname, or SSL issues
+
+**Solution:**
+```bash
+# 1. Verify hostname is correct
+# 2. Ensure SSL mode is set:
+?sslmode=require   # for direct connection
+?pgbouncer=true    # for pooled connection
+
+# 3. Check Supabase connection limits
+# 4. Verify database is not paused (Supabase free tier)
+```
+
+### Vercel Deployment Issues
+
+**Problem:** 404 on `/api/health` endpoint
+
+**Cause:** Build error or route not deployed
+
+**Solution:**
+```bash
+# 1. Check build logs in Vercel dashboard
+# 2. Verify TypeScript compilation
+npm run build
+
+# 3. Check that lib/db.ts exports are correct
+# 4. Redeploy with clear cache
+```
+
 ## 📖 Dokumentace
 
-Kompletní technická specifikace je v souborech:
-- `/Users/zen/Downloads/muza-hair-eshop-zadani.md`
-- `/Users/zen/Downloads/muza-hair-final-spec.md`
+Kompletní technická specifikace:
+- Database setup: `.env.example`
+- Health check implementation: `app/api/health/route.ts`
+- Database utilities: `lib/db.ts`
+- Prisma schema: `prisma/schema.prisma`
+
+## 🚀 Deployment
+
+### Vercel Environment Variables
+
+V Vercel projektu (`muzaready-bahy`) nastavte:
+
+**Production:**
+```bash
+DATABASE_URL=postgresql://...@host:6543/db?pgbouncer=true
+DIRECT_URL=postgresql://...@host:5432/db?sslmode=require
+VERCEL_AUTOMATION_BYPASS_SECRET=your-secret-here
+```
+
+**Preview:**
+```bash
+# Stejné hodnoty jako Production
+```
+
+### CI/CD
+
+GitHub Actions automaticky ověřují:
+- ✅ Build úspěšný
+- ✅ `/api/ok` vrací 200
+- ✅ `/api/health` vrací 200 nebo 500 (ne 404)
+
+Viz: `.github/workflows/verify.yml`
 
 ## 📞 Kontakt
 
 - **Projekt:** Mùza Hair E-shop
-- **Verze:** 0.1.0
-- **Datum:** 2025-11-02
+- **Repository:** github.com/annamontana1/muzaready
+- **Vercel:** muzaready-bahy
+- **Verze:** 0.2.0
+- **Datum:** 2025-11-21
 
 ---
 
-🤖 Generováno s [Claude Code](https://claude.com/claude-code)
+🤖 Co-authored by [Continue](https://continue.dev)
