@@ -7,13 +7,13 @@
     }
   },
   "functions": {
-    "api/ok.ts": {
+    "app/api/ok/route.ts": {
       "maxDuration": 10
     },
-    "api/health.ts": {
+    "app/api/health/route.ts": {
       "maxDuration": 10
     },
-    "api/ping.ts": {
+    "app/api/ping/route.ts": {
       "maxDuration": 10
     }
   },
