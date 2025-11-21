@@ -5,5 +5,27 @@
     "deploymentEnabled": {
       "main": true
     }
-  }
+  },
+  "functions": {
+    "api/ok.ts": {
+      "maxDuration": 10
+    },
+    "api/health.ts": {
+      "maxDuration": 10
+    },
+    "api/ping.ts": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(ok|health|ping)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate"
+        }
+      ]
+    }
+  ]
 }
