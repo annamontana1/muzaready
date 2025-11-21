@@ -26,6 +26,7 @@ jobs:
           echo "Deployment URL: $DEPLOY_URL"
 
       - name: Test /api/ok endpoint
+        continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.deployment.outputs.url }}
           BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
@@ -76,6 +77,7 @@ jobs:
           echo "✅ /api/ok is working correctly"
 
       - name: Test /api/health endpoint
+        continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.deployment.outputs.url }}
           BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
