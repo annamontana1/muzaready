@@ -1,64 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { getDbUrl, maskPassword, getDbConfigInfo } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
 /**
- * Mask password in database URL for logging
+ * Health check endpoint with smart database URL selection
+ * 
+ * Automatically selects the best available database URL:
+ * 1. Prefers DIRECT_URL (port 5432) for reliable health checks
+ * 2. Falls back to DATABASE_URL if DIRECT_URL is not available
+ * 
+ * Returns detailed connection info and database status.
  */
-function maskPassword(url: string | undefined): string {
-  if (!url) return 'not set';
-  try {
-    const parsed = new URL(url);
-    if (parsed.password) {
-      parsed.password = '***';
-    }
-    return parsed.toString();
-  } catch {
-    // If URL parsing fails, just mask any password-like string
-    return url.replace(/:([^:@]+)@/, ':***@');
-  }
-}
-
-/**
- * Extract host:port from database URL
- */
-function extractHostPort(url: string | undefined): string {
-  if (!url) return 'unknown';
-  try {
-    const parsed = new URL(url);
-    const port = parsed.port || (parsed.protocol === 'postgresql:' || parsed.protocol === 'postgres:' ? '5432' : '');
-    return `${parsed.hostname}:${port}`;
-  } catch {
-    return 'unknown';
-  }
-}
-
 export async function GET(request: NextRequest) {
-  // Force DIRECT_URL (5432) for health check only
-  // Global lib/prisma.ts continues using DATABASE_URL (6543/pool)
-  const directUrl = process.env.DIRECT_URL;
-  const maskedUrl = maskPassword(directUrl);
-  const hostPort = extractHostPort(directUrl);
-
-  if (!directUrl) {
+  let dbConfig;
+  
+  try {
+    // Get database URL with automatic fallback (prefer DIRECT_URL for health checks)
+    dbConfig = getDbUrl(true);
+  } catch (error: any) {
+    // Neither DATABASE_URL nor DIRECT_URL is available
+    const configInfo = getDbConfigInfo();
+    
     return NextResponse.json(
       {
         ok: false,
         db: 'down',
-        dbSource: 'DIRECT_URL (5432)',
-        dbHostPort: 'unknown',
-        error: 'DIRECT_URL environment variable is not set',
+        dbSource: 'none',
+        error: error.message,
+        debug: {
+          DATABASE_URL: configInfo.databaseUrl,
+          DIRECT_URL: configInfo.directUrl,
+        },
       },
       { status: 500 }
     );
   }
 
-  // Create PrismaClient instance with DIRECT_URL override for this endpoint only
+  // Create PrismaClient instance with selected URL
   const prisma = new PrismaClient({
     datasources: {
       db: {
-        url: directUrl,
+        url: dbConfig.url,
       },
     },
   });
@@ -72,9 +56,9 @@ export async function GET(request: NextRequest) {
       {
         ok: true,
         db: 'up',
-        dbSource: 'DIRECT_URL (5432)',
-        dbHostPort: hostPort,
-        dbUrl: maskedUrl,
+        dbSource: dbConfig.source,
+        dbHostPort: dbConfig.hostPort,
+        dbUrl: maskPassword(dbConfig.url),
       },
       { status: 200 }
     );
@@ -90,9 +74,9 @@ export async function GET(request: NextRequest) {
       {
         ok: false,
         db: 'down',
-        dbSource: 'DIRECT_URL (5432)',
-        dbHostPort: hostPort,
-        dbUrl: maskedUrl,
+        dbSource: dbConfig.source,
+        dbHostPort: dbConfig.hostPort,
+        dbUrl: maskPassword(dbConfig.url),
         error: maskedError,
       },
       { status: 500 }

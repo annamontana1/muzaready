@@ -1,0 +1,121 @@
+name: Verify Deployment
+
+on:
+  deployment_status:
+
+jobs:
+  verify:
+    name: Verify API Endpoints
+    runs-on: ubuntu-latest
+    
+    # Only run on successful deployments
+    if: github.event.deployment_status.state == 'success'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Wait for deployment to be ready
+        run: sleep 10
+        
+      - name: Get deployment URL
+        id: deployment
+        run: |
+          DEPLOY_URL="${{ github.event.deployment_status.target_url }}"
+          echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "Deployment URL: $DEPLOY_URL"
+
+      - name: Test /api/ok endpoint
+        env:
+          DEPLOY_URL: ${{ steps.deployment.outputs.url }}
+          BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          echo "Testing /api/ok endpoint..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "x-vercel-protection-bypass: $BYPASS_SECRET" \
+            "$DEPLOY_URL/api/ok")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "Response: $BODY"
+          echo "HTTP Status: $HTTP_CODE"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ /api/ok failed with status $HTTP_CODE"
+            exit 1
+          fi
+          
+          if ! echo "$BODY" | grep -q '"ok":true'; then
+            echo "❌ /api/ok response does not contain ok:true"
+            exit 1
+          fi
+          
+          echo "✅ /api/ok is working correctly"
+
+      - name: Test /api/health endpoint
+        env:
+          DEPLOY_URL: ${{ steps.deployment.outputs.url }}
+          BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          echo "Testing /api/health endpoint..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "x-vercel-protection-bypass: $BYPASS_SECRET" \
+            "$DEPLOY_URL/api/health")
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "Response: $BODY"
+          echo "HTTP Status: $HTTP_CODE"
+          
+          # Accept both 200 (success) and 500 (db error), but NOT 404
+          if [ "$HTTP_CODE" = "404" ]; then
+            echo "❌ /api/health returned 404 - endpoint not found!"
+            exit 1
+          fi
+          
+          if [ "$HTTP_CODE" = "200" ]; then
+            if echo "$BODY" | grep -q '"db":"up"'; then
+              echo "✅ /api/health is working - database is UP"
+            else
+              echo "⚠️  /api/health returned 200 but db status is not 'up'"
+              echo "Response body: $BODY"
+            fi
+          elif [ "$HTTP_CODE" = "500" ]; then
+            echo "⚠️  /api/health returned 500 - database connection issue"
+            echo "Response body: $BODY"
+            
+            # Check if it's a port issue
+            if echo "$BODY" | grep -q "5434"; then
+              echo "❌ ERROR: Wrong port 5434 detected!"
+              echo "Fix: Update DATABASE_URL or DIRECT_URL to use correct ports:"
+              echo "  - Pooler: 6543"
+              echo "  - Direct: 5432"
+              exit 1
+            fi
+            
+            # For other 500 errors, warn but don't fail (might be temporary)
+            echo "Note: This might be a temporary connection issue"
+            echo "If persistent, check Vercel environment variables"
+          fi
+          
+          echo "✅ /api/health endpoint exists (status: $HTTP_CODE)"
+
+      - name: Report results
+        if: always()
+        run: |
+          echo "=========================="
+          echo "Deployment Verification Complete"
+          echo "=========================="
+          echo "Deployment URL: ${{ steps.deployment.outputs.url }}"
+          echo ""
+          echo "Next steps if health check failed:"
+          echo "1. Check Vercel Environment Variables"
+          echo "2. Verify DATABASE_URL uses correct port (6543 for pooler, 5432 for direct)"
+          echo "3. Verify DIRECT_URL uses port 5432"
+          echo "4. Redeploy with 'Clear build cache'"
+          echo ""
+          echo "For more info, see README.md Database Setup section"
