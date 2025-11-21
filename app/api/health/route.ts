@@ -35,39 +35,65 @@ function extractHostPort(url: string | undefined): string {
 }
 
 export async function GET(request: NextRequest) {
-  const dbUrl = process.env.DATABASE_URL;
-  const maskedUrl = maskPassword(dbUrl);
-  const hostPort = extractHostPort(dbUrl);
+  // TEMPORARY: Test both pool and direct connections
+  const poolUrl = process.env.DATABASE_URL;
+  const directUrl = process.env.DIRECT_URL;
+  const maskedPoolUrl = maskPassword(poolUrl);
+  const maskedDirectUrl = maskPassword(directUrl);
+  const poolHostPort = extractHostPort(poolUrl);
+  const directHostPort = extractHostPort(directUrl);
 
+  // Test pool connection (DATABASE_URL)
+  let poolResult: { ok: boolean; error?: string } = { ok: false };
   try {
-    // Test DB connection with simple SELECT 1 query
-    // Health route uses DATABASE_URL (pool), not DIRECT_URL
     await prisma.$queryRaw`SELECT 1`;
-    
-    return NextResponse.json(
-      { 
-        ok: true, 
-        db: 'up',
-        dbUrl: maskedUrl,
-        dbHostPort: hostPort,
-        dbSource: 'DATABASE_URL (pool)'
-      },
-      { status: 200 }
-    );
+    poolResult = { ok: true };
   } catch (error: any) {
-    console.error('[Health Check] DB error:', error);
-    
-    return NextResponse.json(
-      { 
-        ok: false, 
-        db: 'down',
-        dbUrl: maskedUrl,
-        dbHostPort: hostPort,
-        dbSource: 'DATABASE_URL (pool)',
-        error: error?.message || 'Database connection failed'
-      },
-      { status: 500 }
-    );
+    poolResult = { ok: false, error: error?.message || 'Database connection failed' };
   }
+
+  // Test direct connection (DIRECT_URL) - create temporary client
+  let directResult: { ok: boolean; error?: string } = { ok: false };
+  if (directUrl) {
+    try {
+      const { PrismaClient } = await import('@prisma/client');
+      const directPrisma = new PrismaClient({
+        datasources: {
+          db: {
+            url: directUrl,
+          },
+        },
+      });
+      await directPrisma.$queryRaw`SELECT 1`;
+      await directPrisma.$disconnect();
+      directResult = { ok: true };
+    } catch (error: any) {
+      directResult = { ok: false, error: error?.message || 'Direct connection failed' };
+    }
+  }
+
+  const overallOk = poolResult.ok || directResult.ok;
+  
+  return NextResponse.json(
+    {
+      ok: overallOk,
+      db: overallOk ? 'up' : 'down',
+      pool: {
+        source: 'DATABASE_URL (pool)',
+        url: maskedPoolUrl,
+        hostPort: poolHostPort,
+        ok: poolResult.ok,
+        error: poolResult.error,
+      },
+      direct: {
+        source: 'DIRECT_URL (direct)',
+        url: maskedDirectUrl,
+        hostPort: directHostPort,
+        ok: directResult.ok,
+        error: directResult.error,
+      },
+    },
+    { status: overallOk ? 200 : 500 }
+  );
 }
 
