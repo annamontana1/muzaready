@@ -1,53 +1,77 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getDbUrl, maskPassword, getDbConfigInfo } from '@/lib/db';
+import { getDbUrl } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
 /**
- * Health check endpoint with smart database URL selection
- * 
- * Automatically selects the best available database URL:
- * 1. Prefers DIRECT_URL (port 5432) for reliable health checks
- * 2. Falls back to DATABASE_URL if DIRECT_URL is not available
- * 
- * Returns detailed connection info and database status.
+ * Mask password in database URL for logging
  */
-export async function GET(request: NextRequest) {
-  let dbConfig;
-  
+function maskPassword(url: string | undefined): string {
+  if (!url) return 'not set';
   try {
-    // Get database URL with automatic fallback (prefer DIRECT_URL for health checks)
-    dbConfig = getDbUrl(true);
-  } catch (error: any) {
-    // Neither DATABASE_URL nor DIRECT_URL is available
-    const configInfo = getDbConfigInfo();
-    
-    return NextResponse.json(
-      {
-        ok: false,
-        db: 'down',
-        dbSource: 'none',
-        error: error.message,
-        debug: {
-          DATABASE_URL: configInfo.databaseUrl,
-          DIRECT_URL: configInfo.directUrl,
-        },
-      },
-      { status: 500 }
-    );
+    const parsed = new URL(url);
+    if (parsed.password) {
+      parsed.password = '***';
+    }
+    return parsed.toString();
+  } catch {
+    // If URL parsing fails, just mask any password-like string
+    return url.replace(/:([^:@]+)@/, ':***@');
+  }
+}
+
+/**
+ * Extract host:port from database URL
+ */
+function extractHostPort(url: string | undefined): string {
+  if (!url) return 'unknown';
+  try {
+    const parsed = new URL(url);
+    const port = parsed.port || (parsed.protocol === 'postgresql:' || parsed.protocol === 'postgres:' ? '5432' : '');
+    return `${parsed.hostname}:${port}`;
+  } catch {
+    return 'unknown';
+  }
+}
+
+/**
+ * Determine which database URL source is being used
+ */
+function getDbSource(): string {
+  const pool = process.env.DATABASE_URL;
+  const direct = process.env.DIRECT_URL;
+
+  if (process.env.NODE_ENV === 'production') {
+    // Production always uses pooler
+    return 'DATABASE_URL (pooler/6543)';
   }
 
-  // Create PrismaClient instance with selected URL
-  const prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: dbConfig.url,
-      },
-    },
-  });
+  // Dev/Preview prefers direct, fallbacks to pooler
+  if (direct) {
+    return 'DIRECT_URL (direct/5432)';
+  }
 
+  return 'DATABASE_URL (pooler/6543)';
+}
+
+export async function GET(request: NextRequest) {
   try {
+    // Use the router function to get the correct URL for this environment
+    const dbUrl = getDbUrl();
+    const maskedUrl = maskPassword(dbUrl);
+    const hostPort = extractHostPort(dbUrl);
+    const dbSource = getDbSource();
+
+    // Create PrismaClient instance with the appropriate URL
+    const prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: dbUrl,
+        },
+      },
+    });
+
     // Test DB connection with simple SELECT 1 query
     await prisma.$queryRaw`SELECT 1`;
     await prisma.$disconnect();
@@ -56,27 +80,31 @@ export async function GET(request: NextRequest) {
       {
         ok: true,
         db: 'up',
-        dbSource: dbConfig.source,
-        dbHostPort: dbConfig.hostPort,
-        dbUrl: maskPassword(dbConfig.url),
+        dbSource,
+        dbHostPort: hostPort,
+        dbUrl: maskedUrl,
       },
       { status: 200 }
     );
   } catch (error: any) {
     console.error('[Health Check] DB error:', error);
-    await prisma.$disconnect();
 
     // Mask password in error message
     const errorMessage = error?.message || 'Database connection failed';
     const maskedError = errorMessage.replace(/:([^:@]+)@/, ':***@');
 
+    const dbSource = getDbSource();
+    const dbUrl = process.env.DATABASE_URL || process.env.DIRECT_URL;
+    const maskedUrl = maskPassword(dbUrl);
+    const hostPort = extractHostPort(dbUrl);
+
     return NextResponse.json(
       {
         ok: false,
         db: 'down',
-        dbSource: dbConfig.source,
-        dbHostPort: dbConfig.hostPort,
-        dbUrl: maskPassword(dbConfig.url),
+        dbSource,
+        dbHostPort: hostPort,
+        dbUrl: maskedUrl,
         error: maskedError,
       },
       { status: 500 }
