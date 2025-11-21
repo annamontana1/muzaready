@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin-auth';
+export const runtime = 'nodejs';
+
 
 const EXCHANGE_RATE_ID = 'GLOBAL_RATE';
 const FALLBACK_CZK_TO_EUR = 1 / 25.5;

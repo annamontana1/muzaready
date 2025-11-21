@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma';
 import { mockProducts } from '@/lib/mock-products';
 import { Product } from '@/types/product';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
+export const runtime = 'nodejs';
+
 
 /**
  * Unified catalog endpoint

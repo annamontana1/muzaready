@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { verifyPassword } from '@/lib/admin-auth';
+export const runtime = 'nodejs';
+
 
 export async function POST(request: NextRequest) {
   try {

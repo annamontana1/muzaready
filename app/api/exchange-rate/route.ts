@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin, verifyAdminSession } from '@/lib/admin-auth';
+export const runtime = 'nodejs';
+
 
 const SINGLETON_ID = 'GLOBAL_RATE';
 

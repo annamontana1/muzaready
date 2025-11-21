@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
+export const runtime = 'nodejs';
+
 
 export async function POST(request: NextRequest) {
   try {

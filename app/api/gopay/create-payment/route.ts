@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+export const runtime = 'nodejs';
+
 
 /**
  * GoPay Payment Creation Endpoint

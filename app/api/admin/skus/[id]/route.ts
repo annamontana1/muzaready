@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin-auth';
+export const runtime = 'nodejs';
+
 
 export async function GET(
   request: NextRequest,
@@ -144,4 +146,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete SKU' }, { status: 500 });
   }
 }
-

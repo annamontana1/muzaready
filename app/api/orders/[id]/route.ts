@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendShippingNotificationEmail } from '@/lib/email';
+export const runtime = 'nodejs';
+
 
 interface Params {
   id: string;

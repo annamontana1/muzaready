@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { ProductCategory, ProductTier } from '@/types/product';
+export const runtime = 'nodejs';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -24,4 +26,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

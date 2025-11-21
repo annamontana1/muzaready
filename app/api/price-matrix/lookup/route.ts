@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+export const runtime = 'nodejs';
+
 
 const FALLBACK_CZK_TO_EUR = 1 / 25.5;
 

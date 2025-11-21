@@ -2,6 +2,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
+export const runtime = 'nodejs';
+
 
 async function isAdmin() {
   const cookieStore = await cookies();
