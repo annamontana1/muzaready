@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
 
 export const runtime = 'nodejs';
 
@@ -35,65 +35,68 @@ function extractHostPort(url: string | undefined): string {
 }
 
 export async function GET(request: NextRequest) {
-  // TEMPORARY: Test both pool and direct connections
-  const poolUrl = process.env.DATABASE_URL;
+  // Force DIRECT_URL (5432) for health check only
+  // Global lib/prisma.ts continues using DATABASE_URL (6543/pool)
   const directUrl = process.env.DIRECT_URL;
-  const maskedPoolUrl = maskPassword(poolUrl);
-  const maskedDirectUrl = maskPassword(directUrl);
-  const poolHostPort = extractHostPort(poolUrl);
-  const directHostPort = extractHostPort(directUrl);
+  const maskedUrl = maskPassword(directUrl);
+  const hostPort = extractHostPort(directUrl);
 
-  // Test pool connection (DATABASE_URL)
-  let poolResult: { ok: boolean; error?: string } = { ok: false };
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    poolResult = { ok: true };
-  } catch (error: any) {
-    poolResult = { ok: false, error: error?.message || 'Database connection failed' };
-  }
-
-  // Test direct connection (DIRECT_URL) - create temporary client
-  let directResult: { ok: boolean; error?: string } = { ok: false };
-  if (directUrl) {
-    try {
-      const { PrismaClient } = require('@prisma/client');
-      const directPrisma = new PrismaClient({
-        datasources: {
-          db: {
-            url: directUrl,
-          },
-        },
-      });
-      await directPrisma.$queryRaw`SELECT 1`;
-      await directPrisma.$disconnect();
-      directResult = { ok: true };
-    } catch (error: any) {
-      directResult = { ok: false, error: error?.message || 'Direct connection failed' };
-    }
-  }
-
-  const overallOk = poolResult.ok || directResult.ok;
-  
-  return NextResponse.json(
-    {
-      ok: overallOk,
-      db: overallOk ? 'up' : 'down',
-      pool: {
-        source: 'DATABASE_URL (pool)',
-        url: maskedPoolUrl,
-        hostPort: poolHostPort,
-        ok: poolResult.ok,
-        error: poolResult.error,
+  if (!directUrl) {
+    return NextResponse.json(
+      {
+        ok: false,
+        db: 'down',
+        dbSource: 'DIRECT_URL (5432)',
+        dbHostPort: 'unknown',
+        error: 'DIRECT_URL environment variable is not set',
       },
-      direct: {
-        source: 'DIRECT_URL (direct)',
-        url: maskedDirectUrl,
-        hostPort: directHostPort,
-        ok: directResult.ok,
-        error: directResult.error,
+      { status: 500 }
+    );
+  }
+
+  // Create PrismaClient instance with DIRECT_URL override for this endpoint only
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: directUrl,
       },
     },
-    { status: overallOk ? 200 : 500 }
-  );
+  });
+
+  try {
+    // Test DB connection with simple SELECT 1 query
+    await prisma.$queryRaw`SELECT 1`;
+    await prisma.$disconnect();
+
+    return NextResponse.json(
+      {
+        ok: true,
+        db: 'up',
+        dbSource: 'DIRECT_URL (5432)',
+        dbHostPort: hostPort,
+        dbUrl: maskedUrl,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('[Health Check] DB error:', error);
+    await prisma.$disconnect();
+
+    // Mask password in error message
+    const errorMessage = error?.message || 'Database connection failed';
+    const maskedError = errorMessage.replace(/:([^:@]+)@/, ':***@');
+
+    return NextResponse.json(
+      {
+        ok: false,
+        db: 'down',
+        dbSource: 'DIRECT_URL (5432)',
+        dbHostPort: hostPort,
+        dbUrl: maskedUrl,
+        error: maskedError,
+      },
+      { status: 500 }
+    );
+  }
 }
 
