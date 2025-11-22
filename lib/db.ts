@@ -1,37 +1,18 @@
 /**
- * Database URL router
+ * Database URL getter for Turso serverless SQLite
  *
- * In production on Vercel: returns DATABASE_URL (pgBouncer pooler at 6543)
- * - Stable for serverless short-lived requests
- * - Handles rapid connect/disconnect cycles
+ * Turso is a serverless SQLite database built for edge computing
+ * and is optimized for Vercel serverless functions.
  *
- * In preview/development: returns DIRECT_URL if available, fallback to DATABASE_URL
- * - DIRECT_URL (direct connection at 5432) is preferred for dev tools like Prisma Studio
- * - Falls back to pooler if DIRECT_URL is not available
+ * Uses LibSQL protocol for remote SQLite access via:
+ * libsql://[database-name].turso.io?authToken=[token]
  */
 export function getDbUrl(): string {
-  const poolUrl = process.env.DATABASE_URL;
-  const directUrl = process.env.DIRECT_URL;
+  const tursoUrl = process.env.TURSO_CONNECTION_URL;
 
-  // Production: always use pooler (6543) for stability
-  // Check both NODE_ENV and Vercel's VERCEL_ENV for production detection
-  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
-
-  if (isProduction) {
-    if (!poolUrl) {
-      throw new Error('DATABASE_URL (pooler) is required in production');
-    }
-    return poolUrl;
+  if (!tursoUrl) {
+    throw new Error('TURSO_CONNECTION_URL environment variable is not set');
   }
 
-  // Preview/Development: prefer direct (5432), fallback to pooler
-  if (directUrl) {
-    return directUrl;
-  }
-
-  if (poolUrl) {
-    return poolUrl;
-  }
-
-  throw new Error('Either DATABASE_URL or DIRECT_URL must be set');
+  return tursoUrl;
 }

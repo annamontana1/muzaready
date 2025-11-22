@@ -2,13 +2,13 @@
 
 ## Overview
 
-This is a modern e-commerce platform built with Next.js, Prisma, and PostgreSQL, designed specifically for the Mùza Hair business. The platform handles product management, shopping carts, orders, and payment processing via GoPay.
+This is a modern e-commerce platform built with Next.js, Prisma, and Turso serverless SQLite database, designed specifically for the Mùza Hair business. The platform handles product management, shopping carts, orders, and payment processing via GoPay.
 
 ## Architecture & Key Features
 
 - **Frontend**: Next.js 14 with React
 - **Backend**: Next.js API Routes
-- **Database**: PostgreSQL (Supabase)
+- **Database**: Turso (serverless SQLite with LibSQL)
 - **ORM**: Prisma
 - **Deployment**: Vercel
 - **Payments**: GoPay (Czech payment gateway)
@@ -16,38 +16,26 @@ This is a modern e-commerce platform built with Next.js, Prisma, and PostgreSQL,
 
 ## Database Configuration
 
-### Supabase PostgreSQL Setup
+### Turso Serverless SQLite Setup
 
-The application uses dual connection URLs to PostgreSQL:
+The application uses Turso, a serverless SQLite database optimized for edge computing and Vercel serverless functions.
 
-1. **DATABASE_URL** (pooled at port 6543)
-   - Used for **production (Vercel serverless)**
-   - Connection pooling via pgBouncer
-   - Required for serverless compatibility
-   - Format: `postgresql://user:password@host:6543/dbname?schema=public&sslmode=require`
+**Why Turso instead of PostgreSQL?**
 
-2. **DIRECT_URL** (direct at port 5432)
-   - Used for **development and migrations**
-   - Direct database connection
-   - Preferred for Prisma Studio
-   - Format: `postgresql://user:password@host:5432/dbname?schema=public&sslmode=require`
+Vercel's serverless functions create rapid connection/disconnect cycles that traditional databases struggle with. Turso provides:
+- **Serverless native**: Built specifically for edge and serverless environments
+- **Simple configuration**: Single connection URL with authentication token
+- **No connection pooling needed**: LibSQL protocol handles connection management automatically
+- **Lightning fast**: Optimized for Vercel edge performance
 
-### Why Two Connection URLs?
-
-Vercel's serverless functions create rapid connection/disconnect cycles. A direct PostgreSQL connection (port 5432) can't handle this load. The pgBouncer pooler (port 6543) reuses connections efficiently, making it essential for production.
-
-### How the Application Routes Connections
-
-The `lib/db.ts` file contains `getDbUrl()` function that:
-- In **production** (Vercel): Always uses DATABASE_URL (pooler at 6543)
-- In **development**: Prefers DIRECT_URL (direct at 5432), falls back to DATABASE_URL
-
-This is detected by checking:
-```typescript
-const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+**Connection Format:**
+```
+libsql://[database-name].turso.io?authToken=[your-token]
 ```
 
-**Critical**: Vercel doesn't set NODE_ENV=production at runtime. The function checks both NODE_ENV and VERCEL_ENV for proper detection.
+### How the Database Router Works
+
+The `lib/db.ts` file contains a simple `getDbUrl()` function that returns the Turso connection URL from the `TURSO_CONNECTION_URL` environment variable. No routing logic needed - Turso handles everything transparently across development and production.
 
 ## Environment Variables Setup
 
@@ -59,19 +47,19 @@ Copy `.env.example` to `.env.local`:
 cp .env.example .env.local
 ```
 
-### Step 2: Database Credentials (Supabase)
+### Step 2: Database Credentials (Turso)
 
-Add your PostgreSQL credentials from Supabase:
+Set up a Turso database and get your connection URL:
 
 ```env
-DATABASE_URL=postgresql://postgres:password@db.XXX.supabase.co:6543/postgres?schema=public&sslmode=require
-DIRECT_URL=postgresql://postgres:password@db.XXX.supabase.co:5432/postgres?schema=public&sslmode=require
+TURSO_CONNECTION_URL=libsql://muzaready-username.aws-eu-west-1.turso.io?authToken=YOUR_TOKEN_HERE
 ```
 
-You can find these credentials in:
-- Supabase Dashboard → Project Settings → Database → Connection String
-- Toggle "Use connection pooler" for DATABASE_URL (shows port 6543)
-- Toggle "Direct connection" for DIRECT_URL (shows port 5432)
+To get these credentials:
+1. Create database at https://turso.tech
+2. Get your database URL from the Turso dashboard
+3. Generate an authentication token
+4. Combine them: `libsql://[database-url]?authToken=[token]`
 
 ### Step 3: GoPay Payment Gateway
 
@@ -111,8 +99,9 @@ NEXT_PUBLIC_APP_URL=https://www.muzahair.cz
 
 When deploying to Vercel, set these environment variables in Vercel dashboard:
 - Go to Project Settings → Environment Variables
-- Add all variables from your `.env.local` **except** DIRECT_URL (production doesn't need it)
-- For production: Only set DATABASE_URL, GOPAY_*, RESEND_*, and SITE_URL
+- Add TURSO_CONNECTION_URL with your full Turso connection string
+- Add GOPAY_*, RESEND_*, and SITE_URL variables
+- No special setup needed - Turso handles everything transparently
 
 **Note**: VERCEL_ENV is automatically set by Vercel.
 
@@ -216,38 +205,39 @@ Expected response:
 
 ## Known Issues & Solutions
 
-### Issue: Database Connection Fails on Vercel
+### Issue: Database Connection Fails
 
-**Symptom**: `/api/health` returns error about connection to port 5432
+**Symptom**: `/api/health` returns connection error
 
-**Cause**: Serverless functions can't maintain direct connections; need pooled connections
-
-**Solution**: 
-- Ensure DATABASE_URL is set (port 6543 pooler)
-- Ensure DIRECT_URL is NOT set in Vercel environment
-- Update `lib/db.ts` to check VERCEL_ENV (not just NODE_ENV)
-- Redeploy without build cache
-
-### Issue: "Cannot read property 'password' of undefined"
-
-**Symptom**: Build fails during migration
-
-**Cause**: Missing DATABASE_URL or DIRECT_URL environment variable
+**Cause**: TURSO_CONNECTION_URL not set or invalid
 
 **Solution**:
-- Verify both URLs are set in `.env.local`
-- For Vercel: DATABASE_URL must be set in environment variables
+- Verify TURSO_CONNECTION_URL is set in `.env.local`
+- Check the connection URL format: `libsql://[db-name].turso.io?authToken=[token]`
+- Ensure the auth token is valid and hasn't expired
+- For Vercel: Set TURSO_CONNECTION_URL in environment variables
+
+### Issue: "TURSO_CONNECTION_URL environment variable is not set"
+
+**Symptom**: Build or runtime error about missing environment variable
+
+**Cause**: TURSO_CONNECTION_URL not configured
+
+**Solution**:
+- Get your Turso connection URL from https://turso.tech dashboard
+- Add it to `.env.local`
+- For Vercel: Add it to Project Settings → Environment Variables
 - Run: `npx prisma generate` locally before pushing
 
-### Issue: Prisma Studio Shows "DIRECT_URL Not Set"
+### Issue: Turso CLI Commands Don't Work
 
-**Symptom**: Can't connect in development
+**Symptom**: `turso` command not found
 
-**Cause**: DIRECT_URL missing from `.env.local`
+**Cause**: Turso CLI not installed (optional - web dashboard works fine)
 
 **Solution**:
-- Add DIRECT_URL from Supabase (port 5432 direct connection)
-- Run: `npx prisma studio`
+- Use Turso web dashboard at https://turso.tech instead
+- Or install Turso CLI if needed: `curl https://get.turso.tech | bash`
 
 ## API Endpoints
 
@@ -270,15 +260,17 @@ See route files in `app/api/` directory for complete API documentation.
 
 ## Deployment Checklist
 
-- [ ] Database URLs configured (DATABASE_URL in Vercel, both local)
+- [ ] Turso database created at https://turso.tech
+- [ ] TURSO_CONNECTION_URL set locally in `.env.local`
+- [ ] TURSO_CONNECTION_URL set in Vercel environment variables
 - [ ] GoPay credentials set
 - [ ] Resend API key set
 - [ ] Application URLs configured
-- [ ] Migrations run: `npx prisma migrate deploy`
+- [ ] Prisma migrations created: `npx prisma migrate dev`
 - [ ] Health check passes: `curl /api/health`
 - [ ] Payment flow tested (GoPay test mode)
 - [ ] Email notifications working
-- [ ] Build succeeds without warnings
+- [ ] Build succeeds without warnings: `npm run build`
 
 ## Support
 
