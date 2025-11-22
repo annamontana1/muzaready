@@ -1,18 +1,19 @@
 /**
- * Database URL getter for Turso serverless SQLite
+ * Database URL getter for development and production
  *
- * Turso is a serverless SQLite database built for edge computing
- * and is optimized for Vercel serverless functions.
+ * Development: Uses local SQLite file (dev.db)
+ * Production (Vercel): Uses Turso serverless SQLite
  *
- * Uses LibSQL protocol for remote SQLite access via:
+ * Turso uses LibSQL protocol for remote SQLite access:
  * libsql://[database-name].turso.io?authToken=[token]
  */
 export function getDbUrl(): string {
-  const tursoUrl = process.env.TURSO_CONNECTION_URL;
+  // Use DATABASE_URL from .env (local SQLite for dev)
+  const databaseUrl = process.env.DATABASE_URL;
 
-  if (!tursoUrl) {
-    throw new Error('TURSO_CONNECTION_URL environment variable is not set');
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL environment variable is not set');
   }
 
-  return tursoUrl;
+  return databaseUrl;
 }

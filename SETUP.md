@@ -16,26 +16,39 @@ This is a modern e-commerce platform built with Next.js, Prisma, and Turso serve
 
 ## Database Configuration
 
-### Turso Serverless SQLite Setup
+### Hybrid SQLite Setup (Local + Turso)
 
-The application uses Turso, a serverless SQLite database optimized for edge computing and Vercel serverless functions.
+The application uses a **hybrid database approach**:
+- **Development**: Local SQLite (file:./dev.db) for local testing and Prisma migrations
+- **Production**: Turso serverless SQLite for Vercel deployment
 
-**Why Turso instead of PostgreSQL?**
+This approach works around Prisma's limitation with the SQLite provider, which only supports local `file://` URLs and not remote `libsql://` protocols.
 
-Vercel's serverless functions create rapid connection/disconnect cycles that traditional databases struggle with. Turso provides:
-- **Serverless native**: Built specifically for edge and serverless environments
-- **Simple configuration**: Single connection URL with authentication token
-- **No connection pooling needed**: LibSQL protocol handles connection management automatically
-- **Lightning fast**: Optimized for Vercel edge performance
+**Why this hybrid approach?**
 
-**Connection Format:**
+1. **Prisma Compatibility**: Prisma's SQLite provider only supports local `file://` URLs, not Turso's `libsql://` protocol
+2. **Development Experience**: Local SQLite allows running migrations without external dependencies
+3. **Production Ready**: Turso provides serverless SQLite optimized for Vercel edge functions
+
+**Database Configuration:**
+
+Development:
 ```
-libsql://[database-name].turso.io?authToken=[your-token]
+DATABASE_URL=file:./dev.db
 ```
 
-### How the Database Router Works
+Production (Vercel):
+```
+TURSO_CONNECTION_URL=libsql://[database-name].turso.io?authToken=[your-token]
+```
 
-The `lib/db.ts` file contains a simple `getDbUrl()` function that returns the Turso connection URL from the `TURSO_CONNECTION_URL` environment variable. No routing logic needed - Turso handles everything transparently across development and production.
+### How the Database Works
+
+- **For Prisma**: Uses `DATABASE_URL` (local SQLite) for migrations and schema synchronization
+- **For Runtime**: The application code accesses `TURSO_CONNECTION_URL` for production Turso connection
+  - Local development uses the local dev.db file
+  - Production (Vercel) connects to remote Turso database
+- **Environment-based routing**: The `lib/db.ts` file returns the appropriate database URL based on environment
 
 ## Environment Variables Setup
 
@@ -47,19 +60,25 @@ Copy `.env.example` to `.env.local`:
 cp .env.example .env.local
 ```
 
-### Step 2: Database Credentials (Turso)
+### Step 2: Database Credentials (Hybrid Setup)
 
-Set up a Turso database and get your connection URL:
+Set up both local SQLite for development and Turso for production:
 
+**Development (Local SQLite):**
+```env
+DATABASE_URL=file:./dev.db
+```
+
+**Production (Turso):**
+1. Create database at https://turso.tech
+2. Get your database URL from the Turso dashboard
+3. Generate an authentication token
+4. Set in .env.local for testing, in Vercel for production:
 ```env
 TURSO_CONNECTION_URL=libsql://muzaready-username.aws-eu-west-1.turso.io?authToken=YOUR_TOKEN_HERE
 ```
 
-To get these credentials:
-1. Create database at https://turso.tech
-2. Get your database URL from the Turso dashboard
-3. Generate an authentication token
-4. Combine them: `libsql://[database-url]?authToken=[token]`
+**Note**: The local dev.db will be created automatically when running Prisma migrations. For Vercel, only set TURSO_CONNECTION_URL (not DATABASE_URL)
 
 ### Step 3: GoPay Payment Gateway
 
