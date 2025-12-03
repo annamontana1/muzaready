@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       {
-        data: transformedOrders,
+        orders: transformedOrders,
         total,
         limit,
         offset,
