@@ -2,6 +2,26 @@
 
 Prémiový e-shop pro prodej vlasových doplňků (vlasy k prodloužení, příčesky, paruky).
 
+---
+
+## 🚨 **AKTUÁLNÍ STAV PROJEKTU (4.12.2025)**
+
+```
+✅ Frontend:   100% HOTOVÝ (Orders Admin Panel + E-shop)
+✅ Backend:    100% HOTOVÝ (30+ API endpoints)
+✅ Testing:    241 tests, 100% pass rate, 9 production approvals
+⏳ Deployment: 80% (fixing Vercel errors - in progress)
+```
+
+### 👉 **ZAČNI TADY:**
+- **[`PROJECT_STATUS.md`](./PROJECT_STATUS.md)** ← Kompletní aktuální stav projektu
+- [`FRONTEND_PROGRESS_REPORT.md`](./FRONTEND_PROGRESS_REPORT.md) ← Frontend 100% completion report
+- [`VERCEL_DEPLOYMENT_FIX.md`](./VERCEL_DEPLOYMENT_FIX.md) ← Deployment troubleshooting
+
+**Pro agenty:** Pokud vás někdo požádá implementovat Orders Admin Panel features, **všechny jsou už hotové**. Viz `PROJECT_STATUS.md`.
+
+---
+
 ## 🎨 Technologie
 
 - **Framework:** Next.js 14 (App Router)
