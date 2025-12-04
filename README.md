@@ -14,11 +14,12 @@ Prémiový e-shop pro prodej vlasových doplňků (vlasy k prodloužení, pří�
 ```
 
 ### 👉 **ZAČNI TADY:**
+- 🚨 **[`START_HERE.md`](./START_HERE.md)** ← **POVINNÉ ČTENÍ PRO KOLEGU & AGENTY!**
 - **[`PROJECT_STATUS.md`](./PROJECT_STATUS.md)** ← Kompletní aktuální stav projektu
 - [`FRONTEND_PROGRESS_REPORT.md`](./FRONTEND_PROGRESS_REPORT.md) ← Frontend 100% completion report
 - [`VERCEL_DEPLOYMENT_FIX.md`](./VERCEL_DEPLOYMENT_FIX.md) ← Deployment troubleshooting
 
-**Pro agenty:** Pokud vás někdo požádá implementovat Orders Admin Panel features, **všechny jsou už hotové**. Viz `PROJECT_STATUS.md`.
+**Pro agenty:** Pokud vás někdo požádá implementovat Orders Admin Panel features, **všechny jsou už hotové**. Viz **`START_HERE.md`** nebo `PROJECT_STATUS.md`.
 
 ---
 
