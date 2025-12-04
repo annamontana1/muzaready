@@ -66,9 +66,19 @@ model Order {
   deliveryMethod    String      @default("standard") // standard, express, pickup
 
   // Payment & Status
-  status            String      @default("awaiting_payment") // awaiting_payment, paid, processing, assembly_in_progress, shipped, cancelled_unpaid, refunded
-  paymentStatus     String      @default("unpaid")      // unpaid, paid, refunded, failed
+  orderStatus       String      @default("pending")     // draft, pending, paid, processing, shipped, completed, cancelled
+  paymentStatus     String      @default("unpaid")      // unpaid, partial, paid, refunded
+  deliveryStatus    String      @default("pending")     // pending, shipped, delivered, returned
   paymentMethod     String?     // gopay, bank_transfer, cash
+
+  // Channel & metadata
+  channel           String      @default("web")         // web, pos, ig_dm
+  tags              String?                             // JSON string of tags for filtering/organization
+  riskScore         Int         @default(0)             // fraud detection score
+
+  // Notes
+  notesInternal     String?                             // internal admin notes
+  notesCustomer     String?                             // customer-facing notes
 
   // Order details
   subtotal          Float
@@ -84,6 +94,7 @@ model Order {
   updatedAt         DateTime    @updatedAt
   paidAt            DateTime?
   shippedAt         DateTime?
+  lastStatusChangeAt DateTime   @default(now())
 
   items             OrderItem[]
 
@@ -170,6 +181,7 @@ model Sku {
   reservedUntil    DateTime?
   orderItems       OrderItem[]
   movements        StockMovement[]
+  scanItems        ScanItem[]
 
   @@map("skus")
 }
@@ -288,4 +300,34 @@ model Session {
   createdAt DateTime @default(now())
 
   @@map("sessions")
+}
+
+model ScanSession {
+  id          String     @id @default(cuid())
+  status      String     @default("active")   // active, scanning, paused, completed, synced
+  scannedBy   String?                         // admin user who is scanning
+  startedAt   DateTime   @default(now())
+  completedAt DateTime?
+  totalPrice  Int        @default(0)          // total price in CZK cents
+  itemCount   Int        @default(0)          // total number of items
+  syncedAt    DateTime?                       // when session was synced to order
+  items       ScanItem[]
+
+  @@map("scan_sessions")
+}
+
+model ScanItem {
+  id            String       @id @default(cuid())
+  sessionId     String
+  skuId         String
+  skuName       String                          // snapshot of SKU name
+  price         Int                             // price per unit in CZK cents
+  quantity      Int                             // quantity of items
+  scannedAt     DateTime     @default(now())
+  status        String       @default("pending") // pending, verified, error
+  notes         String?
+  session       ScanSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sku           Sku          @relation(fields: [skuId], references: [id])
+
+  @@map("scan_items")
 }

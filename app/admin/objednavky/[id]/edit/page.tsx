@@ -7,7 +7,9 @@ import Link from 'next/link';
 interface Order {
   id: string;
   email: string;
-  status: string;
+  orderStatus: string;
+  paymentStatus: string;
+  deliveryStatus: string;
   total: number;
   createdAt: string;
   items: any[];
@@ -25,7 +27,9 @@ export default function EditOrderPage() {
   const [success, setSuccess] = useState('');
 
   const [formData, setFormData] = useState({
-    status: '',
+    orderStatus: '',
+    paymentStatus: '',
+    deliveryStatus: '',
   });
 
   useEffect(() => {
@@ -41,7 +45,9 @@ export default function EditOrderPage() {
         const data = await response.json();
         setOrder(data);
         setFormData({
-          status: data.status,
+          orderStatus: data.orderStatus,
+          paymentStatus: data.paymentStatus,
+          deliveryStatus: data.deliveryStatus,
         });
         setLoading(false);
       } catch (err) {
@@ -56,8 +62,8 @@ export default function EditOrderPage() {
     }
   }, [orderId]);
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, status: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -135,19 +141,55 @@ export default function EditOrderPage() {
       )}
 
       <form onSubmit={handleSave} className="bg-white rounded-lg shadow p-8 space-y-6">
-        {/* Status Selection */}
+        {/* Order Status Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Status objednávky</label>
           <select
-            value={formData.status}
-            onChange={handleStatusChange}
+            name="orderStatus"
+            value={formData.orderStatus}
+            onChange={handleChange}
             disabled={saving}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="pending">Čeká na platbu</option>
             <option value="paid">Zaplaceno</option>
+            <option value="processing">Zpracovává se</option>
+            <option value="shipped">Odesláno</option>
+            <option value="completed">Dokončeno</option>
+          </select>
+        </div>
+
+        {/* Payment Status Selection */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Stav platby</label>
+          <select
+            name="paymentStatus"
+            value={formData.paymentStatus}
+            onChange={handleChange}
+            disabled={saving}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="unpaid">Nezaplaceno</option>
+            <option value="partial">Částečně</option>
+            <option value="paid">Zaplaceno</option>
+            <option value="refunded">Vráceno</option>
+          </select>
+        </div>
+
+        {/* Delivery Status Selection */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Stav doručení</label>
+          <select
+            name="deliveryStatus"
+            value={formData.deliveryStatus}
+            onChange={handleChange}
+            disabled={saving}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="pending">Čeká</option>
             <option value="shipped">Odesláno</option>
             <option value="delivered">Doručeno</option>
+            <option value="returned">Vráceno</option>
           </select>
         </div>
 

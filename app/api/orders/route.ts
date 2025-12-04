@@ -58,11 +58,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Create order with OrderItem records (NO stock deduction yet - waiting for payment confirmation)
+    const totalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
     const order = await prisma.order.create({
       data: {
         email,
-        status: 'pending', // Waiting for GoPay payment confirmation
-        total: quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0),
+        firstName: shippingInfo?.firstName || 'Customer',
+        lastName: shippingInfo?.lastName || '',
+        streetAddress: shippingInfo?.streetAddress || 'Unknown',
+        city: shippingInfo?.city || 'Unknown',
+        zipCode: shippingInfo?.zipCode || '00000',
+        country: shippingInfo?.country || 'CZ',
+        orderStatus: 'pending', // Waiting for GoPay payment confirmation
+        paymentStatus: 'unpaid',
+        deliveryStatus: 'pending',
+        subtotal: totalAmount,
+        total: totalAmount,
         items: {
           create: quotedLines.map((item) => ({
             sku: {
@@ -96,7 +106,7 @@ export async function POST(request: NextRequest) {
         orderId: order.id,
         email: order.email,
         total: order.total,
-        status: order.status,
+        orderStatus: order.orderStatus,
         message: 'Objednávka vytvořena. Čeká na platbu přes GoPay.',
         items: order.items,
       },

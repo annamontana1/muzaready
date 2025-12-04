@@ -8,7 +8,9 @@ interface OrderConfirmation {
   id: string;
   email: string;
   total: number;
-  status: string;
+  orderStatus: string;
+  paymentStatus: string;
+  deliveryStatus: string;
 }
 
 export default function OrderConfirmationPage() {

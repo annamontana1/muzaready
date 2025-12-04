@@ -48,7 +48,7 @@ export default function AdminOrdersPage() {
     try {
       const res = await fetch('/api/admin/orders?limit=100');
       const data = await res.json();
-      setOrders(data.data);
+      setOrders(data.orders);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
@@ -125,7 +125,7 @@ export default function AdminOrdersPage() {
                 <td className="px-6 py-4 text-sm">{order.email}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{order.itemCount}</td>
                 <td className="px-6 py-4 text-sm font-medium">
-                  {(order.total / 100).toLocaleString('cs-CZ')} Kč
+                  {order.total.toLocaleString('cs-CZ')} Kč
                 </td>
                 <td className="px-6 py-4 text-sm">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.orderStatus)}`}>

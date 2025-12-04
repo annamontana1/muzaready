@@ -8,7 +8,9 @@ interface Order {
   id: string;
   email: string;
   total: number;
-  status: string;
+  orderStatus: string;
+  paymentStatus: string;
+  deliveryStatus: string;
   createdAt: string;
 }
 
@@ -48,37 +50,97 @@ export default function AdminDashboard() {
   const totalProducts = products.length;
   const totalOrders = orders.length;
   const totalRevenue = orders.reduce((sum: number, order: Order) => sum + (order.total || 0), 0);
-  const pendingOrders = orders.filter((o: Order) => o.status === 'pending').length;
+  const pendingOrders = orders.filter((o: Order) => o.orderStatus === 'pending').length;
 
   const formatCzech = (date: string | Date) => {
     return formatDistanceToNow(new Date(date), { addSuffix: true, locale: cs });
   };
 
-  const getStatusColor = (status: string) => {
+  const getOrderStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
         return 'bg-orange-100 text-orange-800';
-      case 'paid':
+      case 'processing':
         return 'bg-blue-100 text-blue-800';
-      case 'shipped':
-        return 'bg-purple-100 text-purple-800';
-      case 'delivered':
+      case 'completed':
         return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const getStatusLabel = (status: string) => {
+  const getPaymentStatusColor = (status: string) => {
+    switch (status) {
+      case 'unpaid':
+        return 'bg-red-100 text-red-800';
+      case 'paid':
+        return 'bg-green-100 text-green-800';
+      case 'partial':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'refunded':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getDeliveryStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'Čeká na platbu';
+        return 'bg-orange-100 text-orange-800';
+      case 'shipped':
+        return 'bg-purple-100 text-purple-800';
+      case 'delivered':
+        return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getOrderStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Čeká na zpracování';
+      case 'processing':
+        return 'Zpracovává se';
+      case 'completed':
+        return 'Dokončeno';
+      case 'cancelled':
+        return 'Zrušeno';
+      default:
+        return status;
+    }
+  };
+
+  const getPaymentStatusLabel = (status: string) => {
+    switch (status) {
+      case 'unpaid':
+        return 'Nezaplaceno';
       case 'paid':
         return 'Zaplaceno';
+      case 'partial':
+        return 'Částečně zaplaceno';
+      case 'refunded':
+        return 'Vráceno';
+      default:
+        return status;
+    }
+  };
+
+  const getDeliveryStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Čeká na odeslání';
       case 'shipped':
         return 'Odesláno';
       case 'delivered':
         return 'Doručeno';
+      case 'cancelled':
+        return 'Zrušeno';
       default:
         return status;
     }
@@ -156,7 +218,10 @@ export default function AdminDashboard() {
                   Cena
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Status
+                  Objednávka
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                  Platba
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
                   Datum
@@ -166,7 +231,7 @@ export default function AdminDashboard() {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-gray-600">
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-600">
                     Zatím nejsou žádné objednávky
                   </td>
                 </tr>
@@ -182,11 +247,20 @@ export default function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                          order.status
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${getOrderStatusColor(
+                          order.orderStatus
                         )}`}
                       >
-                        {getStatusLabel(order.status)}
+                        {getOrderStatusLabel(order.orderStatus)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(
+                          order.paymentStatus
+                        )}`}
+                      >
+                        {getPaymentStatusLabel(order.paymentStatus)}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">

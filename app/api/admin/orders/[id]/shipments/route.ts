@@ -123,6 +123,8 @@ export async function POST(
       data: {
         deliveryStatus: 'shipped',
         lastStatusChangeAt: new Date(),
+        trackingNumber: trackingNumber,
+        shippedAt: new Date(),
         // Store shipment data as JSON if your schema supports it
         // Otherwise, you might want to create a separate Shipment model
       },

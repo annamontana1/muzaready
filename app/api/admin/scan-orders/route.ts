@@ -96,8 +96,9 @@ export async function POST(request: NextRequest) {
         deliveryMethod,
 
         // Status
-        status: 'awaiting_payment',
+        orderStatus: 'pending',
         paymentStatus: 'unpaid',
+        deliveryStatus: 'pending',
         paymentMethod: paymentMethod || undefined,
 
         // Order details
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
             grams: item.quantity * 10, // Assume 10g per unit (placeholder)
             lineTotal: item.price * item.quantity,
             saleMode: item.sku.saleMode,
-            ending: item.sku.ending || 'NONE',
+            ending: (item.sku.ending || 'NONE') as any,
           })),
         },
       },
@@ -163,7 +164,9 @@ export async function POST(request: NextRequest) {
           email: order.email,
           total: order.total,
           itemCount: order.items.length,
-          status: order.status,
+          orderStatus: order.orderStatus,
+          paymentStatus: order.paymentStatus,
+          deliveryStatus: order.deliveryStatus,
           createdAt: order.createdAt,
         },
       },

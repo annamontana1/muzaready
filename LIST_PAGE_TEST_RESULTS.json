@@ -1,0 +1,230 @@
+{
+  "timestamp": "2025-12-04T17:58:38.818Z",
+  "results": {
+    "total": 52,
+    "passed": 52,
+    "failed": 0,
+    "passRate": 100,
+    "score": 10
+  },
+  "tests": [
+    {
+      "name": "1.1 - Imports useOrders and useBulkAction from lib/queries/orders",
+      "status": "PASS"
+    },
+    {
+      "name": "1.2 - No longer imports useEffect or useCallback",
+      "status": "PASS"
+    },
+    {
+      "name": "1.3 - No longer imports OrdersResponse type",
+      "status": "PASS"
+    },
+    {
+      "name": "1.4 - No useState for orders array",
+      "status": "PASS"
+    },
+    {
+      "name": "1.5 - No useState for loading boolean",
+      "status": "PASS"
+    },
+    {
+      "name": "1.6 - No useState for totalItems",
+      "status": "PASS"
+    },
+    {
+      "name": "1.7 - No fetchOrders callback",
+      "status": "PASS"
+    },
+    {
+      "name": "1.8 - No useEffect hook",
+      "status": "PASS"
+    },
+    {
+      "name": "2.1 - Calls useOrders() hook",
+      "status": "PASS"
+    },
+    {
+      "name": "2.2 - Destructures data and isLoading from useOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "2.3 - Passes limit to useOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "2.4 - Passes offset to useOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "2.5 - Passes filters to useOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "2.6 - Passes sort to useOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "2.7 - Derives orders from data?.orders",
+      "status": "PASS"
+    },
+    {
+      "name": "2.8 - Derives totalItems from data?.total",
+      "status": "PASS"
+    },
+    {
+      "name": "2.9 - Calls useBulkAction() hook",
+      "status": "PASS"
+    },
+    {
+      "name": "2.10 - Uses isLoading instead of loading variable",
+      "status": "PASS"
+    },
+    {
+      "name": "3.1 - handleFilterChange does NOT call fetchOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "3.2 - handleFilterChange has comment about React Query auto-refetch",
+      "status": "PASS"
+    },
+    {
+      "name": "3.3 - executeBulkAction uses bulkActionMutation.mutateAsync",
+      "status": "PASS"
+    },
+    {
+      "name": "3.4 - executeBulkAction passes action and orderIds",
+      "status": "PASS"
+    },
+    {
+      "name": "3.5 - executeBulkAction does NOT call fetchOrders",
+      "status": "PASS"
+    },
+    {
+      "name": "3.6 - executeBulkAction has comment about auto cache invalidation",
+      "status": "PASS"
+    },
+    {
+      "name": "4.1 - Stats calculated from orders array",
+      "status": "PASS"
+    },
+    {
+      "name": "4.2 - Stats has totalRevenue calculation",
+      "status": "PASS"
+    },
+    {
+      "name": "4.3 - Stats has pendingCount calculation",
+      "status": "PASS"
+    },
+    {
+      "name": "4.4 - Stats has paidCount calculation",
+      "status": "PASS"
+    },
+    {
+      "name": "4.5 - Stats has shippedCount calculation",
+      "status": "PASS"
+    },
+    {
+      "name": "4.6 - Stats has comment acknowledging per-page limitation",
+      "status": "PASS"
+    },
+    {
+      "name": "5.1 - Still has Filters component",
+      "status": "PASS"
+    },
+    {
+      "name": "5.2 - Still has BulkActions component",
+      "status": "PASS"
+    },
+    {
+      "name": "5.3 - Still has Pagination component",
+      "status": "PASS"
+    },
+    {
+      "name": "5.4 - Still has CSV export logic",
+      "status": "PASS"
+    },
+    {
+      "name": "5.5 - Still has selection state (selectedIds)",
+      "status": "PASS"
+    },
+    {
+      "name": "5.6 - Still has confirmation dialog",
+      "status": "PASS"
+    },
+    {
+      "name": "5.7 - Still has keyboard shortcut (useSearchShortcut)",
+      "status": "PASS"
+    },
+    {
+      "name": "5.8 - Still has helper functions (getStatusColor, getStatusLabel, formatPrice)",
+      "status": "PASS"
+    },
+    {
+      "name": "6.1 - File is TypeScript (.tsx extension)",
+      "status": "PASS"
+    },
+    {
+      "name": "6.2 - Has \"use client\" directive",
+      "status": "PASS"
+    },
+    {
+      "name": "6.3 - Filter state uses FilterState type",
+      "status": "PASS"
+    },
+    {
+      "name": "6.4 - Pagination uses number type",
+      "status": "PASS"
+    },
+    {
+      "name": "7.1 - useOrders hook exists in lib/queries/orders.ts",
+      "status": "PASS"
+    },
+    {
+      "name": "7.2 - useOrders accepts OrderListParams",
+      "status": "PASS"
+    },
+    {
+      "name": "7.3 - useOrders uses query keys factory",
+      "status": "PASS"
+    },
+    {
+      "name": "7.4 - useOrders has placeholderData for smooth transitions",
+      "status": "PASS"
+    },
+    {
+      "name": "7.5 - useBulkAction exists in lib/queries/orders.ts",
+      "status": "PASS"
+    },
+    {
+      "name": "7.6 - useBulkAction invalidates all order lists",
+      "status": "PASS"
+    },
+    {
+      "name": "7.7 - useBulkAction invalidates all order details",
+      "status": "PASS"
+    },
+    {
+      "name": "8.1 - File is less than 552 lines (original size)",
+      "status": "PASS"
+    },
+    {
+      "name": "8.2 - File is approximately 450-500 lines",
+      "status": "PASS"
+    },
+    {
+      "name": "8.3 - Reduced useState hooks (from 11 to ~7)",
+      "status": "PASS"
+    }
+  ],
+  "files": {
+    "listPage": "/Users/zen/muzaready/app/admin/objednavky/page.tsx",
+    "queryHooks": "/Users/zen/muzaready/lib/queries/orders.ts"
+  },
+  "metrics": {
+    "originalLines": 552,
+    "newLines": 498,
+    "reduction": 54,
+    "reductionPercent": "9.8%"
+  }
+}

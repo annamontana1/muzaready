@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Prevent double-processing: if order is already paid, return success
-    if (order.status === 'paid') {
+    if (order.paymentStatus === 'paid') {
       console.log(`Order ${orderId} already paid (idempotent)`);
       return NextResponse.json(
         { success: true, message: 'Order already paid (idempotent)' },
@@ -66,11 +66,12 @@ export async function POST(request: NextRequest) {
 
     // Use a transaction to atomically update order status and deduct stock
     const result = await prisma.$transaction(async (tx) => {
-      // Update order status to 'paid'
+      // Update order and payment status to 'paid'
       const updatedOrder = await tx.order.update({
         where: { id: orderId },
         data: {
-          status: 'paid',
+          orderStatus: 'paid',
+          paymentStatus: 'paid',
           updatedAt: new Date(),
         },
         include: {
@@ -140,7 +141,8 @@ export async function POST(request: NextRequest) {
         success: true,
         message: 'Payment confirmed and stock deducted',
         orderId,
-        orderStatus: result.status,
+        orderStatus: result.orderStatus,
+        paymentStatus: result.paymentStatus,
       },
       { status: 200 }
     );

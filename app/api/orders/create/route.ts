@@ -48,7 +48,16 @@ export async function POST(request: NextRequest) {
     const order = await prisma.order.create({
       data: {
         email: body.email.trim(),
-        status: 'awaiting_payment',
+        firstName: body.firstName || 'Customer',
+        lastName: body.lastName || '',
+        streetAddress: body.streetAddress || 'Unknown',
+        city: body.city || 'Unknown',
+        zipCode: body.zipCode || '00000',
+        country: 'CZ',
+        orderStatus: 'pending',
+        paymentStatus: 'unpaid',
+        deliveryStatus: 'pending',
+        subtotal: subtotal / 100,
         total: total / 100, // Konverze z haléřů na koruny
       },
     });
@@ -59,7 +68,8 @@ export async function POST(request: NextRequest) {
         orderId: order.id,
         email: order.email,
         total: total / 100, // Vrátíme vypočítaný total z požadavku
-        status: order.status,
+        orderStatus: order.orderStatus,
+        paymentStatus: order.paymentStatus,
         message: 'Objednávka byla úspěšně vytvořena. Čekáme na vaši platbu.',
       },
       { status: 201 }
