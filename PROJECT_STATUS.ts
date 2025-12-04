@@ -72,12 +72,14 @@ export const PROJECT_STATUS = {
   backend: {
     percentage: 100,
     status: 'COMPLETE',
-    endpoints: 30,
-    working: 30,
+    endpoints: 46,
+    working: 46,
     failing: 0,
+    databaseModels: 15,
     database: 'Prisma + Turso (libSQL)',
-    authentication: 'WORKING',
+    authentication: 'Admin + User auth working',
     payments: 'GoPay integrated',
+    healthChecks: '/api/ok + /api/health',
   },
 
   // Build
@@ -122,6 +124,7 @@ export const PROJECT_STATUS = {
     current: [
       'START_HERE.md',
       'PROJECT_STATUS.md',
+      'BACKEND_STATUS.md',
       'FRONTEND_PROGRESS_REPORT.md',
       'TESTING_COMPLETE.md',
       'CHECKLIST.md',
