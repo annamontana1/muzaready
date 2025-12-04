@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/orders
@@ -24,7 +25,8 @@ export async function GET(request: NextRequest) {
   if (authError) return authError;
 
   try {
-    const { searchParams } = new URL(request.url);
+    // Use request.nextUrl.searchParams instead of new URL(request.url)
+    const searchParams = request.nextUrl.searchParams;
 
     // Extract and validate filters
     const orderStatus = searchParams.get('orderStatus');

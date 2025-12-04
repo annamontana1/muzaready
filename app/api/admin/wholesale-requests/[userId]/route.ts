@@ -18,7 +18,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
-  const { searchParams } = new URL(request.url);
+  const searchParams = request.nextUrl.searchParams;
   const action = searchParams.get('action'); // 'approve' or 'reject'
 
   try {

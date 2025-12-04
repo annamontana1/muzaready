@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/scan-sku?sku=VLASYX-BULK-001
@@ -10,8 +11,8 @@ export const runtime = 'nodejs';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const skuCode = searchParams.get('sku');
+    // Use request.nextUrl.searchParams instead of new URL(request.url)
+    const skuCode = request.nextUrl.searchParams.get('sku');
 
     if (!skuCode) {
       return NextResponse.json(
