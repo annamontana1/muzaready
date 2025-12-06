@@ -2,9 +2,19 @@
 
 **Task:** Fix Vercel deployment by adding missing environment variables
 
-**Current Problem:** All Vercel deployments fail with `PrismaClientInitializationError` because environment variables are missing.
+**Current Problem:** All Vercel deployments fail with database connection errors because environment variables are missing.
 
-**Solution:** Add 3 environment variables to Vercel project settings
+**Solution:** Add environment variables to Vercel project settings
+
+---
+
+## ⚠️ IMPORTANT: DATABASE TYPE
+
+**This project uses SUPABASE PostgreSQL, NOT Turso!**
+
+- Database: Supabase PostgreSQL
+- Host: `db.bcbqrhkoosopmtrryrcy.supabase.co`
+- Port: 5432 (default PostgreSQL)
 
 ---
 
@@ -36,7 +46,7 @@ DATABASE_URL
 
 **Value:**
 ```
-libsql://lg-jevgone.aws-ap-south-1.turso.io
+postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?schema=public
 ```
 
 **Environments:** (check ALL 3 checkboxes)
@@ -48,30 +58,7 @@ Click **"Save"** button
 
 ---
 
-## STEP 4: Add Environment Variable #2 - TURSO_AUTH_TOKEN
-
-Click **"Add New"** button again and enter:
-
-**Key (Name):**
-```
-TURSO_AUTH_TOKEN
-```
-
-**Value:**
-```
-eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzI4OTI4NDYsImlkIjoiMzMwYzA2MWItNzBiYi00ZGJiLThiNzAtZWQwY2ExNmE0YzJmIn0.B03p0SIx3XN2kaSPIQS4yiJ37wtkz5O90NRmNUXCNSWOPPHBd0_-xHw03k9WLJcbglCcnk7Q6B-1ykMB9UvJDA
-```
-
-**Environments:** (check ALL 3 checkboxes)
-- ☑ Production
-- ☑ Preview
-- ☑ Development
-
-Click **"Save"** button
-
----
-
-## STEP 5: Add Environment Variable #3 - SESSION_SECRET
+## STEP 4: Add Environment Variable #2 - SESSION_SECRET
 
 Click **"Add New"** button again and enter:
 
@@ -94,19 +81,74 @@ Click **"Save"** button
 
 ---
 
-## STEP 6: Verify Environment Variables
+## STEP 5: (Optional) Add DIRECT_URL for Better Performance
 
-After adding all 3 variables, you should see this list:
+Click **"Add New"** button again and enter:
 
-1. `DATABASE_URL` - libsql://lg-jevgone.aws-ap-south-1.turso.io
-2. `TURSO_AUTH_TOKEN` - eyJhbGciOiJFZERTQSIsInR5...
-3. `SESSION_SECRET` - muzaready-super-secret-session-key-production-2025-v1
+**Key (Name):**
+```
+DIRECT_URL
+```
+
+**Value:**
+```
+postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?sslmode=require
+```
+
+**Environments:** (check ALL 3 checkboxes)
+- ☑ Production
+- ☑ Preview
+- ☑ Development
+
+Click **"Save"** button
+
+**Why DIRECT_URL?**
+- Provides direct connection to PostgreSQL (bypasses connection pooler)
+- Used for health checks and migrations
+- More reliable for diagnostic endpoints
+
+---
+
+## STEP 6: (Optional) Add RESEND_API_KEY
+
+If you have Resend API key for emails:
+
+**Key (Name):**
+```
+RESEND_API_KEY
+```
+
+**Value:**
+```
+[Your Resend API key]
+```
+
+**Environments:** (check ALL 3 checkboxes)
+- ☑ Production
+- ☑ Preview
+- ☑ Development
+
+Click **"Save"** button
+
+---
+
+## STEP 7: Verify Environment Variables
+
+After adding variables, you should see this list:
+
+**REQUIRED:**
+1. `DATABASE_URL` - postgresql://postgres:***@db.bcbqrhkoosopmtrryrcy...
+2. `SESSION_SECRET` - muzaready-super-secret-session-key-production-2025-v1
+
+**OPTIONAL:**
+3. `DIRECT_URL` - postgresql://postgres:***@db.bcbqrhkoosopmtrryrcy...
+4. `RESEND_API_KEY` - (if you have one)
 
 All should have: Production ✓, Preview ✓, Development ✓
 
 ---
 
-## STEP 7: Trigger Redeploy
+## STEP 8: Trigger Redeploy
 
 **Option A: Automatic (Recommended)**
 - Vercel will automatically detect the new environment variables
@@ -123,7 +165,7 @@ All should have: Production ✓, Preview ✓, Development ✓
 
 ---
 
-## STEP 8: Wait for Deployment
+## STEP 9: Wait for Deployment
 
 1. Stay on **"Deployments"** tab
 2. Watch the deployment status
@@ -132,7 +174,7 @@ All should have: Production ✓, Preview ✓, Development ✓
 
 ---
 
-## STEP 9: Verify Deployment Success
+## STEP 10: Verify Deployment Success
 
 **If deployment shows "Ready" (green):**
 1. ✅ Click on the deployment
@@ -157,18 +199,24 @@ All should have: Production ✓, Preview ✓, Development ✓
 
 2. **Verify Environment Variables:**
    - Settings → Environment Variables
-   - Confirm all 3 are there
+   - Confirm DATABASE_URL and SESSION_SECRET are there
    - Confirm all have Production + Preview + Development checked
 
 3. **Check for typos:**
    - `DATABASE_URL` (no spaces, exact spelling)
-   - `TURSO_AUTH_TOKEN` (no spaces, exact spelling)
    - `SESSION_SECRET` (no spaces, exact spelling)
+   - Database password: `amobenecanto8A` (case-sensitive!)
 
 4. **Try clearing build cache:**
    - Deployments → ... → Redeploy
    - UNCHECK "Use existing Build Cache"
    - Redeploy
+
+5. **Database Connection Issues:**
+   - Error: "Can't reach database server"
+   - Solution: Verify Supabase project is active
+   - Check: https://supabase.com/dashboard
+   - Ensure project `bcbqrhkoosopmtrryrcy` is not paused
 
 ---
 
@@ -180,6 +228,7 @@ After completing these steps:
 - ✅ New deployment succeeds (green "Ready" status)
 - ✅ Website is accessible at production URL
 - ✅ API endpoints work (e.g., /api/ok returns {"ok":true})
+- ✅ Database connection works
 - ✅ Admin panel is accessible (may need login)
 
 ---
@@ -200,6 +249,10 @@ After completing these steps:
    - Visit: https://[your-domain].vercel.app/api/ok
    - Should return: {"ok":true}
 
+4. Check database health:
+   - Visit: https://[your-domain].vercel.app/api/health
+   - Should return: {"ok":true,"db":"up"}
+
 ---
 
 ## IMPORTANT NOTES
@@ -208,8 +261,9 @@ After completing these steps:
 - ⚠️ **Do NOT** skip any checkboxes - all 3 environments must be checked
 - ⚠️ **Do NOT** add extra spaces or line breaks in values
 - ⚠️ **Do NOT** put quotes around values (Vercel adds them automatically)
+- ⚠️ **Database password is case-sensitive**: `amobenecanto8A`
 - ✅ **Do** wait for auto-redeploy (30-60 seconds) before manual redeploy
-- ✅ **Do** check that all 3 variables are saved before redeploying
+- ✅ **Do** check that all variables are saved before redeploying
 
 ---
 
@@ -218,11 +272,16 @@ After completing these steps:
 **What you need to do:**
 1. Access Vercel dashboard
 2. Navigate to: Settings → Environment Variables
-3. Add 3 environment variables (exact values above)
-4. Check all 3 environment checkboxes for each
-5. Save each variable
-6. Wait for auto-redeploy (or trigger manual redeploy)
-7. Verify deployment succeeds
+3. Add 2 required environment variables (exact values above):
+   - DATABASE_URL (Supabase PostgreSQL)
+   - SESSION_SECRET
+4. Add 2 optional environment variables:
+   - DIRECT_URL (for better performance)
+   - RESEND_API_KEY (if available)
+5. Check all 3 environment checkboxes for each
+6. Save each variable
+7. Wait for auto-redeploy (or trigger manual redeploy)
+8. Verify deployment succeeds
 
 **Total time:** 5 minutes
 
@@ -235,19 +294,39 @@ After completing these steps:
 Copy these EXACTLY:
 
 ```env
-DATABASE_URL=libsql://lg-jevgone.aws-ap-south-1.turso.io
-
-TURSO_AUTH_TOKEN=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzI4OTI4NDYsImlkIjoiMzMwYzA2MWItNzBiYi00ZGJiLThiNzAtZWQwY2ExNmE0YzJmIn0.B03p0SIx3XN2kaSPIQS4yiJ37wtkz5O90NRmNUXCNSWOPPHBd0_-xHw03k9WLJcbglCcnk7Q6B-1ykMB9UvJDA
+# REQUIRED
+DATABASE_URL=postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?schema=public
 
 SESSION_SECRET=muzaready-super-secret-session-key-production-2025-v1
+
+# OPTIONAL (but recommended)
+DIRECT_URL=postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?sslmode=require
+
+# OPTIONAL (if you have Resend account)
+RESEND_API_KEY=[Your Resend API key if available]
 ```
 
 Each variable needs: Production ✓, Preview ✓, Development ✓
 
 ---
 
-**Created:** December 4, 2025
+## DATABASE INFO
+
+**Database Type:** Supabase PostgreSQL
+**Host:** db.bcbqrhkoosopmtrryrcy.supabase.co
+**Port:** 5432 (standard PostgreSQL port)
+**Database:** postgres
+**Schema:** public
+**Username:** postgres
+**Password:** amobenecanto8A
+
+**Supabase Dashboard:**
+https://supabase.com/dashboard/project/bcbqrhkoosopmtrryrcy
+
+---
+
+**Created:** December 6, 2025
 **For:** AI Agent to fix Vercel deployment
 **Repository:** https://github.com/annamontana1/muzaready
 **Branch:** main
-**Last Commit:** 4eb18e0
+**Database:** Supabase PostgreSQL (NOT Turso!)
