@@ -3,9 +3,6 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-<<<<<<< HEAD
-import { Order, OrderItem } from '../types';
-=======
 import { useOrder } from '@/lib/queries/orders';
 import OrderHeader from './components/OrderHeader';
 import CustomerSection from './components/CustomerSection';
@@ -68,7 +65,6 @@ interface Order {
   lastStatusChangeAt: string | null;
   items: OrderItem[];
 }
->>>>>>> 2f26bf03adc91ad3c32e8f8433eb15b30a1a7b7a
 
 type TabType = 'customer' | 'items' | 'payment' | 'shipments' | 'metadata';
 
@@ -80,19 +76,7 @@ export default function OrderDetailsPage() {
   // Type assertion: useOrder returns simplified Order, but we need full Order with all fields
   const { data: order, isLoading, error } = useOrder(orderId) as { data: Order | undefined; isLoading: boolean; error: Error | null };
 
-<<<<<<< HEAD
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const response = await fetch(`/api/admin/orders/${orderId}`);
-        if (!response.ok) {
-          setError('Objednávka nebyla nalezena');
-          setLoading(false);
-          return;
-        }
-=======
   const [activeTab, setActiveTab] = useState<TabType>('customer');
->>>>>>> 2f26bf03adc91ad3c32e8f8433eb15b30a1a7b7a
 
   if (isLoading) {
     return (
