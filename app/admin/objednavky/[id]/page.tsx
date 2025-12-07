@@ -3,23 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-
-interface OrderItem {
-  id: string;
-  productId: string;
-  quantity: number;
-  price: number;
-  variant: string;
-}
-
-interface Order {
-  id: string;
-  email: string;
-  status: string;
-  total: number;
-  createdAt: string;
-  items: OrderItem[];
-}
+import { Order, OrderItem } from '../types';
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -33,7 +17,7 @@ export default function OrderDetailsPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/orders/${orderId}`);
+        const response = await fetch(`/api/admin/orders/${orderId}`);
         if (!response.ok) {
           setError('Objednávka nebyla nalezena');
           setLoading(false);

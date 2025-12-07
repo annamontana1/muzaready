@@ -3,15 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-
-interface Order {
-  id: string;
-  email: string;
-  status: string;
-  total: number;
-  createdAt: string;
-  items: any[];
-}
+import { Order, StatusUpdatePayload } from '../types';
 
 export default function EditOrderPage() {
   const params = useParams();
@@ -24,14 +16,14 @@ export default function EditOrderPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<StatusUpdatePayload>({
     status: '',
   });
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/orders/${orderId}`);
+        const response = await fetch(`/api/admin/orders/${orderId}`);
         if (!response.ok) {
           setError('Objednávka nebyla nalezena');
           setLoading(false);
@@ -67,7 +59,7 @@ export default function EditOrderPage() {
     setSuccess('');
 
     try {
-      const response = await fetch(`/api/orders/${orderId}`, {
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
