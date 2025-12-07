@@ -2,7 +2,7 @@
 
 **Priority:** HIGH - Production deployment is failing
 **Estimated Time:** 10 minutes
-**Difficulty:** Medium (requires finding existing Turso credentials)
+**Difficulty:** Medium (requires Supabase credentials)
 
 ---
 
@@ -11,72 +11,62 @@
 **Project:** muzaready (e-commerce platform for hair extensions)
 **Status:** Frontend & Backend 100% complete, all 241 tests passing
 **Problem:** Vercel deployment fails because environment variables are missing
-**Database:** Turso (serverless SQLite via LibSQL protocol)
+**Database:** Supabase PostgreSQL (paid plan)
 
 ---
 
 ## 🎯 YOUR TASK
 
-1. **Find your existing Turso database credentials** (you should already have these)
+1. **Get your Supabase database credentials** (from Supabase dashboard)
 2. Add 3 environment variables to Vercel project settings
-3. Trigger a redeploy
+3. Run database migrations
+4. Trigger a redeploy
 
 **After completion:** The website will be live at your Vercel production URL.
 
 ---
 
-## ⚠️ IMPORTANT: Use YOUR Turso Credentials
+## ⚠️ IMPORTANT: Use YOUR Supabase Credentials
 
-**DO NOT use credentials from this repository's documentation files!**
+**DO NOT use example credentials from documentation!**
 
-You need to use **YOUR OWN Turso database** that you've been using for this project.
-
-If you don't have Turso credentials yet, you'll need to:
-1. Create a Turso account at https://turso.tech
-2. Create a new database for muzaready
-3. Generate an auth token
+You need to use **YOUR OWN Supabase database** credentials.
 
 ---
 
-## 🔍 STEP 0: Find Your Existing Turso Credentials
+## 🔍 STEP 0: Get Your Supabase Credentials
 
-### Option A: Check Your Local Environment Files
+### Option A: Supabase Dashboard (Recommended)
 
-Look in your local project directory for these files:
-- `.env.local`
-- `.env.production`
-- `.env`
-
-Search for variables like:
-```bash
-DATABASE_URL=libsql://...
-TURSO_AUTH_TOKEN=eyJ...
-TURSO_DATABASE_URL=libsql://...
-```
-
-### Option B: Check Turso Dashboard
-
-1. Go to https://turso.tech
+1. Go to https://supabase.com/dashboard
 2. Login to your account
-3. Find your muzaready database (or whatever you named it)
-4. Click on the database
-5. Look for:
-   - **Database URL** (starts with `libsql://`)
-   - **Auth Token** (click "Create Token" if you don't have one)
+3. Find your **muzaready** project (or the project for this application)
+4. Go to **Project Settings** (gear icon in sidebar)
+5. Click **Database** in the left menu
+6. Copy these values:
 
-### Option C: Use Turso CLI
+**Connection String (URI):**
+- Look for "Connection string" section
+- Choose **"Session mode"** (port 5432)
+- Format: `postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:5432/postgres`
+- This will be your **DATABASE_URL**
 
-If you have Turso CLI installed:
+**Direct URL (for migrations):**
+- Same as above (Session mode uses port 5432 - direct connection)
+- This will be your **DIRECT_URL**
+- Can be the same as DATABASE_URL for Supabase
 
+**Connection Pooler (optional, better performance):**
+- Choose **"Transaction mode"** (port 6543)
+- Format: `postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:6543/postgres`
+- Use this as DATABASE_URL for better performance under load
+
+### Option B: From Local Environment Files
+
+Check your local `.env.local` or `.env.production` files for:
 ```bash
-# List your databases
-turso db list
-
-# Get database URL (replace YOUR-DB-NAME with your database name)
-turso db show YOUR-DB-NAME
-
-# Create auth token
-turso db tokens create YOUR-DB-NAME
+DATABASE_URL=postgresql://...
+DIRECT_URL=postgresql://...
 ```
 
 ---
@@ -88,20 +78,21 @@ turso db tokens create YOUR-DB-NAME
 You need these 3 values:
 
 **1. DATABASE_URL**
-- Format: `libsql://YOUR-DATABASE-NAME.turso.io` or similar
-- Example: `libsql://muzaready-prod.turso.io`
-- Should start with `libsql://`
+- Format: `postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:6543/postgres`
+- Port 6543 = Transaction pooler (recommended for app)
+- OR Port 5432 = Direct connection (simpler, works fine)
 
-**2. TURSO_AUTH_TOKEN**
-- Format: A long JWT token starting with `eyJ`
-- Example: `eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9...` (very long string)
-- Should be 200+ characters
+**2. DIRECT_URL**
+- Format: `postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:5432/postgres`
+- Port 5432 = Direct connection (required for migrations)
+- Must use port 5432, NOT 6543
 
 **3. SESSION_SECRET**
 - Any secure random string (32+ characters recommended)
-- Example: `muzaready-production-secret-key-2025-secure`
-- If you already have one, use the same one
-- If not, generate a new secure random string
+- Generate new if you don't have one:
+  ```bash
+  openssl rand -base64 32
+  ```
 
 ---
 
@@ -109,7 +100,7 @@ You need these 3 values:
 
 1. Open browser and go to: **https://vercel.com**
 2. Login to your Vercel account
-3. Find the project named **"muzaready"** (or similar)
+3. Find the project named **"muzaready"**
 4. Click on the project to open it
 
 ---
@@ -118,13 +109,13 @@ You need these 3 values:
 
 1. In the project page, click the **"Settings"** tab (top navigation bar)
 2. In the left sidebar, click **"Environment Variables"**
-3. You should now see the Environment Variables page with an **"Add New"** button
+3. You should now see the Environment Variables page
 
 ---
 
 ### STEP 4: Add Environment Variable #1 - DATABASE_URL
 
-Click the **"Add New"** button and enter:
+Click **"Add New"** button and enter:
 
 **Name/Key:**
 ```
@@ -133,48 +124,52 @@ DATABASE_URL
 
 **Value:**
 ```
-[YOUR Turso database URL - starts with libsql://]
+postgresql://postgres.[YOUR-REF]:[YOUR-PASSWORD]@db.[YOUR-REF].supabase.co:6543/postgres
 ```
 
-**Environments to apply:** (check ALL 3 checkboxes)
+Replace:
+- `[YOUR-REF]` with your Supabase project reference
+- `[YOUR-PASSWORD]` with your database password
+
+**Environments:** (check ALL 3)
 - ☑ Production
 - ☑ Preview
 - ☑ Development
 
-Click **"Save"** button.
+Click **"Save"**
 
-⚠️ **IMPORTANT:** Use YOUR database URL, not someone else's!
+⚠️ **TIP:** Use port **6543** (pooler) for better performance, or **5432** (direct) if simpler
 
 ---
 
-### STEP 5: Add Environment Variable #2 - TURSO_AUTH_TOKEN
+### STEP 5: Add Environment Variable #2 - DIRECT_URL
 
-Click the **"Add New"** button again and enter:
+Click **"Add New"** button again and enter:
 
 **Name/Key:**
 ```
-TURSO_AUTH_TOKEN
+DIRECT_URL
 ```
 
 **Value:**
 ```
-[YOUR Turso auth token - starts with eyJ and is very long]
+postgresql://postgres.[YOUR-REF]:[YOUR-PASSWORD]@db.[YOUR-REF].supabase.co:5432/postgres
 ```
 
-**Environments to apply:** (check ALL 3 checkboxes)
+⚠️ **IMPORTANT:** MUST use port **5432** (direct connection) for migrations!
+
+**Environments:** (check ALL 3)
 - ☑ Production
 - ☑ Preview
 - ☑ Development
 
-Click **"Save"** button.
-
-⚠️ **IMPORTANT:** Use YOUR auth token! This is a secret credential.
+Click **"Save"**
 
 ---
 
 ### STEP 6: Add Environment Variable #3 - SESSION_SECRET
 
-Click the **"Add New"** button one more time and enter:
+Click **"Add New"** button one more time:
 
 **Name/Key:**
 ```
@@ -183,306 +178,275 @@ SESSION_SECRET
 
 **Value:**
 ```
-[YOUR session secret - a secure random string]
+[YOUR-SECURE-RANDOM-STRING]
 ```
 
-**Environments to apply:** (check ALL 3 checkboxes)
+Generate with:
+```bash
+openssl rand -base64 32
+```
+
+**Environments:** (check ALL 3)
 - ☑ Production
 - ☑ Preview
 - ☑ Development
 
-Click **"Save"** button.
+Click **"Save"**
 
-**If you need to generate a secure SESSION_SECRET**, use one of these methods:
+---
+
+### STEP 7: Run Database Migrations
+
+**CRITICAL:** Before deploying, you MUST run Prisma migrations to create database tables.
+
+**Option A: Run Locally (Recommended)**
+
+On your local machine:
 
 ```bash
-# Option 1: OpenSSL (Mac/Linux)
-openssl rand -base64 32
+# 1. Set environment variables
+export DATABASE_URL="postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:5432/postgres"
+export DIRECT_URL="postgresql://postgres.[ref]:[password]@db.[ref].supabase.co:5432/postgres"
 
-# Option 2: Node.js
-node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# 2. Run migrations
+npx prisma migrate deploy
 
-# Option 3: Manual (if above don't work)
-# Use any secure random string, at least 32 characters
-# Example: muzaready-prod-secret-$(date +%s)-secure-key
+# Or create initial migration if needed:
+npx prisma migrate dev --name init
 ```
 
+**Option B: Run via Vercel CLI**
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login
+vercel login
+
+# Link project
+vercel link
+
+# Pull environment variables
+vercel env pull .env
+
+# Run migrations
+npx prisma migrate deploy
+```
+
+**What migrations do:**
+- Create all database tables (products, orders, users, etc.)
+- Set up indexes and constraints
+- Prepare database for application
+
 ---
 
-### STEP 7: Verify All Variables Are Saved
+### STEP 8: Verify Variables Are Saved
 
-After adding all 3 variables, scroll through the Environment Variables list and confirm you see:
+In Vercel Environment Variables page, confirm you see:
 
-1. ✅ **DATABASE_URL** = `libsql://YOUR-DATABASE...` (starts with libsql://)
+1. ✅ **DATABASE_URL** = `postgresql://postgres...` (port 6543 or 5432)
    - Production ✓, Preview ✓, Development ✓
 
-2. ✅ **TURSO_AUTH_TOKEN** = `eyJ...` (starts with eyJ, very long)
+2. ✅ **DIRECT_URL** = `postgresql://postgres...` (port 5432)
    - Production ✓, Preview ✓, Development ✓
 
-3. ✅ **SESSION_SECRET** = Your secure secret string
+3. ✅ **SESSION_SECRET** = Your secure random string
    - Production ✓, Preview ✓, Development ✓
-
-If any variable is missing or has wrong values, edit or re-add it.
 
 ---
 
-### STEP 8: Trigger Redeploy
+### STEP 9: Trigger Redeploy
 
-Now that environment variables are configured, trigger a fresh deployment:
-
-**Option A: Automatic (Wait for Auto-Deploy)**
-- Vercel automatically detects new environment variables
+**Option A: Automatic**
 - Wait 30-60 seconds
-- A new deployment should start automatically
-- Skip to Step 9
+- Vercel may auto-deploy after env var changes
 
-**Option B: Manual Redeploy (Recommended)**
-1. Click the **"Deployments"** tab at the top
-2. Find the most recent deployment (may show "Failed" or "Ready")
-3. Click the **three dots "..."** menu on the right side of that deployment
-4. Click **"Redeploy"**
-5. In the modal dialog:
-   - Optional: Check **"Use existing Build Cache"** (faster)
-   - If issues persist, UNCHECK to force fresh build
-   - Click the **"Redeploy"** button
-6. Continue to Step 9
+**Option B: Manual (Recommended)**
+1. Click **"Deployments"** tab
+2. Find most recent deployment
+3. Click **"..."** menu → **"Redeploy"**
+4. Optional: Check **"Use existing Build Cache"**
+5. Click **"Redeploy"**
 
 ---
 
-### STEP 9: Monitor Deployment Progress
+### STEP 10: Monitor Deployment
 
-1. Stay on the **"Deployments"** tab
-2. You should see a new deployment in progress (status: "Building...")
-3. Wait 2-4 minutes for the build to complete
-4. The deployment status should change to:
-   - **"Ready"** with a green checkmark ✅ = SUCCESS
-   - **"Failed"** with a red X = See Troubleshooting below
+1. Stay on **"Deployments"** tab
+2. Watch status (Building... → Ready)
+3. Wait 2-4 minutes
+4. Look for **"Ready"** with green ✅
 
 ---
 
-### STEP 10: Verify Deployment Success
+### STEP 11: Verify Success
 
-Once the deployment shows **"Ready"** (green ✅):
+Once deployment shows **"Ready"**:
 
-1. Click on the successful deployment
-2. Click the **"Visit"** button or copy the production URL
-3. Open the URL in your browser
-4. The website should load successfully
+1. Click on the deployment
+2. Click **"Visit"** button
+3. Website should load
 
-**Test the API health endpoint:**
-
-Visit this URL in your browser (replace `YOUR-DOMAIN` with your actual Vercel domain):
+**Test API:**
 ```
 https://YOUR-DOMAIN.vercel.app/api/ok
 ```
 
-**Expected response:**
+**Expected:**
 ```json
 {"ok":true}
 ```
 
-If you see `{"ok":true}`, **the deployment is successful!** 🎉
+🎉 **Success!**
 
 ---
 
 ## 🎉 SUCCESS CRITERIA
 
-Your task is complete when ALL of these are true:
+Task complete when:
 
-- ✅ You found YOUR Turso database credentials
-- ✅ All 3 environment variables are saved in Vercel (Production + Preview + Development)
-- ✅ A new deployment was triggered (either automatic or manual)
-- ✅ The deployment completed with "Ready" status (green checkmark)
-- ✅ The production URL is accessible in browser
-- ✅ The `/api/ok` endpoint returns `{"ok":true}`
+- ✅ All 3 environment variables saved in Vercel
+- ✅ Database migrations ran successfully
+- ✅ Deployment completed with "Ready" status
+- ✅ Production URL loads
+- ✅ `/api/ok` returns `{"ok":true}`
 
 ---
 
 ## 🔧 TROUBLESHOOTING
 
-### Issue 1: Can't Find My Turso Credentials
-
-**Solution A: Check with project owner/teammate**
-- Ask where the Turso database for muzaready is hosted
-- Get the database URL and auth token from them
-
-**Solution B: Create new Turso database**
-1. Go to https://turso.tech and sign up/login
-2. Create new database (name it "muzaready" or similar)
-3. Copy the database URL (libsql://...)
-4. Create an auth token
-5. Use these new credentials in Vercel
-
-**Solution C: Check Git history**
-- Look for `.env.example` or `.env.production` in the repository
-- Check if there are example values or documentation
-
----
-
-### Issue 2: Deployment Still Fails After Adding Variables
-
-**Symptoms:** Deployment shows "Failed" status, build logs show database errors
+### Issue 1: Can't Find Supabase Credentials
 
 **Solution:**
-1. Go to Settings → Environment Variables
-2. Double-check ALL 3 variables are present with correct values
-3. Verify ALL 3 environments are checked (Production + Preview + Development)
-4. Verify `DATABASE_URL` starts with `libsql://`
-5. Verify `TURSO_AUTH_TOKEN` starts with `eyJ` and is very long
-6. Go to Deployments → Click "..." → **"Redeploy"**
-7. **UNCHECK "Use existing Build Cache"** (force fresh build)
-8. Click "Redeploy"
+1. Go to https://supabase.com/dashboard
+2. Click your project
+3. Settings → Database
+4. Copy "Connection string" (Session or Transaction mode)
 
----
+### Issue 2: Migrations Fail
 
-### Issue 3: Build Logs Show "URL must start with protocol file:"
-
-**Cause:** `DATABASE_URL` is wrong format
+**Error:** "Can't reach database server"
 
 **Solution:**
-1. Verify `DATABASE_URL` starts with `libsql://` (NOT `file://` or `postgresql://`)
-2. Turso databases use `libsql://` protocol
-3. Example correct format: `libsql://my-database-name.turso.io`
+1. Verify DATABASE_URL and DIRECT_URL are correct
+2. Check Supabase project is active (not paused)
+3. Verify database password is correct
+4. Try using port 5432 for both URLs
 
----
+### Issue 3: Wrong Port
 
-### Issue 4: Database Connection Errors in Production
+**Symptoms:** Connection errors, timeout
 
-**Symptoms:** Deployment succeeds but `/api/health` returns errors
+**Ports explained:**
+- **5432** = Direct connection (for migrations, health checks)
+- **6543** = Connection pooler (for app queries, better performance)
 
-**Possible causes:**
-1. Wrong DATABASE_URL (doesn't point to your actual database)
-2. Wrong TURSO_AUTH_TOKEN (expired or invalid)
-3. Database doesn't exist in Turso
+**Fix:**
+- DATABASE_URL: Can use 6543 or 5432
+- DIRECT_URL: MUST use 5432
+
+### Issue 4: Deployment Succeeds But Database Errors
 
 **Solution:**
-1. Verify your Turso database exists and is active
-2. Regenerate auth token if needed
-3. Update Vercel environment variables
-4. Redeploy with cache cleared
+1. Check you ran migrations: `npx prisma migrate deploy`
+2. Verify tables exist in Supabase dashboard: Tables → check tables list
+3. Test connection:
+   ```bash
+   npx prisma db pull
+   ```
 
 ---
 
 ## 📊 VERIFICATION CHECKLIST
 
-Before reporting completion, verify:
+Before reporting completion:
 
-- [ ] I found MY Turso database credentials (DATABASE_URL + AUTH_TOKEN)
-- [ ] I logged into Vercel successfully
-- [ ] I found the muzaready project
-- [ ] I navigated to Settings → Environment Variables
-- [ ] I added `DATABASE_URL` with MY database URL (starts with `libsql://`)
-- [ ] I added `TURSO_AUTH_TOKEN` with MY auth token (starts with `eyJ`)
-- [ ] I added `SESSION_SECRET` with a secure secret string
-- [ ] All 3 variables have Production ✓, Preview ✓, Development ✓ checked
-- [ ] I triggered a redeploy (automatic or manual)
-- [ ] The deployment completed with "Ready" status (green ✅)
-- [ ] I visited the production URL and it loads
-- [ ] I visited `/api/ok` and it returns `{"ok":true}`
+- [ ] I got my Supabase credentials from dashboard
+- [ ] I added `DATABASE_URL` in Vercel (port 6543 or 5432)
+- [ ] I added `DIRECT_URL` in Vercel (port 5432)
+- [ ] I added `SESSION_SECRET` in Vercel
+- [ ] All 3 variables have Production + Preview + Development checked
+- [ ] I ran `npx prisma migrate deploy` successfully
+- [ ] I triggered a Vercel redeploy
+- [ ] Deployment shows "Ready" (green)
+- [ ] Production URL loads
+- [ ] `/api/ok` returns `{"ok":true}`
 
 ---
 
-## 🚨 CRITICAL NOTES FOR AI AGENT
+## 🚨 CRITICAL NOTES
 
 **DO:**
-- ✅ Use YOUR OWN Turso credentials (database + token)
-- ✅ Check all 3 environment checkboxes for each variable
-- ✅ Verify DATABASE_URL starts with `libsql://`
-- ✅ Verify TURSO_AUTH_TOKEN starts with `eyJ`
-- ✅ Wait for deployment to complete (2-4 minutes)
-- ✅ Verify `/api/ok` returns `{"ok":true}` before reporting success
+- ✅ Use YOUR Supabase credentials
+- ✅ Use port 6543 (pooler) or 5432 (direct) for DATABASE_URL
+- ✅ Use port 5432 for DIRECT_URL (required for migrations)
+- ✅ Run migrations before deploying
+- ✅ Check all 3 environment checkboxes
 
 **DON'T:**
-- ❌ Don't use example credentials from documentation
-- ❌ Don't use credentials from other team members' machines
-- ❌ Don't add quotes around values (Vercel adds them automatically)
-- ❌ Don't add extra spaces or line breaks
-- ❌ Don't use `file://` or `postgresql://` protocol (must be `libsql://`)
-- ❌ Don't skip any environment checkboxes (all 3 required)
-- ❌ Don't report success until you've verified `/api/ok` works
+- ❌ Don't use example credentials
+- ❌ Don't use port 6543 for DIRECT_URL (migrations will fail)
+- ❌ Don't skip migrations (app will fail to start)
+- ❌ Don't add quotes around values
 
 ---
 
 ## 📝 EXPECTED OUTCOME
 
-After completing this task:
+After completion:
 
 1. **Vercel Dashboard:**
-   - 3 environment variables visible in Settings (using YOUR credentials)
-   - Latest deployment shows "Ready" (green)
+   - 3 environment variables configured
+   - Latest deployment = "Ready" (green)
 
-2. **Production Website:**
-   - URL: `https://[your-vercel-domain].vercel.app`
-   - Status: Website loads successfully
+2. **Production:**
+   - URL: `https://[domain].vercel.app`
+   - Website loads successfully
    - API: `/api/ok` returns `{"ok":true}`
 
-3. **Project Status:**
-   - Frontend: 100% complete (105 pages built)
-   - Backend: 100% complete (46 API endpoints)
-   - Tests: 241/241 passing
-   - Deployment: ✅ LIVE
+3. **Database:**
+   - All tables created in Supabase
+   - Migrations completed
+   - Connection working
 
 ---
 
-## 📦 TEMPLATE (Fill in YOUR values)
+## 📦 TEMPLATE
 
 ```plaintext
-Variable 1:
-Name: DATABASE_URL
-Value: libsql://[YOUR-DATABASE-NAME].turso.io
-Environments: Production, Preview, Development
+# Get from Supabase Dashboard → Settings → Database
 
-Variable 2:
-Name: TURSO_AUTH_TOKEN
-Value: eyJ[YOUR-VERY-LONG-AUTH-TOKEN-HERE]
-Environments: Production, Preview, Development
+DATABASE_URL=postgresql://postgres.[YOUR-REF]:[YOUR-PASSWORD]@db.[YOUR-REF].supabase.co:6543/postgres
 
-Variable 3:
-Name: SESSION_SECRET
-Value: [YOUR-SECURE-RANDOM-STRING-HERE]
-Environments: Production, Preview, Development
+DIRECT_URL=postgresql://postgres.[YOUR-REF]:[YOUR-PASSWORD]@db.[YOUR-REF].supabase.co:5432/postgres
+
+SESSION_SECRET=[Generate with: openssl rand -base64 32]
 ```
 
 ---
 
-## 🔗 WHERE TO FIND YOUR CREDENTIALS
+## 🔗 RESOURCES
 
-### 1. Turso Dashboard
-- URL: https://turso.tech/app
-- Login with your account
-- Find your muzaready database
-- Copy database URL and create/copy auth token
-
-### 2. Local Development Environment
-- Check `.env.local` or `.env.production` files
-- Look for `DATABASE_URL` and `TURSO_AUTH_TOKEN`
-
-### 3. Ask Project Owner
-- If you're not the database owner
-- Get credentials from the person who set up Turso
-
----
-
-## 📚 ADDITIONAL RESOURCES
-
+**Supabase Dashboard:** https://supabase.com/dashboard
 **GitHub Repository:** https://github.com/annamontana1/muzaready
-**Latest Commit:** 288ddea (Revert to Turso database)
-**Turso Documentation:** https://docs.turso.tech
+**Prisma Docs:** https://pris.ly/d/prisma-migrate
 
 **Project Documentation:**
-- `START_HERE.md` - Project status overview
-- `PROJECT_STATUS.md` - Detailed completion report
-- `BACKEND_STATUS.md` - Backend API documentation
+- `START_HERE.md` - Project status
+- `PROJECT_STATUS.md` - Completion report
+- `BACKEND_STATUS.md` - API documentation
 
 ---
 
 **Created:** December 6, 2025
-**For:** AI Agent to complete Vercel deployment setup
-**Estimated Completion Time:** 10 minutes
-**Priority:** HIGH - Blocking production launch
+**For:** AI Agent to deploy muzaready with Supabase PostgreSQL
+**Database:** Supabase PostgreSQL (NOT Turso/SQLite)
+**Estimated Time:** 10 minutes
+**Priority:** HIGH
 
 ---
 
 **Good luck! 🚀**
 
-**Remember:** Use YOUR OWN Turso credentials, not example values!
+**Remember:** Use Supabase PostgreSQL credentials, run migrations first!
