@@ -1,0 +1,45 @@
+# ═══════════════════════════════════════════════════════════════
+# ENVIRONMENT VARIABLES PRO VERCEL - PŘIPRAVENO K COPY-PASTE
+# ═══════════════════════════════════════════════════════════════
+#
+# Kolega má zkopírovat tyto 3 proměnné do Vercel:
+# Vercel Dashboard → muzaready → Settings → Environment Variables
+#
+# ═══════════════════════════════════════════════════════════════
+
+# 1. DATABASE_URL (Transaction Pooler - port 6543)
+# Použij pro aplikaci (lepší výkon díky connection poolingu)
+DATABASE_URL=postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:6543/postgres?schema=public
+
+# 2. DIRECT_URL (Direct Connection - port 5432)
+# Použij pro migrace (přímé spojení)
+DIRECT_URL=postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?schema=public
+
+# 3. SESSION_SECRET (vygenerováno openssl rand -base64 32)
+SESSION_SECRET=vqJ7D566WTG7YNVjema8XujjohEgMBwVD7qHmWoDzWc=
+
+# ═══════════════════════════════════════════════════════════════
+# INSTRUKCE PRO PŘIDÁNÍ DO VERCELU:
+# ═══════════════════════════════════════════════════════════════
+#
+# Pro KAŽDOU proměnnou:
+# 1. Klikni "Add New" v Environment Variables
+# 2. Name/Key: zkopíruj název (např. DATABASE_URL)
+# 3. Value: zkopíruj hodnotu (celý postgresql://... string)
+# 4. Environments: zaškrtni VŠECHNY 3 (Production, Preview, Development)
+# 5. Klikni "Save"
+#
+# ═══════════════════════════════════════════════════════════════
+# POZNÁMKY:
+# ═══════════════════════════════════════════════════════════════
+#
+# - DATABASE_URL používá port 6543 (Transaction Pooler)
+#   → Lepší výkon pro aplikaci, zvládne více connections
+#
+# - DIRECT_URL používá port 5432 (Direct Connection)
+#   → Nutný pro Prisma migrace
+#
+# - SESSION_SECRET je náhodný bezpečný string
+#   → Použij pro šifrování session cookies
+#
+# ═══════════════════════════════════════════════════════════════
