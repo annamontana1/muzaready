@@ -9,11 +9,11 @@
 
 # 1. DATABASE_URL (Transaction Pooler - port 6543)
 # Použij pro aplikaci (lepší výkon díky connection poolingu)
-DATABASE_URL=postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:6543/postgres?schema=public
+DATABASE_URL=postgresql://postgres:nezjat-kosRo8-ciccoj@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?schema=public
 
 # 2. DIRECT_URL (Direct Connection - port 5432)
 # Použij pro migrace (přímé spojení)
-DIRECT_URL=postgresql://postgres:amobenecanto8A@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?schema=public
+DIRECT_URL=postgresql://postgres:nezjat-kosRo8-ciccoj@db.bcbqrhkoosopmtrryrcy.supabase.co:5432/postgres?schema=public
 
 # 3. SESSION_SECRET (vygenerováno openssl rand -base64 32)
 SESSION_SECRET=vqJ7D566WTG7YNVjema8XujjohEgMBwVD7qHmWoDzWc=
