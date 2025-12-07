@@ -24,7 +24,9 @@ interface OrderItem {
 interface Order {
   id: string;
   email: string;
-  status: string;
+  orderStatus: string;
+  paymentStatus: string;
+  deliveryStatus: string;
   total: number;
   createdAt: string;
   updatedAt: string;
@@ -189,7 +191,7 @@ export default function OrderTrackingPage() {
             {/* Status Timeline */}
             <Card variant="default" padding="lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Stav objednávky</h2>
-              <OrderStatusTimeline currentStatus={order.status} />
+              <OrderStatusTimeline currentStatus={order.orderStatus} />
             </Card>
 
             {/* Order Items */}

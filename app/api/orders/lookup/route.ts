@@ -68,7 +68,9 @@ export async function POST(request: NextRequest) {
     const formattedOrder = {
       id: order.id,
       email: order.email,
-      status: order.status,
+      orderStatus: order.orderStatus,
+      paymentStatus: order.paymentStatus,
+      deliveryStatus: order.deliveryStatus,
       total: order.total,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,

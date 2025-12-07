@@ -15,7 +15,9 @@ interface OrderItem {
 interface Order {
   id: string;
   email: string;
-  status: string;
+  orderStatus: string;
+  paymentStatus: string;
+  deliveryStatus: string;
   total: number;
   createdAt: string;
   items: OrderItem[];
@@ -120,10 +122,10 @@ function ConfirmationContent() {
             <div>
               <p className="text-sm text-gray-600">Stav</p>
               <p className="text-lg font-semibold text-gray-900">
-                {order.status === 'pending' && 'Čeká na platbu'}
-                {order.status === 'paid' && 'Zaplaceno'}
-                {order.status === 'shipped' && 'Odesláno'}
-                {order.status === 'delivered' && 'Doručeno'}
+                {order.orderStatus === 'pending' && 'Čeká na platbu'}
+                {order.paymentStatus === 'paid' && 'Zaplaceno'}
+                {order.orderStatus === 'shipped' && 'Odesláno'}
+                {order.orderStatus === 'delivered' && 'Doručeno'}
               </p>
             </div>
           </div>

@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
       subtotal: order.subtotal,
       shippingCost: order.shippingCost || 0,
       discountAmount: order.discountAmount || 0,
-      orderStatus: (order as any).orderStatus || order.status || 'draft',
+      orderStatus: (order as any).orderStatus || 'draft',
       paymentStatus: (order as any).paymentStatus || 'unpaid',
       deliveryStatus: (order as any).deliveryStatus || 'pending',
       channel: (order as any).channel || 'web',

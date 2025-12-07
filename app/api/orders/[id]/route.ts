@@ -55,11 +55,11 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
       );
     }
 
-    const { status } = body;
+    const { orderStatus, paymentStatus, deliveryStatus } = body;
 
-    if (!status) {
+    if (!orderStatus && !paymentStatus && !deliveryStatus) {
       return NextResponse.json(
-        { error: 'Status je vyžadován' },
+        { error: 'At least one status field is required (orderStatus, paymentStatus, or deliveryStatus)' },
         { status: 400 }
       );
     }
@@ -76,18 +76,21 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
       );
     }
 
+    const updateData: any = {};
+    if (orderStatus !== undefined) updateData.orderStatus = orderStatus;
+    if (paymentStatus !== undefined) updateData.paymentStatus = paymentStatus;
+    if (deliveryStatus !== undefined) updateData.deliveryStatus = deliveryStatus;
+
     const updatedOrder = await prisma.order.update({
       where: { id },
-      data: {
-        status,
-      },
+      data: updateData,
       include: {
         items: true,
       },
     });
 
-    // Send shipping notification if status changed to "shipped"
-    if (currentOrder.status !== 'shipped' && status === 'shipped') {
+    // Send shipping notification if delivery status changed to "shipped"
+    if (currentOrder.deliveryStatus !== 'shipped' && deliveryStatus === 'shipped') {
       try {
         await sendShippingNotificationEmail(currentOrder.email, id);
         console.log('Shipping notification email sent successfully');

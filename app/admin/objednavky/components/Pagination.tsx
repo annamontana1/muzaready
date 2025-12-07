@@ -1,30 +1,37 @@
 'use client';
 
-import { PaginationInfo } from '../types';
-
 interface PaginationProps {
-  pagination: PaginationInfo;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  startItem: number;
+  endItem: number;
   onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
-  isLoading?: boolean;
+  onItemsPerPageChange: (items: number) => void;
 }
 
 export default function Pagination({
-  pagination,
+  currentPage,
+  totalPages,
+  totalItems,
+  itemsPerPage,
+  startItem,
+  endItem,
   onPageChange,
-  onPageSizeChange,
-  isLoading,
+  onItemsPerPageChange,
 }: PaginationProps) {
-  const { page, pageSize, totalPages, total } = pagination;
+  // Don't render if no items
+  if (totalItems === 0) {
+    return null;
+  }
 
-  const startItem = (page - 1) * pageSize + 1;
-  const endItem = Math.min(page * pageSize, total);
-
-  const getPageNumbers = () => {
+  // Generate page numbers with ellipsis logic
+  const getPageNumbers = (): (number | string)[] => {
     const pages: (number | string)[] = [];
-    const maxPages = 5;
 
-    if (totalPages <= maxPages) {
+    if (totalPages <= 7) {
+      // Show all pages if 7 or less
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
@@ -32,137 +39,112 @@ export default function Pagination({
       // Always show first page
       pages.push(1);
 
-      // Show ellipsis if needed
-      if (page > 3) {
-        pages.push('...');
+      if (currentPage <= 3) {
+        // Near start: 1 2 3 4 ... last
+        pages.push(2, 3, 4, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        // Near end: 1 ... last-3 last-2 last-1 last
+        pages.push('...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        // Middle: 1 ... current-1 current current+1 ... last
+        pages.push('...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
       }
-
-      // Show pages around current page
-      const start = Math.max(2, page - 1);
-      const end = Math.min(totalPages - 1, page + 1);
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      // Show ellipsis if needed
-      if (page < totalPages - 2) {
-        pages.push('...');
-      }
-
-      // Always show last page
-      pages.push(totalPages);
     }
 
     return pages;
   };
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage !== page && newPage > 0 && newPage <= totalPages) {
-      onPageChange(newPage);
-    }
-  };
-
-  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSize = parseInt(e.target.value);
-    onPageSizeChange(newSize);
-  };
-
-  if (totalPages <= 1 && total <= pageSize) {
-    return null;
-  }
+  const pageNumbers = getPageNumbers();
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 mt-6">
+    <div className="bg-white px-6 py-4 border-t border-gray-200">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Info */}
-        <div className="text-sm text-gray-600">
-          Zobrazuji <span className="font-medium">{startItem}</span> až{' '}
-          <span className="font-medium">{endItem}</span> z{' '}
-          <span className="font-medium">{total}</span> objednávek
+        {/* Info text */}
+        <div className="text-sm text-gray-700">
+          Zobrazeno <span className="font-medium">{startItem}</span> - <span className="font-medium">{endItem}</span> z{' '}
+          <span className="font-medium">{totalItems}</span> objednávek
         </div>
 
-        {/* Page Size */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="pageSize" className="text-sm text-gray-600">
-            Řádků na stránku:
-          </label>
-          <select
-            id="pageSize"
-            value={pageSize}
-            onChange={handlePageSizeChange}
-            disabled={isLoading}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-          >
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-        </div>
-
-        {/* Page Numbers */}
-        <div className="flex items-center gap-1">
-          {/* Previous Button */}
+        {/* Pagination controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Previous button */}
           <button
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1 || isLoading}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
-            aria-label="Předchozí stránka"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 1
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+            }`}
           >
-            ← Zpět
+            Předchozí
           </button>
 
-          {/* Page Numbers */}
-          <div className="flex items-center gap-1">
-            {getPageNumbers().map((pageNum, idx) => {
-              if (pageNum === '...') {
+          {/* Page numbers */}
+          <div className="flex gap-1">
+            {pageNumbers.map((page, index) => {
+              if (page === '...') {
                 return (
-                  <span key={`ellipsis-${idx}`} className="px-2 py-2 text-gray-500">
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="px-3 py-2 text-sm text-gray-700"
+                  >
                     ...
                   </span>
                 );
               }
 
-              const num = pageNum as number;
-              const isCurrentPage = num === page;
+              const pageNum = page as number;
+              const isActive = pageNum === currentPage;
 
               return (
                 <button
-                  key={num}
-                  onClick={() => handlePageChange(num)}
-                  disabled={isLoading}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
-                    isCurrentPage
+                  key={pageNum}
+                  onClick={() => onPageChange(pageNum)}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
                       ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                   }`}
-                  aria-label={`Přejít na stránku ${num}`}
-                  aria-current={isCurrentPage ? 'page' : undefined}
                 >
-                  {num}
+                  {pageNum}
                 </button>
               );
             })}
           </div>
 
-          {/* Next Button */}
+          {/* Next button */}
           <button
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages || isLoading}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm font-medium"
-            aria-label="Další stránka"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === totalPages
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+            }`}
           >
-            Další →
+            Další
           </button>
+
+          {/* Items per page selector */}
+          <div className="flex items-center gap-2 ml-4 border-l border-gray-300 pl-4">
+            <label htmlFor="itemsPerPage" className="text-sm text-gray-700">
+              Na stránku:
+            </label>
+            <select
+              id="itemsPerPage"
+              value={itemsPerPage}
+              onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
+              className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
         </div>
       </div>
-
-      {/* Info about being on last page */}
-      {page === totalPages && total > 0 && (
-        <div className="mt-3 text-xs text-gray-500 text-center md:text-right">
-          Jste na poslední stránce
-        </div>
-      )}
     </div>
   );
 }

@@ -370,7 +370,16 @@ async function main() {
     const order = await prisma.order.create({
       data: {
         email: 'test@example.com',
-        status: 'pending',
+        firstName: 'Test',
+        lastName: 'User',
+        streetAddress: 'Test Street 123',
+        city: 'Prague',
+        zipCode: '11000',
+        country: 'CZ',
+        orderStatus: 'pending',
+        paymentStatus: 'unpaid',
+        deliveryStatus: 'pending',
+        subtotal: grams * pricePerGram,
         total: grams * pricePerGram,
         items: {
           create: {

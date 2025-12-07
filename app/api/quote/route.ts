@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { quoteCartLines } from '@/lib/stock';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { priceCalculator } from '@/lib/price-calculator';
 export const runtime = 'nodejs';
 

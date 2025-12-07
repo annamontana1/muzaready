@@ -1,256 +1,152 @@
 'use client';
 
 import { useState } from 'react';
-import { OrderFilters, OrderStatus, PaymentStatus, DeliveryMethod } from '../types';
 
-interface FiltersProps {
-  filters: OrderFilters;
-  onFiltersChange: (filters: OrderFilters) => void;
-  isLoading?: boolean;
+export interface FilterState {
+  orderStatus?: string;
+  paymentStatus?: string;
+  deliveryStatus?: string;
+  channel?: string;
+  email?: string;
 }
 
-const statusOptions = [
-  { value: OrderStatus.AWAITING_PAYMENT, label: 'Čeká na platbu' },
-  { value: OrderStatus.PAID, label: 'Zaplaceno' },
-  { value: OrderStatus.PROCESSING, label: 'Zpracování' },
-  { value: OrderStatus.ASSEMBLY_IN_PROGRESS, label: 'Montáž probíhá' },
-  { value: OrderStatus.SHIPPED, label: 'Odesláno' },
-  { value: OrderStatus.CANCELLED_UNPAID, label: 'Zrušeno - nezaplaceno' },
-  { value: OrderStatus.REFUNDED, label: 'Vráceno' },
-];
+interface FiltersProps {
+  onFilter: (filters: FilterState) => void;
+}
 
-const paymentStatusOptions = [
-  { value: PaymentStatus.UNPAID, label: 'Nezaplaceno' },
-  { value: PaymentStatus.PAID, label: 'Zaplaceno' },
-  { value: PaymentStatus.REFUNDED, label: 'Vráceno' },
-  { value: PaymentStatus.FAILED, label: 'Selhalo' },
-];
+export default function Filters({ onFilter }: FiltersProps) {
+  const [filters, setFilters] = useState<FilterState>({});
 
-const deliveryMethodOptions = [
-  { value: DeliveryMethod.STANDARD, label: 'Standardní doručení' },
-  { value: DeliveryMethod.EXPRESS, label: 'Expresní doručení' },
-  { value: DeliveryMethod.PICKUP, label: 'Osobní vyzvednutí' },
-];
-
-export default function Filters({ filters, onFiltersChange, isLoading }: FiltersProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [searchInput, setSearchInput] = useState(filters.searchTerm || '');
-
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value || undefined;
-    onFiltersChange({ ...filters, status: value });
+  // Handle filter change for individual fields
+  const handleFilterChange = (field: keyof FilterState, value: string) => {
+    const newFilters = {
+      ...filters,
+      [field]: value === '' ? undefined : value,
+    };
+    setFilters(newFilters);
+    onFilter(newFilters);
   };
 
-  const handlePaymentStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value || undefined;
-    onFiltersChange({ ...filters, paymentStatus: value });
+  // Reset all filters
+  const handleReset = () => {
+    const emptyFilters: FilterState = {};
+    setFilters(emptyFilters);
+    onFilter(emptyFilters);
   };
-
-  const handleDeliveryMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value || undefined;
-    onFiltersChange({ ...filters, deliveryMethod: value });
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchInput(value);
-    // Debounce search
-    const timeoutId = setTimeout(() => {
-      onFiltersChange({ ...filters, searchTerm: value || undefined });
-    }, 300);
-    return () => clearTimeout(timeoutId);
-  };
-
-  const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value || undefined;
-    onFiltersChange({ ...filters, dateFrom: value });
-  };
-
-  const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value || undefined;
-    onFiltersChange({ ...filters, dateTo: value });
-  };
-
-  const handleMinAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value ? parseFloat(e.target.value) : undefined;
-    onFiltersChange({ ...filters, minAmount: value });
-  };
-
-  const handleMaxAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value ? parseFloat(e.target.value) : undefined;
-    onFiltersChange({ ...filters, maxAmount: value });
-  };
-
-  const resetFilters = () => {
-    setSearchInput('');
-    onFiltersChange({});
-  };
-
-  const hasActiveFilters = Object.values(filters).some((v) => v !== undefined && v !== '');
 
   return (
     <div className="bg-white rounded-lg shadow p-6 mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-4 flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">Filtry</h3>
-          {hasActiveFilters && (
-            <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-              {Object.values(filters).filter((v) => v !== undefined && v !== '').length} aktivní
-            </span>
-          )}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+        {/* Order Status Filter */}
+        <div>
+          <label htmlFor="orderStatus" className="block text-sm font-medium text-gray-700">
+            Stav objednávky
+          </label>
+          <select
+            id="orderStatus"
+            value={filters.orderStatus || ''}
+            onChange={(e) => handleFilterChange('orderStatus', e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+          >
+            <option value="">Všechny stavy</option>
+            <option value="draft">Návrh</option>
+            <option value="pending">Čekající</option>
+            <option value="paid">Zaplaceno</option>
+            <option value="processing">Zpracování</option>
+            <option value="shipped">Odesláno</option>
+            <option value="completed">Dokončeno</option>
+            <option value="cancelled">Zrušeno</option>
+          </select>
         </div>
+
+        {/* Payment Status Filter */}
+        <div>
+          <label htmlFor="paymentStatus" className="block text-sm font-medium text-gray-700">
+            Stav platby
+          </label>
+          <select
+            id="paymentStatus"
+            value={filters.paymentStatus || ''}
+            onChange={(e) => handleFilterChange('paymentStatus', e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+          >
+            <option value="">Všechny platby</option>
+            <option value="unpaid">Nezaplaceno</option>
+            <option value="partial">Částečně</option>
+            <option value="paid">Zaplaceno</option>
+            <option value="refunded">Vráceno</option>
+          </select>
+        </div>
+
+        {/* Delivery Status Filter */}
+        <div>
+          <label htmlFor="deliveryStatus" className="block text-sm font-medium text-gray-700">
+            Stav dodání
+          </label>
+          <select
+            id="deliveryStatus"
+            value={filters.deliveryStatus || ''}
+            onChange={(e) => handleFilterChange('deliveryStatus', e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+          >
+            <option value="">Všechna dodání</option>
+            <option value="pending">Čeká</option>
+            <option value="shipped">Odesláno</option>
+            <option value="delivered">Doručeno</option>
+            <option value="returned">Vráceno</option>
+          </select>
+        </div>
+
+        {/* Channel Filter */}
+        <div>
+          <label htmlFor="channel" className="block text-sm font-medium text-gray-700">
+            Kanál
+          </label>
+          <select
+            id="channel"
+            value={filters.channel || ''}
+            onChange={(e) => handleFilterChange('channel', e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+          >
+            <option value="">Všechny kanály</option>
+            <option value="web">Web</option>
+            <option value="pos">POS</option>
+            <option value="ig_dm">Instagram DM</option>
+          </select>
+        </div>
+
+        {/* Email Search */}
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            id="email"
+            type="text"
+            value={filters.email || ''}
+            onChange={(e) => handleFilterChange('email', e.target.value)}
+            placeholder="Hledat email..."
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-3">
         <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 font-medium"
+          onClick={handleReset}
+          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-md transition-colors"
         >
-          {isExpanded ? 'Skrýt' : 'Zobrazit'}
+          Resetovat filtry
+        </button>
+        <button
+          disabled
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md opacity-50 cursor-not-allowed"
+          title="Funkce bude dostupná později"
+        >
+          Uložit pohled
         </button>
       </div>
-
-      {/* Search Bar - Always Visible */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Hledat podle emailu, jména nebo ID objednávky..."
-          value={searchInput}
-          onChange={handleSearchChange}
-          disabled={isLoading}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-        />
-      </div>
-
-      {/* Expandable Filters */}
-      {isExpanded && (
-        <div className="space-y-4 pt-4 border-t border-gray-200">
-          {/* Status Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Order Status */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stav objednávky
-              </label>
-              <select
-                value={filters.status || ''}
-                onChange={handleStatusChange}
-                disabled={isLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              >
-                <option value="">Všechny stavy</option>
-                {statusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Payment Status */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stav platby
-              </label>
-              <select
-                value={filters.paymentStatus || ''}
-                onChange={handlePaymentStatusChange}
-                disabled={isLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              >
-                <option value="">Všechny stavy</option>
-                {paymentStatusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Delivery Method */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Způsob doručení
-              </label>
-              <select
-                value={filters.deliveryMethod || ''}
-                onChange={handleDeliveryMethodChange}
-                disabled={isLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              >
-                <option value="">Všechny způsoby</option>
-                {deliveryMethodOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Date Range */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Od data</label>
-              <input
-                type="date"
-                value={filters.dateFrom || ''}
-                onChange={handleDateFromChange}
-                disabled={isLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Do data</label>
-              <input
-                type="date"
-                value={filters.dateTo || ''}
-                onChange={handleDateToChange}
-                disabled={isLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Amount Range */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Minimální cena</label>
-              <input
-                type="number"
-                value={filters.minAmount || ''}
-                onChange={handleMinAmountChange}
-                disabled={isLoading}
-                placeholder="0 Kč"
-                step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Maximální cena</label>
-              <input
-                type="number"
-                value={filters.maxAmount || ''}
-                onChange={handleMaxAmountChange}
-                disabled={isLoading}
-                placeholder="Bez limitu"
-                step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Reset Button */}
-          {hasActiveFilters && (
-            <div className="flex justify-end">
-              <button
-                onClick={resetFilters}
-                disabled={isLoading}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
-              >
-                Vymazat filtry
-              </button>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
