@@ -52,6 +52,15 @@ export async function GET(
             },
           },
         },
+        invoice: {
+          select: {
+            id: true,
+            invoiceNumber: true,
+            status: true,
+            createdAt: true,
+            pdfGenerated: true,
+          },
+        },
       },
     });
 
