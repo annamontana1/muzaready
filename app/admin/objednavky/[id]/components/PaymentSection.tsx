@@ -72,11 +72,13 @@ const getPaymentMethodLabel = (method: string | null) => {
 
   switch (method) {
     case 'gopay':
-      return 'GoPay';
+      return 'GoPay (online platba)';
+    case 'card':
+      return 'Karta (showroom)';
+    case 'cash':
+      return 'Hotovost (showroom)';
     case 'bank_transfer':
       return 'Bankovní převod';
-    case 'cash':
-      return 'Hotovost';
     default:
       return method;
   }
@@ -99,6 +101,8 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isEditingPayment, setIsEditingPayment] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(order.paymentMethod || 'gopay');
 
   const handleGenerateInvoice = async () => {
     setIsGenerating(true);
@@ -136,6 +140,32 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
       setError(err instanceof Error ? err.message : 'Chyba při generování faktury');
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleSavePaymentMethod = async () => {
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentMethod }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Nepodařilo se uložit způsob platby');
+      }
+
+      setSuccess('Způsob platby byl úspěšně uložen');
+      setIsEditingPayment(false);
+
+      // Reload page to show updated payment method
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Chyba při ukládání způsobu platby');
     }
   };
 
@@ -267,13 +297,65 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
           {/* Metody */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Metody</h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Způsob platby</p>
-                <p className="text-base font-medium text-gray-900">
-                  {getPaymentMethodLabel(order.paymentMethod)}
-                </p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-gray-600">Způsob platby</p>
+                  {!isEditingPayment && (
+                    <button
+                      onClick={() => setIsEditingPayment(true)}
+                      className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      Upravit
+                    </button>
+                  )}
+                </div>
+
+                {isEditingPayment ? (
+                  <div className="space-y-2">
+                    <select
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="gopay">GoPay (online platba)</option>
+                      <option value="card">Karta (showroom)</option>
+                      <option value="cash">Hotovost (showroom)</option>
+                      <option value="bank_transfer">Bankovní převod</option>
+                    </select>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleSavePaymentMethod}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                      >
+                        Uložit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsEditingPayment(false);
+                          setPaymentMethod(order.paymentMethod || 'gopay');
+                        }}
+                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                      >
+                        Zrušit
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <p className="text-base font-medium text-gray-900">
+                      {getPaymentMethodLabel(order.paymentMethod)}
+                    </p>
+                    {order.channel === 'showroom' && order.paymentMethod && (
+                      <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">
+                        {order.paymentMethod === 'card' ? '💳 Karta' : '💵 Hotovost'}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
+
               <div>
                 <p className="text-sm text-gray-600 mb-1">Způsob dopravy</p>
                 <p className="text-base font-medium text-gray-900">
