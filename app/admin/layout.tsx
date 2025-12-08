@@ -9,7 +9,7 @@ import { ToastProvider } from '@/components/ui/ToastProvider';
 import { queryClient } from '@/lib/queryClient';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Always start open
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -56,6 +56,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
           >
             {sidebarOpen ? '📊 Dashboard' : '📊'}
+          </Link>
+          <Link
+            href="/admin/warehouse-scanner"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '📱 Warehouse Scanner' : '📱'}
           </Link>
           <Link
             href="/admin/produkty"
