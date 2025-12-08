@@ -185,20 +185,58 @@ function ConfirmationContent() {
           </ol>
         </div>
 
-        {/* Payment Button - Will integrate GoPay later */}
-        <div className="bg-white rounded-lg shadow p-6 text-center mb-8">
-          <p className="text-gray-600 mb-4">Hotov ke své platbě?</p>
-          <button
-            disabled
-            className="px-8 py-3 bg-gray-400 text-white rounded-lg font-medium cursor-not-allowed"
-            title="GoPay integrace bude dostupná brzy"
-          >
-            Pokračovat k platbě (GoPay - brzy)
-          </button>
-          <p className="text-xs text-gray-500 mt-2">
-            GoPay integrace bude aktivní do 3 dnů
-          </p>
-        </div>
+        {/* Payment Button - GoPay Integration */}
+        {order.paymentStatus === 'unpaid' && (
+          <div className="bg-white rounded-lg shadow p-6 text-center mb-8">
+            <p className="text-gray-600 mb-4">Hotov k platbě?</p>
+            <button
+              onClick={async () => {
+                try {
+                  setLoading(true);
+                  const response = await fetch('/api/gopay/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      orderId: order.id,
+                      amount: (subtotal + shippingPrice) / 100, // Convert cents to CZK
+                      email: order.email,
+                    }),
+                  });
+
+                  if (!response.ok) {
+                    throw new Error('Chyba při vytváření platby');
+                  }
+
+                  const data = await response.json();
+                  if (data.paymentUrl) {
+                    // Redirect to GoPay
+                    window.location.href = data.paymentUrl;
+                  } else {
+                    throw new Error('GoPay nevrátil platební URL');
+                  }
+                } catch (err) {
+                  console.error('Payment error:', err);
+                  setError('Chyba při vytváření platby. Prosím zkuste to znovu.');
+                  setLoading(false);
+                }
+              }}
+              disabled={loading}
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Přesměrovávám...' : 'Pokračovat k platbě (GoPay)'}
+            </button>
+            <p className="text-xs text-gray-500 mt-2">
+              Budete přesměrováni na bezpečnou platební bránu GoPay
+            </p>
+          </div>
+        )}
+
+        {order.paymentStatus === 'paid' && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center mb-8">
+            <div className="text-green-600 text-3xl mb-2">✓</div>
+            <p className="text-green-800 font-semibold">Objednávka již byla zaplacena!</p>
+          </div>
+        )}
 
         {/* Continue Shopping */}
         <div className="text-center">
