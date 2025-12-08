@@ -36,6 +36,15 @@ export async function GET(
       );
     }
 
+    // Try to include invoice, but handle case where table doesn't exist yet
+    let includeInvoice = true;
+    try {
+      await prisma.$queryRaw`SELECT 1 FROM "invoices" LIMIT 1`;
+    } catch (e) {
+      includeInvoice = false;
+      console.log('Invoice table does not exist yet, skipping invoice include');
+    }
+
     const order = await prisma.order.findUnique({
       where: { id },
       include: {
@@ -52,15 +61,17 @@ export async function GET(
             },
           },
         },
-        invoice: {
-          select: {
-            id: true,
-            invoiceNumber: true,
-            status: true,
-            createdAt: true,
-            pdfGenerated: true,
+        ...(includeInvoice && {
+          invoice: {
+            select: {
+              id: true,
+              invoiceNumber: true,
+              status: true,
+              createdAt: true,
+              pdfGenerated: true,
+            },
           },
-        },
+        }),
       },
     });
 

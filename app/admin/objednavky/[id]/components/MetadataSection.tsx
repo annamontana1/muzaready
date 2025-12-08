@@ -76,7 +76,13 @@ export default function MetadataSection({ order, onUpdate }: MetadataSectionProp
   const [showEditModal, setShowEditModal] = useState(false);
 
   // Parse tags from JSON string to array
-  const tags: string[] = order.tags ? JSON.parse(order.tags) : [];
+  let tags: string[] = [];
+  try {
+    tags = order.tags ? JSON.parse(order.tags) : [];
+  } catch (error) {
+    console.error('Failed to parse order tags:', error);
+    tags = [];
+  }
 
   return (
     <>
