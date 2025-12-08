@@ -1,7 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import crypto from 'crypto';
 export const runtime = 'nodejs';
 
+/**
+ * Verify GoPay webhook signature to prevent fake payment notifications
+ * GoPay sends X-Signature header with HMAC-SHA256 signature
+ */
+function verifyGoPaySignature(payload: string, signature: string | null): boolean {
+  if (!signature) return false;
+
+  const secret = process.env.GOPAY_CLIENT_SECRET;
+  if (!secret) {
+    console.error('GOPAY_CLIENT_SECRET not configured');
+    return false;
+  }
+
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expectedSignature)
+  );
+}
 
 /**
  * GoPay Payment Confirmation Webhook Endpoint
@@ -17,7 +41,20 @@ export const runtime = 'nodejs';
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    // Get raw body for signature verification
+    const rawBody = await request.text();
+    const signature = request.headers.get('X-Signature');
+
+    // Verify request is actually from GoPay
+    if (!verifyGoPaySignature(rawBody, signature)) {
+      console.error('GoPay webhook signature verification failed');
+      return NextResponse.json(
+        { error: 'Invalid signature' },
+        { status: 401 }
+      );
+    }
+
+    const body = JSON.parse(rawBody);
     const { orderId, state, paymentId } = body;
 
     if (!orderId || !state) {
@@ -36,36 +73,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch the order with all items and SKU details
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        items: {
-          include: {
-            sku: true,
+    // Use a transaction to atomically update order status and deduct stock
+    // IMPORTANT: Idempotency check is INSIDE transaction to prevent race conditions
+    const result = await prisma.$transaction(async (tx) => {
+      // Fetch order with lock to prevent concurrent processing
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: {
+          items: {
+            include: {
+              sku: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (!order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
-    }
+      if (!order) {
+        throw new Error('Order not found');
+      }
 
-    // Prevent double-processing: if order is already paid, return success
-    if (order.paymentStatus === 'paid') {
-      console.log(`Order ${orderId} already paid (idempotent)`);
-      return NextResponse.json(
-        { success: true, message: 'Order already paid (idempotent)' },
-        { status: 200 }
-      );
-    }
+      // Prevent double-processing: if order is already paid, return success
+      if (order.paymentStatus === 'paid') {
+        console.log(`Order ${orderId} already paid (idempotent)`);
+        return order;
+      }
 
-    // Use a transaction to atomically update order status and deduct stock
-    const result = await prisma.$transaction(async (tx) => {
       // Update order and payment status to 'paid'
       const updatedOrder = await tx.order.update({
         where: { id: orderId },

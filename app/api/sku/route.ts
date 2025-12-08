@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 export const runtime = 'nodejs';
-
 
 // GET SKUs with optional filters
 export async function GET(request: NextRequest) {
@@ -31,6 +31,9 @@ export async function GET(request: NextRequest) {
 
 // POST – create new SKU(s)
 export async function POST(request: NextRequest) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const {

@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 import { sendShippingNotificationEmail } from '@/lib/email';
 export const runtime = 'nodejs';
-
 
 interface Params {
   id: string;
 }
 
 export async function GET(request: NextRequest, { params }: { params: Params }) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
   try {
     const { id } = params;
 
@@ -44,6 +46,9 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Params }) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   try {
     const { id } = params;
     const body = await request.json();

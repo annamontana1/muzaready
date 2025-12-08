@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 export const runtime = 'nodejs';
-
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,6 +41,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { name, category, tier, base_price_per_100g_45cm } = body;

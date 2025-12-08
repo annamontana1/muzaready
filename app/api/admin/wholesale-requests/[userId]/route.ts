@@ -1,35 +1,24 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 import { Resend } from 'resend';
 export const runtime = 'nodejs';
 
-
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
-
-// Helper to check if user is admin
-async function isAdmin() {
-  const adminUser = await prisma.adminUser.findFirst({ where: { status: 'active' } });
-  return Boolean(adminUser);
-}
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   const searchParams = request.nextUrl.searchParams;
   const action = searchParams.get('action'); // 'approve' or 'reject'
 
   try {
-    // Check admin access
-    const admin = await isAdmin();
-    if (!admin) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 403 }
-      );
-    }
 
     const userId = params.userId;
 

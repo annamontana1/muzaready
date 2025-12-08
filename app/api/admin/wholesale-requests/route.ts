@@ -1,25 +1,14 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 export const runtime = 'nodejs';
 
-
-async function isAdmin() {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get('session')?.value;
-  if (!sessionToken) return false;
-
-  const adminUser = await prisma.adminUser.findFirst({ where: { status: 'active' } });
-  return Boolean(adminUser);
-}
-
 export async function GET(request: NextRequest) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
   try {
-    const admin = await isAdmin();
-    if (!admin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-    }
 
     const prismaAny = prisma as any;
     const requests = await prismaAny.user.findMany({
