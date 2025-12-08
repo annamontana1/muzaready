@@ -56,12 +56,21 @@ model Order {
   firstName         String
   lastName          String
   phone             String?
+  companyName       String?                             // for invoicing
+  ico               String?                             // IČO - Company ID
+  dic               String?                             // DIČ - Tax ID
 
   // Delivery address
   streetAddress     String
   city              String
   zipCode           String
   country           String      @default("CZ")
+
+  // Billing address (if different from delivery)
+  billingStreet     String?
+  billingCity       String?
+  billingZipCode    String?
+  billingCountry    String?
 
   // Delivery
   deliveryMethod    String      @default("standard") // standard, express, pickup
@@ -98,6 +107,7 @@ model Order {
   lastStatusChangeAt DateTime   @default(now())
 
   items             OrderItem[]
+  invoice           Invoice?
 
   @@map("orders")
 }
@@ -331,4 +341,72 @@ model ScanItem {
   sku           Sku          @relation(fields: [skuId], references: [id])
 
   @@map("scan_items")
+}
+
+model Invoice {
+  id                String      @id @default(cuid())
+
+  // Invoice number (auto-generated: 2025001, 2025002, etc.)
+  invoiceNumber     String      @unique
+
+  // Related order
+  orderId           String      @unique
+  order             Order       @relation(fields: [orderId], references: [id])
+
+  // Supplier info (your company - Mùza Hair)
+  supplierName      String      @default("Mùza Hair s.r.o.")
+  supplierStreet    String?     // will be filled by you
+  supplierCity      String?     // will be filled by you
+  supplierZipCode   String?     // will be filled by you
+  supplierCountry   String      @default("CZ")
+  supplierIco       String?     // Your IČO - will be filled by you
+  supplierDic       String?     // Your DIČ - will be filled by you
+  supplierEmail     String?     // info@muzahair.cz
+  supplierPhone     String?     // +420 728 722 880
+
+  // Customer info (copied from order)
+  customerName      String      // firstName + lastName or companyName
+  customerEmail     String
+  customerPhone     String?
+  customerStreet    String
+  customerCity      String
+  customerZipCode   String
+  customerCountry   String
+  customerIco       String?     // if company
+  customerDic       String?     // if company
+
+  // Invoice amounts
+  subtotal          Float       // without VAT
+  vatRate           Float       @default(21.0) // VAT 21%
+  vatAmount         Float       // calculated: subtotal * (vatRate/100)
+  total             Float       // subtotal + vatAmount
+
+  // Payment info
+  paymentMethod     String?     // GoPay, bank transfer, cash
+  variableSymbol    String?     // for bank transfers
+  bankAccount       String?     // Your bank account - will be filled by you
+  iban              String?     // Your IBAN - will be filled by you
+  swift             String?     // Your SWIFT - will be filled by you
+
+  // Invoice dates
+  issueDate         DateTime    @default(now())    // datum vystavení
+  dueDate           DateTime?                      // datum splatnosti
+  taxDate           DateTime?                      // datum zdanitelného plnění
+  paidDate          DateTime?                      // datum zaplacení
+
+  // Status
+  status            String      @default("draft")  // draft, issued, paid, cancelled, credited
+
+  // PDF storage
+  pdfUrl            String?     // URL to generated PDF (Vercel Blob or Supabase Storage)
+  pdfGenerated      Boolean     @default(false)
+
+  // Notes
+  note              String?     // Additional note on invoice
+
+  // Timestamps
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@map("invoices")
 }

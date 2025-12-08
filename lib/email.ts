@@ -359,3 +359,103 @@ export const sendAdminOrderNotificationEmail = async (
     throw error;
   }
 };
+
+/**
+ * Send invoice email with PDF attachment
+ */
+export const sendInvoiceEmail = async (
+  email: string,
+  invoiceNumber: string,
+  pdfBase64: string
+) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping invoice email');
+    return;
+  }
+
+  try {
+    // Extract base64 data from data URI
+    const base64Data = pdfBase64.split(',')[1];
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #3a2020 0%, #6b4545 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
+            .footer { background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #666; border-radius: 0 0 8px 8px; }
+            .button { display: inline-block; padding: 12px 30px; background: #3a2020; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
+            h1 { margin: 0; font-size: 24px; }
+            .invoice-number { font-size: 18px; font-weight: bold; color: #3a2020; margin: 15px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>💎 Mùza Hair</h1>
+              <p style="margin: 10px 0 0 0; opacity: 0.9;">Faktura za vaši objednávku</p>
+            </div>
+
+            <div class="content">
+              <h2 style="color: #3a2020;">Dobrý den,</h2>
+
+              <p>děkujeme za vaši objednávku. V příloze najdete <strong>daňový doklad - fakturu</strong>.</p>
+
+              <div class="invoice-number">
+                Faktura č. ${invoiceNumber}
+              </div>
+
+              <p>Faktura je přiložena jako PDF soubor. Můžete si ji stáhnout a vytisknout pro své účely.</p>
+
+              <p><strong>Důležité informace:</strong></p>
+              <ul>
+                <li>Faktura slouží jako daňový doklad</li>
+                <li>Prosím uschovejte si ji pro případné reklamace</li>
+                <li>V případě dotazů nás kontaktujte na info@muzahair.cz</li>
+              </ul>
+
+              <p style="margin-top: 30px;">Děkujeme za vaši důvěru a těšíme se na další spolupráci!</p>
+
+              <p style="margin-top: 20px;">
+                S pozdravem,<br>
+                <strong>Tým Mùza Hair</strong>
+              </p>
+            </div>
+
+            <div class="footer">
+              <p>
+                <strong>Mùza Hair s.r.o.</strong><br>
+                Revoluční 8, Praha<br>
+                Tel: +420 728 722 880 | Email: info@muzahair.cz<br>
+                <a href="https://muzahair.cz" style="color: #3a2020;">www.muzahair.cz</a>
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'faktury@muzahair.cz',
+      to: email,
+      subject: `Faktura ${invoiceNumber} - Mùza Hair`,
+      html,
+      attachments: [
+        {
+          filename: `faktura_${invoiceNumber}.pdf`,
+          content: base64Data,
+        },
+      ],
+    });
+
+    console.log('Invoice email sent:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending invoice email:', error);
+    throw error;
+  }
+};
