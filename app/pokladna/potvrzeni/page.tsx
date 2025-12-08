@@ -185,48 +185,15 @@ function ConfirmationContent() {
           </ol>
         </div>
 
-        {/* Payment Button - GoPay Integration */}
+        {/* Payment Information */}
         {order.paymentStatus === 'unpaid' && (
-          <div className="bg-white rounded-lg shadow p-6 text-center mb-8">
-            <p className="text-gray-600 mb-4">Hotov k platbě?</p>
-            <button
-              onClick={async () => {
-                try {
-                  setLoading(true);
-                  const response = await fetch('/api/gopay/create-payment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      orderId: order.id,
-                      amount: (subtotal + shippingPrice) / 100, // Convert cents to CZK
-                      email: order.email,
-                    }),
-                  });
-
-                  if (!response.ok) {
-                    throw new Error('Chyba při vytváření platby');
-                  }
-
-                  const data = await response.json();
-                  if (data.paymentUrl) {
-                    // Redirect to GoPay
-                    window.location.href = data.paymentUrl;
-                  } else {
-                    throw new Error('GoPay nevrátil platební URL');
-                  }
-                } catch (err) {
-                  console.error('Payment error:', err);
-                  setError('Chyba při vytváření platby. Prosím zkuste to znovu.');
-                  setLoading(false);
-                }
-              }}
-              disabled={loading}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Přesměrovávám...' : 'Pokračovat k platbě (GoPay)'}
-            </button>
-            <p className="text-xs text-gray-500 mt-2">
-              Budete přesměrováni na bezpečnou platební bránu GoPay
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center mb-8">
+            <p className="text-gray-700 mb-2">
+              <strong>Platba čeká na připojení platební brány</strong>
+            </p>
+            <p className="text-sm text-gray-600">
+              Po aktivaci GoPay integrace budete moci zaplatit přímo online.
+              Zatím můžete zaplatit bankovním převodem - instrukce byly odeslány na e-mail.
             </p>
           </div>
         )}
