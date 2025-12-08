@@ -97,7 +97,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             href="/admin/konfigurator-sku"
             className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
           >
-            {sidebarOpen ? '➕ Nový produkt' : '➕'}
+            {sidebarOpen ? '🔧 Konfigurátor SKU' : '🔧'}
+          </Link>
+          <Link
+            href="/admin/velkoobchod-zadosti"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '📋 Velkoobchod - Žádosti' : '📋'}
           </Link>
         </nav>
 
