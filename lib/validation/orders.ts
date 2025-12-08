@@ -1,0 +1,71 @@
+import { z } from 'zod';
+
+/**
+ * Validation schemas for order-related API endpoints
+ */
+
+// Customer category enum
+export const CustomerCategorySchema = z.enum(['STANDARD', 'LUXE', 'PLATINUM_EDITION']);
+
+// Sale mode enum
+export const SaleModeSchema = z.enum(['PIECE_BY_WEIGHT', 'BULK_G']);
+
+// Ending type enum
+export const EndingSchema = z.enum(['NONE', 'KERATIN', 'PASKY', 'TRESSY']);
+
+// Assembly fee type enum
+export const AssemblyFeeTypeSchema = z.enum(['FLAT', 'PER_GRAM']);
+
+// Cart item schema
+export const CartItemSchema = z.object({
+  skuId: z.string().min(1, 'SKU ID is required'),
+  skuName: z.string().min(1, 'Product name is required'),
+  customerCategory: CustomerCategorySchema,
+  shade: z.string(),
+  saleMode: SaleModeSchema,
+  grams: z.number().positive('Grams must be positive'),
+  pricePerGram: z.number().nonnegative('Price per gram cannot be negative'),
+  lineTotal: z.number().nonnegative('Line total cannot be negative'),
+  ending: EndingSchema,
+  assemblyFeeType: AssemblyFeeTypeSchema,
+  assemblyFeeCzk: z.number().nonnegative('Assembly fee cannot be negative'),
+  assemblyFeeTotal: z.number().nonnegative('Assembly fee total cannot be negative'),
+  lineGrandTotal: z.number().nonnegative('Line grand total cannot be negative'),
+  quantity: z.number().int().positive('Quantity must be a positive integer').optional(),
+});
+
+// Shipping info schema
+export const ShippingInfoSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().min(1, 'Last name is required').max(100),
+  phone: z.string().regex(/^\+?[0-9\s\-()]+$/, 'Invalid phone number format').optional(),
+  streetAddress: z.string().min(1, 'Street address is required').max(200),
+  city: z.string().min(1, 'City is required').max(100),
+  zipCode: z.string().regex(/^[0-9]{5,10}$/, 'Invalid ZIP code format'),
+  country: z.string().length(2, 'Country code must be 2 characters (e.g., CZ)'),
+});
+
+// Create order request schema
+export const CreateOrderSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  items: z.array(CartItemSchema).min(1, 'At least one item is required'),
+  shippingInfo: ShippingInfoSchema,
+});
+
+// Update order status schema
+export const UpdateOrderStatusSchema = z.object({
+  orderStatus: z.enum(['pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled']).optional(),
+  paymentStatus: z.enum(['unpaid', 'paid', 'refunded', 'failed']).optional(),
+  deliveryStatus: z.enum(['pending', 'processing', 'shipped', 'delivered', 'failed']).optional(),
+}).refine(
+  (data) => data.orderStatus || data.paymentStatus || data.deliveryStatus,
+  'At least one status field must be provided'
+);
+
+// GoPay webhook notification schema
+export const GoPayNotificationSchema = z.object({
+  orderId: z.string().min(1, 'Order ID is required'),
+  state: z.enum(['PAID', 'FAILED', 'CANCELED', 'TIMEOUTED', 'AUTHORIZED', 'CREATED', 'PAYMENT_METHOD_CHOSEN', 'REFUNDED', 'PARTIALLY_REFUNDED']),
+  paymentId: z.string().optional(),
+  amount: z.number().optional(),
+});

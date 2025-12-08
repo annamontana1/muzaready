@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 import { sendShippingNotificationEmail } from '@/lib/email';
+import { UpdateOrderStatusSchema } from '@/lib/validation/orders';
 export const runtime = 'nodejs';
 
 interface Params {
@@ -51,7 +53,6 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
 
   try {
     const { id } = params;
-    const body = await request.json();
 
     if (!id) {
       return NextResponse.json(
@@ -60,14 +61,24 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
       );
     }
 
-    const { orderStatus, paymentStatus, deliveryStatus } = body;
+    const body = await request.json();
 
-    if (!orderStatus && !paymentStatus && !deliveryStatus) {
+    // Validate request body
+    const validation = UpdateOrderStatusSchema.safeParse(body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'At least one status field is required (orderStatus, paymentStatus, or deliveryStatus)' },
+        {
+          error: 'Invalid request data',
+          details: validation.error.errors.map((err) => ({
+            path: err.path.join('.'),
+            message: err.message,
+          })),
+        },
         { status: 400 }
       );
     }
+
+    const { orderStatus, paymentStatus, deliveryStatus } = validation.data;
 
     // Get current order to check status change
     const currentOrder = await prisma.order.findUnique({

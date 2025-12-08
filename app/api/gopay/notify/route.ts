@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import prisma from '@/lib/prisma';
+import { GoPayNotificationSchema } from '@/lib/validation/orders';
 import crypto from 'crypto';
 export const runtime = 'nodejs';
 
@@ -55,14 +57,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = JSON.parse(rawBody);
-    const { orderId, state, paymentId } = body;
 
-    if (!orderId || !state) {
+    // Validate webhook payload
+    const validation = GoPayNotificationSchema.safeParse(body);
+    if (!validation.success) {
+      console.error('Invalid GoPay webhook payload:', validation.error);
       return NextResponse.json(
-        { error: 'Missing orderId or state' },
+        {
+          error: 'Invalid webhook payload',
+          details: validation.error.errors.map((err) => ({
+            path: err.path.join('.'),
+            message: err.message,
+          })),
+        },
         { status: 400 }
       );
     }
+
+    const { orderId, state, paymentId } = validation.data;
 
     // Only process PAID notifications
     if (state !== 'PAID') {

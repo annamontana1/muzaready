@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { z } from 'zod';
 import prisma from '@/lib/prisma';
+import { CreateOrderSchema } from '@/lib/validation/orders';
 export const runtime = 'nodejs';
 
 /**
@@ -73,14 +75,23 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, items: cartLines, shippingInfo } = body;
 
-    if (!email || !cartLines || cartLines.length === 0) {
+    // Validate request body with Zod
+    const validation = CreateOrderSchema.safeParse(body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Email a položky objednávky jsou povinné' },
+        {
+          error: 'Invalid request data',
+          details: validation.error.errors.map((err) => ({
+            path: err.path.join('.'),
+            message: err.message,
+          })),
+        },
         { status: 400 }
       );
     }
+
+    const { email, items: cartLines, shippingInfo } = validation.data;
 
     // Import the quote function at runtime to avoid circular dependencies
     const { quoteCartLines } = await import('@/lib/stock');
