@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 // Don't pre-render this page during build
 export const dynamic = 'force-dynamic';
@@ -10,42 +11,28 @@ interface AdminUser {
   name: string;
   email: string;
   role: 'admin' | 'manager' | 'editor';
-  lastLogin: string;
   status: 'active' | 'inactive';
   createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateUserData {
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'manager' | 'editor';
+}
+
+interface UpdateUserData {
+  name?: string;
+  email?: string;
+  password?: string;
+  role?: 'admin' | 'manager' | 'editor';
+  status?: 'active' | 'inactive';
 }
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<AdminUser[]>([
-    {
-      id: '1',
-      name: 'Admin',
-      email: 'admin@muzahair.cz',
-      role: 'admin',
-      lastLogin: '2025-11-11T19:00:00Z',
-      status: 'active',
-      createdAt: '2025-01-01T00:00:00Z',
-    },
-    {
-      id: '2',
-      name: 'Petra Svobodová',
-      email: 'petra@muzahair.cz',
-      role: 'manager',
-      lastLogin: '2025-11-10T14:30:00Z',
-      status: 'active',
-      createdAt: '2025-06-15T00:00:00Z',
-    },
-    {
-      id: '3',
-      name: 'Tomáš Novák',
-      email: 'tomas@muzahair.cz',
-      role: 'editor',
-      lastLogin: '2025-11-09T10:15:00Z',
-      status: 'active',
-      createdAt: '2025-08-20T00:00:00Z',
-    },
-  ]);
-
+  const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
@@ -54,6 +41,106 @@ export default function AdminUsersPage() {
     email: '',
     role: 'editor' as const,
     password: '',
+  });
+  const [error, setError] = useState('');
+
+  // Fetch all users
+  const { data: users = [], isLoading } = useQuery<AdminUser[]>({
+    queryKey: ['admin-users'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/users');
+      if (!response.ok) {
+        throw new Error('Chyba při načítání uživatelů');
+      }
+      return response.json();
+    },
+  });
+
+  // Create user mutation
+  const createUserMutation = useMutation({
+    mutationFn: async (data: CreateUserData) => {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Chyba při vytváření uživatele');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      setShowAddModal(false);
+      setFormData({ name: '', email: '', role: 'editor', password: '' });
+      setError('');
+    },
+    onError: (error: Error) => {
+      setError(error.message);
+    },
+  });
+
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: UpdateUserData }) => {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Chyba při aktualizaci uživatele');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      setShowEditModal(false);
+      setSelectedUser(null);
+      setFormData({ name: '', email: '', role: 'editor', password: '' });
+      setError('');
+    },
+    onError: (error: Error) => {
+      setError(error.message);
+    },
+  });
+
+  // Delete user mutation
+  const deleteUserMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Chyba při mazání uživatele');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+    },
+  });
+
+  // Toggle status mutation
+  const toggleStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: 'active' | 'inactive' }) => {
+      const response = await fetch(`/api/admin/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Chyba při změně statusu');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+    },
   });
 
   const getRoleBadgeColor = (role: string) => {
@@ -92,24 +179,19 @@ export default function AdminUsersPage() {
 
   const handleAddUser = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
     if (!formData.name || !formData.email || !formData.password) {
-      alert('Vyplňte všechna povinná pole');
+      setError('Vyplňte všechna povinná pole');
       return;
     }
 
-    const newUser: AdminUser = {
-      id: Math.random().toString(36).substr(2, 9),
+    createUserMutation.mutate({
       name: formData.name,
       email: formData.email,
+      password: formData.password,
       role: formData.role,
-      lastLogin: new Date().toISOString(),
-      status: 'active',
-      createdAt: new Date().toISOString(),
-    };
-
-    setUsers([...users, newUser]);
-    setFormData({ name: '', email: '', role: 'editor', password: '' });
-    setShowAddModal(false);
+    });
   };
 
   const handleEditUser = (user: AdminUser) => {
@@ -117,58 +199,64 @@ export default function AdminUsersPage() {
     setFormData({
       name: user.name,
       email: user.email,
-      role: user.role as 'editor',
+      role: user.role as 'admin' | 'manager' | 'editor',
       password: '',
     });
     setShowEditModal(true);
+    setError('');
   };
 
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedUser) {
-      setUsers(
-        users.map((u) =>
-          u.id === selectedUser.id
-            ? {
-                ...u,
-                name: formData.name,
-                email: formData.email,
-                role: formData.role,
-              }
-            : u
-        )
-      );
-      setShowEditModal(false);
-      setSelectedUser(null);
-      setFormData({ name: '', email: '', role: 'editor', password: '' });
+    setError('');
+
+    if (!selectedUser) return;
+
+    const updateData: UpdateUserData = {};
+    if (formData.name && formData.name !== selectedUser.name) updateData.name = formData.name;
+    if (formData.email && formData.email !== selectedUser.email) updateData.email = formData.email;
+    if (formData.role && formData.role !== selectedUser.role) updateData.role = formData.role;
+    if (formData.password) updateData.password = formData.password;
+
+    if (Object.keys(updateData).length === 0) {
+      setError('Žádné změny nebyly provedeny');
+      return;
     }
+
+    updateUserMutation.mutate({ id: selectedUser.id, data: updateData });
   };
 
   const handleDeleteUser = (id: string) => {
     if (confirm('Opravdu chcete smazat tohoto uživatele?')) {
-      setUsers(users.filter((u) => u.id !== id));
+      deleteUserMutation.mutate(id);
     }
   };
 
-  const handleToggleStatus = (id: string) => {
-    setUsers(
-      users.map((u) =>
-        u.id === id
-          ? {
-              ...u,
-              status: u.status === 'active' ? 'inactive' : 'active',
-            }
-          : u
-      )
-    );
+  const handleToggleStatus = (user: AdminUser) => {
+    const newStatus = user.status === 'active' ? 'inactive' : 'active';
+    toggleStatusMutation.mutate({ id: user.id, status: newStatus });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Načítám uživatele...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Správa Uživatelů</h1>
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={() => {
+            setShowAddModal(true);
+            setError('');
+          }}
           className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
         >
           + Přidat uživatele
@@ -183,8 +271,8 @@ export default function AdminUsersPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Jméno</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Poslední přihlášení</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Vytvořeno</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Akce</th>
             </tr>
           </thead>
@@ -198,33 +286,30 @@ export default function AdminUsersPage() {
                     {getRoleLabel(user.role)}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  {new Date(user.lastLogin).toLocaleDateString('cs-CZ')} {new Date(user.lastLogin).toLocaleTimeString('cs-CZ')}
-                </td>
                 <td className="px-6 py-4 text-sm">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(user.status)}`}>
                     {getStatusLabel(user.status)}
                   </span>
                 </td>
+                <td className="px-6 py-4 text-sm text-gray-600">
+                  {new Date(user.createdAt).toLocaleDateString('cs-CZ')}
+                </td>
                 <td className="px-6 py-4 text-sm space-x-2 flex">
                   <button
                     onClick={() => handleEditUser(user)}
-                    disabled={user.id === '1'}
-                    className="text-blue-600 hover:text-blue-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Upravit
                   </button>
                   <button
-                    onClick={() => handleToggleStatus(user.id)}
-                    disabled={user.id === '1'}
-                    className="text-yellow-600 hover:text-yellow-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => handleToggleStatus(user)}
+                    className="text-yellow-600 hover:text-yellow-800 font-medium"
                   >
                     {user.status === 'active' ? 'Deaktivovat' : 'Aktivovat'}
                   </button>
                   <button
                     onClick={() => handleDeleteUser(user.id)}
-                    disabled={user.id === '1'}
-                    className="text-red-600 hover:text-red-800 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-red-600 hover:text-red-800 font-medium"
                   >
                     Smazat
                   </button>
@@ -240,6 +325,11 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-2xl font-bold mb-4">Přidat nového uživatele</h2>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleAddUser} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
@@ -279,23 +369,28 @@ export default function AdminUsersPage() {
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Heslo"
+                  placeholder="Heslo (min. 8 znaků)"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div className="flex gap-2 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setError('');
+                  }}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  disabled={createUserMutation.isPending}
                 >
                   Zrušit
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  disabled={createUserMutation.isPending}
                 >
-                  Přidat
+                  {createUserMutation.isPending ? 'Vytvářím...' : 'Přidat'}
                 </button>
               </div>
             </form>
@@ -308,6 +403,11 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-2xl font-bold mb-4">Upravit uživatele</h2>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSaveEdit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Jméno</label>
@@ -339,23 +439,36 @@ export default function AdminUsersPage() {
                   <option value="admin">Administrátor</option>
                 </select>
               </div>
-              <p className="text-sm text-gray-600 py-2">Ponechte heslo prázdné, pokud nechcete měnit.</p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nové heslo (volitelné)</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Ponechte prázdné pro beze změny"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <p className="text-sm text-gray-600">Změňte pouze pole, která chcete aktualizovat.</p>
               <div className="flex gap-2 pt-4">
                 <button
                   type="button"
                   onClick={() => {
                     setShowEditModal(false);
                     setSelectedUser(null);
+                    setError('');
                   }}
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  disabled={updateUserMutation.isPending}
                 >
                   Zrušit
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  disabled={updateUserMutation.isPending}
                 >
-                  Uložit
+                  {updateUserMutation.isPending ? 'Ukládám...' : 'Uložit'}
                 </button>
               </div>
             </form>
