@@ -96,15 +96,6 @@ export default function AdminLoginPage() {
             {loading ? 'Přihlašuji...' : 'Přihlásit se'}
           </button>
         </form>
-
-        {/* Demo Credentials */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center mb-2">Demo přihlášení:</p>
-          <div className="bg-gray-50 p-3 rounded text-xs text-gray-600 space-y-1">
-            <p>Email: <span className="font-mono">admin@example.com</span></p>
-            <p>Heslo: <span className="font-mono">admin123</span></p>
-          </div>
-        </div>
       </div>
     </div>
   );

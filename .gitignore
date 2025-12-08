@@ -28,6 +28,12 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+.env*
+
+# sensitive deployment files (contain credentials)
+VERCEL_ENV_VARS.txt
+run-migrations.sh
+.env.production
 
 # vercel
 .vercel

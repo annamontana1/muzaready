@@ -59,9 +59,6 @@ export async function GET(request: NextRequest) {
   try {
     // Use the router function to get the correct URL for this environment
     const dbUrl = getDbUrl();
-    const maskedUrl = maskPassword(dbUrl);
-    const hostPort = extractHostPort(dbUrl);
-    const dbSource = getDbSource();
 
     // Create PrismaClient instance with the appropriate URL
     const prisma = new PrismaClient({
@@ -76,6 +73,21 @@ export async function GET(request: NextRequest) {
     await prisma.$queryRaw`SELECT 1`;
     await prisma.$disconnect();
 
+    // Production: Minimal response without infrastructure details
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        {
+          status: 'ok',
+        },
+        { status: 200 }
+      );
+    }
+
+    // Development: Detailed diagnostics
+    const maskedUrl = maskPassword(dbUrl);
+    const hostPort = extractHostPort(dbUrl);
+    const dbSource = getDbSource();
+
     return NextResponse.json(
       {
         ok: true,
@@ -89,7 +101,17 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error('[Health Check] DB error:', error);
 
-    // Mask password in error message
+    // Production: Minimal error response
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        {
+          status: 'error',
+        },
+        { status: 500 }
+      );
+    }
+
+    // Development: Detailed error diagnostics
     const errorMessage = error?.message || 'Database connection failed';
     const maskedError = errorMessage.replace(/:([^:@]+)@/, ':***@');
 

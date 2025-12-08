@@ -5,7 +5,22 @@ export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
+    // Vyžadujeme email parameter pro vyhledání objednávek
+    const searchParams = request.nextUrl.searchParams;
+    const email = searchParams.get('email');
+
+    if (!email) {
+      return NextResponse.json(
+        { error: 'Email parameter is required' },
+        { status: 400 }
+      );
+    }
+
+    // Vrátíme pouze objednávky pro daný email
     const orders = await prisma.order.findMany({
+      where: {
+        email: email,
+      },
       include: {
         items: {
           include: {
@@ -64,6 +79,7 @@ export async function POST(request: NextRequest) {
         email,
         firstName: shippingInfo?.firstName || 'Customer',
         lastName: shippingInfo?.lastName || '',
+        phone: shippingInfo?.phone || null,
         streetAddress: shippingInfo?.streetAddress || 'Unknown',
         city: shippingInfo?.city || 'Unknown',
         zipCode: shippingInfo?.zipCode || '00000',

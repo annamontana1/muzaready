@@ -15,9 +15,9 @@ export default function PokladnaPage() {
     firstName: '',
     lastName: '',
     phone: '',
-    address: '',
+    streetAddress: '',
     city: '',
-    postalCode: '',
+    zipCode: '',
     country: 'CZ',
   });
 
@@ -42,7 +42,7 @@ export default function PokladnaPage() {
 
     try {
       // Validation
-      if (!formData.email || !formData.firstName || !formData.address || !formData.city) {
+      if (!formData.email || !formData.firstName || !formData.streetAddress || !formData.city) {
         setError('Prosím vyplňte všechna povinná pole');
         setLoading(false);
         return;
@@ -61,9 +61,9 @@ export default function PokladnaPage() {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phone: formData.phone,
-          address: formData.address,
+          streetAddress: formData.streetAddress,
           city: formData.city,
-          postalCode: formData.postalCode,
+          zipCode: formData.zipCode,
           country: formData.country,
         },
       };
@@ -257,8 +257,8 @@ export default function PokladnaPage() {
               </label>
               <input
                 type="text"
-                name="address"
-                value={formData.address}
+                name="streetAddress"
+                value={formData.streetAddress}
                 onChange={handleInputChange}
                 required
                 disabled={loading}
@@ -290,8 +290,8 @@ export default function PokladnaPage() {
                 </label>
                 <input
                   type="text"
-                  name="postalCode"
-                  value={formData.postalCode}
+                  name="zipCode"
+                  value={formData.zipCode}
                   onChange={handleInputChange}
                   required
                   disabled={loading}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CookieConsent from "@/components/CookieConsent";
 import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 import Providers from "./Providers";
 
@@ -85,6 +86,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <CookieConsent />
         </Providers>
       </body>
     </html>

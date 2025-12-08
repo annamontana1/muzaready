@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomBytes } from 'crypto';
 import prisma from '@/lib/prisma';
 import { verifyPassword } from '@/lib/admin-auth';
 export const runtime = 'nodejs';
@@ -46,8 +47,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create session token
-    const token = 'admin-token-' + Math.random().toString(36).substring(7) + Date.now();
+    // Create cryptographically secure session token
+    const token = randomBytes(32).toString('hex');
     const sessionData = {
       email: admin.email,
       name: admin.name,
@@ -70,9 +71,9 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-    // Set httpOnly cookie for security (middleware can read cookies)
+    // Set httpOnly cookie for security (prevents XSS attacks)
     response.cookies.set('admin-session', JSON.stringify(sessionData), {
-      httpOnly: false, // Allow JavaScript to read for client-side checks
+      httpOnly: true, // Prevents JavaScript access (XSS protection)
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
