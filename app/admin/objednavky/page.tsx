@@ -281,11 +281,42 @@ export default function AdminOrdersPage() {
     );
   }
 
+  // Create test order function
+  const handleCreateTestOrder = async () => {
+    try {
+      const response = await fetch('/api/admin/test-order', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Chyba při vytváření test objednávky');
+      }
+
+      const data = await response.json();
+      showToast('Test objednávka byla úspěšně vytvořena', 'success');
+      
+      // Invalidate React Query cache to refresh list
+      // React Query will auto-refetch when component re-renders
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating test order:', error);
+      showToast('Chyba při vytváření test objednávky', 'error');
+    }
+  };
+
   // Main render
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Správa Objednávek</h1>
+        <button
+          onClick={handleCreateTestOrder}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+          title="Vytvořit test objednávku pro testování"
+        >
+          ➕ Vytvořit test objednávku
+        </button>
       </div>
 
       {/* Summary Stats - Keep existing enhancement */}
