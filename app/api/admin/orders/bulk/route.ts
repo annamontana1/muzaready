@@ -1,196 +1,121 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { requireAdmin } from '@/lib/admin-auth';
-
-export const runtime = 'nodejs';
 
 /**
  * POST /api/admin/orders/bulk
- * Bulk update multiple orders
- *
- * Request Body:
- * {
- *   "ids": ["order1", "order2", "order3"],
- *   "action": "mark-shipped" | "mark-paid" | "update-status",
- *   "data": {
- *     "orderStatus": "paid",
- *     "paymentStatus": "paid",
- *     "deliveryStatus": "shipped",
- *     "tags": ["expedovano"],
- *     "notesInternal": "Updated via bulk action"
- *   }
- * }
+ * Handles bulk operations on orders (status update, payment status update, delete)
  */
 export async function POST(request: NextRequest) {
-  // Check admin authentication
-  const authError = await requireAdmin(request);
-  if (authError) return authError;
-
   try {
     const body = await request.json();
-    const { ids, action, data } = body;
+    const { orderIds, action, value } = body;
 
     // Validate input
-    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    if (!orderIds || !Array.isArray(orderIds) || orderIds.length === 0) {
       return NextResponse.json(
-        { error: 'Missing or invalid ids array' },
+        { error: 'Neplatné ID objednávek' },
         { status: 400 }
       );
     }
 
     if (!action) {
       return NextResponse.json(
-        { error: 'Missing action' },
+        { error: 'Neplatná akce' },
         { status: 400 }
       );
     }
 
-    // Validate allowed actions
-    const allowedActions = ['mark-shipped', 'mark-paid', 'update-status'];
-    if (!allowedActions.includes(action)) {
-      return NextResponse.json(
-        { error: `Invalid action. Must be one of: ${allowedActions.join(', ')}` },
-        { status: 400 }
-      );
-    }
+    let result;
 
-    // Validate data object
-    if (!data || typeof data !== 'object') {
-      return NextResponse.json(
-        { error: 'Missing or invalid data object' },
-        { status: 400 }
-      );
-    }
-
-    // Build update data based on action
-    const updateData: any = {};
-
-    // Validate statuses if provided
-    const validOrderStatuses = [
-      'draft',
-      'pending',
-      'paid',
-      'processing',
-      'shipped',
-      'completed',
-      'cancelled',
-    ];
-    const validPaymentStatuses = ['unpaid', 'partial', 'paid', 'refunded'];
-    const validDeliveryStatuses = ['pending', 'shipped', 'delivered', 'returned'];
-
-    if (data.orderStatus) {
-      if (!validOrderStatuses.includes(data.orderStatus)) {
+    // Handle different actions
+    if (action === 'updateStatus') {
+      if (!value) {
         return NextResponse.json(
-          {
-            error: `Invalid orderStatus. Must be one of: ${validOrderStatuses.join(', ')}`,
-          },
+          { error: 'Nový stav je vyžadován' },
           { status: 400 }
         );
       }
-      updateData.orderStatus = data.orderStatus;
-    }
 
-    if (data.paymentStatus) {
-      if (!validPaymentStatuses.includes(data.paymentStatus)) {
-        return NextResponse.json(
-          {
-            error: `Invalid paymentStatus. Must be one of: ${validPaymentStatuses.join(
-              ', '
-            )}`,
-          },
-          { status: 400 }
-        );
-      }
-      updateData.paymentStatus = data.paymentStatus;
-    }
-
-    if (data.deliveryStatus) {
-      if (!validDeliveryStatuses.includes(data.deliveryStatus)) {
-        return NextResponse.json(
-          {
-            error: `Invalid deliveryStatus. Must be one of: ${validDeliveryStatuses.join(
-              ', '
-            )}`,
-          },
-          { status: 400 }
-        );
-      }
-      updateData.deliveryStatus = data.deliveryStatus;
-    }
-
-    // Handle other fields
-    if (data.tags !== undefined) {
-      updateData.tags = JSON.stringify(data.tags);
-    }
-    if (data.notesInternal !== undefined) {
-      updateData.notesInternal = data.notesInternal;
-    }
-    if (data.notesCustomer !== undefined) {
-      updateData.notesCustomer = data.notesCustomer;
-    }
-    if (data.riskScore !== undefined) {
-      updateData.riskScore = data.riskScore;
-    }
-    if (data.channel !== undefined) {
-      updateData.channel = data.channel;
-    }
-
-    // Always update lastStatusChangeAt if any status changed
-    if (data.orderStatus || data.paymentStatus || data.deliveryStatus) {
-      updateData.lastStatusChangeAt = new Date();
-    }
-
-    // Handle special actions
-    if (action === 'mark-shipped') {
-      updateData.deliveryStatus = 'shipped';
-      updateData.lastStatusChangeAt = new Date();
-    } else if (action === 'mark-paid') {
-      updateData.paymentStatus = 'paid';
-      updateData.lastStatusChangeAt = new Date();
-    }
-
-    // Perform bulk update
-    const result = await prisma.order.updateMany({
-      where: { id: { in: ids } },
-      data: updateData,
-    });
-
-    // Fetch updated orders for response
-    const updatedOrders = await prisma.order.findMany({
-      where: { id: { in: ids } },
-      include: {
-        items: {
-          include: {
-            sku: {
-              select: {
-                id: true,
-                sku: true,
-                name: true,
-                shadeName: true,
-                lengthCm: true,
-              },
-            },
-          },
+      result = await prisma.order.updateMany({
+        where: {
+          id: { in: orderIds },
         },
-      },
-    });
+        data: {
+          status: value,
+          updatedAt: new Date(),
+        },
+      });
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Byl aktualizován stav ${result.count} objednávek`,
+          count: result.count,
+        },
+        { status: 200 }
+      );
+    }
+
+    if (action === 'updatePaymentStatus') {
+      if (!value) {
+        return NextResponse.json(
+          { error: 'Nový stav platby je vyžadován' },
+          { status: 400 }
+        );
+      }
+
+      result = await prisma.order.updateMany({
+        where: {
+          id: { in: orderIds },
+        },
+        data: {
+          paymentStatus: value,
+          updatedAt: new Date(),
+        },
+      });
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Byl aktualizován stav platby ${result.count} objednávek`,
+          count: result.count,
+        },
+        { status: 200 }
+      );
+    }
+
+    if (action === 'delete') {
+      // Soft delete - mark as cancelled if not using soft deletes,
+      // or perform actual deletion if that's the policy
+      // For now, we'll use status-based marking instead of actual deletion to preserve data
+      result = await prisma.order.updateMany({
+        where: {
+          id: { in: orderIds },
+        },
+        data: {
+          status: 'cancelled_unpaid', // Mark as cancelled instead of true deletion
+          updatedAt: new Date(),
+        },
+      });
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Bylo označeno jako zrušeno ${result.count} objednávek`,
+          count: result.count,
+        },
+        { status: 200 }
+      );
+    }
 
     return NextResponse.json(
-      {
-        success: true,
-        updated: result.count,
-        totalRequested: ids.length,
-        orders: updatedOrders,
-      },
-      { status: 200 }
+      { error: 'Neznámá akce' },
+      { status: 400 }
     );
   } catch (error) {
-    console.error('Error in bulk order update:', error);
+    console.error('Chyba při hromadné akci:', error);
     return NextResponse.json(
-      {
-        error: 'Failed to perform bulk action',
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: 'Chyba při zpracování hromadné akce' },
       { status: 500 }
     );
   }

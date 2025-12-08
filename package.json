@@ -9,7 +9,12 @@
     "lint": "next lint",
     "seed": "tsx prisma/seed.ts",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "ai": "tsx scripts/ai-cli.ts",
+    "ai:claude": "AI_PROVIDER=claude tsx scripts/ai-cli.ts",
+    "ai:openai": "AI_PROVIDER=openai tsx scripts/ai-cli.ts",
+    "ai:chat": "tsx scripts/ai-cli.ts chat",
+    "ai:chat:openai": "tsx scripts/ai-cli.ts chat openai"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
