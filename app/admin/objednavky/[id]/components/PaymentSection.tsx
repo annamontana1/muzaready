@@ -92,6 +92,12 @@ const getDeliveryMethodLabel = (method: string) => {
       return 'Express';
     case 'pickup':
       return 'Osobní odběr';
+    case 'zasilkovna':
+      return 'Zásilkovna';
+    case 'gls':
+      return 'GLS';
+    case 'courier':
+      return 'Kuriér';
     default:
       return method;
   }
@@ -103,6 +109,8 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
   const [success, setSuccess] = useState<string | null>(null);
   const [isEditingPayment, setIsEditingPayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(order.paymentMethod || 'gopay');
+  const [isEditingDelivery, setIsEditingDelivery] = useState(false);
+  const [deliveryMethod, setDeliveryMethod] = useState(order.deliveryMethod || 'standard');
 
   const handleGenerateInvoice = async () => {
     setIsGenerating(true);
@@ -166,6 +174,32 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Chyba při ukládání způsobu platby');
+    }
+  };
+
+  const handleSaveDeliveryMethod = async () => {
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deliveryMethod }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Nepodařilo se uložit způsob dopravy');
+      }
+
+      setSuccess('Způsob dopravy byl úspěšně uložen');
+      setIsEditingDelivery(false);
+
+      // Reload page to show updated delivery method
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Chyba při ukládání způsobu dopravy');
     }
   };
 
@@ -357,10 +391,56 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
               </div>
 
               <div>
-                <p className="text-sm text-gray-600 mb-1">Způsob dopravy</p>
-                <p className="text-base font-medium text-gray-900">
-                  {getDeliveryMethodLabel(order.deliveryMethod)}
-                </p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-gray-600">Způsob dopravy</p>
+                  {!isEditingDelivery && (
+                    <button
+                      onClick={() => setIsEditingDelivery(true)}
+                      className="text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      Upravit
+                    </button>
+                  )}
+                </div>
+
+                {isEditingDelivery ? (
+                  <div className="space-y-2">
+                    <select
+                      value={deliveryMethod}
+                      onChange={(e) => setDeliveryMethod(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="standard">Standardní</option>
+                      <option value="express">Express</option>
+                      <option value="zasilkovna">📦 Zásilkovna</option>
+                      <option value="gls">🚚 GLS</option>
+                      <option value="courier">Kuriér</option>
+                      <option value="pickup">Osobní odběr</option>
+                    </select>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleSaveDeliveryMethod}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                      >
+                        Uložit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsEditingDelivery(false);
+                          setDeliveryMethod(order.deliveryMethod || 'standard');
+                        }}
+                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                      >
+                        Zrušit
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-base font-medium text-gray-900">
+                    {getDeliveryMethodLabel(order.deliveryMethod)}
+                  </p>
+                )}
               </div>
             </div>
           </div>

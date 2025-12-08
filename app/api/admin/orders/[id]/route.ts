@@ -176,6 +176,7 @@ export async function PUT(
     if (body.paymentStatus !== undefined) updateData.paymentStatus = body.paymentStatus;
     if (body.deliveryStatus !== undefined) updateData.deliveryStatus = body.deliveryStatus;
     if (body.paymentMethod !== undefined) updateData.paymentMethod = body.paymentMethod;
+    if (body.deliveryMethod !== undefined) updateData.deliveryMethod = body.deliveryMethod;
     if (body.tags !== undefined) updateData.tags = JSON.stringify(body.tags);
     if (body.notesInternal !== undefined) updateData.notesInternal = body.notesInternal;
     if (body.notesCustomer !== undefined) updateData.notesCustomer = body.notesCustomer;
