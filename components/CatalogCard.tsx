@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { HAIR_COLORS } from '@/types/product';
 import FavoriteButton from './FavoriteButton';
 import AddToCartModal from './AddToCartModal';
+import BulkAddToCartModal from './BulkAddToCartModal';
 import { usePreferences } from '@/lib/preferences-context';
 
 /**
@@ -76,6 +77,7 @@ const formatCurrencyValue = (value: number, currency: 'CZK' | 'EUR') => {
 export default function CatalogCard({ ...props }: CatalogCardProps) {
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   const [showAddToCartModal, setShowAddToCartModal] = useState(false);
+  const [showBulkAddToCartModal, setShowBulkAddToCartModal] = useState(false);
   const { currency, exchangeRate } = usePreferences();
   const rate = exchangeRate || DEFAULT_RATE;
   const shadeColor = getShadeColor(props.shade);
@@ -108,7 +110,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
         onClick={(e) => {
           e.preventDefault();
-          // TODO: Implement add to cart with default combo
+          setShowBulkAddToCartModal(true);
         }}
       >
         🛒 Do košíku
@@ -336,6 +338,23 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         </div>
       </div>
     </Link>
+
+    {/* Bulk Add To Cart Modal */}
+    {showBulkAddToCartModal && (
+      <BulkAddToCartModal
+        isOpen={showBulkAddToCartModal}
+        skuId={props.id}
+        productName={props.name}
+        pricePerGramCzk={props.pricePerGramCzk || 0}
+        lengthCm={props.lengthCm || 45}
+        shade={props.shade || 1}
+        shadeName={props.shadeName || ''}
+        structure={props.structure || ''}
+        tier={props.tier}
+        onClose={() => setShowBulkAddToCartModal(false)}
+        onAdded={handleAddedToCart}
+      />
+    )}
     </>
   );
 }

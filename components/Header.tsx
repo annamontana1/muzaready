@@ -7,7 +7,7 @@ import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
 import { useFavorites } from '@/hooks/useFavorites';
-import { useCart } from '@/contexts/CartContext';
+import { useSkuCart } from '@/contexts/SkuCartContext';
 import { usePreferences } from '@/lib/preferences-context';
 
 export default function Header() {
@@ -19,11 +19,17 @@ export default function Header() {
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
 
   const { favorites } = useFavorites();
-  const { items } = useCart();
+  const { items } = useSkuCart();
   const { language, currency, setLanguage, setCurrency } = usePreferences();
 
   const favoriteCount = favorites.length;
-  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
+  // Count cart items: for BULK_G count each entry as 1, for PIECE_BY_WEIGHT use quantity
+  const cartCount = items.reduce((total, item) => {
+    if (item.saleMode === 'BULK_G') {
+      return total + 1; // Each bulk entry = 1 item
+    }
+    return total + item.quantity; // For PIECE_BY_WEIGHT, use quantity
+  }, 0);
 
   // Memoize search overlay close handler - DEPENDENCY: []
   const handleSearchOverlayClose = useCallback(() => {

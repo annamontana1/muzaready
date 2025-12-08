@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
-import { useCart } from '@/contexts/CartContext';
+import { useSkuCart } from '@/contexts/SkuCartContext';
 import { useAuth } from '@/components/AuthProvider';
 import FavoriteButton from './FavoriteButton';
+import type { SkuCartItem } from '@/types/cart';
 
 interface ProductCardProps {
   product: Product;
@@ -96,11 +97,40 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (displayVariant) {
-      addToCart(product, displayVariant, 1);
-      setShowAddedMessage(true);
-      setTimeout(() => setShowAddedMessage(false), 2000);
-    }
+    if (!displayVariant) return;
+
+    // Transform Product+Variant to SkuCartItem format
+    const grams = 100; // Standard 100g pieces
+    const pricePerGram = displayPrice / 100;
+    const lineTotal = pricePerGram * grams;
+
+    // Map tier to customer category
+    const customerCategory =
+      product.tier === 'Platinum edition' ? 'PLATINUM_EDITION' as const :
+      product.tier === 'LUXE' ? 'LUXE' as const :
+      'STANDARD' as const;
+
+    // Create SkuCartItem object
+    const cartItem: Omit<SkuCartItem, 'addedAt'> = {
+      skuId: displayVariant.id || `${product.id}-${displayVariant.shade}`,
+      skuName: listingTitle,
+      customerCategory,
+      shade: displayVariant.shade.toString(),
+      saleMode: 'PIECE_BY_WEIGHT',
+      grams,
+      pricePerGram,
+      lineTotal,
+      ending: 'NONE',
+      assemblyFeeType: 'FLAT',
+      assemblyFeeCzk: 0,
+      assemblyFeeTotal: 0,
+      lineGrandTotal: lineTotal,
+      quantity: 1,
+    };
+
+    addToCart(cartItem);
+    setShowAddedMessage(true);
+    setTimeout(() => setShowAddedMessage(false), 2000);
   };
 
   return (
