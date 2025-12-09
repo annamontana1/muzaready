@@ -190,6 +190,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Send order confirmation email
+    try {
+      const { sendOrderConfirmationEmail } = await import('@/lib/email');
+      const emailItems = order.items.map((item) => ({
+        variant: item.nameSnapshot || 'Neznámý produkt',
+        quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
+        price: item.lineTotal + (item.assemblyFeeTotal || 0),
+      }));
+      await sendOrderConfirmationEmail(order.email, order.id, emailItems, order.total);
+    } catch (emailError) {
+      console.error('Failed to send order confirmation email:', emailError);
+      // Don't fail the order creation if email fails
+    }
+
     return NextResponse.json(
       {
         orderId: order.id,

@@ -27,6 +27,7 @@ interface Order {
   orderStatus: string;
   paymentStatus: string;
   deliveryStatus: string;
+  trackingNumber: string | null;
   total: number;
   createdAt: string;
   updatedAt: string;
@@ -192,6 +193,52 @@ export default function OrderTrackingPage() {
             <Card variant="default" padding="lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Stav objednávky</h2>
               <OrderStatusTimeline currentStatus={order.orderStatus} />
+              
+              {/* Status Badges */}
+              <div className="mt-6 flex flex-wrap gap-3">
+                <span className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  order.orderStatus === 'completed' ? 'bg-green-100 text-green-800' :
+                  order.orderStatus === 'shipped' ? 'bg-blue-100 text-blue-800' :
+                  order.orderStatus === 'processing' ? 'bg-yellow-100 text-yellow-800' :
+                  order.orderStatus === 'pending' ? 'bg-orange-100 text-orange-800' :
+                  order.orderStatus === 'cancelled' ? 'bg-red-100 text-red-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  Objednávka: {order.orderStatus}
+                </span>
+                <span className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
+                  order.paymentStatus === 'partial' ? 'bg-yellow-100 text-yellow-800' :
+                  order.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                  'bg-red-100 text-red-800'
+                }`}>
+                  Platba: {order.paymentStatus}
+                </span>
+                <span className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  order.deliveryStatus === 'delivered' ? 'bg-green-100 text-green-800' :
+                  order.deliveryStatus === 'shipped' ? 'bg-blue-100 text-blue-800' :
+                  order.deliveryStatus === 'returned' ? 'bg-red-100 text-red-800' :
+                  'bg-orange-100 text-orange-800'
+                }`}>
+                  Doprava: {order.deliveryStatus}
+                </span>
+              </div>
+
+              {/* Tracking Number */}
+              {order.trackingNumber && (
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">Číslo sledování:</p>
+                  <p className="text-lg font-bold text-blue-800">{order.trackingNumber}</p>
+                  <a
+                    href={`https://www.postaonline.cz/trackandtrace/-/zasilka/cislo?parcelNumbers=${order.trackingNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-800 underline mt-2 inline-block"
+                  >
+                    Sledovat zásilku →
+                  </a>
+                </div>
+              )}
             </Card>
 
             {/* Order Items */}

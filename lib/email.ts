@@ -360,6 +360,215 @@ export const sendAdminOrderNotificationEmail = async (
   }
 };
 
+export const sendDeliveryConfirmationEmail = async (
+  email: string,
+  orderId: string
+) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendDeliveryConfirmationEmail');
+    return;
+  }
+
+  try {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #28a745; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+            .content { background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; }
+            .success-icon { font-size: 48px; margin: 20px 0; }
+            .info-box { background-color: #e8f5e9; padding: 15px; border-left: 4px solid #28a745; margin: 15px 0; }
+            .footer { color: #666; font-size: 12px; margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <div class="success-icon">📦</div>
+              <h1>Balíček byl doručen!</h1>
+            </div>
+            <div class="content">
+              <p>Dobrý den,</p>
+              <p>Vaše objednávka byla úspěšně doručena.</p>
+
+              <div class="info-box">
+                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+              </div>
+
+              <p>Doufáme, že jste s vaším nákupem spokojeni. Pokud máte jakékoliv dotazy nebo připomínky, neváhejte nás kontaktovat.</p>
+
+              <p>Děkujeme za váš nákup v obchodě <strong>Múza Hair</strong> a těšíme se na další spolupráci!</p>
+
+              <div class="footer">
+                <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'objednavky@muzahair.cz',
+      to: email,
+      subject: `Balíček doručen #${orderId.substring(0, 8)}`,
+      html,
+    });
+
+    console.log('Delivery confirmation email sent:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending delivery confirmation email:', error);
+    throw error;
+  }
+};
+
+export const sendOrderCancellationEmail = async (
+  email: string,
+  orderId: string,
+  reason?: string
+) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendOrderCancellationEmail');
+    return;
+  }
+
+  try {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+            .content { background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; }
+            .info-box { background-color: #ffe6e6; padding: 15px; border-left: 4px solid #dc3545; margin: 15px 0; }
+            .footer { color: #666; font-size: 12px; margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Objednávka byla zrušena</h1>
+            </div>
+            <div class="content">
+              <p>Dobrý den,</p>
+              <p>Bohužel jsme museli zrušit vaši objednávku.</p>
+
+              <div class="info-box">
+                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                ${reason ? `<p><strong>Důvod:</strong> ${reason}</p>` : ''}
+              </div>
+
+              <p>Pokud byla platba již provedena, peníze budou vráceny na váš účet do 5-7 pracovních dnů.</p>
+
+              <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>info@muzahair.cz</strong>.</p>
+
+              <p>Omlouváme se za případné nepříjemnosti.</p>
+
+              <div class="footer">
+                <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'objednavky@muzahair.cz',
+      to: email,
+      subject: `Objednávka zrušena #${orderId.substring(0, 8)}`,
+      html,
+    });
+
+    console.log('Order cancellation email sent:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending order cancellation email:', error);
+    throw error;
+  }
+};
+
+export const sendPaymentReminderEmail = async (
+  email: string,
+  orderId: string,
+  total: number,
+  daysSinceOrder: number
+) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendPaymentReminderEmail');
+    return;
+  }
+
+  try {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #ffc107; color: #333; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+            .content { background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; }
+            .info-box { background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 15px 0; }
+            .button { display: inline-block; padding: 12px 24px; background-color: #8B1538; color: white; text-decoration: none; border-radius: 4px; margin: 15px 0; }
+            .footer { color: #666; font-size: 12px; margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Připomínka platby</h1>
+            </div>
+            <div class="content">
+              <p>Dobrý den,</p>
+              <p>Vaše objednávka čeká na zaplacení již ${daysSinceOrder} ${daysSinceOrder === 1 ? 'den' : 'dnů'}.</p>
+
+              <div class="info-box">
+                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                <p><strong>Částka k úhradě:</strong> ${total.toLocaleString('cs-CZ')} Kč</p>
+              </div>
+
+              <p>Pro dokončení objednávky prosím dokončete platbu. Pokud jste již zaplatili, tento email můžete ignorovat.</p>
+
+              <p style="text-align: center;">
+                <a href="https://muzahair.cz/sledovani-objednavky" class="button">Sledovat objednávku</a>
+              </p>
+
+              <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>info@muzahair.cz</strong>.</p>
+
+              <div class="footer">
+                <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'objednavky@muzahair.cz',
+      to: email,
+      subject: `Připomínka platby #${orderId.substring(0, 8)}`,
+      html,
+    });
+
+    console.log('Payment reminder email sent:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending payment reminder email:', error);
+    throw error;
+  }
+};
+
 /**
  * Send invoice email with PDF attachment
  */

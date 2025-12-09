@@ -180,6 +180,15 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Order ${orderId} paid and stock deducted`);
 
+    // Send payment confirmation email
+    try {
+      const { sendPaymentConfirmationEmail } = await import('@/lib/email');
+      await sendPaymentConfirmationEmail(result.email, orderId, result.total);
+    } catch (emailError) {
+      console.error('Failed to send payment confirmation email:', emailError);
+      // Don't fail the payment processing if email fails
+    }
+
     // Generate invoice automatically after successful payment
     try {
       const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');

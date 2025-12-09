@@ -333,9 +333,91 @@ export async function PUT(
             }
           }
 
+          // Send payment confirmation email if marked as paid
+          if (isChangingToPaid) {
+            try {
+              const { sendPaymentConfirmationEmail } = await import('@/lib/email');
+              await sendPaymentConfirmationEmail(updatedOrder.email, id, updatedOrder.total);
+            } catch (emailError) {
+              console.error('Failed to send payment confirmation email:', emailError);
+              // Don't fail the update if email fails
+            }
+          }
+
+          // Send delivery confirmation email if marked as delivered
+          const isChangingToDelivered = body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered';
+          const isChangingToCompleted = body.orderStatus === 'completed' && currentOrder.orderStatus !== 'completed';
+          if (isChangingToDelivered || isChangingToCompleted) {
+            try {
+              const { sendDeliveryConfirmationEmail } = await import('@/lib/email');
+              await sendDeliveryConfirmationEmail(updatedOrder.email, id);
+            } catch (emailError) {
+              console.error('Failed to send delivery confirmation email:', emailError);
+              // Don't fail the update if email fails
+            }
+          }
+
+          // Send cancellation email if order is cancelled or refunded
+          if (isChangingToCancelled || isChangingToRefunded) {
+            try {
+              const { sendOrderCancellationEmail } = await import('@/lib/email');
+              const reason = isChangingToRefunded ? 'Vrácení platby' : 'Zrušení objednávky';
+              await sendOrderCancellationEmail(updatedOrder.email, id, reason);
+            } catch (emailError) {
+              console.error('Failed to send cancellation email:', emailError);
+              // Don't fail the update if email fails
+            }
+          }
+
           return updatedOrder;
         })
       : await prisma.order.update({
+          where: { id },
+          data: updateData,
+          include: {
+            items: {
+              include: {
+                sku: {
+                  select: {
+                    id: true,
+                    sku: true,
+                    name: true,
+                    shadeName: true,
+                    lengthCm: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+    // Handle email notifications outside transaction for non-stock-changing updates
+    if (!isChangingToPaid && !isChangingToRefunded && !isChangingToCancelled) {
+      // Check for delivery status change
+      const isChangingToDelivered = body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered';
+      const isChangingToCompleted = body.orderStatus === 'completed' && currentOrder.orderStatus !== 'completed';
+      if (isChangingToDelivered || isChangingToCompleted) {
+        try {
+          const { sendDeliveryConfirmationEmail } = await import('@/lib/email');
+          await sendDeliveryConfirmationEmail(order.email, id);
+        } catch (emailError) {
+          console.error('Failed to send delivery confirmation email:', emailError);
+        }
+      }
+
+      // Check for cancellation
+      const isChangingToCancelledOutside = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled';
+      const isChangingToRefundedOutside = body.paymentStatus === 'refunded' && currentOrder.paymentStatus !== 'refunded';
+      if (isChangingToCancelledOutside || isChangingToRefundedOutside) {
+        try {
+          const { sendOrderCancellationEmail } = await import('@/lib/email');
+          const reason = isChangingToRefundedOutside ? 'Vrácení platby' : 'Zrušení objednávky';
+          await sendOrderCancellationEmail(order.email, id, reason);
+        } catch (emailError) {
+          console.error('Failed to send cancellation email:', emailError);
+        }
+      }
+    }
           where: { id },
           data: updateData,
           include: {
