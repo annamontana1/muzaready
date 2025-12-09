@@ -175,6 +175,18 @@ export async function PUT(
     if (body.orderStatus !== undefined) updateData.orderStatus = body.orderStatus;
     if (body.paymentStatus !== undefined) updateData.paymentStatus = body.paymentStatus;
     if (body.deliveryStatus !== undefined) updateData.deliveryStatus = body.deliveryStatus;
+
+    // Automatic workflow: Set orderStatus to 'processing' when payment is marked as 'paid'
+    if (body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid') {
+      if (currentOrder.orderStatus === 'pending' || currentOrder.orderStatus === 'draft') {
+        updateData.orderStatus = 'processing';
+      }
+    }
+
+    // Automatic workflow: Set orderStatus to 'completed' when delivery is marked as 'delivered'
+    if (body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered') {
+      updateData.orderStatus = 'completed';
+    }
     if (body.paymentMethod !== undefined) updateData.paymentMethod = body.paymentMethod;
     if (body.deliveryMethod !== undefined) updateData.deliveryMethod = body.deliveryMethod;
     if (body.tags !== undefined) updateData.tags = JSON.stringify(body.tags);

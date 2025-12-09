@@ -111,10 +111,11 @@ export async function POST(request: NextRequest) {
       }
 
       // Update order and payment status to 'paid'
+      // Automatic workflow: Set orderStatus to 'processing' when payment is confirmed
       const updatedOrder = await tx.order.update({
         where: { id: orderId },
         data: {
-          orderStatus: 'paid',
+          orderStatus: order.orderStatus === 'pending' || order.orderStatus === 'draft' ? 'processing' : order.orderStatus,
           paymentStatus: 'paid',
           updatedAt: new Date(),
         },
