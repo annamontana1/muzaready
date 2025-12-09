@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 import { UpdateAdminUserSchema } from '@/lib/validation/admin-users';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 export const runtime = 'nodejs';
 
 interface Params {
