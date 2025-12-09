@@ -30,6 +30,7 @@ export default function EditOrderPage() {
     orderStatus: '',
     paymentStatus: '',
     deliveryStatus: '',
+    email: '',
   });
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function EditOrderPage() {
           orderStatus: data.orderStatus,
           paymentStatus: data.paymentStatus,
           deliveryStatus: data.deliveryStatus,
+          email: data.email,
         });
         setLoading(false);
       } catch (err) {
@@ -62,7 +64,7 @@ export default function EditOrderPage() {
     }
   }, [orderId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 

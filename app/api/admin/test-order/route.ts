@@ -7,6 +7,11 @@ export const runtime = 'nodejs';
 /**
  * POST /api/admin/test-order
  * Vytvoří test objednávku pro testování admin panelu
+ * 
+ * Body (volitelné):
+ * {
+ *   "email": "tvuj-email@example.com"  // Pokud není zadán, použije se test email s varováním
+ * }
  */
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +20,18 @@ export async function POST(request: NextRequest) {
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Zkus získat email z request body (volitelné)
+    let email: string;
+    try {
+      const body = await request.json().catch(() => ({}));
+      email = body.email || `test-${Date.now()}@example.com`;
+    } catch {
+      email = `test-${Date.now()}@example.com`;
+    }
+
+    // Varování pokud je @example.com
+    const isTestEmail = email.includes('@example.com');
 
     // Najdi první dostupný SKU
     const sku = await prisma.sku.findFirst({
@@ -31,7 +48,7 @@ export async function POST(request: NextRequest) {
     // Vytvoř test objednávku
     const order = await prisma.order.create({
       data: {
-        email: `test-${Date.now()}@example.com`,
+        email: email,
         firstName: 'Test',
         lastName: 'Uživatel',
         phone: '+420123456789',
@@ -72,7 +89,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: 'Test objednávka byla úspěšně vytvořena',
+        message: isTestEmail 
+          ? 'Test objednávka byla úspěšně vytvořena. ⚠️ Email je @example.com - emaily se nedostanou. Změň email v detailu objednávky.'
+          : 'Test objednávka byla úspěšně vytvořena',
+        warning: isTestEmail ? 'Email je @example.com - emaily se nedostanou. Změň email v detailu objednávky.' : undefined,
         order: {
           id: order.id,
           email: order.email,

@@ -175,6 +175,7 @@ export async function PUT(
     if (body.orderStatus !== undefined) updateData.orderStatus = body.orderStatus;
     if (body.paymentStatus !== undefined) updateData.paymentStatus = body.paymentStatus;
     if (body.deliveryStatus !== undefined) updateData.deliveryStatus = body.deliveryStatus;
+    if (body.email !== undefined) updateData.email = body.email;
 
     // Automatic workflow: Set orderStatus to 'processing' when payment is marked as 'paid'
     if (body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid') {
