@@ -304,6 +304,41 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
     }
   };
 
+  const handleMarkAsRefunded = async () => {
+    if (updating) return;
+
+    if (!confirm('Opravdu chceš označit tuto objednávku jako refunded? Tato akce vrátí zásoby na sklad a odešle email zákazníkovi.')) {
+      return;
+    }
+
+    setUpdating(true);
+    try {
+      const response = await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          paymentStatus: 'refunded',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update payment status' }));
+        throw new Error(errorData.error || 'Failed to update payment status');
+      }
+
+      const updatedOrder = await response.json();
+      showToast('Objednávka byla označena jako refunded - zásoby byly vráceny na sklad', 'success');
+      onStatusChange();
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      showToast(error instanceof Error ? error.message : 'Chyba při aktualizaci stavu platby', 'error');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   // Format order ID to show only first 8 characters
   const shortId = order.id.substring(0, 8);
 
