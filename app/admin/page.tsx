@@ -14,17 +14,28 @@ interface Order {
   createdAt: string;
 }
 
+interface LowStockSku {
+  id: string;
+  sku: string;
+  name: string | null;
+  availableGrams: number | null;
+  inStock: boolean;
+  saleMode: string;
+}
+
 export default function AdminDashboard() {
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [lowStockSkus, setLowStockSkus] = useState<LowStockSku[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, ordersRes] = await Promise.all([
+        const [productsRes, ordersRes, skusRes] = await Promise.all([
           fetch('/api/admin/products'),
           fetch('/api/admin/orders'),
+          fetch('/api/admin/skus'),
         ]);
         
         if (!productsRes.ok || !ordersRes.ok) {
@@ -38,6 +49,20 @@ export default function AdminDashboard() {
         const ordersList = ordersData.orders || ordersData;
         setProducts(productsData);
         setOrders(ordersList);
+
+        // Fetch and filter low stock SKUs
+        if (skusRes.ok) {
+          const skusData = await skusRes.json();
+          // Filter SKUs with low stock (less than 100g or not in stock)
+          const lowStock = skusData.filter((sku: any) => {
+            if (!sku.inStock) return true;
+            if (sku.saleMode === 'BULK_G' && sku.availableGrams !== null) {
+              return sku.availableGrams < 100; // Threshold: 100g
+            }
+            return false;
+          });
+          setLowStockSkus(lowStock);
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -149,6 +174,49 @@ export default function AdminDashboard() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
+
+      {/* Low Stock Alert */}
+      {lowStockSkus.length > 0 && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4 mb-6">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <span className="text-2xl">⚠️</span>
+            </div>
+            <div className="ml-3 flex-1">
+              <h3 className="text-sm font-medium text-yellow-800">
+                Low Stock Alert - {lowStockSkus.length} {lowStockSkus.length === 1 ? 'SKU má' : 'SKU mají'} nízké zásoby
+              </h3>
+              <div className="mt-2 text-sm text-yellow-700">
+                <ul className="list-disc list-inside space-y-1">
+                  {lowStockSkus.slice(0, 5).map((sku) => (
+                    <li key={sku.id}>
+                      <strong>{sku.sku}</strong> {sku.name ? `(${sku.name})` : ''}:{' '}
+                      {sku.saleMode === 'BULK_G' && sku.availableGrams !== null
+                        ? `${sku.availableGrams}g`
+                        : sku.inStock
+                        ? 'Skladem'
+                        : 'Vyprodáno'}
+                    </li>
+                  ))}
+                  {lowStockSkus.length > 5 && (
+                    <li className="text-yellow-600 italic">
+                      ... a dalších {lowStockSkus.length - 5} SKU
+                    </li>
+                  )}
+                </ul>
+              </div>
+              <div className="mt-3">
+                <a
+                  href="/admin/sklad"
+                  className="text-sm font-medium text-yellow-800 hover:text-yellow-900 underline"
+                >
+                  Zobrazit všechny SKU →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

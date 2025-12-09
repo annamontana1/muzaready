@@ -187,25 +187,173 @@ export async function PUT(
       updateData.lastStatusChangeAt = new Date();
     }
 
-    const order = await prisma.order.update({
+    // Get current order state before update to check if paymentStatus is changing to 'paid'
+    const currentOrder = await prisma.order.findUnique({
       where: { id },
-      data: updateData,
       include: {
         items: {
           include: {
-            sku: {
-              select: {
-                id: true,
-                sku: true,
-                name: true,
-                shadeName: true,
-                lengthCm: true,
-              },
-            },
+            sku: true,
           },
         },
       },
     });
+
+    if (!currentOrder) {
+      return NextResponse.json(
+        { error: 'Order not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if paymentStatus is changing to 'paid' and stock hasn't been deducted yet
+    const isChangingToPaid = body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid';
+    
+    // Check if paymentStatus is changing to 'refunded' and stock was already deducted
+    const isChangingToRefunded = body.paymentStatus === 'refunded' && currentOrder.paymentStatus === 'paid';
+    
+    // Check if orderStatus is changing to 'cancelled' and stock was already deducted (order was paid)
+    const isChangingToCancelled = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled' && currentOrder.paymentStatus === 'paid';
+
+    // Use transaction if we need to deduct or return stock
+    const order = isChangingToPaid || isChangingToRefunded || isChangingToCancelled
+      ? await prisma.$transaction(async (tx) => {
+          // Update order status
+          const updatedOrder = await tx.order.update({
+            where: { id },
+            data: updateData,
+            include: {
+              items: {
+                include: {
+                  sku: true,
+                },
+              },
+            },
+          });
+
+          // Deduct stock when marking as paid
+          if (isChangingToPaid) {
+            for (const item of updatedOrder.items) {
+              if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
+                // Mark as sold out (pieces are fully consumed)
+                await tx.sku.update({
+                  where: { id: item.skuId },
+                  data: {
+                    soldOut: true,
+                    inStock: false,
+                  },
+                });
+
+                // Record stock movement
+                await tx.stockMovement.create({
+                  data: {
+                    skuId: item.skuId,
+                    type: 'OUT',
+                    grams: item.grams,
+                    note: `Prodáno (objednávka ${id.substring(0, 8)}) - ruční označení`,
+                    refOrderId: id,
+                  },
+                });
+              } else if (item.sku.saleMode === 'BULK_G') {
+                // Deduct grams from available stock
+                const newAvailableGrams = (item.sku.availableGrams || 0) - item.grams;
+
+                // Update SKU availability
+                await tx.sku.update({
+                  where: { id: item.skuId },
+                  data: {
+                    availableGrams: Math.max(0, newAvailableGrams),
+                    inStock: newAvailableGrams > 0, // Still in stock if grams remain
+                  },
+                });
+
+                // Record stock movement
+                await tx.stockMovement.create({
+                  data: {
+                    skuId: item.skuId,
+                    type: 'OUT',
+                    grams: item.grams,
+                    note: `Prodáno ${item.grams}g (objednávka ${id.substring(0, 8)}) - ruční označení`,
+                    refOrderId: id,
+                  },
+                });
+              }
+            }
+          }
+
+          // Return stock when refunding or cancelling paid order
+          if (isChangingToRefunded || isChangingToCancelled) {
+            for (const item of updatedOrder.items) {
+              if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
+                // Return piece to stock
+                await tx.sku.update({
+                  where: { id: item.skuId },
+                  data: {
+                    soldOut: false,
+                    inStock: true,
+                    inStockSince: new Date(),
+                  },
+                });
+
+                // Record stock movement
+                await tx.stockMovement.create({
+                  data: {
+                    skuId: item.skuId,
+                    type: 'IN',
+                    grams: item.grams,
+                    note: `${isChangingToRefunded ? 'Refund' : 'Zrušení'} (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
+                    refOrderId: id,
+                  },
+                });
+              } else if (item.sku.saleMode === 'BULK_G') {
+                // Return grams to available stock
+                const newAvailableGrams = (item.sku.availableGrams || 0) + item.grams;
+
+                // Update SKU availability
+                await tx.sku.update({
+                  where: { id: item.skuId },
+                  data: {
+                    availableGrams: newAvailableGrams,
+                    inStock: true,
+                    inStockSince: newAvailableGrams > 0 ? new Date() : item.sku.inStockSince,
+                  },
+                });
+
+                // Record stock movement
+                await tx.stockMovement.create({
+                  data: {
+                    skuId: item.skuId,
+                    type: 'IN',
+                    grams: item.grams,
+                    note: `${isChangingToRefunded ? 'Refund' : 'Zrušení'} ${item.grams}g (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
+                    refOrderId: id,
+                  },
+                });
+              }
+            }
+          }
+
+          return updatedOrder;
+        })
+      : await prisma.order.update({
+          where: { id },
+          data: updateData,
+          include: {
+            items: {
+              include: {
+                sku: {
+                  select: {
+                    id: true,
+                    sku: true,
+                    name: true,
+                    shadeName: true,
+                    lengthCm: true,
+                  },
+                },
+              },
+            },
+          },
+        });
 
     // Transform order to include all admin-facing fields
     const transformedOrder = {

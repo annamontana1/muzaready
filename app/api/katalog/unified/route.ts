@@ -55,6 +55,8 @@ export async function GET(request: NextRequest) {
       // Skip Platinum (those go in PIECE)
       if (product.tier === 'Platinum edition') continue;
       if (!product.variants || product.variants.length === 0) continue;
+      // Only show products that are in stock
+      if (!product.in_stock) continue;
 
       const firstVariant = product.variants[0];
 
@@ -83,11 +85,16 @@ export async function GET(request: NextRequest) {
       const skus = await prisma.sku.findMany({
         where: {
           isListed: true, // Only show listed SKUs
+          inStock: true, // Only show items in stock
+          soldOut: false, // Exclude sold out items
         },
         take: 100,
       });
 
       for (const sku of skus) {
+        // Skip items that are not in stock (already filtered in query, but double-check)
+        if (!sku.inStock || sku.soldOut) continue;
+
         const shadeCode = sku.shade ? parseInt(sku.shade, 10) : undefined;
         const weight = sku.weightGrams ?? sku.weightTotalG ?? undefined;
         const isPlatinum = sku.customerCategory === 'PLATINUM_EDITION';
@@ -119,7 +126,7 @@ export async function GET(request: NextRequest) {
           weightGrams: weight,
           priceCzk,
           priceEur,
-          inStock: sku.inStock && !sku.soldOut,
+          inStock: true, // All items here are in stock (already filtered)
           priority: priority++,
         });
       }

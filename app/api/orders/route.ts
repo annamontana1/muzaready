@@ -110,6 +110,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Additional stock validation before creating order
+    // This ensures stock is still available between quote and order creation
+    for (const item of quotedLines) {
+      const sku = item.sku;
+      
+      // Check if SKU is still in stock
+      if (!sku.inStock) {
+        return NextResponse.json(
+          { error: `SKU ${sku.sku} (${sku.name || 'Neznámý produkt'}) již není na skladě` },
+          { status: 400 }
+        );
+      }
+
+      // For PIECE_BY_WEIGHT: check if not sold out
+      if (sku.saleMode === 'PIECE_BY_WEIGHT' && sku.soldOut) {
+        return NextResponse.json(
+          { error: `Culík "${sku.name || sku.sku}" již není dostupný` },
+          { status: 400 }
+        );
+      }
+
+      // For BULK_G: check if enough grams available
+      if (sku.saleMode === 'BULK_G') {
+        const availableGrams = sku.availableGrams || 0;
+        if (availableGrams < item.grams) {
+          return NextResponse.json(
+            { 
+              error: `SKU ${sku.sku} (${sku.name || 'Neznámý produkt'}) má pouze ${availableGrams}g dostupných, ale požadováno ${item.grams}g` 
+            },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     // Create order with OrderItem records (NO stock deduction yet - waiting for payment confirmation)
     const totalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
     const order = await prisma.order.create({
