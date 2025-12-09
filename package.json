@@ -14,7 +14,8 @@
     "ai:claude": "AI_PROVIDER=claude tsx scripts/ai-cli.ts",
     "ai:openai": "AI_PROVIDER=openai tsx scripts/ai-cli.ts",
     "ai:chat": "tsx scripts/ai-cli.ts chat",
-    "ai:chat:openai": "tsx scripts/ai-cli.ts chat openai"
+    "ai:chat:openai": "tsx scripts/ai-cli.ts chat openai",
+    "create-test-order": "tsx create-test-order.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
@@ -43,6 +44,7 @@
     "@vitest/ui": "^4.0.9",
     "autoprefixer": "^10.4.20",
     "better-sqlite3": "^12.4.1",
+    "dotenv": "^17.2.3",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.18",
     "postcss": "^8.4.47",
