@@ -74,7 +74,19 @@ export default function CustomerSection({ order }: CustomerSectionProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">Email</p>
-              <p className="text-base font-medium text-gray-900">{order.email}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-base font-medium text-gray-900">{order.email}</p>
+                {order.email.includes('@example.com') && (
+                  <span className="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded">
+                    ⚠️ Test email
+                  </span>
+                )}
+              </div>
+              {order.email.includes('@example.com') && (
+                <p className="text-xs text-amber-600 mt-1">
+                  Emaily se nedostanou. Změň email v edit stránce (po deploymentu nových změn).
+                </p>
+              )}
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">Telefon</p>

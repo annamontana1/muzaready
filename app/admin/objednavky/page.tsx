@@ -283,25 +283,38 @@ export default function AdminOrdersPage() {
 
   // Create test order function
   const handleCreateTestOrder = async () => {
+    // Prompt for email (optional)
+    const email = prompt('Zadej email pro test objednávku (nebo nech prázdné pro test@example.com):');
+    const testEmail = email && email.trim() ? email.trim() : undefined;
+
     try {
       const response = await fetch('/api/admin/test-order', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         credentials: 'include',
+        body: JSON.stringify(testEmail ? { email: testEmail } : {}),
       });
 
       if (!response.ok) {
-        throw new Error('Chyba při vytváření test objednávky');
+        const errorData = await response.json().catch(() => ({ error: 'Chyba při vytváření test objednávky' }));
+        throw new Error(errorData.error || 'Chyba při vytváření test objednávky');
       }
 
       const data = await response.json();
-      showToast('Test objednávka byla úspěšně vytvořena', 'success');
+      const message = data.warning 
+        ? `${data.message} ${data.warning}`
+        : data.message || 'Test objednávka byla úspěšně vytvořena';
       
+      showToast(message, data.warning ? 'warning' : 'success');
+
       // Invalidate React Query cache to refresh list
       // React Query will auto-refetch when component re-renders
       window.location.reload();
     } catch (error) {
       console.error('Error creating test order:', error);
-      showToast('Chyba při vytváření test objednávky', 'error');
+      showToast(error instanceof Error ? error.message : 'Chyba při vytváření test objednávky', 'error');
     }
   };
 
