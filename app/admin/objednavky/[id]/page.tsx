@@ -134,16 +134,18 @@ export default function OrderDetailsPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="mb-6 flex justify-between items-center">
-        <Link href="/admin/objednavky" className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
-          ← Zpět na objednávky
-        </Link>
-        <Link
-          href={`/admin/objednavky/${orderId}/edit`}
-          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition"
-        >
-          ✏️ Upravit objednávku
-        </Link>
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <Link href="/admin/objednavky" className="text-blue-600 hover:text-blue-800">
+            ← Zpět na objednávky
+          </Link>
+          <Link
+            href={`/admin/objednavky/${orderId}/edit`}
+            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
+          >
+            ✏️ Upravit objednávku
+          </Link>
+        </div>
       </div>
 
       {/* Order Header */}

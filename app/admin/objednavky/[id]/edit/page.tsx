@@ -35,7 +35,7 @@ export default function EditOrderPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/orders/${orderId}`);
+        const response = await fetch(`/api/admin/orders/${orderId}`);
         if (!response.ok) {
           setError('Objednávka nebyla nalezena');
           setLoading(false);
@@ -73,7 +73,7 @@ export default function EditOrderPage() {
     setSuccess('');
 
     try {
-      const response = await fetch(`/api/orders/${orderId}`, {
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
