@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import CapturePaymentModal from './CapturePaymentModal';
 import CreateShipmentModal from './CreateShipmentModal';
 import { useToast } from '@/components/ui/ToastProvider';
@@ -310,9 +311,18 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
     <div className="bg-white rounded-lg shadow p-6 mb-6">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            Objednávka #{shortId}
-          </h1>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Objednávka #{shortId}
+            </h1>
+            <Link
+              href={`/admin/objednavky/${order.id}/edit`}
+              className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-medium transition shadow-sm"
+              title="Upravit objednávku"
+            >
+              ✏️ Upravit
+            </Link>
+          </div>
           <p className="text-3xl font-bold text-blue-600">
             {order.total.toLocaleString('cs-CZ')} Kč
           </p>
