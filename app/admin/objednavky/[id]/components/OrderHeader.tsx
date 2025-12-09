@@ -317,10 +317,10 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
             </h1>
             <Link
               href={`/admin/objednavky/${order.id}/edit`}
-              className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-medium transition shadow-sm"
+              className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
               title="Upravit objednávku"
             >
-              ✏️ Upravit
+              ✏️ Upravit objednávku
             </Link>
           </div>
           <p className="text-3xl font-bold text-blue-600">
