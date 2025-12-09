@@ -354,6 +354,140 @@ export async function PUT(
               console.error('Failed to send payment confirmation email:', emailError);
               // Don't fail the update if email fails
             }
+
+            // Generate invoice automatically after successful payment
+            try {
+              const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');
+              const { sendInvoiceEmail } = await import('@/lib/email');
+
+              // Check if invoice already exists
+              const existingInvoice = await prisma.invoice.findUnique({
+                where: { orderId: id },
+              });
+
+              if (!existingInvoice) {
+                // Get last invoice number
+                const lastInvoice = await prisma.invoice.findFirst({
+                  orderBy: { invoiceNumber: 'desc' },
+                  select: { invoiceNumber: true },
+                });
+
+                const invoiceNumber = generateInvoiceNumber(lastInvoice?.invoiceNumber);
+
+                // Calculate VAT
+                const vatRate = 21.0;
+                const subtotal = updatedOrder.total / (1 + vatRate / 100);
+                const vatAmount = updatedOrder.total - subtotal;
+
+                // Create invoice
+                const invoice = await prisma.invoice.create({
+                  data: {
+                    invoiceNumber,
+                    orderId: id,
+
+                    supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Mùza Hair s.r.o.',
+                    supplierStreet: process.env.INVOICE_SUPPLIER_STREET,
+                    supplierCity: process.env.INVOICE_SUPPLIER_CITY,
+                    supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP,
+                    supplierCountry: 'CZ',
+                    supplierIco: process.env.INVOICE_SUPPLIER_ICO,
+                    supplierDic: process.env.INVOICE_SUPPLIER_DIC,
+                    supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'info@muzahair.cz',
+                    supplierPhone: process.env.INVOICE_SUPPLIER_PHONE || '+420 728 722 880',
+
+                    customerName: (updatedOrder as any).companyName || `${updatedOrder.firstName} ${updatedOrder.lastName}`,
+                    customerEmail: updatedOrder.email,
+                    customerPhone: updatedOrder.phone,
+                    customerStreet: (updatedOrder as any).billingStreet || updatedOrder.streetAddress,
+                    customerCity: (updatedOrder as any).billingCity || updatedOrder.city,
+                    customerZipCode: (updatedOrder as any).billingZipCode || updatedOrder.zipCode,
+                    customerCountry: (updatedOrder as any).billingCountry || updatedOrder.country,
+                    customerIco: (updatedOrder as any).ico,
+                    customerDic: (updatedOrder as any).dic,
+
+                    subtotal,
+                    vatRate,
+                    vatAmount,
+                    total: updatedOrder.total,
+
+                    paymentMethod: (updatedOrder as any).paymentMethod || 'manual',
+                    variableSymbol: invoiceNumber,
+                    bankAccount: process.env.INVOICE_BANK_ACCOUNT,
+                    iban: process.env.INVOICE_IBAN,
+                    swift: process.env.INVOICE_SWIFT,
+
+                    issueDate: new Date(),
+                    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+                    taxDate: new Date(),
+                    paidDate: new Date(),
+
+                    status: 'paid',
+                  },
+                });
+
+                // Generate PDF
+                const invoiceData = {
+                  invoiceNumber: invoice.invoiceNumber,
+                  issueDate: invoice.issueDate,
+                  dueDate: invoice.dueDate,
+                  taxDate: invoice.taxDate,
+                  orderId: invoice.orderId,
+                  supplierName: invoice.supplierName,
+                  supplierStreet: invoice.supplierStreet,
+                  supplierCity: invoice.supplierCity,
+                  supplierZipCode: invoice.supplierZipCode,
+                  supplierCountry: invoice.supplierCountry,
+                  supplierIco: invoice.supplierIco,
+                  supplierDic: invoice.supplierDic,
+                  supplierEmail: invoice.supplierEmail,
+                  supplierPhone: invoice.supplierPhone,
+                  customerName: invoice.customerName,
+                  customerEmail: invoice.customerEmail,
+                  customerPhone: invoice.customerPhone,
+                  customerStreet: invoice.customerStreet,
+                  customerCity: invoice.customerCity,
+                  customerZipCode: invoice.customerZipCode,
+                  customerCountry: invoice.customerCountry,
+                  customerIco: invoice.customerIco,
+                  customerDic: invoice.customerDic,
+                  items: updatedOrder.items.map((item) => ({
+                    name: item.nameSnapshot || 'Neznámý produkt',
+                    quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
+                    unitPrice: item.pricePerGram,
+                    total: item.lineTotal + (item.assemblyFeeTotal || 0),
+                  })),
+                  subtotal: invoice.subtotal,
+                  vatRate: invoice.vatRate,
+                  vatAmount: invoice.vatAmount,
+                  total: invoice.total,
+                  paymentMethod: invoice.paymentMethod,
+                  variableSymbol: invoice.variableSymbol,
+                  bankAccount: invoice.bankAccount,
+                  iban: invoice.iban,
+                  swift: invoice.swift,
+                };
+
+                const pdfBase64 = generateInvoicePDF(invoiceData);
+
+                // Update invoice with PDF status
+                await prisma.invoice.update({
+                  where: { id: invoice.id },
+                  data: { pdfGenerated: true },
+                });
+
+                // Send invoice email (async, don't wait)
+                sendInvoiceEmail(updatedOrder.email, invoiceNumber, pdfBase64).catch((err) => {
+                  console.error('Failed to send invoice email:', err);
+                });
+
+                console.log(`📄 Invoice ${invoiceNumber} generated and sent for order ${id}`);
+              } else {
+                console.log(`📄 Invoice already exists for order ${id}`);
+              }
+            } catch (invoiceError) {
+              console.error('Failed to generate invoice (non-critical):', invoiceError);
+              // Don't fail the update if invoice generation fails
+            }
           }
 
           // Send delivery confirmation email if marked as delivered
