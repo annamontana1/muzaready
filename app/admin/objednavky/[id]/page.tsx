@@ -141,7 +141,8 @@ export default function OrderDetailsPage() {
           </Link>
           <Link
             href={`/admin/objednavky/${orderId}/edit`}
-            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
+            className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition shadow-sm inline-block"
+            style={{ display: 'inline-block' }}
           >
             ✏️ Upravit objednávku
           </Link>
