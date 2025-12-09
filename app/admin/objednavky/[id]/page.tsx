@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useOrder } from '@/lib/queries/orders';
+import { useQueryClient } from '@tanstack/react-query';
 import OrderHeader from './components/OrderHeader';
 import CustomerSection from './components/CustomerSection';
 import ItemsSection from './components/ItemsSection';
@@ -11,6 +12,7 @@ import PaymentSection from './components/PaymentSection';
 import ShipmentHistory from './components/ShipmentHistory';
 import MetadataSection from './components/MetadataSection';
 import { CardSkeleton } from '@/components/ui/Skeleton';
+import { orderKeys } from '@/lib/queries/orders';
 
 // Note: Using local Order interface because detail page needs more fields
 // than the simplified Order type in types.ts (which is for list view)
@@ -71,12 +73,21 @@ type TabType = 'customer' | 'items' | 'payment' | 'shipments' | 'metadata';
 export default function OrderDetailsPage() {
   const params = useParams();
   const orderId = params.id as string;
+  const queryClient = useQueryClient();
 
   // React Query hook - replaces useState + useEffect + fetchOrder
   // Type assertion: useOrder returns simplified Order, but we need full Order with all fields
-  const { data: order, isLoading, error } = useOrder(orderId) as { data: Order | undefined; isLoading: boolean; error: Error | null };
+  const { data: order, isLoading, error, refetch } = useOrder(orderId) as { data: Order | undefined; isLoading: boolean; error: Error | null; refetch: () => void };
 
   const [activeTab, setActiveTab] = useState<TabType>('customer');
+
+  // Handler to refresh order data after status changes
+  const handleStatusChange = () => {
+    // Invalidate and refetch order data
+    queryClient.invalidateQueries({ queryKey: orderKeys.detail(orderId) });
+    queryClient.invalidateQueries({ queryKey: orderKeys.lists() });
+    refetch();
+  };
 
   if (isLoading) {
     return (
@@ -123,15 +134,20 @@ export default function OrderDetailsPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
         <Link href="/admin/objednavky" className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
           ← Zpět na objednávky
+        </Link>
+        <Link
+          href={`/admin/objednavky/${orderId}/edit`}
+          className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition"
+        >
+          ✏️ Upravit objednávku
         </Link>
       </div>
 
       {/* Order Header */}
-      {/* Note: onStatusChange is no longer needed - React Query auto-invalidates cache */}
-      <OrderHeader order={order} onStatusChange={() => {}} />
+      <OrderHeader order={order} onStatusChange={handleStatusChange} />
 
       {/* Tab Navigation */}
       <div className="flex space-x-1 border-b border-gray-200 mb-6">
