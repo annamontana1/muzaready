@@ -143,6 +143,25 @@ export default function EditOrderPage() {
       )}
 
       <form onSubmit={handleSave} className="bg-white rounded-lg shadow p-8 space-y-6">
+        {/* Email Field */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Email zákazníka</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            disabled={saving}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="zákazník@example.com"
+          />
+          {formData.email.includes('@example.com') && (
+            <p className="mt-2 text-sm text-amber-600">
+              ⚠️ Email je @example.com - emaily se nedostanou. Změň na skutečný email pro testování.
+            </p>
+          )}
+        </div>
+
         {/* Order Status Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Status objednávky</label>
