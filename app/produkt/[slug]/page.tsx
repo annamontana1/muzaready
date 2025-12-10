@@ -93,6 +93,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 }
 
+// Force dynamic rendering - products come from database/API
+export const dynamic = 'force-dynamic';
+
 // Generate static params for all products (for static generation)
 // Note: This is disabled for dynamic catalog - products come from database
 export async function generateStaticParams() {
