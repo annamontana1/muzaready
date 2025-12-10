@@ -7,7 +7,17 @@ export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return NextResponse.json(
+        { error: 'Neplatný formát požadavku. Očekává se JSON.' },
+        { status: 400 }
+      );
+    }
+
     const { email, password } = body;
 
     // Validate input
