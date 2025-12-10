@@ -33,8 +33,12 @@ export default function AdminLoginPage() {
 
       if (response.ok) {
         // Login successful - API route sets cookie
+        // Wait a bit to ensure cookie is set before redirect
+        // This helps with cookie propagation in some browsers
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         // Přesměrovat na dashboard
-        router.push('/admin');
+        window.location.href = '/admin'; // Use window.location instead of router.push for better cookie handling
         return;
       } else {
         // Try to parse error response

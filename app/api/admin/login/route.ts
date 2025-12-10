@@ -82,12 +82,15 @@ export async function POST(request: NextRequest) {
     );
 
     // Set httpOnly cookie for security (prevents XSS attacks)
+    // Note: secure flag should be true in production (HTTPS required)
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
     response.cookies.set('admin-session', JSON.stringify(sessionData), {
       httpOnly: true, // Prevents JavaScript access (XSS protection)
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction, // HTTPS only in production
       sameSite: 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
+      domain: undefined, // Let browser decide (works for all subdomains)
     });
 
     return response;
