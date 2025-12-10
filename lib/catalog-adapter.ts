@@ -46,10 +46,17 @@ interface SkuWithStock {
  * Spočítá zásobu v gramech po délkách z pohybů skladu
  */
 async function calculateStockByLength(skuId: string): Promise<Map<number, number>> {
-  const movements = await prisma.stockMovement.findMany({
-    where: { skuId },
-    orderBy: { createdAt: 'asc' },
-  });
+  let movements = [];
+  try {
+    movements = await prisma.stockMovement.findMany({
+      where: { skuId },
+      orderBy: { createdAt: 'asc' },
+    });
+  } catch (error) {
+    // During build, database might not be available - return empty map
+    console.warn('Failed to fetch stock movements during build (this is OK):', error);
+    return new Map();
+  }
 
   const stockMap = new Map<number, number>();
   
