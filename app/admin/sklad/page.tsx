@@ -1,7 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import SkuFilterPanel from '@/components/admin/SkuFilterPanel';
+import type { SkuFilters, PaginationMeta } from '@/lib/sku-filter-utils';
+import { filtersToQueryString, queryStringToFilters } from '@/lib/sku-filter-utils';
 
 interface Sku {
   id: string;
@@ -25,10 +29,15 @@ interface Sku {
   reservedUntil: string | null;
 }
 
-export default function SkuListPage() {
+function SkuListPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [skus, setSkus] = useState<Sku[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [pagination, setPagination] = useState<PaginationMeta | null>(null);
+  const [filters, setFilters] = useState<SkuFilters>({});
   const [formData, setFormData] = useState({
     sku: '',
     name: '',
@@ -48,22 +57,57 @@ export default function SkuListPage() {
     inStock: false,
   });
 
+  // Initialize filters from URL on mount
   useEffect(() => {
-    fetchSkus();
+    const initialFilters = queryStringToFilters(searchParams);
+    setFilters(initialFilters);
+    fetchSkus(initialFilters);
   }, []);
 
-  const fetchSkus = async () => {
+  const fetchSkus = async (appliedFilters: SkuFilters = {}) => {
+    setLoading(true);
     try {
-      const res = await fetch('/api/admin/skus');
+      const queryString = filtersToQueryString(appliedFilters);
+      const url = `/api/admin/skus${queryString ? `?${queryString}` : ''}`;
+      const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch SKUs');
       const data = await res.json();
-      setSkus(data);
+
+      // Handle both old format (array) and new format (object with skus/pagination)
+      if (Array.isArray(data)) {
+        setSkus(data);
+        setPagination(null);
+      } else {
+        setSkus(data.skus || []);
+        setPagination(data.pagination || null);
+      }
     } catch (err) {
       console.error(err);
       alert('Chyba při načítání skladů');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleApplyFilters = (newFilters: SkuFilters) => {
+    setFilters(newFilters);
+
+    // Update URL with new filters
+    const queryString = filtersToQueryString(newFilters);
+    router.push(`/admin/sklad${queryString ? `?${queryString}` : ''}`, { scroll: false });
+
+    // Fetch with new filters
+    fetchSkus(newFilters);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    const newFilters = { ...filters, page: newPage };
+    handleApplyFilters(newFilters);
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    const newFilters = { ...filters, limit: newLimit, page: 1 };
+    handleApplyFilters(newFilters);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -141,6 +185,9 @@ export default function SkuListPage() {
           {showForm ? 'Zrušit' : '+ Nový SKU'}
         </button>
       </div>
+
+      {/* Filter Panel */}
+      <SkuFilterPanel onApplyFilters={handleApplyFilters} initialFilters={filters} />
 
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-2 gap-4">
@@ -377,13 +424,64 @@ export default function SkuListPage() {
         </table>
       </div>
 
-      {skus.length === 0 && (
-        <div className="text-center py-8 text-gray-500">Zatím žádné SKU. Přidej první!</div>
+      {skus.length === 0 && !loading && (
+        <div className="text-center py-8 text-gray-500">
+          {Object.keys(filters).length > 0 ? 'Žádné SKU neodpovídá filtrům.' : 'Zatím žádné SKU. Přidej první!'}
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between bg-white p-4 rounded-lg shadow">
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-700">
+              Zobrazeno {(pagination.page - 1) * pagination.limit + 1} -{' '}
+              {Math.min(pagination.page * pagination.limit, pagination.total)} z {pagination.total}
+            </span>
+            <select
+              value={filters.limit || 25}
+              onChange={(e) => handleLimitChange(parseInt(e.target.value))}
+              className="border rounded px-3 py-1.5 text-sm"
+            >
+              <option value={25}>25 na stránku</option>
+              <option value={50}>50 na stránku</option>
+              <option value={100}>100 na stránku</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={pagination.page <= 1}
+              className="px-3 py-1.5 text-sm bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ← Předchozí
+            </button>
+            <span className="text-sm text-gray-700">
+              Stránka {pagination.page} z {pagination.totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={pagination.page >= pagination.totalPages}
+              className="px-3 py-1.5 text-sm bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Další →
+            </button>
+          </div>
+        </div>
       )}
 
       <Link href="/admin" className="mt-6 inline-block text-blue-600 hover:text-blue-800">
         ← Zpět na admin
       </Link>
     </div>
+  );
+}
+
+export default function SkuListPage() {
+  return (
+    <Suspense fallback={<div className="p-4">Načítám...</div>}>
+      <SkuListPageContent />
+    </Suspense>
   );
 }
