@@ -565,24 +565,6 @@ export async function PUT(
         }
       }
     }
-          where: { id },
-          data: updateData,
-          include: {
-            items: {
-              include: {
-                sku: {
-                  select: {
-                    id: true,
-                    sku: true,
-                    name: true,
-                    shadeName: true,
-                    lengthCm: true,
-                  },
-                },
-              },
-            },
-          },
-        });
 
     // Transform order to include all admin-facing fields
     const transformedOrder = {
