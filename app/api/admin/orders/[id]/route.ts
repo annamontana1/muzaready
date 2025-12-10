@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { requireAdmin } from '@/lib/admin-auth';
+import { requireAdmin, verifyAdminSession } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 
@@ -128,9 +128,16 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Check admin authentication
-  const authError = await requireAdmin(request);
-  if (authError) return authError;
+  // Check admin authentication and get admin info
+  const session = await verifyAdminSession(request);
+  if (!session.valid || !session.admin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin session required' },
+      { status: 401 }
+    );
+  }
+
+  const adminEmail = session.admin.email;
 
   try {
     const { id } = params;
@@ -228,9 +235,140 @@ export async function PUT(
     // Check if orderStatus is changing to 'cancelled' and stock was already deducted (order was paid)
     const isChangingToCancelled = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled' && currentOrder.paymentStatus === 'paid';
 
+    // Helper function to log changes to OrderHistory
+    const logOrderChange = async (
+      tx: any,
+      orderId: string,
+      field: string,
+      oldValue: any,
+      newValue: any,
+      changeType: string,
+      note?: string
+    ) => {
+      try {
+        await tx.orderHistory.create({
+          data: {
+            orderId,
+            changedBy: adminEmail,
+            field,
+            oldValue: oldValue !== null && oldValue !== undefined ? String(oldValue) : null,
+            newValue: newValue !== null && newValue !== undefined ? String(newValue) : null,
+            changeType,
+            note,
+          },
+        });
+      } catch (error) {
+        // If OrderHistory table doesn't exist yet, just log error but don't fail
+        console.error('Failed to log order change:', error);
+      }
+    };
+
     // Use transaction if we need to deduct or return stock
     const order = isChangingToPaid || isChangingToRefunded || isChangingToCancelled
       ? await prisma.$transaction(async (tx) => {
+          // Log all changes before update
+          if (body.orderStatus !== undefined && body.orderStatus !== currentOrder.orderStatus) {
+            await logOrderChange(
+              tx,
+              id,
+              'orderStatus',
+              currentOrder.orderStatus,
+              body.orderStatus,
+              'status_change',
+              `Status změněn z ${currentOrder.orderStatus} na ${body.orderStatus}`
+            );
+          }
+          if (body.paymentStatus !== undefined && body.paymentStatus !== currentOrder.paymentStatus) {
+            await logOrderChange(
+              tx,
+              id,
+              'paymentStatus',
+              currentOrder.paymentStatus,
+              body.paymentStatus,
+              'status_change',
+              `Platba změněna z ${currentOrder.paymentStatus} na ${body.paymentStatus}`
+            );
+          }
+          if (body.deliveryStatus !== undefined && body.deliveryStatus !== currentOrder.deliveryStatus) {
+            await logOrderChange(
+              tx,
+              id,
+              'deliveryStatus',
+              currentOrder.deliveryStatus,
+              body.deliveryStatus,
+              'status_change',
+              `Doručení změněno z ${currentOrder.deliveryStatus} na ${body.deliveryStatus}`
+            );
+          }
+          if (body.email !== undefined && body.email !== currentOrder.email) {
+            await logOrderChange(
+              tx,
+              id,
+              'email',
+              currentOrder.email,
+              body.email,
+              'field_update',
+              `Email zákazníka změněn`
+            );
+          }
+          if (body.notesInternal !== undefined && body.notesInternal !== currentOrder.notesInternal) {
+            await logOrderChange(
+              tx,
+              id,
+              'notesInternal',
+              currentOrder.notesInternal,
+              body.notesInternal,
+              'note_added',
+              `Interní poznámka ${currentOrder.notesInternal ? 'aktualizována' : 'přidána'}`
+            );
+          }
+          if (body.notesCustomer !== undefined && body.notesCustomer !== currentOrder.notesCustomer) {
+            await logOrderChange(
+              tx,
+              id,
+              'notesCustomer',
+              currentOrder.notesCustomer,
+              body.notesCustomer,
+              'note_added',
+              `Poznámka pro zákazníka ${currentOrder.notesCustomer ? 'aktualizována' : 'přidána'}`
+            );
+          }
+
+          // Log stock changes
+          if (isChangingToPaid) {
+            await logOrderChange(
+              tx,
+              id,
+              'stock',
+              'available',
+              'deducted',
+              'stock_deduction',
+              `Zásoby odečteny při označení jako zaplaceno`
+            );
+          }
+          if (isChangingToRefunded) {
+            await logOrderChange(
+              tx,
+              id,
+              'stock',
+              'deducted',
+              'returned',
+              'stock_return',
+              `Zásoby vráceny při refundu`
+            );
+          }
+          if (isChangingToCancelled) {
+            await logOrderChange(
+              tx,
+              id,
+              'stock',
+              'deducted',
+              'returned',
+              'stock_return',
+              `Zásoby vráceny při zrušení objednávky`
+            );
+          }
+
           // Update order status
           const updatedOrder = await tx.order.update({
             where: { id },
@@ -518,25 +656,113 @@ export async function PUT(
 
           return updatedOrder;
         })
-      : await prisma.order.update({
-          where: { id },
-          data: updateData,
-          include: {
-            items: {
-              include: {
-                sku: {
-                  select: {
-                    id: true,
-                    sku: true,
-                    name: true,
-                    shadeName: true,
-                    lengthCm: true,
+      : await (async () => {
+          // Log changes before update (non-transaction case)
+          const historyPromises = [];
+          
+          if (body.orderStatus !== undefined && body.orderStatus !== currentOrder.orderStatus) {
+            historyPromises.push(
+              logOrderChange(
+                prisma,
+                id,
+                'orderStatus',
+                currentOrder.orderStatus,
+                body.orderStatus,
+                'status_change',
+                `Status změněn z ${currentOrder.orderStatus} na ${body.orderStatus}`
+              )
+            );
+          }
+          if (body.paymentStatus !== undefined && body.paymentStatus !== currentOrder.paymentStatus) {
+            historyPromises.push(
+              logOrderChange(
+                prisma,
+                id,
+                'paymentStatus',
+                currentOrder.paymentStatus,
+                body.paymentStatus,
+                'status_change',
+                `Platba změněna z ${currentOrder.paymentStatus} na ${body.paymentStatus}`
+              )
+            );
+          }
+          if (body.deliveryStatus !== undefined && body.deliveryStatus !== currentOrder.deliveryStatus) {
+            historyPromises.push(
+              logOrderChange(
+                prisma,
+                id,
+                'deliveryStatus',
+                currentOrder.deliveryStatus,
+                body.deliveryStatus,
+                'status_change',
+                `Doručení změněno z ${currentOrder.deliveryStatus} na ${body.deliveryStatus}`
+              )
+            );
+          }
+          if (body.email !== undefined && body.email !== currentOrder.email) {
+            historyPromises.push(
+              logOrderChange(
+                prisma,
+                id,
+                'email',
+                currentOrder.email,
+                body.email,
+                'field_update',
+                `Email zákazníka změněn`
+              )
+            );
+          }
+          if (body.notesInternal !== undefined && body.notesInternal !== currentOrder.notesInternal) {
+            historyPromises.push(
+              logOrderChange(
+                prisma,
+                id,
+                'notesInternal',
+                currentOrder.notesInternal,
+                body.notesInternal,
+                'note_added',
+                `Interní poznámka ${currentOrder.notesInternal ? 'aktualizována' : 'přidána'}`
+              )
+            );
+          }
+          if (body.notesCustomer !== undefined && body.notesCustomer !== currentOrder.notesCustomer) {
+            historyPromises.push(
+              logOrderChange(
+                prisma,
+                id,
+                'notesCustomer',
+                currentOrder.notesCustomer,
+                body.notesCustomer,
+                'note_added',
+                `Poznámka pro zákazníka ${currentOrder.notesCustomer ? 'aktualizována' : 'přidána'}`
+              )
+            );
+          }
+
+          // Log all changes in parallel (don't fail if history table doesn't exist)
+          await Promise.allSettled(historyPromises);
+
+          // Update order
+          return await prisma.order.update({
+            where: { id },
+            data: updateData,
+            include: {
+              items: {
+                include: {
+                  sku: {
+                    select: {
+                      id: true,
+                      sku: true,
+                      name: true,
+                      shadeName: true,
+                      lengthCm: true,
+                    },
                   },
                 },
               },
             },
-          },
-        });
+          });
+        })();
 
     // Handle email notifications outside transaction for non-stock-changing updates
     if (!isChangingToPaid && !isChangingToRefunded && !isChangingToCancelled) {

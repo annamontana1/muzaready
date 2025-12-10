@@ -11,6 +11,7 @@ import ItemsSection from './components/ItemsSection';
 import PaymentSection from './components/PaymentSection';
 import ShipmentHistory from './components/ShipmentHistory';
 import MetadataSection from './components/MetadataSection';
+import OrderHistorySection from './components/OrderHistorySection';
 import { CardSkeleton } from '@/components/ui/Skeleton';
 import { orderKeys } from '@/lib/queries/orders';
 
@@ -68,7 +69,7 @@ interface Order {
   items: OrderItem[];
 }
 
-type TabType = 'customer' | 'items' | 'payment' | 'shipments' | 'metadata';
+type TabType = 'customer' | 'items' | 'payment' | 'shipments' | 'metadata' | 'history';
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -204,6 +205,16 @@ export default function OrderDetailsPage() {
         >
           Metadata
         </button>
+        <button
+          onClick={() => setActiveTab('history')}
+          className={`px-6 py-3 font-medium transition-colors ${
+            activeTab === 'history'
+              ? 'border-b-2 border-blue-600 text-blue-600'
+              : 'text-gray-600 hover:text-gray-800'
+          }`}
+        >
+          Historie
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -212,6 +223,7 @@ export default function OrderDetailsPage() {
       {activeTab === 'payment' && <PaymentSection order={order} />}
       {activeTab === 'shipments' && <ShipmentHistory order={order} />}
       {activeTab === 'metadata' && <MetadataSection order={order} onUpdate={() => {}} />}
+      {activeTab === 'history' && <OrderHistorySection orderId={order.id} />}
     </div>
   );
 }

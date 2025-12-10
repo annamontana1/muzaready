@@ -49,65 +49,66 @@ model Variant {
 }
 
 model Order {
-  id                String      @id @default(cuid())
+  id String @id @default(cuid())
 
   // Customer info
-  email             String
-  firstName         String
-  lastName          String
-  phone             String?
-  companyName       String?                             // for invoicing
-  ico               String?                             // IČO - Company ID
-  dic               String?                             // DIČ - Tax ID
+  email       String
+  firstName   String
+  lastName    String
+  phone       String?
+  companyName String? // for invoicing
+  ico         String? // IČO - Company ID
+  dic         String? // DIČ - Tax ID
 
   // Delivery address
-  streetAddress     String
-  city              String
-  zipCode           String
-  country           String      @default("CZ")
+  streetAddress String
+  city          String
+  zipCode       String
+  country       String @default("CZ")
 
   // Billing address (if different from delivery)
-  billingStreet     String?
-  billingCity       String?
-  billingZipCode    String?
-  billingCountry    String?
+  billingStreet  String?
+  billingCity    String?
+  billingZipCode String?
+  billingCountry String?
 
   // Delivery
-  deliveryMethod    String      @default("standard") // standard, express, pickup
+  deliveryMethod String @default("standard") // standard, express, pickup
 
   // Payment & Status
-  orderStatus       String      @default("pending")     // draft, pending, paid, processing, shipped, completed, cancelled
-  paymentStatus     String      @default("unpaid")      // unpaid, partial, paid, refunded
-  deliveryStatus    String      @default("pending")     // pending, shipped, delivered, returned
-  paymentMethod     String?     // gopay, bank_transfer, cash
+  orderStatus    String  @default("pending") // draft, pending, paid, processing, shipped, completed, cancelled
+  paymentStatus  String  @default("unpaid") // unpaid, partial, paid, refunded
+  deliveryStatus String  @default("pending") // pending, shipped, delivered, returned
+  paymentMethod  String? // gopay, bank_transfer, cash
 
   // Channel & metadata
-  channel           String      @default("web")         // web, pos, ig_dm
-  tags              String?                             // JSON string of tags for filtering/organization
-  riskScore         Int         @default(0)             // fraud detection score
+  channel   String  @default("web") // web, pos, ig_dm
+  tags      String? // JSON string of tags for filtering/organization
+  riskScore Int     @default(0) // fraud detection score
 
   // Notes
-  notesInternal     String?                             // internal admin notes
-  notesCustomer     String?                             // customer-facing notes
+  notesInternal String? // internal admin notes
+  notesCustomer String? // customer-facing notes
 
   // Order details
-  subtotal          Float
-  shippingCost      Float       @default(0)
-  discountAmount    Float       @default(0)
-  total             Float
+  subtotal       Float
+  shippingCost   Float @default(0)
+  discountAmount Float @default(0)
+  total          Float
 
   // Tracking
-  trackingNumber    String?
+  trackingNumber String?
 
   // Timestamps
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  paidAt            DateTime?
-  shippedAt         DateTime?
-  lastStatusChangeAt DateTime   @default(now())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  paidAt             DateTime?
+  shippedAt          DateTime?
+  lastStatusChangeAt DateTime  @default(now())
 
-  items             OrderItem[]
-  invoice           Invoice?
+  items   OrderItem[]
+  invoice Invoice?
+  history OrderHistory[]
 
   @@map("orders")
 }
@@ -211,16 +212,16 @@ model StockMovement {
 }
 
 model PriceMatrix {
-  id               String   @id @default(cuid())
-  category         String
-  tier             String
-  shadeRangeStart  Int?
-  shadeRangeEnd    Int?
-  lengthCm         Int
-  pricePerGramCzk  Float
-  pricePerGramEur  Float?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id              String   @id @default(cuid())
+  category        String
+  tier            String
+  shadeRangeStart Int?
+  shadeRangeEnd   Int?
+  lengthCm        Int
+  pricePerGramCzk Float
+  pricePerGramEur Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@unique([category, tier, shadeRangeStart, shadeRangeEnd, lengthCm])
   @@index([category, tier])
@@ -267,37 +268,37 @@ model ExchangeRate {
 }
 
 model User {
-  id                    String   @id @default(cuid())
-  email                 String   @unique
-  password              String
-  firstName             String
-  lastName              String
-  phone                 String?
+  id        String  @id @default(cuid())
+  email     String  @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String?
 
   // Wholesale specific
-  wholesaleRequested    Boolean  @default(false)
-  isWholesale           Boolean  @default(false)
-  wholesaleRequestedAt  DateTime?
-  wholesaleApprovedAt   DateTime?
+  wholesaleRequested   Boolean   @default(false)
+  isWholesale          Boolean   @default(false)
+  wholesaleRequestedAt DateTime?
+  wholesaleApprovedAt  DateTime?
 
   // Business info (for wholesale users)
-  companyName           String?
-  businessType          String?  // "salon", "stylist", "distributor"
-  website               String?
-  instagram             String?
-  country               String?
-  city                  String?
-  zipCode               String?
-  streetAddress         String?
-  taxId                 String?
+  companyName   String?
+  businessType  String? // "salon", "stylist", "distributor"
+  website       String?
+  instagram     String?
+  country       String?
+  city          String?
+  zipCode       String?
+  streetAddress String?
+  taxId         String?
 
   // Status
-  status                String   @default("active")  // active, suspended, rejected
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  status    String   @default("active") // active, suspended, rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  sessions              Session[]
+  sessions Session[]
 
   @@map("users")
 }
@@ -315,98 +316,115 @@ model Session {
 
 model ScanSession {
   id          String     @id @default(cuid())
-  status      String     @default("active")   // active, scanning, paused, completed, synced
-  scannedBy   String?                         // admin user who is scanning
+  status      String     @default("active") // active, scanning, paused, completed, synced
+  scannedBy   String? // admin user who is scanning
   startedAt   DateTime   @default(now())
   completedAt DateTime?
-  totalPrice  Int        @default(0)          // total price in CZK cents
-  itemCount   Int        @default(0)          // total number of items
-  syncedAt    DateTime?                       // when session was synced to order
+  totalPrice  Int        @default(0) // total price in CZK cents
+  itemCount   Int        @default(0) // total number of items
+  syncedAt    DateTime? // when session was synced to order
   items       ScanItem[]
 
   @@map("scan_sessions")
 }
 
 model ScanItem {
-  id            String       @id @default(cuid())
-  sessionId     String
-  skuId         String
-  skuName       String                          // snapshot of SKU name
-  price         Int                             // price per unit in CZK cents
-  quantity      Int                             // quantity of items
-  scannedAt     DateTime     @default(now())
-  status        String       @default("pending") // pending, verified, error
-  notes         String?
-  session       ScanSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sku           Sku          @relation(fields: [skuId], references: [id])
+  id        String      @id @default(cuid())
+  sessionId String
+  skuId     String
+  skuName   String // snapshot of SKU name
+  price     Int // price per unit in CZK cents
+  quantity  Int // quantity of items
+  scannedAt DateTime    @default(now())
+  status    String      @default("pending") // pending, verified, error
+  notes     String?
+  session   ScanSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sku       Sku         @relation(fields: [skuId], references: [id])
 
   @@map("scan_items")
 }
 
 model Invoice {
-  id                String      @id @default(cuid())
+  id String @id @default(cuid())
 
   // Invoice number (auto-generated: 2025001, 2025002, etc.)
-  invoiceNumber     String      @unique
+  invoiceNumber String @unique
 
   // Related order
-  orderId           String      @unique
-  order             Order       @relation(fields: [orderId], references: [id])
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
 
   // Supplier info (your company - Mùza Hair)
-  supplierName      String      @default("Mùza Hair s.r.o.")
-  supplierStreet    String?     // will be filled by you
-  supplierCity      String?     // will be filled by you
-  supplierZipCode   String?     // will be filled by you
-  supplierCountry   String      @default("CZ")
-  supplierIco       String?     // Your IČO - will be filled by you
-  supplierDic       String?     // Your DIČ - will be filled by you
-  supplierEmail     String?     // info@muzahair.cz
-  supplierPhone     String?     // +420 728 722 880
+  supplierName    String  @default("Mùza Hair s.r.o.")
+  supplierStreet  String? // will be filled by you
+  supplierCity    String? // will be filled by you
+  supplierZipCode String? // will be filled by you
+  supplierCountry String  @default("CZ")
+  supplierIco     String? // Your IČO - will be filled by you
+  supplierDic     String? // Your DIČ - will be filled by you
+  supplierEmail   String? // info@muzahair.cz
+  supplierPhone   String? // +420 728 722 880
 
   // Customer info (copied from order)
-  customerName      String      // firstName + lastName or companyName
-  customerEmail     String
-  customerPhone     String?
-  customerStreet    String
-  customerCity      String
-  customerZipCode   String
-  customerCountry   String
-  customerIco       String?     // if company
-  customerDic       String?     // if company
+  customerName    String // firstName + lastName or companyName
+  customerEmail   String
+  customerPhone   String?
+  customerStreet  String
+  customerCity    String
+  customerZipCode String
+  customerCountry String
+  customerIco     String? // if company
+  customerDic     String? // if company
 
   // Invoice amounts
-  subtotal          Float       // without VAT
-  vatRate           Float       @default(21.0) // VAT 21%
-  vatAmount         Float       // calculated: subtotal * (vatRate/100)
-  total             Float       // subtotal + vatAmount
+  subtotal  Float // without VAT
+  vatRate   Float @default(21.0) // VAT 21%
+  vatAmount Float // calculated: subtotal * (vatRate/100)
+  total     Float // subtotal + vatAmount
 
   // Payment info
-  paymentMethod     String?     // GoPay, bank transfer, cash
-  variableSymbol    String?     // for bank transfers
-  bankAccount       String?     // Your bank account - will be filled by you
-  iban              String?     // Your IBAN - will be filled by you
-  swift             String?     // Your SWIFT - will be filled by you
+  paymentMethod  String? // GoPay, bank transfer, cash
+  variableSymbol String? // for bank transfers
+  bankAccount    String? // Your bank account - will be filled by you
+  iban           String? // Your IBAN - will be filled by you
+  swift          String? // Your SWIFT - will be filled by you
 
   // Invoice dates
-  issueDate         DateTime    @default(now())    // datum vystavení
-  dueDate           DateTime?                      // datum splatnosti
-  taxDate           DateTime?                      // datum zdanitelného plnění
-  paidDate          DateTime?                      // datum zaplacení
+  issueDate DateTime  @default(now()) // datum vystavení
+  dueDate   DateTime? // datum splatnosti
+  taxDate   DateTime? // datum zdanitelného plnění
+  paidDate  DateTime? // datum zaplacení
 
   // Status
-  status            String      @default("draft")  // draft, issued, paid, cancelled, credited
+  status String @default("draft") // draft, issued, paid, cancelled, credited
 
   // PDF storage
-  pdfUrl            String?     // URL to generated PDF (Vercel Blob or Supabase Storage)
-  pdfGenerated      Boolean     @default(false)
+  pdfUrl       String? // URL to generated PDF (Vercel Blob or Supabase Storage)
+  pdfGenerated Boolean @default(false)
 
   // Notes
-  note              String?     // Additional note on invoice
+  note String? // Additional note on invoice
 
   // Timestamps
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("invoices")
+}
+
+model OrderHistory {
+  id         String   @id @default(cuid())
+  orderId    String
+  changedBy  String? // Admin email or system
+  field      String // Field name that changed (e.g., "orderStatus", "paymentStatus", "email")
+  oldValue   String? // Old value (JSON string for complex values)
+  newValue   String? // New value (JSON string for complex values)
+  changeType String // "status_change", "field_update", "note_added", "stock_deduction", "stock_return"
+  note       String? // Additional note about the change
+  createdAt  DateTime @default(now())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([createdAt])
+  @@map("order_history")
 }
