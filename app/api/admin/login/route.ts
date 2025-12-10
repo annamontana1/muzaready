@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = body;
 
+    // Debug logging (only in development or with debug flag)
+    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_LOGIN === 'true') {
+      console.log('Login attempt:', { email, passwordLength: password?.length });
+    }
+
     // Validate input
     if (!email || !password) {
       return NextResponse.json(
@@ -50,6 +55,15 @@ export async function POST(request: NextRequest) {
 
     // Verify password
     const passwordValid = await verifyPassword(password, admin.password);
+    
+    // Debug logging
+    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_LOGIN === 'true') {
+      console.log('Password verification:', { 
+        valid: passwordValid,
+        hashPreview: admin.password.substring(0, 30),
+      });
+    }
+    
     if (!passwordValid) {
       return NextResponse.json(
         { error: 'Nesprávný email nebo heslo' },
@@ -84,7 +98,20 @@ export async function POST(request: NextRequest) {
     // Set httpOnly cookie for security (prevents XSS attacks)
     // Note: secure flag should be true in production (HTTPS required)
     const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
-    response.cookies.set('admin-session', JSON.stringify(sessionData), {
+    const cookieValue = JSON.stringify(sessionData);
+    
+    // Debug logging
+    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_LOGIN === 'true') {
+      console.log('Setting cookie:', {
+        isProduction,
+        secure: isProduction,
+        sameSite: 'lax',
+        path: '/',
+        cookieLength: cookieValue.length,
+      });
+    }
+    
+    response.cookies.set('admin-session', cookieValue, {
       httpOnly: true, // Prevents JavaScript access (XSS protection)
       secure: isProduction, // HTTPS only in production
       sameSite: 'lax',
@@ -92,6 +119,9 @@ export async function POST(request: NextRequest) {
       path: '/',
       domain: undefined, // Let browser decide (works for all subdomains)
     });
+    
+    // Also set a response header to confirm cookie was set
+    response.headers.set('X-Login-Success', 'true');
 
     return response;
   } catch (error) {

@@ -19,13 +19,21 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
+      // Debug: Log what we're sending
+      console.log('Attempting login with:', { email, passwordLength: password.length });
+
       // Send login request to API route
       const response = await fetch('/api/admin/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // Important for cookies
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important for cookies - must be 'include' for cross-origin
         body: JSON.stringify({ email, password }),
       });
+
+      console.log('Login response status:', response.status);
+      console.log('Login response headers:', Object.fromEntries(response.headers.entries()));
 
       // Check if response has content before parsing JSON
       const contentType = response.headers.get('content-type');
