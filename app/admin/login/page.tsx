@@ -23,20 +23,57 @@ export default function AdminLoginPage() {
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Important for cookies
         body: JSON.stringify({ email, password }),
       });
+
+      // Check if response has content before parsing JSON
+      const contentType = response.headers.get('content-type');
+      const hasJson = contentType && contentType.includes('application/json');
 
       if (response.ok) {
         // Login successful - API route sets cookie
         // Přesměrovat na dashboard
         router.push('/admin');
+        return;
       } else {
-        const data = await response.json();
-        setError(data.error || 'Nesprávný email nebo heslo');
+        // Try to parse error response
+        let errorMessage = 'Nesprávný email nebo heslo';
+        
+        if (hasJson) {
+          try {
+            const text = await response.text();
+            if (text) {
+              const data = JSON.parse(text);
+              errorMessage = data.error || errorMessage;
+            }
+          } catch (parseError) {
+            console.error('Failed to parse error response:', parseError);
+            // Use status-based error message
+            if (response.status === 401) {
+              errorMessage = 'Nesprávný email nebo heslo';
+            } else if (response.status === 403) {
+              errorMessage = 'Váš účet není aktivní';
+            } else if (response.status === 500) {
+              errorMessage = 'Chyba serveru. Zkus to prosím znovu.';
+            }
+          }
+        } else {
+          // No JSON response, use status-based message
+          if (response.status === 401) {
+            errorMessage = 'Nesprávný email nebo heslo';
+          } else if (response.status === 403) {
+            errorMessage = 'Váš účet není aktivní';
+          } else if (response.status === 500) {
+            errorMessage = 'Chyba serveru. Zkus to prosím znovu.';
+          }
+        }
+        
+        setError(errorMessage);
       }
     } catch (err) {
-      setError('Chyba při přihlášení');
-      console.error(err);
+      console.error('Login error:', err);
+      setError('Chyba při přihlášení. Zkontroluj připojení k internetu.');
     } finally {
       setLoading(false);
     }
