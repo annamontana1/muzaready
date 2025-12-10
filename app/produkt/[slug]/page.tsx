@@ -53,44 +53,54 @@ async function getProductBySlug(slug: string): Promise<Product | null> {
 }
 
 // Generate metadata for SEO
+// Note: This runs during build, so we use try-catch to avoid Prisma errors
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug);
+  try {
+    const product = await getProductBySlug(params.slug);
 
-  if (!product) {
+    if (!product) {
+      return {
+        title: 'Produkt nenalezen | Mùza Hair',
+      };
+    }
+
+    const variant = product.variants[0];
+    const color = variant ? HAIR_COLORS[variant.shade] : null;
+    const title = `${product.name} | Mùza Hair`;
+    const description = `${product.description} Kvalita ${product.tier}. ${variant ? `Odstín ${variant.shade} (${color?.name}), ${variant.length_cm} cm, ${variant.structure}.` : ''} Cena od ${priceCalculator.formatPrice(product.base_price_per_100g_45cm)}.`;
+
     return {
-      title: 'Produkt nenalezen | Mùza Hair',
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: 'website',
+        url: `https://muza-hair-shop.vercel.app/produkt/${params.slug}`,
+        images: [
+          {
+            url: product.images.main || '/og-image.jpg',
+            width: 1200,
+            height: 630,
+            alt: product.name,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: [product.images.main || '/og-image.jpg'],
+      },
+    };
+  } catch (error) {
+    // During build, database might not be available - return fallback metadata
+    console.warn(`Failed to generate metadata for ${params.slug} during build:`, error);
+    return {
+      title: 'Produkt | Mùza Hair',
+      description: 'Kvalitní vlasy k prodloužení od Mùza Hair',
     };
   }
-
-  const variant = product.variants[0];
-  const color = variant ? HAIR_COLORS[variant.shade] : null;
-  const title = `${product.name} | Mùza Hair`;
-  const description = `${product.description} Kvalita ${product.tier}. ${variant ? `Odstín ${variant.shade} (${color?.name}), ${variant.length_cm} cm, ${variant.structure}.` : ''} Cena od ${priceCalculator.formatPrice(product.base_price_per_100g_45cm)}.`;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      url: `https://muza-hair-shop.vercel.app/produkt/${params.slug}`,
-      images: [
-        {
-          url: product.images.main || '/og-image.jpg',
-          width: 1200,
-          height: 630,
-          alt: product.name,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [product.images.main || '/og-image.jpg'],
-    },
-  };
 }
 
 // Force dynamic rendering - products come from database/API

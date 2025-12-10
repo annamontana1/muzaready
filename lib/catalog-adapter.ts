@@ -143,19 +143,26 @@ export async function getCatalogProducts(
     where.customerCategory = tierMap[tier];
   }
 
-  const skus = await prisma.sku.findMany({
-    where,
-    include: {
-      movements: {
-        orderBy: { createdAt: 'desc' },
-        take: 100, // Posledních 100 pohybů pro výpočet zásoby
+  let skus = [];
+  try {
+    skus = await prisma.sku.findMany({
+      where,
+      include: {
+        movements: {
+          orderBy: { createdAt: 'desc' },
+          take: 100, // Posledních 100 pohybů pro výpočet zásoby
+        },
       },
-    },
-    orderBy: [
-      { listingPriority: 'desc' },
-      { createdAt: 'desc' },
-    ],
-  });
+      orderBy: [
+        { listingPriority: 'desc' },
+        { createdAt: 'desc' },
+      ],
+    });
+  } catch (error) {
+    // During build, database might not be available - return empty array
+    console.warn('Failed to fetch SKUs during build (this is OK):', error);
+    return [];
+  }
 
   // Debug logging
   console.log(`[Catalog Adapter] Found ${skus.length} SKUs with filters:`, JSON.stringify(where, null, 2));
