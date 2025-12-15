@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import bcryptjs from 'bcryptjs';
+import bcryptjs from 'bcrypt';
 
 export const runtime = 'nodejs';
 

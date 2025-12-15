@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from './prisma';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 /**
  * Helper function to verify admin session from cookie
