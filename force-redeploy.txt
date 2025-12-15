@@ -1,0 +1,11 @@
+This file exists to trigger a Vercel redeploy.
+Timestamp: 2025-12-15 20:09 CET
+
+Recent fixes committed but not deployed:
+1. Fixed bcrypt imports (replaced bcryptjs with bcrypt)
+2. Added output: 'standalone' to next.config.mjs
+3. Fixed duplicate code in orders route
+4. Fixed database credentials
+
+All changes are committed to main branch.
+Vercel needs to pick up these changes.
