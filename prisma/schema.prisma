@@ -96,6 +96,11 @@ model Order {
   discountAmount Float @default(0)
   total          Float
 
+  // Coupon/Discount
+  couponId   String? // ID použitého kupónu
+  couponCode String? // Snapshot kódu pro historii
+  coupon     Coupon? @relation(fields: [couponId], references: [id])
+
   // Tracking
   trackingNumber String?
   carrier        String? // zasilkovna, gls, dpd, ceska_posta, fedex, ups, other
@@ -428,4 +433,49 @@ model OrderHistory {
   @@index([orderId])
   @@index([createdAt])
   @@map("order_history")
+}
+
+model Coupon {
+  id          String   @id @default(cuid())
+  code        String   @unique // Unikátní kód kupónu (např. "LETO2025")
+  description String? // Popis kupónu pro adminy
+
+  // Discount settings
+  discountType   String  // "percentage" nebo "fixed_amount"
+  discountValue  Float   // 10 pro 10%, nebo 500 pro 500 Kč
+  minOrderAmount Float?  // Minimální částka objednávky (volitelné)
+  maxDiscount    Float?  // Max sleva v Kč (pro percentage kupóny)
+
+  // Usage limits
+  maxUses       Int?     // Celkový počet použití (null = neomezené)
+  usedCount     Int      @default(0) // Kolikrát již použito
+  maxUsesPerUser Int?    @default(1) // Max použití na zákazníka
+
+  // Validity
+  validFrom  DateTime  @default(now())
+  validUntil DateTime? // null = neomezená platnost
+
+  // Status
+  isActive Boolean @default(true)
+
+  // Applicability rules (JSON)
+  rules String? // JSON: { "minItems": 2, "productIds": ["id1"], "categories": ["cat1"] }
+
+  // Metadata
+  createdBy String? // Admin user ID
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  orders Order[]
+
+  @@index([code])
+  @@index([isActive])
+  @@index([validFrom, validUntil])
+  @@map("coupons")
+}
+
+enum CouponDiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
 }
