@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ProductReviews from '@/components/ProductReviews';
 
 interface Sku {
   id: string;
@@ -447,6 +448,11 @@ export default function SkuDetailPage() {
               </ol>
             </div>
           </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="max-w-4xl mx-auto mt-12">
+          <ProductReviews skuId={skuId} />
         </div>
       </div>
     </div>
