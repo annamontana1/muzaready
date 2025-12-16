@@ -115,6 +115,7 @@ model Order {
   items   OrderItem[]
   invoice Invoice?
   history OrderHistory[]
+  reviews Review[]
 
   @@map("orders")
 }
@@ -200,6 +201,7 @@ model Sku {
   orderItems       OrderItem[]
   movements        StockMovement[]
   scanItems        ScanItem[]
+  reviews          Review[]
 
   @@map("skus")
 }
@@ -305,6 +307,7 @@ model User {
 
   // Relations
   sessions Session[]
+  reviews  Review[]
 
   @@map("users")
 }
@@ -478,4 +481,47 @@ model Coupon {
 enum CouponDiscountType {
   PERCENTAGE
   FIXED_AMOUNT
+}
+
+model Review {
+  id String @id @default(cuid())
+
+  // What is being reviewed
+  skuId String
+  sku   Sku    @relation(fields: [skuId], references: [id], onDelete: Cascade)
+
+  // Who wrote the review
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Review can be from verified purchase
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  // Review data
+  rating  Int // 1-5 stars
+  title   String? // Optional short title
+  comment String // Review text
+
+  // Customer info (for non-logged users or display)
+  customerName  String
+  customerEmail String?
+
+  // Admin moderation
+  isApproved Boolean  @default(false)
+  isVerified Boolean  @default(false) // True if from verified purchase
+  adminNotes String?
+
+  // Helpful votes
+  helpfulCount Int @default(0)
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([skuId])
+  @@index([userId])
+  @@index([isApproved])
+  @@index([rating])
+  @@map("reviews")
 }
