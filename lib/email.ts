@@ -672,3 +672,116 @@ export const sendInvoiceEmail = async (
     throw error;
   }
 };
+
+/**
+ * Send low stock alert email to admin
+ */
+export const sendLowStockAlert = async (
+  adminEmail: string,
+  lowStockItems: Array<{
+    sku: string;
+    name: string | null;
+    availableGrams: number;
+    shade: string | null;
+    lengthCm: number | null;
+  }>
+) => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping low stock alert');
+    return;
+  }
+
+  try {
+    const itemsHtml = lowStockItems
+      .map(
+        (item) =>
+          `<tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.sku}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name || 'N/A'}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.shade || 'N/A'}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.lengthCm ? item.lengthCm + ' cm' : 'N/A'}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right; color: #dc2626; font-weight: bold;">${item.availableGrams}g</td>
+          </tr>`
+      )
+      .join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; color: #333; }
+            .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #dc2626; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+            .content { background-color: #fff; padding: 20px; border: 2px solid #dc2626; border-radius: 0 0 5px 5px; }
+            .warning { background-color: #fef2f2; border-left: 4px solid #dc2626; padding: 12px; margin: 15px 0; }
+            table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+            th { background-color: #f3f4f6; padding: 10px; text-align: left; font-weight: bold; border-bottom: 2px solid #dc2626; }
+            .footer { color: #666; font-size: 12px; margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
+            .cta-button { display: inline-block; background-color: #8B1538; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 15px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>⚠️ UPOZORNĚNÍ: Nízké zásoby skladu</h1>
+            </div>
+            <div class="content">
+              <div class="warning">
+                <strong>⚠️ Varování:</strong> Následující produkty mají nízké zásoby a vyžadují okamžitou pozornost.
+              </div>
+
+              <p><strong>Počet produktů s nízkými zásobami:</strong> ${lowStockItems.length}</p>
+
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Název</th>
+                    <th>Odstín</th>
+                    <th style="text-align: center;">Délka</th>
+                    <th style="text-align: right;">Dostupné gramy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${itemsHtml}
+                </tbody>
+              </table>
+
+              <p><strong>Doporučené kroky:</strong></p>
+              <ul>
+                <li>Okamžitě objednejte nové zásoby</li>
+                <li>Zkontrolujte nedokončené objednávky</li>
+                <li>Zvažte dočasné pozastavení prodeje těchto produktů</li>
+                <li>Informujte zákazníky o možných zpožděních</li>
+              </ul>
+
+              <a href="${process.env.NEXT_PUBLIC_URL || 'https://muzaready.cz'}/admin/sklad" class="cta-button">
+                Přejít do správy skladu →
+              </a>
+
+              <div class="footer">
+                <p>Tento email byl automaticky vygenerován systémem Múza Hair.</p>
+                <p>Pro změnu nastavení upozornění na nízké zásoby přejděte do administrace.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await resend.emails.send({
+      from: 'Múza Hair <noreply@muzahair.cz>',
+      to: [adminEmail],
+      subject: `⚠️ UPOZORNĚNÍ: ${lowStockItems.length} produktů s nízkými zásobami`,
+      html,
+    });
+
+    console.log('Low stock alert email sent:', result);
+    return result;
+  } catch (error) {
+    console.error('Error sending low stock alert:', error);
+    throw error;
+  }
+};
