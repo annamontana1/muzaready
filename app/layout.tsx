@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
+import SmartsuppChat from "@/components/SmartsuppChat";
 import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 import Providers from "./Providers";
 
@@ -87,6 +88,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <CookieConsent />
+          <SmartsuppChat />
         </Providers>
       </body>
     </html>
