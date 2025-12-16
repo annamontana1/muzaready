@@ -98,6 +98,7 @@ model Order {
 
   // Tracking
   trackingNumber String?
+  carrier        String? // zasilkovna, gls, dpd, ceska_posta, fedex, ups, other
 
   // Timestamps
   createdAt          DateTime  @default(now())

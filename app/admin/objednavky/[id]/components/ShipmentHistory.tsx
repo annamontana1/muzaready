@@ -1,5 +1,7 @@
 'use client';
 
+import { getCarrierName, getTrackingUrl } from '@/lib/shipping';
+
 interface OrderItem {
   id: string;
   orderId: string;
@@ -158,6 +160,18 @@ export default function ShipmentHistory({ order }: ShipmentHistoryProps) {
           </div>
 
           <div className="space-y-3">
+            {/* Carrier */}
+            {(order as any).carrier && (
+              <div className="flex items-start">
+                <dt className="text-sm font-medium text-gray-500 w-40 flex-shrink-0">
+                  Dopravce:
+                </dt>
+                <dd className="text-sm text-gray-900 font-semibold">
+                  {getCarrierName((order as any).carrier)}
+                </dd>
+              </div>
+            )}
+
             {/* Tracking Number */}
             <div className="flex items-start">
               <dt className="text-sm font-medium text-gray-500 w-40 flex-shrink-0">
@@ -165,6 +179,16 @@ export default function ShipmentHistory({ order }: ShipmentHistoryProps) {
               </dt>
               <dd className="text-sm text-gray-900 font-medium">
                 {order.trackingNumber}
+                {(order as any).carrier && (
+                  <a
+                    href={getTrackingUrl((order as any).carrier, order.trackingNumber)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-purple-600 hover:text-purple-800 text-xs underline"
+                  >
+                    Sledovat →
+                  </a>
+                )}
               </dd>
             </div>
 

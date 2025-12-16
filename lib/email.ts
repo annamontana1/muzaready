@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { getTrackingUrl, getCarrierName } from './shipping';
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
@@ -196,7 +197,8 @@ export const sendPaymentConfirmationEmail = async (
 export const sendShippingNotificationEmail = async (
   email: string,
   orderId: string,
-  trackingInfo?: string
+  trackingInfo?: string,
+  carrier?: string | null
 ) => {
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendShippingNotificationEmail');
@@ -229,7 +231,9 @@ export const sendShippingNotificationEmail = async (
 
               <div class="info-box">
                 <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                ${carrier ? `<p><strong>Dopravce:</strong> ${getCarrierName(carrier)}</p>` : ''}
                 ${trackingInfo ? `<p><strong>Číslo sledování:</strong> ${trackingInfo}</p>` : ''}
+                ${trackingInfo && carrier ? `<p><a href="${getTrackingUrl(carrier, trackingInfo)}" style="color: #007bff; text-decoration: none; font-weight: bold;">→ Sledovat zásilku</a></p>` : ''}
               </div>
 
               <p>Balíček by měl k vám dorazit do několika pracovních dnů.</p>

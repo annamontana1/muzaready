@@ -1,0 +1,52 @@
+═══════════════════════════════════════════════════════════════
+              🆘 RYCHLÁ NÁPOVĚDA - VERCEL CHAOS
+═══════════════════════════════════════════════════════════════
+
+SITUACE:
+--------
+- Máš X projektů na Vercelu
+- Každý má jiné heslo k databázi
+- Login nefunguje na muzaready-iota.vercel.app
+- Nevíš, který projekt opravit
+
+CO POTŘEBUJI OD TEBE:
+---------------------
+
+1. Jdi na: https://vercel.com
+
+2. Udělej SCREENSHOT stránky s přehledem projektů
+   (měl by tam být seznam typu: "muzaready", "muzaready-iota", atd.)
+
+3. Pošli mi ten screenshot
+
+4. Já ti pak řeknu PŘESNĚ:
+   ✓ Který projekt je ten správný
+   ✓ Co v něm změnit
+   ✓ Jak spustit redeploy
+
+═══════════════════════════════════════════════════════════════
+
+DŮLEŽITÉ INFO:
+--------------
+
+✅ SPRÁVNÉ database heslo (aktuální Supabase):
+   tuchaw-gidqup-peVho0
+
+❌ ŠPATNÁ hesla (stará, nepoužívat):
+   amobenecanto8A
+   nezjat-kosRo8-ciccoj
+
+✅ Login credentials (funguje lokálně):
+   Email: admin@muzahair.cz
+   Heslo: admin123
+
+═══════════════════════════════════════════════════════════════
+
+HLEDÁME PROJEKT S:
+------------------
+Project ID: prj_Ei7ELoHKFaNvrooaiAbcyjhPsLb9
+Production URL: muzaready-iota.vercel.app
+
+(Může se jmenovat "muzaready" nebo jinak)
+
+═══════════════════════════════════════════════════════════════

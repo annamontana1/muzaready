@@ -124,9 +124,8 @@ export async function POST(
         deliveryStatus: 'shipped',
         lastStatusChangeAt: new Date(),
         trackingNumber: trackingNumber,
+        carrier: carrier, // Save carrier to database
         shippedAt: new Date(),
-        // Store shipment data as JSON if your schema supports it
-        // Otherwise, you might want to create a separate Shipment model
       },
       include: {
         items: {

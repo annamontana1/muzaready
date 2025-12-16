@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Card, Input, Alert, OrderStatusTimeline } from '@/components';
+import { getTrackingUrl, getCarrierName } from '@/lib/shipping';
 
 interface OrderItem {
   id: string;
@@ -28,6 +29,7 @@ interface Order {
   paymentStatus: string;
   deliveryStatus: string;
   trackingNumber: string | null;
+  carrier: string | null;
   total: number;
   createdAt: string;
   updatedAt: string;
@@ -227,10 +229,12 @@ export default function OrderTrackingPage() {
               {/* Tracking Number */}
               {order.trackingNumber && (
                 <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">Dopravce:</p>
+                  <p className="text-base font-semibold text-gray-800 mb-2">{getCarrierName(order.carrier)}</p>
                   <p className="text-sm text-gray-600 mb-1">Číslo sledování:</p>
                   <p className="text-lg font-bold text-blue-800">{order.trackingNumber}</p>
                   <a
-                    href={`https://www.postaonline.cz/trackandtrace/-/zasilka/cislo?parcelNumbers=${order.trackingNumber}`}
+                    href={getTrackingUrl(order.carrier, order.trackingNumber)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-blue-600 hover:text-blue-800 underline mt-2 inline-block"

@@ -108,7 +108,12 @@ export async function PUT(request: NextRequest, { params }: { params: Params }) 
     // Send shipping notification if delivery status changed to "shipped"
     if (currentOrder.deliveryStatus !== 'shipped' && deliveryStatus === 'shipped') {
       try {
-        await sendShippingNotificationEmail(currentOrder.email, id);
+        await sendShippingNotificationEmail(
+          currentOrder.email,
+          id,
+          (updatedOrder as any).trackingNumber || undefined,
+          (updatedOrder as any).carrier || undefined
+        );
         console.log('Shipping notification email sent successfully');
       } catch (emailError) {
         console.error('Error sending shipping notification email:', emailError);

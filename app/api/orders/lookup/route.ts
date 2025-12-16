@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
       paymentStatus: order.paymentStatus,
       deliveryStatus: order.deliveryStatus,
       trackingNumber: (order as any).trackingNumber || null,
+      carrier: (order as any).carrier || null,
       total: order.total,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,

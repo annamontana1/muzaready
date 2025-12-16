@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/ToastProvider';
 import { ErrorAlert } from '@/components/ui/ErrorAlert';
+import { Carrier } from '@/lib/shipping';
 
 interface OrderItem {
   id: string;
@@ -36,13 +37,12 @@ interface CreateShipmentModalProps {
   onSuccess: () => void;
 }
 
-type CarrierType = 'dpd' | 'zasilkovna' | 'fedex' | 'gls' | 'ups' | 'other';
-
-const carrierOptions: { value: CarrierType; label: string }[] = [
+const carrierOptions: { value: Carrier; label: string }[] = [
   { value: 'zasilkovna', label: 'Zásilkovna' },
+  { value: 'ceska_posta', label: 'Česká pošta' },
   { value: 'dpd', label: 'DPD' },
-  { value: 'fedex', label: 'FedEx' },
   { value: 'gls', label: 'GLS' },
+  { value: 'fedex', label: 'FedEx' },
   { value: 'ups', label: 'UPS' },
   { value: 'other', label: 'Jiný dopravce' },
 ];
@@ -53,7 +53,7 @@ export default function CreateShipmentModal({
   onClose,
   onSuccess,
 }: CreateShipmentModalProps) {
-  const [carrier, setCarrier] = useState<CarrierType>('zasilkovna');
+  const [carrier, setCarrier] = useState<Carrier>('zasilkovna');
   const [trackingNumber, setTrackingNumber] = useState<string>('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>('');
