@@ -47,6 +47,12 @@ interface Order {
   zipCode: string;
   country: string;
   deliveryMethod: string;
+
+  // Zásilkovna data
+  packetaPointId: string | null;
+  packetaPointName: string | null;
+  packetaPointData: string | null;
+
   orderStatus: string;
   paymentStatus: string;
   deliveryStatus: string;

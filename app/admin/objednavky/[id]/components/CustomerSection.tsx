@@ -30,6 +30,12 @@ interface Order {
   zipCode: string;
   country: string;
   deliveryMethod: string;
+
+  // Zásilkovna data
+  packetaPointId?: string | null;
+  packetaPointName?: string | null;
+  packetaPointData?: string | null;
+
   orderStatus: string;
   paymentStatus: string;
   deliveryStatus: string;
@@ -97,23 +103,59 @@ export default function CustomerSection({ order }: CustomerSectionProps) {
 
         {/* Doručovací adresa */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Doručovací adresa</h3>
-          <div className="space-y-3">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Ulice</p>
-              <p className="text-base font-medium text-gray-900">{order.streetAddress}</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            {order.deliveryMethod === 'zasilkovna' ? 'Výdejní místo Zásilkovny' : 'Doručovací adresa'}
+          </h3>
+
+          {order.deliveryMethod === 'zasilkovna' && order.packetaPointName ? (
+            <div className="space-y-3">
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-3">
+                <p className="text-sm font-medium text-orange-900 flex items-center gap-2">
+                  <span>📦</span>
+                  <span>Zásilkovna - výdejní místo</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Název výdejního místa</p>
+                <p className="text-base font-medium text-gray-900">{order.packetaPointName}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">ID výdejního místa</p>
+                <p className="text-base font-medium text-gray-900">{order.packetaPointId}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Adresa</p>
+                <p className="text-base font-medium text-gray-900">{order.streetAddress}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Město</p>
+                <p className="text-base font-medium text-gray-900">
+                  {order.zipCode} {order.city}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Země</p>
+                <p className="text-base font-medium text-gray-900">{order.country}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Město</p>
-              <p className="text-base font-medium text-gray-900">
-                {order.zipCode} {order.city}
-              </p>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Ulice</p>
+                <p className="text-base font-medium text-gray-900">{order.streetAddress}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Město</p>
+                <p className="text-base font-medium text-gray-900">
+                  {order.zipCode} {order.city}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Země</p>
+                <p className="text-base font-medium text-gray-900">{order.country}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Země</p>
-              <p className="text-base font-medium text-gray-900">{order.country}</p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, items: cartLines, shippingInfo } = validation.data;
+    const { email, items: cartLines, shippingInfo, packetaPoint, couponCode } = validation.data;
 
     // Import the quote function at runtime to avoid circular dependencies
     const { quoteCartLines } = await import('@/lib/stock');
@@ -147,16 +147,24 @@ export async function POST(request: NextRequest) {
 
     // Create order with OrderItem records (NO stock deduction yet - waiting for payment confirmation)
     const totalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
+
     const order = await prisma.order.create({
       data: {
         email,
         firstName: shippingInfo?.firstName || 'Customer',
         lastName: shippingInfo?.lastName || '',
         phone: shippingInfo?.phone || null,
-        streetAddress: shippingInfo?.streetAddress || 'Unknown',
-        city: shippingInfo?.city || 'Unknown',
-        zipCode: shippingInfo?.zipCode || '00000',
+        streetAddress: shippingInfo?.streetAddress || packetaPoint?.street || 'Unknown',
+        city: shippingInfo?.city || packetaPoint?.city || 'Unknown',
+        zipCode: shippingInfo?.zipCode || packetaPoint?.zip || '00000',
         country: shippingInfo?.country || 'CZ',
+        deliveryMethod: shippingInfo?.deliveryMethod || 'standard',
+
+        // Zásilkovna pickup point data
+        packetaPointId: packetaPoint?.id || null,
+        packetaPointName: packetaPoint?.name || null,
+        packetaPointData: packetaPoint ? JSON.stringify(packetaPoint) : null,
+
         orderStatus: 'pending', // Waiting for GoPay payment confirmation
         paymentStatus: 'unpaid',
         deliveryStatus: 'pending',

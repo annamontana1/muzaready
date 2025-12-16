@@ -2,13 +2,45 @@
 
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Script from 'next/script';
+
+// Packeta widget types
+declare global {
+  interface Window {
+    Packeta?: {
+      Widget: {
+        pick: (
+          apiKey: string,
+          callback: (point: PacketaPoint | null) => void,
+          opts?: PacketaOptions
+        ) => void;
+      };
+    };
+  }
+}
+
+interface PacketaPoint {
+  id: string;
+  name: string;
+  city: string;
+  street: string;
+  zip: string;
+  country: string;
+  url?: string;
+}
+
+interface PacketaOptions {
+  country?: string;
+  language?: string;
+}
 
 export default function PokladnaPage() {
   const { items, getTotalPrice, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [packetaLoaded, setPacketaLoaded] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -19,6 +51,7 @@ export default function PokladnaPage() {
     city: '',
     zipCode: '',
     country: 'CZ',
+    deliveryMethod: 'standard', // standard nebo zasilkovna
   });
 
   // Coupon state
@@ -28,10 +61,44 @@ export default function PokladnaPage() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponApplied, setCouponApplied] = useState(false);
 
+  // Zásilkovna state
+  const [selectedPickupPoint, setSelectedPickupPoint] = useState<PacketaPoint | null>(null);
+
   // Calculate totals using new cart structure
   const total = getTotalPrice();
   const shippingThreshold = 3000;
-  const shipping = total >= shippingThreshold ? 0 : 150;
+
+  // Zásilkovna má fixní cenu 65 Kč
+  const getShippingCost = () => {
+    if (formData.deliveryMethod === 'zasilkovna') return 65;
+    return total >= shippingThreshold ? 0 : 150;
+  };
+  const shipping = getShippingCost();
+
+  // Open Packeta widget to select pickup point
+  const openPacketaWidget = () => {
+    if (!window.Packeta) {
+      alert('Widget Zásilkovny se načítá, zkuste to prosím znovu za chvíli.');
+      return;
+    }
+
+    // API klíč - POZNÁMKA: Tento klíč je placeholder, musíte ho nahradit skutečným API klíčem ze Zásilkovny
+    const apiKey = process.env.NEXT_PUBLIC_PACKETA_API_KEY || 'demo-api-key';
+
+    window.Packeta.Widget.pick(
+      apiKey,
+      (point) => {
+        if (point) {
+          setSelectedPickupPoint(point);
+          console.log('Selected pickup point:', point);
+        }
+      },
+      {
+        country: formData.country,
+        language: 'cs',
+      }
+    );
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -95,8 +162,22 @@ export default function PokladnaPage() {
 
     try {
       // Validation
-      if (!formData.email || !formData.firstName || !formData.streetAddress || !formData.city) {
+      if (!formData.email || !formData.firstName) {
         setError('Prosím vyplňte všechna povinná pole');
+        setLoading(false);
+        return;
+      }
+
+      // Validate Zásilkovna selection
+      if (formData.deliveryMethod === 'zasilkovna' && !selectedPickupPoint) {
+        setError('Prosím vyberte výdejní místo Zásilkovny');
+        setLoading(false);
+        return;
+      }
+
+      // Validate address for standard delivery
+      if (formData.deliveryMethod === 'standard' && (!formData.streetAddress || !formData.city)) {
+        setError('Prosím vyplňte dodací adresu');
         setLoading(false);
         return;
       }
@@ -114,11 +195,29 @@ export default function PokladnaPage() {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phone: formData.phone,
-          streetAddress: formData.streetAddress,
-          city: formData.city,
-          zipCode: formData.zipCode,
+          streetAddress: formData.deliveryMethod === 'zasilkovna'
+            ? (selectedPickupPoint?.street || '')
+            : formData.streetAddress,
+          city: formData.deliveryMethod === 'zasilkovna'
+            ? (selectedPickupPoint?.city || '')
+            : formData.city,
+          zipCode: formData.deliveryMethod === 'zasilkovna'
+            ? (selectedPickupPoint?.zip || '')
+            : formData.zipCode,
           country: formData.country,
+          deliveryMethod: formData.deliveryMethod,
         },
+        // Zásilkovna pickup point data
+        packetaPoint: formData.deliveryMethod === 'zasilkovna' && selectedPickupPoint
+          ? {
+              id: selectedPickupPoint.id,
+              name: selectedPickupPoint.name,
+              street: selectedPickupPoint.street,
+              city: selectedPickupPoint.city,
+              zip: selectedPickupPoint.zip,
+              country: selectedPickupPoint.country,
+            }
+          : undefined,
         couponCode: couponApplied && couponCode ? couponCode.trim() : undefined,
       };
 
@@ -218,8 +317,16 @@ export default function PokladnaPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Pokladna</h1>
+    <>
+      {/* Packeta Widget Library */}
+      <Script
+        src="https://widget.packeta.com/www/js/library.js"
+        strategy="lazyOnload"
+        onLoad={() => setPacketaLoaded(true)}
+      />
+
+      <div className="max-w-6xl mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Pokladna</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
@@ -304,76 +411,175 @@ export default function PokladnaPage() {
               />
             </div>
 
-            {/* Address */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Adresa *
+            {/* Delivery Method Selection */}
+            <div className="border-t border-gray-200 pt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Způsob dopravy *
               </label>
-              <input
-                type="text"
-                name="streetAddress"
-                value={formData.streetAddress}
-                onChange={handleInputChange}
-                required
-                disabled={loading}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                placeholder="Ulice a číslo popisné"
-              />
+              <div className="space-y-3">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
+                    value="standard"
+                    checked={formData.deliveryMethod === 'standard'}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="mt-1 mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">Standardní doprava na adresu</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Doručení do 3-5 pracovních dnů
+                        </p>
+                      </div>
+                      <p className="font-medium text-gray-900">
+                        {total >= shippingThreshold ? 'Zdarma' : '150 Kč'}
+                      </p>
+                    </div>
+                    {total < shippingThreshold && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        Doprava zdarma při nákupu nad {shippingThreshold.toLocaleString('cs-CZ')} Kč
+                      </p>
+                    )}
+                  </div>
+                </label>
+
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
+                    value="zasilkovna"
+                    checked={formData.deliveryMethod === 'zasilkovna'}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="mt-1 mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">Zásilkovna - výdejní místo</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Vyzvednutí na více než 7 500 místech v ČR a SK
+                        </p>
+                      </div>
+                      <p className="font-medium text-gray-900">65 Kč</p>
+                    </div>
+                    {formData.deliveryMethod === 'zasilkovna' && (
+                      <div className="mt-3">
+                        {selectedPickupPoint ? (
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <p className="text-sm font-medium text-green-900 mb-1">
+                              ✓ Vybrané výdejní místo:
+                            </p>
+                            <p className="text-sm text-green-800 font-medium">
+                              {selectedPickupPoint.name}
+                            </p>
+                            <p className="text-xs text-green-700">
+                              {selectedPickupPoint.street}, {selectedPickupPoint.city},{' '}
+                              {selectedPickupPoint.zip}
+                            </p>
+                            <button
+                              type="button"
+                              onClick={openPacketaWidget}
+                              className="mt-2 text-sm text-burgundy hover:text-maroon font-medium"
+                            >
+                              Změnit výdejní místo
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={openPacketaWidget}
+                            className="w-full px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium"
+                          >
+                            Vybrat výdejní místo Zásilkovny
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </label>
+              </div>
             </div>
 
-            {/* City and Postal Code */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Město *
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                  placeholder="Praha"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  PSČ *
-                </label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                  placeholder="110 00"
-                />
-              </div>
-            </div>
+            {/* Address - only show if standard delivery selected */}
+            {formData.deliveryMethod === 'standard' && (
+              <div className="border-t border-gray-200 pt-6 space-y-4">
+                <h3 className="text-lg font-medium text-gray-900">Dodací adresa</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Adresa *
+                  </label>
+                  <input
+                    type="text"
+                    name="streetAddress"
+                    value={formData.streetAddress}
+                    onChange={handleInputChange}
+                    required={formData.deliveryMethod === 'standard'}
+                    disabled={loading}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                    placeholder="Ulice a číslo popisné"
+                  />
+                </div>
 
-            {/* Country */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Země
-              </label>
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleInputChange}
-                disabled={loading}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-              >
-                <option value="CZ">Česká republika</option>
-                <option value="SK">Slovensko</option>
-                <option value="PL">Polsko</option>
-                <option value="DE">Německo</option>
-                <option value="AT">Rakousko</option>
-              </select>
-            </div>
+                {/* City and Postal Code */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Město *
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      required={formData.deliveryMethod === 'standard'}
+                      disabled={loading}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                      placeholder="Praha"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      PSČ *
+                    </label>
+                    <input
+                      type="text"
+                      name="zipCode"
+                      value={formData.zipCode}
+                      onChange={handleInputChange}
+                      required={formData.deliveryMethod === 'standard'}
+                      disabled={loading}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                      placeholder="110 00"
+                    />
+                  </div>
+                </div>
+
+                {/* Country */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Země
+                  </label>
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                  >
+                    <option value="CZ">Česká republika</option>
+                    <option value="SK">Slovensko</option>
+                    <option value="PL">Polsko</option>
+                    <option value="DE">Německo</option>
+                    <option value="AT">Rakousko</option>
+                  </select>
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <button
@@ -509,6 +715,7 @@ export default function PokladnaPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

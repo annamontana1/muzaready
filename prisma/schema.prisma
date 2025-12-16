@@ -73,7 +73,12 @@ model Order {
   billingCountry String?
 
   // Delivery
-  deliveryMethod String @default("standard") // standard, express, pickup
+  deliveryMethod String @default("standard") // standard, express, pickup, zasilkovna
+
+  // Zásilkovna pick-up point data (JSON)
+  packetaPointId   String? // ID výdejního místa
+  packetaPointName String? // Název výdejního místa
+  packetaPointData String? // JSON s kompletními daty (address, city, zip, country, etc.)
 
   // Payment & Status
   orderStatus    String  @default("pending") // draft, pending, paid, processing, shipped, completed, cancelled
