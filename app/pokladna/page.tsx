@@ -21,6 +21,13 @@ export default function PokladnaPage() {
     country: 'CZ',
   });
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponApplied, setCouponApplied] = useState(false);
+
   // Calculate totals using new cart structure
   const total = getTotalPrice();
   const shippingThreshold = 3000;
@@ -32,6 +39,52 @@ export default function PokladnaPage() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Zadejte kód kupónu');
+      return;
+    }
+
+    setCouponLoading(true);
+    setCouponError('');
+
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          orderAmount: total,
+          userEmail: formData.email || undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.valid) {
+        setCouponError(data.error || 'Neplatný kupón');
+        setCouponDiscount(0);
+        setCouponApplied(false);
+      } else {
+        setCouponDiscount(data.discount.amount);
+        setCouponApplied(true);
+        setCouponError('');
+      }
+    } catch (error) {
+      console.error('Error validating coupon:', error);
+      setCouponError('Chyba při ověřování kupónu');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode('');
+    setCouponDiscount(0);
+    setCouponApplied(false);
+    setCouponError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,6 +119,7 @@ export default function PokladnaPage() {
           zipCode: formData.zipCode,
           country: formData.country,
         },
+        couponCode: couponApplied && couponCode ? couponCode.trim() : undefined,
       };
 
       // Step 1: Create order in database (status: pending)
@@ -364,11 +418,63 @@ export default function PokladnaPage() {
               ))}
             </div>
 
+            {/* Coupon Input */}
+            <div className="mb-6 border-b border-gray-200 pb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Máte slevový kupón?
+              </label>
+              {!couponApplied ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    placeholder="KÓD KUPÓNU"
+                    disabled={couponLoading}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy text-sm uppercase"
+                  />
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    className="px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {couponLoading ? 'Ověřuji...' : 'Použít'}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-700 font-medium">{couponCode}</span>
+                    <span className="text-green-600 text-sm">
+                      (-{couponDiscount.toLocaleString('cs-CZ')} Kč)
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="text-red-600 hover:text-red-800 text-sm"
+                  >
+                    Odebrat
+                  </button>
+                </div>
+              )}
+              {couponError && (
+                <p className="text-red-600 text-xs mt-2">{couponError}</p>
+              )}
+            </div>
+
             <div className="space-y-3">
               <div className="flex justify-between">
                 <p className="text-gray-600">Mezisoučet:</p>
                 <p className="text-gray-900 font-medium">{total.toLocaleString('cs-CZ')} Kč</p>
               </div>
+              {couponApplied && couponDiscount > 0 && (
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Sleva ({couponCode}):</p>
+                  <p className="text-green-600 font-medium">
+                    -{couponDiscount.toLocaleString('cs-CZ')} Kč
+                  </p>
+                </div>
+              )}
               <div className="flex justify-between">
                 <p className="text-gray-600">Doprava:</p>
                 <p className="text-gray-900 font-medium">
@@ -388,7 +494,7 @@ export default function PokladnaPage() {
                 <div className="flex justify-between">
                   <p className="text-lg font-bold text-gray-900">Celkem:</p>
                   <p className="text-lg font-bold text-burgundy">
-                    {(total + shipping).toLocaleString('cs-CZ')} Kč
+                    {(total - couponDiscount + shipping).toLocaleString('cs-CZ')} Kč
                   </p>
                 </div>
               </div>
