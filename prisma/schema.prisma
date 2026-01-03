@@ -207,6 +207,7 @@ model Sku {
   movements        StockMovement[]
   scanItems        ScanItem[]
   reviews          Review[]
+  stockTakeItems   StockTakeItem[]
 
   @@map("skus")
 }
@@ -218,9 +219,23 @@ model StockMovement {
   grams      Int
   note       String?
   refOrderId String?
+
+  // Enhanced tracking
+  performedBy String?  // Admin user who performed the action
+  location    String?  // Warehouse location (e.g., "A1-3", "Shelf B2")
+  batchNumber String?  // Lot/Batch tracking for traceability
+  reason      String?  // Reason for adjustment (damage, theft, correction, etc.)
+
+  // Cost tracking
+  costPerGramCzk Float?  // Purchase cost for IN movements
+
   createdAt  DateTime @default(now())
   sku        Sku      @relation(fields: [skuId], references: [id], onDelete: Cascade)
 
+  @@index([skuId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([batchNumber])
   @@map("stock_movements")
 }
 
@@ -265,9 +280,62 @@ enum EndingOption {
 }
 
 enum MoveType {
-  IN
-  OUT
-  ADJUST
+  IN          // Naskladnění (příjem zboží)
+  OUT         // Vyskladnění (prodej, výdej)
+  ADJUST      // Inventurní úprava
+  TRANSFER    // Přesun mezi lokacemi
+  DAMAGE      // Poškození/znehodnocení
+  RETURN      // Vrácení zboží od zákazníka
+}
+
+// Inventory/Stock Take management
+model StockTake {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "Měsíční inventura 12/2024"
+  status      StockTakeStatus @default(PLANNED)
+
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  performedBy String?  // Admin user
+  notes       String?
+
+  items StockTakeItem[]
+
+  @@map("stock_takes")
+}
+
+model StockTakeItem {
+  id String @id @default(cuid())
+
+  stockTakeId String
+  stockTake   StockTake @relation(fields: [stockTakeId], references: [id], onDelete: Cascade)
+
+  skuId String
+  sku   Sku    @relation(fields: [skuId], references: [id])
+
+  // System vs Physical count
+  expectedGrams Int  // What system says
+  countedGrams  Int  // What was physically counted
+  difference    Int  // countedGrams - expectedGrams
+
+  location String?  // Where it was counted
+  notes    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([stockTakeId])
+  @@index([skuId])
+  @@map("stock_take_items")
+}
+
+enum StockTakeStatus {
+  PLANNED     // Naplánováno
+  IN_PROGRESS // Probíhá
+  COMPLETED   // Dokončeno
+  CANCELLED   // Zrušeno
 }
 
 model ExchangeRate {

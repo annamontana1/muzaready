@@ -86,6 +86,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {sidebarOpen ? '📦 Sklad (SKU)' : '📦'}
           </Link>
           <Link
+            href="/admin/stock-receive"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '📥 Naskladnění' : '📥'}
+          </Link>
+          <Link
+            href="/admin/inventory"
+            className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
+          >
+            {sidebarOpen ? '📋 Inventury' : '📋'}
+          </Link>
+          <Link
             href="/admin/price-matrix"
             className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition text-sm"
           >
