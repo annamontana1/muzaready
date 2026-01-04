@@ -32,6 +32,8 @@ export default function WarehouseScannerPage() {
   const [manualSkuInput, setManualSkuInput] = useState<string>('');
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [scanMode, setScanMode] = useState<'order' | 'sell'>('order'); // New: scan mode toggle
+  const [sellItem, setSellItem] = useState<any>(null); // New: current item to sell
   const [customerData, setCustomerData] = useState({
     email: '',
     firstName: '',
@@ -121,12 +123,76 @@ export default function WarehouseScannerPage() {
     };
   }, [isScanning, sessionId, lastScanned]);
 
+  const processStockSale = async (movementId: string) => {
+    try {
+      // Get movement details
+      const response = await fetch(`/api/admin/stock/sell?movementId=${movementId}`);
+
+      if (!response.ok) {
+        const data = await response.json();
+        setErrorMessage(data.error || 'Chyba při načítání položky');
+        setIsProcessing(false);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!data.canSell) {
+        setErrorMessage('Tuto položku nelze prodat (již prodáno nebo není typ IN)');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Show sell confirmation
+      setSellItem(data);
+      setErrorMessage('');
+    } catch (error) {
+      setErrorMessage('Chyba při načítání položky: ' + (error instanceof Error ? error.message : String(error)));
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const confirmSale = async () => {
+    if (!sellItem) return;
+
+    try {
+      const response = await fetch('/api/admin/stock/sell', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          movementId: sellItem.movement.id,
+          performedBy: 'Admin', // TODO: get from auth
+          note: 'Prodej z prodejny',
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error);
+      }
+
+      const data = await response.json();
+      setErrorMessage(`✓ ${data.message}`);
+      setSellItem(null);
+    } catch (error) {
+      setErrorMessage('Chyba při prodeji: ' + (error instanceof Error ? error.message : String(error)));
+    }
+  };
+
   const processScannedSKU = async (skuCode: string) => {
     if (isProcessing) return;
     setIsProcessing(true);
 
     try {
-      // Lookup SKU
+      // Check if this is a QR code from stock movement (format: STOCK-{id})
+      if (scanMode === 'sell' && skuCode.startsWith('STOCK-')) {
+        const movementId = skuCode.replace('STOCK-', '');
+        await processStockSale(movementId);
+        return;
+      }
+
+      // Lookup SKU (order mode or non-QR code)
       const response = await fetch(`/api/admin/scan-sku?sku=${encodeURIComponent(skuCode)}`);
 
       if (!response.ok) {
@@ -291,6 +357,38 @@ export default function WarehouseScannerPage() {
           {/* Camera Section */}
           <div className="lg:col-span-2">
             <div className="bg-gray-800 rounded-lg overflow-hidden shadow-xl">
+              {/* Mode Toggle */}
+              <div className="bg-gray-800 p-4 border-b border-gray-600">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-sm text-gray-400">Režim:</span>
+                  <button
+                    onClick={() => setScanMode('order')}
+                    className={`px-4 py-2 rounded-lg font-medium transition ${
+                      scanMode === 'order'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                    }`}
+                  >
+                    🛒 Objednávka
+                  </button>
+                  <button
+                    onClick={() => setScanMode('sell')}
+                    className={`px-4 py-2 rounded-lg font-medium transition ${
+                      scanMode === 'sell'
+                        ? 'bg-green-600 text-white'
+                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                    }`}
+                  >
+                    💰 Prodej (POS)
+                  </button>
+                </div>
+                {scanMode === 'sell' && (
+                  <p className="text-center text-xs text-gray-400 mt-2">
+                    Naskenujte QR kód z produktu pro přímý prodej
+                  </p>
+                )}
+              </div>
+
               {/* Camera Controls */}
               <div className="bg-gray-700 p-4 border-b border-gray-600 space-y-4">
                 <div className="flex gap-3">
@@ -528,6 +626,72 @@ export default function WarehouseScannerPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Sell Confirmation Modal */}
+        {sellItem && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+            <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full">
+              <h2 className="text-2xl font-bold mb-6">Potvrdit prodej</h2>
+
+              <div className="space-y-4 mb-6">
+                <div>
+                  <p className="text-sm text-gray-400">Produkt:</p>
+                  <p className="text-lg font-medium">{sellItem.sku.name || sellItem.sku.sku}</p>
+                  {sellItem.sku.shadeName && (
+                    <p className="text-sm text-gray-400">{sellItem.sku.shadeName}</p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-400">Množství:</p>
+                    <p className="text-lg font-bold">{sellItem.movement.grams}g</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Cena:</p>
+                    <p className="text-lg font-bold text-green-400">
+                      {(sellItem.price / 100).toFixed(2)} Kč
+                    </p>
+                  </div>
+                </div>
+
+                {sellItem.movement.location && (
+                  <div>
+                    <p className="text-sm text-gray-400">Lokace:</p>
+                    <p className="text-sm">{sellItem.movement.location}</p>
+                  </div>
+                )}
+
+                {sellItem.movement.batchNumber && (
+                  <div>
+                    <p className="text-sm text-gray-400">Šarže:</p>
+                    <p className="text-sm">{sellItem.movement.batchNumber}</p>
+                  </div>
+                )}
+
+                <div className="bg-gray-700 p-3 rounded">
+                  <p className="text-sm text-gray-400">Dostupný sklad:</p>
+                  <p className="text-sm">{sellItem.sku.availableGrams}g celkem</p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={confirmSale}
+                  className="flex-1 bg-green-600 hover:bg-green-700 px-6 py-3 rounded font-bold transition"
+                >
+                  ✓ Potvrdit prodej
+                </button>
+                <button
+                  onClick={() => setSellItem(null)}
+                  className="flex-1 bg-gray-600 hover:bg-gray-500 px-6 py-3 rounded font-bold transition"
+                >
+                  ✕ Zrušit
+                </button>
+              </div>
             </div>
           </div>
         )}

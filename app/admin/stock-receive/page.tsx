@@ -34,6 +34,7 @@ export default function StockReceivePage() {
   const [loading, setLoading] = useState(false);
   const [loadingSkus, setLoadingSkus] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [lastMovementId, setLastMovementId] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     skuId: '',
@@ -100,6 +101,7 @@ export default function StockReceivePage() {
 
       if (response.ok) {
         setMessage({ type: 'success', text: data.message || 'Zboží úspěšně naskladněno!' });
+        setLastMovementId(data.movement?.id || null); // Save movement ID for QR code
         setFormData({
           skuId: '',
           grams: '',
@@ -133,7 +135,49 @@ export default function StockReceivePage() {
             <div className={`p-4 rounded-lg mb-6 ${
               message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
             }`}>
-              {message.text}
+              <p>{message.text}</p>
+
+              {/* Show QR code download button after successful stock receipt */}
+              {message.type === 'success' && lastMovementId && (
+                <div className="mt-4 pt-4 border-t border-green-200">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <p className="font-medium mb-1">QR kód pro tuto položku:</p>
+                      <p className="text-sm text-green-700">
+                        Stáhněte QR kód, vytiskněte a nalepte na produkt pro snadné skenování
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <a
+                        href={`/api/admin/stock/qr-code/${lastMovementId}`}
+                        download
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium inline-flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Stáhnout QR kód
+                      </a>
+                      <button
+                        onClick={() => setLastMovementId(null)}
+                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                      >
+                        Zavřít
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* QR code preview */}
+                  <div className="mt-4 text-center">
+                    <img
+                      src={`/api/admin/stock/qr-code/${lastMovementId}`}
+                      alt="QR kód"
+                      className="inline-block w-48 h-48 border-2 border-green-300 rounded-lg"
+                    />
+                    <p className="text-xs text-green-700 mt-2">ID: {lastMovementId}</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -297,9 +341,21 @@ export default function StockReceivePage() {
                     <p className="text-sm text-gray-600 italic mt-2">{receipt.note}</p>
                   )}
 
-                  <p className="text-xs text-gray-500 mt-2">
-                    {new Date(receipt.createdAt).toLocaleString('cs-CZ')}
-                  </p>
+                  <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+                    <p className="text-xs text-gray-500">
+                      {new Date(receipt.createdAt).toLocaleString('cs-CZ')}
+                    </p>
+                    <a
+                      href={`/api/admin/stock/qr-code/${receipt.id}`}
+                      download
+                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition inline-flex items-center gap-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
+                      </svg>
+                      QR kód
+                    </a>
+                  </div>
                 </div>
               ))}
             </div>

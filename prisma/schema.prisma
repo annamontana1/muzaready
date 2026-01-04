@@ -229,6 +229,10 @@ model StockMovement {
   // Cost tracking
   costPerGramCzk Float?  // Purchase cost for IN movements
 
+  // Sale tracking (for IN movements that get sold)
+  soldAt DateTime? // When this item was sold
+  soldBy String?   // Who sold it (admin user)
+
   createdAt  DateTime @default(now())
   sku        Sku      @relation(fields: [skuId], references: [id], onDelete: Cascade)
 
