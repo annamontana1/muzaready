@@ -117,198 +117,239 @@ export default function CookieConsent() {
 
   return (
     <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9998] animate-fade-in" />
+      {/* Backdrop with glassmorphism */}
+      <div
+        className="fixed inset-0 bg-gradient-to-br from-black/30 via-purple-900/10 to-black/30 backdrop-blur-md z-[9998]"
+        style={{ animation: 'fadeIn 0.4s ease-out' }}
+      />
 
-      {/* Cookie Banner */}
-      <div className="fixed bottom-0 left-0 right-0 z-[9999] animate-slide-up">
-        <div className="bg-white border-t-4 border-purple-600 shadow-2xl">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Cookie Banner - Floating Card Style */}
+      <div
+        className="fixed bottom-6 left-6 right-6 md:bottom-8 md:left-8 md:right-8 lg:left-auto lg:right-8 lg:max-w-md z-[9999]"
+        style={{ animation: 'slideUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+      >
+        <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-purple-100 overflow-hidden">
+          {/* Gradient accent */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500" />
+
+          <div className="p-6">
             {!showSettings ? (
-              /* SIMPLE VIEW */
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-start gap-3">
-                    <span className="text-3xl flex-shrink-0">🍪</span>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">
-                        Používáme cookies
-                      </h3>
-                      <p className="text-sm text-gray-700 leading-relaxed">
-                        Náš web používá cookies pro zajištění funkcí webu, analýzu návštěvnosti
-                        a personalizaci obsahu. Kliknutím na <strong>"Přijmout vše"</strong> souhlasíte
-                        se všemi cookies. Můžete si také upravit své preference.
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-3 text-sm">
-                        <Link
-                          href="/informace/ochrana-osobnich-udaju"
-                          className="text-purple-600 hover:text-purple-700 font-medium hover:underline"
-                        >
-                          Zásady ochrany údajů
-                        </Link>
-                        <button
-                          onClick={() => setShowSettings(true)}
-                          className="text-purple-600 hover:text-purple-700 font-medium hover:underline"
-                        >
-                          Nastavení cookies
-                        </button>
-                      </div>
-                    </div>
+              /* SIMPLE VIEW - Modern Compact Design */
+              <div className="space-y-4">
+                {/* Header with icon */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9zm1-5a1 1 0 100 2 1 1 0 000-2z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Soukromí a cookies
+                    </h3>
+                    <p className="text-xs text-gray-500">Pomáháme vám chránit vaše data</p>
                   </div>
                 </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
+                {/* Content */}
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Používáme cookies pro lepší zážitek. Můžete přijmout vše nebo si vybrat, které cookies chcete povolit.
+                </p>
+
+                {/* Quick stats */}
+                <div className="flex gap-2 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Nezbytné
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    Analytické
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    Marketingové
+                  </span>
+                </div>
+
+                {/* Buttons - Modernější style */}
+                <div className="flex flex-col sm:flex-row gap-2 pt-2">
                   <button
                     onClick={rejectOptional}
-                    className="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 hover:scale-105"
                   >
                     Jen nezbytné
                   </button>
                   <button
-                    onClick={acceptAll}
-                    className="px-6 py-3 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors shadow-lg"
+                    onClick={() => setShowSettings(true)}
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-xl transition-all duration-200 hover:scale-105"
                   >
-                    Přijmout vše
+                    ⚙️ Upravit
                   </button>
+                  <button
+                    onClick={acceptAll}
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    ✨ Přijmout vše
+                  </button>
+                </div>
+
+                {/* Footer link */}
+                <div className="pt-2 border-t border-gray-100">
+                  <Link
+                    href="/informace/ochrana-osobnich-udaju"
+                    className="text-xs text-gray-500 hover:text-purple-600 transition-colors flex items-center gap-1"
+                  >
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Zásady ochrany osobních údajů
+                  </Link>
                 </div>
               </div>
             ) : (
-              /* SETTINGS VIEW */
-              <div className="space-y-6">
+              /* SETTINGS VIEW - Modern Cards */}
+              <div className="space-y-5">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                  <h3 className="text-xl font-bold text-gray-900">Nastavení cookies</h3>
+                <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+                  <div>
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Nastavení cookies
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">Vyberte si, co chcete povolit</p>
+                  </div>
                   <button
                     onClick={() => setShowSettings(false)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 hover:rotate-90"
                     aria-label="Zavřít nastavení"
                   >
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
 
-                {/* Cookie Categories */}
-                <div className="space-y-4 max-h-[50vh] overflow-y-auto">
+                {/* Cookie Categories - Modern Card Design */}
+                <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
                   {/* Necessary Cookies */}
-                  <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xl">🔧</span>
-                          <h4 className="font-semibold text-gray-900">Nezbytné cookies</h4>
-                          <span className="px-2 py-0.5 bg-gray-600 text-white text-xs font-medium rounded">
+                  <div className="group relative rounded-xl p-4 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100">
+                    <div className="absolute top-2 right-2">
+                      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="pr-14">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">🔧</span>
+                        <div>
+                          <h4 className="font-bold text-gray-900">Nezbytné cookies</h4>
+                          <span className="inline-block mt-0.5 px-2 py-0.5 bg-green-600 text-white text-xs font-medium rounded-full">
                             Vždy aktivní
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                          Tyto cookies jsou nezbytné pro fungování webu (košík, přihlášení, zabezpečení).
-                          Nelze je vypnout.
-                        </p>
                       </div>
-                      <div className="ml-4 flex-shrink-0">
-                        <input
-                          type="checkbox"
-                          checked={true}
-                          disabled
-                          className="w-5 h-5 rounded cursor-not-allowed opacity-50"
-                        />
-                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed mt-2">
+                        Zajišťují základní funkce webu - košík, přihlášení, zabezpečení. Bez nich web nemůže fungovat.
+                      </p>
                     </div>
                   </div>
 
                   {/* Analytics Cookies */}
-                  <div className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xl">📊</span>
-                          <h4 className="font-semibold text-gray-900">Analytické cookies</h4>
-                        </div>
-                        <p className="text-sm text-gray-600 leading-relaxed mb-2">
-                          Pomáhají nám pochopit, jak návštěvníci používají web (Google Analytics).
-                          Používáme anonymizované IP adresy.
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Nástroje: Google Analytics 4
-                        </p>
-                      </div>
-                      <div className="ml-4 flex-shrink-0">
-                        <button
-                          onClick={() => setPreferences({ ...preferences, analytics: !preferences.analytics })}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            preferences.analytics ? 'bg-purple-600' : 'bg-gray-300'
+                  <div className={`group relative rounded-xl p-4 border-2 transition-all duration-200 cursor-pointer ${
+                    preferences.analytics
+                      ? 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm'
+                      : 'bg-white border-gray-200 hover:border-blue-200'
+                  }`}
+                    onClick={() => setPreferences({ ...preferences, analytics: !preferences.analytics })}
+                  >
+                    <div className="absolute top-3 right-3">
+                      <button
+                        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 ${
+                          preferences.analytics ? 'bg-blue-600 shadow-lg shadow-blue-200' : 'bg-gray-300'
+                        }`}
+                        role="switch"
+                        aria-checked={preferences.analytics}
+                      >
+                        <span
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ${
+                            preferences.analytics ? 'translate-x-6' : 'translate-x-1'
                           }`}
-                          role="switch"
-                          aria-checked={preferences.analytics}
-                        >
-                          <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                              preferences.analytics ? 'translate-x-6' : 'translate-x-1'
-                            }`}
-                          />
-                        </button>
+                        />
+                      </button>
+                    </div>
+                    <div className="pr-16">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">📊</span>
+                        <div>
+                          <h4 className="font-bold text-gray-900">Analytické cookies</h4>
+                          <span className="text-xs text-blue-600 font-medium">Google Analytics 4</span>
+                        </div>
                       </div>
+                      <p className="text-sm text-gray-700 leading-relaxed mt-2">
+                        Pomáhají nám pochopit, jak návštěvníci používají web. Používáme anonymizované IP adresy.
+                      </p>
                     </div>
                   </div>
 
                   {/* Marketing Cookies */}
-                  <div className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xl">📢</span>
-                          <h4 className="font-semibold text-gray-900">Marketingové cookies</h4>
-                        </div>
-                        <p className="text-sm text-gray-600 leading-relaxed mb-2">
-                          Používají se pro cílenou reklamu a remarketing na sociálních sítích.
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Nástroje: Facebook Pixel, Google Ads
-                        </p>
-                      </div>
-                      <div className="ml-4 flex-shrink-0">
-                        <button
-                          onClick={() => setPreferences({ ...preferences, marketing: !preferences.marketing })}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            preferences.marketing ? 'bg-purple-600' : 'bg-gray-300'
+                  <div className={`group relative rounded-xl p-4 border-2 transition-all duration-200 cursor-pointer ${
+                    preferences.marketing
+                      ? 'bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200 shadow-sm'
+                      : 'bg-white border-gray-200 hover:border-purple-200'
+                  }`}
+                    onClick={() => setPreferences({ ...preferences, marketing: !preferences.marketing })}
+                  >
+                    <div className="absolute top-3 right-3">
+                      <button
+                        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 ${
+                          preferences.marketing ? 'bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-200' : 'bg-gray-300'
+                        }`}
+                        role="switch"
+                        aria-checked={preferences.marketing}
+                      >
+                        <span
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-300 ${
+                            preferences.marketing ? 'translate-x-6' : 'translate-x-1'
                           }`}
-                          role="switch"
-                          aria-checked={preferences.marketing}
-                        >
-                          <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                              preferences.marketing ? 'translate-x-6' : 'translate-x-1'
-                            }`}
-                          />
-                        </button>
+                        />
+                      </button>
+                    </div>
+                    <div className="pr-16">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">📢</span>
+                        <div>
+                          <h4 className="font-bold text-gray-900">Marketingové cookies</h4>
+                          <span className="text-xs text-purple-600 font-medium">Facebook Pixel, Google Ads</span>
+                        </div>
                       </div>
+                      <p className="text-sm text-gray-700 leading-relaxed mt-2">
+                        Používají se pro cílenou reklamu a remarketing na sociálních sítích.
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Footer Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                {/* Footer Buttons - Modern with hover effects */}
+                <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-gray-100">
                   <button
                     onClick={rejectOptional}
-                    className="flex-1 px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 hover:scale-105"
                   >
                     Odmítnout vše
                   </button>
                   <button
                     onClick={savePreferences}
-                    className="flex-1 px-6 py-3 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors shadow-lg"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
-                    Uložit nastavení
+                    💾 Uložit
                   </button>
                   <button
                     onClick={acceptAll}
-                    className="flex-1 px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg transition-colors shadow-lg"
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
-                    Přijmout vše
+                    ✨ Přijmout
                   </button>
                 </div>
               </div>
@@ -317,19 +358,8 @@ export default function CookieConsent() {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes slide-up {
-          from {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes fade-in {
+      <style jsx global>{`
+        @keyframes fadeIn {
           from {
             opacity: 0;
           }
@@ -338,12 +368,37 @@ export default function CookieConsent() {
           }
         }
 
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
+        @keyframes slideUpBounce {
+          0% {
+            transform: translateY(100%) scale(0.95);
+            opacity: 0;
+          }
+          50% {
+            transform: translateY(-10px) scale(1.02);
+          }
+          100% {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+          }
         }
 
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
+        /* Smooth scrollbar for settings */
+        .space-y-3::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .space-y-3::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        .space-y-3::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, #a855f7, #ec4899);
+          border-radius: 10px;
+        }
+
+        .space-y-3::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, #9333ea, #db2777);
         }
       `}</style>
     </>
