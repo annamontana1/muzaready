@@ -118,7 +118,7 @@ export default function RootLayout({
         <Providers>
           <OrganizationSchema />
           <WebSiteSchema />
-          <Header />
+          {/* <Header /> TEMPORARILY DISABLED TO DEBUG */}
           <main className="min-h-screen">
             {children}
           </main>
