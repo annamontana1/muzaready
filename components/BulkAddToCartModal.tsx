@@ -39,12 +39,12 @@ export default function BulkAddToCartModal({
 
   if (!isOpen) return null;
 
-  // Assembly fees (simplified - ideally from API or config)
+  // Assembly fees - matches ASSEMBLY_FEE_CONFIG from lib/stock.ts
   const assemblyFees: Record<typeof ending, { fee: number; type: 'FLAT' | 'PER_GRAM' }> = {
     NONE: { fee: 0, type: 'FLAT' },
-    KERATIN: { fee: 15, type: 'PER_GRAM' }, // 15 Kč per gram
-    PASKY: { fee: 500, type: 'FLAT' }, // 500 Kč flat
-    TRESSY: { fee: 800, type: 'FLAT' }, // 800 Kč flat
+    KERATIN: { fee: 5, type: 'PER_GRAM' }, // 5 Kč per gram (matches lib/stock.ts config)
+    PASKY: { fee: 200, type: 'FLAT' }, // 200 Kč flat (matches lib/stock.ts config)
+    TRESSY: { fee: 150, type: 'FLAT' }, // 150 Kč flat (matches lib/stock.ts config)
   };
 
   const { fee: assemblyFeeCzk, type: assemblyFeeType } = assemblyFees[ending];
@@ -185,10 +185,10 @@ export default function BulkAddToCartModal({
               />
               <div className="flex-1">
                 <div className="font-medium text-gray-900">Keratinové kapky</div>
-                <div className="text-xs text-gray-500">15 Kč/gram</div>
+                <div className="text-xs text-gray-500">5 Kč/gram</div>
               </div>
               <div className="text-sm font-semibold text-gray-700">
-                +{(15 * grams).toFixed(0)} Kč
+                +{(assemblyFees.KERATIN.fee * grams).toFixed(0)} Kč
               </div>
             </label>
 
@@ -206,7 +206,7 @@ export default function BulkAddToCartModal({
                 <div className="font-medium text-gray-900">Pásky (Tape-in)</div>
                 <div className="text-xs text-gray-500">Paušál</div>
               </div>
-              <div className="text-sm font-semibold text-gray-700">+500 Kč</div>
+              <div className="text-sm font-semibold text-gray-700">+{assemblyFees.PASKY.fee} Kč</div>
             </label>
 
             <label className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-ivory transition">
@@ -223,7 +223,7 @@ export default function BulkAddToCartModal({
                 <div className="font-medium text-gray-900">Tressy</div>
                 <div className="text-xs text-gray-500">Paušál</div>
               </div>
-              <div className="text-sm font-semibold text-gray-700">+800 Kč</div>
+              <div className="text-sm font-semibold text-gray-700">+{assemblyFees.TRESSY.fee} Kč</div>
             </label>
           </div>
         </div>
