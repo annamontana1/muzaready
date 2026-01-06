@@ -12,14 +12,21 @@ import {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fix hydration mismatch - wait for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Check session on mount
   useEffect(() => {
+    if (!mounted) return; // Wait for client-side mount
     refreshSession();
-  }, []);
+  }, [mounted]);
 
   const refreshSession = async () => {
     try {
