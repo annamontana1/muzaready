@@ -14,6 +14,7 @@ const CONSENT_KEY = 'muzaready_cookie_consent';
 const CONSENT_EXPIRY_DAYS = 365;
 
 export default function CookieConsent() {
+  const [mounted, setMounted] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState({
@@ -22,7 +23,14 @@ export default function CookieConsent() {
     marketing: false,
   });
 
+  // Fix hydration mismatch - wait for client-side mount
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return; // Wait for client-side mount
+
     // Check if user has already made a choice
     const consent = localStorage.getItem(CONSENT_KEY);
     if (!consent) {
@@ -66,7 +74,7 @@ export default function CookieConsent() {
         setShowBanner(true);
       }
     }
-  }, []);
+  }, [mounted]);
 
   const saveConsent = (prefs: typeof preferences) => {
     const consentData: CookieConsent = {
