@@ -208,17 +208,17 @@ export default function Home() {
               className="group relative h-96 rounded-xl overflow-hidden shadow-medium hover:shadow-heavy transition-all duration-300"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-burgundy/90 to-maroon/90 group-hover:from-burgundy/80 group-hover:to-maroon/80 transition-all duration-300" />
-              <div className="relative h-full flex flex-col items-center justify-center p-8 text-white text-center">
-                <span className="text-sm text-warm-beige mb-3 uppercase tracking-wider">Nejprodávanější</span>
-                <h3 className="text-3xl md:text-4xl font-playfair mb-4">Nebarvené panenské vlasy</h3>
-                <p className="text-ivory mb-6 text-lg">100% přírodní vlasy bez chemického ošetření</p>
-                <p className="text-sm text-warm-beige mb-6">
+              <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                <span className="text-sm text-burgundy mb-3 uppercase tracking-wider font-semibold">Nejprodávanější</span>
+                <h3 className="text-3xl md:text-4xl font-playfair mb-4 text-gray-900 font-bold">Nebarvené panenské vlasy</h3>
+                <p className="text-gray-700 mb-6 text-lg">100% přírodní vlasy bez chemického ošetření</p>
+                <p className="text-sm text-gray-600 mb-6">
                   Ideální pro přirozený vzhled. Možnost vlastního barvení nebo použití přirozeně.
                 </p>
-                <div className="flex gap-2 text-xs">
-                  <span className="px-3 py-1 bg-white/20 rounded-full">Standard od 6 900 Kč</span>
-                  <span className="px-3 py-1 bg-white/20 rounded-full">LUXE od 8 900 Kč</span>
-                  <span className="px-3 py-1 bg-white/20 rounded-full">Platinum od 10 900 Kč</span>
+                <div className="flex gap-2 text-xs flex-wrap justify-center">
+                  <span className="px-3 py-1 bg-burgundy/10 text-burgundy rounded-full font-medium">Standard od 6 900 Kč</span>
+                  <span className="px-3 py-1 bg-burgundy/10 text-burgundy rounded-full font-medium">LUXE od 8 900 Kč</span>
+                  <span className="px-3 py-1 bg-burgundy/10 text-burgundy rounded-full font-medium">Platinum od 10 900 Kč</span>
                 </div>
               </div>
               </Link>
@@ -231,17 +231,17 @@ export default function Home() {
               className="group relative h-96 rounded-xl overflow-hidden shadow-medium hover:shadow-heavy transition-all duration-300"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-terracotta/90 to-dusty-rose/90 group-hover:from-terracotta/80 group-hover:to-dusty-rose/80 transition-all duration-300" />
-              <div className="relative h-full flex flex-col items-center justify-center p-8 text-white text-center">
-                <span className="text-sm text-warm-beige mb-3 uppercase tracking-wider">Prémiové</span>
-                <h3 className="text-3xl md:text-4xl font-playfair mb-4">Barvené blond vlasy</h3>
-                <p className="text-ivory mb-6 text-lg">Profesionálně odbarvené odstíny 5-10</p>
-                <p className="text-sm text-warm-beige mb-6">
+              <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
+                <span className="text-sm text-terracotta mb-3 uppercase tracking-wider font-semibold">Prémiové</span>
+                <h3 className="text-3xl md:text-4xl font-playfair mb-4 text-gray-900 font-bold">Barvené blond vlasy</h3>
+                <p className="text-gray-700 mb-6 text-lg">Profesionálně odbarvené odstíny 5-10</p>
+                <p className="text-sm text-gray-600 mb-6">
                   Odbarveno ve vlastní barvírně. Krásné blond odstíny bez žlutých tónů.
                 </p>
-                <div className="flex gap-2 text-xs">
-                  <span className="px-3 py-1 bg-white/20 rounded-full">Standard od 6 900 Kč</span>
-                  <span className="px-3 py-1 bg-white/20 rounded-full">LUXE od 8 900 Kč</span>
-                  <span className="px-3 py-1 bg-white/20 rounded-full">Platinum od 10 900 Kč</span>
+                <div className="flex gap-2 text-xs flex-wrap justify-center">
+                  <span className="px-3 py-1 bg-terracotta/10 text-terracotta rounded-full font-medium">Standard od 6 900 Kč</span>
+                  <span className="px-3 py-1 bg-terracotta/10 text-terracotta rounded-full font-medium">LUXE od 8 900 Kč</span>
+                  <span className="px-3 py-1 bg-terracotta/10 text-terracotta rounded-full font-medium">Platinum od 10 900 Kč</span>
                 </div>
               </div>
               </Link>
