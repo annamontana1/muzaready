@@ -115,17 +115,9 @@ export default function RootLayout({
           </>
         )}
 
-        <Providers>
-          <OrganizationSchema />
-          <WebSiteSchema />
-          <Header />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-          <CookieConsent />
-          <SmartsuppChat />
-        </Providers>
+        <main className="min-h-screen">
+          {children}
+        </main>
       </body>
     </html>
   );
