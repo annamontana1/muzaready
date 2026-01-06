@@ -123,8 +123,8 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          {/* Temporarily disabled to debug
           <CookieConsent />
+          {/* Temporarily disabled - testing which component causes error
           <SmartsuppChat />
           */}
         </Providers>
