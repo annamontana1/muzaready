@@ -91,8 +91,10 @@ function ConfirmationContent() {
     );
   }
 
-  const shippingPrice = order.total > 500 ? 0 : 79;
-  const subtotal = order.total;
+  // Use actual shipping cost from order (calculated during order creation)
+  const shippingPrice = order.shippingCost || 0;
+  const subtotal = order.subtotal || 0;
+  const discount = order.discountAmount || 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -161,14 +163,20 @@ function ConfirmationContent() {
                 {shippingPrice === 0 ? (
                   <span className="text-green-600">Zdarma</span>
                 ) : (
-                  `${shippingPrice} Kč`
+                  `${shippingPrice.toLocaleString('cs-CZ')} Kč`
                 )}
               </p>
             </div>
+            {discount > 0 && (
+              <div className="flex justify-between">
+                <p className="text-gray-600">Sleva:</p>
+                <p className="font-medium text-green-600">-{discount.toLocaleString('cs-CZ')} Kč</p>
+              </div>
+            )}
             <div className="border-t border-gray-200 pt-3 flex justify-between">
               <p className="text-lg font-bold text-gray-900">Celkem:</p>
               <p className="text-lg font-bold text-blue-600">
-                {(subtotal + shippingPrice).toLocaleString('cs-CZ')} Kč
+                {order.total.toLocaleString('cs-CZ')} Kč
               </p>
             </div>
           </div>

@@ -146,7 +146,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Create order with OrderItem records (NO stock deduction yet - waiting for payment confirmation)
-    const totalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
+    const subtotalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
+
+    // Calculate shipping cost (frontend should send this, but we calculate as fallback)
+    const shippingCost = shippingInfo?.deliveryMethod === 'zasilkovna'
+      ? 65
+      : (subtotalAmount >= 3000 ? 0 : 150);
 
     const order = await prisma.order.create({
       data: {
@@ -168,8 +173,9 @@ export async function POST(request: NextRequest) {
         orderStatus: 'pending', // Waiting for GoPay payment confirmation
         paymentStatus: 'unpaid',
         deliveryStatus: 'pending',
-        subtotal: totalAmount,
-        total: totalAmount,
+        subtotal: subtotalAmount,
+        shippingCost: shippingCost,
+        total: subtotalAmount + shippingCost, // Will be updated if coupon applied
         items: {
           create: quotedLines.map((item) => ({
             sku: {
@@ -197,6 +203,37 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    // Apply coupon if provided
+    if (couponCode) {
+      try {
+        const { applyCouponToOrder } = await import('@/lib/coupon-utils');
+        const couponResult = await applyCouponToOrder(
+          couponCode,
+          subtotalAmount + shippingCost,
+          email,
+          order.id
+        );
+
+        if (couponResult.success && couponResult.discount > 0) {
+          // Update order with discount
+          const updatedOrder = await prisma.order.update({
+            where: { id: order.id },
+            data: {
+              discountAmount: couponResult.discount,
+              total: (subtotalAmount + shippingCost) - couponResult.discount,
+            },
+          });
+
+          // Update local order object to return correct total
+          order.discountAmount = couponResult.discount;
+          order.total = updatedOrder.total;
+        }
+      } catch (couponError) {
+        console.error('Failed to apply coupon (non-critical):', couponError);
+        // Don't fail order creation if coupon fails
+      }
+    }
 
     // Send order confirmation email
     try {
