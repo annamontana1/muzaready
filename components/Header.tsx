@@ -11,6 +11,7 @@ import { useSkuCart } from '@/contexts/SkuCartContext';
 import { usePreferences } from '@/lib/preferences-context';
 
 export default function Header() {
+  const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [vlasySubmenuOpen, setVlasySubmenuOpen] = useState(false);
   const [priceskySubmenuOpen, setPriceskySubmenuOpen] = useState(false);
@@ -31,13 +32,20 @@ export default function Header() {
     return total + item.quantity; // For PIECE_BY_WEIGHT, use quantity
   }, 0);
 
+  // Fix hydration mismatch - wait for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Memoize search overlay close handler - DEPENDENCY: []
   const handleSearchOverlayClose = useCallback(() => {
     setSearchOverlayOpen(false);
   }, []);
 
-  // Body scroll lock pro mobilní menu - DEPENDENCY: [mobileMenuOpen]
+  // Body scroll lock pro mobilní menu - DEPENDENCY: [mobileMenuOpen, mounted]
   useEffect(() => {
+    if (!mounted) return; // Wait for client-side mount
+
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -46,7 +54,7 @@ export default function Header() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, mounted]);
 
   return (
     <>
