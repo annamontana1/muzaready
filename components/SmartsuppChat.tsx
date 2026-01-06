@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Script from 'next/script';
 
 /**
@@ -15,7 +15,16 @@ import Script from 'next/script';
  */
 
 export default function SmartsuppChat() {
+  const [mounted, setMounted] = useState(false);
+
+  // Fix hydration mismatch - wait for client-side mount
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return; // Wait for client-side mount
+
     // Initialize Smartsupp after script loads
     const initSmartsupp = () => {
       const smartsupp_key = process.env.NEXT_PUBLIC_SMARTSUPP_KEY || 'YOUR_SMARTSUPP_KEY';
@@ -41,7 +50,7 @@ export default function SmartsuppChat() {
       window.addEventListener('load', initSmartsupp);
       return () => window.removeEventListener('load', initSmartsupp);
     }
-  }, []);
+  }, [mounted]);
 
   return (
     <>

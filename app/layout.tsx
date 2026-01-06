@@ -124,9 +124,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <CookieConsent />
-          {/* Temporarily disabled - testing which component causes error
           <SmartsuppChat />
-          */}
         </Providers>
       </body>
     </html>
