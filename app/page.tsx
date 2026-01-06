@@ -4,54 +4,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  // Schema.org structured data for SEO
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'HairSalon',
-    name: 'Mùza Hair Shop',
-    description: 'Český výrobce pravých a panenských vlasů. Vlastní barvírna, ruční výroba v Praze.',
-    url: 'https://muzahair.cz',
-    telephone: '+420-XXX-XXX-XXX',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Praha',
-      addressLocality: 'Praha',
-      addressCountry: 'CZ',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: '50.0755',
-      longitude: '14.4378',
-    },
-    priceRange: '6900 Kč - 10900 Kč',
-    image: '/og-image.jpg',
-    sameAs: [
-      'https://www.facebook.com/muzahair',
-      'https://www.instagram.com/muzahair',
-    ],
-    hasOfferCatalog: {
-      '@type': 'OfferCatalog',
-      name: 'Vlasy k prodloužení',
-      itemListElement: [
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Product',
-            name: 'Nebarvené panenské vlasy',
-            description: '100% přírodní panenské vlasy bez chemického ošetření',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Product',
-            name: 'Barvené blond vlasy',
-            description: 'Profesionálně odbarvené vlasy odstíny 5-10',
-          },
-        },
-      ],
-    },
-  };
 
   // Animation variants
   const fadeInUp = {
@@ -82,12 +34,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* Schema.org JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center bg-gradient-to-br from-burgundy to-maroon text-white">
         <motion.div
