@@ -42,6 +42,8 @@ export default function NebarvenePanenskePage() {
         const response = await fetch('/api/catalog?category=nebarvene_panenske');
         if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
+        console.log('[DEBUG] Products loaded:', data.length, 'products');
+        console.log('[DEBUG] First product:', data[0]);
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -78,7 +80,7 @@ export default function NebarvenePanenskePage() {
 
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
-    return nebarveneProdukty.filter((product) => {
+    const filtered = nebarveneProdukty.filter((product) => {
       // Tier filtr
       if (filters.tier !== 'all' && product.tier !== filters.tier) return false;
 
@@ -103,6 +105,9 @@ export default function NebarvenePanenskePage() {
 
       return true;
     });
+    console.log('[DEBUG] Filtered products:', filtered.length, 'from', nebarveneProdukty.length, 'total');
+    console.log('[DEBUG] Active filters:', filters);
+    return filtered;
   }, [nebarveneProdukty, filters]);
 
   // Pagination
