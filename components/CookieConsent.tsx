@@ -50,10 +50,14 @@ export default function CookieConsent() {
           marketing: saved.marketing,
         });
 
-        // Initialize tracking based on saved preferences
-        if (saved.analytics) {
-          initializeAnalytics();
+        // Update consent for already-loaded analytics (GA4 loaded in layout.tsx)
+        if (saved.analytics && window.gtag) {
+          window.gtag('consent', 'update', {
+            analytics_storage: 'granted',
+          });
         }
+
+        // Initialize marketing tracking if enabled
         if (saved.marketing) {
           initializeMarketing();
         }
@@ -76,10 +80,14 @@ export default function CookieConsent() {
       detail: consentData,
     }));
 
-    // Initialize tracking
-    if (prefs.analytics) {
-      initializeAnalytics();
+    // Update consent for already-loaded analytics
+    if (prefs.analytics && window.gtag) {
+      window.gtag('consent', 'update', {
+        analytics_storage: 'granted',
+      });
     }
+
+    // Initialize marketing tracking (only if enabled)
     if (prefs.marketing) {
       initializeMarketing();
     }
@@ -405,42 +413,8 @@ export default function CookieConsent() {
   );
 }
 
-// Google Analytics initialization
-function initializeAnalytics() {
-  if (typeof window === 'undefined') return;
-
-  const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  if (!GA_ID) {
-    console.warn('Google Analytics ID not configured');
-    return;
-  }
-
-  // Check if already loaded
-  if (window.gtag) {
-    window.gtag('consent', 'update', {
-      analytics_storage: 'granted',
-    });
-    return;
-  }
-
-  // Load GA script
-  const script = document.createElement('script');
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  script.async = true;
-  document.head.appendChild(script);
-
-  // Initialize gtag
-  window.dataLayer = window.dataLayer || [];
-  function gtag(...args: any[]) {
-    window.dataLayer.push(args);
-  }
-  window.gtag = gtag;
-  gtag('js', new Date());
-  gtag('config', GA_ID, {
-    anonymize_ip: true,
-    cookie_flags: 'SameSite=None;Secure',
-  });
-}
+// NOTE: Google Analytics 4 is now loaded in app/layout.tsx using next/script
+// This ensures proper SSR handling and env variable interpolation during build time
 
 // Facebook Pixel initialization
 function initializeMarketing() {

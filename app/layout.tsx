@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -76,9 +77,44 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html lang="cs">
       <body className="antialiased">
+        {/* Google Analytics 4 - loaded via consent from CookieConsent component */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            />
+            <Script
+              id="google-analytics-config"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  // Default consent mode - denies until cookie consent given
+                  gtag('consent', 'default', {
+                    'analytics_storage': 'denied'
+                  });
+
+                  gtag('config', '${GA_MEASUREMENT_ID}', {
+                    page_path: window.location.pathname,
+                    anonymize_ip: true,
+                    cookie_flags: 'SameSite=None;Secure'
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
+
         <Providers>
           <OrganizationSchema />
           <WebSiteSchema />
