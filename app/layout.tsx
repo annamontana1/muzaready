@@ -115,9 +115,11 @@ export default function RootLayout({
           </>
         )}
 
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <Providers>
+          <main className="min-h-screen">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
