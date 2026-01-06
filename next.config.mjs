@@ -41,7 +41,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://gate.gopay.cz; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://gate.gopay.cz; frame-src https://gate.gopay.cz;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://gate.gopay.cz https://www.googletagmanager.com https://www.google-analytics.com https://widget.smartsupp.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://gate.gopay.cz https://www.google-analytics.com https://analytics.google.com https://widget.smartsupp.com wss://widget.smartsupp.com; frame-src https://gate.gopay.cz https://widget.smartsupp.com;",
           },
         ],
       },
