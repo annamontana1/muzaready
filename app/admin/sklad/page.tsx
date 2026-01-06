@@ -368,6 +368,7 @@ function SkuListPageContent() {
               <th className="px-4 py-2 text-left">Katalog</th>
               <th className="px-4 py-2 text-left">Priorita</th>
               <th className="px-4 py-2 text-left">Skladové info</th>
+              <th className="px-4 py-2 text-left">QR kódy</th>
             </tr>
           </thead>
           <tbody>
@@ -417,6 +418,17 @@ function SkuListPageContent() {
                   ) : (
                     <span>{sku.availableGrams}g ({sku.minOrderG}g min, {sku.stepG}g krok)</span>
                   )}
+                </td>
+                <td className="px-4 py-2">
+                  <Link
+                    href={`/admin/sklad/${sku.id}/qr-codes`}
+                    className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition inline-flex items-center gap-1"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    QR kódy
+                  </Link>
                 </td>
               </tr>
             ))}
