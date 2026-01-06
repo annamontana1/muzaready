@@ -88,28 +88,77 @@ export async function POST(
       // If partial payment, mark as 'partial', otherwise 'paid'
       const paymentStatus = amount < currentOrder.total ? 'partial' : 'paid';
 
-      const updatedOrder = await prisma.order.update({
-        where: { id },
-        data: {
-          paymentStatus,
-          lastStatusChangeAt: new Date(),
-          // Track payment amount if needed (you may want to add this field to schema)
-        },
-        include: {
-          items: {
-            include: {
-              sku: {
-                select: {
-                  id: true,
-                  sku: true,
-                  name: true,
-                  shadeName: true,
-                  lengthCm: true,
-                },
+      // Use transaction to ensure atomicity (payment + stock deduction)
+      const updatedOrder = await prisma.$transaction(async (tx) => {
+        // Update order payment status
+        const order = await tx.order.update({
+          where: { id },
+          data: {
+            paymentStatus,
+            orderStatus: paymentStatus === 'paid' && currentOrder.orderStatus === 'pending'
+              ? 'processing'
+              : currentOrder.orderStatus,
+            lastStatusChangeAt: new Date(),
+          },
+          include: {
+            items: {
+              include: {
+                sku: true,
               },
             },
           },
-        },
+        });
+
+        // Deduct stock ONLY if fully paid (not partial payment)
+        if (paymentStatus === 'paid') {
+          for (const item of order.items) {
+            if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
+              // Mark as sold out (pieces are fully consumed)
+              await tx.sku.update({
+                where: { id: item.skuId },
+                data: {
+                  soldOut: true,
+                  inStock: false,
+                },
+              });
+
+              // Record stock movement
+              await tx.stockMovement.create({
+                data: {
+                  skuId: item.skuId,
+                  type: 'OUT',
+                  grams: item.grams,
+                  note: `Prodáno - admin manual capture (objednávka ${id.substring(0, 8)})`,
+                  refOrderId: id,
+                },
+              });
+            } else if (item.sku.saleMode === 'BULK_G') {
+              // Deduct grams from available stock
+              const newAvailableGrams = (item.sku.availableGrams || 0) - item.grams;
+
+              await tx.sku.update({
+                where: { id: item.skuId },
+                data: {
+                  availableGrams: Math.max(0, newAvailableGrams),
+                  inStock: newAvailableGrams > 0,
+                },
+              });
+
+              // Record stock movement
+              await tx.stockMovement.create({
+                data: {
+                  skuId: item.skuId,
+                  type: 'OUT',
+                  grams: item.grams,
+                  note: `Prodáno ${item.grams}g - admin manual capture (objednávka ${id.substring(0, 8)})`,
+                  refOrderId: id,
+                },
+              });
+            }
+          }
+        }
+
+        return order;
       });
 
       const transformedOrder = {
@@ -137,28 +186,82 @@ export async function POST(
       );
     }
 
-    // No amount provided - simply mark as paid
-    const updatedOrder = await prisma.order.update({
-      where: { id },
-      data: {
-        paymentStatus: 'paid',
-        lastStatusChangeAt: new Date(),
-      },
-      include: {
-        items: {
-          include: {
-            sku: {
-              select: {
-                id: true,
-                sku: true,
-                name: true,
-                shadeName: true,
-                lengthCm: true,
-              },
+    // No amount provided - mark as paid and deduct stock
+    // Use transaction to ensure atomicity (payment + stock deduction)
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      // Prevent double-processing: if order is already paid, return it
+      if (currentOrder.paymentStatus === 'paid') {
+        console.log(`Order ${id} already paid (idempotent)`);
+        return currentOrder;
+      }
+
+      // Update order payment status
+      const order = await tx.order.update({
+        where: { id },
+        data: {
+          paymentStatus: 'paid',
+          orderStatus: currentOrder.orderStatus === 'pending'
+            ? 'processing'
+            : currentOrder.orderStatus,
+          lastStatusChangeAt: new Date(),
+        },
+        include: {
+          items: {
+            include: {
+              sku: true,
             },
           },
         },
-      },
+      });
+
+      // Deduct stock for each order item
+      for (const item of order.items) {
+        if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
+          // Mark as sold out (pieces are fully consumed)
+          await tx.sku.update({
+            where: { id: item.skuId },
+            data: {
+              soldOut: true,
+              inStock: false,
+            },
+          });
+
+          // Record stock movement
+          await tx.stockMovement.create({
+            data: {
+              skuId: item.skuId,
+              type: 'OUT',
+              grams: item.grams,
+              note: `Prodáno - admin manual capture (objednávka ${id.substring(0, 8)})`,
+              refOrderId: id,
+            },
+          });
+        } else if (item.sku.saleMode === 'BULK_G') {
+          // Deduct grams from available stock
+          const newAvailableGrams = (item.sku.availableGrams || 0) - item.grams;
+
+          await tx.sku.update({
+            where: { id: item.skuId },
+            data: {
+              availableGrams: Math.max(0, newAvailableGrams),
+              inStock: newAvailableGrams > 0,
+            },
+          });
+
+          // Record stock movement
+          await tx.stockMovement.create({
+            data: {
+              skuId: item.skuId,
+              type: 'OUT',
+              grams: item.grams,
+              note: `Prodáno ${item.grams}g - admin manual capture (objednávka ${id.substring(0, 8)})`,
+              refOrderId: id,
+            },
+          });
+        }
+      }
+
+      return order;
     });
 
     const transformedOrder = {
