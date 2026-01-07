@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
-import { useSkuCart } from '@/contexts/SkuCartContext';
+import { useSkuCart, useCart } from '@/contexts/SkuCartContext';
 import { useAuth } from '@/components/AuthProvider';
 import FavoriteButton from './FavoriteButton';
 import type { SkuCartItem } from '@/types/cart';

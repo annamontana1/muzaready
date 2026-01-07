@@ -116,10 +116,15 @@ export default function RootLayout({
         )}
 
         <Providers>
+          <OrganizationSchema />
+          <WebSiteSchema />
           <Header />
           <main className="min-h-screen">
             {children}
           </main>
+          <Footer />
+          <CookieConsent />
+          <SmartsuppChat />
         </Providers>
       </body>
     </html>
