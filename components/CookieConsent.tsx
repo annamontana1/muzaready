@@ -133,93 +133,72 @@ export default function CookieConsent() {
 
   return (
     <>
-      {/* Backdrop with glassmorphism */}
+      {/* Backdrop with modern blur */}
       <div
-        className="fixed inset-0 bg-gradient-to-br from-black/30 via-burgundy/10 to-black/30 backdrop-blur-md z-[9998]"
-        style={{ animation: 'fadeIn 0.4s ease-out' }}
+        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9998]"
+        style={{ animation: 'fadeIn 0.3s ease-out' }}
       />
 
-      {/* Cookie Banner - Floating Card Style */}
+      {/* Cookie Banner - Modern Elevated Card */}
       <div
-        className="fixed bottom-6 left-6 right-6 md:bottom-8 md:left-8 md:right-8 lg:left-auto lg:right-8 lg:max-w-md z-[9999]"
-        style={{ animation: 'slideUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+        className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-6 md:right-6 lg:left-auto lg:right-6 lg:max-w-lg z-[9999]"
+        style={{ animation: 'slideUpBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
       >
-        <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-burgundy/20 overflow-hidden">
-          {/* Gradient accent */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-burgundy via-terracotta to-maroon" />
+        <div className="relative bg-white/98 backdrop-blur-2xl md:rounded-3xl shadow-[0_20px_60px_-15px_rgba(52,12,13,0.3)] border border-burgundy/10 overflow-hidden">
+          {/* Elegant top accent with gradient */}
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-burgundy to-transparent opacity-60" />
+
+          {/* Subtle corner decoration */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-burgundy/5 to-transparent rounded-bl-full pointer-events-none" />
 
           <div className="p-6">
             {!showSettings ? (
               /* SIMPLE VIEW - Modern Compact Design */
-              <div className="space-y-4">
-                {/* Header with icon */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-burgundy to-maroon flex items-center justify-center shadow-lg">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 9a1 1 0 112 0v4a1 1 0 11-2 0V9zm1-5a1 1 0 100 2 1 1 0 000-2z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold bg-gradient-to-r from-burgundy to-terracotta bg-clip-text text-transparent">
-                      Soukromí a cookies
-                    </h3>
-                    <p className="text-xs text-gray-500">Pomáháme vám chránit vaše data</p>
-                  </div>
+              <div className="space-y-5">
+                {/* Modern minimalist header */}
+                <div>
+                  <h3 className="text-xl font-playfair font-semibold text-burgundy mb-2">
+                    Cookies a soukromí
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Používáme cookies k personalizaci obsahu a analýze návštěvnosti. Vyberte si preferenci nebo přijměte vše.
+                  </p>
                 </div>
 
-                {/* Content */}
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Používáme cookies pro lepší zážitek. Můžete přijmout vše nebo si vybrat, které cookies chcete povolit.
-                </p>
-
-                {/* Quick stats */}
-                <div className="flex gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    Nezbytné
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    Analytické
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-terracotta/10 text-terracotta rounded-full text-xs font-medium">
-                    <span className="w-2 h-2 bg-terracotta rounded-full"></span>
-                    Marketingové
-                  </span>
-                </div>
-
-                {/* Buttons - Modernější style */}
-                <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                  <button
-                    onClick={rejectOptional}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 hover:scale-105"
-                  >
-                    Jen nezbytné
-                  </button>
-                  <button
-                    onClick={() => setShowSettings(true)}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-burgundy bg-burgundy/10 hover:bg-burgundy/20 rounded-xl transition-all duration-200 hover:scale-105"
-                  >
-                    ⚙️ Upravit
-                  </button>
+                {/* Modern action buttons */}
+                <div className="flex flex-col gap-3">
                   <button
                     onClick={acceptAll}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-burgundy to-maroon hover:from-burgundy-dark hover:to-burgundy rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                    className="w-full px-5 py-3 text-sm font-medium text-white bg-burgundy hover:bg-burgundy-dark rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                   >
-                    ✨ Přijmout vše
+                    Přijmout vše
                   </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={rejectOptional}
+                      className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all duration-200 border border-gray-200"
+                    >
+                      Jen nezbytné
+                    </button>
+                    <button
+                      onClick={() => setShowSettings(true)}
+                      className="flex-1 px-4 py-2.5 text-sm font-medium text-burgundy bg-white hover:bg-burgundy/5 rounded-lg transition-all duration-200 border border-burgundy/30"
+                    >
+                      Nastavení
+                    </button>
+                  </div>
                 </div>
 
-                {/* Footer link */}
-                <div className="pt-2 border-t border-gray-100">
+                {/* Footer link - minimal */}
+                <div className="pt-3">
                   <Link
                     href="/informace/ochrana-osobnich-udaju"
-                    className="text-xs text-gray-500 hover:text-burgundy transition-colors flex items-center gap-1"
+                    className="text-xs text-gray-500 hover:text-burgundy transition-colors inline-flex items-center gap-1.5 group"
                   >
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <span className="group-hover:underline">Zásady ochrany údajů</span>
+                    <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    Zásady ochrany osobních údajů
                   </Link>
                 </div>
               </div>
@@ -227,16 +206,16 @@ export default function CookieConsent() {
               /* SETTINGS VIEW - Modern Cards */
               <div className="space-y-5">
                 {/* Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+                <div className="flex items-center justify-between pb-4">
                   <div>
-                    <h3 className="text-lg font-bold bg-gradient-to-r from-burgundy to-terracotta bg-clip-text text-transparent">
+                    <h3 className="text-xl font-playfair font-semibold text-burgundy">
                       Nastavení cookies
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1">Vyberte si, co chcete povolit</p>
+                    <p className="text-sm text-gray-600 mt-1">Vyberte si, které soubory cookies povolit</p>
                   </div>
                   <button
                     onClick={() => setShowSettings(false)}
-                    className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 hover:rotate-90"
+                    className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-200 hover:rotate-90"
                     aria-label="Zavřít nastavení"
                   >
                     <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
