@@ -1,12 +1,8 @@
 'use client';
 
-// Force dynamic rendering - prevent prerendering during build
-export const dynamic = 'force-dynamic';
-
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { Product, ProductTier, HAIR_COLORS } from '@/types/product';
