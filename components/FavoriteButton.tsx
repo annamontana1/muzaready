@@ -28,7 +28,10 @@ export default function FavoriteButton({
     setIsActive(isFav);
   }, [productId, favorites]);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (isActive) {
       removeFavorite(productId);
     } else {
