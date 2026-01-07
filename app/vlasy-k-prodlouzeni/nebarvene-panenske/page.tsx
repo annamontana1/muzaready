@@ -43,7 +43,6 @@ export default function NebarvenePanenskePage() {
         if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
         console.log('[DEBUG] Products loaded:', data.length, 'products');
-        console.log('[DEBUG] First product:', data[0]);
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
