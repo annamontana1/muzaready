@@ -2,19 +2,50 @@
 
 import { useFavorites } from '@/hooks/useFavorites';
 import Link from 'next/link';
-import { mockProducts } from '@/lib/mock-products';
 import { HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
+import { useState, useEffect } from 'react';
+import type { Product } from '@/types/product';
 
 export default function OblibeneePage() {
   const { favorites, removeFavorite } = useFavorites();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const favoriteCount = favorites.length;
 
-  // Get actual products from favorites
-  const favoriteProducts = mockProducts.filter((product) =>
-    favorites.some(fav => fav.id === product.id)
-  );
+  // Load products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (favorites.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch all products to match favorites
+        const response = await fetch('/api/catalog');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const allProducts = await response.json();
+
+        // Filter to only favorite products
+        const favoriteProducts = allProducts.filter((product: Product) =>
+          favorites.some(fav => fav.id === product.id)
+        );
+
+        setProducts(favoriteProducts);
+      } catch (error) {
+        console.error('Error fetching favorite products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [favorites]);
+
+  const favoriteProducts = products;
 
   return (
     <div className="py-12 bg-ivory min-h-screen">
@@ -32,8 +63,16 @@ export default function OblibeneePage() {
           </p>
         </div>
 
+        {/* Loading State */}
+        {loading && favoriteCount > 0 && (
+          <div className="bg-white rounded-xl p-12 text-center shadow-medium">
+            <div className="animate-spin w-12 h-12 border-4 border-burgundy border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-600">Načítám oblíbené produkty...</p>
+          </div>
+        )}
+
         {/* Empty State */}
-        {favoriteCount === 0 && (
+        {!loading && favoriteCount === 0 && (
           <div className="bg-white rounded-xl p-12 text-center shadow-medium">
             <svg
               className="w-24 h-24 mx-auto text-gray-300 mb-6"
@@ -64,7 +103,7 @@ export default function OblibeneePage() {
         )}
 
         {/* Favorites Grid */}
-        {favoriteCount > 0 && (
+        {!loading && favoriteCount > 0 && (
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {favoriteProducts.map((product) => {

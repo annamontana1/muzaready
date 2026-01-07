@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering - prevent prerendering during build
+export const dynamic = 'force-dynamic';
+
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
