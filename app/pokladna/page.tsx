@@ -68,9 +68,10 @@ export default function PokladnaPage() {
   const total = getTotalPrice();
   const shippingThreshold = 3000;
 
-  // Zásilkovna má fixní cenu 65 Kč
+  // Zásilkovna má fixní cenu 65 Kč, showroom odběr je ZDARMA
   const getShippingCost = () => {
     if (formData.deliveryMethod === 'zasilkovna') return 65;
+    if (formData.deliveryMethod === 'showroom') return 0;
     return total >= shippingThreshold ? 0 : 150;
   };
   const shipping = getShippingCost();
@@ -197,12 +198,18 @@ export default function PokladnaPage() {
           phone: formData.phone,
           streetAddress: formData.deliveryMethod === 'zasilkovna'
             ? (selectedPickupPoint?.street || '')
+            : formData.deliveryMethod === 'showroom'
+            ? 'Revoluční 8'
             : formData.streetAddress,
           city: formData.deliveryMethod === 'zasilkovna'
             ? (selectedPickupPoint?.city || '')
+            : formData.deliveryMethod === 'showroom'
+            ? 'Praha 1'
             : formData.city,
           zipCode: formData.deliveryMethod === 'zasilkovna'
             ? (selectedPickupPoint?.zip || '')
+            : formData.deliveryMethod === 'showroom'
+            ? '110 00'
             : formData.zipCode,
           country: formData.country,
           deliveryMethod: formData.deliveryMethod,
@@ -498,6 +505,42 @@ export default function PokladnaPage() {
                             Vybrat výdejní místo Zásilkovny
                           </button>
                         )}
+                      </div>
+                    )}
+                  </div>
+                </label>
+
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
+                    value="showroom"
+                    checked={formData.deliveryMethod === 'showroom'}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="mt-1 mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">Osobní odběr v showroomu</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Revoluční 8, Praha 1 - ihned k dispozici
+                        </p>
+                      </div>
+                      <p className="font-medium text-green-600">Zdarma</p>
+                    </div>
+                    {formData.deliveryMethod === 'showroom' && (
+                      <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-sm text-blue-900 font-medium mb-1">
+                          📍 Adresa showroomu:
+                        </p>
+                        <p className="text-sm text-blue-800">
+                          Revoluční 8, 110 00 Praha 1
+                        </p>
+                        <p className="text-xs text-blue-700 mt-2">
+                          Otevírací doba bude potvrzena emailem po objednání.
+                        </p>
                       </div>
                     )}
                   </div>
