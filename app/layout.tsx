@@ -116,6 +116,7 @@ export default function RootLayout({
         )}
 
         <Providers>
+          <Header />
           <main className="min-h-screen">
             {children}
           </main>
