@@ -80,29 +80,47 @@ export default function NebarvenePanenskePage() {
 
   // Aplikuj filtry
   const filteredProducts = useMemo(() => {
-    const filtered = nebarveneProdukty.filter((product) => {
+    console.log('[DEBUG FILTER] Starting filter with', nebarveneProdukty.length, 'products');
+    console.log('[DEBUG FILTER] Active filters:', filters);
+
+    const filtered = nebarveneProdukty.filter((product, idx) => {
+      console.log(`[DEBUG FILTER] Product ${idx}:`, product.name, 'tier:', product.tier);
+
       // Tier filtr
-      if (filters.tier !== 'all' && product.tier !== filters.tier) return false;
+      if (filters.tier !== 'all' && product.tier !== filters.tier) {
+        console.log(`  ❌ REJECTED by tier filter: ${product.tier} !== ${filters.tier}`);
+        return false;
+      }
 
       // Odstín filtr (pokud jsou vybrané odstíny)
       if (filters.shades.length > 0) {
         const productShade = product.variants[0]?.shade;
-        if (!productShade || !filters.shades.includes(productShade)) return false;
+        if (!productShade || !filters.shades.includes(productShade)) {
+          console.log(`  ❌ REJECTED by shade filter: ${productShade} not in`, filters.shades);
+          return false;
+        }
       }
 
       // Struktura filtr
       if (filters.structures.length > 0) {
         const productStructure = product.variants[0]?.structure;
-        if (!productStructure || !filters.structures.includes(productStructure)) return false;
+        if (!productStructure || !filters.structures.includes(productStructure)) {
+          console.log(`  ❌ REJECTED by structure filter: ${productStructure} not in`, filters.structures);
+          return false;
+        }
       }
 
       // Délka filtr - POUZE pro Platinum
       if (filters.lengths.length > 0 && product.tier === 'Platinum edition') {
         const productLengths = product.variants.map(v => v.length_cm).filter(Boolean) as number[];
         const hasMatchingLength = productLengths.some(len => filters.lengths.includes(len));
-        if (!hasMatchingLength) return false;
+        if (!hasMatchingLength) {
+          console.log(`  ❌ REJECTED by length filter: ${productLengths} not matching`, filters.lengths);
+          return false;
+        }
       }
 
+      console.log(`  ✅ PASSED all filters`);
       return true;
     });
     console.log('[DEBUG] Filtered products:', filtered.length, 'from', nebarveneProdukty.length, 'total');
