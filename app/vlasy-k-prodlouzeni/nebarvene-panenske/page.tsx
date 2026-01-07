@@ -94,18 +94,22 @@ export default function NebarvenePanenskePage() {
 
       // Odstín filtr (pokud jsou vybrané odstíny)
       if (filters.shades.length > 0) {
-        const productShade = product.variants[0]?.shade;
-        if (!productShade || !filters.shades.includes(productShade)) {
-          console.log(`  ❌ REJECTED by shade filter: ${productShade} not in`, filters.shades);
+        const hasMatchingShade = product.variants.some(v =>
+          v.shade && filters.shades.includes(v.shade)
+        );
+        if (!hasMatchingShade) {
+          console.log(`  ❌ REJECTED by shade filter: no variant matches`, filters.shades);
           return false;
         }
       }
 
       // Struktura filtr
       if (filters.structures.length > 0) {
-        const productStructure = product.variants[0]?.structure;
-        if (!productStructure || !filters.structures.includes(productStructure)) {
-          console.log(`  ❌ REJECTED by structure filter: ${productStructure} not in`, filters.structures);
+        const hasMatchingStructure = product.variants.some(v =>
+          v.structure && filters.structures.includes(v.structure)
+        );
+        if (!hasMatchingStructure) {
+          console.log(`  ❌ REJECTED by structure filter: no variant matches`, filters.structures);
           return false;
         }
       }
