@@ -1,13 +1,18 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-burgundy text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-5 gap-8">
           {/* Column 1: O Mùza Hair */}
           <div>
-            <h3 className="font-playfair text-xl mb-4">O Mùza Hair</h3>
+            <h3 className="font-playfair text-xl mb-4">{t('footer.about.title')}</h3>
             <ul className="space-y-2 text-sm text-ivory">
               <li>
                 <Link href="/o-nas" className="hover:text-white transition">
@@ -119,14 +124,14 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-ivory">
-          <p>© 2025 Mùza Hair Shop | Praha, Česká republika</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
           <div className="flex gap-4">
             <Link href="/informace/obchodni-podminky" className="hover:text-white transition">
-              Obchodní podmínky
+              {t('footer.customer.terms')}
             </Link>
             <span>|</span>
             <Link href="/informace/ochrana-soukromi" className="hover:text-white transition">
-              Ochrana soukromí
+              {t('footer.customer.privacy')}
             </Link>
           </div>
           <div className="flex gap-4 text-xl">

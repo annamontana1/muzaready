@@ -6,9 +6,11 @@ import { useState, useEffect, useCallback } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
+import LanguageSwitcher from './LanguageSwitcher';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 import { usePreferences } from '@/lib/preferences-context';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
@@ -21,7 +23,8 @@ export default function Header() {
 
   const { favorites } = useFavorites();
   const { items } = useSkuCart();
-  const { language, currency, setLanguage, setCurrency } = usePreferences();
+  const { currency, setCurrency } = usePreferences();
+  const { t } = useTranslation();
 
   const favoriteCount = favorites.length;
   // Count cart items: for BULK_G count each entry as 1, for PIECE_BY_WEIGHT use quantity
@@ -78,12 +81,12 @@ export default function Header() {
           {/* Navigation */}
           <nav className="flex items-center gap-6 text-sm">
             <Link href="/" className="text-burgundy font-medium hover:text-maroon transition">
-              Domů
+              {t('nav.home')}
             </Link>
 
             <div className="relative group">
               <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                Vlasy k prodloužení
+                {t('nav.hairExtensions')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -93,20 +96,20 @@ export default function Header() {
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
-                  Nebarvené panenské vlasy
+                  {t('nav.hairExtensions_undyed')}
                 </Link>
                 <Link
                   href="/vlasy-k-prodlouzeni/barvene-vlasy"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
-                  Barvené vlasy
+                  {t('nav.hairExtensions_dyed')}
                 </Link>
               </div>
             </div>
 
             <div className="relative group">
               <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                Příčesky a paruky
+                {t('nav.wigs')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -116,44 +119,44 @@ export default function Header() {
                     href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                   >
-                    Ofiny
+                    {t('nav.wigs_bangs')}
                   </Link>
                   <Link
                     href="/pricesky-a-paruky/toupee"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Toupee/tupé
+                    {t('nav.wigs_toupee')}
                   </Link>
                   <Link
                     href="/pricesky-a-paruky/vlasove-tresy"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Vlasové tresy
+                    {t('nav.wigs_wefts')}
                   </Link>
                   <Link
                     href="/pricesky-a-paruky/prave-paruky"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Pravé paruky
+                    {t('nav.wigs_real')}
                   </Link>
                   <Link
                     href="/pricesky-a-paruky/clip-in-vlasy"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Clip in vlasy
+                    {t('nav.wigs_clipIn')}
                   </Link>
                   <Link
                     href="/pricesky-a-paruky/clip-in-culik"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                   >
-                    Clip in culík
+                    {t('nav.wigs_clipInPonytail')}
                   </Link>
                 </div>
             </div>
 
             <div className="relative group">
               <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                Příslušenství
+                {t('nav.accessories')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -163,44 +166,44 @@ export default function Header() {
                     href="/prislusenstvi/tavici-kleste"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                   >
-                    Tavicí kleště
+                    {t('nav.accessories_ironPliers')}
                   </Link>
                   <Link
                     href="/prislusenstvi/keratin"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Keratin
+                    {t('nav.accessories_keratin')}
                   </Link>
                   <Link
                     href="/prislusenstvi/pomykadlo"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Pomykadlo
+                    {t('nav.accessories_slider')}
                   </Link>
                   <Link
                     href="/prislusenstvi/hrebeny"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Hřebeny
+                    {t('nav.accessories_combs')}
                   </Link>
                   <Link
                     href="/prislusenstvi/kosmetika"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Kosmetika
+                    {t('nav.accessories_cosmetics')}
                   </Link>
                   <Link
                     href="/prislusenstvi/ostatni"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                   >
-                    Ostatní
+                    {t('nav.accessories_other')}
                   </Link>
                 </div>
             </div>
 
             <div className="relative group">
               <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer">
-                Metody zakončení
+                {t('nav.methods')}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -210,43 +213,36 @@ export default function Header() {
                     href="/metody-zakonceni/vlasy-na-keratin"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                   >
-                    Keratin / Mikrokeratin
+                    {t('nav.methods_keratin')}
                   </Link>
                   <Link
                     href="/metody-zakonceni/pasky-nano-tapes"
                     className="block px-6 py-3 hover:bg-ivory transition"
                   >
-                    Tape-in (nano tapes)
+                    {t('nav.methods_tapeIn')}
                   </Link>
                   <Link
                     href="/metody-zakonceni/vlasove-tresy"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                   >
-                    Ručně šité vlasové tresy
+                    {t('nav.methods_wefts')}
                   </Link>
                 </div>
             </div>
 
             <Link href="/velkoobchod" className="text-burgundy font-medium hover:text-maroon transition">
-              Velkoobchod
+              {t('nav.wholesale')}
             </Link>
 
             <Link href="/kontakt" className="text-burgundy font-medium hover:text-maroon transition">
-              Showroom
+              {t('nav.showroom')}
             </Link>
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-xs text-gray-600">
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as 'cs' | 'en')}
-                className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
-              >
-                <option value="cs">🇨🇿 Čeština</option>
-                <option value="en">🇬🇧 English</option>
-              </select>
+              <LanguageSwitcher />
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
@@ -259,7 +255,7 @@ export default function Header() {
             <button
               onClick={() => setSearchOverlayOpen(true)}
               className="text-burgundy hover:text-maroon transition p-2"
-              aria-label="Hledat"
+              aria-label={t('common.search')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -268,7 +264,7 @@ export default function Header() {
             <Link
               href="/ucet"
               className="text-burgundy hover:text-maroon transition p-2"
-              aria-label="Můj účet"
+              aria-label={t('nav.myAccount')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -277,7 +273,7 @@ export default function Header() {
             <Link
               href="/oblibene"
               className="text-burgundy hover:text-maroon transition p-2 relative"
-              aria-label="Oblíbené"
+              aria-label={t('nav.favorites')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -287,7 +283,7 @@ export default function Header() {
             <Link
               href="/kosik"
               className="text-burgundy hover:text-maroon transition p-2 relative"
-              aria-label="Košík"
+              aria-label={t('nav.cart')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -321,14 +317,7 @@ export default function Header() {
 
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2 text-xs text-gray-600">
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value as 'cs' | 'en')}
-                  className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-burgundy"
-                >
-                  <option value="cs">CZ</option>
-                  <option value="en">EN</option>
-                </select>
+                <LanguageSwitcher />
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
@@ -341,7 +330,7 @@ export default function Header() {
               <button
                 onClick={() => setSearchOverlayOpen(true)}
                 className="text-burgundy p-2"
-                aria-label="Hledat"
+                aria-label={t('common.search')}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -350,7 +339,7 @@ export default function Header() {
               <Link
                 href="/oblibene"
                 className="text-burgundy p-2 relative"
-                aria-label="Oblíbené"
+                aria-label={t('nav.favorites')}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -360,7 +349,7 @@ export default function Header() {
               <Link
                 href="/kosik"
                 className="text-burgundy p-2 relative"
-                aria-label="Košík"
+                aria-label={t('nav.cart')}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -442,7 +431,7 @@ export default function Header() {
                   onClick={() => setVlasySubmenuOpen(!vlasySubmenuOpen)}
                   className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
                 >
-                  <span>Vlasy k prodloužení</span>
+                  <span>{t('nav.hairExtensions')}</span>
                   <svg
                     className={`w-4 h-4 transition-transform ${vlasySubmenuOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -459,14 +448,14 @@ export default function Header() {
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Nebarvené panenské
+                      {t('nav.hairExtensions_undyed')}
                     </Link>
                     <Link
                       href="/vlasy-k-prodlouzeni/barvene-vlasy"
                       className="block text-burgundy py-1"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Barvené vlasy
+                      {t('nav.hairExtensions_dyed')}
                     </Link>
                   </div>
                 )}
@@ -477,7 +466,7 @@ export default function Header() {
                   onClick={() => setPriceskySubmenuOpen(!priceskySubmenuOpen)}
                   className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
                 >
-                  <span>Příčesky a paruky</span>
+                  <span>{t('nav.wigs')}</span>
                   <svg
                     className={`w-4 h-4 transition-transform ${priceskySubmenuOpen ? 'rotate-180' : ''}`}
                     fill="none"
