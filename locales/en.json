@@ -1,0 +1,324 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "from": "from",
+    "to": "to",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "free": "Free",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "addToCart": "Add to Cart",
+    "viewDetails": "View Details",
+    "readMore": "Read More",
+    "showMore": "Show More",
+    "showLess": "Show Less"
+  },
+  "nav": {
+    "home": "Home",
+    "hairExtensions": "Hair Extensions",
+    "hairExtensions_undyed": "Virgin Undyed Hair",
+    "hairExtensions_dyed": "Colored Hair",
+    "wigs": "Hairpieces & Wigs",
+    "wigs_bangs": "Bangs",
+    "wigs_toupee": "Toupee",
+    "wigs_wefts": "Hair Wefts",
+    "wigs_real": "Real Wigs",
+    "wigs_clipIn": "Clip-in Hair",
+    "wigs_clipInPonytail": "Clip-in Ponytail",
+    "accessories": "Accessories",
+    "accessories_ironPliers": "Fusion Iron",
+    "accessories_keratin": "Keratin",
+    "accessories_slider": "Hair Slider",
+    "accessories_combs": "Combs",
+    "accessories_cosmetics": "Cosmetics",
+    "accessories_other": "Other",
+    "methods": "Extension Methods",
+    "methods_keratin": "Keratin / Micro-keratin",
+    "methods_tapeIn": "Tape-in (nano tapes)",
+    "methods_wefts": "Hand-sewn Hair Wefts",
+    "wholesale": "Wholesale",
+    "showroom": "Showroom",
+    "contact": "Contact",
+    "myAccount": "My Account",
+    "favorites": "Favorites",
+    "cart": "Cart",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "header": {
+    "topbar": {
+      "phone": "+420 728 722 880",
+      "instagram": "Follow us on Instagram and get a 500 CZK voucher",
+      "location": "Revoluční 8, Prague"
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "noResults": "No results",
+      "searchResults": "Search Results"
+    },
+    "cart": {
+      "empty": "Cart is empty",
+      "items": "{{count}} items",
+      "item": "{{count}} item",
+      "viewCart": "View Cart",
+      "checkout": "Proceed to Checkout"
+    }
+  },
+  "footer": {
+    "about": {
+      "title": "About Us",
+      "description": "Czech manufacturer of real hair since 2016. Own coloring studio in Prague. LUXE & Platinum quality."
+    },
+    "customer": {
+      "title": "Customer Service",
+      "shipping": "Shipping & Payment",
+      "returns": "Returns",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions",
+      "faq": "FAQ"
+    },
+    "contact": {
+      "title": "Contact",
+      "address": "Prague, Czech Republic",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Mon-Fri 09:00-18:00"
+    },
+    "social": {
+      "title": "Follow Us",
+      "instagram": "Instagram",
+      "facebook": "Facebook"
+    },
+    "copyright": "© {{year}} Mùza Hair. All rights reserved.",
+    "poweredBy": "Made with ❤️ in Prague"
+  },
+  "home": {
+    "hero": {
+      "title": "Premium Virgin Hair",
+      "subtitle": "Own Coloring Studio in Prague",
+      "description": "100% virgin hair from our own collection. The highest quality hair extensions in the Czech Republic. Keratin, tapes, wefts.",
+      "cta": "Explore Our Collection"
+    },
+    "features": {
+      "quality": {
+        "title": "100% Virgin Hair",
+        "description": "Exclusively virgin hair from our own collection"
+      },
+      "coloring": {
+        "title": "Own Coloring Studio",
+        "description": "Professional coloring directly in Prague"
+      },
+      "delivery": {
+        "title": "48h Delivery",
+        "description": "Fast delivery throughout Czech Republic"
+      },
+      "warranty": {
+        "title": "Quality Guarantee",
+        "description": "LUXE & Platinum edition with warranty"
+      }
+    },
+    "categories": {
+      "undyed": {
+        "title": "Virgin undyed hair",
+        "description": "100% virgin hair in natural shades. Suitable for coloring.",
+        "from": "From"
+      },
+      "dyed": {
+        "title": "Colored blonde hair",
+        "description": "Professionally bleached in our Prague coloring studio.",
+        "from": "From"
+      }
+    },
+    "whyUs": {
+      "title": "Why Choose Mùza Hair?",
+      "subtitle": "We are a Czech manufacturer with own coloring studio in Prague",
+      "reasons": {
+        "quality": "Highest Hair Quality",
+        "experience": "Over 7 Years of Experience",
+        "service": "Individual Approach",
+        "price": "Fair Prices"
+      }
+    }
+  },
+  "catalog": {
+    "title": "Product Catalog",
+    "filters": {
+      "title": "Filters",
+      "clear": "Clear Filters",
+      "category": "Category",
+      "length": "Length",
+      "structure": "Structure",
+      "shade": "Shade",
+      "tier": "Quality",
+      "price": "Price"
+    },
+    "sort": {
+      "newest": "Newest",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "popular": "Most Popular"
+    },
+    "noProducts": "No products found",
+    "noProductsDescription": "Try changing the filters or search term",
+    "showing": "Showing {{count}} products",
+    "loadMore": "Load More"
+  },
+  "product": {
+    "details": "Product Details",
+    "description": "Description",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "relatedProducts": "Related Products",
+    "addedToCart": "Added to Cart",
+    "addedToFavorites": "Added to Favorites",
+    "removedFromFavorites": "Removed from Favorites",
+    "selectOptions": "Select Options",
+    "length": "Length",
+    "structure": "Structure",
+    "shade": "Shade",
+    "weight": "Weight",
+    "grams": "{{count}} g",
+    "tier": "Quality",
+    "assembly": "Extension Method",
+    "assemblyFee": "Extension Method Fee"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "You haven't added any products yet",
+    "continueShopping": "Continue Shopping",
+    "itemsInCart": "You have {{count}} items in cart",
+    "itemInCart": "You have {{count}} item in cart",
+    "remove": "Remove",
+    "update": "Update",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingCalculated": "Calculated at checkout",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "coupon": {
+      "title": "Discount Coupon",
+      "placeholder": "Enter code",
+      "apply": "Apply",
+      "applied": "Coupon applied",
+      "invalid": "Invalid coupon",
+      "remove": "Remove coupon"
+    }
+  },
+  "checkout": {
+    "title": "Checkout",
+    "steps": {
+      "shipping": "Shipping",
+      "payment": "Payment",
+      "review": "Review"
+    },
+    "shipping": {
+      "title": "Shipping Details",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Street Address",
+      "city": "City",
+      "zip": "ZIP Code",
+      "country": "Country",
+      "note": "Order Note"
+    },
+    "shippingMethod": {
+      "title": "Shipping Method",
+      "standard": "Standard Shipping",
+      "express": "Express Shipping",
+      "pickup": "Zásilkovna - Pickup Point",
+      "showroom": "Personal Pickup - Prague Showroom"
+    },
+    "payment": {
+      "title": "Payment Method",
+      "gopay": "Online Payment (card, bank transfer)",
+      "transfer": "Bank Transfer",
+      "cash": "Cash on Delivery"
+    },
+    "review": {
+      "title": "Order Review",
+      "edit": "Edit",
+      "order": "Your Order",
+      "shippingAddress": "Shipping Address",
+      "billingAddress": "Billing Address",
+      "shippingMethod": "Shipping Method",
+      "paymentMethod": "Payment Method"
+    },
+    "order": {
+      "placeOrder": "Place Order",
+      "processing": "Processing order...",
+      "terms": "I agree to the terms and conditions",
+      "termsRequired": "You must agree to the terms and conditions"
+    }
+  },
+  "account": {
+    "title": "My Account",
+    "dashboard": "Dashboard",
+    "orders": "Orders",
+    "favorites": "Favorites",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Register",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "login": "Login"
+    },
+    "orders": {
+      "title": "My Orders",
+      "noOrders": "You don't have any orders yet",
+      "orderNumber": "Order Number",
+      "date": "Date",
+      "status": "Status",
+      "total": "Total",
+      "viewOrder": "View Details"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Connection error. Please check your internet connection.",
+    "notFound": "Page not found",
+    "unauthorized": "You don't have permission for this action",
+    "validation": "Please check the entered data"
+  }
+}
