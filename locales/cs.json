@@ -118,49 +118,171 @@
   },
   "home": {
     "hero": {
-      "title": "Prémiové Panenské Vlasy",
-      "subtitle": "Vlastní Barvírna v Praze",
-      "description": "100% panenské vlasy z našeho výkupu. Nejkvalitnější vlasy k prodloužení v ČR. Keratin, pásky, tresy.",
-      "cta": "Objevte naši nabídku"
-    },
-    "features": {
-      "quality": {
-        "title": "100% Panenské Vlasy",
-        "description": "Výhradně panenské vlasy z našeho vlastního výkupu"
-      },
-      "coloring": {
-        "title": "Vlastní Barvírna",
-        "description": "Profesionální barvení přímo v Praze"
-      },
-      "delivery": {
-        "title": "Dodání do 48h",
-        "description": "Rychlé doručení po celé ČR"
-      },
-      "warranty": {
-        "title": "Záruka Kvality",
-        "description": "LUXE & Platinum edice s garancí"
+      "title": "Pravé vlasy k prodloužení Praha",
+      "subtitle": "Objevte svou přirozenou krásu s prémiovou kvalitou",
+      "description": "Český výrobce panenských a pravých vlasů od roku 2016. Vlastní barvírna v Praze, ruční výroba, nejkvalitnější vlasy na trhu. Standard • LUXE • Platinum edition",
+      "cta": {
+        "explore": "Prozkoumat kolekci",
+        "pricing": "Zobrazit ceník"
       }
     },
-    "categories": {
+    "usp": {
+      "experience": {
+        "number": "8+",
+        "title": "Let zkušeností",
+        "description": "Dlouholeté know-how v oboru"
+      },
+      "realHair": {
+        "number": "100%",
+        "title": "Pravé vlasy",
+        "description": "Žádné syntetické materiály"
+      },
+      "czechMade": {
+        "title": "Český výrobce",
+        "description": "Výroba a barvení v Praze"
+      },
+      "ownDyehouse": {
+        "title": "Vlastní barvírna",
+        "description": "Profesionální odbarvování"
+      }
+    },
+    "collections": {
+      "title": "Naše kolekce vlasů k prodloužení",
+      "subtitle": "Nabízíme kompletní sortiment pravých vlasů - od nebarvených panenských po profesionálně odbarvené blond vlasy. Vše ve třech úrovních kvality.",
       "undyed": {
+        "badge": "Nejprodávanější",
         "title": "Nebarvené panenské vlasy",
-        "description": "100% panenské vlasy v přirozených odstínech. Vhodné pro barvení.",
-        "from": "Od"
+        "subtitle": "100% přírodní vlasy bez chemického ošetření",
+        "description": "Ideální pro přirozený vzhled. Možnost vlastního barvení nebo použití přirozeně.",
+        "prices": {
+          "standard": "Standard od 6 900 Kč",
+          "luxe": "LUXE od 8 900 Kč",
+          "platinum": "Platinum od 10 900 Kč"
+        }
       },
       "dyed": {
+        "badge": "Prémiové",
         "title": "Barvené blond vlasy",
-        "description": "Profesionálně odbarvené v naší pražské barvírně.",
-        "from": "Od"
+        "subtitle": "Profesionálně odbarvené odstíny 5-10",
+        "description": "Odbarveno ve vlastní barvírně. Krásné blond odstíny bez žlutých tónů.",
+        "prices": {
+          "standard": "Standard od 6 900 Kč",
+          "luxe": "LUXE od 8 900 Kč",
+          "platinum": "Platinum od 10 900 Kč"
+        }
+      },
+      "methods": {
+        "keratin": {
+          "title": "Vlasy na keratin",
+          "description": "Keratinové prodloužení pro dlouhotrvající efekt"
+        },
+        "tapes": {
+          "title": "Pásky (nano tapes)",
+          "description": "Moderní a šetrné prodlužování vlasů"
+        },
+        "wefts": {
+          "title": "Vlasové tresy",
+          "description": "Ručně šité tresy nejvyšší kvality"
+        }
       }
     },
+    "wigs": {
+      "title": "Příčesky, paruky a doplňky",
+      "subtitle": "Kompletní řešení pro každou potřebu - od ofin přes toupee až po pravé paruky z lidských vlasů.",
+      "bangs": "Ofiny",
+      "toupee": "Toupee/tupé",
+      "wefts": "Vlasové tresy",
+      "realWigs": "Pravé paruky",
+      "clipIn": "Clip in vlasy",
+      "clipInPonytail": "Clip in culík"
+    },
     "whyUs": {
-      "title": "Proč zvolit Mùza Hair?",
-      "subtitle": "Jsme český výrobce s vlastní barvírnou v Praze",
-      "reasons": {
-        "quality": "Nejvyšší kvalita vlasů",
-        "experience": "Více než 7 let zkušeností",
-        "service": "Individuální přístup",
-        "price": "Férové ceny"
+      "title": "Proč si vybrat Mùza Hair Shop?",
+      "experience": {
+        "title": "🏆 8 let zkušeností na trhu",
+        "description": "Od roku 2016 vyrábíme prémiové vlasové doplňky. Naše know-how zaručuje nejvyšší kvalitu."
+      },
+      "dyehouse": {
+        "title": "🇨🇿 Vlastní barvírna v Praze",
+        "description": "Profesionální odbarvování a barvení přímo v Praze. Kontrola kvality v každém kroku výroby."
+      },
+      "handmade": {
+        "title": "✋ Ruční výroba",
+        "description": "Každý kus je ručně zpracován a kontrolován. Žádná hromadná výroba, jen kvalita."
+      },
+      "quality": {
+        "title": "💎 Tři úrovně kvality",
+        "description": "Standard, LUXE a Platinum edition - vyberte si podle vašich potřeb a rozpočtu."
+      },
+      "shades": {
+        "title": "🎨 10 odstínů",
+        "description": "Od tmavě hnědé po ultra blond. Najdete přesně ten odstín, který k vám pasuje."
+      },
+      "lengths": {
+        "title": "📏 Délky 45-90 cm",
+        "description": "Široký výběr délek pro různé účesy a styly. Od klasických po extra dlouhé."
+      }
+    },
+    "reviews": {
+      "title": "Co říkají naše zákaznice",
+      "subtitle": "Přečtěte si zkušenosti žen, které si vybraly vlasy Mùza Hair",
+      "stats": {
+        "rating": {
+          "value": "4.9/5",
+          "label": "Průměrné hodnocení"
+        },
+        "customers": {
+          "value": "500+",
+          "label": "Spokojených zákaznic"
+        },
+        "recommend": {
+          "value": "98%",
+          "label": "Doporučuje přátelům"
+        },
+        "years": {
+          "value": "8+",
+          "label": "Let na trhu"
+        }
+      }
+    },
+    "faq": {
+      "title": "Často kladené otázky",
+      "q1": {
+        "question": "Jaký je rozdíl mezi nebarvené panenské a barvené blond vlasy?",
+        "answer": "Nebarvené panenské vlasy jsou 100% přírodní bez jakéhokoliv chemického ošetření. Barvené blond vlasy jsou profesionálně odbarveny v naší vlastní barvírně na odstíny 5-10. Obě kategorie nabízíme ve třech úrovních kvality: Standard, LUXE a Platinum edition."
+      },
+      "q2": {
+        "question": "Jak dlouho vydrží prodloužené vlasy?",
+        "answer": "Při správné péči vydrží naše pravé vlasy 6-12 měsíců. LUXE a Platinum edition dokonce i déle. Záleží na typu aplikace (keratin, pásky, tresy) a péči."
+      },
+      "q3": {
+        "question": "Vyrábíte vlasy v Česku?",
+        "answer": "Ano! Jsme český výrobce s vlastní barvírnou v Praze. Veškeré odbarvování, barvení a ruční zpracování probíhá v České republice. To nám umožňuje garantovat vysokou kvalitu."
+      },
+      "q4": {
+        "question": "Mohu vlasy barvit nebo žehlit?",
+        "answer": "Ano, naše pravé vlasy můžete barvit, žehlit, natáčet a foukat stejně jako své vlastní vlasy. Doporučujeme použít tepelnou ochranu a kvalitní vlasovou kosmetiku."
+      },
+      "viewAll": "Zobrazit všechny otázky →"
+    },
+    "cta": {
+      "title": "Připraveni na transformaci?",
+      "subtitle": "Prohlédněte si naši kompletní nabídku pravých vlasů k prodloužení nebo nás kontaktujte pro individuální poradenství.",
+      "viewProducts": "Zobrazit všechny produkty",
+      "contact": "Kontaktujte nás"
+    },
+    "trust": {
+      "shipping": {
+        "title": "Rychlé doručení",
+        "description": "Po celé ČR"
+      },
+      "payment": {
+        "title": "Bezpečná platba",
+        "description": "Platba kartou i převodem"
+      },
+      "returns": {
+        "title": "Vrácení zboží",
+        "description": "14 dní na vrácení"
       }
     }
   },

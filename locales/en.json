@@ -118,49 +118,171 @@
   },
   "home": {
     "hero": {
-      "title": "Premium Virgin Hair",
-      "subtitle": "Own Coloring Studio in Prague",
-      "description": "100% virgin hair from our own collection. The highest quality hair extensions in the Czech Republic. Keratin, tapes, wefts.",
-      "cta": "Explore Our Collection"
-    },
-    "features": {
-      "quality": {
-        "title": "100% Virgin Hair",
-        "description": "Exclusively virgin hair from our own collection"
-      },
-      "coloring": {
-        "title": "Own Coloring Studio",
-        "description": "Professional coloring directly in Prague"
-      },
-      "delivery": {
-        "title": "48h Delivery",
-        "description": "Fast delivery throughout Czech Republic"
-      },
-      "warranty": {
-        "title": "Quality Guarantee",
-        "description": "LUXE & Platinum edition with warranty"
+      "title": "Real Hair Extensions Prague",
+      "subtitle": "Discover Your Natural Beauty with Premium Quality",
+      "description": "Czech manufacturer of virgin and real hair since 2016. Own coloring studio in Prague, handmade production, highest quality hair on the market. Standard • LUXE • Platinum edition",
+      "cta": {
+        "explore": "Explore Collection",
+        "pricing": "View Pricing"
       }
     },
-    "categories": {
+    "usp": {
+      "experience": {
+        "number": "8+",
+        "title": "Years of Experience",
+        "description": "Long-standing know-how in the field"
+      },
+      "realHair": {
+        "number": "100%",
+        "title": "Real Hair",
+        "description": "No synthetic materials"
+      },
+      "czechMade": {
+        "title": "Czech Manufacturer",
+        "description": "Production and coloring in Prague"
+      },
+      "ownDyehouse": {
+        "title": "Own Coloring Studio",
+        "description": "Professional bleaching"
+      }
+    },
+    "collections": {
+      "title": "Our Hair Extension Collections",
+      "subtitle": "We offer a complete range of real hair - from virgin undyed to professionally bleached blonde hair. Everything in three quality levels.",
       "undyed": {
-        "title": "Virgin undyed hair",
-        "description": "100% virgin hair in natural shades. Suitable for coloring.",
-        "from": "From"
+        "badge": "Best Seller",
+        "title": "Virgin Undyed Hair",
+        "subtitle": "100% natural hair without chemical treatment",
+        "description": "Ideal for a natural look. Option for your own coloring or natural use.",
+        "prices": {
+          "standard": "Standard from 6,900 CZK",
+          "luxe": "LUXE from 8,900 CZK",
+          "platinum": "Platinum from 10,900 CZK"
+        }
       },
       "dyed": {
-        "title": "Colored blonde hair",
-        "description": "Professionally bleached in our Prague coloring studio.",
-        "from": "From"
+        "badge": "Premium",
+        "title": "Colored Blonde Hair",
+        "subtitle": "Professionally bleached shades 5-10",
+        "description": "Bleached in our own coloring studio. Beautiful blonde shades without yellow tones.",
+        "prices": {
+          "standard": "Standard from 6,900 CZK",
+          "luxe": "LUXE from 8,900 CZK",
+          "platinum": "Platinum from 10,900 CZK"
+        }
+      },
+      "methods": {
+        "keratin": {
+          "title": "Keratin Hair",
+          "description": "Keratin extensions for long-lasting effect"
+        },
+        "tapes": {
+          "title": "Tapes (nano tapes)",
+          "description": "Modern and gentle hair extensions"
+        },
+        "wefts": {
+          "title": "Hair Wefts",
+          "description": "Hand-sewn wefts of the highest quality"
+        }
       }
     },
+    "wigs": {
+      "title": "Hairpieces, Wigs and Accessories",
+      "subtitle": "Complete solution for every need - from bangs through toupee to real wigs made of human hair.",
+      "bangs": "Bangs",
+      "toupee": "Toupee",
+      "wefts": "Hair Wefts",
+      "realWigs": "Real Wigs",
+      "clipIn": "Clip-in Hair",
+      "clipInPonytail": "Clip-in Ponytail"
+    },
     "whyUs": {
-      "title": "Why Choose Mùza Hair?",
-      "subtitle": "We are a Czech manufacturer with own coloring studio in Prague",
-      "reasons": {
-        "quality": "Highest Hair Quality",
-        "experience": "Over 7 Years of Experience",
-        "service": "Individual Approach",
-        "price": "Fair Prices"
+      "title": "Why Choose Mùza Hair Shop?",
+      "experience": {
+        "title": "🏆 8 Years of Market Experience",
+        "description": "Since 2016 we've been manufacturing premium hair accessories. Our know-how guarantees the highest quality."
+      },
+      "dyehouse": {
+        "title": "🇨🇿 Own Coloring Studio in Prague",
+        "description": "Professional bleaching and coloring directly in Prague. Quality control at every production step."
+      },
+      "handmade": {
+        "title": "✋ Handmade Production",
+        "description": "Every piece is manually processed and checked. No mass production, only quality."
+      },
+      "quality": {
+        "title": "💎 Three Quality Levels",
+        "description": "Standard, LUXE and Platinum edition - choose according to your needs and budget."
+      },
+      "shades": {
+        "title": "🎨 10 Shades",
+        "description": "From dark brown to ultra blonde. Find exactly the shade that suits you."
+      },
+      "lengths": {
+        "title": "📏 Lengths 45-90 cm",
+        "description": "Wide selection of lengths for various hairstyles and styles. From classic to extra long."
+      }
+    },
+    "reviews": {
+      "title": "What Our Customers Say",
+      "subtitle": "Read the experiences of women who chose Mùza Hair",
+      "stats": {
+        "rating": {
+          "value": "4.9/5",
+          "label": "Average Rating"
+        },
+        "customers": {
+          "value": "500+",
+          "label": "Satisfied Customers"
+        },
+        "recommend": {
+          "value": "98%",
+          "label": "Recommend to Friends"
+        },
+        "years": {
+          "value": "8+",
+          "label": "Years on Market"
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "What is the difference between virgin undyed and colored blonde hair?",
+        "answer": "Virgin undyed hair is 100% natural without any chemical treatment. Colored blonde hair is professionally bleached in our own coloring studio to shades 5-10. We offer both categories in three quality levels: Standard, LUXE and Platinum edition."
+      },
+      "q2": {
+        "question": "How long do hair extensions last?",
+        "answer": "With proper care, our real hair lasts 6-12 months. LUXE and Platinum edition even longer. It depends on the type of application (keratin, tapes, wefts) and care."
+      },
+      "q3": {
+        "question": "Do you manufacture hair in Czech Republic?",
+        "answer": "Yes! We are a Czech manufacturer with our own coloring studio in Prague. All bleaching, coloring and manual processing takes place in the Czech Republic. This allows us to guarantee high quality."
+      },
+      "q4": {
+        "question": "Can I color or straighten the hair?",
+        "answer": "Yes, you can color, straighten, curl and blow-dry our real hair just like your own hair. We recommend using heat protection and quality hair cosmetics."
+      },
+      "viewAll": "View all questions →"
+    },
+    "cta": {
+      "title": "Ready for Transformation?",
+      "subtitle": "Browse our complete range of real hair extensions or contact us for individual consultation.",
+      "viewProducts": "View All Products",
+      "contact": "Contact Us"
+    },
+    "trust": {
+      "shipping": {
+        "title": "Fast Delivery",
+        "description": "Throughout Czech Republic"
+      },
+      "payment": {
+        "title": "Secure Payment",
+        "description": "Card and bank transfer"
+      },
+      "returns": {
+        "title": "Money Back",
+        "description": "14 days return policy"
       }
     }
   },

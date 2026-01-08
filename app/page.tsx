@@ -1,30 +1,30 @@
-import Link from 'next/link';
+'use client';
 
-// ISR (Incremental Static Regeneration) - regeneruj každých 60 sekund
-export const revalidate = 60;
+import Link from 'next/link';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function Home() {
+  const { t } = useTranslation();
   return (
     <div>
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center bg-gradient-to-br from-burgundy to-maroon text-white">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-playfair mb-6">
-            Pravé vlasy k prodloužení Praha
+            {t('home.hero.title')}
           </h1>
           <p className="text-xl md:text-2xl mb-4 text-ivory font-playfair">
-            Objevte svou přirozenou krásu s prémiovou kvalitou
+            {t('home.hero.subtitle')}
           </p>
           <p className="text-base md:text-lg mb-8 text-warm-beige max-w-3xl mx-auto">
-            Český výrobce panenských a pravých vlasů od roku 2016. Vlastní barvírna v Praze,
-            ruční výroba, nejkvalitnější vlasy na trhu. Standard • LUXE • Platinum edition
+            {t('home.hero.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/vlasy-k-prodlouzeni" className="btn-primary text-lg px-8 py-3">
-              Prozkoumat kolekci
+              {t('home.hero.cta.explore')}
             </Link>
             <Link href="/cenik" className="bg-white/10 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-medium hover:bg-white/20 transition">
-              Zobrazit ceník
+              {t('home.hero.cta.pricing')}
             </Link>
           </div>
         </div>
@@ -35,24 +35,24 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl mb-3 text-burgundy">8+</div>
-              <h3 className="font-semibold text-burgundy mb-2">Let zkušeností</h3>
-              <p className="text-sm text-gray-600">Dlouholeté know-how v oboru</p>
+              <div className="text-4xl mb-3 text-burgundy">{t('home.usp.experience.number')}</div>
+              <h3 className="font-semibold text-burgundy mb-2">{t('home.usp.experience.title')}</h3>
+              <p className="text-sm text-gray-600">{t('home.usp.experience.description')}</p>
             </div>
             <div>
-              <div className="text-4xl mb-3 text-burgundy">100%</div>
-              <h3 className="font-semibold text-burgundy mb-2">Pravé vlasy</h3>
-              <p className="text-sm text-gray-600">Žádné syntetické materiály</p>
+              <div className="text-4xl mb-3 text-burgundy">{t('home.usp.realHair.number')}</div>
+              <h3 className="font-semibold text-burgundy mb-2">{t('home.usp.realHair.title')}</h3>
+              <p className="text-sm text-gray-600">{t('home.usp.realHair.description')}</p>
             </div>
             <div>
               <div className="text-4xl mb-3 text-burgundy">🇨🇿</div>
-              <h3 className="font-semibold text-burgundy mb-2">Český výrobce</h3>
-              <p className="text-sm text-gray-600">Výroba a barvení v Praze</p>
+              <h3 className="font-semibold text-burgundy mb-2">{t('home.usp.czechMade.title')}</h3>
+              <p className="text-sm text-gray-600">{t('home.usp.czechMade.description')}</p>
             </div>
             <div>
               <div className="text-4xl mb-3 text-burgundy">⚡</div>
-              <h3 className="font-semibold text-burgundy mb-2">Vlastní barvírna</h3>
-              <p className="text-sm text-gray-600">Profesionální odbarvování</p>
+              <h3 className="font-semibold text-burgundy mb-2">{t('home.usp.ownDyehouse.title')}</h3>
+              <p className="text-sm text-gray-600">{t('home.usp.ownDyehouse.description')}</p>
             </div>
           </div>
         </div>
@@ -62,11 +62,10 @@ export default function Home() {
       <section className="py-20 bg-ivory">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-playfair text-burgundy text-center mb-4">
-            Naše kolekce vlasů k prodloužení
+            {t('home.collections.title')}
           </h2>
           <p className="text-center text-gray-700 mb-12 max-w-2xl mx-auto">
-            Nabízíme kompletní sortiment pravých vlasů - od nebarvených panenských po profesionálně
-            odbarvené blond vlasy. Vše ve třech úrovních kvality.
+            {t('home.collections.subtitle')}
           </p>
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
             {/* Nebarvené panenské */}
@@ -76,16 +75,16 @@ export default function Home() {
             >
               <div className="absolute inset-0 bg-ivory" />
               <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                <span className="text-sm text-burgundy mb-3 uppercase tracking-wider font-bold">Nejprodávanější</span>
-                <h3 className="text-3xl md:text-4xl font-playfair mb-4 text-burgundy font-bold">Nebarvené panenské vlasy</h3>
-                <p className="text-gray-800 mb-6 text-lg font-medium">100% přírodní vlasy bez chemického ošetření</p>
+                <span className="text-sm text-burgundy mb-3 uppercase tracking-wider font-bold">{t('home.collections.undyed.badge')}</span>
+                <h3 className="text-3xl md:text-4xl font-playfair mb-4 text-burgundy font-bold">{t('home.collections.undyed.title')}</h3>
+                <p className="text-gray-800 mb-6 text-lg font-medium">{t('home.collections.undyed.subtitle')}</p>
                 <p className="text-sm text-gray-700 mb-6">
-                  Ideální pro přirozený vzhled. Možnost vlastního barvení nebo použití přirozeně.
+                  {t('home.collections.undyed.description')}
                 </p>
                 <div className="flex gap-2 text-xs flex-wrap justify-center">
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full font-semibold">Standard od 6 900 Kč</span>
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full font-semibold">LUXE od 8 900 Kč</span>
-                  <span className="px-3 py-1 bg-burgundy text-white rounded-full font-semibold">Platinum od 10 900 Kč</span>
+                  <span className="px-3 py-1 bg-burgundy text-white rounded-full font-semibold">{t('home.collections.undyed.prices.standard')}</span>
+                  <span className="px-3 py-1 bg-burgundy text-white rounded-full font-semibold">{t('home.collections.undyed.prices.luxe')}</span>
+                  <span className="px-3 py-1 bg-burgundy text-white rounded-full font-semibold">{t('home.collections.undyed.prices.platinum')}</span>
                 </div>
               </div>
             </Link>
@@ -97,16 +96,16 @@ export default function Home() {
             >
               <div className="absolute inset-0 bg-warm-beige" />
               <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-                <span className="text-sm text-terracotta mb-3 uppercase tracking-wider font-bold">Prémiové</span>
-                <h3 className="text-3xl md:text-4xl font-playfair mb-4 text-terracotta font-bold">Barvené blond vlasy</h3>
-                <p className="text-gray-800 mb-6 text-lg font-medium">Profesionálně odbarvené odstíny 5-10</p>
+                <span className="text-sm text-terracotta mb-3 uppercase tracking-wider font-bold">{t('home.collections.dyed.badge')}</span>
+                <h3 className="text-3xl md:text-4xl font-playfair mb-4 text-terracotta font-bold">{t('home.collections.dyed.title')}</h3>
+                <p className="text-gray-800 mb-6 text-lg font-medium">{t('home.collections.dyed.subtitle')}</p>
                 <p className="text-sm text-gray-700 mb-6">
-                  Odbarveno ve vlastní barvírně. Krásné blond odstíny bez žlutých tónů.
+                  {t('home.collections.dyed.description')}
                 </p>
                 <div className="flex gap-2 text-xs flex-wrap justify-center">
-                  <span className="px-3 py-1 bg-terracotta text-white rounded-full font-semibold">Standard od 6 900 Kč</span>
-                  <span className="px-3 py-1 bg-terracotta text-white rounded-full font-semibold">LUXE od 8 900 Kč</span>
-                  <span className="px-3 py-1 bg-terracotta text-white rounded-full font-semibold">Platinum od 10 900 Kč</span>
+                  <span className="px-3 py-1 bg-terracotta text-white rounded-full font-semibold">{t('home.collections.dyed.prices.standard')}</span>
+                  <span className="px-3 py-1 bg-terracotta text-white rounded-full font-semibold">{t('home.collections.dyed.prices.luxe')}</span>
+                  <span className="px-3 py-1 bg-terracotta text-white rounded-full font-semibold">{t('home.collections.dyed.prices.platinum')}</span>
                 </div>
               </div>
             </Link>
@@ -115,16 +114,16 @@ export default function Home() {
           {/* Additional categories grid */}
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <Link href="/metody-zakonceni/vlasy-na-keratin" className="p-6 bg-white rounded-lg shadow hover:shadow-medium transition">
-              <h4 className="text-xl font-semibold text-burgundy mb-2">Vlasy na keratin</h4>
-              <p className="text-sm text-gray-600">Keratinové prodloužení pro dlouhotrvající efekt</p>
+              <h4 className="text-xl font-semibold text-burgundy mb-2">{t('home.collections.methods.keratin.title')}</h4>
+              <p className="text-sm text-gray-600">{t('home.collections.methods.keratin.description')}</p>
             </Link>
             <Link href="/metody-zakonceni/pasky-nano-tapes" className="p-6 bg-white rounded-lg shadow hover:shadow-medium transition">
-              <h4 className="text-xl font-semibold text-burgundy mb-2">Pásky (nano tapes)</h4>
-              <p className="text-sm text-gray-600">Moderní a šetrné prodlužování vlasů</p>
+              <h4 className="text-xl font-semibold text-burgundy mb-2">{t('home.collections.methods.tapes.title')}</h4>
+              <p className="text-sm text-gray-600">{t('home.collections.methods.tapes.description')}</p>
             </Link>
             <Link href="/metody-zakonceni/vlasove-tresy" className="p-6 bg-white rounded-lg shadow hover:shadow-medium transition">
-              <h4 className="text-xl font-semibold text-burgundy mb-2">Vlasové tresy</h4>
-              <p className="text-sm text-gray-600">Ručně šité tresy nejvyšší kvality</p>
+              <h4 className="text-xl font-semibold text-burgundy mb-2">{t('home.collections.methods.wefts.title')}</h4>
+              <p className="text-sm text-gray-600">{t('home.collections.methods.wefts.description')}</p>
             </Link>
           </div>
         </div>
@@ -134,35 +133,35 @@ export default function Home() {
       <section className="py-20 bg-soft-cream">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-playfair text-burgundy text-center mb-4">
-            Příčesky, paruky a doplňky
+            {t('home.wigs.title')}
           </h2>
           <p className="text-center text-gray-700 mb-12 max-w-2xl mx-auto">
-            Kompletní řešení pro každou potřebu - od ofin přes toupee až po pravé paruky z lidských vlasů.
+            {t('home.wigs.subtitle')}
           </p>
           <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
             <Link href="/pricesky-a-paruky/ofiny-z-pravych-vlasu" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">👱‍♀️</div>
-              <h4 className="font-semibold text-burgundy text-sm">Ofiny</h4>
+              <h4 className="font-semibold text-burgundy text-sm">{t('home.wigs.bangs')}</h4>
             </Link>
             <Link href="/pricesky-a-paruky/toupee" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">💇‍♂️</div>
-              <h4 className="font-semibold text-burgundy text-sm">Toupee/tupé</h4>
+              <h4 className="font-semibold text-burgundy text-sm">{t('home.wigs.toupee')}</h4>
             </Link>
             <Link href="/pricesky-a-paruky/vlasove-tresy" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">🧵</div>
-              <h4 className="font-semibold text-burgundy text-sm">Vlasové tresy</h4>
+              <h4 className="font-semibold text-burgundy text-sm">{t('home.wigs.wefts')}</h4>
             </Link>
             <Link href="/pricesky-a-paruky/prave-paruky" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">✨</div>
-              <h4 className="font-semibold text-burgundy text-sm">Pravé paruky</h4>
+              <h4 className="font-semibold text-burgundy text-sm">{t('home.wigs.realWigs')}</h4>
             </Link>
             <Link href="/pricesky-a-paruky/clip-in-vlasy" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">💁‍♀️</div>
-              <h4 className="font-semibold text-burgundy text-sm">Clip in vlasy</h4>
+              <h4 className="font-semibold text-burgundy text-sm">{t('home.wigs.clipIn')}</h4>
             </Link>
             <Link href="/pricesky-a-paruky/clip-in-culik" className="p-4 bg-white rounded-lg shadow hover:shadow-medium transition text-center">
               <div className="text-3xl mb-2">🎀</div>
-              <h4 className="font-semibold text-burgundy text-sm">Clip in culík</h4>
+              <h4 className="font-semibold text-burgundy text-sm">{t('home.wigs.clipInPonytail')}</h4>
             </Link>
           </div>
         </div>
@@ -172,43 +171,43 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-playfair text-burgundy text-center mb-12">
-            Proč si vybrat Mùza Hair Shop?
+            {t('home.whyUs.title')}
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-burgundy mb-3">🏆 8 let zkušeností na trhu</h3>
+              <h3 className="text-xl font-semibold text-burgundy mb-3">{t('home.whyUs.experience.title')}</h3>
               <p className="text-gray-700">
-                Od roku 2016 vyrábíme prémiové vlasové doplňky. Naše know-how zaručuje nejvyšší kvalitu.
+                {t('home.whyUs.experience.description')}
               </p>
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-burgundy mb-3">🇨🇿 Vlastní barvírna v Praze</h3>
+              <h3 className="text-xl font-semibold text-burgundy mb-3">{t('home.whyUs.dyehouse.title')}</h3>
               <p className="text-gray-700">
-                Profesionální odbarvování a barvení přímo v Praze. Kontrola kvality v každém kroku výroby.
+                {t('home.whyUs.dyehouse.description')}
               </p>
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-burgundy mb-3">✋ Ruční výroba</h3>
+              <h3 className="text-xl font-semibold text-burgundy mb-3">{t('home.whyUs.handmade.title')}</h3>
               <p className="text-gray-700">
-                Každý kus je ručně zpracován a kontrolován. Žádná hromadná výroba, jen kvalita.
+                {t('home.whyUs.handmade.description')}
               </p>
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-burgundy mb-3">💎 Tři úrovně kvality</h3>
+              <h3 className="text-xl font-semibold text-burgundy mb-3">{t('home.whyUs.quality.title')}</h3>
               <p className="text-gray-700">
-                Standard, LUXE a Platinum edition - vyberte si podle vašich potřeb a rozpočtu.
+                {t('home.whyUs.quality.description')}
               </p>
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-burgundy mb-3">🎨 10 odstínů</h3>
+              <h3 className="text-xl font-semibold text-burgundy mb-3">{t('home.whyUs.shades.title')}</h3>
               <p className="text-gray-700">
-                Od tmavě hnědé po ultra blond. Najdete přesně ten odstín, který k vám pasuje.
+                {t('home.whyUs.shades.description')}
               </p>
             </div>
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-burgundy mb-3">📏 Délky 45-90 cm</h3>
+              <h3 className="text-xl font-semibold text-burgundy mb-3">{t('home.whyUs.lengths.title')}</h3>
               <p className="text-gray-700">
-                Široký výběr délek pro různé účesy a styly. Od klasických po extra dlouhé.
+                {t('home.whyUs.lengths.description')}
               </p>
             </div>
           </div>
@@ -220,10 +219,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
-              Co říkají naše zákaznice
+              {t('home.reviews.title')}
             </h2>
             <p className="text-gray-700 max-w-2xl mx-auto">
-              Přečtěte si zkušenosti žen, které si vybraly vlasy Mùza Hair
+              {t('home.reviews.subtitle')}
             </p>
           </div>
 
@@ -308,20 +307,20 @@ export default function Home() {
           {/* Stats */}
           <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-burgundy mb-2">4.9/5</div>
-              <div className="text-sm text-gray-600">Průměrné hodnocení</div>
+              <div className="text-3xl font-bold text-burgundy mb-2">{t('home.reviews.stats.rating.value')}</div>
+              <div className="text-sm text-gray-600">{t('home.reviews.stats.rating.label')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-burgundy mb-2">500+</div>
-              <div className="text-sm text-gray-600">Spokojených zákaznic</div>
+              <div className="text-3xl font-bold text-burgundy mb-2">{t('home.reviews.stats.customers.value')}</div>
+              <div className="text-sm text-gray-600">{t('home.reviews.stats.customers.label')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-burgundy mb-2">98%</div>
-              <div className="text-sm text-gray-600">Doporučuje přátelům</div>
+              <div className="text-3xl font-bold text-burgundy mb-2">{t('home.reviews.stats.recommend.value')}</div>
+              <div className="text-sm text-gray-600">{t('home.reviews.stats.recommend.label')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-burgundy mb-2">8+</div>
-              <div className="text-sm text-gray-600">Let na trhu</div>
+              <div className="text-3xl font-bold text-burgundy mb-2">{t('home.reviews.stats.years.value')}</div>
+              <div className="text-sm text-gray-600">{t('home.reviews.stats.years.label')}</div>
             </div>
           </div>
         </div>
@@ -331,50 +330,45 @@ export default function Home() {
       <section className="py-20 bg-ivory">
         <div className="container mx-auto px-4 max-w-4xl">
           <h2 className="text-4xl md:text-5xl font-playfair text-burgundy text-center mb-12">
-            Často kladené otázky
+            {t('home.faq.title')}
           </h2>
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold text-burgundy mb-3">
-                Jaký je rozdíl mezi nebarvené panenské a barvené blond vlasy?
+                {t('home.faq.q1.question')}
               </h3>
               <p className="text-gray-700">
-                Nebarvené panenské vlasy jsou 100% přírodní bez jakéhokoliv chemického ošetření. Barvené blond
-                vlasy jsou profesionálně odbarveny v naší vlastní barvírně na odstíny 5-10. Obě kategorie nabízíme
-                ve třech úrovních kvality: Standard, LUXE a Platinum edition.
+                {t('home.faq.q1.answer')}
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold text-burgundy mb-3">
-                Jak dlouho vydrží prodloužené vlasy?
+                {t('home.faq.q2.question')}
               </h3>
               <p className="text-gray-700">
-                Při správné péči vydrží naše pravé vlasy 6-12 měsíců. LUXE a Platinum edition dokonce i déle.
-                Záleží na typu aplikace (keratin, pásky, tresy) a péči.
+                {t('home.faq.q2.answer')}
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold text-burgundy mb-3">
-                Vyrábíte vlasy v Česku?
+                {t('home.faq.q3.question')}
               </h3>
               <p className="text-gray-700">
-                Ano! Jsme český výrobce s vlastní barvírnou v Praze. Veškeré odbarvování, barvení a ruční
-                zpracování probíhá v České republice. To nám umožňuje garantovat vysokou kvalitu.
+                {t('home.faq.q3.answer')}
               </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold text-burgundy mb-3">
-                Mohu vlasy barvit nebo žehlit?
+                {t('home.faq.q4.question')}
               </h3>
               <p className="text-gray-700">
-                Ano, naše pravé vlasy můžete barvit, žehlit, natáčet a foukat stejně jako své vlastní vlasy.
-                Doporučujeme použít tepelnou ochranu a kvalitní vlasovou kosmetiku.
+                {t('home.faq.q4.answer')}
               </p>
             </div>
           </div>
           <div className="text-center mt-8">
             <Link href="/informace/faq" className="text-burgundy font-semibold hover:text-maroon transition">
-              Zobrazit všechny otázky →
+              {t('home.faq.viewAll')}
             </Link>
           </div>
         </div>
@@ -384,18 +378,17 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-br from-burgundy to-maroon text-white">
         <div className="container mx-auto px-4 text-center max-w-3xl">
           <h2 className="text-4xl md:text-5xl font-playfair mb-6">
-            Připraveni na transformaci?
+            {t('home.cta.title')}
           </h2>
           <p className="text-xl text-ivory mb-8">
-            Prohlédněte si naši kompletní nabídku pravých vlasů k prodloužení nebo nás kontaktujte
-            pro individuální poradenství.
+            {t('home.cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/vlasy-k-prodlouzeni" className="bg-white text-burgundy px-8 py-3 rounded-lg font-semibold hover:bg-ivory transition">
-              Zobrazit všechny produkty
+              {t('home.cta.viewProducts')}
             </Link>
             <Link href="/kontakt" className="bg-white/10 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition border border-white/30">
-              Kontaktujte nás
+              {t('home.cta.contact')}
             </Link>
           </div>
         </div>
@@ -407,18 +400,18 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 text-center max-w-4xl mx-auto">
             <div>
               <div className="text-3xl mb-2">🚚</div>
-              <h4 className="font-semibold text-burgundy mb-1">Rychlé doručení</h4>
-              <p className="text-sm text-gray-600">Po celé ČR</p>
+              <h4 className="font-semibold text-burgundy mb-1">{t('home.trust.shipping.title')}</h4>
+              <p className="text-sm text-gray-600">{t('home.trust.shipping.description')}</p>
             </div>
             <div>
               <div className="text-3xl mb-2">💳</div>
-              <h4 className="font-semibold text-burgundy mb-1">Bezpečná platba</h4>
-              <p className="text-sm text-gray-600">Platba kartou i převodem</p>
+              <h4 className="font-semibold text-burgundy mb-1">{t('home.trust.payment.title')}</h4>
+              <p className="text-sm text-gray-600">{t('home.trust.payment.description')}</p>
             </div>
             <div>
               <div className="text-3xl mb-2">↩️</div>
-              <h4 className="font-semibold text-burgundy mb-1">Vrácení zboží</h4>
-              <p className="text-sm text-gray-600">14 dní na vrácení</p>
+              <h4 className="font-semibold text-burgundy mb-1">{t('home.trust.returns.title')}</h4>
+              <p className="text-sm text-gray-600">{t('home.trust.returns.description')}</p>
             </div>
           </div>
         </div>
