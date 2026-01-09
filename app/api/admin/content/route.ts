@@ -3,6 +3,7 @@ import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/content
