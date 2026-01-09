@@ -21,6 +21,8 @@ export default function AdminSeoPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+  const [seeding, setSeeding] = useState(false);
+  const [seedMessage, setSeedMessage] = useState('');
 
   useEffect(() => {
     fetchPages();
@@ -37,6 +39,26 @@ export default function AdminSeoPage() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const seedPages = async () => {
+    setSeeding(true);
+    setSeedMessage('');
+    try {
+      const response = await fetch('/api/admin/seo/seed', { method: 'POST' });
+      const data = await response.json();
+      if (response.ok) {
+        setSeedMessage(`Úspěch: ${data.results.created} stránek vytvořeno`);
+        fetchPages(); // Refresh the list
+      } else {
+        setSeedMessage(`Chyba: ${data.error}`);
+      }
+    } catch (err) {
+      setSeedMessage('Chyba při inicializaci');
+      console.error(err);
+    } finally {
+      setSeeding(false);
     }
   };
 
@@ -206,8 +228,41 @@ export default function AdminSeoPage() {
         </table>
 
         {filteredPages.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            {search ? 'Žádné stránky nenalezeny' : 'Zatím nejsou žádné SEO stránky'}
+          <div className="text-center py-12">
+            {search ? (
+              <p className="text-gray-500">Žádné stránky nenalezeny</p>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-gray-500">Zatím nejsou žádné SEO stránky</p>
+                <button
+                  onClick={seedPages}
+                  disabled={seeding}
+                  className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
+                >
+                  {seeding ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Inicializuji...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Inicializovat SEO pro všechny stránky
+                    </>
+                  )}
+                </button>
+                {seedMessage && (
+                  <p className={`text-sm ${seedMessage.includes('Úspěch') ? 'text-green-600' : 'text-red-600'}`}>
+                    {seedMessage}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

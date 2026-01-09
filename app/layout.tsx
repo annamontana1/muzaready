@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import CookieConsent from "@/components/CookieConsent";
-import SmartsuppChat from "@/components/SmartsuppChat";
-import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
+import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
 
 export const metadata: Metadata = {
@@ -116,15 +112,9 @@ export default function RootLayout({
         )}
 
         <Providers>
-          <OrganizationSchema />
-          <WebSiteSchema />
-          <Header />
-          <main className="min-h-screen">
+          <MainLayout>
             {children}
-          </main>
-          <Footer />
-          <CookieConsent />
-          <SmartsuppChat />
+          </MainLayout>
         </Providers>
       </body>
     </html>
