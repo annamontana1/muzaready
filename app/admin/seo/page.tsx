@@ -16,146 +16,274 @@ interface PageSeo {
   updatedAt: string;
 }
 
+interface ScannedPage {
+  slug: string;
+  name: string;
+  type: string;
+  hasSeo: boolean;
+  seoId: string | null;
+  titleCs: string | null;
+  descriptionCs: string | null;
+  seoStatus: 'missing' | 'incomplete' | 'complete';
+}
+
+interface ScanResult {
+  pages: ScannedPage[];
+  stats: {
+    total: number;
+    withSeo: number;
+    complete: number;
+    incomplete: number;
+    missing: number;
+  };
+}
+
 export default function AdminSeoPage() {
-  const [pages, setPages] = useState<PageSeo[]>([]);
+  const [pages, setPages] = useState<ScannedPage[]>([]);
+  const [stats, setStats] = useState({ total: 0, withSeo: 0, complete: 0, incomplete: 0, missing: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
-  const [seeding, setSeeding] = useState(false);
-  const [seedMessage, setSeedMessage] = useState('');
+  const [filter, setFilter] = useState<'all' | 'missing' | 'incomplete' | 'complete'>('all');
+  const [generating, setGenerating] = useState<string | null>(null);
+  const [generatingAll, setGeneratingAll] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetchPages();
+    scanPages();
   }, []);
 
-  const fetchPages = async () => {
+  const scanPages = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('/api/admin/seo');
-      if (!response.ok) throw new Error('Chyba při načítání');
-      const data = await response.json();
-      setPages(data);
+      const response = await fetch('/api/admin/seo/scan');
+      if (!response.ok) throw new Error('Chyba při skenování');
+      const data: ScanResult = await response.json();
+      setPages(data.pages);
+      setStats(data.stats);
     } catch (err) {
-      setError('Nepodařilo se načíst SEO stránky');
+      setError('Nepodařilo se načíst stránky');
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const seedPages = async () => {
-    setSeeding(true);
-    setSeedMessage('');
+  const generateSeo = async (slug: string) => {
+    setGenerating(slug);
+    setMessage('');
     try {
-      const response = await fetch('/api/admin/seo/seed', { method: 'POST' });
+      const response = await fetch('/api/admin/seo/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug }),
+      });
       const data = await response.json();
       if (response.ok) {
-        setSeedMessage(`Úspěch: ${data.results.created} stránek vytvořeno`);
-        fetchPages(); // Refresh the list
+        setMessage(`SEO vygenerováno pro ${slug}`);
+        scanPages(); // Refresh
       } else {
-        setSeedMessage(`Chyba: ${data.error}`);
+        setMessage(`Chyba: ${data.error}`);
       }
     } catch (err) {
-      setSeedMessage('Chyba při inicializaci');
+      setMessage('Chyba při generování');
       console.error(err);
     } finally {
-      setSeeding(false);
+      setGenerating(null);
     }
   };
 
-  const getSeoStatus = (page: PageSeo) => {
-    if (!page.titleCs && !page.descriptionCs) {
-      return { status: 'missing', label: 'Chybí', color: 'bg-red-100 text-red-800' };
+  const generateAllSeo = async () => {
+    setGeneratingAll(true);
+    setMessage('');
+    try {
+      const response = await fetch('/api/admin/seo/generate', {
+        method: 'PUT',
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(data.message);
+        scanPages(); // Refresh
+      } else {
+        setMessage(`Chyba: ${data.error}`);
+      }
+    } catch (err) {
+      setMessage('Chyba při generování');
+      console.error(err);
+    } finally {
+      setGeneratingAll(false);
     }
-    if (!page.titleCs || !page.descriptionCs) {
-      return { status: 'partial', label: 'Neúplné', color: 'bg-yellow-100 text-yellow-800' };
-    }
-    if (page.titleCs.length < 30 || page.titleCs.length > 60) {
-      return { status: 'warning', label: 'Title délka', color: 'bg-yellow-100 text-yellow-800' };
-    }
-    if (page.descriptionCs.length < 120 || page.descriptionCs.length > 160) {
-      return { status: 'warning', label: 'Desc délka', color: 'bg-yellow-100 text-yellow-800' };
-    }
-    return { status: 'ok', label: 'OK', color: 'bg-green-100 text-green-800' };
   };
 
-  const filteredPages = pages.filter(page =>
-    page.slug.toLowerCase().includes(search.toLowerCase()) ||
-    page.pageName?.toLowerCase().includes(search.toLowerCase()) ||
-    page.titleCs?.toLowerCase().includes(search.toLowerCase())
-  );
+  const createMissingEntries = async () => {
+    setGeneratingAll(true);
+    setMessage('');
+    try {
+      const response = await fetch('/api/admin/seo/scan', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(data.message);
+        scanPages(); // Refresh
+      } else {
+        setMessage(`Chyba: ${data.error}`);
+      }
+    } catch (err) {
+      setMessage('Chyba při vytváření');
+      console.error(err);
+    } finally {
+      setGeneratingAll(false);
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'complete':
+        return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Kompletní</span>;
+      case 'incomplete':
+        return <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Neúplné</span>;
+      case 'missing':
+        return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Chybí</span>;
+      default:
+        return null;
+    }
+  };
+
+  const getTypeBadge = (type: string) => {
+    const colors: Record<string, string> = {
+      main: 'bg-blue-100 text-blue-800',
+      category: 'bg-purple-100 text-purple-800',
+      info: 'bg-gray-100 text-gray-800',
+      legal: 'bg-slate-100 text-slate-800',
+      blog: 'bg-pink-100 text-pink-800',
+    };
+    return (
+      <span className={`px-2 py-1 text-xs rounded-full ${colors[type] || 'bg-gray-100 text-gray-800'}`}>
+        {type}
+      </span>
+    );
+  };
+
+  const filteredPages = pages.filter(page => {
+    const matchesSearch = page.slug.toLowerCase().includes(search.toLowerCase()) ||
+      page.name.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = filter === 'all' || page.seoStatus === filter;
+    return matchesSearch && matchesFilter;
+  });
 
   if (loading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
-            ))}
-          </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-slate-600">Skenuji stránky webu...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">SEO Správa</h1>
-        <Link
-          href="/admin/seo/new"
-          className="bg-burgundy text-white px-4 py-2 rounded-lg hover:bg-maroon transition"
-        >
-          + Přidat stránku
-        </Link>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">SEO Správa</h1>
+          <p className="text-sm text-gray-500 mt-1">Spravujte SEO pro všechny stránky webu</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={generateAllSeo}
+            disabled={generatingAll}
+            className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
+          >
+            {generatingAll ? (
+              <>
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Generuji...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Generovat vše
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
+      {/* Message */}
+      {message && (
+        <div className={`p-4 rounded-lg ${message.includes('Chyba') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+          {message}
+        </div>
+      )}
+
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}
         </div>
       )}
 
-      {/* Search */}
-      <div className="mb-4">
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <div className="text-3xl font-bold text-gray-900">{stats.total}</div>
+          <div className="text-sm text-gray-500">Celkem stránek</div>
+        </div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <div className="text-3xl font-bold text-green-600">{stats.complete}</div>
+          <div className="text-sm text-gray-500">Kompletní SEO</div>
+        </div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <div className="text-3xl font-bold text-yellow-600">{stats.incomplete}</div>
+          <div className="text-sm text-gray-500">Neúplné SEO</div>
+        </div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <div className="text-3xl font-bold text-red-600">{stats.missing}</div>
+          <div className="text-sm text-gray-500">Chybí SEO</div>
+        </div>
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <div className="text-3xl font-bold text-indigo-600">
+            {stats.total > 0 ? Math.round((stats.complete / stats.total) * 100) : 0}%
+          </div>
+          <div className="text-sm text-gray-500">Pokrytí</div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-4">
         <input
           type="text"
           placeholder="Hledat stránku..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-96 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy focus:border-transparent"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
         />
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-gray-900">{pages.length}</div>
-          <div className="text-sm text-gray-500">Celkem stránek</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-green-600">
-            {pages.filter(p => getSeoStatus(p).status === 'ok').length}
-          </div>
-          <div className="text-sm text-gray-500">Optimalizováno</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-yellow-600">
-            {pages.filter(p => ['partial', 'warning'].includes(getSeoStatus(p).status)).length}
-          </div>
-          <div className="text-sm text-gray-500">K vylepšení</div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="text-2xl font-bold text-red-600">
-            {pages.filter(p => getSeoStatus(p).status === 'missing').length}
-          </div>
-          <div className="text-sm text-gray-500">Chybí SEO</div>
+        <div className="flex gap-2">
+          {(['all', 'missing', 'incomplete', 'complete'] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filter === f
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {f === 'all' ? 'Vše' : f === 'missing' ? 'Chybí' : f === 'incomplete' ? 'Neúplné' : 'Kompletní'}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -163,13 +291,13 @@ export default function AdminSeoPage() {
                 Stránka
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title CZ
+                Typ
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Title
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Stav
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Robots
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Akce
@@ -177,94 +305,79 @@ export default function AdminSeoPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredPages.map((page) => {
-              const status = getSeoStatus(page);
-              return (
-                <tr key={page.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{page.slug}</div>
-                    {page.pageName && (
-                      <div className="text-sm text-gray-500">{page.pageName}</div>
+            {filteredPages.map((page) => (
+              <tr key={page.slug} className="hover:bg-gray-50">
+                <td className="px-6 py-4">
+                  <div className="text-sm font-medium text-gray-900">{page.name}</div>
+                  <div className="text-sm text-gray-500 font-mono">{page.slug}</div>
+                </td>
+                <td className="px-6 py-4">
+                  {getTypeBadge(page.type)}
+                </td>
+                <td className="px-6 py-4">
+                  <div className="text-sm text-gray-900 max-w-xs truncate">
+                    {page.titleCs || <span className="text-gray-400 italic">Není nastaveno</span>}
+                  </div>
+                </td>
+                <td className="px-6 py-4">
+                  {getStatusBadge(page.seoStatus)}
+                </td>
+                <td className="px-6 py-4 text-right space-x-2">
+                  <button
+                    onClick={() => generateSeo(page.slug)}
+                    disabled={generating === page.slug}
+                    className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 text-sm font-medium disabled:opacity-50"
+                  >
+                    {generating === page.slug ? (
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
                     )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900 max-w-xs truncate">
-                      {page.titleCs || <span className="text-gray-400 italic">Není nastaveno</span>}
-                    </div>
-                    {page.titleCs && (
-                      <div className="text-xs text-gray-500">{page.titleCs.length} znaků</div>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs rounded-full ${status.color}`}>
-                      {status.label}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {page.noIndex && <span className="text-red-600 mr-2">noindex</span>}
-                    {page.noFollow && <span className="text-red-600">nofollow</span>}
-                    {!page.noIndex && !page.noFollow && <span className="text-green-600">index, follow</span>}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    Generovat
+                  </button>
+                  {page.seoId && (
                     <Link
-                      href={`/admin/seo/${page.id}`}
-                      className="text-burgundy hover:text-maroon mr-4"
+                      href={`/admin/seo/${page.seoId}`}
+                      className="text-gray-600 hover:text-gray-800 text-sm font-medium"
                     >
                       Upravit
                     </Link>
-                    <a
-                      href={page.slug}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      Zobrazit ↗
-                    </a>
-                  </td>
-                </tr>
-              );
-            })}
+                  )}
+                  <a
+                    href={page.slug}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-gray-600 text-sm"
+                  >
+                    ↗
+                  </a>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
 
         {filteredPages.length === 0 && (
-          <div className="text-center py-12">
-            {search ? (
-              <p className="text-gray-500">Žádné stránky nenalezeny</p>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-gray-500">Zatím nejsou žádné SEO stránky</p>
-                <button
-                  onClick={seedPages}
-                  disabled={seeding}
-                  className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
-                >
-                  {seeding ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      Inicializuji...
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                      Inicializovat SEO pro všechny stránky
-                    </>
-                  )}
-                </button>
-                {seedMessage && (
-                  <p className={`text-sm ${seedMessage.includes('Úspěch') ? 'text-green-600' : 'text-red-600'}`}>
-                    {seedMessage}
-                  </p>
-                )}
-              </div>
-            )}
+          <div className="text-center py-12 text-gray-500">
+            {search || filter !== 'all' ? 'Žádné stránky nenalezeny' : 'Žádné stránky k zobrazení'}
           </div>
         )}
+      </div>
+
+      {/* Help section */}
+      <div className="bg-blue-50 rounded-xl p-6">
+        <h3 className="font-semibold text-blue-900 mb-2">Jak to funguje?</h3>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• <strong>Skenování</strong> - automaticky najde všechny stránky na webu</li>
+          <li>• <strong>Generovat</strong> - vytvoří SEO (title, description, keywords) na základě obsahu stránky</li>
+          <li>• <strong>Upravit</strong> - ruční úprava vygenerovaného SEO</li>
+          <li>• <strong>Generovat vše</strong> - vygeneruje SEO pro všechny stránky najednou</li>
+        </ul>
       </div>
     </div>
   );
