@@ -6,7 +6,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * Simple admin creation endpoint
+ * Reset 2 admin accounts
  * Visit: /api/create-admin?key=Muza2024
  */
 export async function GET(request: Request) {
@@ -18,70 +18,55 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Invalid key' }, { status: 401 });
     }
 
-    const email = 'admin@muzahair.cz';
-    const password = 'admin123';
+    const admins = [
+      { email: 'anna@muzahair.cz', password: 'muzaisthebestA8', name: 'Anna' },
+      { email: 'muzahaircz@gmail.com', password: 'Muza2024!', name: 'Muza Admin' },
+    ];
 
-    // Check if table exists by trying to count
-    let tableExists = true;
-    try {
-      await prisma.adminUser.count();
-    } catch (e: any) {
-      tableExists = false;
-      return NextResponse.json({
-        error: 'AdminUser table does not exist',
-        details: e.message,
-        solution: 'Run: npx prisma db push'
-      }, { status: 500 });
-    }
+    const results = [];
 
-    // Check if admin already exists
-    const existing = await prisma.adminUser.findUnique({
-      where: { email }
-    });
+    for (const admin of admins) {
+      const hashedPassword = await bcrypt.hash(admin.password, 10);
 
-    if (existing) {
-      // Update password
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await prisma.adminUser.update({
-        where: { email },
-        data: {
-          password: hashedPassword,
-          status: 'active'
-        }
+      const existing = await prisma.adminUser.findUnique({
+        where: { email: admin.email }
       });
 
-      return NextResponse.json({
-        success: true,
-        message: 'Admin password reset',
-        credentials: { email, password }
-      });
+      if (existing) {
+        await prisma.adminUser.update({
+          where: { email: admin.email },
+          data: {
+            password: hashedPassword,
+            status: 'active',
+            role: 'admin'
+          }
+        });
+        results.push({ email: admin.email, password: admin.password, status: 'password reset' });
+      } else {
+        await prisma.adminUser.create({
+          data: {
+            name: admin.name,
+            email: admin.email,
+            password: hashedPassword,
+            role: 'admin',
+            status: 'active',
+          },
+        });
+        results.push({ email: admin.email, password: admin.password, status: 'created' });
+      }
     }
-
-    // Create new admin
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const admin = await prisma.adminUser.create({
-      data: {
-        name: 'Admin',
-        email,
-        password: hashedPassword,
-        role: 'admin',
-        status: 'active',
-      },
-    });
 
     return NextResponse.json({
       success: true,
-      message: 'Admin created',
-      credentials: { email, password },
-      adminId: admin.id
+      message: '2 admin accounts ready',
+      accounts: results
     });
 
   } catch (error: any) {
     console.error('Create admin error:', error);
     return NextResponse.json({
-      error: 'Failed to create admin',
-      details: error.message,
-      stack: error.stack?.substring(0, 500)
+      error: 'Failed',
+      details: error.message
     }, { status: 500 });
   }
 }
