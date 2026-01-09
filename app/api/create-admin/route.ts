@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { hashPassword } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * Create/Reset 2 admin accounts
+ * Create/Reset 2 admin accounts with pre-computed hashes
  * Visit: /api/create-admin?key=Muza2024
  */
 export async function GET(request: Request) {
@@ -18,17 +17,26 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Invalid key' }, { status: 401 });
     }
 
+    // Pre-computed bcrypt hashes (generated locally)
     const admins = [
-      { email: 'anna@muzahair.cz', password: 'muzaisthebestA8', name: 'Anna' },
-      { email: 'zen@muzahair.cz', password: 'Barcelona33', name: 'Zen' },
+      {
+        email: 'anna@muzahair.cz',
+        password: 'muzaisthebestA8',
+        hash: '$2b$10$JYY1H8ZfQ3n6CAUTCDYVDecFgLtW6X1uXaOFFKUF7DhmZ0GMrwd..',
+        name: 'Anna'
+      },
+      {
+        email: 'zen@muzahair.cz',
+        password: 'Barcelona33',
+        hash: '$2b$10$eW6yMoAUGv5oTQdqNM1h4emdQmOsqx1B9KSjFpGjhbh08PGVnBXFO',
+        name: 'Zen'
+      },
     ];
 
     const results = [];
 
     for (const admin of admins) {
       try {
-        const hashedPassword = await hashPassword(admin.password);
-
         const existing = await prisma.adminUser.findUnique({
           where: { email: admin.email }
         });
@@ -37,7 +45,7 @@ export async function GET(request: Request) {
           await prisma.adminUser.update({
             where: { email: admin.email },
             data: {
-              password: hashedPassword,
+              password: admin.hash,
               status: 'active',
               role: 'admin'
             }
@@ -48,7 +56,7 @@ export async function GET(request: Request) {
             data: {
               name: admin.name,
               email: admin.email,
-              password: hashedPassword,
+              password: admin.hash,
               role: 'admin',
               status: 'active',
             },
@@ -69,8 +77,7 @@ export async function GET(request: Request) {
   } catch (error: any) {
     return NextResponse.json({
       error: 'Failed',
-      details: error.message,
-      stack: error.stack?.substring(0, 300)
+      details: error.message
     }, { status: 500 });
   }
 }
