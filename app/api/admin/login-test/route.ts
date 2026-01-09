@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import bcryptjs from 'bcrypt';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * Test endpoint to debug login issues

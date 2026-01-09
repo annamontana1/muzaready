@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { requireAdmin, verifyAdminSession } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/orders/[id]

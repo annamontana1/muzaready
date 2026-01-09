@@ -4,6 +4,7 @@ import { requireAdmin } from '@/lib/admin-auth';
 import QRCode from 'qrcode';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 interface Params {
   movementId: string;

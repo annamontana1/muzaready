@@ -4,6 +4,7 @@ import { requireAdmin } from '@/lib/admin-auth';
 import { sendLowStockAlert } from '@/lib/email';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/stock/check-low-stock

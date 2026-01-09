@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { formatPlatinumName } from '@/lib/platinum-format';
 import { generateVlasyXName, VlasyXCategory, VlasyXTier } from '@/lib/vlasyx-format';
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 
 const EXCHANGE_RATE_ID = 'GLOBAL_RATE';

@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { CreateAdminUserSchema } from '@/lib/validation/admin-users';
 import bcrypt from 'bcrypt';
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/admin/users
