@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 
     const admins = [
       { email: 'anna@muzahair.cz', password: 'muzaisthebestA8', name: 'Anna' },
-      { email: 'muzahaircz@gmail.com', password: 'Muza2024!', name: 'Muza Admin' },
+      { email: 'zen@muzahair.cz', password: 'Barcelona33', name: 'Zen' },
     ];
 
     const results = [];
