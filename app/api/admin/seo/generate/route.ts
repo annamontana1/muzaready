@@ -8,6 +8,139 @@ export const dynamic = 'force-dynamic';
 const SITE_URL = 'https://muzahair.cz';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
+// Fetch and extract text content from a page
+async function fetchPageContent(slug: string): Promise<{
+  title: string;
+  headings: string[];
+  text: string;
+  products: string[];
+}> {
+  try {
+    const url = `${SITE_URL}${slug}`;
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'MuzaHair-SEO-Generator/1.0',
+      },
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${url}`);
+    }
+
+    const html = await response.text();
+
+    // Extract title
+    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+    const title = titleMatch ? titleMatch[1].trim() : '';
+
+    // Extract headings (h1, h2)
+    const h1Matches = html.matchAll(/<h1[^>]*>([^<]+)<\/h1>/gi);
+    const h2Matches = html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/gi);
+    const headings: string[] = [];
+    for (const match of h1Matches) headings.push(match[1].trim());
+    for (const match of h2Matches) headings.push(match[1].trim());
+
+    // Extract paragraph text
+    const pMatches = html.matchAll(/<p[^>]*>([^<]+)<\/p>/gi);
+    const paragraphs: string[] = [];
+    for (const match of pMatches) {
+      const text = match[1].trim();
+      if (text.length > 20) paragraphs.push(text);
+    }
+    const text = paragraphs.slice(0, 5).join(' ');
+
+    // Extract product names if present
+    const productMatches = html.matchAll(/data-product-name="([^"]+)"/gi);
+    const products: string[] = [];
+    for (const match of productMatches) products.push(match[1]);
+
+    return { title, headings, text, products };
+  } catch (error) {
+    console.error('Error fetching page content:', error);
+    return { title: '', headings: [], text: '', products: [] };
+  }
+}
+
+// Generate smart SEO based on page content
+function generateSmartSeo(slug: string, content: {
+  title: string;
+  headings: string[];
+  text: string;
+  products: string[];
+}, pageName: string): {
+  titleCs: string;
+  descriptionCs: string;
+  keywordsCs: string;
+  pageType: PageType;
+} {
+  // Determine page type from slug
+  let pageType: PageType = 'article';
+  if (slug === '/') pageType = 'homepage';
+  else if (slug === '/o-nas' || slug.includes('pribeh')) pageType = 'about';
+  else if (slug === '/kontakt' || slug.includes('showroom')) pageType = 'contact';
+  else if (slug.includes('vlasy-k-prodlouzeni') || slug.includes('pricesky') || slug.includes('katalog')) pageType = 'category';
+  else if (slug.includes('faq')) pageType = 'faq';
+  else if (slug.includes('podminky') || slug.includes('ochrana') || slug.includes('reklamace')) pageType = 'legal';
+
+  // Build title
+  let titleCs = '';
+  if (content.headings.length > 0) {
+    titleCs = content.headings[0];
+    if (!titleCs.includes('Mùza') && !titleCs.includes('Hair')) {
+      titleCs += ' | Mùza Hair';
+    }
+  } else if (pageName) {
+    titleCs = `${pageName} | Mùza Hair Praha`;
+  } else {
+    titleCs = 'Mùza Hair Praha | Pravé vlasy k prodloužení';
+  }
+
+  // Build description from content
+  let descriptionCs = '';
+  if (content.text && content.text.length > 50) {
+    // Use actual page text, truncate to ~150 chars
+    descriptionCs = content.text.substring(0, 150).trim();
+    if (descriptionCs.length === 150) {
+      descriptionCs = descriptionCs.substring(0, descriptionCs.lastIndexOf(' ')) + '...';
+    }
+  } else if (content.headings.length > 1) {
+    descriptionCs = content.headings.slice(0, 3).join('. ') + '. Mùza Hair Praha.';
+  } else {
+    descriptionCs = `${pageName || 'Informace'} - Mùza Hair, český výrobce pravých vlasů k prodloužení. Showroom Praha.`;
+  }
+
+  // Build keywords from headings, products and slug
+  const keywordSet = new Set<string>();
+
+  // Add from slug
+  const slugParts = slug.split('/').filter(Boolean);
+  slugParts.forEach(part => {
+    const keyword = part.replace(/-/g, ' ');
+    if (keyword.length > 2) keywordSet.add(keyword);
+  });
+
+  // Add from headings
+  content.headings.slice(0, 3).forEach(h => {
+    const words = h.toLowerCase().split(' ').filter(w => w.length > 3);
+    words.forEach(w => keywordSet.add(w));
+  });
+
+  // Add product names
+  content.products.slice(0, 5).forEach(p => keywordSet.add(p.toLowerCase()));
+
+  // Add base keywords
+  keywordSet.add('Mùza Hair');
+  keywordSet.add('vlasy k prodloužení');
+  if (slug.includes('keratin')) keywordSet.add('keratinové vlasy');
+  if (slug.includes('tape')) keywordSet.add('tape-in vlasy');
+  if (slug.includes('paruky') || slug.includes('pricesky')) keywordSet.add('paruky pravé vlasy');
+
+  const keywordsCs = Array.from(keywordSet).slice(0, 10).join(', ');
+
+  return { titleCs, descriptionCs, keywordsCs, pageType };
+}
+
 // Page types for structured data
 type PageType = 'homepage' | 'about' | 'contact' | 'category' | 'product' | 'article' | 'faq' | 'legal';
 
@@ -371,7 +504,7 @@ const defaultTemplate = {
 
 /**
  * POST /api/admin/seo/generate
- * Generate SEO for a specific page based on its content
+ * Generate SEO for a specific page based on its ACTUAL content
  */
 export async function POST(request: NextRequest) {
   const authError = await requireAdmin(request);
@@ -402,20 +535,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get template for this page
-    const template = seoTemplates[targetSlug] || defaultTemplate;
     const pageName = seoEntry?.pageName || targetSlug.split('/').pop()?.replace(/-/g, ' ') || 'Stránka';
 
-    // Generate SEO content
-    const generatedTitle = template.titleTemplate.replace('{pageName}', pageName);
-    const generatedDescription = template.descriptionTemplate.replace('{pageName}', pageName);
-    const generatedKeywords = template.keywords.join(', ');
+    // FETCH ACTUAL PAGE CONTENT
+    const pageContent = await fetchPageContent(targetSlug);
+
+    // Check if we have a hardcoded template (for key pages)
+    const template = seoTemplates[targetSlug];
+
+    let generatedTitle: string;
+    let generatedDescription: string;
+    let generatedKeywords: string;
+    let pageType: PageType;
+
+    if (template) {
+      // Use curated template for key pages
+      generatedTitle = template.titleTemplate;
+      generatedDescription = template.descriptionTemplate;
+      generatedKeywords = template.keywords.join(', ');
+      pageType = template.pageType;
+    } else {
+      // Generate smart SEO from actual page content
+      const smartSeo = generateSmartSeo(targetSlug, pageContent, pageName);
+      generatedTitle = smartSeo.titleCs;
+      generatedDescription = smartSeo.descriptionCs;
+      generatedKeywords = smartSeo.keywordsCs;
+      pageType = smartSeo.pageType;
+    }
 
     // Auto-generate canonical URL
     const canonicalUrl = `${SITE_URL}${targetSlug}`;
 
     // Auto-generate structured data
-    const structuredData = generateStructuredData(template.pageType, {
+    const structuredData = generateStructuredData(pageType, {
       title: generatedTitle,
       description: generatedDescription,
       url: canonicalUrl,
@@ -458,6 +610,12 @@ export async function POST(request: NextRequest) {
         keywords: generatedKeywords,
         canonicalUrl,
         structuredData: JSON.parse(structuredData),
+      },
+      source: template ? 'template' : 'content-analysis',
+      analyzedContent: template ? null : {
+        headingsFound: pageContent.headings.length,
+        textLength: pageContent.text.length,
+        productsFound: pageContent.products.length,
       },
     }, { status: 200 });
   } catch (error) {
