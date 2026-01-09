@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import bcrypt from 'bcrypt';
+import { hashPassword } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
- * Reset 2 admin accounts
+ * Create/Reset 2 admin accounts
  * Visit: /api/create-admin?key=Muza2024
  */
 export async function GET(request: Request) {
@@ -26,47 +26,51 @@ export async function GET(request: Request) {
     const results = [];
 
     for (const admin of admins) {
-      const hashedPassword = await bcrypt.hash(admin.password, 10);
+      try {
+        const hashedPassword = await hashPassword(admin.password);
 
-      const existing = await prisma.adminUser.findUnique({
-        where: { email: admin.email }
-      });
+        const existing = await prisma.adminUser.findUnique({
+          where: { email: admin.email }
+        });
 
-      if (existing) {
-        await prisma.adminUser.update({
-          where: { email: admin.email },
-          data: {
-            password: hashedPassword,
-            status: 'active',
-            role: 'admin'
-          }
-        });
-        results.push({ email: admin.email, password: admin.password, status: 'password reset' });
-      } else {
-        await prisma.adminUser.create({
-          data: {
-            name: admin.name,
-            email: admin.email,
-            password: hashedPassword,
-            role: 'admin',
-            status: 'active',
-          },
-        });
-        results.push({ email: admin.email, password: admin.password, status: 'created' });
+        if (existing) {
+          await prisma.adminUser.update({
+            where: { email: admin.email },
+            data: {
+              password: hashedPassword,
+              status: 'active',
+              role: 'admin'
+            }
+          });
+          results.push({ email: admin.email, password: admin.password, status: 'password reset' });
+        } else {
+          await prisma.adminUser.create({
+            data: {
+              name: admin.name,
+              email: admin.email,
+              password: hashedPassword,
+              role: 'admin',
+              status: 'active',
+            },
+          });
+          results.push({ email: admin.email, password: admin.password, status: 'created' });
+        }
+      } catch (e: any) {
+        results.push({ email: admin.email, error: e.message });
       }
     }
 
     return NextResponse.json({
       success: true,
-      message: '2 admin accounts ready',
+      message: '2 admin accounts processed',
       accounts: results
     });
 
   } catch (error: any) {
-    console.error('Create admin error:', error);
     return NextResponse.json({
       error: 'Failed',
-      details: error.message
+      details: error.message,
+      stack: error.stack?.substring(0, 300)
     }, { status: 500 });
   }
 }
