@@ -11,14 +11,14 @@ export default function MetodyZakonceniPage() {
     {
       title: 'Keratin / Mikrokeratin',
       description: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3-6 měsíců.',
-      href: '/metody-zakonceni/keratin',
+      href: '/metody-zakonceni/vlasy-na-keratin',
       icon: '💎',
       highlights: ['Trvanlivé 3-6 měsíců', 'Přirozený vzhled', 'Pro aktivní životní styl']
     },
     {
       title: 'Tape-in (nano tapes)',
       description: 'Nejšetrnější a nejrychlejší metoda aplikace. Ideální pro jemné vlasy.',
-      href: '/metody-zakonceni/tape-in',
+      href: '/metody-zakonceni/pasky-nano-tapes',
       icon: '✨',
       highlights: ['Rychlá aplikace 30-60 min', 'Opakovaně použitelné', 'Bez tepla a chemie']
     },

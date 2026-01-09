@@ -61,12 +61,12 @@ const nextConfig = {
       },
       {
         source: '/metody/keratin',
-        destination: '/metody-zakonceni/keratin',
+        destination: '/metody-zakonceni/vlasy-na-keratin',
         permanent: true,
       },
       {
         source: '/metody/tape-in',
-        destination: '/metody-zakonceni/tape-in',
+        destination: '/metody-zakonceni/pasky-nano-tapes',
         permanent: true,
       },
       {
@@ -82,22 +82,33 @@ const nextConfig = {
       // Stará pojmenování pod vlasy-k-prodlouzeni → metody-zakonceni
       {
         source: '/vlasy-k-prodlouzeni/vlasy-na-keratin',
-        destination: '/metody-zakonceni/keratin',
+        destination: '/metody-zakonceni/vlasy-na-keratin',
         permanent: true,
       },
       {
         source: '/vlasy-k-prodlouzeni/pasky-nano-tapes',
-        destination: '/metody-zakonceni/tape-in',
+        destination: '/metody-zakonceni/pasky-nano-tapes',
         permanent: true,
       },
       {
         source: '/vlasy-k-prodlouzeni/keratin',
-        destination: '/metody-zakonceni/keratin',
+        destination: '/metody-zakonceni/vlasy-na-keratin',
         permanent: true,
       },
       {
         source: '/vlasy-k-prodlouzeni/nano-tapes',
-        destination: '/metody-zakonceni/tape-in',
+        destination: '/metody-zakonceni/pasky-nano-tapes',
+        permanent: true,
+      },
+      // Aliasy pro kratší URL
+      {
+        source: '/metody-zakonceni/keratin',
+        destination: '/metody-zakonceni/vlasy-na-keratin',
+        permanent: true,
+      },
+      {
+        source: '/metody-zakonceni/tape-in',
+        destination: '/metody-zakonceni/pasky-nano-tapes',
         permanent: true,
       },
       {
