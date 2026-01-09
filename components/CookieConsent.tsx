@@ -135,7 +135,7 @@ export default function CookieConsent() {
     <>
       {/* Backdrop with modern blur */}
       <div
-        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9998]"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9998]"
         style={{ animation: 'fadeIn 0.3s ease-out' }}
       />
 
@@ -144,9 +144,9 @@ export default function CookieConsent() {
         className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-6 md:right-6 lg:left-auto lg:right-6 lg:max-w-lg z-[9999]"
         style={{ animation: 'slideUpBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
       >
-        <div className="relative bg-white/98 backdrop-blur-2xl md:rounded-3xl shadow-[0_20px_60px_-15px_rgba(52,12,13,0.3)] border border-burgundy/10 overflow-hidden">
+        <div className="relative bg-white md:rounded-3xl shadow-[0_25px_80px_-10px_rgba(0,0,0,0.5)] border-2 border-burgundy overflow-hidden">
           {/* Elegant top accent with gradient */}
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-burgundy to-transparent opacity-60" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-burgundy" />
 
           {/* Subtle corner decoration */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-burgundy/5 to-transparent rounded-bl-full pointer-events-none" />
