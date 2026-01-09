@@ -602,3 +602,98 @@ model Review {
   @@index([rating])
   @@map("reviews")
 }
+
+// ============================================
+// SEO & Content Management Models
+// ============================================
+
+model PageSeo {
+  id             String   @id @default(cuid())
+  slug           String   @unique // URL cesta: "/", "/o-nas", "/vlasy-k-prodlouzeni"
+  pageName       String?  // Lidsky čitelný název stránky pro admin
+
+  // Meta tagy
+  titleCs        String?
+  titleEn        String?
+  descriptionCs  String?  @db.Text
+  descriptionEn  String?  @db.Text
+  keywordsCs     String?  // comma-separated
+  keywordsEn     String?
+
+  // OpenGraph
+  ogImageUrl     String?
+  ogType         String   @default("website")
+
+  // Strukturovaná data (JSON-LD)
+  structuredData String?  @db.Text // JSON string
+
+  // Canonical & Robots
+  canonicalUrl   String?
+  noIndex        Boolean  @default(false)
+  noFollow       Boolean  @default(false)
+
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  updatedBy      String?
+
+  @@map("page_seo")
+}
+
+model PageContent {
+  id          String   @id @default(cuid())
+  slug        String   @unique // URL cesta nebo identifikátor sekce
+  pageName    String?  // Lidsky čitelný název
+  pageType    String   // "static", "category", "homepage_section", "faq"
+  sectionKey  String?  // pro homepage sekce: "hero", "usp", "collections"
+
+  // Obsah (Markdown)
+  contentCs   String?  @db.Text
+  contentEn   String?  @db.Text
+
+  // Metadata
+  isPublished Boolean  @default(true)
+  sortOrder   Int      @default(0)
+
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  @@index([pageType])
+  @@index([isPublished])
+  @@map("page_content")
+}
+
+model Redirect {
+  id         String   @id @default(cuid())
+  fromPath   String   @unique
+  toPath     String
+  statusCode Int      @default(301) // 301 nebo 302
+  isActive   Boolean  @default(true)
+  note       String?  // Poznámka proč redirect existuje
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("redirects")
+}
+
+model FaqItem {
+  id          String   @id @default(cuid())
+  category    String   // "O produktech", "Doprava", "Platba" atd.
+  questionCs  String
+  questionEn  String?
+  answerCs    String   @db.Text // Markdown
+  answerEn    String?  @db.Text
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([isPublished])
+  @@map("faq_items")
+}
