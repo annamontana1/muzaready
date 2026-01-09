@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  serverExternalPackages: ['bcrypt'],
   generateBuildId: async () => {
     return `build-${Date.now()}`;
   },
