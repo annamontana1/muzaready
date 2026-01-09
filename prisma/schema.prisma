@@ -383,8 +383,9 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  sessions Session[]
-  reviews  Review[]
+  sessions            Session[]
+  reviews             Review[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -398,6 +399,20 @@ model Session {
   createdAt DateTime @default(now())
 
   @@map("sessions")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+  @@map("password_reset_tokens")
 }
 
 model ScanSession {
