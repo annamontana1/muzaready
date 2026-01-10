@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         title,
         description,
         type: 'website',
-        url: `https://muza-hair-shop.vercel.app/produkt/${params.slug}`,
+        url: `https://muzahair.cz/produkt/${params.slug}`,
         images: [
           {
             url: product.images.main || '/og-image.jpg',
@@ -129,18 +129,18 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
   // Breadcrumb data
   const breadcrumbItems = [
-    { name: 'Domů', url: 'https://muza-hair-shop.vercel.app' },
+    { name: 'Domů', url: 'https://muzahair.cz' },
     {
       name: 'Vlasy k prodloužení',
-      url: 'https://muza-hair-shop.vercel.app/vlasy-k-prodlouzeni',
+      url: 'https://muzahair.cz/vlasy-k-prodlouzeni',
     },
     {
       name: product.category === 'nebarvene_panenske' ? 'Nebarvené panenské' : 'Barvené blond',
-      url: `https://muza-hair-shop.vercel.app/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-vlasy'}`,
+      url: `https://muzahair.cz/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-vlasy'}`,
     },
     {
       name: product.name,
-      url: `https://muza-hair-shop.vercel.app/produkt/${product.slug}`,
+      url: `https://muzahair.cz/produkt/${product.slug}`,
     },
   ];
 
@@ -150,11 +150,11 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       <ProductSchema
         name={product.name}
         description={product.description}
-        image={product.images.main || 'https://muza-hair-shop.vercel.app/placeholder.jpg'}
+        image={product.images.main || 'https://muzahair.cz/placeholder.jpg'}
         sku={product.sku}
         price={product.base_price_per_100g_45cm}
         availability={product.in_stock}
-        url={`https://muza-hair-shop.vercel.app/produkt/${product.slug}`}
+        url={`https://muzahair.cz/produkt/${product.slug}`}
         rating={
           product.review_count && product.review_count > 0
             ? {

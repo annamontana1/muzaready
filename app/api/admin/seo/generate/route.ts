@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
+import {
+  generateCompleteSEO,
+  needsSeoRefresh,
+  getCurrentSeason,
+  getCurrentEvent,
+  getKeywordsForPageType,
+  type PageType
+} from '@/lib/seo-engine';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -696,6 +704,149 @@ export async function PUT(request: NextRequest) {
     console.error('Error generating all SEO:', error);
     return NextResponse.json(
       { error: 'Chyba při generování SEO' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * PATCH /api/admin/seo/generate
+ * Generate ADVANCED SEO using the SEO Engine with seasonal/GEO/AIEO support
+ */
+export async function PATCH(request: NextRequest) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
+  try {
+    const body = await request.json();
+    const { slug, includeSeasonalContent = true, includeGeo = true, includeAIEO = true } = body;
+
+    if (!slug) {
+      return NextResponse.json(
+        { error: 'Musíte zadat slug' },
+        { status: 400 }
+      );
+    }
+
+    // Generate advanced SEO using the SEO engine
+    const seo = generateCompleteSEO(slug, {
+      includeSeasonalContent,
+      includeGeo,
+      includeAIEO,
+    });
+
+    // Check if SEO needs refresh
+    const existingSeo = await prisma.pageSeo.findUnique({ where: { slug } });
+    const refreshStatus = existingSeo
+      ? needsSeoRefresh(existingSeo.updatedAt)
+      : { shouldRefresh: true, reason: 'Nová stránka' };
+
+    // Build structured data JSON
+    const structuredDataJson = JSON.stringify(seo.structuredData, null, 2);
+
+    // Upsert SEO entry
+    const pageName = slug.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || 'Stránka';
+
+    const seoEntry = await prisma.pageSeo.upsert({
+      where: { slug },
+      create: {
+        slug,
+        pageName: pageName.charAt(0).toUpperCase() + pageName.slice(1),
+        titleCs: seo.title,
+        descriptionCs: seo.description,
+        keywordsCs: seo.keywords.join(', '),
+        canonicalUrl: seo.canonicalUrl,
+        ogImageUrl: seo.ogImage,
+        ogType: 'website',
+        structuredData: structuredDataJson,
+      },
+      update: {
+        titleCs: seo.title,
+        descriptionCs: seo.description,
+        keywordsCs: seo.keywords.join(', '),
+        canonicalUrl: seo.canonicalUrl,
+        ogImageUrl: seo.ogImage,
+        structuredData: structuredDataJson,
+        updatedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      seo: seoEntry,
+      advanced: {
+        title: seo.title,
+        description: seo.description,
+        keywords: seo.keywords,
+        canonicalUrl: seo.canonicalUrl,
+        structuredData: seo.structuredData,
+        aieoContent: seo.aieoContent,
+        seasonal: seo.seasonal,
+        geo: seo.geo,
+      },
+      refreshStatus,
+      source: 'seo-engine-advanced',
+    }, { status: 200 });
+  } catch (error) {
+    console.error('Error generating advanced SEO:', error);
+    return NextResponse.json(
+      { error: 'Chyba při generování advanced SEO' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * GET /api/admin/seo/generate?check=refresh
+ * Check which pages need SEO refresh
+ */
+export async function GET(request: NextRequest) {
+  const authError = await requireAdmin(request);
+  if (authError) return authError;
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const check = searchParams.get('check');
+
+    if (check === 'refresh') {
+      // Get all SEO entries and check which need refresh
+      const allSeo = await prisma.pageSeo.findMany({
+        select: { slug: true, pageName: true, updatedAt: true },
+        orderBy: { updatedAt: 'asc' },
+      });
+
+      const needsRefresh = allSeo.map(entry => ({
+        slug: entry.slug,
+        pageName: entry.pageName,
+        lastUpdated: entry.updatedAt,
+        ...needsSeoRefresh(entry.updatedAt),
+      })).filter(entry => entry.shouldRefresh);
+
+      // Get current season and event info
+      const currentSeason = getCurrentSeason();
+      const currentEvent = getCurrentEvent();
+
+      return NextResponse.json({
+        success: true,
+        currentSeason,
+        currentEvent,
+        totalPages: allSeo.length,
+        needsRefresh: needsRefresh.length,
+        pages: needsRefresh,
+      }, { status: 200 });
+    }
+
+    // Default: return current season/event info
+    return NextResponse.json({
+      success: true,
+      currentSeason: getCurrentSeason(),
+      currentEvent: getCurrentEvent(),
+      message: 'Use ?check=refresh to see pages needing SEO refresh',
+    }, { status: 200 });
+  } catch (error) {
+    console.error('Error checking SEO refresh:', error);
+    return NextResponse.json(
+      { error: 'Chyba při kontrole SEO' },
       { status: 500 }
     );
   }
