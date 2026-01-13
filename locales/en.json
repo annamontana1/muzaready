@@ -329,19 +329,42 @@
     "assemblyFee": "Extension Method Fee"
   },
   "cart": {
-    "title": "Shopping Cart",
+    "title": "Cart",
     "empty": "Your cart is empty",
-    "emptyDescription": "You haven't added any products yet",
+    "emptyDescription": "You haven't added any products to your cart yet. Start shopping and discover our range of premium hair!",
+    "startShopping": "Start Shopping",
     "continueShopping": "Continue Shopping",
     "itemsInCart": "You have {{count}} items in cart",
     "itemInCart": "You have {{count}} item in cart",
+    "shoppingCart": "Shopping Cart",
+    "clearCart": "Clear Cart",
+    "clearCartConfirm": "Are you sure you want to clear your cart?",
     "remove": "Remove",
+    "removeConfirm": "Are you sure you want to remove this item from cart?",
+    "removeFromCart": "Remove from Cart",
     "update": "Update",
+    "category": "Category",
+    "categoryUndyed": "Virgin Undyed",
+    "categoryDyed": "Colored Hair",
+    "ending": "Extension Method",
+    "gramsLabel": "Weight",
+    "gramsAt": "{{grams}}g @ {{price}}/g",
+    "quantityLabel": "Quantity",
+    "quantityAt": "{{quantity}} pcs @ {{price}}/pc",
+    "serviceCharge": "Service Fee",
     "subtotal": "Subtotal",
     "shipping": "Shipping",
     "shippingCalculated": "Calculated at checkout",
     "total": "Total",
     "checkout": "Proceed to Checkout",
+    "orderSummary": "Order Summary",
+    "freeShippingRemaining": "Free shipping remaining:",
+    "deliveryTime": "Delivery within 2-3 days",
+    "securePayment": "Secure Payment",
+    "premiumHair": "100% premium hair",
+    "items": "{{count}} items",
+    "item": "{{count}} item",
+    "itemsPlural": "{{count}} items",
     "coupon": {
       "title": "Discount Coupon",
       "placeholder": "Enter code",
@@ -349,10 +372,18 @@
       "applied": "Coupon applied",
       "invalid": "Invalid coupon",
       "remove": "Remove coupon"
+    },
+    "endings": {
+      "keratin": "Keratin",
+      "microkeratin": "Micro-keratin",
+      "nano_tapes": "Nano Tapes",
+      "vlasove_tresy": "Hair Wefts"
     }
   },
   "checkout": {
     "title": "Checkout",
+    "empty": "Nothing in cart.",
+    "emptyButton": "Continue Shopping",
     "steps": {
       "shipping": "Shipping",
       "payment": "Payment",
@@ -364,6 +395,7 @@
       "lastName": "Last Name",
       "email": "Email",
       "phone": "Phone",
+      "phoneOptional": "Phone Number",
       "address": "Street Address",
       "city": "City",
       "zip": "ZIP Code",
@@ -372,16 +404,30 @@
     },
     "shippingMethod": {
       "title": "Shipping Method",
-      "standard": "Standard Shipping",
+      "standard": "Standard Delivery to Address",
+      "standardDesc": "Delivery within 3-5 business days",
+      "standardFree": "Free shipping on orders over {{threshold}} CZK",
       "express": "Express Shipping",
       "pickup": "Zásilkovna - Pickup Point",
-      "showroom": "Personal Pickup - Prague Showroom"
+      "pickupDesc": "Pick up at over 7,500 locations in CZ and SK",
+      "showroom": "Personal Pickup at Showroom",
+      "showroomDesc": "Revoluční 8, Prague 1 - available immediately",
+      "showroomAddress": "Showroom Address:",
+      "showroomInfo": "Opening hours will be confirmed by email after ordering.",
+      "selectPickupPoint": "Select Zásilkovna Pickup Point",
+      "selectedPickupPoint": "Selected Pickup Point:",
+      "changePickupPoint": "Change Pickup Point",
+      "pickupPointRequired": "Please select a Zásilkovna pickup point",
+      "packetaLoading": "Zásilkovna widget is loading, please try again in a moment."
     },
     "payment": {
       "title": "Payment Method",
       "gopay": "Online Payment (card, bank transfer)",
       "transfer": "Bank Transfer",
-      "cash": "Cash on Delivery"
+      "cash": "Cash on Delivery",
+      "processing": "Processing...",
+      "continueToPayment": "Continue to Payment",
+      "orderCreated": "Order created. Redirecting to payment..."
     },
     "review": {
       "title": "Order Review",
@@ -397,6 +443,25 @@
       "processing": "Processing order...",
       "terms": "I agree to the terms and conditions",
       "termsRequired": "You must agree to the terms and conditions"
+    },
+    "deliveryAddress": "Delivery Address",
+    "required": "Required fields are marked *",
+    "requiredFields": "Please fill in all required fields",
+    "addressRequired": "Please fill in delivery address",
+    "countries": {
+      "CZ": "Czech Republic",
+      "SK": "Slovakia",
+      "PL": "Poland",
+      "DE": "Germany",
+      "AT": "Austria"
+    },
+    "errors": {
+      "generic": "Error processing order",
+      "orderCreation": "Error creating order",
+      "paymentCreation": "Error creating payment session. Order was created, please try again.",
+      "paymentUrl": "Error: Could not get payment link",
+      "couponValidation": "Error validating coupon",
+      "couponCode": "Enter coupon code"
     }
   },
   "account": {

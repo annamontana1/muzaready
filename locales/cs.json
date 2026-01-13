@@ -331,17 +331,40 @@
   "cart": {
     "title": "Košík",
     "empty": "Váš košík je prázdný",
-    "emptyDescription": "Zatím jste nepřidali žádné produkty",
+    "emptyDescription": "Zatím jste do košíku nepřidali žádné produkty. Začněte nakupovat a objevte naši nabídku prémiových vlasů!",
+    "startShopping": "Začít nakupovat",
     "continueShopping": "Pokračovat v nákupu",
     "itemsInCart": "Máte {{count}} položek v košíku",
     "itemInCart": "Máte {{count}} položku v košíku",
+    "shoppingCart": "Nákupní košík",
+    "clearCart": "Vyprázdnit košík",
+    "clearCartConfirm": "Opravdu chcete vyprázdnit košík?",
     "remove": "Odebrat",
+    "removeConfirm": "Opravdu chcete odstranit tuto položku z košíku?",
+    "removeFromCart": "Odstranit z košíku",
     "update": "Aktualizovat",
+    "category": "Kategorie",
+    "categoryUndyed": "Nebarvené panenské",
+    "categoryDyed": "Barvené vlasy",
+    "ending": "Zakončení",
+    "gramsLabel": "Gramáž",
+    "gramsAt": "{{grams}}g @ {{price}}/g",
+    "quantityLabel": "Množství",
+    "quantityAt": "{{quantity}} ks @ {{price}}/ks",
+    "serviceCharge": "Servisní poplatek",
     "subtotal": "Mezisoučet",
     "shipping": "Doprava",
     "shippingCalculated": "Vypočítáno při pokladně",
     "total": "Celkem",
-    "checkout": "Přejít k pokladně",
+    "checkout": "Pokračovat k pokladně",
+    "orderSummary": "Shrnutí objednávky",
+    "freeShippingRemaining": "Do dopravy zdarma zbývá:",
+    "deliveryTime": "Doprava do 2-3 dnů",
+    "securePayment": "Bezpečná platba",
+    "premiumHair": "100% prémiové vlasy",
+    "items": "{{count}} položek",
+    "item": "{{count}} položka",
+    "itemsPlural": "{{count}} položky",
     "coupon": {
       "title": "Slevový kupón",
       "placeholder": "Zadejte kód",
@@ -349,10 +372,18 @@
       "applied": "Kupón použit",
       "invalid": "Neplatný kupón",
       "remove": "Odebrat kupón"
+    },
+    "endings": {
+      "keratin": "Keratin",
+      "microkeratin": "Mikrokeratin",
+      "nano_tapes": "Nano tapes",
+      "vlasove_tresy": "Vlasové tresy"
     }
   },
   "checkout": {
     "title": "Pokladna",
+    "empty": "V košíku nic není.",
+    "emptyButton": "Pokračovat v nákupu",
     "steps": {
       "shipping": "Doručení",
       "payment": "Platba",
@@ -364,6 +395,7 @@
       "lastName": "Příjmení",
       "email": "Email",
       "phone": "Telefon",
+      "phoneOptional": "Telefonní číslo",
       "address": "Ulice a číslo popisné",
       "city": "Město",
       "zip": "PSČ",
@@ -372,16 +404,30 @@
     },
     "shippingMethod": {
       "title": "Způsob dopravy",
-      "standard": "Standardní doprava",
+      "standard": "Standardní doprava na adresu",
+      "standardDesc": "Doručení do 3-5 pracovních dnů",
+      "standardFree": "Doprava zdarma při nákupu nad {{threshold}} Kč",
       "express": "Expresní doprava",
-      "pickup": "Zásilkovna - Výdejní místo",
-      "showroom": "Osobní odběr - Showroom Praha"
+      "pickup": "Zásilkovna - výdejní místo",
+      "pickupDesc": "Vyzvednutí na více než 7 500 místech v ČR a SK",
+      "showroom": "Osobní odběr v showroomu",
+      "showroomDesc": "Revoluční 8, Praha 1 - ihned k dispozici",
+      "showroomAddress": "Adresa showroomu:",
+      "showroomInfo": "Otevírací doba bude potvrzena emailem po objednání.",
+      "selectPickupPoint": "Vybrat výdejní místo Zásilkovny",
+      "selectedPickupPoint": "Vybrané výdejní místo:",
+      "changePickupPoint": "Změnit výdejní místo",
+      "pickupPointRequired": "Prosím vyberte výdejní místo Zásilkovny",
+      "packetaLoading": "Widget Zásilkovny se načítá, zkuste to prosím znovu za chvíli."
     },
     "payment": {
       "title": "Způsob platby",
       "gopay": "Online platba (karta, bankovní převod)",
       "transfer": "Bankovní převod",
-      "cash": "Dobírka"
+      "cash": "Dobírka",
+      "processing": "Zpracovávám...",
+      "continueToPayment": "Pokračovat k platbě",
+      "orderCreated": "Objednávka vytvořena. Přesměrování na platbu..."
     },
     "review": {
       "title": "Kontrola objednávky",
@@ -397,6 +443,25 @@
       "processing": "Zpracovávám objednávku...",
       "terms": "Souhlasím s obchodními podmínkami",
       "termsRequired": "Musíte souhlasit s obchodními podmínkami"
+    },
+    "deliveryAddress": "Dodací adresa",
+    "required": "Povinná pole jsou označena *",
+    "requiredFields": "Prosím vyplňte všechna povinná pole",
+    "addressRequired": "Prosím vyplňte dodací adresu",
+    "countries": {
+      "CZ": "Česká republika",
+      "SK": "Slovensko",
+      "PL": "Polsko",
+      "DE": "Německo",
+      "AT": "Rakousko"
+    },
+    "errors": {
+      "generic": "Chyba při zpracování objednávky",
+      "orderCreation": "Chyba při vytváření objednávky",
+      "paymentCreation": "Chyba při vytváření platební relace. Objednávka byla vytvořena, prosím zkuste to znovu.",
+      "paymentUrl": "Chyba: Nebylo možné získat odkaz na platbu",
+      "couponValidation": "Chyba při ověřování kupónu",
+      "couponCode": "Zadejte kód kupónu"
     }
   },
   "account": {

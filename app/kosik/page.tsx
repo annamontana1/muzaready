@@ -3,20 +3,17 @@
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import { useState } from 'react';
-
-const ENDING_LABELS: Record<string, string> = {
-  keratin: 'Keratin',
-  microkeratin: 'Mikrokeratin',
-  nano_tapes: 'Nano tapes',
-  vlasove_tresy: 'Vlasové tresy',
-};
+import { useTranslation, useLanguage } from '@/contexts/LanguageContext';
 
 export default function CartPage() {
   const { items, updateQuantity, updateGrams, removeFromCart, getTotalPrice, clearCart } = useCart();
   const [isClearing, setIsClearing] = useState(false);
+  const { t } = useTranslation();
+  const { language } = useLanguage();
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('cs-CZ', {
+    const locale = language === 'cs' ? 'cs-CZ' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'CZK',
       minimumFractionDigits: 0,
@@ -25,7 +22,7 @@ export default function CartPage() {
   };
 
   const handleClearCart = () => {
-    if (confirm('Opravdu chcete vyprázdnit košík?')) {
+    if (confirm(t('cart.clearCartConfirm'))) {
       setIsClearing(true);
       clearCart();
       setTimeout(() => setIsClearing(false), 500);
@@ -47,11 +44,11 @@ export default function CartPage() {
             <ol className="flex items-center gap-2">
               <li>
                 <Link href="/" className="text-burgundy hover:text-maroon transition">
-                  Domů
+                  {t('nav.home')}
                 </Link>
               </li>
               <li className="text-gray-400">/</li>
-              <li className="text-gray-600">Košík</li>
+              <li className="text-gray-600">{t('cart.title')}</li>
             </ol>
           </nav>
 
@@ -72,16 +69,16 @@ export default function CartPage() {
                 />
               </svg>
               <h1 className="text-2xl font-semibold text-burgundy mb-3">
-                Váš košík je prázdný
+                {t('cart.empty')}
               </h1>
               <p className="text-gray-600 mb-8">
-                Zatím jste do košíku nepřidali žádné produkty. Začněte nakupovat a objevte naši nabídku prémiových vlasů!
+                {t('cart.emptyDescription')}
               </p>
               <Link
                 href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                 className="inline-block bg-burgundy text-white px-8 py-3 rounded-lg font-medium hover:bg-maroon transition shadow-medium"
               >
-                Začít nakupovat
+                {t('cart.startShopping')}
               </Link>
             </div>
           </div>
@@ -98,20 +95,20 @@ export default function CartPage() {
           <ol className="flex items-center gap-2">
             <li>
               <Link href="/" className="text-burgundy hover:text-maroon transition">
-                Domů
+                {t('nav.home')}
               </Link>
             </li>
             <li className="text-gray-400">/</li>
-            <li className="text-gray-600">Košík</li>
+            <li className="text-gray-600">{t('cart.title')}</li>
           </ol>
         </nav>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-burgundy">
-            Nákupní košík
+            {t('cart.shoppingCart')}
             <span className="text-lg font-normal text-gray-600 ml-3">
-              ({items.length} {items.length === 1 ? 'položka' : items.length < 5 ? 'položky' : 'položek'})
+              ({items.length} {items.length === 1 ? t('cart.item', { count: items.length }) : items.length < 5 ? t('cart.itemsPlural', { count: items.length }) : t('cart.items', { count: items.length })})
             </span>
           </h1>
           {items.length > 0 && (
@@ -120,7 +117,7 @@ export default function CartPage() {
               disabled={isClearing}
               className="text-sm text-gray-500 hover:text-burgundy transition disabled:opacity-50"
             >
-              Vyprázdnit košík
+              {t('cart.clearCart')}
             </button>
           )}
         </div>
@@ -143,31 +140,30 @@ export default function CartPage() {
                     {/* Product Details */}
                     <div className="space-y-1 text-sm text-gray-600 mb-4">
                       <div>
-                        <span className="font-medium">Kategorie:</span>{' '}
+                        <span className="font-medium">{t('cart.category')}:</span>{' '}
                         {item.shade && (item.shade === 'barvene_blond' || item.shade.includes('BLONDE') || item.shade.includes('barvene'))
-                          ? 'Barvené vlasy'
-                          : 'Nebarvené panenské'}
+                          ? t('cart.categoryDyed')
+                          : t('cart.categoryUndyed')}
                       </div>
                       <div>
-                        <span className="font-medium">Zakončení:</span> {ENDING_LABELS[item.ending] || item.ending}
+                        <span className="font-medium">{t('cart.ending')}:</span> {t(`cart.endings.${item.ending}`) || item.ending}
                       </div>
 
                       {/* Show grams for BULK items or quantity for PIECE items */}
                       {item.saleMode === 'BULK_G' ? (
                         <div>
-                          <span className="font-medium">Gramáž:</span> {item.grams}g @ {formatPrice(item.pricePerGram)}/g
+                          <span className="font-medium">{t('cart.gramsLabel')}:</span> {t('cart.gramsAt', { grams: item.grams, price: formatPrice(item.pricePerGram) })}
                         </div>
                       ) : (
                         <div>
-                          <span className="font-medium">Množství:</span> {item.quantity} ks @{' '}
-                          {formatPrice(item.lineTotal / item.quantity)}/ks
+                          <span className="font-medium">{t('cart.quantityLabel')}:</span> {t('cart.quantityAt', { quantity: item.quantity, price: formatPrice(item.lineTotal / item.quantity) })}
                         </div>
                       )}
 
                       {/* Assembly Fee Info */}
                       {item.assemblyFeeTotal > 0 && (
                         <div>
-                          <span className="font-medium">Servisní poplatek:</span>{' '}
+                          <span className="font-medium">{t('cart.serviceCharge')}:</span>{' '}
                           {item.assemblyFeeType === 'PER_GRAM'
                             ? `${formatPrice(item.assemblyFeeCzk)}/g = ${formatPrice(item.assemblyFeeTotal)}`
                             : formatPrice(item.assemblyFeeTotal)}
@@ -180,7 +176,7 @@ export default function CartPage() {
                       {/* Quantity/Grams Selector */}
                       {item.saleMode === 'BULK_G' ? (
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600">Gramáž:</span>
+                          <span className="text-sm text-gray-600">{t('cart.gramsLabel')}:</span>
                           <div className="flex items-center border border-gray-300 rounded-lg">
                             <button
                               onClick={() =>
@@ -204,7 +200,7 @@ export default function CartPage() {
                         </div>
                       ) : (
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600">Ks:</span>
+                          <span className="text-sm text-gray-600">{t('cart.quantityLabel')}:</span>
                           <div className="flex items-center border border-gray-300 rounded-lg">
                             <button
                               onClick={() =>
@@ -247,7 +243,7 @@ export default function CartPage() {
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <button
                     onClick={() => {
-                      if (confirm('Opravdu chcete odstranit tuto položku z košíku?')) {
+                      if (confirm(t('cart.removeConfirm'))) {
                         removeFromCart(item.skuId);
                       }
                     }}
@@ -261,7 +257,7 @@ export default function CartPage() {
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                       />
                     </svg>
-                    Odstranit z košíku
+                    {t('cart.removeFromCart')}
                   </button>
                 </div>
               </div>
@@ -271,18 +267,18 @@ export default function CartPage() {
           {/* Cart Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-soft p-6 sticky top-24">
-              <h2 className="text-xl font-semibold text-burgundy mb-6">Shrnutí objednávky</h2>
+              <h2 className="text-xl font-semibold text-burgundy mb-6">{t('cart.orderSummary')}</h2>
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600">
-                  <span>Mezisoučet:</span>
+                  <span>{t('cart.subtotal')}:</span>
                   <span className="font-medium">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>Doprava:</span>
+                  <span>{t('cart.shipping')}:</span>
                   <span className="font-medium">
                     {shipping === 0 ? (
-                      <span className="text-green-600">ZDARMA</span>
+                      <span className="text-green-600">{t('common.free').toUpperCase()}</span>
                     ) : (
                       formatPrice(shipping)
                     )}
@@ -293,7 +289,7 @@ export default function CartPage() {
                 {subtotal < shippingThreshold && (
                   <div className="pt-2">
                     <div className="text-sm text-gray-600 mb-2">
-                      Do dopravy zdarma zbývá:{' '}
+                      {t('cart.freeShippingRemaining')}{' '}
                       <span className="font-semibold text-burgundy">
                         {formatPrice(shippingThreshold - subtotal)}
                       </span>
@@ -309,7 +305,7 @@ export default function CartPage() {
 
                 <div className="pt-3 border-t border-gray-200">
                   <div className="flex justify-between text-lg font-bold text-burgundy">
-                    <span>Celkem:</span>
+                    <span>{t('cart.total')}:</span>
                     <span>{formatPrice(total)}</span>
                   </div>
                 </div>
@@ -321,13 +317,13 @@ export default function CartPage() {
                   href="/pokladna"
                   className="block w-full bg-burgundy text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-maroon transition shadow-medium"
                 >
-                  Pokračovat k pokladně
+                  {t('cart.checkout')}
                 </Link>
                 <Link
                   href="/vlasy-k-prodlouzeni/nebarvene-panenske"
                   className="block w-full border-2 border-burgundy text-burgundy text-center px-6 py-3 rounded-lg font-semibold hover:bg-burgundy hover:text-white transition"
                 >
-                  Pokračovat v nákupu
+                  {t('cart.continueShopping')}
                 </Link>
               </div>
 
@@ -341,7 +337,7 @@ export default function CartPage() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span>Bezpečná platba</span>
+                  <span>{t('cart.securePayment')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -351,7 +347,7 @@ export default function CartPage() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span>Doprava do 2-3 dnů</span>
+                  <span>{t('cart.deliveryTime')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -361,7 +357,7 @@ export default function CartPage() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span>100% prémiové vlasy</span>
+                  <span>{t('cart.premiumHair')}</span>
                 </div>
               </div>
             </div>
