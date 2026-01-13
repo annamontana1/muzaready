@@ -4,6 +4,7 @@ import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Script from 'next/script';
+import { useTranslation, useLanguage } from '@/contexts/LanguageContext';
 
 // Packeta widget types
 declare global {
@@ -37,6 +38,8 @@ interface PacketaOptions {
 
 export default function PokladnaPage() {
   const { items, getTotalPrice, clearCart } = useCart();
+  const { t } = useTranslation();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -309,14 +312,14 @@ export default function PokladnaPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto py-8 px-4">
-        <h1 className="text-2xl font-semibold mb-6">Pokladna</h1>
+        <h1 className="text-2xl font-semibold mb-6">{t('checkout.title')}</h1>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
-          <p className="text-yellow-800 mb-4">V košíku nic není.</p>
+          <p className="text-yellow-800 mb-4">{t('checkout.empty')}</p>
           <Link
             href="/vlasy-k-prodlouzeni/nebarvene-panenske"
             className="inline-block bg-burgundy text-white px-6 py-2 rounded-lg hover:bg-maroon transition"
           >
-            Pokračovat v nákupu
+            {t('checkout.emptyButton')}
           </Link>
         </div>
       </div>
@@ -333,7 +336,7 @@ export default function PokladnaPage() {
       />
 
       <div className="max-w-6xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Pokladna</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('checkout.title')}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
@@ -354,7 +357,7 @@ export default function PokladnaPage() {
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email *
+                {t('checkout.shipping.email')} *
               </label>
               <input
                 type="email"
@@ -364,7 +367,7 @@ export default function PokladnaPage() {
                 required
                 disabled={loading}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                placeholder="vase@email.cz"
+                placeholder={language === 'cs' ? 'vase@email.cz' : 'your@email.com'}
               />
             </div>
 
@@ -372,7 +375,7 @@ export default function PokladnaPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Jméno *
+                  {t('checkout.shipping.firstName')} *
                 </label>
                 <input
                   type="text"
@@ -382,12 +385,12 @@ export default function PokladnaPage() {
                   required
                   disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                  placeholder="Jméno"
+                  placeholder={t('checkout.shipping.firstName')}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Příjmení *
+                  {t('checkout.shipping.lastName')} *
                 </label>
                 <input
                   type="text"
@@ -397,7 +400,7 @@ export default function PokladnaPage() {
                   required
                   disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                  placeholder="Příjmení"
+                  placeholder={t('checkout.shipping.lastName')}
                 />
               </div>
             </div>
@@ -405,7 +408,7 @@ export default function PokladnaPage() {
             {/* Phone */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Telefonní číslo
+                {t('checkout.shipping.phoneOptional')}
               </label>
               <input
                 type="tel"
