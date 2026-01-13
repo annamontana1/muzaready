@@ -82,7 +82,7 @@ export default function PokladnaPage() {
   // Open Packeta widget to select pickup point
   const openPacketaWidget = () => {
     if (!window.Packeta) {
-      alert('Widget Zásilkovny se načítá, zkuste to prosím znovu za chvíli.');
+      alert(t('checkout.shippingMethod.packetaLoading'));
       return;
     }
 
@@ -167,21 +167,21 @@ export default function PokladnaPage() {
     try {
       // Validation
       if (!formData.email || !formData.firstName) {
-        setError('Prosím vyplňte všechna povinná pole');
+        setError(t('checkout.requiredFields'));
         setLoading(false);
         return;
       }
 
       // Validate Zásilkovna selection
       if (formData.deliveryMethod === 'zasilkovna' && !selectedPickupPoint) {
-        setError('Prosím vyberte výdejní místo Zásilkovny');
+        setError(t('checkout.shippingMethod.pickupPointRequired'));
         setLoading(false);
         return;
       }
 
       // Validate address for standard delivery
       if (formData.deliveryMethod === 'standard' && (!formData.streetAddress || !formData.city)) {
-        setError('Prosím vyplňte dodací adresu');
+        setError(t('checkout.addressRequired'));
         setLoading(false);
         return;
       }
@@ -243,7 +243,7 @@ export default function PokladnaPage() {
 
       if (!orderResponse.ok) {
         const errorData = await orderResponse.json();
-        setError(errorData.error || 'Chyba při vytváření objednávky');
+        setError(errorData.error || t('checkout.errors.orderCreation'));
         setLoading(false);
         return;
       }
@@ -252,7 +252,7 @@ export default function PokladnaPage() {
       const { orderId, total: orderTotal } = orderResult;
 
       console.log(`✅ Order created: ${orderId}, total: ${orderTotal} CZK`);
-      setSuccess('Objednávka vytvořena. Přesměrování na platbu...');
+      setSuccess(t('checkout.payment.orderCreated'));
 
       // Step 2: Create payment session with GoPay
       console.log('💳 Creating GoPay payment session...');
@@ -275,8 +275,7 @@ export default function PokladnaPage() {
         const paymentError = await paymentResponse.json();
         console.error('❌ Payment creation failed:', paymentError);
         setError(
-          paymentError.error ||
-            'Chyba při vytváření platební relace. Objednávka byla vytvořena, prosím zkuste to znovu.'
+          paymentError.error || t('checkout.errors.paymentCreation')
         );
         setLoading(false);
         return;
@@ -286,7 +285,7 @@ export default function PokladnaPage() {
       const { paymentUrl } = paymentData;
 
       if (!paymentUrl) {
-        setError('Chyba: Nebylo možné získat odkaz na platbu');
+        setError(t('checkout.errors.paymentUrl'));
         setLoading(false);
         return;
       }
@@ -301,8 +300,8 @@ export default function PokladnaPage() {
       // A webhook will be called to confirm payment and deduct stock
       window.location.href = paymentUrl;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Neznámá chyba';
-      setError(`Chyba při zpracování objednávky: ${errorMessage}`);
+      const errorMessage = err instanceof Error ? err.message : t('errors.generic');
+      setError(`${t('checkout.errors.generic')}: ${errorMessage}`);
       console.error('❌ Checkout error:', err);
       setLoading(false);
     }
@@ -424,7 +423,7 @@ export default function PokladnaPage() {
             {/* Delivery Method Selection */}
             <div className="border-t border-gray-200 pt-6">
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                Způsob dopravy *
+                {t('checkout.shippingMethod.title')} *
               </label>
               <div className="space-y-3">
                 <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
@@ -440,18 +439,18 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">Standardní doprava na adresu</p>
+                        <p className="font-medium text-gray-900">{t('checkout.shippingMethod.standard')}</p>
                         <p className="text-sm text-gray-600 mt-1">
-                          Doručení do 3-5 pracovních dnů
+                          {t('checkout.shippingMethod.standardDesc')}
                         </p>
                       </div>
                       <p className="font-medium text-gray-900">
-                        {total >= shippingThreshold ? 'Zdarma' : '150 Kč'}
+                        {total >= shippingThreshold ? t('common.free') : '150 Kč'}
                       </p>
                     </div>
                     {total < shippingThreshold && (
                       <p className="text-xs text-gray-500 mt-2">
-                        Doprava zdarma při nákupu nad {shippingThreshold.toLocaleString('cs-CZ')} Kč
+                        {t('checkout.shippingMethod.standardFree', { threshold: shippingThreshold.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US') })}
                       </p>
                     )}
                   </div>
@@ -470,9 +469,9 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">Zásilkovna - výdejní místo</p>
+                        <p className="font-medium text-gray-900">{t('checkout.shippingMethod.pickup')}</p>
                         <p className="text-sm text-gray-600 mt-1">
-                          Vyzvednutí na více než 7 500 místech v ČR a SK
+                          {t('checkout.shippingMethod.pickupDesc')}
                         </p>
                       </div>
                       <p className="font-medium text-gray-900">65 Kč</p>
@@ -482,7 +481,7 @@ export default function PokladnaPage() {
                         {selectedPickupPoint ? (
                           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                             <p className="text-sm font-medium text-green-900 mb-1">
-                              ✓ Vybrané výdejní místo:
+                              ✓ {t('checkout.shippingMethod.selectedPickupPoint')}
                             </p>
                             <p className="text-sm text-green-800 font-medium">
                               {selectedPickupPoint.name}
@@ -496,7 +495,7 @@ export default function PokladnaPage() {
                               onClick={openPacketaWidget}
                               className="mt-2 text-sm text-burgundy hover:text-maroon font-medium"
                             >
-                              Změnit výdejní místo
+                              {t('checkout.shippingMethod.changePickupPoint')}
                             </button>
                           </div>
                         ) : (
@@ -505,7 +504,7 @@ export default function PokladnaPage() {
                             onClick={openPacketaWidget}
                             className="w-full px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium"
                           >
-                            Vybrat výdejní místo Zásilkovny
+                            {t('checkout.shippingMethod.selectPickupPoint')}
                           </button>
                         )}
                       </div>
@@ -526,23 +525,23 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">Osobní odběr v showroomu</p>
+                        <p className="font-medium text-gray-900">{t('checkout.shippingMethod.showroom')}</p>
                         <p className="text-sm text-gray-600 mt-1">
-                          Revoluční 8, Praha 1 - ihned k dispozici
+                          {t('checkout.shippingMethod.showroomDesc')}
                         </p>
                       </div>
-                      <p className="font-medium text-green-600">Zdarma</p>
+                      <p className="font-medium text-green-600">{t('common.free')}</p>
                     </div>
                     {formData.deliveryMethod === 'showroom' && (
                       <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
                         <p className="text-sm text-blue-900 font-medium mb-1">
-                          📍 Adresa showroomu:
+                          📍 {t('checkout.shippingMethod.showroomAddress')}
                         </p>
                         <p className="text-sm text-blue-800">
                           Revoluční 8, 110 00 Praha 1
                         </p>
                         <p className="text-xs text-blue-700 mt-2">
-                          Otevírací doba bude potvrzena emailem po objednání.
+                          {t('checkout.shippingMethod.showroomInfo')}
                         </p>
                       </div>
                     )}
@@ -554,10 +553,10 @@ export default function PokladnaPage() {
             {/* Address - only show if standard delivery selected */}
             {formData.deliveryMethod === 'standard' && (
               <div className="border-t border-gray-200 pt-6 space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">Dodací adresa</h3>
+                <h3 className="text-lg font-medium text-gray-900">{t('checkout.deliveryAddress')}</h3>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Adresa *
+                    {t('checkout.shipping.address')} *
                   </label>
                   <input
                     type="text"
@@ -567,7 +566,7 @@ export default function PokladnaPage() {
                     required={formData.deliveryMethod === 'standard'}
                     disabled={loading}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                    placeholder="Ulice a číslo popisné"
+                    placeholder={t('checkout.shipping.address')}
                   />
                 </div>
 
@@ -575,7 +574,7 @@ export default function PokladnaPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Město *
+                      {t('checkout.shipping.city')} *
                     </label>
                     <input
                       type="text"
@@ -585,12 +584,12 @@ export default function PokladnaPage() {
                       required={formData.deliveryMethod === 'standard'}
                       disabled={loading}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
-                      placeholder="Praha"
+                      placeholder={language === 'cs' ? 'Praha' : 'Prague'}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      PSČ *
+                      {t('checkout.shipping.zip')} *
                     </label>
                     <input
                       type="text"
@@ -608,7 +607,7 @@ export default function PokladnaPage() {
                 {/* Country */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Země
+                    {t('checkout.shipping.country')}
                   </label>
                   <select
                     name="country"
@@ -617,11 +616,11 @@ export default function PokladnaPage() {
                     disabled={loading}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                   >
-                    <option value="CZ">Česká republika</option>
-                    <option value="SK">Slovensko</option>
-                    <option value="PL">Polsko</option>
-                    <option value="DE">Německo</option>
-                    <option value="AT">Rakousko</option>
+                    <option value="CZ">{t('checkout.countries.CZ')}</option>
+                    <option value="SK">{t('checkout.countries.SK')}</option>
+                    <option value="PL">{t('checkout.countries.PL')}</option>
+                    <option value="DE">{t('checkout.countries.DE')}</option>
+                    <option value="AT">{t('checkout.countries.AT')}</option>
                   </select>
                 </div>
               </div>
@@ -633,11 +632,11 @@ export default function PokladnaPage() {
               disabled={loading}
               className="w-full px-6 py-3 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Zpracovávám...' : 'Pokračovat k platbě'}
+              {loading ? t('checkout.payment.processing') : t('checkout.payment.continueToPayment')}
             </button>
 
             <p className="text-xs text-gray-500 text-center">
-              Povinná pole jsou označena *
+              {t('checkout.required')}
             </p>
           </form>
         </div>
@@ -645,7 +644,7 @@ export default function PokladnaPage() {
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow p-6 sticky top-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Shrnutí objednávky</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('cart.orderSummary')}</h2>
 
             <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
               {items.map((item) => (
@@ -673,7 +672,7 @@ export default function PokladnaPage() {
             {/* Coupon Input */}
             <div className="mb-6 border-b border-gray-200 pb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Máte slevový kupón?
+                {t('cart.coupon.title')}?
               </label>
               {!couponApplied ? (
                 <div className="flex gap-2">
@@ -716,22 +715,22 @@ export default function PokladnaPage() {
 
             <div className="space-y-3">
               <div className="flex justify-between">
-                <p className="text-gray-600">Mezisoučet:</p>
-                <p className="text-gray-900 font-medium">{total.toLocaleString('cs-CZ')} Kč</p>
+                <p className="text-gray-600">{t('cart.subtotal')}:</p>
+                <p className="text-gray-900 font-medium">{total.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč</p>
               </div>
               {couponApplied && couponDiscount > 0 && (
                 <div className="flex justify-between">
-                  <p className="text-gray-600">Sleva ({couponCode}):</p>
+                  <p className="text-gray-600">{t('common.discount')} ({couponCode}):</p>
                   <p className="text-green-600 font-medium">
-                    -{couponDiscount.toLocaleString('cs-CZ')} Kč
+                    -{couponDiscount.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
                   </p>
                 </div>
               )}
               <div className="flex justify-between">
-                <p className="text-gray-600">Doprava:</p>
+                <p className="text-gray-600">{t('cart.shipping')}:</p>
                 <p className="text-gray-900 font-medium">
                   {shipping === 0 ? (
-                    <span className="text-green-600">Zdarma</span>
+                    <span className="text-green-600">{t('common.free')}</span>
                   ) : (
                     `${shipping} Kč`
                   )}
@@ -739,14 +738,14 @@ export default function PokladnaPage() {
               </div>
               {total <= shippingThreshold && (
                 <p className="text-xs text-gray-500">
-                  Do dopravy zdarma zbývá: {(shippingThreshold - total).toLocaleString('cs-CZ')} Kč
+                  {t('cart.freeShippingRemaining')} {(shippingThreshold - total).toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
                 </p>
               )}
               <div className="border-t border-gray-200 pt-3">
                 <div className="flex justify-between">
-                  <p className="text-lg font-bold text-gray-900">Celkem:</p>
+                  <p className="text-lg font-bold text-gray-900">{t('cart.total')}:</p>
                   <p className="text-lg font-bold text-burgundy">
-                    {(total - couponDiscount + shipping).toLocaleString('cs-CZ')} Kč
+                    {(total - couponDiscount + shipping).toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
                   </p>
                 </div>
               </div>
@@ -756,7 +755,7 @@ export default function PokladnaPage() {
               href="/kosik"
               className="mt-6 block text-center text-burgundy hover:text-maroon text-sm"
             >
-              ← Zpět na nákupní košík
+              ← {t('nav.cart')}
             </Link>
           </div>
         </div>
