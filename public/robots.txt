@@ -10,6 +10,13 @@ Disallow: /admin/
 Disallow: /_next/
 Disallow: /static/
 
+# Disallow auth and personalized pages
+Disallow: /auth/
+Disallow: /kosik
+Disallow: /pokladna
+Disallow: /ucet
+Disallow: /oblibene
+
 # Allow all product and category pages
 Allow: /vlasy-k-prodlouzeni/
 Allow: /pricesky-a-paruky/
