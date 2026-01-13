@@ -191,13 +191,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://muza-hair-shop.vercel.app/</loc>
+    <loc>https://www.muzahair.cz/</loc>
     <lastmod>2026-01-13T12:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://muza-hair-shop.vercel.app/vlasy-k-prodlouzeni</loc>
+    <loc>https://www.muzahair.cz/vlasy-k-prodlouzeni</loc>
     <lastmod>2026-01-13T12:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
@@ -219,13 +219,13 @@ npm run build
 
 ### 2. Production Testing
 ```
-URL: https://muza-hair-shop.vercel.app/sitemap.xml
+URL: https://www.muzahair.cz/sitemap.xml
 ```
 
 ### 3. Google Search Console
 1. Přihlásit se do GSC
 2. Sitemaps → Add a new sitemap
-3. Submit: `https://muza-hair-shop.vercel.app/sitemap.xml`
+3. Submit: `https://www.muzahair.cz/sitemap.xml`
 4. Počkat 1-2 týdny na indexaci
 
 ### 4. Validation Tools
@@ -252,7 +252,7 @@ Disallow: /ucet
 Disallow: /oblibene
 
 # Sitemap location
-Sitemap: https://muza-hair-shop.vercel.app/sitemap.xml
+Sitemap: https://www.muzahair.cz/sitemap.xml
 ```
 
 ---
@@ -304,4 +304,4 @@ Sitemap: https://muza-hair-shop.vercel.app/sitemap.xml
 **Created:** 2026-01-13
 **Author:** Claude Code Implementation
 **Status:** ✅ Production Ready
-**URL:** https://muza-hair-shop.vercel.app/sitemap.xml
+**URL:** https://www.muzahair.cz/sitemap.xml

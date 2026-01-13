@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'Blog a Magazín | Mùza Hair Praha',
     description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality.',
     type: 'website',
-    url: 'https://muza-hair-shop.vercel.app/blog',
+    url: 'https://www.muzahair.cz/blog',
   },
 };
 

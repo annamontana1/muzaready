@@ -5,7 +5,7 @@ import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://muza-hair-shop.vercel.app'),
+  metadataBase: new URL('https://www.muzahair.cz'),
   title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna 🇨🇿",
   description: "Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. Nebarvené panenské, barvené blond, keratin, pásky, tresy. LUXE & Platinum kvalita. Dodání do 48h.",
   keywords: [
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'cs_CZ',
-    url: 'https://muza-hair-shop.vercel.app',
+    url: 'https://www.muzahair.cz',
     siteName: 'Mùza Hair',
     title: '💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení',
     description: 'Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. LUXE & Platinum kvalita. Dodání do 48h.',

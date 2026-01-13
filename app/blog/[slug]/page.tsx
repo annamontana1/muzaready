@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       title: article.title,
       description: article.excerpt,
       type: 'article',
-      url: `https://muza-hair-shop.vercel.app/blog/${params.slug}`,
+      url: `https://www.muzahair.cz/blog/${params.slug}`,
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       authors: [article.author],
@@ -62,7 +62,7 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
     '@type': 'Article',
     headline: article.title,
     description: article.excerpt,
-    image: `https://muza-hair-shop.vercel.app${article.imageUrl}`,
+    image: `https://www.muzahair.cz${article.imageUrl}`,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
     author: {
@@ -74,21 +74,21 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
       name: 'Mùza Hair',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://muza-hair-shop.vercel.app/logo.png',
+        url: 'https://www.muzahair.cz/logo.png',
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://muza-hair-shop.vercel.app/blog/${params.slug}`,
+      '@id': `https://www.muzahair.cz/blog/${params.slug}`,
     },
     keywords: article.tags.join(', '),
   };
 
   // Breadcrumb data
   const breadcrumbItems = [
-    { name: 'Domů', url: 'https://muza-hair-shop.vercel.app' },
-    { name: 'Blog', url: 'https://muza-hair-shop.vercel.app/blog' },
-    { name: article.title, url: `https://muza-hair-shop.vercel.app/blog/${params.slug}` },
+    { name: 'Domů', url: 'https://www.muzahair.cz' },
+    { name: 'Blog', url: 'https://www.muzahair.cz/blog' },
+    { name: article.title, url: `https://www.muzahair.cz/blog/${params.slug}` },
   ];
 
   return (

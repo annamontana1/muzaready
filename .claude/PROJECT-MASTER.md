@@ -1,7 +1,7 @@
 # 🎯 PROJECT MASTER: Mùza Hair E-shop
 
 **Projekt:** Mùza Hair - Prémiový e-shop pro vlasy k prodloužení
-**Status:** 🟢 Production (muza-hair-shop.vercel.app)
+**Status:** 🟢 Production (www.muzahair.cz)
 **Tech Stack:** Next.js 14, React 18, TypeScript, Tailwind CSS
 **Začátek:** 2. listopadu 2025
 **Současná fáze:** CHUNK-01 (E-commerce Foundation)
@@ -209,7 +209,7 @@ cat .claude/PROJECT-MASTER.md
 
 ## 📞 REFERENCE
 
-- **Production:** https://muza-hair-shop.vercel.app
+- **Production:** https://www.muzahair.cz
 - **Dokumentace:** `DEEP-ANALYSIS-AND-ROADMAP.md`
 - **Templates:** `~/.claude/project-templates/`
 

@@ -21,7 +21,7 @@ import { getCatalogProducts } from '@/lib/catalog-adapter';
  */
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://muza-hair-shop.vercel.app';
+  const baseUrl = 'https://www.muzahair.cz';
   const currentDate = new Date();
 
   // ========================================

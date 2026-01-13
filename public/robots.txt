@@ -1,5 +1,5 @@
 # Mùza Hair - Robots.txt
-# https://muza-hair-shop.vercel.app
+# https://www.muzahair.cz
 
 User-agent: *
 Allow: /
@@ -23,7 +23,7 @@ Allow: /pricesky-a-paruky/
 Allow: /produkt/
 
 # Sitemap location
-Sitemap: https://muza-hair-shop.vercel.app/sitemap.xml
+Sitemap: https://www.muzahair.cz/sitemap.xml
 
 # Crawl delay for polite crawling
 Crawl-delay: 1
