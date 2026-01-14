@@ -2,9 +2,6 @@
 
 import { useState } from 'react';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-
 interface FAQItem {
   question: string;
   answer: string;

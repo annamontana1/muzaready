@@ -1,7 +1,7 @@
 import PagePlaceholder from '@/components/PagePlaceholder';
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic'; // zabraň statickému prerenderu
+// ISR - revalidate every day
+export const revalidate = 86400;
 
 export default function Page() {
   return <PagePlaceholder title="Platba a vrácení" description="Informace o platebních metodách a vrácení zboží." icon="💳" />;

@@ -1,6 +1,7 @@
 import Link from 'next/link';
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+
+// ISR - revalidate every day
+export const revalidate = 86400;
 
 
 export default function InformacePage() {

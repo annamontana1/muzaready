@@ -103,14 +103,19 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 }
 
-// Force dynamic rendering - products come from database/API
-export const dynamic = 'force-dynamic';
+// ISR - revalidate every hour (3600 seconds)
+export const revalidate = 3600;
 
-// Generate static params for all products (for static generation)
-// Note: This is disabled for dynamic catalog - products come from database
+// Generate static params for all products at build time
 export async function generateStaticParams() {
-  // Return empty array to enable dynamic rendering
-  return [];
+  try {
+    const products = await getCatalogProducts();
+    return products.map((product) => ({
+      slug: product.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
