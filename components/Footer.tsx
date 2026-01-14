@@ -1,10 +1,46 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '@/contexts/LanguageContext';
+
+interface SiteSettings {
+  instagramUrl: string | null;
+  facebookUrl: string | null;
+  tiktokUrl: string | null;
+  youtubeUrl: string | null;
+  newsletterEnabled: boolean;
+  newsletterTitle: string | null;
+  newsletterSubtitle: string | null;
+  copyrightText: string | null;
+  companyName: string | null;
+}
+
+const DEFAULT_SETTINGS: SiteSettings = {
+  instagramUrl: 'https://www.instagram.com/muzahair.cz',
+  facebookUrl: 'https://www.facebook.com/muzahair',
+  tiktokUrl: null,
+  youtubeUrl: null,
+  newsletterEnabled: true,
+  newsletterTitle: 'Newsletter',
+  newsletterSubtitle: 'Získejte slevu 10% na první nákup',
+  copyrightText: '© {year} Mùza Hair. Všechna práva vyhrazena.',
+  companyName: 'Mùza Hair s.r.o.',
+};
 
 export default function Footer() {
   const { t } = useTranslation();
+  const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => setSettings(prev => ({ ...prev, ...data })))
+      .catch(() => {});
+  }, []);
+
+  const copyrightText = (settings.copyrightText || DEFAULT_SETTINGS.copyrightText || '')
+    .replace('{year}', new Date().getFullYear().toString());
 
   return (
     <footer className="bg-burgundy text-white">
@@ -104,27 +140,29 @@ export default function Footer() {
           </div>
 
           {/* Column 5: Newsletter */}
-          <div>
-            <h3 className="font-playfair text-xl mb-4">Newsletter</h3>
-            <p className="text-sm text-ivory mb-4">
-              Získejte slevu 10% na první nákup
-            </p>
-            <form className="flex flex-col gap-2">
-              <input
-                type="email"
-                placeholder="Váš email"
-                className="px-4 py-2 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white"
-              />
-              <button className="btn-primary">
-                Odebírat
-              </button>
-            </form>
-          </div>
+          {settings.newsletterEnabled && (
+            <div>
+              <h3 className="font-playfair text-xl mb-4">{settings.newsletterTitle || 'Newsletter'}</h3>
+              <p className="text-sm text-ivory mb-4">
+                {settings.newsletterSubtitle || 'Získejte slevu 10% na první nákup'}
+              </p>
+              <form className="flex flex-col gap-2">
+                <input
+                  type="email"
+                  placeholder="Váš email"
+                  className="px-4 py-2 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white"
+                />
+                <button className="btn-primary">
+                  Odebírat
+                </button>
+              </form>
+            </div>
+          )}
         </div>
 
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-ivory">
-          <p>{t('footer.copyright', { year: new Date().getFullYear() })}</p>
+          <p>{copyrightText}</p>
           <div className="flex gap-4">
             <Link href="/informace/obchodni-podminky" className="hover:text-white transition">
               {t('footer.customer.terms')}
@@ -135,24 +173,50 @@ export default function Footer() {
             </Link>
           </div>
           <div className="flex gap-4 text-xl">
-            <a
-              href="https://www.instagram.com/muzahair.cz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition"
-              aria-label="Instagram"
-            >
-              📷
-            </a>
-            <a
-              href="https://www.facebook.com/muzahair"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white transition"
-              aria-label="Facebook"
-            >
-              📘
-            </a>
+            {settings.instagramUrl && (
+              <a
+                href={settings.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition"
+                aria-label="Instagram"
+              >
+                📷
+              </a>
+            )}
+            {settings.facebookUrl && (
+              <a
+                href={settings.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition"
+                aria-label="Facebook"
+              >
+                📘
+              </a>
+            )}
+            {settings.tiktokUrl && (
+              <a
+                href={settings.tiktokUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition"
+                aria-label="TikTok"
+              >
+                🎵
+              </a>
+            )}
+            {settings.youtubeUrl && (
+              <a
+                href={settings.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition"
+                aria-label="YouTube"
+              >
+                🎬
+              </a>
+            )}
           </div>
         </div>
       </div>

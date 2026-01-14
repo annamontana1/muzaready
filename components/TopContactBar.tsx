@@ -1,11 +1,46 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
+interface SiteSettings {
+  phone: string | null;
+  phoneWhatsapp: string | null;
+  addressStreet: string | null;
+  addressCity: string | null;
+  promoBannerEnabled: boolean;
+  promoBannerText: string | null;
+  promoBannerLink: string | null;
+}
+
+const DEFAULT_SETTINGS: SiteSettings = {
+  phone: '+420 728 722 880',
+  phoneWhatsapp: '420728722880',
+  addressStreet: 'Revoluční 8',
+  addressCity: 'Praha',
+  promoBannerEnabled: true,
+  promoBannerText: 'Sledujte nás na Instagramu a získejte voucher v hodnotě 500 Kč',
+  promoBannerLink: 'https://www.instagram.com/muzahair.cz/',
+};
+
 export default function TopContactBar() {
-  const phone = '+420 728 722 880';
-  const phoneHref = 'https://wa.me/420728722880';
-  const address = 'Revoluční 8, Praha';
-  const instagramUrl = 'https://www.instagram.com/muzahair.cz/';
-  const instagramText = 'Sledujte nás na Instagramu a získejte voucher v hodnotě 500 Kč';
+  const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => setSettings(prev => ({ ...prev, ...data })))
+      .catch(() => {});
+  }, []);
+
+  const phone = settings.phone || DEFAULT_SETTINGS.phone;
+  const phoneHref = `https://wa.me/${settings.phoneWhatsapp || DEFAULT_SETTINGS.phoneWhatsapp}`;
+  const address = `${settings.addressStreet || DEFAULT_SETTINGS.addressStreet}, ${settings.addressCity || DEFAULT_SETTINGS.addressCity}`;
+  const instagramUrl = settings.promoBannerLink || DEFAULT_SETTINGS.promoBannerLink;
+  const instagramText = settings.promoBannerText || DEFAULT_SETTINGS.promoBannerText;
+
+  if (!settings.promoBannerEnabled) {
+    return null;
+  }
 
   return (
     <div className="w-full bg-[#e8e1d7] border-b border-black/5">

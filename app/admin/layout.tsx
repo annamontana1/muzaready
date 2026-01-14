@@ -30,6 +30,7 @@ const navigation = {
     { href: '/admin/warehouse-scanner', label: 'Scanner', icon: '📱' },
   ],
   cms: [
+    { href: '/admin/nastaveni', label: 'Nastavení', icon: '⚙️' },
     { href: '/admin/seo', label: 'SEO', icon: '🔍' },
     { href: '/admin/content', label: 'Obsah', icon: '✏️' },
     { href: '/admin/redirects', label: 'Redirecty', icon: '🔗' },

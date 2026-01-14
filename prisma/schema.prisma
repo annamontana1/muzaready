@@ -712,3 +712,76 @@ model FaqItem {
   @@index([isPublished])
   @@map("faq_items")
 }
+
+// ============================================
+// Site Settings (Singleton)
+// ============================================
+
+model SiteSettings {
+  id                    String   @id @default("main")
+
+  // === KONTAKTY ===
+  phone                 String?  // +420 728 722 880
+  phoneWhatsapp         String?  // 420728722880
+  email                 String?  // info@muzahair.cz
+  emailSupport          String?  // podpora@muzahair.cz
+
+  // === SHOWROOM ===
+  addressStreet         String?  // Revoluční 8
+  addressCity           String?  // Praha
+  addressZip            String?  // 110 00
+  addressMapUrl         String?  // Google Maps embed
+  openingHours          String?  @db.Text  // Markdown/text
+
+  // === SOCIÁLNÍ SÍTĚ ===
+  instagramUrl          String?
+  instagramHandle       String?  // @muzahair.cz
+  facebookUrl           String?
+  tiktokUrl             String?
+  youtubeUrl            String?
+  pinterestUrl          String?
+
+  // === PROMO BANNER ===
+  promoBannerEnabled    Boolean  @default(true)
+  promoBannerText       String?
+  promoBannerLink       String?
+
+  // === NEWSLETTER ===
+  newsletterEnabled     Boolean  @default(true)
+  newsletterTitle       String?  // "Newsletter"
+  newsletterSubtitle    String?  // "Získejte slevu 10%"
+
+  // === FIRMA ===
+  companyName           String?  // Mùza Hair s.r.o.
+  companyIco            String?  // IČO
+  companyDic            String?  // DIČ
+  companyStreet         String?
+  companyCity           String?
+  companyZip            String?
+  bankName              String?
+  bankAccount           String?
+  bankIban              String?
+  bankSwift             String?
+
+  // === VZHLED ===
+  logoUrl               String?  // /images/logo/muza-logo.png
+  logoAlt               String?  // Mùza Hair Shop
+  faviconUrl            String?
+  copyrightText         String?  // © {year} Mùza Hair
+
+  // === DOPRAVA ===
+  freeShippingThreshold Int?     // 2500
+  shippingCostCzk       Int?     // 99
+  shippingCostEur       Float?   // 4.99
+
+  // === ANALYTIKA ===
+  gaTrackingId          String?  // G-XXXXXXXXXX
+  fbPixelId             String?
+  hotjarId              String?
+
+  // === META ===
+  updatedAt             DateTime @updatedAt
+  updatedBy             String?
+
+  @@map("site_settings")
+}
