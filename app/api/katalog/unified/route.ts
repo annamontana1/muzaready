@@ -17,6 +17,7 @@ export const runtime = 'nodejs';
 interface UnifiedItem {
   type: 'BULK' | 'PIECE';
   id: string;
+  shortCode?: string; // Krátký kód pro IG (M0001)
   slug?: string; // BULK only
   name: string;
   tier: string; // "Standard" | "LUXE" | "Platinum edition"
@@ -116,6 +117,7 @@ export async function GET(request: NextRequest) {
         items.push({
           type: 'PIECE',
           id: sku.id,
+          shortCode: sku.shortCode || undefined,
           slug: pieceSlug,
           name: pieceName,
           tier: tierLabel,

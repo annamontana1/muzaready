@@ -31,6 +31,7 @@ export async function GET(
         sku: {
           select: {
             sku: true,
+            shortCode: true,
             name: true,
             shadeName: true,
           },
@@ -46,8 +47,11 @@ export async function GET(
     }
 
     // Generate QR code content
-    // Format: STOCK-{movementId}
-    const qrContent = `STOCK-${movementId}`;
+    // Format: STOCK-{movementId} or with shortCode: M0001|STOCK-{movementId}
+    const shortCode = movement.sku.shortCode;
+    const qrContent = shortCode
+      ? `${shortCode}|STOCK-${movementId}`
+      : `STOCK-${movementId}`;
 
     // Generate QR code as PNG buffer
     const qrCodeBuffer = await QRCode.toBuffer(qrContent, {
@@ -58,10 +62,14 @@ export async function GET(
     });
 
     // Return PNG image
+    const filename = shortCode
+      ? `QR-${shortCode}-${movementId.slice(-6)}.png`
+      : `QR-${movement.sku.sku}-${movementId}.png`;
+
     return new NextResponse(qrCodeBuffer, {
       headers: {
         'Content-Type': 'image/png',
-        'Content-Disposition': `attachment; filename="QR-${movement.sku.sku}-${movementId}.png"`,
+        'Content-Disposition': `attachment; filename="${filename}"`,
         'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
       },
     });

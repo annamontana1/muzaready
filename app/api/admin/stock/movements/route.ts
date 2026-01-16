@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         sku: true,
+        shortCode: true,
         name: true,
         shadeName: true,
         lengthCm: true,

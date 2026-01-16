@@ -20,6 +20,7 @@ interface StockMovement {
 interface SkuData {
   id: string;
   sku: string;
+  shortCode: string | null;
   name: string | null;
   shadeName: string | null;
   lengthCm: number | null;
@@ -94,7 +95,13 @@ export default function SkuQRCodesPage() {
         </Link>
         <h1 className="text-3xl font-bold text-gray-900">QR kódy pro SKU</h1>
         <div className="mt-4 bg-white rounded-lg shadow p-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {sku.shortCode && (
+              <div>
+                <p className="text-sm text-gray-600">Kód pro IG</p>
+                <p className="font-bold text-lg text-blue-600">{sku.shortCode}</p>
+              </div>
+            )}
             <div>
               <p className="text-sm text-gray-600">SKU</p>
               <p className="font-medium">{sku.sku}</p>

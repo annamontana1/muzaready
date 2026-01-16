@@ -55,11 +55,16 @@ export async function PATCH(
     const body = await request.json();
     const {
       name,
+      description,
+      images,
       shade,
       shadeName,
+      shadeHex,
       lengthCm,
       structure,
+      customerCategory,
       pricePerGramCzk,
+      pricePerGramEur,
       weightTotalG,
       weightGrams,
       availableGrams,
@@ -74,11 +79,16 @@ export async function PATCH(
     const updateData: any = {};
 
     if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (images !== undefined) updateData.images = images;
     if (shade !== undefined) updateData.shade = shade;
     if (shadeName !== undefined) updateData.shadeName = shadeName;
+    if (shadeHex !== undefined) updateData.shadeHex = shadeHex;
     if (lengthCm !== undefined) updateData.lengthCm = lengthCm;
     if (structure !== undefined) updateData.structure = structure;
+    if (customerCategory !== undefined) updateData.customerCategory = customerCategory;
     if (pricePerGramCzk !== undefined) updateData.pricePerGramCzk = pricePerGramCzk;
+    if (pricePerGramEur !== undefined) updateData.pricePerGramEur = pricePerGramEur;
     if (weightTotalG !== undefined) updateData.weightTotalG = weightTotalG;
     if (weightGrams !== undefined) updateData.weightGrams = weightGrams;
     if (availableGrams !== undefined) updateData.availableGrams = availableGrams;

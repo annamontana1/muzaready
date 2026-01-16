@@ -10,7 +10,10 @@ import { filtersToQueryString, queryStringToFilters } from '@/lib/sku-filter-uti
 interface Sku {
   id: string;
   sku: string;
+  shortCode: string | null;
   name: string | null;
+  description: string | null;
+  images: string[];
   shade: string | null;
   shadeName: string | null;
   lengthCm: number | null;
@@ -38,6 +41,8 @@ function SkuListPageContent() {
   const [showForm, setShowForm] = useState(false);
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);
   const [filters, setFilters] = useState<SkuFilters>({});
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     sku: '',
     name: '',
@@ -170,6 +175,90 @@ function SkuListPageContent() {
     }
   };
 
+  const toggleSelectAll = () => {
+    if (selectedIds.size === skus.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(skus.map((s) => s.id)));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) {
+      alert('Vyberte SKU k smazání');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Opravdu chcete smazat ${selectedIds.size} vybraných SKU? Tato akce je nevratná.`
+    );
+    if (!confirmed) return;
+
+    setDeleting(true);
+    try {
+      const res = await fetch('/api/admin/skus/bulk-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: Array.from(selectedIds) }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Chyba při mazání');
+
+      alert(`Smazáno ${data.deleted} SKU`);
+      setSelectedIds(new Set());
+      fetchSkus(filters);
+    } catch (err: any) {
+      console.error(err);
+      alert('Chyba: ' + err.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    const confirmed = window.confirm(
+      'Opravdu chcete smazat VŠECHNY SKU bez objednávek? Tato akce je nevratná!'
+    );
+    if (!confirmed) return;
+
+    const doubleConfirm = window.confirm(
+      'Toto je nevratná akce. Naposledy se ptám - opravdu smazat všechny testovací produkty?'
+    );
+    if (!doubleConfirm) return;
+
+    setDeleting(true);
+    try {
+      const res = await fetch('/api/admin/skus/bulk-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deleteAll: true }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Chyba při mazání');
+
+      alert(`Smazáno ${data.deleted} SKU`);
+      setSelectedIds(new Set());
+      fetchSkus(filters);
+    } catch (err: any) {
+      console.error(err);
+      alert('Chyba: ' + err.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return <div className="p-4">Načítám...</div>;
   }
@@ -188,6 +277,33 @@ function SkuListPageContent() {
 
       {/* Filter Panel */}
       <SkuFilterPanel onApplyFilters={handleApplyFilters} initialFilters={filters} />
+
+      {/* Bulk Actions Toolbar */}
+      {(selectedIds.size > 0 || skus.length > 0) && (
+        <div className="bg-gray-100 rounded-lg p-4 mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-700">
+              {selectedIds.size > 0 ? `Vybráno: ${selectedIds.size} SKU` : `Celkem: ${pagination?.total || skus.length} SKU`}
+            </span>
+            {selectedIds.size > 0 && (
+              <button
+                onClick={handleBulkDelete}
+                disabled={deleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm font-medium"
+              >
+                {deleting ? 'Mažu...' : `Smazat vybrané (${selectedIds.size})`}
+              </button>
+            )}
+          </div>
+          <button
+            onClick={handleDeleteAll}
+            disabled={deleting}
+            className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50 text-sm font-medium"
+          >
+            Smazat všechny test produkty
+          </button>
+        </div>
+      )}
 
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-2 gap-4">
@@ -357,7 +473,16 @@ function SkuListPageContent() {
         <table className="w-full text-sm">
           <thead className="bg-gray-100 border-b">
             <tr>
+              <th className="px-2 py-2 w-8">
+                <input
+                  type="checkbox"
+                  checked={skus.length > 0 && selectedIds.size === skus.length}
+                  onChange={toggleSelectAll}
+                  className="w-4 h-4 rounded"
+                />
+              </th>
               <th className="px-4 py-2 text-left">SKU</th>
+              <th className="px-4 py-2 text-left">Kód IG</th>
               <th className="px-4 py-2 text-left">Název</th>
               <th className="px-4 py-2 text-left">Kategorie</th>
               <th className="px-4 py-2 text-left">Odstín</th>
@@ -368,13 +493,28 @@ function SkuListPageContent() {
               <th className="px-4 py-2 text-left">Katalog</th>
               <th className="px-4 py-2 text-left">Priorita</th>
               <th className="px-4 py-2 text-left">Skladové info</th>
-              <th className="px-4 py-2 text-left">QR kódy</th>
+              <th className="px-4 py-2 text-left">Akce</th>
             </tr>
           </thead>
           <tbody>
             {skus.map((sku) => (
-              <tr key={sku.id} className="border-b hover:bg-gray-50">
+              <tr key={sku.id} className={`border-b hover:bg-gray-50 ${selectedIds.has(sku.id) ? 'bg-blue-50' : ''}`}>
+                <td className="px-2 py-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(sku.id)}
+                    onChange={() => toggleSelect(sku.id)}
+                    className="w-4 h-4 rounded"
+                  />
+                </td>
                 <td className="px-4 py-2 font-mono text-xs">{sku.sku}</td>
+                <td className="px-4 py-2">
+                  {sku.shortCode ? (
+                    <span className="font-bold text-blue-600">{sku.shortCode}</span>
+                  ) : (
+                    <span className="text-gray-400">-</span>
+                  )}
+                </td>
                 <td className="px-4 py-2">{sku.name || '-'}</td>
                 <td className="px-4 py-2 text-xs">
                   <span className={`px-2 py-1 rounded ${
@@ -420,15 +560,20 @@ function SkuListPageContent() {
                   )}
                 </td>
                 <td className="px-4 py-2">
-                  <Link
-                    href={`/admin/sklad/${sku.id}/qr-codes`}
-                    className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition inline-flex items-center gap-1"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    QR kódy
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/admin/sklad/${sku.id}/edit`}
+                      className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
+                    >
+                      Upravit
+                    </Link>
+                    <Link
+                      href={`/admin/sklad/${sku.id}/qr-codes`}
+                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                    >
+                      QR
+                    </Link>
+                  </div>
                 </td>
               </tr>
             ))}
