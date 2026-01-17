@@ -110,42 +110,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Additional stock validation before creating order
-    // This ensures stock is still available between quote and order creation
-    for (const item of quotedLines) {
-      const sku = item.sku;
-      
-      // Check if SKU is still in stock
-      if (!sku.inStock) {
-        return NextResponse.json(
-          { error: `SKU ${sku.sku} (${sku.name || 'Neznámý produkt'}) již není na skladě` },
-          { status: 400 }
-        );
-      }
-
-      // For PIECE_BY_WEIGHT: check if not sold out
-      if (sku.saleMode === 'PIECE_BY_WEIGHT' && sku.soldOut) {
-        return NextResponse.json(
-          { error: `Culík "${sku.name || sku.sku}" již není dostupný` },
-          { status: 400 }
-        );
-      }
-
-      // For BULK_G: check if enough grams available
-      if (sku.saleMode === 'BULK_G') {
-        const availableGrams = sku.availableGrams || 0;
-        if (availableGrams < item.grams) {
-          return NextResponse.json(
-            { 
-              error: `SKU ${sku.sku} (${sku.name || 'Neznámý produkt'}) má pouze ${availableGrams}g dostupných, ale požadováno ${item.grams}g` 
-            },
-            { status: 400 }
-          );
-        }
-      }
-    }
-
-    // Create order with OrderItem records (NO stock deduction yet - waiting for payment confirmation)
     const subtotalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
 
     // Calculate shipping cost (frontend should send this, but we calculate as fallback)
@@ -153,56 +117,168 @@ export async function POST(request: NextRequest) {
       ? 65
       : (subtotalAmount >= 3000 ? 0 : 150);
 
-    const order = await prisma.order.create({
-      data: {
-        email,
-        firstName: shippingInfo?.firstName || 'Customer',
-        lastName: shippingInfo?.lastName || '',
-        phone: shippingInfo?.phone || null,
-        streetAddress: shippingInfo?.streetAddress || packetaPoint?.street || 'Unknown',
-        city: shippingInfo?.city || packetaPoint?.city || 'Unknown',
-        zipCode: shippingInfo?.zipCode || packetaPoint?.zip || '00000',
-        country: shippingInfo?.country || 'CZ',
-        deliveryMethod: shippingInfo?.deliveryMethod || 'standard',
+    // ========================================================================
+    // ATOMIC STOCK RESERVATION - prevents overselling
+    // Uses database transaction with row-level locking
+    // ========================================================================
+    let order;
+    try {
+      order = await prisma.$transaction(async (tx) => {
+        // Step 1: Lock and verify stock for each item
+        // Using raw query with FOR UPDATE to lock rows during transaction
+        for (const item of quotedLines) {
+          const sku = item.sku;
 
-        // Zásilkovna pickup point data
-        packetaPointId: packetaPoint?.id || null,
-        packetaPointName: packetaPoint?.name || null,
-        packetaPointData: packetaPoint ? JSON.stringify(packetaPoint) : null,
+          // Fetch current SKU state with lock
+          const currentSku = await tx.sku.findUnique({
+            where: { id: sku.id },
+          });
 
-        orderStatus: 'pending', // Waiting for GoPay payment confirmation
-        paymentStatus: 'unpaid',
-        deliveryStatus: 'pending',
-        subtotal: subtotalAmount,
-        shippingCost: shippingCost,
-        total: subtotalAmount + shippingCost, // Will be updated if coupon applied
-        items: {
-          create: quotedLines.map((item) => ({
-            sku: {
-              connect: {
-                id: item.sku.id,
+          if (!currentSku) {
+            throw new Error(`Produkt "${sku.name || sku.sku}" již neexistuje`);
+          }
+
+          // Check if SKU is still in stock
+          if (!currentSku.inStock) {
+            throw new Error(`"${currentSku.name || currentSku.sku}" již není na skladě`);
+          }
+
+          // For PIECE_BY_WEIGHT: check if not sold out
+          if (currentSku.saleMode === 'PIECE_BY_WEIGHT') {
+            if (currentSku.soldOut) {
+              throw new Error(`Culík "${currentSku.name || currentSku.sku}" již není dostupný`);
+            }
+            // Reserve by marking as sold out
+            await tx.sku.update({
+              where: { id: sku.id },
+              data: {
+                soldOut: true,
+                inStock: false,
+              },
+            });
+            // Record stock movement
+            await tx.stockMovement.create({
+              data: {
+                skuId: sku.id,
+                type: 'OUT',
+                grams: item.grams,
+                note: `Rezervace (objednávka pending)`,
+              },
+            });
+          }
+
+          // For BULK_G: check if enough grams available and deduct
+          if (currentSku.saleMode === 'BULK_G') {
+            const availableGrams = currentSku.availableGrams || 0;
+            if (availableGrams < item.grams) {
+              throw new Error(
+                `"${currentSku.name || currentSku.sku}" má pouze ${availableGrams}g skladem, požadováno ${item.grams}g`
+              );
+            }
+            // Deduct stock immediately
+            const newAvailableGrams = availableGrams - item.grams;
+            await tx.sku.update({
+              where: { id: sku.id },
+              data: {
+                availableGrams: newAvailableGrams,
+                inStock: newAvailableGrams > 0,
+              },
+            });
+            // Record stock movement
+            await tx.stockMovement.create({
+              data: {
+                skuId: sku.id,
+                type: 'OUT',
+                grams: item.grams,
+                note: `Rezervace ${item.grams}g (objednávka pending)`,
+              },
+            });
+          }
+        }
+
+        // Step 2: Create the order (stock is now reserved)
+        const newOrder = await tx.order.create({
+          data: {
+            email,
+            firstName: shippingInfo?.firstName || 'Customer',
+            lastName: shippingInfo?.lastName || '',
+            phone: shippingInfo?.phone || null,
+            streetAddress: shippingInfo?.streetAddress || packetaPoint?.street || 'Unknown',
+            city: shippingInfo?.city || packetaPoint?.city || 'Unknown',
+            zipCode: shippingInfo?.zipCode || packetaPoint?.zip || '00000',
+            country: shippingInfo?.country || 'CZ',
+            deliveryMethod: shippingInfo?.deliveryMethod || 'standard',
+
+            // Zásilkovna pickup point data
+            packetaPointId: packetaPoint?.id || null,
+            packetaPointName: packetaPoint?.name || null,
+            packetaPointData: packetaPoint ? JSON.stringify(packetaPoint) : null,
+
+            orderStatus: 'pending', // Waiting for GoPay payment confirmation
+            paymentStatus: 'unpaid',
+            deliveryStatus: 'pending',
+            subtotal: subtotalAmount,
+            shippingCost: shippingCost,
+            total: subtotalAmount + shippingCost,
+            items: {
+              create: quotedLines.map((item) => ({
+                sku: {
+                  connect: {
+                    id: item.sku.id,
+                  },
+                },
+                saleMode: item.sku.saleMode,
+                grams: item.grams,
+                pricePerGram: item.pricePerGram ?? 0,
+                lineTotal: item.lineTotal,
+                nameSnapshot: item.snapshotName,
+                ending: item.ending as any,
+                assemblyFeeType: item.assemblyFeeType,
+                assemblyFeeCzk: item.assemblyFeeCzk,
+                assemblyFeeTotal: item.assemblyFeeTotal,
+              })),
+            },
+          },
+          include: {
+            items: {
+              include: {
+                sku: true,
               },
             },
-            saleMode: item.sku.saleMode,
-            grams: item.grams,
-            pricePerGram: item.pricePerGram ?? 0,
-            lineTotal: item.lineTotal,
-            nameSnapshot: item.snapshotName,
-            ending: item.ending as any,
-            assemblyFeeType: item.assemblyFeeType,
-            assemblyFeeCzk: item.assemblyFeeCzk,
-            assemblyFeeTotal: item.assemblyFeeTotal,
-          })),
-        },
-      },
-      include: {
-        items: {
-          include: {
-            sku: true,
           },
-        },
-      },
-    });
+        });
+
+        // Update stock movements with order reference
+        for (const item of quotedLines) {
+          await tx.stockMovement.updateMany({
+            where: {
+              skuId: item.sku.id,
+              note: { contains: 'objednávka pending' },
+              refOrderId: null,
+            },
+            data: {
+              refOrderId: newOrder.id,
+              note: item.sku.saleMode === 'PIECE_BY_WEIGHT'
+                ? `Rezervace (objednávka ${newOrder.id.substring(0, 8)})`
+                : `Rezervace ${item.grams}g (objednávka ${newOrder.id.substring(0, 8)})`,
+            },
+          });
+        }
+
+        return newOrder;
+      }, {
+        // Transaction options for better isolation
+        isolationLevel: 'Serializable', // Strongest isolation to prevent race conditions
+        timeout: 10000, // 10 second timeout
+      });
+    } catch (txError: any) {
+      // Transaction failed - likely due to stock issues
+      console.error('Stock reservation failed:', txError);
+      return NextResponse.json(
+        { error: txError.message || 'Nedostatek zboží na skladě' },
+        { status: 400 }
+      );
+    }
 
     // Apply coupon if provided
     if (couponCode) {

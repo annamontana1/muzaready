@@ -177,6 +177,25 @@ export async function PUT(
       );
     }
 
+    // Get current order state FIRST before building update data
+    const currentOrder = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        items: {
+          include: {
+            sku: true,
+          },
+        },
+      },
+    });
+
+    if (!currentOrder) {
+      return NextResponse.json(
+        { error: 'Order not found' },
+        { status: 404 }
+      );
+    }
+
     // Build update data
     const updateData: any = {};
 
@@ -208,33 +227,19 @@ export async function PUT(
       updateData.lastStatusChangeAt = new Date();
     }
 
-    // Get current order state before update to check if paymentStatus is changing to 'paid'
-    const currentOrder = await prisma.order.findUnique({
-      where: { id },
-      include: {
-        items: {
-          include: {
-            sku: true,
-          },
-        },
-      },
-    });
-
-    if (!currentOrder) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
-    }
-
-    // Check if paymentStatus is changing to 'paid' and stock hasn't been deducted yet
+    // Check if paymentStatus is changing to 'paid' - stock movements get updated from "Rezervace" to "Prodáno"
+    // NOTE: Stock was already deducted at order creation, so we just update the movement note
     const isChangingToPaid = body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid';
-    
-    // Check if paymentStatus is changing to 'refunded' and stock was already deducted
-    const isChangingToRefunded = body.paymentStatus === 'refunded' && currentOrder.paymentStatus === 'paid';
-    
-    // Check if orderStatus is changing to 'cancelled' and stock was already deducted (order was paid)
-    const isChangingToCancelled = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled' && currentOrder.paymentStatus === 'paid';
+
+    // Check if paymentStatus is changing to 'refunded' - return stock
+    const isChangingToRefunded = body.paymentStatus === 'refunded' && currentOrder.paymentStatus !== 'refunded';
+
+    // Check if orderStatus is changing to 'cancelled' - ALWAYS return stock
+    // Stock is deducted at order creation, so we need to return it on ANY cancellation
+    const isChangingToCancelled = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled';
+
+    // Check if deliveryStatus is changing to 'returned' - return stock (physical return by customer)
+    const isChangingToReturned = body.deliveryStatus === 'returned' && currentOrder.deliveryStatus !== 'returned';
 
     // Helper function to log changes to OrderHistory
     const logOrderChange = async (
@@ -265,7 +270,7 @@ export async function PUT(
     };
 
     // Use transaction if we need to deduct or return stock
-    const order = isChangingToPaid || isChangingToRefunded || isChangingToCancelled
+    const order = isChangingToPaid || isChangingToRefunded || isChangingToCancelled || isChangingToReturned
       ? await prisma.$transaction(async (tx) => {
           // Log all changes before update
           if (body.orderStatus !== undefined && body.orderStatus !== currentOrder.orderStatus) {
@@ -383,58 +388,35 @@ export async function PUT(
             },
           });
 
-          // Deduct stock when marking as paid
+          // Update stock movement notes when marking as paid
+          // NOTE: Stock was already deducted at order creation, so we just update the note
           if (isChangingToPaid) {
             for (const item of updatedOrder.items) {
-              if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
-                // Mark as sold out (pieces are fully consumed)
-                await tx.sku.update({
-                  where: { id: item.skuId },
-                  data: {
-                    soldOut: true,
-                    inStock: false,
-                  },
-                });
-
-                // Record stock movement
-                await tx.stockMovement.create({
-                  data: {
-                    skuId: item.skuId,
-                    type: 'OUT',
-                    grams: item.grams,
-                    note: `Prodáno (objednávka ${id.substring(0, 8)}) - ruční označení`,
-                    refOrderId: id,
-                  },
-                });
-              } else if (item.sku.saleMode === 'BULK_G') {
-                // Deduct grams from available stock
-                const newAvailableGrams = (item.sku.availableGrams || 0) - item.grams;
-
-                // Update SKU availability
-                await tx.sku.update({
-                  where: { id: item.skuId },
-                  data: {
-                    availableGrams: Math.max(0, newAvailableGrams),
-                    inStock: newAvailableGrams > 0, // Still in stock if grams remain
-                  },
-                });
-
-                // Record stock movement
-                await tx.stockMovement.create({
-                  data: {
-                    skuId: item.skuId,
-                    type: 'OUT',
-                    grams: item.grams,
-                    note: `Prodáno ${item.grams}g (objednávka ${id.substring(0, 8)}) - ruční označení`,
-                    refOrderId: id,
-                  },
-                });
-              }
+              await tx.stockMovement.updateMany({
+                where: {
+                  refOrderId: id,
+                  skuId: item.skuId,
+                  note: { contains: 'Rezervace' },
+                },
+                data: {
+                  note: item.sku.saleMode === 'PIECE_BY_WEIGHT'
+                    ? `Prodáno (objednávka ${id.substring(0, 8)}) - ruční označení`
+                    : `Prodáno ${item.grams}g (objednávka ${id.substring(0, 8)}) - ruční označení`,
+                },
+              });
             }
           }
 
-          // Return stock when refunding or cancelling paid order
-          if (isChangingToRefunded || isChangingToCancelled) {
+          // Return stock when refunding, cancelling, or physically returning order
+          // NOTE: Stock is deducted at order creation, so we ALWAYS return on cancel/refund/return
+          if (isChangingToRefunded || isChangingToCancelled || isChangingToReturned) {
+            // Determine reason for stock return
+            const returnReason = isChangingToRefunded
+              ? 'Refund'
+              : isChangingToReturned
+                ? 'Vrácení zákazníkem'
+                : 'Zrušení';
+
             for (const item of updatedOrder.items) {
               if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
                 // Return piece to stock
@@ -453,7 +435,7 @@ export async function PUT(
                     skuId: item.skuId,
                     type: 'IN',
                     grams: item.grams,
-                    note: `${isChangingToRefunded ? 'Refund' : 'Zrušení'} (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
+                    note: `${returnReason} (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
                     refOrderId: id,
                   },
                 });
@@ -477,7 +459,7 @@ export async function PUT(
                     skuId: item.skuId,
                     type: 'IN',
                     grams: item.grams,
-                    note: `${isChangingToRefunded ? 'Refund' : 'Zrušení'} ${item.grams}g (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
+                    note: `${returnReason} ${item.grams}g (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
                     refOrderId: id,
                   },
                 });
@@ -643,11 +625,15 @@ export async function PUT(
             }
           }
 
-          // Send cancellation email if order is cancelled or refunded
-          if (isChangingToCancelled || isChangingToRefunded) {
+          // Send cancellation/return email if order is cancelled, refunded, or returned
+          if (isChangingToCancelled || isChangingToRefunded || isChangingToReturned) {
             try {
               const { sendOrderCancellationEmail } = await import('@/lib/email');
-              const reason = isChangingToRefunded ? 'Vrácení platby' : 'Zrušení objednávky';
+              const reason = isChangingToRefunded
+                ? 'Vrácení platby'
+                : isChangingToReturned
+                  ? 'Přijetí vráceného zboží'
+                  : 'Zrušení objednávky';
               await sendOrderCancellationEmail(updatedOrder.email, id, reason);
             } catch (emailError) {
               console.error('Failed to send cancellation email:', emailError);

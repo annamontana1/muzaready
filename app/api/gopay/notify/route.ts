@@ -85,8 +85,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use a transaction to atomically update order status and deduct stock
-    // IMPORTANT: Idempotency check is INSIDE transaction to prevent race conditions
+    // Use a transaction to atomically update order status
+    // NOTE: Stock was already reserved/deducted at order creation time
+    // This webhook only confirms payment and updates status
     const result = await prisma.$transaction(async (tx) => {
       // Fetch order with lock to prevent concurrent processing
       const order = await tx.order.findUnique({
@@ -128,52 +129,20 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // For each order item, deduct stock based on sale mode
+      // Update stock movements from "Rezervace" to "Prodáno"
       for (const item of updatedOrder.items) {
-        if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
-          // Mark as sold out (pieces are fully consumed)
-          await tx.sku.update({
-            where: { id: item.skuId },
-            data: {
-              soldOut: true,
-              inStock: false,
-            },
-          });
-
-          // Record stock movement
-          await tx.stockMovement.create({
-            data: {
-              skuId: item.skuId,
-              type: 'OUT',
-              grams: item.grams,
-              note: `Prodáno (objednávka ${orderId.substring(0, 8)})`,
-              refOrderId: orderId,
-            },
-          });
-        } else if (item.sku.saleMode === 'BULK_G') {
-          // Deduct grams from available stock
-          const newAvailableGrams = (item.sku.availableGrams || 0) - item.grams;
-
-          // Update SKU availability
-          const updatedSku = await tx.sku.update({
-            where: { id: item.skuId },
-            data: {
-              availableGrams: Math.max(0, newAvailableGrams),
-              inStock: newAvailableGrams > 0, // Still in stock if grams remain
-            },
-          });
-
-          // Record stock movement
-          await tx.stockMovement.create({
-            data: {
-              skuId: item.skuId,
-              type: 'OUT',
-              grams: item.grams,
-              note: `Prodáno ${item.grams}g (objednávka ${orderId.substring(0, 8)})`,
-              refOrderId: orderId,
-            },
-          });
-        }
+        await tx.stockMovement.updateMany({
+          where: {
+            refOrderId: orderId,
+            skuId: item.skuId,
+            note: { contains: 'Rezervace' },
+          },
+          data: {
+            note: item.sku.saleMode === 'PIECE_BY_WEIGHT'
+              ? `Prodáno (objednávka ${orderId.substring(0, 8)})`
+              : `Prodáno ${item.grams}g (objednávka ${orderId.substring(0, 8)})`,
+          },
+        });
       }
 
       return updatedOrder;
