@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { getCarrierName, getTrackingUrl } from '@/lib/shipping';
 
 interface OrderItem {
@@ -46,16 +47,21 @@ interface Order {
   discountAmount: number;
   total: number;
   trackingNumber: string | null;
+  carrier?: string | null;
   createdAt: string;
   updatedAt: string;
   paidAt: string | null;
   shippedAt: string | null;
   lastStatusChangeAt: string | null;
   items: OrderItem[];
+  // Zásilkovna data
+  packetaPointId?: string | null;
+  packetaPointName?: string | null;
 }
 
 interface ShipmentHistoryProps {
   order: Order;
+  onStatusChange?: () => void;
 }
 
 const getDeliveryStatusLabel = (status: string): string => {
@@ -73,37 +79,161 @@ const getDeliveryStatusLabel = (status: string): string => {
   }
 };
 
-export default function ShipmentHistory({ order }: ShipmentHistoryProps) {
+export default function ShipmentHistory({ order, onStatusChange }: ShipmentHistoryProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
   const hasShipment = order.trackingNumber && order.shippedAt;
+  const hasZasilkovnaPoint = !!(order as any).packetaPointId;
+  const canShipViaZasilkovna = hasZasilkovnaPoint && !hasShipment && order.paymentStatus === 'paid';
+
+  const handleZasilkovnaShip = async () => {
+    if (!confirm('Opravdu chcete odeslat tuto objednávku přes Zásilkovnu?\n\nZákazník obdrží automaticky email a SMS s informacemi o zásilce.')) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch(`/api/admin/orders/${order.id}/zasilkovna`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          weight: 0.5, // Default weight
+          cod: 0, // Prepaid orders
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Chyba při vytváření zásilky');
+      }
+
+      setSuccess(`Zásilka vytvořena! Tracking: ${data.barcode}`);
+
+      // Refresh order data
+      if (onStatusChange) {
+        onStatusChange();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Neznámá chyba');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Info Banner - always show */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <svg
-            className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <div>
-            <p className="text-sm text-blue-800 font-medium">
-              Poznámka:
-            </p>
-            <p className="text-sm text-blue-700 mt-1">
-              Tento systém podporuje zatím pouze jednu zásilku na objednávku. Tracking number je uloženo v poli order.trackingNumber.
-            </p>
+      {/* Success Message */}
+      {success && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <p className="text-sm text-green-800 font-medium">{success}</p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <p className="text-sm text-red-800 font-medium">{error}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Zásilkovna Action Card */}
+      {canShipViaZasilkovna && (
+        <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-lg shadow p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-white/20 rounded-lg">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold">Odeslat přes Zásilkovnu</h3>
+                <p className="text-red-100 text-sm">
+                  Výdejní místo: {(order as any).packetaPointName || (order as any).packetaPointId}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleZasilkovnaShip}
+              disabled={isLoading}
+              className="px-6 py-3 bg-white text-red-600 rounded-lg font-semibold hover:bg-red-50 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Odesílám...
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  Odeslat zásilku
+                </>
+              )}
+            </button>
+          </div>
+          <p className="mt-3 text-red-100 text-xs">
+            Zákazník automaticky obdrží email a SMS od Zásilkovny o stavu zásilky.
+          </p>
+        </div>
+      )}
+
+      {/* Info about Zásilkovna not available */}
+      {!hasZasilkovnaPoint && !hasShipment && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+              <p className="text-sm text-amber-800 font-medium">Zásilkovna není k dispozici</p>
+              <p className="text-sm text-amber-700 mt-1">
+                Tato objednávka nemá vybrané výdejní místo Zásilkovny. Použijte jiného dopravce nebo zadejte tracking ručně.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Payment not completed warning */}
+      {hasZasilkovnaPoint && !hasShipment && order.paymentStatus !== 'paid' && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="text-sm text-amber-800 font-medium">Čeká na platbu</p>
+              <p className="text-sm text-amber-700 mt-1">
+                Objednávka zatím nebyla zaplacena. Tlačítko pro odeslání přes Zásilkovnu se zobrazí po zaplacení.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Shipment Content */}
       {!hasShipment ? (

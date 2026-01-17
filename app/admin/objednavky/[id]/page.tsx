@@ -227,7 +227,7 @@ export default function OrderDetailsPage() {
       {activeTab === 'customer' && <CustomerSection order={order} />}
       {activeTab === 'items' && <ItemsSection order={order} />}
       {activeTab === 'payment' && <PaymentSection order={order} />}
-      {activeTab === 'shipments' && <ShipmentHistory order={order} />}
+      {activeTab === 'shipments' && <ShipmentHistory order={order} onStatusChange={handleStatusChange} />}
       {activeTab === 'metadata' && <MetadataSection order={order} onUpdate={() => {}} />}
       {activeTab === 'history' && <OrderHistorySection orderId={order.id} />}
     </div>
