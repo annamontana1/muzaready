@@ -33,7 +33,7 @@ export default function BulkAddToCartModal({
 }: BulkAddToCartModalProps) {
   const { addToCart } = useCart();
   const [grams, setGrams] = useState(100);
-  const [ending, setEnding] = useState<'NONE' | 'KERATIN' | 'PASKY' | 'TRESSY'>('NONE');
+  const [ending, setEnding] = useState<'NONE' | 'KERATIN'>('NONE');
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,8 +43,6 @@ export default function BulkAddToCartModal({
   const assemblyFees: Record<typeof ending, { fee: number; type: 'FLAT' | 'PER_GRAM' }> = {
     NONE: { fee: 0, type: 'FLAT' },
     KERATIN: { fee: 5, type: 'PER_GRAM' }, // 5 Kč per gram (matches lib/stock.ts config)
-    PASKY: { fee: 200, type: 'FLAT' }, // 200 Kč flat (matches lib/stock.ts config)
-    TRESSY: { fee: 150, type: 'FLAT' }, // 150 Kč flat (matches lib/stock.ts config)
   };
 
   const { fee: assemblyFeeCzk, type: assemblyFeeType } = assemblyFees[ending];
@@ -190,40 +188,6 @@ export default function BulkAddToCartModal({
               <div className="text-sm font-semibold text-gray-700">
                 +{(assemblyFees.KERATIN.fee * grams).toFixed(0)} Kč
               </div>
-            </label>
-
-            <label className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-ivory transition">
-              <input
-                type="radio"
-                name="ending"
-                value="PASKY"
-                checked={ending === 'PASKY'}
-                onChange={() => setEnding('PASKY')}
-                disabled={isAdding}
-                className="text-burgundy focus:ring-burgundy"
-              />
-              <div className="flex-1">
-                <div className="font-medium text-gray-900">Pásky (Tape-in)</div>
-                <div className="text-xs text-gray-500">Paušál</div>
-              </div>
-              <div className="text-sm font-semibold text-gray-700">+{assemblyFees.PASKY.fee} Kč</div>
-            </label>
-
-            <label className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-ivory transition">
-              <input
-                type="radio"
-                name="ending"
-                value="TRESSY"
-                checked={ending === 'TRESSY'}
-                onChange={() => setEnding('TRESSY')}
-                disabled={isAdding}
-                className="text-burgundy focus:ring-burgundy"
-              />
-              <div className="flex-1">
-                <div className="font-medium text-gray-900">Tressy</div>
-                <div className="text-xs text-gray-500">Paušál</div>
-              </div>
-              <div className="text-sm font-semibold text-gray-700">+{assemblyFees.TRESSY.fee} Kč</div>
             </label>
           </div>
         </div>

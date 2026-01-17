@@ -281,8 +281,6 @@ enum SaleMode {
 
 enum EndingOption {
   KERATIN
-  PASKY
-  TRESSY
   NONE
 }
 

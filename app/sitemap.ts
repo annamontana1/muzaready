@@ -38,12 +38,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/vlasy-k-prodlouzeni/pasky-nano-tapes`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    },
-    {
       url: `${baseUrl}/vlasy-k-prodlouzeni/vlasove-tresy`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,

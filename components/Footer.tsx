@@ -127,11 +127,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/metody-zakonceni/pasky-nano-tapes" className="hover:text-white transition">
-                  Tape-in nano pásky
-                </Link>
-              </li>
-              <li>
                 <Link href="/metody-zakonceni/vlasove-tresy" className="hover:text-white transition">
                   Vlasové tresy
                 </Link>

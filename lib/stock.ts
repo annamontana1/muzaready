@@ -13,8 +13,6 @@ interface PriceMatrixEntry {
 export const ASSEMBLY_FEE_CONFIG: Record<string, { type: 'FLAT' | 'PER_GRAM'; price?: number; pricePerGram?: number }> = {
   NONE: { type: 'FLAT', price: 0 },
   KERATIN: { type: 'PER_GRAM', pricePerGram: 5 }, // 5 Kč per gram
-  PASKY: { type: 'FLAT', price: 200 }, // 200 Kč flat fee
-  TRESSY: { type: 'FLAT', price: 150 }, // 150 Kč flat fee
 };
 
 export function validateBulkChoice(grams: number, min?: number | null, step?: number | null): boolean {

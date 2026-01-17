@@ -8,7 +8,7 @@ export interface SkuCartItem {
   grams: number;
   pricePerGram: number;
   lineTotal: number;
-  ending: 'KERATIN' | 'PASKY' | 'TRESSY' | 'NONE';
+  ending: 'KERATIN' | 'NONE';
   assemblyFeeType: 'FLAT' | 'PER_GRAM';
   assemblyFeeCzk: number;
   assemblyFeeTotal: number;

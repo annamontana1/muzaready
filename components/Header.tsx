@@ -216,12 +216,6 @@ export default function Header() {
                     {t('nav.methods_keratin')}
                   </Link>
                   <Link
-                    href="/metody-zakonceni/pasky-nano-tapes"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.methods_tapeIn')}
-                  </Link>
-                  <Link
                     href="/metody-zakonceni/vlasove-tresy"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                   >
@@ -589,13 +583,6 @@ export default function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Keratin / Mikrokeratin
-                    </Link>
-                    <Link
-                      href="/metody-zakonceni/pasky-nano-tapes"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Tape-in (nano tapes)
                     </Link>
                     <Link
                       href="/metody-zakonceni/vlasove-tresy"

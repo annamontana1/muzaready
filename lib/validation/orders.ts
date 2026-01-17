@@ -11,7 +11,7 @@ export const CustomerCategorySchema = z.enum(['STANDARD', 'LUXE', 'PLATINUM_EDIT
 export const SaleModeSchema = z.enum(['PIECE_BY_WEIGHT', 'BULK_G']);
 
 // Ending type enum
-export const EndingSchema = z.enum(['NONE', 'KERATIN', 'PASKY', 'TRESSY']);
+export const EndingSchema = z.enum(['NONE', 'KERATIN']);
 
 // Assembly fee type enum
 export const AssemblyFeeTypeSchema = z.enum(['FLAT', 'PER_GRAM']);

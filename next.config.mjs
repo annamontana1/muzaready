@@ -66,7 +66,7 @@ const nextConfig = {
       },
       {
         source: '/metody/tape-in',
-        destination: '/metody-zakonceni/pasky-nano-tapes',
+        destination: '/metody-zakonceni',
         permanent: true,
       },
       {
@@ -87,7 +87,7 @@ const nextConfig = {
       },
       {
         source: '/vlasy-k-prodlouzeni/pasky-nano-tapes',
-        destination: '/metody-zakonceni/pasky-nano-tapes',
+        destination: '/metody-zakonceni',
         permanent: true,
       },
       {
@@ -97,7 +97,7 @@ const nextConfig = {
       },
       {
         source: '/vlasy-k-prodlouzeni/nano-tapes',
-        destination: '/metody-zakonceni/pasky-nano-tapes',
+        destination: '/metody-zakonceni',
         permanent: true,
       },
       // Aliasy pro kratší URL
@@ -108,7 +108,12 @@ const nextConfig = {
       },
       {
         source: '/metody-zakonceni/tape-in',
-        destination: '/metody-zakonceni/pasky-nano-tapes',
+        destination: '/metody-zakonceni',
+        permanent: true,
+      },
+      {
+        source: '/metody-zakonceni/pasky-nano-tapes',
+        destination: '/metody-zakonceni',
         permanent: true,
       },
       {

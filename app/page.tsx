@@ -112,14 +112,10 @@ export default function Home() {
           </div>
 
           {/* Additional categories grid */}
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <Link href="/metody-zakonceni/vlasy-na-keratin" className="p-6 bg-white rounded-lg shadow hover:shadow-medium transition">
               <h4 className="text-xl font-semibold text-burgundy mb-2">{t('home.collections.methods.keratin.title')}</h4>
               <p className="text-sm text-gray-600">{t('home.collections.methods.keratin.description')}</p>
-            </Link>
-            <Link href="/metody-zakonceni/pasky-nano-tapes" className="p-6 bg-white rounded-lg shadow hover:shadow-medium transition">
-              <h4 className="text-xl font-semibold text-burgundy mb-2">{t('home.collections.methods.tapes.title')}</h4>
-              <p className="text-sm text-gray-600">{t('home.collections.methods.tapes.description')}</p>
             </Link>
             <Link href="/metody-zakonceni/vlasove-tresy" className="p-6 bg-white rounded-lg shadow hover:shadow-medium transition">
               <h4 className="text-xl font-semibold text-burgundy mb-2">{t('home.collections.methods.wefts.title')}</h4>

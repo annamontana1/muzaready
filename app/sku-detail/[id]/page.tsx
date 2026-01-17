@@ -37,8 +37,6 @@ interface QuoteItem {
 const ENDING_OPTIONS = [
   { id: 'NONE', label: 'Bez zakončení', emoji: '-' },
   { id: 'KERATIN', label: 'Keratin (5 Kč/g)', emoji: '✨' },
-  { id: 'PASKY', label: 'Pásky (200 Kč)', emoji: '🎀' },
-  { id: 'TRESSY', label: 'Tressy (150 Kč)', emoji: '💎' },
 ];
 
 export default function SkuDetailPage() {
@@ -440,7 +438,7 @@ export default function SkuDetailPage() {
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
               <p className="font-medium mb-2">ℹ️ Jak to funguje:</p>
               <ol className="list-decimal list-inside space-y-1 text-xs">
-                <li>Vyber typ zakončení (KERATIN, PÁSKY, TRESSY)</li>
+                <li>Vyber typ zakončení (KERATIN nebo bez zakončení)</li>
                 {sku.saleMode === 'BULK_G' && <li>Zadej počet gramů</li>}
                 <li>Klikni "Spočítat cenu" pro přesný cenový rozpis</li>
                 <li>Vyber počet kusů a přidej do košíku</li>

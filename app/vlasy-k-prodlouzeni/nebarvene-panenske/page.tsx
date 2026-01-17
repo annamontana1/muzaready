@@ -348,14 +348,6 @@ export default function NebarvenePanenskePage() {
                 </div>
               </Link>
               <Link
-                href="/metody-zakonceni/pasky-nano-tapes"
-                className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
-              >
-                <div className="text-sm font-medium text-burgundy group-hover:text-[#6E2A2A]">
-                  Tape in
-                </div>
-              </Link>
-              <Link
                 href="/metody-zakonceni/vlasove-tresy"
                 className="flex-1 group px-3 py-2 bg-white border border-warm-beige rounded-lg hover:border-burgundy hover:shadow-md transition-all text-center"
               >

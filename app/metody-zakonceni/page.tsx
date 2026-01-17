@@ -16,13 +16,6 @@ export default function MetodyZakonceniPage() {
       highlights: ['Trvanlivé 3-6 měsíců', 'Přirozený vzhled', 'Pro aktivní životní styl']
     },
     {
-      title: 'Tape-in (nano tapes)',
-      description: 'Nejšetrnější a nejrychlejší metoda aplikace. Ideální pro jemné vlasy.',
-      href: '/metody-zakonceni/pasky-nano-tapes',
-      icon: '✨',
-      highlights: ['Rychlá aplikace 30-60 min', 'Opakovaně použitelné', 'Bez tepla a chemie']
-    },
-    {
       title: 'Vlasové tresy',
       description: 'Tradiční metoda bez chemie a tepla. Ideální pro afro a kudrnaté vlasy.',
       href: '/metody-zakonceni/vlasove-tresy',
