@@ -72,8 +72,15 @@ function SkuListPageContent() {
     try {
       const queryString = filtersToQueryString(appliedFilters);
       const url = `/api/admin/skus${queryString ? `?${queryString}` : ''}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Failed to fetch SKUs');
+      const res = await fetch(url, {
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${res.status}`);
+      }
+
       const data = await res.json();
 
       // Handle both old format (array) and new format (object with skus/pagination)
@@ -84,9 +91,12 @@ function SkuListPageContent() {
         setSkus(data.skus || []);
         setPagination(data.pagination || null);
       }
-    } catch (err) {
-      console.error(err);
-      alert('Chyba při načítání skladů');
+    } catch (err: any) {
+      console.error('Chyba při načítání SKU:', err);
+      // Don't show alert for initial load if auth is just slow
+      if (err.message !== 'Unauthorized - Admin session required') {
+        alert('Chyba při načítání skladů: ' + err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -139,6 +149,7 @@ function SkuListPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        credentials: 'include',
       });
 
       if (!res.ok) {
@@ -208,6 +219,7 @@ function SkuListPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: Array.from(selectedIds) }),
+        credentials: 'include',
       });
 
       const data = await res.json();
@@ -241,6 +253,7 @@ function SkuListPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deleteAll: true }),
+        credentials: 'include',
       });
 
       const data = await res.json();

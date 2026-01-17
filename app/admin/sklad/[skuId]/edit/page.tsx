@@ -65,7 +65,9 @@ export default function SkuEditPage() {
   const fetchSku = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/admin/skus/${skuId}`);
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        credentials: 'include',
+      });
       const data = await res.json();
 
       if (!res.ok) {
@@ -139,6 +141,7 @@ export default function SkuEditPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        credentials: 'include',
       });
 
       const data = await res.json();
