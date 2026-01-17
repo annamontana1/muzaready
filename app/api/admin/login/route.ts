@@ -112,13 +112,17 @@ export async function POST(request: NextRequest) {
       });
     }
     
+    // Get the root domain for cookie (works for both www and non-www)
+    const host = request.headers.get('host') || '';
+    const rootDomain = host.includes('muzahair.cz') ? '.muzahair.cz' : undefined;
+
     response.cookies.set('admin-session', cookieValue, {
       httpOnly: true, // Prevents JavaScript access (XSS protection)
       secure: isProduction, // HTTPS only in production
       sameSite: 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
-      domain: undefined, // Let browser decide (works for all subdomains)
+      domain: rootDomain, // Works for both www.muzahair.cz and muzahair.cz
     });
     
     // Also set a response header to confirm cookie was set
