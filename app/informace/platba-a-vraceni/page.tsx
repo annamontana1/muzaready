@@ -149,6 +149,32 @@ export default function PlatbaAVraceniPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             ↩️ Vrácení zboží
           </h2>
+
+          {/* Important notice */}
+          <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-6 mb-6">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div>
+                <h3 className="font-bold text-amber-800 mb-2">Důležité upozornění k vrácení vlasů</h3>
+                <p className="text-amber-700 mb-3">
+                  Vlasy lze vrátit <strong>pouze v nerozbalené originální folii</strong> - například pokud vám nevyhovuje odstín
+                  a vlasy jste si pouze přiložili k obličeji pro kontrolu barvy, aniž byste je rozbalili.
+                </p>
+                <p className="text-amber-700 mb-3">
+                  <strong>Rozbalené vlasy nelze vrátit</strong> dle § 1837 občanského zákoníku, protože:
+                </p>
+                <ul className="text-amber-700 text-sm space-y-1 ml-4 list-disc">
+                  <li>Po rozbalení z ochranné folie nelze ověřit, zda nedošlo k poškození produktu</li>
+                  <li>Vlasy mohly být česány, zkoušeny, upravovány nebo aplikovány kadeřnicí</li>
+                  <li>Jakákoliv manipulace (rozbalení, česání, barvení, střih, aplikace) znemožňuje další prodej</li>
+                </ul>
+                <p className="text-amber-600 text-sm mt-3 italic">
+                  Toto opatření chrání všechny zákaznice před nákupem již použitého zboží.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -156,12 +182,12 @@ export default function PlatbaAVraceniPage() {
                   14 dní na vrácení
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Máte právo odstoupit od smlouvy do 14 dnů od převzetí zboží bez udání důvodu.
+                  Máte právo odstoupit od smlouvy do 14 dnů od převzetí zboží.
                 </p>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">✓</span>
-                    Zboží musí být nepoužité a v původním obalu
+                    Vlasy musí být <strong>nerozbalené v originální folii</strong>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">✓</span>
@@ -170,6 +196,10 @@ export default function PlatbaAVraceniPage() {
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">✓</span>
                     Peníze vrátíme do 14 dnů od obdržení vráceného zboží
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500">✗</span>
+                    <span className="text-gray-600">Rozbalené nebo zkoušené vlasy nelze vrátit</span>
                   </li>
                 </ul>
               </div>
