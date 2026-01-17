@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -9,8 +9,6 @@ interface SkuData {
   sku: string;
   shortCode: string | null;
   name: string | null;
-  description: string | null;
-  images: string[];
   shade: string | null;
   shadeName: string | null;
   shadeHex: string | null;
@@ -34,7 +32,6 @@ export default function SkuEditPage() {
   const params = useParams();
   const router = useRouter();
   const skuId = params.skuId as string;
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [sku, setSku] = useState<SkuData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,10 +39,8 @@ export default function SkuEditPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Form state
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     shadeName: '',
     shadeHex: '',
     lengthCm: '',
@@ -63,10 +58,6 @@ export default function SkuEditPage() {
     soldOut: false,
   });
 
-  const [images, setImages] = useState<string[]>([]);
-  const [newImageUrl, setNewImageUrl] = useState('');
-  const [uploadingImage, setUploadingImage] = useState(false);
-
   useEffect(() => {
     fetchSku();
   }, [skuId]);
@@ -78,14 +69,13 @@ export default function SkuEditPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Chyba při načítání SKU');
+        setError(data.error || 'Chyba pri nacitani SKU');
         return;
       }
 
       setSku(data);
       setFormData({
         name: data.name || '',
-        description: data.description || '',
         shadeName: data.shadeName || '',
         shadeHex: data.shadeHex || '',
         lengthCm: data.lengthCm?.toString() || '',
@@ -102,9 +92,8 @@ export default function SkuEditPage() {
         listingPriority: data.listingPriority?.toString() || '',
         soldOut: data.soldOut || false,
       });
-      setImages(data.images || []);
     } catch (err) {
-      setError('Chyba při komunikaci se serverem');
+      setError('Chyba pri komunikaci se serverem');
     } finally {
       setLoading(false);
     }
@@ -120,50 +109,6 @@ export default function SkuEditPage() {
     }));
   };
 
-  const handleAddImageUrl = () => {
-    if (newImageUrl.trim()) {
-      setImages((prev) => [...prev, newImageUrl.trim()]);
-      setNewImageUrl('');
-    }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    setUploadingImage(true);
-    try {
-      for (const file of Array.from(files)) {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('folder', 'products');
-
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setImages((prev) => [...prev, data.url]);
-        } else {
-          console.error('Upload failed');
-        }
-      }
-    } catch (err) {
-      console.error('Error uploading image:', err);
-    } finally {
-      setUploadingImage(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -173,8 +118,6 @@ export default function SkuEditPage() {
     try {
       const payload = {
         name: formData.name || null,
-        description: formData.description || null,
-        images: images,
         shadeName: formData.shadeName || null,
         shadeHex: formData.shadeHex || null,
         lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
@@ -201,7 +144,7 @@ export default function SkuEditPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Chyba při ukládání');
+        throw new Error(data.error || 'Chyba pri ukladani');
       }
 
       setSuccess(true);
@@ -250,7 +193,6 @@ export default function SkuEditPage() {
         </div>
       </div>
 
-      {/* Success/Error Messages */}
       {success && (
         <div className="bg-green-50 text-green-800 p-4 rounded-lg mb-6">Ulozeno!</div>
       )}
@@ -269,7 +211,7 @@ export default function SkuEditPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
                 placeholder="Nazev produktu"
               />
             </div>
@@ -280,120 +222,12 @@ export default function SkuEditPage() {
                 name="customerCategory"
                 value={formData.customerCategory}
                 onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full border rounded-lg px-4 py-2"
               >
                 <option value="STANDARD">STANDARD</option>
                 <option value="LUXE">LUXE</option>
                 <option value="PLATINUM_EDITION">PLATINUM EDITION</option>
               </select>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Popis produktu</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Detailni popis produktu pro e-shop..."
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Popis se zobrazi na strance produktu a v katalogu.
-            </p>
-          </div>
-        </div>
-
-        {/* Images */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Obrazky produktu</h2>
-
-          {/* Current Images */}
-          {images.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              {images.map((url, index) => (
-                <div key={index} className="relative group">
-                  <img
-                    src={url}
-                    alt={`Obrazek ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg border"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                  {index === 0 && (
-                    <span className="absolute bottom-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
-                      Hlavni
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Upload New Image */}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nahrat obrazek
-              </label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageUpload}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              {uploadingImage && <p className="text-sm text-gray-500 mt-2">Nahravani...</p>}
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">nebo</span>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Pridat URL obrazku
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="url"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="flex-1 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddImageUrl}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
-                >
-                  Pridat
-                </button>
-              </div>
             </div>
           </div>
         </div>

@@ -12,8 +12,6 @@ interface Sku {
   sku: string;
   shortCode: string | null;
   name: string | null;
-  description: string | null;
-  images: string[];
   shade: string | null;
   shadeName: string | null;
   lengthCm: number | null;
