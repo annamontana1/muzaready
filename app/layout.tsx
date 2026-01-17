@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
+import CookieBanner from "@/components/CookieBanner";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.muzahair.cz'),
@@ -115,6 +116,7 @@ export default function RootLayout({
           <MainLayout>
             {children}
           </MainLayout>
+          <CookieBanner />
         </Providers>
       </body>
     </html>
