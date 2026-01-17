@@ -140,7 +140,7 @@ model OrderItem {
   saleMode         SaleMode
   skuId            String
   order            Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  sku              Sku          @relation(fields: [skuId], references: [id])
+  sku              Sku          @relation(fields: [skuId], references: [id], onDelete: Restrict)
 
   @@map("order_items")
 }
