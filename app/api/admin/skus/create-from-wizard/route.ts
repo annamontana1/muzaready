@@ -412,13 +412,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Return detailed error for debugging
+    const errorMessage = error.message || 'Neznámá chyba';
+    const errorCode = error.code || 'UNKNOWN';
     return NextResponse.json(
       {
-        error: 'Chyba při vytváření SKU',
+        error: `Chyba: ${errorMessage} (${errorCode})`,
         details: error.message,
         code: error.code,
         meta: error.meta,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );

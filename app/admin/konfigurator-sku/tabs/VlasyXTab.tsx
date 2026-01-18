@@ -406,8 +406,8 @@ export default function VlasyXTab() {
       }
     } catch (err: any) {
       console.error('Submit error:', err);
-      const errorMsg = err.message || 'Chyba při vytváření SKU';
-      setError(`${errorMsg}. Zkontroluj: vybrané délky, default délku, a ceny v ceníku.`);
+      const errorMsg = err.message || 'Neznámá chyba';
+      setError(`${errorMsg}`);
     } finally {
       setLoading(false);
     }
