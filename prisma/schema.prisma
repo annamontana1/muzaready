@@ -175,6 +175,7 @@ model Sku {
   sku              String            @unique
   shortCode        String?           @unique // Krátký kód pro IG (M0001, M0002...)
   name             String?
+  imageUrl         String?           // URL obrázku produktu
   // TODO: Přidat po nastavení DIRECT_URL na Vercelu
   // description      String?           @db.Text // Popis produktu
   // images           String[]          // URL obrázků produktu

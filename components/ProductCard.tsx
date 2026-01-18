@@ -170,8 +170,23 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
       {/* Product Image */}
       <div className="aspect-square overflow-hidden relative">
+        {/* Actual image if available */}
+        {product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? (
+          <img
+            src={product.images.main}
+            alt={listingTitle}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to gradient if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallback = target.nextElementSibling as HTMLElement;
+              if (fallback) fallback.style.display = 'flex';
+            }}
+          />
+        ) : null}
         <div
-          className="w-full h-full flex items-center justify-center relative"
+          className={`w-full h-full flex items-center justify-center relative ${product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? 'hidden absolute inset-0' : ''}`}
           style={{
             background: `linear-gradient(135deg, ${shadeColor.hex} 0%, ${shadeColor.hex}dd 50%, ${shadeColor.hex}bb 100%)`
           }}

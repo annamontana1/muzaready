@@ -19,6 +19,7 @@ interface SkuWithStock {
   id: string;
   sku: string;
   name: string | null;
+  imageUrl: string | null;
   customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
   shade: string | null;
   shadeName: string | null;
@@ -258,8 +259,8 @@ export async function getCatalogProducts(
             ribbon_color: shadeHex,
           }],
           images: {
-            main: `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
-            hover: `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+            main: sku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+            hover: sku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
             gallery: [],
           },
           base_price_per_100g_45cm: sku.pricePerGramCzk * 100, // Cena za 100g
@@ -342,8 +343,8 @@ export async function getCatalogProducts(
           };
         }),
         images: {
-          main: `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
-          hover: `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+          main: displaySku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+          hover: displaySku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
           gallery: [],
         },
         base_price_per_100g_45cm: displaySku.pricePerGramCzk * 100,
