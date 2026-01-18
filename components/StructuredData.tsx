@@ -9,10 +9,10 @@ export function OrganizationSchema() {
     '@type': ['Organization', 'LocalBusiness', 'Store'],
     name: 'Mùza Hair',
     alternateName: 'Muza Hair Praha',
-    url: 'https://muzahair.cz',
-    logo: 'https://muzahair.cz/logo.png',
+    url: 'https://www.muzahair.cz',
+    logo: 'https://www.muzahair.cz/logo.png',
     description: 'Prémiové vlasy k prodloužení, příčesky a paruky v Praze. 100% panenské vlasy, profesionální barvení. Vlastní barvírna.',
-    image: 'https://muzahair.cz/og-image.jpg',
+    image: 'https://www.muzahair.cz/og-image.jpg',
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
@@ -55,12 +55,12 @@ export function WebSiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Mùza Hair',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://muzahair.cz/hledat?q={search_term_string}',
+        urlTemplate: 'https://www.muzahair.cz/hledat?q={search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },
@@ -157,7 +157,7 @@ export function ProductSchema({
       seller: {
         '@type': 'Organization',
         name: 'Mùza Hair',
-        url: 'https://muzahair.cz',
+        url: 'https://www.muzahair.cz',
       },
       shippingDetails: {
         '@type': 'OfferShippingDetails',
