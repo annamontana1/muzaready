@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface SkuData {
   id: string;
   sku: string;
   shortCode: string | null;
   name: string | null;
+  imageUrl: string | null;
   shade: string | null;
   shadeName: string | null;
   shadeHex: string | null;
@@ -41,6 +43,7 @@ export default function SkuEditPage() {
 
   const [formData, setFormData] = useState({
     name: '',
+    imageUrl: '',
     shadeName: '',
     shadeHex: '',
     lengthCm: '',
@@ -78,6 +81,7 @@ export default function SkuEditPage() {
       setSku(data);
       setFormData({
         name: data.name || '',
+        imageUrl: data.imageUrl || '',
         shadeName: data.shadeName || '',
         shadeHex: data.shadeHex || '',
         lengthCm: data.lengthCm?.toString() || '',
@@ -120,6 +124,7 @@ export default function SkuEditPage() {
     try {
       const payload = {
         name: formData.name || null,
+        imageUrl: formData.imageUrl || null,
         shadeName: formData.shadeName || null,
         shadeHex: formData.shadeHex || null,
         lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
@@ -232,6 +237,16 @@ export default function SkuEditPage() {
                 <option value="PLATINUM_EDITION">PLATINUM EDITION</option>
               </select>
             </div>
+          </div>
+
+          {/* Image Upload */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Fotka produktu</label>
+            <ImageUpload
+              value={formData.imageUrl}
+              onChange={(url) => setFormData((prev) => ({ ...prev, imageUrl: url }))}
+              folder="skus"
+            />
           </div>
         </div>
 
