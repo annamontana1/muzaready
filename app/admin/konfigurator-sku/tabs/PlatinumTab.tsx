@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getAllShades, ShadeInfo } from '@/lib/shades';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface PriceMatrixEntry {
   id: string;
@@ -631,13 +632,11 @@ export default function PlatinumTab() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">URL obrázku (volitelné)</label>
-          <input
-            type="url"
+          <label className="block text-sm font-medium text-gray-700 mb-2">Fotka produktu</label>
+          <ImageUpload
             value={formData.imageUrl}
-            onChange={(e) => handleFieldChange('imageUrl', e.target.value)}
-            placeholder="https://..."
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            onChange={(url) => handleFieldChange('imageUrl', url)}
+            folder="skus"
           />
         </div>
 
