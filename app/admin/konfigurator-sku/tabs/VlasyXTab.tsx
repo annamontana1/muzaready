@@ -75,6 +75,7 @@ export default function VlasyXTab() {
   const [createdSkus, setCreatedSkus] = useState<Array<{
     id: string;
     sku: string;
+    shortCode: string;
     length: number;
     movementId?: string;
     stock: number;
@@ -98,6 +99,7 @@ export default function VlasyXTab() {
     manualPricePerGram: '',
     isListed: true,
     listingPriority: 8,
+    imageUrl: '',
   });
 
   useEffect(() => {
@@ -371,6 +373,7 @@ export default function VlasyXTab() {
           formData.priceMode === 'manual' ? Number(formData.manualPricePerGram) : undefined,
         isListed: formData.isListed,
         listingPriority: formData.listingPriority,
+        imageUrl: formData.imageUrl || undefined,
         name: generateVlasyXName(
           Number(formData.defaultLength || formData.selectedLengths[0]),
           formData.category,
@@ -460,42 +463,37 @@ export default function VlasyXTab() {
                 {createdSkus.map((sku) => (
                   <div key={sku.id} className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                     <div className="text-center mb-4">
+                      {/* Short Code - prominent display */}
+                      <div className="inline-block px-4 py-2 bg-burgundy text-white rounded-lg font-bold text-xl mb-2">
+                        {sku.shortCode}
+                      </div>
                       <div className="font-bold text-lg text-gray-900">{sku.length} cm</div>
-                      <div className="text-sm text-gray-500">{sku.sku}</div>
-                      <div className="text-sm font-medium text-green-600 mt-1">{sku.stock}g skladem</div>
+                      <div className="text-xs text-gray-400 font-mono">{sku.sku}</div>
+                      {sku.stock > 0 && (
+                        <div className="text-sm font-medium text-green-600 mt-1">{sku.stock}g skladem</div>
+                      )}
                     </div>
 
-                    {sku.movementId ? (
-                      <>
-                        {/* QR Code Image */}
-                        <div className="bg-white rounded-lg p-4 mb-4 flex items-center justify-center">
-                          <img
-                            src={`/api/admin/stock/qr-code/${sku.movementId}`}
-                            alt={`QR kód pro ${sku.sku}`}
-                            className="w-40 h-40"
-                          />
-                        </div>
+                    {/* QR Code - always show based on SKU ID */}
+                    <div className="bg-white rounded-lg p-4 mb-4 flex items-center justify-center">
+                      <img
+                        src={`/api/admin/stock/qr-code/sku/${sku.id}`}
+                        alt={`QR kód pro ${sku.shortCode}`}
+                        className="w-40 h-40"
+                      />
+                    </div>
 
-                        {/* Download Button */}
-                        <a
-                          href={`/api/admin/stock/qr-code/${sku.movementId}`}
-                          download={`QR-${sku.sku}.png`}
-                          className="w-full px-4 py-3 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium inline-flex items-center justify-center gap-2"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                          Stáhnout QR
-                        </a>
-                      </>
-                    ) : (
-                      <div className="text-center py-8 text-gray-400">
-                        <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                        <p className="text-sm">Bez skladu - není QR</p>
-                      </div>
-                    )}
+                    {/* Download Button */}
+                    <a
+                      href={`/api/admin/stock/qr-code/sku/${sku.id}`}
+                      download={`QR-${sku.shortCode}.png`}
+                      className="w-full px-4 py-3 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium inline-flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Stáhnout QR
+                    </a>
                   </div>
                 ))}
               </div>
@@ -504,7 +502,7 @@ export default function VlasyXTab() {
             {/* Footer */}
             <div className="bg-gray-50 px-6 py-4 border-t flex justify-between items-center">
               <p className="text-sm text-gray-600">
-                Vytvořeno {createdSkus.length} SKU, {createdSkus.filter(s => s.movementId).length} s QR kódem
+                Vytvořeno {createdSkus.length} SKU
               </p>
               <button
                 onClick={closeQrModal}
@@ -830,6 +828,36 @@ export default function VlasyXTab() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
             />
           </div>
+        </div>
+
+        {/* Image URL */}
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Obrázek produktu (URL)
+            </label>
+            <input
+              type="url"
+              value={formData.imageUrl}
+              onChange={(e) => handleFieldChange('imageUrl', e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            />
+            <p className="text-xs text-gray-500 mt-1">Volitelné - URL obrázku produktu</p>
+          </div>
+          {formData.imageUrl && (
+            <div className="mt-2">
+              <p className="text-xs text-gray-500 mb-2">Náhled:</p>
+              <img
+                src={formData.imageUrl}
+                alt="Náhled"
+                className="w-32 h-32 object-cover rounded-lg border border-gray-200"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

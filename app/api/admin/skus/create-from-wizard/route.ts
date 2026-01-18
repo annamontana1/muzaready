@@ -9,6 +9,30 @@ export const dynamic = 'force-dynamic';
 const EXCHANGE_RATE_ID = 'GLOBAL_RATE';
 const FALLBACK_CZK_TO_EUR = 1 / 25.5;
 
+// Generate next short code (M0001, M0002, ...)
+const generateNextShortCode = async (): Promise<string> => {
+  const lastSku = await prisma.sku.findFirst({
+    where: {
+      shortCode: { not: null }
+    },
+    orderBy: { shortCode: 'desc' },
+    select: { shortCode: true }
+  });
+
+  if (!lastSku?.shortCode) {
+    return 'M0001';
+  }
+
+  // Extract number from shortCode (e.g., "M0042" -> 42)
+  const match = lastSku.shortCode.match(/M(\d+)/);
+  if (!match) {
+    return 'M0001';
+  }
+
+  const nextNumber = parseInt(match[1], 10) + 1;
+  return `M${String(nextNumber).padStart(4, '0')}`;
+};
+
 const categoryMap: Record<string, string> = {
   nebarvene_panenske: 'nebarvene',
   barvene_vlasy: 'barvene',
@@ -204,8 +228,12 @@ export async function POST(request: NextRequest) {
         );
         const finalName = manualName ?? generatedNameForLength;
 
+        // Generate unique short code for this SKU
+        const shortCode = await generateNextShortCode();
+
         console.log('📝 Creating SKU with data:', {
           sku: finalSkuCode,
+          shortCode,
           name: finalName,
           shade: String(shadeNumber),
           lengthCm: length,
@@ -216,6 +244,7 @@ export async function POST(request: NextRequest) {
         const sku = await prisma.sku.create({
           data: {
             sku: finalSkuCode,
+            shortCode,
             name: finalName,
             shade: String(shadeNumber),
             shadeName: shadeName || null,
@@ -252,7 +281,14 @@ export async function POST(request: NextRequest) {
           movementId = movement.id;
         }
 
-        createdSkus.push({ id: sku.id, sku: finalSkuCode, length, movementId, stock: stockForLength });
+        createdSkus.push({
+          id: sku.id,
+          sku: finalSkuCode,
+          shortCode,
+          length,
+          movementId,
+          stock: stockForLength
+        });
       }
 
       return NextResponse.json(
@@ -332,9 +368,13 @@ export async function POST(request: NextRequest) {
         priceCzkTotal: totalPriceCzk,
       });
 
+      // Generate unique short code for this SKU
+      const shortCode = await generateNextShortCode();
+
       const sku = await prisma.sku.create({
         data: {
           sku: finalSkuCode,
+          shortCode,
           name: platinumName || name,
           shade: String(shadeNumber),
           shadeName: shadeName || null,
@@ -379,6 +419,7 @@ export async function POST(request: NextRequest) {
           message: 'SKU vytvořen',
           skuId: sku.id,
           skuCode: finalSkuCode,
+          shortCode,
           movementId,
           weight: numericWeight,
         },
