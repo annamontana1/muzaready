@@ -204,29 +204,40 @@ export async function POST(request: NextRequest) {
         );
         const finalName = manualName ?? generatedNameForLength;
 
+        console.log('📝 Creating SKU with data:', {
+          sku: finalSkuCode,
+          name: finalName,
+          shade: String(shadeNumber),
+          lengthCm: length,
+          pricePerGram,
+          customerCategory,
+        });
+
         const sku = await prisma.sku.create({
           data: {
             sku: finalSkuCode,
             name: finalName,
             shade: String(shadeNumber),
-            shadeName,
-            shadeHex,
+            shadeName: shadeName || null,
+            shadeHex: shadeHex || null,
             shadeRangeStart: shadeRange.start,
             shadeRangeEnd: shadeRange.end,
             lengthCm: length,
-            structure,
+            structure: structure || null,
             saleMode: 'BULK_G',
             pricePerGramCzk: pricePerGram,
-            pricePerGramEur,
-            minOrderG,
-            stepG,
-            availableGrams: stockForLength,
+            pricePerGramEur: pricePerGramEur,
+            minOrderG: minOrderG || null,
+            stepG: stepG || null,
+            availableGrams: stockForLength || null,
             inStock: stockForLength > 0,
             customerCategory: customerCategory as any,
             isListed: Boolean(isListed),
-            listingPriority: isListed ? listingPriority ?? 5 : null,
-          } as any,
+            listingPriority: isListed ? (listingPriority ?? 5) : null,
+          },
         });
+
+        console.log('✅ SKU created:', sku.id, sku.sku);
 
         let movementId: string | undefined;
         if (stockForLength > 0) {
@@ -313,30 +324,40 @@ export async function POST(request: NextRequest) {
         finalSkuCode = `${baseSkuCode}-${String(counter).padStart(2, '0')}`;
       }
 
+      console.log('📝 Creating Platinum SKU:', {
+        sku: finalSkuCode,
+        name: platinumName || name,
+        lengthCm: numericLength,
+        weightGrams: numericWeight,
+        priceCzkTotal: totalPriceCzk,
+      });
+
       const sku = await prisma.sku.create({
         data: {
           sku: finalSkuCode,
           name: platinumName || name,
           shade: String(shadeNumber),
-          shadeName,
-          shadeHex,
+          shadeName: shadeName || null,
+          shadeHex: shadeHex || null,
           shadeRangeStart: shadeRange.start,
           shadeRangeEnd: shadeRange.end,
-          structure,
+          structure: structure || null,
           lengthCm: numericLength,
           customerCategory: 'PLATINUM_EDITION',
           saleMode: 'PIECE_BY_WEIGHT',
           pricePerGramCzk: pricePerGram,
-          pricePerGramEur,
+          pricePerGramEur: pricePerGramEur,
           priceCzkTotal: totalPriceCzk,
-          priceEurTotal,
+          priceEurTotal: priceEurTotal,
           weightTotalG: numericWeight,
           weightGrams: numericWeight,
           inStock: Boolean(inStock),
           isListed: Boolean(isListed),
-          listingPriority: isListed ? listingPriority ?? 5 : null,
-        } as any,
+          listingPriority: isListed ? (listingPriority ?? 5) : null,
+        },
       });
+
+      console.log('✅ Platinum SKU created:', sku.id, sku.sku);
 
       // Create stock movement for the piece (for QR code)
       let movementId: string | undefined;
@@ -370,7 +391,10 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   } catch (error: any) {
-    console.error('Error creating SKU from wizard:', error);
+    console.error('❌ Error creating SKU from wizard:', error);
+    console.error('❌ Error stack:', error.stack);
+    console.error('❌ Error code:', error.code);
+    console.error('❌ Error meta:', error.meta);
 
     if (error.code === 'P2002') {
       return NextResponse.json(
@@ -379,8 +403,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Prisma validation error
+    if (error.code === 'P2003') {
+      return NextResponse.json(
+        { error: 'Chyba vztahu v databázi', details: error.message, meta: error.meta },
+        { status: 400 }
+      );
+    }
+
+    // Return detailed error for debugging
     return NextResponse.json(
-      { error: 'Chyba při vytváření SKU', details: error.message },
+      {
+        error: 'Chyba při vytváření SKU',
+        details: error.message,
+        code: error.code,
+        meta: error.meta,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     );
   }

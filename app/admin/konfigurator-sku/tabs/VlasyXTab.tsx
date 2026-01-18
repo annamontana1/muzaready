@@ -312,8 +312,29 @@ export default function VlasyXTab() {
   };
 
   const handleSubmit = async () => {
+    // Detailed validation messages
+    if (formData.selectedLengths.length === 0) {
+      setError('❌ Vyber alespoň jednu délku (scrolluj dolů na sekci "Délky")');
+      return;
+    }
+
+    if (formData.defaultLength === '') {
+      setError('❌ Vyber "Default délku pro kartu"');
+      return;
+    }
+
+    if (formData.priceMode === 'manual' && (!formData.manualPricePerGram || Number(formData.manualPricePerGram) <= 0)) {
+      setError('❌ Vyplň ruční cenu za gram');
+      return;
+    }
+
+    if (formData.priceMode === 'matrix' && missingPriceLengths.length > 0) {
+      setError(`❌ Chybí ceny v ceníku pro délky: ${missingPriceLengths.join(', ')} cm. Přepni na ruční cenu nebo doplň ceník.`);
+      return;
+    }
+
     if (!canSubmit) {
-      setError('Zkontroluj délky, ceny a povinná pole.');
+      setError('❌ Zkontroluj všechna povinná pole');
       return;
     }
 
@@ -365,10 +386,16 @@ export default function VlasyXTab() {
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        throw new Error(`Chyba serveru (${response.status}): Nepodařilo se parsovat odpověď`);
+      }
 
       if (!response.ok) {
-        throw new Error(result.error || 'Chyba při vytváření SKU');
+        const errorMsg = result.error || result.details || `Chyba ${response.status}`;
+        throw new Error(errorMsg);
       }
 
       setSuccess(result.message || `Vytvořeno ${formData.selectedLengths.length} SKU`);
@@ -805,15 +832,38 @@ export default function VlasyXTab() {
           </div>
         </div>
 
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={!canSubmit || loading}
-            className="px-6 py-3 bg-burgundy text-white rounded-lg font-semibold hover:bg-maroon disabled:bg-gray-400"
-          >
-            {loading ? 'Ukládám…' : 'Vytvořit SKU'}
-          </button>
+        <div className="space-y-4">
+          {/* Checklist before submit */}
+          {!canSubmit && (
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm font-semibold text-yellow-900 mb-2">⚠️ Před vytvořením SKU dokončete:</p>
+              <ul className="text-sm text-yellow-800 space-y-1">
+                {formData.selectedLengths.length === 0 && (
+                  <li>• Vyberte alespoň jednu délku</li>
+                )}
+                {formData.defaultLength === '' && formData.selectedLengths.length > 0 && (
+                  <li>• Vyberte "Default délku pro kartu"</li>
+                )}
+                {formData.priceMode === 'manual' && (!formData.manualPricePerGram || Number(formData.manualPricePerGram) <= 0) && (
+                  <li>• Vyplňte ruční cenu za gram</li>
+                )}
+                {missingPriceLengths.length > 0 && (
+                  <li>• Chybí ceny pro délky: {missingPriceLengths.join(', ')} cm</li>
+                )}
+              </ul>
+            </div>
+          )}
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={!canSubmit || loading}
+              className="px-6 py-3 bg-burgundy text-white rounded-lg font-semibold hover:bg-maroon disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Ukládám…' : 'Vytvořit SKU'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
