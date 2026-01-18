@@ -297,6 +297,61 @@ export async function POST(request: NextRequest) {
       // Don't fail the payment if invoice generation fails
     }
 
+    // Automatically create Zásilkovna shipment if order has pickup point
+    const packetaPointId = (result as any).packetaPointId;
+    if (packetaPointId && (result as any).deliveryMethod === 'zasilkovna') {
+      try {
+        const { createPacket } = await import('@/lib/zasilkovna');
+
+        const shipmentResult = await createPacket(
+          orderId.substring(0, 12),
+          {
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            phone: result.phone || '',
+          },
+          parseInt(packetaPointId, 10),
+          result.total,
+          0.5, // Default weight
+          0 // No COD for prepaid orders
+        );
+
+        if (shipmentResult.success && shipmentResult.barcode) {
+          // Update order with tracking info
+          await prisma.order.update({
+            where: { id: orderId },
+            data: {
+              deliveryStatus: 'shipped',
+              trackingNumber: shipmentResult.barcode,
+              carrier: 'zasilkovna',
+              shippedAt: new Date(),
+            },
+          });
+
+          // Send shipping notification email
+          try {
+            const { sendShippingNotificationEmail } = await import('@/lib/email');
+            await sendShippingNotificationEmail(
+              result.email,
+              orderId,
+              shipmentResult.barcode,
+              `https://tracking.packeta.com/cs/?id=${shipmentResult.barcode}`
+            );
+          } catch (shippingEmailError) {
+            console.error('Failed to send shipping email:', shippingEmailError);
+          }
+
+          console.log(`📦 Zásilkovna shipment auto-created: ${shipmentResult.barcode}`);
+        } else {
+          console.error('Failed to auto-create Zásilkovna shipment:', shipmentResult.error);
+        }
+      } catch (zasilkovnaError) {
+        console.error('Zásilkovna auto-shipment error (non-critical):', zasilkovnaError);
+        // Don't fail the payment if Zásilkovna fails - admin can create manually
+      }
+    }
+
     return NextResponse.json(
       {
         success: true,

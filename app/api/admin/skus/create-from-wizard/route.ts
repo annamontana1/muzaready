@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
       const structureCode = structureCodeMap[structure] || 'R';
       const shadeCode = String(shadeNumber).padStart(2, '0');
 
-      const createdSkus = [] as Array<{ id: string; sku: string; length: number }>;
+      const createdSkus = [] as Array<{ id: string; sku: string; length: number; movementId?: string; stock: number }>;
 
       for (let index = 0; index < selectedLengths.length; index++) {
         const length = Number(selectedLengths[index]);
@@ -228,8 +228,9 @@ export async function POST(request: NextRequest) {
           } as any,
         });
 
+        let movementId: string | undefined;
         if (stockForLength > 0) {
-          await prisma.stockMovement.create({
+          const movement = await prisma.stockMovement.create({
             data: {
               skuId: sku.id,
               type: 'IN',
@@ -237,9 +238,10 @@ export async function POST(request: NextRequest) {
               note: 'Počáteční zásoba z konfigurátoru',
             },
           });
+          movementId = movement.id;
         }
 
-        createdSkus.push({ id: sku.id, sku: finalSkuCode, length });
+        createdSkus.push({ id: sku.id, sku: finalSkuCode, length, movementId, stock: stockForLength });
       }
 
       return NextResponse.json(
@@ -336,8 +338,29 @@ export async function POST(request: NextRequest) {
         } as any,
       });
 
+      // Create stock movement for the piece (for QR code)
+      let movementId: string | undefined;
+      if (inStock) {
+        const movement = await prisma.stockMovement.create({
+          data: {
+            skuId: sku.id,
+            type: 'IN',
+            grams: numericWeight,
+            note: 'Počáteční naskladnění z konfigurátoru (Platinum)',
+          },
+        });
+        movementId = movement.id;
+      }
+
       return NextResponse.json(
-        { success: true, message: 'SKU vytvořen', skuId: sku.id, skuCode: finalSkuCode },
+        {
+          success: true,
+          message: 'SKU vytvořen',
+          skuId: sku.id,
+          skuCode: finalSkuCode,
+          movementId,
+          weight: numericWeight,
+        },
         { status: 201 }
       );
     }

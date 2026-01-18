@@ -63,6 +63,12 @@ export default function PlatinumTab() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [currency, setCurrency] = useState<'CZK' | 'EUR'>('CZK');
+  const [createdSku, setCreatedSku] = useState<{
+    skuId: string;
+    skuCode: string;
+    movementId?: string;
+    weight: number;
+  } | null>(null);
 
   const [formData, setFormData] = useState({
     category: 'nebarvene' as 'nebarvene' | 'barvene',
@@ -273,7 +279,16 @@ export default function PlatinumTab() {
       }
 
       setSuccess(result.message || 'SKU vytvořen');
-      setTimeout(() => setSuccess(''), 4000);
+
+      // Store created SKU for QR code display
+      if (result.skuId) {
+        setCreatedSku({
+          skuId: result.skuId,
+          skuCode: result.skuCode,
+          movementId: result.movementId,
+          weight: result.weight || Number(formData.weightGrams),
+        });
+      }
     } catch (err: any) {
       console.error('Save error:', err);
       setError(err.message || 'Chyba při ukládání SKU');
@@ -282,13 +297,99 @@ export default function PlatinumTab() {
     }
   };
 
+  const closeQrModal = () => {
+    setCreatedSku(null);
+    setSuccess('');
+    // Reset form for next product
+    setFormData(prev => ({
+      ...prev,
+      weightGrams: 150,
+      inStock: true,
+    }));
+  };
+
   return (
     <div className="space-y-8">
       {error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>
       )}
-      {success && (
+      {success && !createdSku && (
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700">{success}</div>
+      )}
+
+      {/* QR Code Modal */}
+      {createdSku && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            {/* Header */}
+            <div className="bg-green-600 text-white p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">SKU vytvořen</h2>
+                  <p className="text-green-100 mt-1">Platinum kus naskladněn</p>
+                </div>
+                <button
+                  onClick={closeQrModal}
+                  className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <div className="text-center mb-4">
+                <div className="font-bold text-lg text-gray-900">{createdSku.skuCode}</div>
+                <div className="text-sm font-medium text-green-600 mt-1">{createdSku.weight}g</div>
+              </div>
+
+              {createdSku.movementId ? (
+                <>
+                  {/* QR Code Image */}
+                  <div className="bg-gray-50 rounded-lg p-6 mb-4 flex items-center justify-center">
+                    <img
+                      src={`/api/admin/stock/qr-code/${createdSku.movementId}`}
+                      alt={`QR kód pro ${createdSku.skuCode}`}
+                      className="w-48 h-48"
+                    />
+                  </div>
+
+                  {/* Download Button */}
+                  <a
+                    href={`/api/admin/stock/qr-code/${createdSku.movementId}`}
+                    download={`QR-${createdSku.skuCode}.png`}
+                    className="w-full px-4 py-3 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium inline-flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Stáhnout QR kód
+                  </a>
+                </>
+              ) : (
+                <div className="text-center py-8 text-gray-400">
+                  <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <p className="text-sm">Produkt není skladem - QR kód nevygenerován</p>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="bg-gray-50 px-6 py-4 border-t">
+              <button
+                onClick={closeQrModal}
+                className="w-full px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+              >
+                Zavřít a přidat další
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="bg-white rounded-lg shadow p-6 space-y-6">
