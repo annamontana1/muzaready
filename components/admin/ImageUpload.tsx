@@ -119,7 +119,7 @@ export default function ImageUpload({ value, onChange, folder = 'skus' }: ImageU
       {/* URL Mode */}
       {mode === 'url' && (
         <input
-          type="url"
+          type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="https://example.com/image.jpg"
