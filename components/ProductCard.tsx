@@ -150,7 +150,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
               }
             }}
           >
-            {product.tier}<sup className="text-[0.75em] ml-0.5">?</sup>
+            {product.tier}
           </div>
 
           {/* Favorite Button */}
