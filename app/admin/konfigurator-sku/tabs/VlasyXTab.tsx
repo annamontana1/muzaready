@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getAllShades, ShadeInfo } from '@/lib/shades';
 import { generateVlasyXName, generateVlasyXSlug } from '@/lib/vlasyx-format';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface PriceMatrixEntry {
   id: string;
@@ -830,34 +831,17 @@ export default function VlasyXTab() {
           </div>
         </div>
 
-        {/* Image URL */}
+        {/* Image Upload */}
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Obrázek produktu (URL)
-            </label>
-            <input
-              type="url"
-              value={formData.imageUrl}
-              onChange={(e) => handleFieldChange('imageUrl', e.target.value)}
-              placeholder="https://example.com/image.jpg"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            />
-            <p className="text-xs text-gray-500 mt-1">Volitelné - URL obrázku produktu</p>
-          </div>
-          {formData.imageUrl && (
-            <div className="mt-2">
-              <p className="text-xs text-gray-500 mb-2">Náhled:</p>
-              <img
-                src={formData.imageUrl}
-                alt="Náhled"
-                className="w-32 h-32 object-cover rounded-lg border border-gray-200"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            </div>
-          )}
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Obrázek produktu
+          </label>
+          <ImageUpload
+            value={formData.imageUrl}
+            onChange={(url) => handleFieldChange('imageUrl', url)}
+            folder="skus"
+          />
+          <p className="text-xs text-gray-500">Volitelné - nahraj obrázek nebo zadej URL</p>
         </div>
 
         <div className="space-y-4">
