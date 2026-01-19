@@ -753,6 +753,22 @@ export async function PUT(
 
     // Handle email notifications outside transaction for non-stock-changing updates
     if (!isChangingToPaid && !isChangingToRefunded && !isChangingToCancelled) {
+      // Check for shipping status change - send shipping notification email
+      const isChangingToShipped = body.deliveryStatus === 'shipped' && currentOrder.deliveryStatus !== 'shipped';
+      if (isChangingToShipped) {
+        try {
+          const { sendShippingNotificationEmail } = await import('@/lib/email');
+          await sendShippingNotificationEmail(
+            order.email,
+            id,
+            (order as any).trackingNumber || undefined,
+            (order as any).carrier || undefined
+          );
+        } catch (emailError) {
+          console.error('Failed to send shipping notification email:', emailError);
+        }
+      }
+
       // Check for delivery status change
       const isChangingToDelivered = body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered';
       const isChangingToCompleted = body.orderStatus === 'completed' && currentOrder.orderStatus !== 'completed';

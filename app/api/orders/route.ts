@@ -311,17 +311,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Send order confirmation email
+    // Send order confirmation email to customer
     try {
-      const { sendOrderConfirmationEmail } = await import('@/lib/email');
+      const { sendOrderConfirmationEmail, sendAdminOrderNotificationEmail } = await import('@/lib/email');
       const emailItems = order.items.map((item) => ({
         variant: item.nameSnapshot || 'Neznámý produkt',
         quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
         price: item.lineTotal + (item.assemblyFeeTotal || 0),
       }));
+
+      // Send confirmation to customer
       await sendOrderConfirmationEmail(order.email, order.id, emailItems, order.total);
+
+      // Send notification to admin
+      await sendAdminOrderNotificationEmail(order.id, order.email, emailItems, order.total);
     } catch (emailError) {
-      console.error('Failed to send order confirmation email:', emailError);
+      console.error('Failed to send order emails:', emailError);
       // Don't fail the order creation if email fails
     }
 

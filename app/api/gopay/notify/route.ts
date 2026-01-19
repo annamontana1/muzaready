@@ -336,7 +336,7 @@ export async function POST(request: NextRequest) {
               result.email,
               orderId,
               shipmentResult.barcode,
-              `https://tracking.packeta.com/cs/?id=${shipmentResult.barcode}`
+              'zasilkovna'
             );
           } catch (shippingEmailError) {
             console.error('Failed to send shipping email:', shippingEmailError);
