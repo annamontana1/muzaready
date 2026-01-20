@@ -61,6 +61,11 @@ export default function Header() {
 
   return (
     <>
+      {/* Development Banner */}
+      <div className="bg-burgundy text-white text-center py-2 px-4 text-sm">
+        <span className="font-medium">Web je ve vývoji</span>
+        <span className="hidden sm:inline"> — Připravujeme pro vás nový e-shop. Děkujeme za trpělivost.</span>
+      </div>
       <TopContactBar />
       <header className="sticky top-0 z-50 bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
       <div className="container mx-auto px-4">
