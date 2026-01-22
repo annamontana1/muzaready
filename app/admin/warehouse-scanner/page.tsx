@@ -1,7 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Html5Qrcode, QrcodeErrorCallback, QrcodeSuccessCallback } from 'html5-qrcode';
+
+// Types for html5-qrcode (will be loaded dynamically)
+type Html5Qrcode = any;
+type QrcodeErrorCallback = any;
+type QrcodeSuccessCallback = any;
 
 interface ScannedItem {
   id: string;
@@ -76,6 +80,18 @@ export default function WarehouseScannerPage() {
 
     const initCamera = async () => {
       try {
+        // Dynamically import html5-qrcode (client-side only)
+        const { Html5Qrcode } = await import('html5-qrcode');
+
+        // Wait for element to be available in DOM
+        const element = document.getElementById('qr-reader');
+        if (!element) {
+          console.error('QR reader element not found');
+          setErrorMessage('Chyba: QR reader element nenalezen');
+          setIsScanning(false);
+          return;
+        }
+
         qrCodeRef.current = new Html5Qrcode('qr-reader');
 
         const onSuccess: QrcodeSuccessCallback = (decodedText) => {
