@@ -56,7 +56,7 @@ K dispozici v odstínech:
 **Online nákup:**
 - Na každé produktové stránce máme **detailní fotky odstínů**
 - Galerie odstínů s hex kódy barev
-- Pokud si nejste jistí, kontaktujte nás na WhatsApp (+420 XXX XXX XXX) a pošlete nám selfie - poradíme vám
+- Pokud si nejste jistí, kontaktujte nás na WhatsApp (+420 728 722 880) a pošlete nám selfie - poradíme vám
 
 **Tipy:**
 - Chladné podtóny pleti → popelové/studené odstíny
@@ -139,7 +139,7 @@ Pokud si nejste jistí, **napište nám** - pošleme vám kalkulačku nebo vám 
 7. **Vyberte dopravu a platbu**
 8. **Potvrďte objednávku** - dostanete email s potvrzením
 
-**Potřebujete pomoc?** Zavolejte/napište na WhatsApp: +420 XXX XXX XXX`
+**Potřebujete pomoc?** Zavolejte/napište na WhatsApp: +420 728 722 880`
   },
   {
     category: 'Objednávání',
@@ -164,7 +164,7 @@ Pokud si nejste jistí, **napište nám** - pošleme vám kalkulačku nebo vám 
 
 **Kontakt:**
 - Email: info@muzahair.cz
-- WhatsApp: +420 XXX XXX XXX
+- WhatsApp: +420 728 722 880
 - Osobně v showroomu`
   },
   {
@@ -250,7 +250,7 @@ Pokud si nejste jistí, **napište nám** - pošleme vám kalkulačku nebo vám 
 - Platba na účet
 - **Výhody:** Tradiční způsob
 - Variabilní symbol: číslo objednávky
-- IBAN: CZ XX XXXX XXXX XXXX XXXX XXXX
+- IBAN: CZ55 5500 0000 0064 2442 3004
 - Objednávka se expeduje po připsání platby (1-3 dny)
 
 **3. Dobírka** 📦 (pouze ČR)
@@ -416,7 +416,7 @@ Tracking číslo dostanete emailem po expedici.`
 - Můžete si prohlédnout všechny vzorky
 - Poradit se s odborníkem
 - A koupit vlasy přímo na místě
-- **Doporučujeme:** Zavolejte předem (+420 XXX XXX XXX) a domluvte si schůzku
+- **Doporučujeme:** Zavolejte předem (+420 728 722 880) a domluvte si schůzku
 
 **Výhody osobního odběru:**
 ✅ Ušetříte za dopravu
@@ -601,7 +601,7 @@ Tracking funguje mezinárodně - uvidíte, kde je váš balík.
 
 **Kontakt pro kadeřnictví:**
 - Email: obchod@muzahair.cz
-- Tel: +420 XXX XXX XXX`
+- Tel: +420 728 722 880`
   },
 
   // ===== KATEGORIE: PÉČE O VLASY =====
@@ -843,7 +843,7 @@ Praha 1, 110 00
 ✅ Prohlédnout si různé **typy zakončení**
 
 **Doporučujeme:**
-📞 Zavolejte předem: **+420 XXX XXX XXX**
+📞 Zavolejte předem: **+420 728 722 880**
 - Domluvíme si čas
 - Budeme mít pro vás připravené vzorky
 - Věnujeme vám plnou pozornost
@@ -859,7 +859,7 @@ Praha 1, 110 00
     answer: `**Ano! Máme 3 typy konzultací:**
 
 **1. ONLINE konzultace** 💬 **ZDARMA**
-- Napište nám na WhatsApp: +420 XXX XXX XXX
+- Napište nám na WhatsApp: +420 728 722 880
 - Pošlete selfie vašich vlasů
 - Poradíme vám:
   - Který odstín vám bude sedět
@@ -875,7 +875,7 @@ Praha 1, 110 00
 
 **3. OSOBNÍ konzultace** 🏢 **ZDARMA**
 - Přímo v showroomu
-- Objednejte si termín: +420 XXX XXX XXX
+- Objednejte si termín: +420 728 722 880
 - Trvá 30-60 minut
 - Vyzkoušíte si vzorky
 - Doporučíme vám přesně, co potřebujete
@@ -900,11 +900,11 @@ Nabízíme **profesionální školení** aplikace vlasů:
 - Pro kadeřnictví: obchod@muzahair.cz
 
 📱 **WhatsApp/SMS:**
-- +420 XXX XXX XXX
+- +420 728 722 880
 - Nejrychlejší odpověď (do 1 hodiny v pracovní době)
 
 📞 **Telefon:**
-- +420 XXX XXX XXX
+- +420 728 722 880
 - Po-Pá: 9:00 - 17:00
 
 💬 **Live chat:**
@@ -1056,7 +1056,7 @@ export default function FAQPage() {
             Napsat email
           </a>
           <a
-            href="https://wa.me/420XXXXXXXXX"
+            href="https://wa.me/420728722880"
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
@@ -1064,7 +1064,7 @@ export default function FAQPage() {
             WhatsApp
           </a>
           <a
-            href="tel:+420XXXXXXXXX"
+            href="tel:+420728722880"
             className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition font-medium"
           >
             Zavolat

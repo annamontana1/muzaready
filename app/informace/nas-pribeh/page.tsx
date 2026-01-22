@@ -201,7 +201,7 @@ export default function NasPribehPage() {
             <div>
               <div className="text-2xl mb-2">📞</div>
               <h3 className="font-semibold text-gray-900">Telefon</h3>
-              <p className="text-gray-600 text-sm">+420 XXX XXX XXX</p>
+              <p className="text-gray-600 text-sm">+420 728 722 880</p>
             </div>
             <div>
               <div className="text-2xl mb-2">✉️</div>

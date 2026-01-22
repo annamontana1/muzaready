@@ -278,7 +278,7 @@ export default function ObchodniPodminkyPage() {
           </p>
           <p className="text-gray-700 mb-4">
             11.4. Kontaktní údaje prodávajícího: adresa pro doručování: [DOPLNIT ADRESU], adresa elektronické pošty: <a href="mailto:info@muzahair.cz" className="text-purple-600 hover:underline">info@muzahair.cz</a>,
-            telefon: <a href="tel:+420XXXXXXXXX" className="text-purple-600 hover:underline">+420 XXX XXX XXX</a>.
+            telefon: <a href="tel:+420728722880" className="text-purple-600 hover:underline">+420 728 722 880</a>.
           </p>
           <p className="text-gray-700">
             <strong>Tyto obchodní podmínky nabývají účinnosti dnem 1.1.2026.</strong>
