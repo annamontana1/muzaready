@@ -11,6 +11,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useSearchShortcut } from '@/hooks/useKeyboardShortcuts';
 import { TableSkeleton, StatsCardSkeleton } from '@/components/ui/Skeleton';
 import { useOrders, useBulkAction } from '@/lib/queries/orders';
+import CreateOrderModal from './components/CreateOrderModal';
 
 export default function AdminOrdersPage() {
   // Local UI state (filters, pagination, sorting, selection)
@@ -20,6 +21,9 @@ export default function AdminOrdersPage() {
   const [itemsPerPage, setItemsPerPage] = useState<number>(25);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  // Create order modal state
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Confirmation dialog state
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -323,13 +327,25 @@ export default function AdminOrdersPage() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Správa Objednávek</h1>
-        <button
-          onClick={handleCreateTestOrder}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
-          title="Vytvořit test objednávku pro testování"
-        >
-          ➕ Vytvořit test objednávku
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm font-medium flex items-center gap-2"
+            title="Vytvořit Instagram objednávku s výběrem Zásilkovny"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+            </svg>
+            Instagram objednávka
+          </button>
+          <button
+            onClick={handleCreateTestOrder}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+            title="Vytvořit test objednávku pro testování (rychlé)"
+          >
+            🧪 Test
+          </button>
+        </div>
       </div>
 
       {/* Summary Stats - Keep existing enhancement */}
@@ -535,6 +551,12 @@ export default function AdminOrdersPage() {
           setConfirmOpen(false);
           setPendingAction(null);
         }}
+      />
+
+      {/* Create Order Modal */}
+      <CreateOrderModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
       />
     </div>
   );
