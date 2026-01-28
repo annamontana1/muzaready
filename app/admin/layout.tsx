@@ -8,7 +8,7 @@ import { ToastProvider } from '@/components/ui/ToastProvider';
 import { queryClient } from '@/lib/queryClient';
 import { useOrderNotifications } from '@/lib/hooks/useOrderNotifications';
 
-// Navigation structure - FLAT LIST (all items visible)
+// Navigation structure - FLAT LIST
 const navigation = [
   { href: '/admin', label: 'Dashboard', icon: '📊', exact: true },
   { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒', showBadge: true },
@@ -16,17 +16,13 @@ const navigation = [
   { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
   { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
 
-  // Divider
-  { divider: true, label: 'E-shop' },
-
+  { divider: true, label: 'E-SHOP' },
   { href: '/admin/uzivatele', label: 'Zákazníci', icon: '👥' },
   { href: '/admin/reviews', label: 'Recenze', icon: '⭐' },
   { href: '/admin/coupons', label: 'Kupóny', icon: '🎟️' },
   { href: '/admin/velkoobchod-zadosti', label: 'Velkoobchod', icon: '🏢' },
 
-  // Divider
-  { divider: true, label: 'Sklad' },
-
+  { divider: true, label: 'SKLAD' },
   { href: '/admin/sklad', label: 'SKU položky', icon: '📋' },
   { href: '/admin/stock-receive', label: 'Naskladnění', icon: '📥' },
   { href: '/admin/inventory', label: 'Inventury', icon: '📊' },
@@ -35,9 +31,7 @@ const navigation = [
   { href: '/admin/konfigurator-sku', label: 'Konfigurátor', icon: '⚙️' },
   { href: '/admin/warehouse-scanner', label: 'Scanner', icon: '📱' },
 
-  // Divider
   { divider: true, label: 'CMS' },
-
   { href: '/admin/nastaveni', label: 'Nastavení', icon: '⚙️' },
   { href: '/admin/seo', label: 'SEO', icon: '🔍' },
   { href: '/admin/content', label: 'Obsah', icon: '📄' },
@@ -67,25 +61,25 @@ function SidebarNavItem({
     <Link
       href={href}
       className={`
-        group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+        group relative flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150
         ${
           isActive
-            ? 'bg-gradient-to-r from-burgundy-600 to-burgundy-700 text-white shadow-lg shadow-burgundy-900/40'
-            : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            ? 'bg-burgundy text-white shadow-md'
+            : 'text-stone-700 hover:text-burgundy hover:bg-stone-50'
         }
       `}
     >
-      <span className={`text-lg transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
+      <span className={`text-xl transition-transform duration-150 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
         {icon}
       </span>
       <span className="font-semibold">{label}</span>
       {badge !== undefined && badge > 0 && (
-        <span className="ml-auto min-w-[22px] h-5 flex items-center justify-center px-2 text-xs font-bold text-white bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-lg shadow-red-500/50 animate-pulse">
+        <span className="ml-auto min-w-[22px] h-5 flex items-center justify-center px-2 text-xs font-bold text-white bg-red-500 rounded-full shadow-sm animate-pulse">
           {badge > 99 ? '99+' : badge}
         </span>
       )}
       {isActive && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full shadow-lg" />
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-burgundy rounded-r-full" />
       )}
     </Link>
   );
@@ -94,12 +88,8 @@ function SidebarNavItem({
 // Section divider
 function SectionDivider({ label }: { label: string }) {
   return (
-    <div className="px-4 py-3">
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
-        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</span>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
-      </div>
+    <div className="px-4 pt-4 pb-2">
+      <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">{label}</span>
     </div>
   );
 }
@@ -112,7 +102,6 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const { pendingCount } = useOrderNotifications(soundEnabled);
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
@@ -127,33 +116,31 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 z-40 h-screen w-64 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900
-          transition-transform duration-300 ease-in-out border-r border-slate-700/50
+          fixed top-0 left-0 z-40 h-screen w-72 bg-white border-r border-stone-200 shadow-sm
+          transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
         `}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center gap-3 px-6 py-6 border-b border-slate-700/50">
-            <div className="w-11 h-11 bg-gradient-to-br from-burgundy-600 to-burgundy-800 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-xl shadow-burgundy-900/50 ring-2 ring-burgundy-500/20">
+          <div className="flex items-center gap-3 px-6 py-6 border-b border-stone-200">
+            <div className="w-12 h-12 bg-gradient-to-br from-burgundy to-burgundy-light rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
               💎
             </div>
             <div>
-              <div className="text-white font-bold text-lg tracking-tight">Mùza Hair</div>
-              <div className="text-slate-400 text-xs font-medium">Admin Dashboard</div>
+              <div className="text-stone-800 font-bold text-lg tracking-tight">Mùza Hair</div>
+              <div className="text-stone-500 text-xs font-medium">Admin Panel</div>
             </div>
           </div>
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
             {navigation.map((item, index) => {
-              // Render divider
               if ('divider' in item && item.divider) {
                 return <SectionDivider key={`divider-${index}`} label={item.label} />;
               }
 
-              // Render navigation item
               return (
                 <SidebarNavItem
                   key={item.href}
@@ -169,19 +156,19 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
           </nav>
 
           {/* User section */}
-          <div className="border-t border-slate-700/50 p-4">
+          <div className="border-t border-stone-200 p-4">
             <div className="flex items-center gap-3 mb-3 px-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-burgundy-600 to-burgundy-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg ring-2 ring-burgundy-500/20">
+              <div className="w-10 h-10 bg-gradient-to-br from-burgundy to-burgundy-light rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-md">
                 👤
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-white text-sm font-semibold truncate">Admin</div>
-                <div className="text-slate-400 text-xs truncate">admin@muzahair.cz</div>
+                <div className="text-stone-800 text-sm font-semibold truncate">Admin</div>
+                <div className="text-stone-500 text-xs truncate">admin@muzahair.cz</div>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800/60 hover:bg-slate-700/80 text-slate-300 hover:text-white rounded-xl text-sm font-semibold transition-all duration-200 border border-slate-700/50"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 hover:text-stone-900 rounded-lg text-sm font-semibold transition-all duration-150"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -200,20 +187,20 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="lg:pl-72">
         {/* Top bar */}
-        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-stone-200/80 shadow-sm">
+        <header className="sticky top-0 z-20 bg-white border-b border-stone-200 shadow-sm">
           <div className="flex items-center justify-between px-6 py-4">
             {/* Mobile menu button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 -ml-2 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl transition-colors duration-200"
+              className="lg:hidden p-2 -ml-2 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -225,17 +212,24 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
               </svg>
             </button>
 
+            {/* Page title - hidden on mobile */}
+            <div className="hidden md:block">
+              <h1 className="text-xl font-bold text-stone-800">
+                {navigation.find((item) => !item.divider && item.href === pathname)?.label || 'Dashboard'}
+              </h1>
+            </div>
+
             {/* Search bar */}
-            <div className="flex-1 max-w-2xl mx-4">
+            <div className="flex-1 max-w-md mx-4">
               <div className="relative group">
                 <input
                   type="text"
-                  placeholder="🔍 Hledat... (Cmd+K)"
-                  className="w-full px-4 py-2.5 pl-10 bg-stone-50/80 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-burgundy-500/30 focus:border-burgundy-500 focus:bg-white transition-all duration-200 placeholder:text-stone-400"
-                  onFocus={(e) => e.target.blur()} // Placeholder for command palette
+                  placeholder="🔍 Hledat..."
+                  className="w-full px-4 py-2 pl-10 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-burgundy/20 focus:border-burgundy focus:bg-white transition-all placeholder:text-stone-400"
+                  onFocus={(e) => e.target.blur()}
                 />
                 <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-burgundy-600 transition-colors"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-burgundy transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -247,9 +241,6 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
-                <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-stone-200 bg-stone-50 px-1.5 font-mono text-[10px] font-medium text-stone-500">
-                  ⌘K
-                </kbd>
               </div>
             </div>
 
@@ -258,9 +249,9 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
               {/* Sound toggle */}
               <button
                 onClick={() => setSoundEnabled(!soundEnabled)}
-                className={`p-2.5 rounded-xl transition-all duration-200 ${
+                className={`p-2 rounded-lg transition-colors ${
                   soundEnabled
-                    ? 'text-burgundy-600 bg-burgundy-50 hover:bg-burgundy-100'
+                    ? 'text-burgundy bg-burgundy/5 hover:bg-burgundy/10'
                     : 'text-stone-400 hover:text-stone-600 hover:bg-stone-100'
                 }`}
                 title={soundEnabled ? '🔊 Zvuk zapnut' : '🔇 Zvuk vypnut'}
@@ -287,7 +278,7 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
               </button>
 
               {/* Notifications */}
-              <button className="relative p-2.5 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl transition-all duration-200 group">
+              <button className="relative p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -297,19 +288,19 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
                   />
                 </svg>
                 {pendingCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                  <span className="absolute top-1 right-1 flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
                 )}
               </button>
 
-              {/* Quick action - New Order */}
+              {/* Quick action */}
               <Link
                 href="/admin/objednavky"
-                className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-burgundy-600 to-burgundy-700 hover:from-burgundy-700 hover:to-burgundy-800 text-white rounded-xl text-sm font-semibold shadow-lg shadow-burgundy-600/30 transition-all duration-200 hover:shadow-xl"
+                className="hidden md:flex items-center gap-2 px-4 py-2 bg-burgundy hover:bg-burgundy-light text-white rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all"
               >
-                <span className="text-base">➕</span>
+                <span>➕</span>
                 Nová objednávka
               </Link>
             </div>
@@ -331,7 +322,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  // Check authentication
   useEffect(() => {
     if (pathname === '/admin/login') {
       setIsAuthenticated(true);
@@ -351,19 +341,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       });
   }, [pathname, router]);
 
-  // Loading state
   if (isAuthenticated === null) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-burgundy-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-12 h-12 border-4 border-burgundy border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-stone-600">Načítám...</p>
         </div>
       </div>
     );
   }
 
-  // Login page (no layout)
   if (pathname === '/admin/login') {
     return (
       <QueryClientProvider client={queryClient}>
@@ -372,7 +360,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // Authenticated pages
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
