@@ -1,8 +1,33 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 type PlatformMetrics = {
+  impressions: number;
+  clicks: number;
+  spend: number;
+  conversions: number;
+  conversionValue: number;
+  ctr: number;
+  cpc: number;
+  cpa: number;
+  roas: number;
+};
+
+type DailyMetrics = {
+  date: string;
   impressions: number;
   clicks: number;
   spend: number;
@@ -32,6 +57,7 @@ export default function MarketingOverviewPage() {
   const [totals, setTotals] = useState<PlatformMetrics | null>(null);
   const [metaPlatform, setMetaPlatform] = useState<PlatformMetrics | null>(null);
   const [googlePlatform, setGooglePlatform] = useState<PlatformMetrics | null>(null);
+  const [dailyData, setDailyData] = useState<DailyMetrics[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [generatingRecs, setGeneratingRecs] = useState(false);
 
@@ -62,6 +88,13 @@ export default function MarketingOverviewPage() {
       if (resGoogle.ok) {
         const data = await resGoogle.json();
         setGooglePlatform(data.totals);
+      }
+
+      // Fetch daily time-series data
+      const resDaily = await fetch(`/api/admin/marketing/daily?platform=all&days=${days}`);
+      if (resDaily.ok) {
+        const data = await resDaily.json();
+        setDailyData(data.daily || []);
       }
     } catch (error) {
       console.error("Failed to load overview data:", error);
@@ -299,6 +332,207 @@ export default function MarketingOverviewPage() {
               )}
             </div>
           </div>
+
+          {/* Performance Charts */}
+          {dailyData.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+              {/* ROAS Trend */}
+              <div className="bg-white border border-stone-200 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-stone-800 mb-4">
+                  📈 ROAS Trend
+                </h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={dailyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                      tickFormatter={(value) => {
+                        const date = new Date(value);
+                        return `${date.getDate()}/${date.getMonth() + 1}`;
+                      }}
+                    />
+                    <YAxis tick={{ fontSize: 12, fill: "#78716c" }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e7e5e4",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                      }}
+                      formatter={(value: number) => value.toFixed(2) + "x"}
+                      labelFormatter={(label) => {
+                        const date = new Date(label);
+                        return date.toLocaleDateString("cs-CZ");
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "14px" }} />
+                    <Line
+                      type="monotone"
+                      dataKey="roas"
+                      stroke="#722F37"
+                      strokeWidth={2}
+                      dot={{ fill: "#722F37", r: 3 }}
+                      name="ROAS"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Spend vs Revenue */}
+              <div className="bg-white border border-stone-200 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-stone-800 mb-4">
+                  💰 Spend vs Obrat
+                </h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={dailyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                      tickFormatter={(value) => {
+                        const date = new Date(value);
+                        return `${date.getDate()}/${date.getMonth() + 1}`;
+                      }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                      tickFormatter={(value) =>
+                        (value / 100).toLocaleString("cs-CZ", {
+                          maximumFractionDigits: 0,
+                        }) + " Kč"
+                      }
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e7e5e4",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                      }}
+                      formatter={(value: number) =>
+                        (value / 100).toLocaleString("cs-CZ") + " Kč"
+                      }
+                      labelFormatter={(label) => {
+                        const date = new Date(label);
+                        return date.toLocaleDateString("cs-CZ");
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "14px" }} />
+                    <Bar dataKey="spend" fill="#ef4444" name="Spend" />
+                    <Bar
+                      dataKey="conversionValue"
+                      fill="#22c55e"
+                      name="Obrat"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Clicks & Conversions */}
+              <div className="bg-white border border-stone-200 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-stone-800 mb-4">
+                  🎯 Kliky & Konverze
+                </h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={dailyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                      tickFormatter={(value) => {
+                        const date = new Date(value);
+                        return `${date.getDate()}/${date.getMonth() + 1}`;
+                      }}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e7e5e4",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                      }}
+                      labelFormatter={(label) => {
+                        const date = new Date(label);
+                        return date.toLocaleDateString("cs-CZ");
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "14px" }} />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="clicks"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      dot={{ fill: "#3b82f6", r: 3 }}
+                      name="Kliky"
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="conversions"
+                      stroke="#22c55e"
+                      strokeWidth={2}
+                      dot={{ fill: "#22c55e", r: 3 }}
+                      name="Konverze"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* CTR Trend */}
+              <div className="bg-white border border-stone-200 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-stone-800 mb-4">
+                  👆 CTR Trend
+                </h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={dailyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 12, fill: "#78716c" }}
+                      tickFormatter={(value) => {
+                        const date = new Date(value);
+                        return `${date.getDate()}/${date.getMonth() + 1}`;
+                      }}
+                    />
+                    <YAxis tick={{ fontSize: 12, fill: "#78716c" }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e7e5e4",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                      }}
+                      formatter={(value: number) => value.toFixed(2) + "%"}
+                      labelFormatter={(label) => {
+                        const date = new Date(label);
+                        return date.toLocaleDateString("cs-CZ");
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "14px" }} />
+                    <Line
+                      type="monotone"
+                      dataKey="ctr"
+                      stroke="#f59e0b"
+                      strokeWidth={2}
+                      dot={{ fill: "#f59e0b", r: 3 }}
+                      name="CTR %"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
 
           {/* AI Recommendations */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
