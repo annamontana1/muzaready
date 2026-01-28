@@ -14,6 +14,7 @@ export default function MarketingLayout({
     { name: "Overview", href: "/admin/marketing", icon: "📊" },
     { name: "Google Ads", href: "/admin/marketing/google-ads", icon: "🔍" },
     { name: "Meta Ads", href: "/admin/marketing/meta-ads", icon: "📘" },
+    { name: "Tracking Guide", href: "/admin/marketing/tracking-guide", icon: "📚" },
     { name: "Settings", href: "/admin/marketing/settings", icon: "⚙️" },
   ];
 

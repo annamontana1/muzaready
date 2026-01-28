@@ -150,6 +150,28 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Order ${orderId} paid and stock deducted`);
 
+    // Track conversion in Meta Ads (server-side)
+    try {
+      const { trackServerSidePurchase } = await import('@/lib/marketing/meta-conversions');
+      await trackServerSidePurchase({
+        orderId: result.id,
+        email: result.email,
+        phone: result.phone || undefined,
+        firstName: result.firstName || undefined,
+        lastName: result.lastName || undefined,
+        city: result.city || undefined,
+        zipCode: result.zipCode || undefined,
+        country: result.country || undefined,
+        value: result.total,
+        currency: 'CZK',
+        numItems: result.items.length,
+        productIds: result.items.map((item: any) => item.skuId),
+      });
+    } catch (metaError) {
+      console.error('Failed to send Meta conversion (non-critical):', metaError);
+      // Don't fail payment if Meta tracking fails
+    }
+
     // Send payment confirmation email
     try {
       const { sendPaymentConfirmationEmail } = await import('@/lib/email');

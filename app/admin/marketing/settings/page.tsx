@@ -215,6 +215,28 @@ export default function MarketingSettingsPage() {
 
   return (
     <div>
+      {/* Tracking Guide Notice */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">📚</span>
+          <div className="flex-1">
+            <h3 className="font-semibold text-blue-900 mb-1">
+              Důležité: Jak správně měřit ROAS
+            </h3>
+            <p className="text-sm text-blue-800 mb-2">
+              Pro přesné měření výkonnosti kampaní je důležité rozlišovat nové vs. opakované zákazníky.
+              Návod najdeš v sekci <strong>Tracking Guide</strong>.
+            </p>
+            <a
+              href="/admin/marketing/tracking-guide"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              📚 Přečíst návod
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Sub-tabs */}
       <div className="flex gap-1 border-b border-stone-200 mb-6">
         <button
