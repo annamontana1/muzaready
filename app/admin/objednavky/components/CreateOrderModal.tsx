@@ -60,6 +60,9 @@ export default function CreateOrderModal({ isOpen, onClose }: CreateOrderModalPr
   const [notesInternal, setNotesInternal] = useState('');
   const [notesCustomer, setNotesCustomer] = useState('');
 
+  // Sales channel
+  const [channel, setChannel] = useState('ig_dm');
+
   // Load Packeta widget script
   useEffect(() => {
     if (!isOpen) return;
@@ -195,7 +198,7 @@ export default function CreateOrderModal({ isOpen, onClose }: CreateOrderModalPr
             paymentStatus,
             paidAt: paymentStatus === 'paid' ? new Date().toISOString() : undefined,
           },
-          channel: 'ig_dm',
+          channel,
           notesInternal,
           notesCustomer,
         }),
@@ -225,8 +228,8 @@ export default function CreateOrderModal({ isOpen, onClose }: CreateOrderModalPr
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between rounded-t-2xl">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Vytvořit Instagram objednávku</h2>
-            <p className="text-sm text-gray-600 mt-1">Vyplňte údaje a vyberte výdejní místo Zásilkovny</p>
+            <h2 className="text-2xl font-bold text-gray-900">Vytvořit manuální objednávku</h2>
+            <p className="text-sm text-gray-600 mt-1">Vyplňte údaje zákazníka a vyberte prodejní kanál</p>
           </div>
           <button
             onClick={onClose}
@@ -300,6 +303,29 @@ export default function CreateOrderModal({ isOpen, onClose }: CreateOrderModalPr
                   placeholder="Novák"
                 />
               </div>
+            </div>
+          </section>
+
+          {/* Sales Channel */}
+          <section>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Prodejní kanál</h3>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Odkud přišla objednávka? *</label>
+              <select
+                value={channel}
+                onChange={(e) => setChannel(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+              >
+                <option value="ig_dm">📷 Instagram DM</option>
+                <option value="fb_messenger">💬 Facebook Messenger</option>
+                <option value="whatsapp">📱 WhatsApp</option>
+                <option value="phone">☎️ Telefon</option>
+                <option value="showroom">🏪 Showroom (osobně)</option>
+                <option value="email">📧 Email</option>
+                <option value="web">🌐 Web (e-shop)</option>
+                <option value="other">🔹 Jiné</option>
+              </select>
             </div>
           </section>
 

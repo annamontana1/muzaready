@@ -4,6 +4,11 @@ interface BadgeProps {
 }
 
 export default function Badge({ count, variant = 'default' }: BadgeProps) {
+  // Don't render badge if count is 0 or undefined
+  if (!count || count === 0) {
+    return null;
+  }
+
   const sizeClasses = variant === 'small'
     ? 'min-w-[16px] h-4 text-[10px]'
     : 'min-w-[18px] h-[18px] text-xs';

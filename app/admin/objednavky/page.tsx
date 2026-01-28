@@ -332,12 +332,12 @@ export default function AdminOrdersPage() {
           <button
             onClick={() => setIsCreateModalOpen(true)}
             className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm font-medium flex items-center gap-2"
-            title="Vytvořit Instagram objednávku s výběrem Zásilkovny"
+            title="Vytvořit manuální objednávku (Instagram, telefon, showroom...)"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
             </svg>
-            Instagram objednávka
+            Nová objednávka
           </button>
           <button
             onClick={handleCreateTestOrder}
