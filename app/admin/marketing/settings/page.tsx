@@ -61,13 +61,126 @@ export default function MarketingSettingsPage() {
   };
 
   const loadConnections = async () => {
-    // TODO: Implement when API is ready
-    setConnections([
-      { platform: "Google Ads", connected: false },
-      { platform: "Meta Ads", connected: false },
-      { platform: "GA4", connected: false },
-      { platform: "GSC", connected: false },
-    ]);
+    try {
+      // Load Meta Ads connection
+      const metaRes = await fetch("/api/admin/marketing/connections/meta");
+      const metaData = metaRes.ok ? await metaRes.json() : { connected: false };
+
+      setConnections([
+        {
+          platform: "Google Ads",
+          connected: false,
+        },
+        {
+          platform: "Meta Ads",
+          connected: metaData.connected,
+          accountName: metaData.accountName,
+          lastSync: metaData.lastSync,
+          error: metaData.error,
+        },
+        {
+          platform: "GA4",
+          connected: false,
+        },
+        {
+          platform: "GSC",
+          connected: false,
+        },
+      ]);
+    } catch (error) {
+      console.error("Failed to load connections:", error);
+    }
+  };
+
+  const handleConnect = (platform: string) => {
+    if (platform === "Meta Ads") {
+      const accessToken = prompt("Zadej Meta Ads Access Token:");
+      const adAccountId = prompt("Zadej Ad Account ID (např. act_123456789):");
+
+      if (accessToken && adAccountId) {
+        connectMetaAds(accessToken, adAccountId);
+      }
+    } else {
+      alert(`${platform} integrace bude přidána později`);
+    }
+  };
+
+  const connectMetaAds = async (accessToken: string, adAccountId: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/marketing/connections/meta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessToken, adAccountId }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("✅ " + data.message);
+        loadConnections();
+      } else {
+        alert("❌ " + data.error);
+      }
+    } catch (error) {
+      alert("Chyba při připojování");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTest = async (platform: string) => {
+    if (platform === "Meta Ads") {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/admin/marketing/connections/meta/test", {
+          method: "POST",
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert(`✅ ${data.message}\n\nAccount: ${data.account.name}\nID: ${data.account.id}\nStatus: ${data.account.status}`);
+          loadConnections();
+        } else {
+          alert("❌ " + data.error);
+        }
+      } catch (error) {
+        alert("Chyba při testování");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert(`${platform} test není dostupný`);
+    }
+  };
+
+  const handleDisconnect = async (platform: string) => {
+    if (!confirm(`Opravdu chceš odpojit ${platform}?`)) return;
+
+    if (platform === "Meta Ads") {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/admin/marketing/connections/meta", {
+          method: "DELETE",
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("✅ " + data.message);
+          loadConnections();
+        } else {
+          alert("❌ " + data.error);
+        }
+      } catch (error) {
+        alert("Chyba při odpojování");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert(`${platform} disconnect není dostupný`);
+    }
   };
 
   const saveConfig = async () => {
@@ -151,16 +264,28 @@ export default function MarketingSettingsPage() {
               <div className="flex gap-2">
                 {conn.connected ? (
                   <>
-                    <button className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition-colors font-medium text-sm">
+                    <button
+                      onClick={() => handleTest(conn.platform)}
+                      disabled={loading}
+                      className="px-4 py-2 bg-stone-100 hover:bg-stone-200 disabled:bg-stone-50 disabled:cursor-not-allowed text-stone-700 rounded-lg transition-colors font-medium text-sm"
+                    >
                       Test
                     </button>
-                    <button className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium text-sm">
+                    <button
+                      onClick={() => handleDisconnect(conn.platform)}
+                      disabled={loading}
+                      className="px-4 py-2 bg-red-50 hover:bg-red-100 disabled:bg-stone-50 disabled:cursor-not-allowed text-red-600 rounded-lg transition-colors font-medium text-sm"
+                    >
                       Disconnect
                     </button>
                   </>
                 ) : (
-                  <button className="px-4 py-2 bg-[#722F37] hover:bg-[#5a2529] text-white rounded-lg transition-colors font-medium text-sm">
-                    Connect
+                  <button
+                    onClick={() => handleConnect(conn.platform)}
+                    disabled={loading}
+                    className="px-4 py-2 bg-[#722F37] hover:bg-[#5a2529] disabled:bg-stone-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium text-sm"
+                  >
+                    {loading ? "..." : "Connect"}
                   </button>
                 )}
               </div>
