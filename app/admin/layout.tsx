@@ -322,25 +322,42 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+  // Skip auth check for login page
+  const isLoginPage = pathname === '/admin/login';
+
   useEffect(() => {
-    if (pathname === '/admin/login') {
+    // Don't check auth for login page
+    if (isLoginPage) {
       setIsAuthenticated(true);
       return;
     }
 
+    // Check authentication for all other pages
     fetch('/api/admin/me', { credentials: 'include' })
       .then((res) => {
         if (res.ok) {
           setIsAuthenticated(true);
         } else {
-          router.push('/admin/login');
+          // Not authenticated - redirect to login
+          router.replace('/admin/login');
         }
       })
       .catch(() => {
-        router.push('/admin/login');
+        // Error checking auth - redirect to login
+        router.replace('/admin/login');
       });
-  }, [pathname, router]);
+  }, [pathname, router, isLoginPage]);
 
+  // Login page - render without layout
+  if (isLoginPage) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>{children}</ToastProvider>
+      </QueryClientProvider>
+    );
+  }
+
+  // Loading state - show spinner
   if (isAuthenticated === null) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
@@ -352,14 +369,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (pathname === '/admin/login') {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <ToastProvider>{children}</ToastProvider>
-      </QueryClientProvider>
-    );
-  }
-
+  // Authenticated - render with layout
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
