@@ -21,7 +21,7 @@
   "crons": [
     {
       "path": "/api/cron/check-low-stock",
-      "schedule": "0 */4 * * *"
+      "schedule": "0 8 * * *"
     },
     {
       "path": "/api/cron/payment-reminders",
