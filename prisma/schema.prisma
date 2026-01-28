@@ -878,6 +878,10 @@ model MarketingMetricsDaily {
   entityId String
   entityName String
 
+  // Parent campaign (pro adsets/ads)
+  campaignId String?
+  campaignName String?
+
   // Core metrics
   impressions Int @default(0)
   clicks Int @default(0)
@@ -893,9 +897,10 @@ model MarketingMetricsDaily {
 
   createdAt DateTime @default(now())
 
-  @@unique([date, platform, level, entityId])
+  @@unique([date, platform, level, entityId], name: "date_platform_level_entityId")
   @@index([date])
   @@index([platform])
   @@index([entityId])
+  @@index([campaignId])
   @@map("marketing_metrics_daily")
 }
