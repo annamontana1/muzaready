@@ -103,23 +103,23 @@ export default function MarketingSettingsPage() {
   return (
     <div>
       {/* Sub-tabs */}
-      <div className="flex gap-2 border-b border-slate-700 mb-6">
+      <div className="flex gap-1 border-b border-stone-200 mb-6">
         <button
           onClick={() => setActiveTab("connections")}
-          className={`px-4 py-2 border-b-2 transition-colors ${
+          className={`px-5 py-3 border-b-2 transition-all font-medium text-sm ${
             activeTab === "connections"
-              ? "border-blue-500 text-blue-500"
-              : "border-transparent text-slate-400"
+              ? "border-[#722F37] text-[#722F37] bg-[#722F37]/5"
+              : "border-transparent text-stone-500 hover:text-stone-700 hover:bg-stone-50"
           }`}
         >
           API Connections
         </button>
         <button
           onClick={() => setActiveTab("config")}
-          className={`px-4 py-2 border-b-2 transition-colors ${
+          className={`px-5 py-3 border-b-2 transition-all font-medium text-sm ${
             activeTab === "config"
-              ? "border-blue-500 text-blue-500"
-              : "border-transparent text-slate-400"
+              ? "border-[#722F37] text-[#722F37] bg-[#722F37]/5"
+              : "border-transparent text-stone-500 hover:text-stone-700 hover:bg-stone-50"
           }`}
         >
           Project Config
@@ -128,38 +128,38 @@ export default function MarketingSettingsPage() {
 
       {/* API Connections Tab */}
       {activeTab === "connections" && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {connections.map((conn) => (
             <div
               key={conn.platform}
-              className="bg-slate-800 rounded-lg p-6 flex items-center justify-between"
+              className="bg-white border border-stone-200 rounded-xl p-5 flex items-center justify-between hover:shadow-sm transition-shadow"
             >
               <div className="flex items-center gap-4">
                 <div className="text-2xl">
                   {conn.connected ? "✅" : "❌"}
                 </div>
                 <div>
-                  <h3 className="font-semibold">{conn.platform}</h3>
+                  <h3 className="font-semibold text-stone-800">{conn.platform}</h3>
                   {conn.connected && conn.accountName && (
-                    <p className="text-sm text-slate-400">{conn.accountName}</p>
+                    <p className="text-sm text-stone-500">{conn.accountName}</p>
                   )}
                   {conn.error && (
-                    <p className="text-sm text-red-400">{conn.error}</p>
+                    <p className="text-sm text-red-500">{conn.error}</p>
                   )}
                 </div>
               </div>
               <div className="flex gap-2">
                 {conn.connected ? (
                   <>
-                    <button className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded transition-colors">
+                    <button className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition-colors font-medium text-sm">
                       Test
                     </button>
-                    <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors">
+                    <button className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors font-medium text-sm">
                       Disconnect
                     </button>
                   </>
                 ) : (
-                  <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
+                  <button className="px-4 py-2 bg-[#722F37] hover:bg-[#5a2529] text-white rounded-lg transition-colors font-medium text-sm">
                     Connect
                   </button>
                 )}
@@ -171,20 +171,20 @@ export default function MarketingSettingsPage() {
 
       {/* Project Config Tab */}
       {activeTab === "config" && (
-        <div className="bg-slate-800 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Business Configuration</h3>
-          <p className="text-sm text-slate-400 mb-6">
+        <div className="bg-white border border-stone-200 rounded-xl p-6">
+          <h3 className="text-lg font-bold text-stone-800 mb-2">Business Configuration</h3>
+          <p className="text-sm text-stone-500 mb-6">
             Nastav základní byznys metriky pro výpočet ROAS, CPA a doporučení
             od AI.
           </p>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Required Fields */}
             <div>
-              <h4 className="font-semibold mb-4">Základní údaje (povinné)</h4>
+              <h4 className="font-semibold text-stone-800 mb-4 text-sm uppercase tracking-wide">Základní údaje (povinné)</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Průměrná hodnota objednávky (AOV)
                   </label>
                   <div className="flex items-center gap-2">
@@ -197,14 +197,14 @@ export default function MarketingSettingsPage() {
                           averageOrderValue: Number(e.target.value),
                         })
                       }
-                      className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded focus:outline-none focus:border-blue-500"
+                      className="flex-1 px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-[#722F37] focus:ring-2 focus:ring-[#722F37]/10 text-stone-800"
                     />
-                    <span className="text-slate-400">Kč</span>
+                    <span className="text-stone-500 font-medium">Kč</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Hrubá marže
                   </label>
                   <div className="flex items-center gap-2">
@@ -217,9 +217,9 @@ export default function MarketingSettingsPage() {
                           grossMarginPercent: Number(e.target.value),
                         })
                       }
-                      className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded focus:outline-none focus:border-blue-500"
+                      className="flex-1 px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-[#722F37] focus:ring-2 focus:ring-[#722F37]/10 text-stone-800"
                     />
-                    <span className="text-slate-400">%</span>
+                    <span className="text-stone-500 font-medium">%</span>
                   </div>
                 </div>
               </div>
@@ -227,16 +227,16 @@ export default function MarketingSettingsPage() {
 
             {/* Optional Fields */}
             <div>
-              <h4 className="font-semibold mb-4">
+              <h4 className="font-semibold text-stone-800 mb-2 text-sm uppercase tracking-wide">
                 Cíle a limity (volitelné)
               </h4>
-              <p className="text-sm text-slate-400 mb-4">
+              <p className="text-sm text-stone-500 mb-4">
                 Pokud nevyplníš, AI bude doporučovat pouze na základě
                 break-even hodnot.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Měsíční budget
                   </label>
                   <div className="flex items-center gap-2">
@@ -252,14 +252,14 @@ export default function MarketingSettingsPage() {
                         })
                       }
                       placeholder="Neomezený"
-                      className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded focus:outline-none focus:border-blue-500"
+                      className="flex-1 px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-[#722F37] focus:ring-2 focus:ring-[#722F37]/10 text-stone-800 placeholder:text-stone-400"
                     />
-                    <span className="text-slate-400">Kč</span>
+                    <span className="text-stone-500 font-medium">Kč</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Target ROAS
                   </label>
                   <div className="flex items-center gap-2">
@@ -276,14 +276,14 @@ export default function MarketingSettingsPage() {
                         })
                       }
                       placeholder="Auto"
-                      className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded focus:outline-none focus:border-blue-500"
+                      className="flex-1 px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-[#722F37] focus:ring-2 focus:ring-[#722F37]/10 text-stone-800 placeholder:text-stone-400"
                     />
-                    <span className="text-slate-400">x</span>
+                    <span className="text-stone-500 font-medium">x</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Target CPA
                   </label>
                   <div className="flex items-center gap-2">
@@ -299,38 +299,38 @@ export default function MarketingSettingsPage() {
                         })
                       }
                       placeholder="Auto"
-                      className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded focus:outline-none focus:border-blue-500"
+                      className="flex-1 px-4 py-2.5 bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:border-[#722F37] focus:ring-2 focus:ring-[#722F37]/10 text-stone-800 placeholder:text-stone-400"
                     />
-                    <span className="text-slate-400">Kč</span>
+                    <span className="text-stone-500 font-medium">Kč</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Auto-calculated */}
-            <div className="border-t border-slate-700 pt-6">
-              <h4 className="font-semibold mb-4">Auto-vypočítané hodnoty</h4>
+            <div className="border-t border-stone-200 pt-6">
+              <h4 className="font-semibold text-stone-800 mb-4 text-sm uppercase tracking-wide">Auto-vypočítané hodnoty</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-700/50 rounded p-4">
-                  <div className="text-sm text-slate-400 mb-1">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5">
+                  <div className="text-sm font-medium text-stone-600 mb-1">
                     Break-even ROAS
                   </div>
-                  <div className="text-2xl font-bold">
+                  <div className="text-3xl font-bold text-stone-800 mb-1">
                     {config.breakEvenRoas?.toFixed(2) || "—"}x
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-stone-500">
                     100 / marže = minimální ROAS pro ziskovost
                   </div>
                 </div>
 
-                <div className="bg-slate-700/50 rounded p-4">
-                  <div className="text-sm text-slate-400 mb-1">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-5">
+                  <div className="text-sm font-medium text-stone-600 mb-1">
                     Max CPA (break-even)
                   </div>
-                  <div className="text-2xl font-bold">
+                  <div className="text-3xl font-bold text-stone-800 mb-1">
                     {config.maxCpa?.toFixed(0) || "—"} Kč
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-xs text-stone-500">
                     AOV × (marže/100) = max náklady na konverzi
                   </div>
                 </div>
@@ -338,11 +338,11 @@ export default function MarketingSettingsPage() {
             </div>
 
             {/* Save Button */}
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-4">
               <button
                 onClick={saveConfig}
                 disabled={saving}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white rounded transition-colors flex items-center gap-2"
+                className="px-8 py-3 bg-[#722F37] hover:bg-[#5a2529] disabled:bg-stone-300 text-white rounded-lg transition-colors font-medium flex items-center gap-2 shadow-sm hover:shadow"
               >
                 {saving && <span className="animate-spin">⏳</span>}
                 Uložit konfiguraci

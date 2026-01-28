@@ -1,30 +1,29 @@
 export default function GoogleAdsPage() {
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Google Ads</h2>
-        <p className="text-slate-400">
-          Správa Google Ads kampaní, keywords a search terms
-        </p>
-      </div>
-
-      {/* Sub-tabs placeholder */}
-      <div className="flex gap-2 border-b border-slate-700 mb-6">
-        {["Campaigns", "Keywords", "Search Terms"].map((tab) => (
+      {/* Sub-tabs */}
+      <div className="flex gap-1 border-b border-stone-200 mb-6">
+        {["Campaigns", "Keywords", "Search Terms"].map((tab, idx) => (
           <button
             key={tab}
-            className="px-4 py-2 border-b-2 border-transparent text-slate-400"
+            className={`px-5 py-3 border-b-2 transition-all font-medium text-sm ${
+              idx === 0
+                ? "border-[#722F37] text-[#722F37] bg-[#722F37]/5"
+                : "border-transparent text-stone-500"
+            }`}
           >
             {tab}
           </button>
         ))}
       </div>
 
-      <div className="bg-slate-800 rounded-lg p-6 text-center">
-        <p className="text-slate-400 mb-4">
-          Google Ads integrace bude implementována ve Fázi 2
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8 text-center">
+        <div className="text-5xl mb-4">🔍</div>
+        <h3 className="text-lg font-bold text-stone-800 mb-2">Google Ads integrace</h3>
+        <p className="text-stone-600 mb-4">
+          Bude implementována ve Fázi 2
         </p>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-stone-500">
           Nejprve připoj Google Ads účet v Settings
         </p>
       </div>
