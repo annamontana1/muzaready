@@ -14,15 +14,30 @@ type PlatformMetrics = {
   roas: number;
 };
 
+type Recommendation = {
+  id: string;
+  type: "optimization" | "alert" | "opportunity";
+  priority: "high" | "medium" | "low";
+  title: string;
+  description: string;
+  impact: string;
+  action: string;
+  status: string;
+  createdAt: string;
+};
+
 export default function MarketingOverviewPage() {
   const [days, setDays] = useState(30);
   const [loading, setLoading] = useState(true);
   const [totals, setTotals] = useState<PlatformMetrics | null>(null);
   const [metaPlatform, setMetaPlatform] = useState<PlatformMetrics | null>(null);
   const [googlePlatform, setGooglePlatform] = useState<PlatformMetrics | null>(null);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [generatingRecs, setGeneratingRecs] = useState(false);
 
   useEffect(() => {
     loadData();
+    loadRecommendations();
   }, [days]);
 
   const loadData = async () => {
@@ -52,6 +67,59 @@ export default function MarketingOverviewPage() {
       console.error("Failed to load overview data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRecommendations = async () => {
+    try {
+      const res = await fetch(`/api/admin/marketing/recommendations?limit=5`);
+      if (res.ok) {
+        const data = await res.json();
+        setRecommendations(data.recommendations || []);
+      }
+    } catch (error) {
+      console.error("Failed to load recommendations:", error);
+    }
+  };
+
+  const generateNewRecommendations = async () => {
+    setGeneratingRecs(true);
+    try {
+      const res = await fetch(`/api/admin/marketing/recommendations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ days }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        await loadRecommendations(); // Reload recommendations
+        alert(`✅ Vygenerováno ${data.count} doporučení`);
+      } else {
+        const error = await res.json();
+        alert(`❌ Chyba: ${error.error || error.details}`);
+      }
+    } catch (error) {
+      console.error("Failed to generate recommendations:", error);
+      alert("❌ Chyba při generování doporučení");
+    } finally {
+      setGeneratingRecs(false);
+    }
+  };
+
+  const handleRecommendation = async (id: string, action: "apply" | "dismiss") => {
+    try {
+      const res = await fetch(`/api/admin/marketing/recommendations/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+
+      if (res.ok) {
+        await loadRecommendations(); // Reload recommendations
+      }
+    } catch (error) {
+      console.error("Failed to update recommendation:", error);
     }
   };
 
@@ -234,15 +302,110 @@ export default function MarketingOverviewPage() {
 
           {/* AI Recommendations */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-2xl">🤖</span>
-              <h3 className="text-lg font-semibold text-stone-800">AI Doporučení</h3>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🤖</span>
+                <h3 className="text-lg font-semibold text-stone-800">AI Doporučení</h3>
+              </div>
+              {totals && totals.spend > 0 && (
+                <button
+                  onClick={generateNewRecommendations}
+                  disabled={generatingRecs}
+                  className="px-4 py-2 bg-[#722F37] text-white rounded-lg text-sm font-medium hover:bg-[#5a2429] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {generatingRecs ? "Generuji..." : "🔄 Generovat nová"}
+                </button>
+              )}
             </div>
-            <div className="text-stone-600">
-              {!totals || totals.spend === 0
-                ? "Žádná doporučení. Nejprve připoj marketingové platformy."
-                : "AI analýza bude dostupná po implementaci Claude API integrace."}
-            </div>
+
+            {/* No data state */}
+            {(!totals || totals.spend === 0) && (
+              <div className="text-stone-600">
+                Žádná doporučení. Nejprve připoj marketingové platformy a načti data.
+              </div>
+            )}
+
+            {/* No recommendations yet */}
+            {totals && totals.spend > 0 && recommendations.length === 0 && (
+              <div className="text-stone-600">
+                Zatím žádná AI doporučení. Klikni na "Generovat nová" pro analýzu.
+              </div>
+            )}
+
+            {/* Recommendations list */}
+            {recommendations.length > 0 && (
+              <div className="space-y-3">
+                {recommendations.map((rec) => (
+                  <div
+                    key={rec.id}
+                    className="bg-white border border-stone-200 rounded-lg p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">
+                          {rec.type === "alert"
+                            ? "⚠️"
+                            : rec.type === "opportunity"
+                            ? "💡"
+                            : "🔧"}
+                        </span>
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                            rec.priority === "high"
+                              ? "bg-red-100 text-red-700"
+                              : rec.priority === "medium"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-blue-100 text-blue-700"
+                          }`}
+                        >
+                          {rec.priority === "high"
+                            ? "Vysoká"
+                            : rec.priority === "medium"
+                            ? "Střední"
+                            : "Nízká"}
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleRecommendation(rec.id, "apply")}
+                          className="px-3 py-1 bg-green-50 text-green-700 rounded text-xs font-medium hover:bg-green-100 transition-colors"
+                          title="Označit jako aplikováno"
+                        >
+                          ✓ Použít
+                        </button>
+                        <button
+                          onClick={() => handleRecommendation(rec.id, "dismiss")}
+                          className="px-3 py-1 bg-stone-100 text-stone-600 rounded text-xs font-medium hover:bg-stone-200 transition-colors"
+                          title="Zamítnout"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                    <h4 className="font-semibold text-stone-800 mb-1">
+                      {rec.title}
+                    </h4>
+                    <p className="text-sm text-stone-600 mb-2">
+                      {rec.description}
+                    </p>
+                    <div className="flex items-center gap-4 text-xs">
+                      <div className="flex items-center gap-1">
+                        <span className="text-stone-500">📊 Dopad:</span>
+                        <span className="font-medium text-stone-700">
+                          {rec.impact}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-stone-500">🎯 Akce:</span>
+                        <span className="font-medium text-stone-700">
+                          {rec.action}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}
