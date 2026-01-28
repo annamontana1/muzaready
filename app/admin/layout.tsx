@@ -13,6 +13,8 @@ const navigation = {
   main: [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒' },
+    { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
+    { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
   ],
   eshop: [
     { href: '/admin/uzivatele', label: 'Zákazníci', icon: '👥' },

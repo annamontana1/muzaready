@@ -788,3 +788,114 @@ model SiteSettings {
 
   @@map("site_settings")
 }
+
+// ============================================
+// Marketing & AI Campaign Management
+// ============================================
+
+model MarketingConnection {
+  id String @id @default(cuid())
+
+  platform String // "meta" nebo "google"
+  connected Boolean @default(false)
+
+  // Credentials (encrypted JSON)
+  credentials String? @db.Text
+
+  // Account info
+  accountId String?
+  accountName String?
+
+  // Status
+  lastSync DateTime?
+  error String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("marketing_connections")
+}
+
+model MarketingConfig {
+  id String @id @default("main")
+
+  // Business fundamentals
+  businessType String @default("ecommerce")
+  averageOrderValue Int @default(10000) // v haléřích (100 Kč)
+  grossMarginPercent Float @default(50.0)
+
+  // Targets (VOLITELNÉ - user může nechat prázdné)
+  targetRoas Float?
+  targetCpa Int? // v haléřích
+  monthlyBudget Int? // v haléřích
+
+  // Auto-calculated (readonly)
+  breakEvenRoas Float? // 100 / margin
+  maxCpa Int? // AOV * (margin/100)
+
+  currency String @default("CZK")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("marketing_config")
+}
+
+model MarketingRecommendation {
+  id String @id @default(cuid())
+
+  platform String // "meta", "google", "both"
+  type String // "budget_increase", "budget_decrease", "pause_campaign", "negative_keyword", "scale_winner"
+  priority String @default("medium") // "critical", "high", "medium", "low"
+
+  title String // "Škáluj budget o 20%"
+  description String @db.Text // Detailní vysvětlení
+  expectedImpact String? @db.Text // "Očekávaný revenue +2 940 Kč"
+
+  // Action data (JSON)
+  actionData String? @db.Text // { "campaignId": "123", "newBudget": 168 }
+
+  status String @default("new") // "new", "applied", "dismissed"
+  appliedAt DateTime?
+  dismissedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([platform])
+  @@index([status])
+  @@index([priority])
+  @@map("marketing_recommendations")
+}
+
+model MarketingMetricsDaily {
+  id String @id @default(cuid())
+
+  date DateTime
+  platform String // "meta" nebo "google"
+
+  // Entity (campaign/adset/keyword)
+  level String // "campaign", "adset", "ad", "keyword"
+  entityId String
+  entityName String
+
+  // Core metrics
+  impressions Int @default(0)
+  clicks Int @default(0)
+  spend Int @default(0) // v haléřích
+  conversions Int @default(0)
+  conversionValue Int @default(0) // v haléřích
+
+  // Calculated
+  ctr Float?
+  cpc Int?
+  cpa Int?
+  roas Float?
+
+  createdAt DateTime @default(now())
+
+  @@unique([date, platform, level, entityId])
+  @@index([date])
+  @@index([platform])
+  @@index([entityId])
+  @@map("marketing_metrics_daily")
+}
