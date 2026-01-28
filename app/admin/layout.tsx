@@ -8,50 +8,42 @@ import { ToastProvider } from '@/components/ui/ToastProvider';
 import { queryClient } from '@/lib/queryClient';
 import { useOrderNotifications } from '@/lib/hooks/useOrderNotifications';
 
-// Navigation structure
-const navigation = {
-  main: [
-    { href: '/admin', label: 'Dashboard', icon: '📊', exact: true },
-    { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒' },
-    { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
-    { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
-  ],
-  eshop: {
-    label: 'E-shop',
-    icon: '🛍️',
-    items: [
-      { href: '/admin/produkty', label: 'Produkty', icon: '📦' },
-      { href: '/admin/uzivatele', label: 'Zákazníci', icon: '👥' },
-      { href: '/admin/reviews', label: 'Recenze', icon: '⭐' },
-      { href: '/admin/coupons', label: 'Kupóny', icon: '🎟️' },
-      { href: '/admin/velkoobchod-zadosti', label: 'Velkoobchod', icon: '🏢' },
-    ],
-  },
-  sklad: {
-    label: 'Sklad',
-    icon: '📦',
-    items: [
-      { href: '/admin/sklad', label: 'SKU položky', icon: '📋' },
-      { href: '/admin/stock-receive', label: 'Naskladnění', icon: '📥' },
-      { href: '/admin/inventory', label: 'Inventury', icon: '📊' },
-      { href: '/admin/low-stock-alerts', label: 'Nízký stav', icon: '⚠️' },
-      { href: '/admin/price-matrix', label: 'Matice cen', icon: '💰' },
-      { href: '/admin/konfigurator-sku', label: 'Konfigurátor', icon: '⚙️' },
-      { href: '/admin/warehouse-scanner', label: 'Scanner', icon: '📱' },
-    ],
-  },
-  cms: {
-    label: 'CMS',
-    icon: '✏️',
-    items: [
-      { href: '/admin/nastaveni', label: 'Nastavení', icon: '⚙️' },
-      { href: '/admin/seo', label: 'SEO', icon: '🔍' },
-      { href: '/admin/content', label: 'Obsah', icon: '📄' },
-      { href: '/admin/redirects', label: 'Redirecty', icon: '🔗' },
-      { href: '/admin/faq', label: 'FAQ', icon: '❓' },
-    ],
-  },
-};
+// Navigation structure - FLAT LIST (all items visible)
+const navigation = [
+  { href: '/admin', label: 'Dashboard', icon: '📊', exact: true },
+  { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒', showBadge: true },
+  { href: '/admin/produkty', label: 'Produkty', icon: '📦' },
+  { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
+  { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
+
+  // Divider
+  { divider: true, label: 'E-shop' },
+
+  { href: '/admin/uzivatele', label: 'Zákazníci', icon: '👥' },
+  { href: '/admin/reviews', label: 'Recenze', icon: '⭐' },
+  { href: '/admin/coupons', label: 'Kupóny', icon: '🎟️' },
+  { href: '/admin/velkoobchod-zadosti', label: 'Velkoobchod', icon: '🏢' },
+
+  // Divider
+  { divider: true, label: 'Sklad' },
+
+  { href: '/admin/sklad', label: 'SKU položky', icon: '📋' },
+  { href: '/admin/stock-receive', label: 'Naskladnění', icon: '📥' },
+  { href: '/admin/inventory', label: 'Inventury', icon: '📊' },
+  { href: '/admin/low-stock-alerts', label: 'Nízký stav', icon: '⚠️' },
+  { href: '/admin/price-matrix', label: 'Matice cen', icon: '💰' },
+  { href: '/admin/konfigurator-sku', label: 'Konfigurátor', icon: '⚙️' },
+  { href: '/admin/warehouse-scanner', label: 'Scanner', icon: '📱' },
+
+  // Divider
+  { divider: true, label: 'CMS' },
+
+  { href: '/admin/nastaveni', label: 'Nastavení', icon: '⚙️' },
+  { href: '/admin/seo', label: 'SEO', icon: '🔍' },
+  { href: '/admin/content', label: 'Obsah', icon: '📄' },
+  { href: '/admin/redirects', label: 'Redirecty', icon: '🔗' },
+  { href: '/admin/faq', label: 'FAQ', icon: '❓' },
+];
 
 // Sidebar navigation item
 function SidebarNavItem({
@@ -75,7 +67,7 @@ function SidebarNavItem({
     <Link
       href={href}
       className={`
-        group relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
+        group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
         ${
           isActive
             ? 'bg-gradient-to-r from-burgundy-600 to-burgundy-700 text-white shadow-lg shadow-burgundy-900/40'
@@ -83,7 +75,7 @@ function SidebarNavItem({
         }
       `}
     >
-      <span className={`text-xl transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
+      <span className={`text-lg transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
         {icon}
       </span>
       <span className="font-semibold">{label}</span>
@@ -99,81 +91,15 @@ function SidebarNavItem({
   );
 }
 
-// Sidebar section with collapsible items
-function SidebarSection({
-  label,
-  icon,
-  items,
-  pathname,
-}: {
-  label: string;
-  icon: string;
-  items: typeof navigation.eshop.items;
-  pathname: string;
-}) {
-  const hasActive = items.some(
-    (item) => pathname === item.href || pathname.startsWith(item.href)
-  );
-  const [open, setOpen] = useState(hasActive);
-
+// Section divider
+function SectionDivider({ label }: { label: string }) {
   return (
-    <div>
-      <button
-        onClick={() => setOpen(!open)}
-        className={`
-          group w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
-          ${
-            hasActive
-              ? 'text-white bg-slate-800/80'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-          }
-        `}
-      >
-        <span className={`text-lg transition-transform duration-200 ${hasActive ? 'scale-110' : 'group-hover:scale-110'}`}>
-          {icon}
-        </span>
-        <span className="font-semibold">{label}</span>
-        <svg
-          className={`ml-auto w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-
-      {open && (
-        <div className="mt-1 space-y-0.5 ml-2">
-          {items.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`
-                  group flex items-center gap-3 pl-9 pr-4 py-2.5 rounded-lg text-sm transition-all duration-200
-                  ${
-                    isActive
-                      ? 'text-white bg-slate-700/60 font-semibold'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
-                  }
-                `}
-              >
-                <span className={`text-base transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+    <div className="px-4 py-3">
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</span>
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
+      </div>
     </div>
   );
 }
@@ -220,30 +146,26 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-            {/* Main navigation */}
-            {navigation.main.map((item) => (
-              <SidebarNavItem
-                key={item.href}
-                {...item}
-                pathname={pathname}
-                badge={item.href === '/admin/objednavky' ? pendingCount : undefined}
-              />
-            ))}
+          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+            {navigation.map((item, index) => {
+              // Render divider
+              if ('divider' in item && item.divider) {
+                return <SectionDivider key={`divider-${index}`} label={item.label} />;
+              }
 
-            {/* Divider */}
-            <div className="my-4 px-4">
-              <div className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
-            </div>
-
-            {/* E-shop section */}
-            <SidebarSection {...navigation.eshop} pathname={pathname} />
-
-            {/* Sklad section */}
-            <SidebarSection {...navigation.sklad} pathname={pathname} />
-
-            {/* CMS section */}
-            <SidebarSection {...navigation.cms} pathname={pathname} />
+              // Render navigation item
+              return (
+                <SidebarNavItem
+                  key={item.href}
+                  href={item.href!}
+                  label={item.label}
+                  icon={item.icon!}
+                  exact={item.exact}
+                  pathname={pathname}
+                  badge={item.showBadge ? pendingCount : undefined}
+                />
+              );
+            })}
           </nav>
 
           {/* User section */}
