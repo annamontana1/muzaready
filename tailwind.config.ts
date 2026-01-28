@@ -9,9 +9,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Primární burgundy/maroon
+        // Primární burgundy/maroon (rozšířená paleta + DEFAULT pro zpětnou kompatibilitu)
         burgundy: {
-          DEFAULT: '#340C0D',
+          DEFAULT: '#340C0D', // bg-burgundy bude fungovat jako dřív
+          50: '#FCF3F3',
+          100: '#F9E7E7',
+          200: '#F2CFCF',
+          300: '#E8A7A8',
+          400: '#DC7A7B',
+          500: '#CC5556',
+          600: '#B13D3F',
+          700: '#8B2F31',
+          800: '#5D1F20',
+          900: '#340C0D',
+          950: '#2A0A0B',
           light: '#5D1F20',
           dark: '#2A0A0B',
         },
