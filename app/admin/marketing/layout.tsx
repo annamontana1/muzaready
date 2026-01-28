@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { BarChart3, Search, Facebook, Settings } from "lucide-react";
 
 export default function MarketingLayout({
   children,
@@ -12,10 +11,10 @@ export default function MarketingLayout({
   const pathname = usePathname();
 
   const tabs = [
-    { name: "Overview", href: "/admin/marketing", icon: BarChart3 },
-    { name: "Google Ads", href: "/admin/marketing/google-ads", icon: Search },
-    { name: "Meta Ads", href: "/admin/marketing/meta-ads", icon: Facebook },
-    { name: "Settings", href: "/admin/marketing/settings", icon: Settings },
+    { name: "Overview", href: "/admin/marketing", icon: "📊" },
+    { name: "Google Ads", href: "/admin/marketing/google-ads", icon: "🔍" },
+    { name: "Meta Ads", href: "/admin/marketing/meta-ads", icon: "📘" },
+    { name: "Settings", href: "/admin/marketing/settings", icon: "⚙️" },
   ];
 
   return (
@@ -34,7 +33,6 @@ export default function MarketingLayout({
       <div className="flex gap-2 border-b border-slate-700 mb-6">
         {tabs.map((tab) => {
           const isActive = pathname === tab.href;
-          const Icon = tab.icon;
 
           return (
             <Link
@@ -49,7 +47,7 @@ export default function MarketingLayout({
                 }
               `}
             >
-              <Icon className="w-4 h-4" />
+              <span>{tab.icon}</span>
               {tab.name}
             </Link>
           );

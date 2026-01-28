@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Check, X, Loader2 } from "lucide-react";
 
 type ConnectionStatus = {
   platform: string;
@@ -136,12 +135,8 @@ export default function MarketingSettingsPage() {
               className="bg-slate-800 rounded-lg p-6 flex items-center justify-between"
             >
               <div className="flex items-center gap-4">
-                <div>
-                  {conn.connected ? (
-                    <Check className="w-6 h-6 text-green-500" />
-                  ) : (
-                    <X className="w-6 h-6 text-slate-500" />
-                  )}
+                <div className="text-2xl">
+                  {conn.connected ? "✅" : "❌"}
                 </div>
                 <div>
                   <h3 className="font-semibold">{conn.platform}</h3>
@@ -349,7 +344,7 @@ export default function MarketingSettingsPage() {
                 disabled={saving}
                 className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white rounded transition-colors flex items-center gap-2"
               >
-                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                {saving && <span className="animate-spin">⏳</span>}
                 Uložit konfiguraci
               </button>
             </div>
