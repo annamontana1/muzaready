@@ -121,9 +121,24 @@ export default function OblibeneePage() {
                   >
                     {/* Product Image */}
                     <Link href={`/produkt/${product.slug}`}>
-                      <div className="aspect-square relative">
+                      <div className="aspect-square relative overflow-hidden">
+                        {/* Actual image if available */}
+                        {product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? (
+                          <img
+                            src={product.images.main}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const fallback = target.nextElementSibling as HTMLElement;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                        ) : null}
+                        {/* Gradient fallback */}
                         <div
-                          className="w-full h-full flex items-center justify-center"
+                          className={`w-full h-full flex items-center justify-center ${product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? 'hidden absolute inset-0' : ''}`}
                           style={{
                             background: color
                               ? `linear-gradient(135deg, ${color.hex} 0%, ${color.hex}dd 50%, ${color.hex}bb 100%)`

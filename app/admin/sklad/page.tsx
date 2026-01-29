@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SkuFilterPanel from '@/components/admin/SkuFilterPanel';
-import AdminShadePicker from '@/components/admin/AdminShadePicker';
+import QuickAddSkuModal from '@/components/admin/QuickAddSkuModal';
 import type { SkuFilters, PaginationMeta } from '@/lib/sku-filter-utils';
 import { filtersToQueryString, queryStringToFilters } from '@/lib/sku-filter-utils';
 
@@ -37,28 +37,11 @@ function SkuListPageContent() {
 
   const [skus, setSkus] = useState<Sku[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [pagination, setPagination] = useState<PaginationMeta | null>(null);
   const [filters, setFilters] = useState<SkuFilters>({});
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
-  const [formData, setFormData] = useState({
-    shade: '',
-    shadeName: '',
-    shadeHex: '',
-    lengthCm: '',
-    structure: '',
-    customerCategory: 'STANDARD',
-    saleMode: 'PIECE_BY_WEIGHT',
-    pricePerGramCzk: '',
-    weightTotalG: '',
-    availableGrams: '',
-    minOrderG: '',
-    stepG: '',
-    isListed: false,
-    listingPriority: '',
-    inStock: false,
-  });
 
   // Initialize filters from URL on mount
   useEffect(() => {
@@ -92,10 +75,9 @@ function SkuListPageContent() {
         setPagination(data.pagination || null);
       }
     } catch (err: any) {
-      console.error('Chyba při načítání SKU:', err);
-      // Don't show alert for initial load if auth is just slow
+      console.error('Chyba pri nacitani SKU:', err);
       if (err.message !== 'Unauthorized - Admin session required') {
-        alert('Chyba při načítání skladů: ' + err.message);
+        alert('Chyba pri nacitani skladu: ' + err.message);
       }
     } finally {
       setLoading(false);
@@ -105,11 +87,9 @@ function SkuListPageContent() {
   const handleApplyFilters = (newFilters: SkuFilters) => {
     setFilters(newFilters);
 
-    // Update URL with new filters
     const queryString = filtersToQueryString(newFilters);
     router.push(`/admin/sklad${queryString ? `?${queryString}` : ''}`, { scroll: false });
 
-    // Fetch with new filters
     fetchSkus(newFilters);
   };
 
@@ -121,66 +101,6 @@ function SkuListPageContent() {
   const handleLimitChange = (newLimit: number) => {
     const newFilters = { ...filters, limit: newLimit, page: 1 };
     handleApplyFilters(newFilters);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const payload = {
-        ...formData,
-        pricePerGramCzk: parseInt(formData.pricePerGramCzk) || 0,
-        weightTotalG: formData.weightTotalG ? parseInt(formData.weightTotalG) : null,
-        availableGrams: formData.availableGrams ? parseInt(formData.availableGrams) : null,
-        minOrderG: formData.minOrderG ? parseInt(formData.minOrderG) : null,
-        stepG: formData.stepG ? parseInt(formData.stepG) : null,
-        lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
-        listingPriority: formData.listingPriority ? parseInt(formData.listingPriority) : null,
-      };
-
-      const res = await fetch('/api/admin/skus', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        credentials: 'include',
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || 'Failed to create SKU');
-      }
-
-      alert('SKU vytvořeno!');
-      setFormData({
-        shade: '',
-        shadeName: '',
-        shadeHex: '',
-        lengthCm: '',
-        structure: '',
-        customerCategory: 'STANDARD',
-        saleMode: 'PIECE_BY_WEIGHT',
-        pricePerGramCzk: '',
-        weightTotalG: '',
-        availableGrams: '',
-        minOrderG: '',
-        stepG: '',
-        isListed: false,
-        listingPriority: '',
-        inStock: false,
-      });
-      setShowForm(false);
-      fetchSkus();
-    } catch (err: any) {
-      console.error(err);
-      alert('Chyba: ' + err.message);
-    }
   };
 
   const toggleSelectAll = () => {
@@ -203,12 +123,12 @@ function SkuListPageContent() {
 
   const handleBulkDelete = async () => {
     if (selectedIds.size === 0) {
-      alert('Vyberte SKU k smazání');
+      alert('Vyberte SKU k smazani');
       return;
     }
 
     const confirmed = window.confirm(
-      `Opravdu chcete smazat ${selectedIds.size} vybraných SKU? Tato akce je nevratná.`
+      `Opravdu chcete smazat ${selectedIds.size} vybranych SKU? Tato akce je nevratna.`
     );
     if (!confirmed) return;
 
@@ -222,9 +142,9 @@ function SkuListPageContent() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Chyba při mazání');
+      if (!res.ok) throw new Error(data.error || 'Chyba pri mazani');
 
-      alert(`Smazáno ${data.deleted} SKU`);
+      alert(`Smazano ${data.deleted} SKU`);
       setSelectedIds(new Set());
       fetchSkus(filters);
     } catch (err: any) {
@@ -237,12 +157,12 @@ function SkuListPageContent() {
 
   const handleDeleteAll = async () => {
     const confirmed = window.confirm(
-      'Opravdu chcete smazat VŠECHNY SKU bez objednávek? Tato akce je nevratná!'
+      'Opravdu chcete smazat VSECHNY SKU bez objednavek? Tato akce je nevratna!'
     );
     if (!confirmed) return;
 
     const doubleConfirm = window.confirm(
-      'Toto je nevratná akce. Naposledy se ptám - opravdu smazat všechny testovací produkty?'
+      'Toto je nevratna akce. Naposledy se ptam - opravdu smazat vsechny testovaci produkty?'
     );
     if (!doubleConfirm) return;
 
@@ -256,9 +176,9 @@ function SkuListPageContent() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Chyba při mazání');
+      if (!res.ok) throw new Error(data.error || 'Chyba pri mazani');
 
-      alert(`Smazáno ${data.deleted} SKU`);
+      alert(`Smazano ${data.deleted} SKU`);
       setSelectedIds(new Set());
       fetchSkus(filters);
     } catch (err: any) {
@@ -270,20 +190,35 @@ function SkuListPageContent() {
   };
 
   if (loading) {
-    return <div className="p-4">Načítám...</div>;
+    return <div className="p-4">Nacitam...</div>;
   }
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Sklad (SKU)</h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-        >
-          {showForm ? 'Zrušit' : '+ Nový SKU'}
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowQuickAdd(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+          >
+            + Quick Add
+          </button>
+          <Link
+            href="/admin/sklad/novy"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium"
+          >
+            Wizard (vice delek)
+          </Link>
+        </div>
       </div>
+
+      {/* Quick Add Modal */}
+      <QuickAddSkuModal
+        isOpen={showQuickAdd}
+        onClose={() => setShowQuickAdd(false)}
+        onCreated={() => fetchSkus(filters)}
+      />
 
       {/* Filter Panel */}
       <SkuFilterPanel onApplyFilters={handleApplyFilters} initialFilters={filters} />
@@ -293,7 +228,7 @@ function SkuListPageContent() {
         <div className="bg-gray-100 rounded-lg p-4 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-700">
-              {selectedIds.size > 0 ? `Vybráno: ${selectedIds.size} SKU` : `Celkem: ${pagination?.total || skus.length} SKU`}
+              {selectedIds.size > 0 ? `Vybrano: ${selectedIds.size} SKU` : `Celkem: ${pagination?.total || skus.length} SKU`}
             </span>
             {selectedIds.size > 0 && (
               <button
@@ -301,7 +236,7 @@ function SkuListPageContent() {
                 disabled={deleting}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm font-medium"
               >
-                {deleting ? 'Mažu...' : `Smazat vybrané (${selectedIds.size})`}
+                {deleting ? 'Mazu...' : `Smazat vybrane (${selectedIds.size})`}
               </button>
             )}
           </div>
@@ -310,168 +245,9 @@ function SkuListPageContent() {
             disabled={deleting}
             className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50 text-sm font-medium"
           >
-            Smazat všechny test produkty
+            Smazat vsechny test produkty
           </button>
         </div>
-      )}
-
-      {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-2 gap-4">
-          <div className="col-span-2 text-sm text-gray-500 italic">
-            SKU kód, název a shortCode se vygenerují automaticky.
-          </div>
-          <div className="col-span-2">
-            <AdminShadePicker
-              selectedShadeCode={formData.shade}
-              onSelect={(shade) => {
-                if (shade) {
-                  setFormData((prev) => ({
-                    ...prev,
-                    shade: shade.code,
-                    shadeName: shade.name,
-                    shadeHex: shade.hex,
-                  }));
-                } else {
-                  setFormData((prev) => ({
-                    ...prev,
-                    shade: '',
-                    shadeName: '',
-                    shadeHex: '',
-                  }));
-                }
-              }}
-            />
-          </div>
-          <select
-            name="lengthCm"
-            value={formData.lengthCm}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          >
-            <option value="">Délka (cm)</option>
-            {[35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90].map((len) => (
-              <option key={len} value={len}>{len} cm</option>
-            ))}
-          </select>
-          <select
-            name="structure"
-            value={formData.structure}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          >
-            <option value="">Struktura</option>
-            <option value="rovné">rovné</option>
-            <option value="mírně vlnité">mírně vlnité</option>
-            <option value="vlnité">vlnité</option>
-            <option value="kudrnaté">kudrnaté</option>
-          </select>
-
-          <select
-            name="customerCategory"
-            value={formData.customerCategory}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          >
-            <option value="STANDARD">STANDARD</option>
-            <option value="LUXE">LUXE</option>
-            <option value="PLATINUM_EDITION">PLATINUM EDITION</option>
-          </select>
-
-          <select
-            name="saleMode"
-            value={formData.saleMode}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2 col-span-2"
-          >
-            <option value="PIECE_BY_WEIGHT">Culík (pevná váha)</option>
-            <option value="BULK_G">Sypané gramy</option>
-          </select>
-
-          <input
-            type="number"
-            name="pricePerGramCzk"
-            placeholder="Cena za 1g (Kč)"
-            value={formData.pricePerGramCzk}
-            onChange={handleInputChange}
-            required
-            className="border rounded px-3 py-2"
-          />
-
-          {formData.saleMode === 'PIECE_BY_WEIGHT' && (
-            <input
-              type="number"
-              name="weightTotalG"
-              placeholder="Váha culičku (g)"
-              value={formData.weightTotalG}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2"
-            />
-          )}
-
-          {formData.saleMode === 'BULK_G' && (
-            <>
-              <input
-                type="number"
-                name="availableGrams"
-                placeholder="Dostupné gramy"
-                value={formData.availableGrams}
-                onChange={handleInputChange}
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="number"
-                name="minOrderG"
-                placeholder="Min. objednávka (g)"
-                value={formData.minOrderG}
-                onChange={handleInputChange}
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="number"
-                name="stepG"
-                placeholder="Krok (g)"
-                value={formData.stepG}
-                onChange={handleInputChange}
-                className="border rounded px-3 py-2"
-              />
-            </>
-          )}
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="inStock"
-              checked={formData.inStock}
-              onChange={handleInputChange}
-              className="w-4 h-4"
-            />
-            Na skladě
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="isListed"
-              checked={formData.isListed}
-              onChange={handleInputChange}
-              className="w-4 h-4"
-            />
-            Zobrazit v katalogu
-          </label>
-
-          <input
-            type="number"
-            name="listingPriority"
-            placeholder="Priorita zobrazení (1-10)"
-            value={formData.listingPriority}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          />
-
-          <button type="submit" className="col-span-2 bg-green-600 text-white py-2 rounded-md hover:bg-green-700">
-            Vytvořit SKU
-          </button>
-        </form>
       )}
 
       <div className="overflow-x-auto bg-white rounded-lg shadow">
@@ -487,17 +263,17 @@ function SkuListPageContent() {
                 />
               </th>
               <th className="px-4 py-2 text-left">SKU</th>
-              <th className="px-4 py-2 text-left">Kód IG</th>
-              <th className="px-4 py-2 text-left">Název</th>
+              <th className="px-4 py-2 text-left">Kod IG</th>
+              <th className="px-4 py-2 text-left">Nazev</th>
               <th className="px-4 py-2 text-left">Kategorie</th>
-              <th className="px-4 py-2 text-left">Odstín</th>
-              <th className="px-4 py-2 text-left">Délka</th>
+              <th className="px-4 py-2 text-left">Odstin</th>
+              <th className="px-4 py-2 text-left">Delka</th>
               <th className="px-4 py-2 text-left">Cena/g</th>
               <th className="px-4 py-2 text-left">Typ</th>
               <th className="px-4 py-2 text-left">Stav</th>
               <th className="px-4 py-2 text-left">Katalog</th>
               <th className="px-4 py-2 text-left">Priorita</th>
-              <th className="px-4 py-2 text-left">Skladové info</th>
+              <th className="px-4 py-2 text-left">Skladove info</th>
               <th className="px-4 py-2 text-left">Akce</th>
             </tr>
           </thead>
@@ -532,24 +308,24 @@ function SkuListPageContent() {
                 </td>
                 <td className="px-4 py-2">{sku.shadeName || sku.shade || '-'}</td>
                 <td className="px-4 py-2">{sku.lengthCm ? `${sku.lengthCm} cm` : '-'}</td>
-                <td className="px-4 py-2">{sku.pricePerGramCzk} Kč</td>
+                <td className="px-4 py-2">{sku.pricePerGramCzk} Kc</td>
                 <td className="px-4 py-2 text-xs">
                   <span className={`px-2 py-1 rounded ${sku.saleMode === 'PIECE_BY_WEIGHT' ? 'bg-purple-100' : 'bg-blue-100'}`}>
-                    {sku.saleMode === 'PIECE_BY_WEIGHT' ? 'Culík' : 'Gramy'}
+                    {sku.saleMode === 'PIECE_BY_WEIGHT' ? 'Culik' : 'Gramy'}
                   </span>
                 </td>
                 <td className="px-4 py-2">
                   {sku.soldOut ? (
-                    <span className="text-red-600 font-bold">Vyprodáno</span>
+                    <span className="text-red-600 font-bold">Vyprodano</span>
                   ) : sku.inStock ? (
                     <span className="text-green-600 font-bold">Skladem</span>
                   ) : (
-                    <span className="text-gray-500">Vyprodáno</span>
+                    <span className="text-gray-500">Vyprodano</span>
                   )}
                 </td>
                 <td className="px-4 py-2 text-xs">
                   {sku.isListed ? (
-                    <span className="text-blue-600 font-bold">✓ Ano</span>
+                    <span className="text-blue-600 font-bold">Ano</span>
                   ) : (
                     <span className="text-gray-500">-</span>
                   )}
@@ -588,7 +364,7 @@ function SkuListPageContent() {
 
       {skus.length === 0 && !loading && (
         <div className="text-center py-8 text-gray-500">
-          {Object.keys(filters).length > 0 ? 'Žádné SKU neodpovídá filtrům.' : 'Zatím žádné SKU. Přidej první!'}
+          {Object.keys(filters).length > 0 ? 'Zadne SKU neodpovida filtrum.' : 'Zatim zadne SKU. Pridej prvni!'}
         </div>
       )}
 
@@ -605,9 +381,9 @@ function SkuListPageContent() {
               onChange={(e) => handleLimitChange(parseInt(e.target.value))}
               className="border rounded px-3 py-1.5 text-sm"
             >
-              <option value={25}>25 na stránku</option>
-              <option value={50}>50 na stránku</option>
-              <option value={100}>100 na stránku</option>
+              <option value={25}>25 na stranku</option>
+              <option value={50}>50 na stranku</option>
+              <option value={100}>100 na stranku</option>
             </select>
           </div>
 
@@ -617,24 +393,24 @@ function SkuListPageContent() {
               disabled={pagination.page <= 1}
               className="px-3 py-1.5 text-sm bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              ← Předchozí
+              ← Predchozi
             </button>
             <span className="text-sm text-gray-700">
-              Stránka {pagination.page} z {pagination.totalPages}
+              Stranka {pagination.page} z {pagination.totalPages}
             </span>
             <button
               onClick={() => handlePageChange(pagination.page + 1)}
               disabled={pagination.page >= pagination.totalPages}
               className="px-3 py-1.5 text-sm bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Další →
+              Dalsi →
             </button>
           </div>
         </div>
       )}
 
       <Link href="/admin" className="mt-6 inline-block text-blue-600 hover:text-blue-800">
-        ← Zpět na admin
+        ← Zpet na admin
       </Link>
     </div>
   );
@@ -642,7 +418,7 @@ function SkuListPageContent() {
 
 export default function SkuListPage() {
   return (
-    <Suspense fallback={<div className="p-4">Načítám...</div>}>
+    <Suspense fallback={<div className="p-4">Nacitam...</div>}>
       <SkuListPageContent />
     </Suspense>
   );
