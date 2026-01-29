@@ -43,8 +43,6 @@ function SkuListPageContent() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
-    sku: '',
-    name: '',
     shade: '',
     shadeName: '',
     shadeHex: '',
@@ -161,8 +159,6 @@ function SkuListPageContent() {
 
       alert('SKU vytvořeno!');
       setFormData({
-        sku: '',
-        name: '',
         shade: '',
         shadeName: '',
         shadeHex: '',
@@ -321,23 +317,9 @@ function SkuListPageContent() {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="sku"
-            placeholder="SKU (kód)"
-            value={formData.sku}
-            onChange={handleInputChange}
-            required
-            className="border rounded px-3 py-2"
-          />
-          <input
-            type="text"
-            name="name"
-            placeholder="Název"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          />
+          <div className="col-span-2 text-sm text-gray-500 italic">
+            SKU kód, název a shortCode se vygenerují automaticky.
+          </div>
           <div className="col-span-2">
             <AdminShadePicker
               selectedShadeCode={formData.shade}
@@ -360,14 +342,17 @@ function SkuListPageContent() {
               }}
             />
           </div>
-          <input
-            type="number"
+          <select
             name="lengthCm"
-            placeholder="Délka (cm)"
             value={formData.lengthCm}
             onChange={handleInputChange}
             className="border rounded px-3 py-2"
-          />
+          >
+            <option value="">Délka (cm)</option>
+            {[35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90].map((len) => (
+              <option key={len} value={len}>{len} cm</option>
+            ))}
+          </select>
           <select
             name="structure"
             value={formData.structure}
