@@ -303,10 +303,10 @@ export default function SkuEditPage() {
                 className="w-full border rounded-lg px-4 py-2"
               >
                 <option value="">Vyberte strukturu</option>
-                <option value="rovne">Rovne</option>
-                <option value="mirne vlnite">Mirne vlnite</option>
-                <option value="vlnite">Vlnite</option>
-                <option value="kudrnate">Kudrnate</option>
+                <option value="rovné">rovné</option>
+                <option value="mírně vlnité">mírně vlnité</option>
+                <option value="vlnité">vlnité</option>
+                <option value="kudrnaté">kudrnaté</option>
               </select>
             </div>
           </div>
