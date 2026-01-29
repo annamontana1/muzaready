@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ImageUpload from '@/components/admin/ImageUpload';
+import AdminShadePicker from '@/components/admin/AdminShadePicker';
 
 interface SkuData {
   id: string;
@@ -44,6 +45,7 @@ export default function SkuEditPage() {
   const [formData, setFormData] = useState({
     name: '',
     imageUrl: '',
+    shade: '',
     shadeName: '',
     shadeHex: '',
     lengthCm: '',
@@ -82,6 +84,7 @@ export default function SkuEditPage() {
       setFormData({
         name: data.name || '',
         imageUrl: data.imageUrl || '',
+        shade: data.shade || '',
         shadeName: data.shadeName || '',
         shadeHex: data.shadeHex || '',
         lengthCm: data.lengthCm?.toString() || '',
@@ -125,6 +128,7 @@ export default function SkuEditPage() {
       const payload = {
         name: formData.name || null,
         imageUrl: formData.imageUrl || null,
+        shade: formData.shade || null,
         shadeName: formData.shadeName || null,
         shadeHex: formData.shadeHex || null,
         lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
@@ -255,36 +259,27 @@ export default function SkuEditPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">Vlastnosti produktu</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nazev odstinu</label>
-              <input
-                type="text"
-                name="shadeName"
-                value={formData.shadeName}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-                placeholder="napr. Zlata blond"
+            <div className="md:col-span-2">
+              <AdminShadePicker
+                selectedShadeCode={formData.shade}
+                onSelect={(shade) => {
+                  if (shade) {
+                    setFormData((prev) => ({
+                      ...prev,
+                      shade: shade.code,
+                      shadeName: shade.name,
+                      shadeHex: shade.hex,
+                    }));
+                  } else {
+                    setFormData((prev) => ({
+                      ...prev,
+                      shade: '',
+                      shadeName: '',
+                      shadeHex: '',
+                    }));
+                  }
+                }}
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Barva (HEX)</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  name="shadeHex"
-                  value={formData.shadeHex}
-                  onChange={handleInputChange}
-                  className="flex-1 border rounded-lg px-4 py-2"
-                  placeholder="#FFD700"
-                />
-                {formData.shadeHex && (
-                  <div
-                    className="w-10 h-10 rounded-lg border"
-                    style={{ backgroundColor: formData.shadeHex }}
-                  />
-                )}
-              </div>
             </div>
 
             <div>

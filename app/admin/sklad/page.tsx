@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SkuFilterPanel from '@/components/admin/SkuFilterPanel';
+import AdminShadePicker from '@/components/admin/AdminShadePicker';
 import type { SkuFilters, PaginationMeta } from '@/lib/sku-filter-utils';
 import { filtersToQueryString, queryStringToFilters } from '@/lib/sku-filter-utils';
 
@@ -46,6 +47,7 @@ function SkuListPageContent() {
     name: '',
     shade: '',
     shadeName: '',
+    shadeHex: '',
     lengthCm: '',
     structure: '',
     customerCategory: 'STANDARD',
@@ -163,6 +165,7 @@ function SkuListPageContent() {
         name: '',
         shade: '',
         shadeName: '',
+        shadeHex: '',
         lengthCm: '',
         structure: '',
         customerCategory: 'STANDARD',
@@ -335,22 +338,28 @@ function SkuListPageContent() {
             onChange={handleInputChange}
             className="border rounded px-3 py-2"
           />
-          <input
-            type="text"
-            name="shade"
-            placeholder="Odstín (ID)"
-            value={formData.shade}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          />
-          <input
-            type="text"
-            name="shadeName"
-            placeholder="Jméno odstínu"
-            value={formData.shadeName}
-            onChange={handleInputChange}
-            className="border rounded px-3 py-2"
-          />
+          <div className="col-span-2">
+            <AdminShadePicker
+              selectedShadeCode={formData.shade}
+              onSelect={(shade) => {
+                if (shade) {
+                  setFormData((prev) => ({
+                    ...prev,
+                    shade: shade.code,
+                    shadeName: shade.name,
+                    shadeHex: shade.hex,
+                  }));
+                } else {
+                  setFormData((prev) => ({
+                    ...prev,
+                    shade: '',
+                    shadeName: '',
+                    shadeHex: '',
+                  }));
+                }
+              }}
+            />
+          </div>
           <input
             type="number"
             name="lengthCm"
