@@ -46,6 +46,10 @@ export default function OblibeneePage() {
   }, [favorites]);
 
   const favoriteProducts = products;
+  // Favorites that couldn't be matched to any catalog product
+  const unmatchedFavorites = favorites.filter(
+    fav => !products.some(p => p.id === fav.id)
+  );
 
   return (
     <div className="py-12 bg-ivory min-h-screen">
@@ -211,6 +215,33 @@ export default function OblibeneePage() {
                 );
               })}
             </div>
+
+            {/* Unmatched favorites - product not in catalog */}
+            {unmatchedFavorites.length > 0 && (
+              <div className="mb-8">
+                {unmatchedFavorites.map((fav) => (
+                  <div
+                    key={fav.id}
+                    className="bg-white rounded-xl p-6 shadow-medium flex items-center justify-between mb-4"
+                  >
+                    <div>
+                      <p className="text-gray-700 font-medium">
+                        {fav.name || 'Oblíbený produkt'}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Tento produkt momentálně není k dispozici v katalogu.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeFavorite(fav.id)}
+                      className="px-4 py-2 border border-burgundy text-burgundy rounded-lg hover:bg-burgundy/5 transition-colors text-sm"
+                    >
+                      Odebrat
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Continue Shopping */}
             <div className="text-center">
