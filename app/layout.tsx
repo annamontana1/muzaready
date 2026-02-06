@@ -5,6 +5,7 @@ import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
 import CookieBanner from "@/components/CookieBanner";
 import MetaPixel from "@/components/MetaPixel";
+import DevelopmentModal from "@/components/DevelopmentModal";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.muzahair.cz'),
@@ -119,6 +120,7 @@ export default function RootLayout({
           </MainLayout>
           <CookieBanner />
           <MetaPixel />
+          <DevelopmentModal />
         </Providers>
       </body>
     </html>
