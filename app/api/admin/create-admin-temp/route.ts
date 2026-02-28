@@ -10,31 +10,26 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET() {
   try {
-    const email = 'admin@muzahair.cz';
-    const password = 'admin123';
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const accounts = [
+      { email: 'admin@muzahair.cz', name: 'Administrator', password: 'admin123', role: 'admin' as const },
+      { email: 'zen@muzahair.cz', name: 'Zen', password: 'zen123', role: 'admin' as const },
+    ];
 
-    // Upsert - create or update
-    const admin = await prisma.adminUser.upsert({
-      where: { email },
-      update: {
-        password: hashedPassword,
-        status: 'active',
-      },
-      create: {
-        name: 'Administrator',
-        email,
-        password: hashedPassword,
-        role: 'admin',
-        status: 'active',
-      },
-    });
+    const results = [];
+    for (const acc of accounts) {
+      const hashedPassword = await bcrypt.hash(acc.password, 10);
+      const user = await prisma.adminUser.upsert({
+        where: { email: acc.email },
+        update: { password: hashedPassword, status: 'active' },
+        create: { name: acc.name, email: acc.email, password: hashedPassword, role: acc.role, status: 'active' },
+      });
+      results.push({ email: user.email, password: acc.password });
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'Admin účet vytvořen/resetován!',
-      email: admin.email,
-      password: 'admin123',
+      message: 'Účty vytvořeny/resetovány!',
+      accounts: results,
       note: 'SMAŽ tento endpoint po použití! /api/admin/create-admin-temp',
     });
   } catch (error: any) {
