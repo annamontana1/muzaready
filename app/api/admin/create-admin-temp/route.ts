@@ -12,7 +12,7 @@ export async function GET() {
   try {
     const accounts = [
       { email: 'admin@muzahair.cz', name: 'Administrator', password: 'admin123', role: 'admin' as const },
-      { email: 'zen@muzahair.cz', name: 'Zen', password: 'zen123', role: 'admin' as const },
+      { email: 'zen@muzahair.cz', name: 'Zen', password: 'admin123456', role: 'admin' as const },
     ];
 
     const results = [];
