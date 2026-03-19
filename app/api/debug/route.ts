@@ -54,11 +54,5 @@ export async function GET() {
     results.checks.prismaConnect = `FAILED: ${e.message}`;
   }
 
-  // GoPay env check (temporary debug)
-  results.checks.gopayGoid = process.env.GOPAY_GOID ? 'Set' : 'NOT SET';
-  results.checks.gopayClientId = process.env.GOPAY_CLIENT_ID ? 'Set' : 'NOT SET';
-  results.checks.gopayClientSecret = process.env.GOPAY_CLIENT_SECRET ? 'Set (hidden)' : 'NOT SET';
-  results.checks.gopayEnv = process.env.GOPAY_ENV || 'NOT SET';
-
   return NextResponse.json(results, { status: 200 });
 }
