@@ -6,10 +6,14 @@ import Link from 'next/link';
 
 interface OrderItem {
   id: string;
-  productId: string;
-  quantity: number;
-  price: number;
-  variant: string;
+  skuId: string;
+  nameSnapshot: string | null;
+  grams: number;
+  pricePerGram: number;
+  lineTotal: number;
+  saleMode: string;
+  ending: string;
+  assemblyFeeTotal: number | null;
 }
 
 interface Order {
@@ -18,6 +22,9 @@ interface Order {
   orderStatus: string;
   paymentStatus: string;
   deliveryStatus: string;
+  subtotal: number;
+  shippingCost: number;
+  discountAmount: number;
   total: number;
   createdAt: string;
   items: OrderItem[];
@@ -91,10 +98,9 @@ function ConfirmationContent() {
     );
   }
 
-  // Use actual shipping cost from order (calculated during order creation)
-  const shippingPrice = order.shippingCost || 0;
-  const subtotal = order.subtotal || 0;
-  const discount = order.discountAmount || 0;
+  const shippingPrice = order.shippingCost;
+  const subtotal = order.subtotal;
+  const discount = order.discountAmount;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -102,9 +108,13 @@ function ConfirmationContent() {
         {/* Success Header */}
         <div className="bg-white rounded-lg shadow p-8 text-center mb-8">
           <div className="text-green-600 text-5xl mb-4">✓</div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Objednávka potvrzena!</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            {order.paymentStatus === 'paid' ? 'Platba přijata!' : 'Objednávka přijata!'}
+          </h1>
           <p className="text-gray-600 mb-4">
-            Vaše objednávka byla přijata a čeká na zaplacení.
+            {order.paymentStatus === 'paid'
+              ? 'Vaše platba byla úspěšně zpracována. Děkujeme za nákup!'
+              : 'Vaše objednávka byla přijata a čeká na zpracování platby.'}
           </p>
           <p className="text-sm text-gray-500">
             Potvrzení byl odeslán na e-mail: <strong>{order.email}</strong>
@@ -139,12 +149,20 @@ function ConfirmationContent() {
               {order.items.map((item) => (
                 <div key={item.id} className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium text-gray-900">Produkt: {item.productId}</p>
-                    <p className="text-sm text-gray-600">{item.variant}</p>
-                    <p className="text-sm text-gray-600">Počet: {item.quantity}x</p>
+                    <p className="font-medium text-gray-900">{item.nameSnapshot || item.skuId}</p>
+                    <p className="text-sm text-gray-600">
+                      {item.saleMode === 'BULK_G'
+                        ? `${item.grams}g × ${item.pricePerGram} Kč/g`
+                        : `1 ks`}
+                    </p>
+                    {item.assemblyFeeTotal && item.assemblyFeeTotal > 0 && (
+                      <p className="text-sm text-gray-500">
+                        Poplatek za zakončení: {item.assemblyFeeTotal.toLocaleString('cs-CZ')} Kč
+                      </p>
+                    )}
                   </div>
                   <p className="font-semibold text-gray-900">
-                    {(item.price * item.quantity).toLocaleString('cs-CZ')} Kč
+                    {item.lineTotal.toLocaleString('cs-CZ')} Kč
                   </p>
                 </div>
               ))}
@@ -187,21 +205,19 @@ function ConfirmationContent() {
           <h3 className="font-semibold text-gray-900 mb-3">Co bude dál?</h3>
           <ol className="list-decimal list-inside space-y-2 text-gray-700 text-sm">
             <li>Na e-mail <strong>{order.email}</strong> Vám přijde potvrzení objednávky</li>
-            <li>Přesměrujeme Vás na platební bránu GoPay</li>
-            <li>Po zaplacení bude objednávka označena jako zaplacená</li>
+            <li>Vaši objednávku připravíme k odeslání</li>
             <li>Pošleme Vám potvrzení o odeslání balíčku na e-mail</li>
           </ol>
         </div>
 
         {/* Payment Information */}
         {order.paymentStatus === 'unpaid' && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center mb-8">
-            <p className="text-gray-700 mb-2">
-              <strong>Platba čeká na připojení platební brány</strong>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center mb-8">
+            <p className="text-yellow-800 font-semibold mb-2">
+              Čekáme na potvrzení platby
             </p>
-            <p className="text-sm text-gray-600">
-              Po aktivaci GoPay integrace budete moci zaplatit přímo online.
-              Zatím můžete zaplatit bankovním převodem - instrukce byly odeslány na e-mail.
+            <p className="text-sm text-yellow-700">
+              Platba se zpracovává. Tato stránka se automaticky aktualizuje po přijetí platby.
             </p>
           </div>
         )}

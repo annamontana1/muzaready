@@ -56,10 +56,17 @@ export const PacketaPointSchema = z.object({
   country: z.string(),
 });
 
+// Cart line schema (simplified input — prices are recalculated server-side via quoteCartLines)
+export const CartLineSchema = z.object({
+  skuId: z.string().min(1, 'SKU ID is required'),
+  wantedGrams: z.number().positive('Grams must be positive').optional(),
+  ending: z.string().optional(),
+});
+
 // Create order request schema
 export const CreateOrderSchema = z.object({
   email: z.string().email('Invalid email address'),
-  items: z.array(CartItemSchema).min(1, 'At least one item is required'),
+  cartLines: z.array(CartLineSchema).min(1, 'At least one item is required'),
   shippingInfo: ShippingInfoSchema,
   packetaPoint: PacketaPointSchema.optional(), // Optional Zásilkovna pickup point
   couponCode: z.string().optional(), // Optional coupon code
@@ -75,10 +82,11 @@ export const UpdateOrderStatusSchema = z.object({
   'At least one status field must be provided'
 );
 
-// GoPay webhook notification schema
-export const GoPayNotificationSchema = z.object({
-  orderId: z.string().min(1, 'Order ID is required'),
-  state: z.enum(['PAID', 'FAILED', 'CANCELED', 'TIMEOUTED', 'AUTHORIZED', 'CREATED', 'PAYMENT_METHOD_CHOSEN', 'REFUNDED', 'PARTIALLY_REFUNDED']),
-  paymentId: z.string().optional(),
-  amount: z.number().optional(),
+// GoPay payment status response schema (from GET /api/payments/payment/{id})
+export const GoPayPaymentStatusSchema = z.object({
+  id: z.number(),
+  order_number: z.string(),
+  state: z.enum(['CREATED', 'PAYMENT_METHOD_CHOSEN', 'PAID', 'AUTHORIZED', 'CANCELED', 'TIMEOUTED', 'REFUNDED', 'PARTIALLY_REFUNDED']),
+  amount: z.number(),
+  currency: z.string(),
 });

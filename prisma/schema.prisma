@@ -81,10 +81,11 @@ model Order {
   packetaPointData String? // JSON s kompletními daty (address, city, zip, country, etc.)
 
   // Payment & Status
-  orderStatus    String  @default("pending") // draft, pending, paid, processing, shipped, completed, cancelled
-  paymentStatus  String  @default("unpaid") // unpaid, partial, paid, refunded
-  deliveryStatus String  @default("pending") // pending, shipped, delivered, returned
-  paymentMethod  String? // gopay, bank_transfer, cash
+  orderStatus      String  @default("pending") // draft, pending, paid, processing, shipped, completed, cancelled
+  paymentStatus    String  @default("unpaid") // unpaid, partial, paid, refunded
+  deliveryStatus   String  @default("pending") // pending, shipped, delivered, returned
+  paymentMethod    String? // gopay, bank_transfer, cash
+  gopayPaymentId   String? // GoPay payment session ID for status verification
 
   // Channel & metadata
   channel   String  @default("web") // web, pos, ig_dm

@@ -1,24 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
-export const runtime = 'nodejs';
+import prisma from '@/lib/prisma';
+import { getGoPayBaseUrl, getGoPayAccessToken } from '@/lib/gopay';
 
+export const runtime = 'nodejs';
 
 /**
  * GoPay Payment Creation Endpoint
  *
- * Creates a payment session with GoPay and returns the redirect URL
- * The customer is then sent to GoPay to complete payment
- * After payment, GoPay will send a webhook to /api/gopay/notify
+ * Creates a payment session via GoPay REST API (OAuth2 + JSON)
+ * and returns the gateway URL for customer redirect.
  *
  * Environment variables required:
- * - GOPAY_CLIENT_ID: GoPay OAuth client ID
- * - GOPAY_CLIENT_SECRET: GoPay OAuth client secret
- * - GOPAY_GATEWAY_ID: GoPay gateway ID (merchant ID)
+ * - GOPAY_CLIENT_ID: OAuth2 client ID
+ * - GOPAY_CLIENT_SECRET: OAuth2 client secret
+ * - GOPAY_GOID: Merchant GoID (numeric)
  * - GOPAY_ENV: 'test' or 'production'
- * - SITE_URL: Domain for callbacks (e.g., https://muzaready.com)
+ * - SITE_URL: Domain for callbacks (e.g., https://www.muzahair.cz)
  */
 
-interface GoPayPaymentRequest {
+interface CreatePaymentBody {
   orderId: string;
   amount: number; // in CZK
   email: string;
@@ -27,35 +27,11 @@ interface GoPayPaymentRequest {
   phone?: string;
 }
 
-interface GoPayResponse {
-  hasErrors: boolean;
-  errors?: Array<{ message: string }>;
-  result?: {
-    redirectUrl: string;
-    paymentSessionId?: string;
-  };
-}
-
-// Get GoPay API endpoint based on environment
-function getGoPayEndpoint(): string {
-  const env = process.env.GOPAY_ENV || 'test';
-  return env === 'production'
-    ? 'https://gate.gopay.cz'
-    : 'https://gw.sandbox.gopay.cz';
-}
-
-// Create signature for GoPay API request (used for authentication)
-function createSignature(payload: Record<string, any>, clientSecret: string): string {
-  const json = JSON.stringify(payload);
-  return crypto.createHash('sha256').update(json + clientSecret).digest('hex');
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as GoPayPaymentRequest;
+    const body = (await request.json()) as CreatePaymentBody;
     const { orderId, amount, email, firstName, lastName, phone } = body;
 
-    // Validate required fields
     if (!orderId || !amount || !email) {
       return NextResponse.json(
         { error: 'Chybějící povinná pole: orderId, amount, email' },
@@ -63,130 +39,114 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate environment variables
-    const clientId = process.env.GOPAY_CLIENT_ID;
-    const clientSecret = process.env.GOPAY_CLIENT_SECRET;
-    const gatewayId = process.env.GOPAY_GATEWAY_ID;
-    const siteUrl = process.env.SITE_URL || process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000';
-
-    if (!clientId || !clientSecret || !gatewayId) {
-      console.error('❌ GoPay environment variables not configured');
+    const goId = process.env.GOPAY_GOID;
+    if (!goId || !process.env.GOPAY_CLIENT_ID || !process.env.GOPAY_CLIENT_SECRET) {
+      console.error('GoPay environment variables not configured');
       return NextResponse.json(
-        {
-          error:
-            'GoPay není nakonfigurován. Prosím kontaktujte podporu. (Payment gateway not configured)',
-        },
+        { error: 'Platební brána není nakonfigurována. Kontaktujte podporu.' },
         { status: 500 }
       );
     }
 
-    const endpoint = getGoPayEndpoint();
-    const successUrl = `${siteUrl}/pokladna/potvrzeni?orderId=${orderId}`;
-    const failureUrl = `${siteUrl}/pokladna?paymentFailed=true`;
-    const notificationUrl = `${siteUrl}/api/gopay/notify`;
+    const siteUrl = process.env.SITE_URL
+      || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
-    // Create payment request payload
+    // 1. Get OAuth2 access token
+    const accessToken = await getGoPayAccessToken('payment-create');
+
+    // 2. Create payment via GoPay REST API
+    const baseUrl = getGoPayBaseUrl();
+    const amountInCents = Math.round(amount * 100);
+
     const paymentPayload = {
       payer: {
-        email,
-        firstName: firstName || undefined,
-        lastName: lastName || undefined,
-        phone: phone || undefined,
+        default_payment_instrument: 'PAYMENT_CARD',
+        allowed_payment_instruments: ['PAYMENT_CARD', 'BANK_ACCOUNT'],
+        contact: {
+          first_name: firstName || undefined,
+          last_name: lastName || undefined,
+          email,
+          phone_number: phone || undefined,
+        },
       },
       target: {
         type: 'ACCOUNT',
-        gid: gatewayId, // Gateway ID
+        goid: parseInt(goId, 10),
       },
-      amount: Math.round(amount * 100), // Convert to cents
+      amount: amountInCents,
       currency: 'CZK',
-      orderNumber: orderId,
-      orderDescription: `Objednávka #${orderId.substring(0, 8)}`,
+      order_number: orderId,
+      order_description: `Objednávka #${orderId.substring(0, 8)}`,
       items: [
         {
-          name: 'Objednávka vlasů',
-          amount: Math.round(amount * 100),
+          type: 'ITEM',
+          name: 'Objednávka vlasů - Múza Hair',
+          amount: amountInCents,
           count: 1,
         },
       ],
-      successUrl,
-      failureUrl,
-      notificationUrl,
-      lang: 'CS',
-      additionalParams: [
-        {
-          name: 'invoiceId',
-          value: orderId,
-        },
-      ],
-    };
-
-    // Create signature (without payer personal data for security)
-    const signaturePayload = {
-      ...paymentPayload,
-      payer: {
-        email: paymentPayload.payer.email,
-        // Don't include firstName/lastName/phone in signature for privacy
+      callback: {
+        return_url: `${siteUrl}/pokladna/potvrzeni?orderId=${orderId}`,
+        notification_url: `${siteUrl}/api/gopay/notify`,
       },
+      lang: 'CS',
     };
-    const signature = createSignature(signaturePayload, clientSecret);
 
-    console.log(`📤 Creating GoPay payment for order ${orderId}, amount: ${amount} CZK`);
+    console.log(`Creating GoPay payment for order ${orderId}, amount: ${amount} CZK`);
 
-    // Call GoPay API
-    const createPaymentUrl = `${endpoint}/api/payments/payment`;
-
-    const gopayResponse = await fetch(createPaymentUrl, {
+    const gopayResponse = await fetch(`${baseUrl}/api/payments/payment`, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
+        'Accept': 'application/json',
       },
       body: JSON.stringify(paymentPayload),
     });
 
-    const gopayData = (await gopayResponse.json()) as GoPayResponse;
+    const gopayData = await gopayResponse.json();
 
-    if (!gopayResponse.ok || gopayData.hasErrors) {
-      const errorMessage = gopayData.errors?.[0]?.message || 'Neznámá chyba';
-      console.error(`❌ GoPay API error for order ${orderId}:`, errorMessage);
-
+    if (!gopayResponse.ok) {
+      console.error(`GoPay API error for order ${orderId}:`, JSON.stringify(gopayData));
+      const errorMsg = gopayData.errors
+        ? gopayData.errors.map((e: any) => `${e.error_code}: ${e.message}`).join(', ')
+        : 'Neznámá chyba';
       return NextResponse.json(
-        {
-          error: `Chyba při vytváření platby: ${errorMessage}`,
-          gopayError: gopayData.errors,
-        },
-        { status: gopayResponse.status || 400 }
+        { error: `Chyba platební brány: ${errorMsg}` },
+        { status: gopayResponse.status }
       );
     }
 
-    if (!gopayData.result?.redirectUrl) {
-      console.error(`❌ No redirect URL from GoPay for order ${orderId}`);
+    if (!gopayData.gw_url) {
+      console.error(`No gw_url from GoPay for order ${orderId}:`, JSON.stringify(gopayData));
       return NextResponse.json(
-        { error: 'Chyba: GoPay nevrátil odkaz na platbu' },
+        { error: 'Platební brána nevrátila odkaz na platbu' },
         { status: 500 }
       );
     }
 
-    console.log(`✅ GoPay payment created for order ${orderId}`);
-    console.log(`   Redirect: ${gopayData.result.redirectUrl}`);
-
-    return NextResponse.json(
-      {
-        success: true,
-        orderId,
-        paymentUrl: gopayData.result.redirectUrl,
-        message: 'Přesměrování na GoPay pro dokončení platby...',
+    // 3. Store GoPay payment ID on order for later verification
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        gopayPaymentId: String(gopayData.id),
+        paymentMethod: 'gopay',
       },
-      { status: 200 }
-    );
+    });
+
+    console.log(`GoPay payment created: id=${gopayData.id}, order=${orderId}`);
+
+    return NextResponse.json({
+      success: true,
+      orderId,
+      paymentUrl: gopayData.gw_url,
+      message: 'Přesměrování na GoPay pro dokončení platby...',
+    });
   } catch (error) {
-    console.error('❌ GoPay create-payment error:', error);
+    console.error('GoPay create-payment error:', error);
     return NextResponse.json(
       {
-        error:
-          error instanceof Error ? error.message : 'Neznámá chyba při zpracování platby',
+        error: error instanceof Error ? error.message : 'Chyba při zpracování platby',
       },
       { status: 500 }
     );

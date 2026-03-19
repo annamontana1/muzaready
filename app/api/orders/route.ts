@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, items: cartLines, shippingInfo, packetaPoint, couponCode } = validation.data;
+    const { email, cartLines, shippingInfo, packetaPoint, couponCode } = validation.data;
 
     // Import the quote function at runtime to avoid circular dependencies
     const { quoteCartLines } = await import('@/lib/stock');
