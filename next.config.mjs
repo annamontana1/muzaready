@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['bcrypt'],
+  // GoPay env vars — Vercel CLI deployments don't inject project env vars reliably,
+  // so we provide sandbox defaults here. Override in Vercel dashboard for production.
+  env: {
+    GOPAY_GOID: process.env.GOPAY_GOID || '8889008051',
+    GOPAY_CLIENT_ID: process.env.GOPAY_CLIENT_ID || '1260435473',
+    GOPAY_CLIENT_SECRET: process.env.GOPAY_CLIENT_SECRET || 'Fz7VdE24',
+    GOPAY_ENV: process.env.GOPAY_ENV || 'test',
+  },
   generateBuildId: async () => {
     return `build-${Date.now()}`;
   },
