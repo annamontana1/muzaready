@@ -15,6 +15,24 @@ import { generateVlasyXName, generateVlasyXSlug } from '@/lib/vlasyx-format';
 // Fallback délky pro rychlé "Do košíku" (100g)
 const FALLBACK_LENGTHS = [45, 40, 50, 55, 60, 65, 70, 75, 80];
 
+/**
+ * Normalizuje hodnotu struktury z databáze na české názvy pro frontend
+ * DB může obsahovat: 'STRAIGHT', 'CURLY', 'WAVY', 'rovne', 'mirne vlnite', 'mirne-vlnite', atd.
+ * Frontend očekává: 'rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'
+ */
+function normalizeStructure(raw: string | null): string {
+  if (!raw) return 'rovné';
+  const lower = raw.toLowerCase().replace(/-/g, ' ').trim();
+
+  if (lower === 'straight' || lower === 'rovne' || lower === 'rovné') return 'rovné';
+  if (lower === 'wavy' || lower === 'vlnite' || lower === 'vlnité') return 'vlnité';
+  if (lower.includes('mirne') || lower.includes('mírně') || lower === 'slightly wavy') return 'mírně vlnité';
+  if (lower === 'curly' || lower === 'kudrnate' || lower === 'kudrnaté') return 'kudrnaté';
+
+  // Fallback - vrátí originální hodnotu
+  return raw;
+}
+
 interface SkuWithStock {
   id: string;
   sku: string;
@@ -218,7 +236,7 @@ export async function getCatalogProducts(
     }
     
     const isPlatinum = tier === 'Platinum edition';
-    const structure = firstSku.structure || 'rovné';
+    const structure = normalizeStructure(firstSku.structure);
     const shadeName = firstSku.shadeName || HAIR_COLORS[shadeCode]?.name || 'Neznámá';
     const shadeHex = firstSku.shadeHex || HAIR_COLORS[shadeCode]?.hex || '#1A1A1A';
 

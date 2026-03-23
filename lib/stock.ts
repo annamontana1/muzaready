@@ -87,7 +87,9 @@ export async function quoteCartLines(
     let pricePerGram = sku.pricePerGramCzk;
 
     // Try to look up price from matrix
-    const category = sku.shade === 'barvene_blond' || sku.shade?.includes('BLONDE') ? 'barvene' : 'nebarvene';
+    // Shade is a number string (1-10). Shades 1-4 are nebarvené, 5-10 are barvené
+    const shadeNum = parseInt(sku.shade || '1', 10);
+    const category = shadeNum >= 5 ? 'barvene' : 'nebarvene';
 
     // Map customer category to tier for price matrix lookup
     const tierMap: Record<string, string> = {
