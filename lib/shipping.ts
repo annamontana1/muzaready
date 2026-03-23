@@ -6,6 +6,7 @@ export type Carrier =
   | 'zasilkovna'
   | 'gls'
   | 'dpd'
+  | 'ppl'
   | 'ceska_posta'
   | 'fedex'
   | 'ups'
@@ -15,6 +16,7 @@ export const CARRIER_NAMES: Record<Carrier, string> = {
   zasilkovna: 'Zásilkovna',
   gls: 'GLS',
   dpd: 'DPD',
+  ppl: 'PPL',
   ceska_posta: 'Česká pošta',
   fedex: 'FedEx',
   ups: 'UPS',
@@ -36,6 +38,7 @@ export function getTrackingUrl(carrier: string | null | undefined, trackingNumbe
     zasilkovna: `https://tracking.packeta.com/cs/?id=${encodeURIComponent(trackingNumber)}`,
     gls: `https://gls-group.eu/CZ/cs/sledovani-zasilek?match=${encodeURIComponent(trackingNumber)}`,
     dpd: `https://tracking.dpd.de/parcelstatus?query=${encodeURIComponent(trackingNumber)}`,
+    ppl: `https://www.ppl.cz/vyhledat-zasilku?shipmentId=${encodeURIComponent(trackingNumber)}`,
     ceska_posta: `https://www.postaonline.cz/trackandtrace?parcelNumbers=${encodeURIComponent(trackingNumber)}`,
     ups: `https://www.ups.com/track?trackingNumber=${encodeURIComponent(trackingNumber)}`,
     fedex: `https://www.fedex.com/fedextrack/?tracknumbers=${encodeURIComponent(trackingNumber)}`,
@@ -58,7 +61,7 @@ export function getCarrierName(carrier: string | null | undefined): string {
  * Validate carrier code
  */
 export function isValidCarrier(carrier: string): carrier is Carrier {
-  const validCarriers = ['zasilkovna', 'gls', 'dpd', 'ceska_posta', 'fedex', 'ups', 'other'];
+  const validCarriers = ['zasilkovna', 'gls', 'dpd', 'ppl', 'ceska_posta', 'fedex', 'ups', 'other'];
   return validCarriers.includes(carrier.toLowerCase());
 }
 
@@ -72,6 +75,7 @@ export function getTrackingFormatHint(carrier: string | null | undefined): strin
     zasilkovna: 'Formát: Z123456789',
     gls: 'Formát: číselný kód (např. 12345678901)',
     dpd: 'Formát: alfanumerický kód',
+    ppl: 'Formát: číselný kód (např. 40950000123)',
     ceska_posta: 'Formát: DR123456789CZ nebo RR123456789CZ',
     ups: 'Formát: 1Z999AA10123456784',
     fedex: 'Formát: 12 nebo 14 číslic',

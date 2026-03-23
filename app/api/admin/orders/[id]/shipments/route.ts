@@ -55,6 +55,7 @@ export async function POST(
     const validCarriers = [
       'zasilkovna',
       'dpd',
+      'ppl',
       'fedex',
       'gls',
       'ups',

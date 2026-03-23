@@ -71,12 +71,17 @@ export default function PokladnaPage() {
   const total = getTotalPrice();
   const shippingThreshold = 3000;
 
-  // Zásilkovna má fixní cenu 65 Kč, showroom odběr je ZDARMA
+  // Ceny dopravy: Zásilkovna 65 Kč, DPD 99 Kč, PPL 99 Kč, Standard 150 Kč (zdarma od 3000), Showroom zdarma
   const getShippingCost = () => {
     if (formData.deliveryMethod === 'zasilkovna') return 65;
+    if (formData.deliveryMethod === 'dpd') return 99;
+    if (formData.deliveryMethod === 'ppl') return 99;
     if (formData.deliveryMethod === 'showroom') return 0;
     return total >= shippingThreshold ? 0 : 150;
   };
+
+  // Metody vyžadující doručovací adresu
+  const needsAddress = ['standard', 'dpd', 'ppl'].includes(formData.deliveryMethod);
   const shipping = getShippingCost();
 
   // Open Packeta widget to select pickup point
@@ -179,8 +184,8 @@ export default function PokladnaPage() {
         return;
       }
 
-      // Validate address for standard delivery
-      if (formData.deliveryMethod === 'standard' && (!formData.streetAddress || !formData.city)) {
+      // Validate address for standard/DPD/PPL delivery
+      if (needsAddress && (!formData.streetAddress || !formData.city)) {
         setError(t('checkout.addressRequired'));
         setLoading(false);
         return;
@@ -516,6 +521,52 @@ export default function PokladnaPage() {
                   <input
                     type="radio"
                     name="deliveryMethod"
+                    value="dpd"
+                    checked={formData.deliveryMethod === 'dpd'}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="mt-1 mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">DPD</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Doručení na adresu kurýrem DPD (1–2 pracovní dny)
+                        </p>
+                      </div>
+                      <p className="font-medium text-gray-900">99 Kč</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
+                    value="ppl"
+                    checked={formData.deliveryMethod === 'ppl'}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="mt-1 mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900">PPL</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Doručení na adresu kurýrem PPL (1–2 pracovní dny)
+                        </p>
+                      </div>
+                      <p className="font-medium text-gray-900">99 Kč</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <input
+                    type="radio"
+                    name="deliveryMethod"
                     value="showroom"
                     checked={formData.deliveryMethod === 'showroom'}
                     onChange={handleInputChange}
@@ -550,8 +601,8 @@ export default function PokladnaPage() {
               </div>
             </div>
 
-            {/* Address - only show if standard delivery selected */}
-            {formData.deliveryMethod === 'standard' && (
+            {/* Address - show for standard, DPD, PPL delivery */}
+            {needsAddress && (
               <div className="border-t border-gray-200 pt-6 space-y-4">
                 <h3 className="text-lg font-medium text-gray-900">{t('checkout.deliveryAddress')}</h3>
                 <div>
@@ -563,7 +614,7 @@ export default function PokladnaPage() {
                     name="streetAddress"
                     value={formData.streetAddress}
                     onChange={handleInputChange}
-                    required={formData.deliveryMethod === 'standard'}
+                    required={needsAddress}
                     disabled={loading}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                     placeholder={t('checkout.shipping.address')}
@@ -581,7 +632,7 @@ export default function PokladnaPage() {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      required={formData.deliveryMethod === 'standard'}
+                      required={needsAddress}
                       disabled={loading}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                       placeholder={language === 'cs' ? 'Praha' : 'Prague'}
@@ -596,7 +647,7 @@ export default function PokladnaPage() {
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleInputChange}
-                      required={formData.deliveryMethod === 'standard'}
+                      required={needsAddress}
                       disabled={loading}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                       placeholder="110 00"
