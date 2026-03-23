@@ -126,10 +126,12 @@ export default function SkuDetailPage() {
     }
 
     // Store in localStorage with timestamp to detect stale prices
-    const cart = JSON.parse(localStorage.getItem('sku-cart') || '[]');
+    // SkuCartContext stores { version, items, savedAt }, not a plain array
+    const raw = JSON.parse(localStorage.getItem('sku-cart') || '{"version":2,"items":[]}');
+    const cartItems: any[] = Array.isArray(raw) ? raw : (raw.items || []);
     const timestamp = new Date().getTime();
     for (let i = 0; i < quantity; i++) {
-      cart.push({
+      cartItems.push({
         skuId: sku!.id,
         skuName: sku!.name,
         customerCategory: sku!.customerCategory,
@@ -142,11 +144,16 @@ export default function SkuDetailPage() {
         assemblyFeeCzk: quote.assemblyFeeCzk,
         assemblyFeeTotal: quote.assemblyFeeTotal,
         lineGrandTotal: quote.lineGrandTotal,
-        addedAt: timestamp, // Store when item was added
+        quantity: 1,
+        addedAt: timestamp,
       });
     }
-    localStorage.setItem('sku-cart', JSON.stringify(cart));
-    router.push('/sku-kosik');
+    localStorage.setItem('sku-cart', JSON.stringify({
+      version: 2,
+      items: cartItems,
+      savedAt: new Date().toISOString(),
+    }));
+    router.push('/kosik');
   };
 
   const formatPrice = (price: number) => {
