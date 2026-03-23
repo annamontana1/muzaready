@@ -4,8 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
-import { mockProducts } from '@/lib/mock-products';
-import { HAIR_COLORS } from '@/types/product';
+import { Product, HAIR_COLORS } from '@/types/product';
 import ShadeGallery from '@/components/ShadeGallery';
 import { motion } from 'framer-motion';
 
@@ -49,12 +48,15 @@ export default function BarveneBlondPlatinumPage() {
     endings: [],
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filtruj produkty: barvené blond + tier Platinum edition
-  const products = useMemo(() => {
-    return mockProducts.filter((p) =>
-      p.category === 'barvene_blond' && p.tier === 'Platinum edition'
-    );
+  // Fetch products from API: barvené blond + tier Platinum edition
+  useEffect(() => {
+    fetch('/api/catalog?category=barvene_blond&tier=Platinum+edition')
+      .then(res => res.json())
+      .then(data => { setProducts(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   // Dostupné odstíny pro Platinum barvené: 5-10
@@ -288,6 +290,14 @@ export default function BarveneBlondPlatinumPage() {
           )}
         </div>
 
+        {/* Loading state */}
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-burgundy border-r-transparent" />
+            <p className="mt-4 text-gray-600">Načítání produktů...</p>
+          </div>
+        ) : (
+        <>
         {/* Počet výsledků */}
         <div className="mb-6">
           <p className="text-gray-600">
@@ -502,6 +512,8 @@ export default function BarveneBlondPlatinumPage() {
               Vymazat všechny filtry
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
     </div>

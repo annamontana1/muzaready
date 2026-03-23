@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
-import { mockProducts } from '@/lib/mock-products';
+import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { blogArticles } from '@/lib/blog-articles';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://muzahair.cz';
 
   // Static pages
@@ -141,13 +141,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Dynamic product pages
-  const productPages = mockProducts.map((product) => ({
-    url: `${baseUrl}/produkt/${product.slug}`,
-    lastModified: product.updated_at || new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }));
+  // Dynamic product pages from database
+  let productPages: MetadataRoute.Sitemap = [];
+  try {
+    const products = await getCatalogProducts();
+    productPages = products.map((product) => ({
+      url: `${baseUrl}/produkt/${product.slug}`,
+      lastModified: product.updated_at || new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error('Sitemap: Failed to fetch products from DB:', error);
+  }
 
   // Blog articles
   const blogPages = blogArticles.map((article) => ({

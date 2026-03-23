@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { mockProducts } from '@/lib/mock-products';
+import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { Product } from '@/types/product';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
 export const runtime = 'nodejs';
@@ -49,34 +49,36 @@ export async function GET(request: NextRequest) {
     }
 
     // ============================================================
-    // BULK: Products (Standard/LUXE) - configurable items
+    // BULK: Products (Standard/LUXE) - configurable items from DB
     // ============================================================
-    const products: Product[] = mockProducts || [];
-    for (const product of products) {
-      // Skip Platinum (those go in PIECE)
-      if (product.tier === 'Platinum edition') continue;
-      if (!product.variants || product.variants.length === 0) continue;
-      // Only show products that are in stock
-      if (!product.in_stock) continue;
+    try {
+      const dbProducts = await getCatalogProducts();
+      for (const product of dbProducts) {
+        // Skip Platinum (those go in PIECE section below)
+        if (product.tier === 'Platinum edition') continue;
+        if (!product.variants || product.variants.length === 0) continue;
+        if (!product.in_stock) continue;
 
-      const firstVariant = product.variants[0];
-
-      const pricePerGram = product.base_price_per_100g_45cm / 100;
-      items.push({
-        type: 'BULK',
-        id: product.id,
-        slug: product.slug,
-        name: product.name,
-        tier: product.tier,
-        shade: firstVariant?.shade,
-        shadeName: firstVariant?.shade_name,
-        structure: firstVariant?.structure,
-        lengthCm: firstVariant?.length_cm,
-        pricePerGramCzk: pricePerGram,
-        pricePerGramEur: Number((pricePerGram * czkToEur).toFixed(3)),
-        inStock: product.in_stock,
-        priority: priority++,
-      });
+        const firstVariant = product.variants[0];
+        const pricePerGram = product.base_price_per_100g_45cm / 100;
+        items.push({
+          type: 'BULK',
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
+          tier: product.tier,
+          shade: firstVariant?.shade,
+          shadeName: firstVariant?.shade_name,
+          structure: firstVariant?.structure,
+          lengthCm: firstVariant?.length_cm,
+          pricePerGramCzk: pricePerGram,
+          pricePerGramEur: Number((pricePerGram * czkToEur).toFixed(3)),
+          inStock: product.in_stock,
+          priority: priority++,
+        });
+      }
+    } catch (dbError) {
+      console.warn('Could not fetch BULK products from database:', dbError);
     }
 
     // ============================================================

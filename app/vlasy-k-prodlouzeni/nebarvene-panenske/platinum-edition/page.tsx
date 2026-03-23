@@ -5,8 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
-import { mockProducts } from '@/lib/mock-products';
-import { HAIR_COLORS } from '@/types/product';
+import { Product, HAIR_COLORS } from '@/types/product';
 import { motion } from 'framer-motion';
 
 type FilterState = {
@@ -49,12 +48,15 @@ export default function PlatinumCategoryPage() {
     endings: [],
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Filtruj produkty: nebarvené + tier Platinum edition
-  const products = useMemo(() => {
-    return mockProducts.filter((p) =>
-      p.category === 'nebarvene_panenske' && p.tier === 'Platinum edition'
-    );
+  // Fetch products from API: nebarvené + tier Platinum edition
+  useEffect(() => {
+    fetch('/api/catalog?category=nebarvene_panenske&tier=Platinum+edition')
+      .then(res => res.json())
+      .then(data => { setProducts(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   // Dostupné odstíny pro Platinum: 1, 3-10 (bez #2)
@@ -294,6 +296,14 @@ export default function PlatinumCategoryPage() {
           )}
         </div>
 
+        {/* Loading state */}
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-burgundy border-r-transparent" />
+            <p className="mt-4 text-gray-600">Načítání produktů...</p>
+          </div>
+        ) : (
+        <>
         {/* Počet výsledků */}
         <div className="mb-6">
           <p className="text-gray-600">
@@ -505,6 +515,8 @@ export default function PlatinumCategoryPage() {
               Vymazat všechny filtry
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
     </div>
