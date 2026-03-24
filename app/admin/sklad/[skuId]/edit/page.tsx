@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import ImageUpload from '@/components/admin/ImageUpload';
+import MultiImageUpload from '@/components/admin/MultiImageUpload';
 import AdminShadePicker from '@/components/admin/AdminShadePicker';
 
 interface SkuData {
@@ -12,6 +12,7 @@ interface SkuData {
   shortCode: string | null;
   name: string | null;
   imageUrl: string | null;
+  images: string[];
   shade: string | null;
   shadeName: string | null;
   shadeHex: string | null;
@@ -45,6 +46,7 @@ export default function SkuEditPage() {
   const [formData, setFormData] = useState({
     name: '',
     imageUrl: '',
+    images: [] as string[],
     shade: '',
     shadeName: '',
     shadeHex: '',
@@ -85,6 +87,7 @@ export default function SkuEditPage() {
       setFormData({
         name: data.name || '',
         imageUrl: data.imageUrl || '',
+        images: Array.isArray(data.images) ? data.images : [],
         shade: data.shade || '',
         shadeName: data.shadeName || '',
         shadeHex: data.shadeHex || '',
@@ -130,6 +133,7 @@ export default function SkuEditPage() {
       const payload = {
         name: formData.name || null,
         imageUrl: formData.imageUrl || null,
+        images: formData.images || [],
         shade: formData.shade || null,
         shadeName: formData.shadeName || null,
         shadeHex: formData.shadeHex || null,
@@ -261,10 +265,12 @@ export default function SkuEditPage() {
 
           {/* Image Upload */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Fotka produktu</label>
-            <ImageUpload
-              value={formData.imageUrl}
-              onChange={(url) => setFormData((prev) => ({ ...prev, imageUrl: url }))}
+            <label className="block text-sm font-medium text-gray-700 mb-2">Fotky produktu</label>
+            <MultiImageUpload
+              mainImage={formData.imageUrl}
+              additionalImages={formData.images}
+              onMainImageChange={(url) => setFormData((prev) => ({ ...prev, imageUrl: url }))}
+              onAdditionalImagesChange={(urls) => setFormData((prev) => ({ ...prev, images: urls }))}
               folder="skus"
             />
           </div>

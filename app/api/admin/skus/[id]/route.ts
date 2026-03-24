@@ -56,6 +56,7 @@ export async function PATCH(
     const {
       name,
       imageUrl,
+      images,
       shade,
       shadeName,
       shadeHex,
@@ -79,6 +80,7 @@ export async function PATCH(
 
     if (name !== undefined) updateData.name = name;
     if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+    if (images !== undefined) updateData.images = images;
     if (shade !== undefined) updateData.shade = shade;
     if (shadeName !== undefined) updateData.shadeName = shadeName;
     if (shadeHex !== undefined) updateData.shadeHex = shadeHex;
