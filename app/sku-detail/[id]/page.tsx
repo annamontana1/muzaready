@@ -38,8 +38,12 @@ interface QuoteItem {
 }
 
 const ENDING_OPTIONS = [
-  { id: 'NONE', label: 'Bez zakonceni', emoji: '-' },
-  { id: 'KERATIN', label: 'Keratin (5 Kc/g)', emoji: '✨' },
+  { id: 'NONE', label: 'Bez zakončení', price: '0 Kč' },
+  { id: 'MICRO_KERATIN', label: 'Mikrokeratin', price: '10 Kč/g' },
+  { id: 'STANDARD_KERATIN', label: 'Standart keratin', price: '10 Kč/g' },
+  { id: 'PASKY_KERATINU', label: 'Pásky keratinu', price: '10 Kč/g' },
+  { id: 'WEFT', label: 'Weft', price: '50 Kč/g' },
+  { id: 'TAPES', label: 'Tapes', price: '50 Kč/g' },
 ];
 
 function getCategoryBadge(category: Sku['customerCategory']) {
@@ -401,19 +405,19 @@ export default function SkuDetailPage() {
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Zakonceni
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {ENDING_OPTIONS.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => setSelectedEnding(option.id)}
-                      className={`p-3 rounded-lg text-center transition border-2 ${
+                      className={`p-3 rounded-xl text-left transition-all border-2 ${
                         selectedEnding === option.id
                           ? 'bg-burgundy text-white border-burgundy shadow-md'
                           : 'bg-white text-gray-700 border-gray-200 hover:border-burgundy/50'
                       }`}
                     >
-                      <span className="block text-lg mb-0.5">{option.emoji}</span>
-                      <span className="block text-sm font-medium">{option.label}</span>
+                      <span className="block text-sm font-semibold">{option.label}</span>
+                      <span className={`block text-xs mt-0.5 ${selectedEnding === option.id ? 'text-white/70' : 'text-gray-400'}`}>{option.price}</span>
                     </button>
                   ))}
                 </div>

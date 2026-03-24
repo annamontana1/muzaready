@@ -320,13 +320,13 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
         {/* CTA Buttons - outside Link to avoid hydration issues */}
         <div className="p-4 bg-ivory pt-0">
-          {!isPlatinum && displayVariant?.in_stock && (
-            <button
-              onClick={handleAddToCart}
-              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
+          {displayVariant?.in_stock && (
+            <Link
+              href={`/sku-detail/${product.id}`}
+              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95 block text-center"
             >
-              {showAddedMessage ? '✓ Přidáno!' : 'Do košíku'}
-            </button>
+              Nakonfigurovat
+            </Link>
           )}
 
           {/* Vyprodáno tlačítko */}
