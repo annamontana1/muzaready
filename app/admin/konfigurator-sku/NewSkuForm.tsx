@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getAllShades, ShadeInfo } from '@/lib/shades';
 import { generateVlasyXName, generateVlasyXSlug } from '@/lib/vlasyx-format';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
-import ImageUpload from '@/components/admin/ImageUpload';
+import MultiImageUpload from '@/components/admin/MultiImageUpload';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -176,6 +176,7 @@ export default function NewSkuForm() {
   const [priceMode, setPriceMode] = useState<PriceMode>('matrix');
   const [manualPricePerGram, setManualPricePerGram] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [additionalImages, setAdditionalImages] = useState<string[]>([]);
   const [isListed, setIsListed] = useState(true);
 
   // ---- derived: is Baby Shades? ----
@@ -415,6 +416,7 @@ export default function NewSkuForm() {
           isListed,
           listingPriority: 8,
           imageUrl: imageUrl || undefined,
+          images: additionalImages.length > 0 ? additionalImages : undefined,
           name: generatedName,
           slug: generatedSlug,
         };
@@ -440,6 +442,7 @@ export default function NewSkuForm() {
           isListed,
           listingPriority: 8,
           imageUrl: imageUrl || undefined,
+          images: additionalImages.length > 0 ? additionalImages : undefined,
           name: generatedName,
         };
       }
@@ -922,10 +925,12 @@ export default function NewSkuForm() {
         {/* -------------------------------------------------------------- */}
         {/* 9. Obrazek                                                      */}
         {/* -------------------------------------------------------------- */}
-        <Section number={isBabyShades ? 8 : 9} title="Obrazek (volitelne)">
-          <ImageUpload
-            value={imageUrl}
-            onChange={(url) => setImageUrl(url)}
+        <Section number={isBabyShades ? 8 : 9} title="Fotky produktu">
+          <MultiImageUpload
+            mainImage={imageUrl}
+            additionalImages={additionalImages}
+            onMainImageChange={setImageUrl}
+            onAdditionalImagesChange={setAdditionalImages}
             folder="skus"
           />
         </Section>
