@@ -17,7 +17,7 @@ interface SkuData {
   shadeHex: string | null;
   lengthCm: number | null;
   structure: string | null;
-  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
+  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | 'BABY_SHADES' | null;
   saleMode: string;
   pricePerGramCzk: number | null;
   pricePerGramEur: number | null;
@@ -51,6 +51,7 @@ export default function SkuEditPage() {
     lengthCm: '',
     structure: '',
     customerCategory: 'STANDARD',
+    saleMode: 'BULK_G' as 'BULK_G' | 'PIECE_BY_WEIGHT',
     pricePerGramCzk: '',
     pricePerGramEur: '',
     weightTotalG: '',
@@ -90,6 +91,7 @@ export default function SkuEditPage() {
         lengthCm: data.lengthCm?.toString() || '',
         structure: data.structure || '',
         customerCategory: data.customerCategory || 'STANDARD',
+        saleMode: data.saleMode || 'BULK_G',
         pricePerGramCzk: data.pricePerGramCzk?.toString() || '',
         pricePerGramEur: data.pricePerGramEur?.toString() || '',
         weightTotalG: data.weightTotalG?.toString() || '',
@@ -134,6 +136,7 @@ export default function SkuEditPage() {
         lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
         structure: formData.structure || null,
         customerCategory: formData.customerCategory,
+        saleMode: formData.saleMode,
         pricePerGramCzk: formData.pricePerGramCzk ? parseFloat(formData.pricePerGramCzk) : null,
         pricePerGramEur: formData.pricePerGramEur ? parseFloat(formData.pricePerGramEur) : null,
         weightTotalG: formData.weightTotalG ? parseInt(formData.weightTotalG) : null,
@@ -239,6 +242,19 @@ export default function SkuEditPage() {
                 <option value="STANDARD">STANDARD</option>
                 <option value="LUXE">LUXE</option>
                 <option value="PLATINUM_EDITION">PLATINUM EDITION</option>
+                <option value="BABY_SHADES">BABY SHADES</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Způsob prodeje</label>
+              <select
+                name="saleMode"
+                value={formData.saleMode}
+                onChange={handleInputChange}
+                className="w-full border rounded-lg px-4 py-2"
+              >
+                <option value="BULK_G">Na gramy (BULK_G)</option>
+                <option value="PIECE_BY_WEIGHT">Celý culík (PIECE_BY_WEIGHT)</option>
               </select>
             </div>
           </div>
@@ -350,7 +366,7 @@ export default function SkuEditPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">Sklad</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {sku?.saleMode === 'PIECE_BY_WEIGHT' ? (
+            {formData.saleMode === 'PIECE_BY_WEIGHT' ? (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Vaha culicku (g)

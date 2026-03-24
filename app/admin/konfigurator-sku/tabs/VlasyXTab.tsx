@@ -7,7 +7,7 @@ import ImageUpload from '@/components/admin/ImageUpload';
 
 interface PriceMatrixEntry {
   id: string;
-  category: 'nebarvene' | 'barvene';
+  category: 'nebarvene' | 'barvene' | 'baby_shades';
   tier: 'standard' | 'luxe' | 'platinum';
   shadeRangeStart: number | null;
   shadeRangeEnd: number | null;
@@ -30,15 +30,18 @@ const STRUCTURES = ['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'];
 const CATEGORY_OPTIONS = [
   { value: 'nebarvene', label: 'Nebarvené panenské vlasy', apiValue: 'nebarvene_panenske' },
   { value: 'barvene', label: 'Barvené vlasy', apiValue: 'barvene_vlasy' },
+  { value: 'baby_shades', label: 'Baby Shades', apiValue: 'baby_shades' },
 ];
 const TIER_OPTIONS = [
   { value: 'standard', label: 'Standard' },
   { value: 'luxe', label: 'LUXE' },
+  { value: 'platinum_edition', label: 'PLATINUM EDITION' },
+  { value: 'baby_shades', label: 'BABY SHADES' },
 ];
 
 const DEFAULT_RATE = 1 / 25.5;
 
-const getShadeRange = (category: 'nebarvene' | 'barvene', shade: number) => {
+const getShadeRange = (category: 'nebarvene' | 'barvene' | 'baby_shades', shade: number) => {
   if (category === 'barvene') {
     return { start: 5, end: 10 };
   }
@@ -47,7 +50,10 @@ const getShadeRange = (category: 'nebarvene' | 'barvene', shade: number) => {
   return { start: 8, end: 10 };
 };
 
-const getAllowedShadeCodes = (category: 'nebarvene' | 'barvene', tier: 'standard' | 'luxe') => {
+const getAllowedShadeCodes = (category: 'nebarvene' | 'barvene' | 'baby_shades', tier: 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades') => {
+  if (category === 'baby_shades') {
+    return SHADES.filter((shade) => shade.code >= 1 && shade.code <= 4);
+  }
   if (category === 'barvene') {
     return SHADES.filter((shade) => shade.code >= 5 && shade.code <= 10);
   }
@@ -82,9 +88,11 @@ export default function VlasyXTab() {
     stock: number;
   }> | null>(null);
 
+  const [saleMode, setSaleMode] = useState<'BULK_G' | 'PIECE_BY_WEIGHT'>('BULK_G');
+
   const [formData, setFormData] = useState({
-    category: 'nebarvene' as 'nebarvene' | 'barvene',
-    tier: 'standard' as 'standard' | 'luxe',
+    category: 'nebarvene' as 'nebarvene' | 'barvene' | 'baby_shades',
+    tier: 'standard' as 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades',
     shade: 1,
     shadeName: SHADES[0]?.name ?? '',
     shadeHex: SHADES[0]?.hex ?? '#000000',
@@ -101,6 +109,7 @@ export default function VlasyXTab() {
     isListed: true,
     listingPriority: 8,
     imageUrl: '',
+    weightTotalG: '' as number | '',
   });
 
   useEffect(() => {
@@ -355,10 +364,18 @@ export default function VlasyXTab() {
         formData.defaultGrams
       );
 
+      const tierMap: Record<string, string> = {
+        standard: 'Standard',
+        luxe: 'LUXE',
+        platinum_edition: 'PLATINUM_EDITION',
+        baby_shades: 'BABY_SHADES',
+      };
+
       const payload = {
         productType: 'vlasyx',
+        saleMode,
         category: CATEGORY_OPTIONS.find((opt) => opt.value === formData.category)?.apiValue || 'nebarvene_panenske',
-        tier: formData.tier === 'standard' ? 'Standard' : 'LUXE',
+        tier: tierMap[formData.tier] || 'Standard',
         shade: String(formData.shade),
         shadeName: formData.shadeName,
         shadeHex: formData.shadeHex,
@@ -374,6 +391,7 @@ export default function VlasyXTab() {
           formData.priceMode === 'manual' ? Number(formData.manualPricePerGram) : undefined,
         isListed: formData.isListed,
         listingPriority: formData.listingPriority,
+        weightTotalG: saleMode === 'PIECE_BY_WEIGHT' && formData.weightTotalG !== '' ? Number(formData.weightTotalG) : undefined,
         imageUrl: formData.imageUrl || undefined,
         name: generateVlasyXName(
           Number(formData.defaultLength || formData.selectedLengths[0]),
@@ -525,7 +543,7 @@ export default function VlasyXTab() {
             <label className="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
             <select
               value={formData.category}
-              onChange={(e) => handleFieldChange('category', e.target.value as 'nebarvene' | 'barvene')}
+              onChange={(e) => handleFieldChange('category', e.target.value as 'nebarvene' | 'barvene' | 'baby_shades')}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
             >
               {CATEGORY_OPTIONS.map((opt) => (
@@ -539,7 +557,7 @@ export default function VlasyXTab() {
             <label className="block text-sm font-medium text-gray-700 mb-2">Linie</label>
             <select
               value={formData.tier}
-              onChange={(e) => handleFieldChange('tier', e.target.value as 'standard' | 'luxe')}
+              onChange={(e) => handleFieldChange('tier', e.target.value as 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades')}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
             >
               {TIER_OPTIONS.map((opt) => (
@@ -549,6 +567,27 @@ export default function VlasyXTab() {
               ))}
             </select>
           </div>
+          {/* Způsob prodeje */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Způsob prodeje</label>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setSaleMode('BULK_G')}
+                className={`px-4 py-2 rounded-lg border ${saleMode === 'BULK_G' ? 'bg-burgundy text-white border-burgundy' : 'bg-white text-gray-700 border-gray-300'}`}
+              >
+                Na gramy
+              </button>
+              <button
+                type="button"
+                onClick={() => setSaleMode('PIECE_BY_WEIGHT')}
+                className={`px-4 py-2 rounded-lg border ${saleMode === 'PIECE_BY_WEIGHT' ? 'bg-burgundy text-white border-burgundy' : 'bg-white text-gray-700 border-gray-300'}`}
+              >
+                Celý culík
+              </button>
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Náhled názvu produktu</label>
             <input
@@ -705,45 +744,59 @@ export default function VlasyXTab() {
               />
             </div>
 
-            <div className="overflow-x-auto border rounded-lg">
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-100 text-gray-700">
-                  <tr>
-                    <th className="px-3 py-2 text-left">Délka</th>
-                    <th className="px-3 py-2 text-left">PPG (Kč)</th>
-                    <th className="px-3 py-2 text-left">Cena /100g</th>
-                    <th className="px-3 py-2 text-left">Skladem (g)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {previewRows.map((row) => (
-                    <tr key={row.length} className="border-t">
-                      <td className="px-3 py-2 font-medium text-gray-900">{row.length} cm</td>
-                      <td className="px-3 py-2">
-                        {row.pricePerGram ? `${row.pricePerGram.toFixed(2)} Kč/g` : '—'}
-                      </td>
-                      <td className="px-3 py-2">
-                        {row.pricePer100
-                          ? `${formatCurrency(
-                              currency === 'CZK' ? row.pricePer100 : row.pricePer100 * rate,
-                              currency
-                            )}`
-                          : '—'}
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          type="number"
-                          min={0}
-                          value={row.stock}
-                          onChange={(e) => handleStockChange(row.length, Number(e.target.value))}
-                          className="w-24 px-2 py-1 border border-gray-300 rounded"
-                        />
-                      </td>
+            {saleMode === 'PIECE_BY_WEIGHT' ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Váha culíku (g)</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={formData.weightTotalG}
+                  onChange={(e) => handleFieldChange('weightTotalG', e.target.value === '' ? '' : Number(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Zadejte váhu celého culíku v gramech"
+                />
+              </div>
+            ) : (
+              <div className="overflow-x-auto border rounded-lg">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-gray-100 text-gray-700">
+                    <tr>
+                      <th className="px-3 py-2 text-left">Délka</th>
+                      <th className="px-3 py-2 text-left">PPG (Kč)</th>
+                      <th className="px-3 py-2 text-left">Cena /100g</th>
+                      <th className="px-3 py-2 text-left">Skladem (g)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {previewRows.map((row) => (
+                      <tr key={row.length} className="border-t">
+                        <td className="px-3 py-2 font-medium text-gray-900">{row.length} cm</td>
+                        <td className="px-3 py-2">
+                          {row.pricePerGram ? `${row.pricePerGram.toFixed(2)} Kč/g` : '—'}
+                        </td>
+                        <td className="px-3 py-2">
+                          {row.pricePer100
+                            ? `${formatCurrency(
+                                currency === 'CZK' ? row.pricePer100 : row.pricePer100 * rate,
+                                currency
+                              )}`
+                            : '—'}
+                        </td>
+                        <td className="px-3 py-2">
+                          <input
+                            type="number"
+                            min={0}
+                            value={row.stock}
+                            onChange={(e) => handleStockChange(row.length, Number(e.target.value))}
+                            className="w-24 px-2 py-1 border border-gray-300 rounded"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             {missingPriceLengths.length > 0 && (
               <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">

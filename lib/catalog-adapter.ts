@@ -38,7 +38,7 @@ interface SkuWithStock {
   sku: string;
   name: string | null;
   imageUrl: string | null;
-  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
+  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | 'BABY_SHADES' | null;
   shade: string | null;
   shadeName: string | null;
   shadeHex: string | null;
@@ -97,6 +97,8 @@ function mapCustomerCategoryToTier(category: string | null): ProductTier {
       return 'LUXE';
     case 'PLATINUM_EDITION':
       return 'Platinum edition';
+    case 'BABY_SHADES':
+      return 'Baby Shades';
     default:
       return 'Standard';
   }
@@ -136,20 +138,33 @@ function createSlug(
  */
 export async function getCatalogProducts(
   categoryParam?: ProductCategory,
-  tier?: ProductTier
+  tier?: ProductTier,
+  colorType?: 'barvene' | 'nebarvene'
 ): Promise<Product[]> {
   const where: any = {
     isListed: true,
     inStock: true,
   };
 
-  // Filtrování podle kategorie
-  // Pro nebarvené: shade 1-4 (nebo shade není 5-10 a shadeName neobsahuje "blond")
-  // Pro barvené: shade 5-10 (nebo shadeName obsahuje "blond")
+  // Filtrování podle tieru (customerCategory) - PRIMARY filter
+  if (tier) {
+    const tierMap: Record<ProductTier, string> = {
+      'Standard': 'STANDARD',
+      'LUXE': 'LUXE',
+      'Platinum edition': 'PLATINUM_EDITION',
+      'Baby Shades': 'BABY_SHADES',
+    };
+    where.customerCategory = tierMap[tier];
+  }
+
+  // Filtrování podle kategorie (shade range) - SECONDARY filter
   if (categoryParam) {
     if (categoryParam === 'nebarvene_panenske') {
       // Nebarvené: shade 1-4
       where.shade = { in: ['1', '2', '3', '4'] };
+    } else if (categoryParam === 'baby_shades') {
+      // Baby Shades: shade 7-10
+      where.shade = { in: ['7', '8', '9', '10'] };
     } else {
       // Barvené: shade 5-10 nebo shadeName obsahuje "blond"
       where.OR = [
@@ -159,14 +174,13 @@ export async function getCatalogProducts(
     }
   }
 
-  // Filtrování podle tieru
-  if (tier) {
-    const tierMap: Record<ProductTier, string> = {
-      'Standard': 'STANDARD',
-      'LUXE': 'LUXE',
-      'Platinum edition': 'PLATINUM_EDITION',
-    };
-    where.customerCategory = tierMap[tier];
+  // Filtrování podle colorType (barvene/nebarvene)
+  if (colorType) {
+    if (colorType === 'nebarvene') {
+      where.shade = { in: ['1', '2', '3', '4'] };
+    } else if (colorType === 'barvene') {
+      where.shade = { in: ['5', '6', '7', '8', '9', '10'] };
+    }
   }
 
   let skus = [];

@@ -59,6 +59,47 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Stará struktura nebarvené/barvené → nová tier-first struktura
+      {
+        source: '/vlasy-k-prodlouzeni/nebarvene-panenske/standard',
+        destination: '/vlasy-k-prodlouzeni/standard',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/nebarvene-panenske/luxe',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition',
+        destination: '/vlasy-k-prodlouzeni/platinum-edition',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/barvene-vlasy/standard',
+        destination: '/vlasy-k-prodlouzeni/standard',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/barvene-vlasy/luxe',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/barvene-vlasy/platinum-edition',
+        destination: '/vlasy-k-prodlouzeni/platinum-edition',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/nebarvene-panenske',
+        destination: '/vlasy-k-prodlouzeni',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/barvene-vlasy',
+        destination: '/vlasy-k-prodlouzeni',
+        permanent: true,
+      },
       // Stará struktura /metody → metody-zakonceni
       {
         source: '/metody',

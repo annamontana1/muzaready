@@ -104,16 +104,28 @@ export default function Header() {
               </Link>
               <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
                 <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+                  href="/vlasy-k-prodlouzeni/standard"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
                 >
-                  {t('nav.hairExtensions_undyed')}
+                  Standard
                 </Link>
                 <Link
-                  href="/vlasy-k-prodlouzeni/barvene-vlasy"
+                  href="/vlasy-k-prodlouzeni/luxe"
+                  className="block px-6 py-3 hover:bg-ivory transition"
+                >
+                  Luxe
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/platinum-edition"
+                  className="block px-6 py-3 hover:bg-ivory transition"
+                >
+                  Platinum Edition
+                </Link>
+                <Link
+                  href="/vlasy-k-prodlouzeni/baby-shades"
                   className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                 >
-                  {t('nav.hairExtensions_dyed')}
+                  Baby Shades
                 </Link>
               </div>
             </div>
@@ -448,19 +460,17 @@ export default function Header() {
                 </button>
                 {vlasySubmenuOpen && (
                   <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {t('nav.hairExtensions_undyed')}
+                    <Link href="/vlasy-k-prodlouzeni/standard" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
+                      Standard
                     </Link>
-                    <Link
-                      href="/vlasy-k-prodlouzeni/barvene-vlasy"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {t('nav.hairExtensions_dyed')}
+                    <Link href="/vlasy-k-prodlouzeni/luxe" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
+                      Luxe
+                    </Link>
+                    <Link href="/vlasy-k-prodlouzeni/platinum-edition" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
+                      Platinum Edition
+                    </Link>
+                    <Link href="/vlasy-k-prodlouzeni/baby-shades" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
+                      Baby Shades
                     </Link>
                   </div>
                 )}

@@ -275,6 +275,7 @@ enum CustomerCategory {
   STANDARD
   LUXE
   PLATINUM_EDITION
+  BABY_SHADES
 }
 
 enum SaleMode {

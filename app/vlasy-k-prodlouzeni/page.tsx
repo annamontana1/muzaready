@@ -2,16 +2,43 @@
 
 import Link from 'next/link';
 
+const tiers = [
+  {
+    name: 'Standard',
+    href: '/vlasy-k-prodlouzeni/standard',
+    description: 'Kvalitní panenské vlasy za výhodnou cenu.',
+    color: 'bg-warm-beige',
+  },
+  {
+    name: 'Luxe',
+    href: '/vlasy-k-prodlouzeni/luxe',
+    description: 'Prémiové vlasy s hedvábnou strukturou.',
+    color: 'bg-warm-beige',
+  },
+  {
+    name: 'Platinum Edition',
+    href: '/vlasy-k-prodlouzeni/platinum-edition',
+    description: 'Exkluzivní culíky v limitované edici.',
+    color: 'bg-warm-beige',
+  },
+  {
+    name: 'Baby Shades',
+    href: '/vlasy-k-prodlouzeni/baby-shades',
+    description: 'Jemné dětské vlasy v přirozených odstínech.',
+    color: 'bg-warm-beige',
+  },
+];
+
 export default function VlasyKProdlouzenLanding() {
   return (
-    <div className="min-h-screen bg-soft-cream py-16" data-testid="vlasy-k-prodlouzeni-page-v1.9">
+    <div className="min-h-screen bg-soft-cream py-16">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm">
           <ol className="flex items-center gap-2 text-gray-600">
             <li>
               <Link href="/" className="hover:text-burgundy transition">
-                Domů
+                Domu
               </Link>
             </li>
             <li>/</li>
@@ -25,57 +52,27 @@ export default function VlasyKProdlouzenLanding() {
             Vlasy k prodloužení
           </h1>
           <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-            Vyberte si kategorii panenských vlasů a prohlédněte si naši kompletní nabídku s možností filtrování
+            Vyberte si kvalitu panenských vlasu a prohlédněte si naši kompletní nabídku s možností filtrování
           </p>
         </div>
 
-        {/* Category Buttons */}
+        {/* Tier Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Nebarvené */}
-          <Link
-            href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-            className="group"
-          >
-            <div className="bg-white rounded-2xl shadow-light hover:shadow-card-hover transition-all p-12 text-center h-full flex flex-col justify-center items-center border border-gray-200 hover:border-burgundy">
-              <div className="mb-6">
-                <div className="w-24 h-32 mx-auto rounded-lg bg-gradient-to-b from-amber-100 to-amber-200 border-4 border-burgundy/20 flex items-center justify-center group-hover:border-burgundy transition">
-                  <span className="text-4xl">👱‍♀️</span>
-                </div>
+          {tiers.map((tier) => (
+            <Link key={tier.name} href={tier.href} className="group">
+              <div className={`${tier.color} rounded-2xl shadow-light hover:shadow-card-hover transition-all p-12 text-center h-full flex flex-col justify-center items-center border border-gray-200 hover:border-burgundy`}>
+                <h2 className="text-3xl font-playfair font-bold text-burgundy mb-3 group-hover:text-maroon transition">
+                  {tier.name}
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {tier.description}
+                </p>
+                <span className="text-burgundy font-semibold group-hover:text-maroon transition">
+                  Prohlédnout katalog &rarr;
+                </span>
               </div>
-              <h2 className="text-3xl font-playfair font-bold text-burgundy mb-3 group-hover:text-maroon transition">
-                Nebarvené panenské vlasy
-              </h2>
-              <p className="text-gray-600 mb-6">
-                100% přírodní nebarvené vlasy. Odstíny 1-5 s možností profesionálního barvení.
-              </p>
-              <span className="text-burgundy font-semibold group-hover:text-maroon transition">
-                Prohlédnout katalog →
-              </span>
-            </div>
-          </Link>
-
-          {/* Barvené */}
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-vlasy"
-            className="group"
-          >
-            <div className="bg-white rounded-2xl shadow-light hover:shadow-card-hover transition-all p-12 text-center h-full flex flex-col justify-center items-center border border-gray-200 hover:border-burgundy">
-              <div className="mb-6">
-                <div className="w-24 h-32 mx-auto rounded-lg bg-gradient-to-b from-yellow-100 to-yellow-200 border-4 border-burgundy/20 flex items-center justify-center group-hover:border-burgundy transition">
-                  <span className="text-4xl">👱‍♀️</span>
-                </div>
-              </div>
-              <h2 className="text-3xl font-playfair font-bold text-burgundy mb-3 group-hover:text-maroon transition">
-                Barvené blond vlasy
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Profesionálně barvené vlasy v různých odstínech. Odstíny 1-10 v různých tónech blonda.
-              </p>
-              <span className="text-burgundy font-semibold group-hover:text-maroon transition">
-                Prohlédnout katalog →
-              </span>
-            </div>
-          </Link>
+            </Link>
+          ))}
         </div>
 
         {/* Info Section */}
@@ -85,21 +82,21 @@ export default function VlasyKProdlouzenLanding() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
             <div>
+              <div className="font-semibold text-burgundy mb-2">Typ vlasu</div>
+              <p className="text-gray-600 text-sm">
+                Filtrujte podle typu: nebarvené panenské nebo barvené blond vlasy
+              </p>
+            </div>
+            <div>
               <div className="font-semibold text-burgundy mb-2">Odstín</div>
               <p className="text-gray-600 text-sm">
-                Vyberte si z dostupných odstínů. Nebarvené (1-5), Barvené (1-10)
+                Vyberte si z dostupných odstínu 1-10 podle galerie barev
               </p>
             </div>
             <div>
               <div className="font-semibold text-burgundy mb-2">Struktura</div>
               <p className="text-gray-600 text-sm">
                 Filtrujte podle typu: rovné, mírně vlnité, vlnité, kudrnaté
-              </p>
-            </div>
-            <div>
-              <div className="font-semibold text-burgundy mb-2">Délka (Platinum)</div>
-              <p className="text-gray-600 text-sm">
-                Délka je k dispozici jen u Platinum Edition produktů
               </p>
             </div>
           </div>
