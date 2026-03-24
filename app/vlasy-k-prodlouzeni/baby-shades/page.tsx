@@ -7,6 +7,7 @@ import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { Product, HAIR_COLORS } from '@/types/product';
 import { motion } from 'framer-motion';
+import SimilarFromOtherTiers from '@/components/SimilarFromOtherTiers';
 
 type FilterState = {
   shades: number[];
@@ -353,30 +354,8 @@ export default function BabyShadesTierPage() {
         </>
         )}
 
-        {/* Other categories suggestion */}
-        <div className="mt-16 pt-12 border-t border-warm-beige">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-playfair text-burgundy mb-2">Nenašli jste co hledáte?</h2>
-            <p className="text-gray-600">Prozkoumejte jiné kategorie vlasů</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { name: 'Standard', href: '/vlasy-k-prodlouzeni/standard', desc: 'Kvalitní panenské vlasy za výhodnou cenu.' },
-              { name: 'Luxe', href: '/vlasy-k-prodlouzeni/luxe', desc: 'Prémiové vlasy s hedvábnou strukturou.' },
-              { name: 'Platinum Edition', href: '/vlasy-k-prodlouzeni/platinum-edition', desc: 'Exkluzivní culíky v limitované edici.' },
-            ].map((tier) => (
-              <Link
-                key={tier.name}
-                href={tier.href}
-                className="block p-6 bg-ivory rounded-xl border border-warm-beige hover:border-burgundy hover:shadow-md transition group"
-              >
-                <h3 className="text-lg font-semibold text-burgundy group-hover:text-maroon mb-1">{tier.name}</h3>
-                <p className="text-sm text-gray-600">{tier.desc}</p>
-                <span className="text-sm text-burgundy font-medium mt-3 inline-block group-hover:translate-x-1 transition-transform">Prohlédnout →</span>
-              </Link>
-            ))}
-          </div>
-        </div>
+        {/* Similar products from other tiers */}
+        <SimilarFromOtherTiers currentTier="Baby Shades" activeShades={filters.shades} />
       </div>
     </div>
   );
