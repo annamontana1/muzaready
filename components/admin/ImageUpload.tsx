@@ -18,6 +18,17 @@ export default function ImageUpload({ value, onChange, folder = 'skus' }: ImageU
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Client-side validation
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Neplatný typ souboru. Povolené: JPG, PNG, WebP, GIF');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Soubor je příliš velký. Max 10MB');
+      return;
+    }
+
     setUploading(true);
     setError('');
 
@@ -31,15 +42,27 @@ export default function ImageUpload({ value, onChange, folder = 'skus' }: ImageU
         body: formData,
       });
 
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        // Non-JSON response — likely auth redirect or server error
+        const text = await response.text();
+        console.error('Upload non-JSON response:', response.status, text.substring(0, 200));
+        if (response.status === 401 || response.redirected) {
+          throw new Error('Nejste přihlášeni. Přihlašte se znovu do admin panelu.');
+        }
+        throw new Error(`Server vrátil neočekávanou odpověď (${response.status})`);
+      }
+
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Upload failed');
+        throw new Error(result.error || 'Upload selhal');
       }
 
       onChange(result.url);
     } catch (err: any) {
-      setError(err.message || 'Upload failed');
+      setError(err.message || 'Upload selhal');
     } finally {
       setUploading(false);
       if (fileInputRef.current) {

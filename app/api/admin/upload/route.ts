@@ -4,10 +4,19 @@ import { supabase, PRODUCT_IMAGES_BUCKET } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
-  const authError = await requireAdmin(request);
-  if (authError) return authError;
+  try {
+    // Auth check — wrap in try/catch so we always return JSON
+    const authError = await requireAdmin(request);
+    if (authError) return authError;
+  } catch (authErr: any) {
+    return NextResponse.json(
+      { error: 'Chyba autentizace: ' + (authErr.message || 'neznámá') },
+      { status: 401 }
+    );
+  }
 
   try {
     const formData = await request.formData();
