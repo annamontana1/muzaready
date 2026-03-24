@@ -13,49 +13,51 @@ interface ImageUploadProps {
  * Vercel Hobby has 4.5MB body limit, so we resize to max 1200px and compress to JPEG.
  */
 async function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<File> {
-  return new Promise((resolve, reject) => {
-    // If file is already small enough (<1MB), skip compression
-    if (file.size < 1 * 1024 * 1024) {
-      resolve(file);
-      return;
-    }
+  // If file is already small enough (<1MB), skip compression
+  if (file.size < 1 * 1024 * 1024) {
+    return file;
+  }
 
-    const img = new Image();
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+  // Read file as data URL using FileReader
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Nepodařilo se přečíst soubor'));
+    reader.readAsDataURL(file);
+  });
 
-    img.onload = () => {
-      let { width, height } = img;
+  // Load into HTMLImageElement
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const el = document.createElement('img');
+    el.onload = () => resolve(el);
+    el.onerror = () => reject(new Error('Nepodařilo se dekódovat obrázek'));
+    el.src = dataUrl;
+  });
 
-      // Scale down if wider than maxWidth
-      if (width > maxWidth) {
-        height = Math.round((height * maxWidth) / width);
-        width = maxWidth;
-      }
+  let { width, height } = img;
+  if (width > maxWidth) {
+    height = Math.round((height * maxWidth) / width);
+    width = maxWidth;
+  }
 
-      canvas.width = width;
-      canvas.height = height;
-      ctx?.drawImage(img, 0, 0, width, height);
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas není podporován');
+  ctx.drawImage(img, 0, 0, width, height);
 
-      canvas.toBlob(
-        (blob) => {
-          if (!blob) {
-            reject(new Error('Komprese selhala'));
-            return;
-          }
-          const compressedFile = new File([blob], file.name.replace(/\.\w+$/, '.jpg'), {
-            type: 'image/jpeg',
-            lastModified: Date.now(),
-          });
-          resolve(compressedFile);
-        },
-        'image/jpeg',
-        quality
-      );
-    };
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error('Komprese selhala'))),
+      'image/jpeg',
+      quality
+    );
+  });
 
-    img.onerror = () => reject(new Error('Nepodařilo se načíst obrázek'));
-    img.src = URL.createObjectURL(file);
+  return new File([blob], file.name.replace(/\.\w+$/, '.jpg'), {
+    type: 'image/jpeg',
+    lastModified: Date.now(),
   });
 }
 
