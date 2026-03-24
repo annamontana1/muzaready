@@ -174,11 +174,11 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         {(() => {
           // Build all images array: main + gallery
           const allImages: string[] = [];
-          if (product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/'))) {
+          if (product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/'))) {
             allImages.push(product.images.main);
           }
           if (product.images?.gallery && Array.isArray(product.images.gallery)) {
-            allImages.push(...product.images.gallery.filter((img: string) => img && img.startsWith('http')));
+            allImages.push(...product.images.gallery.filter((img: string) => img && (img.startsWith('http') || img.startsWith('/'))));
           }
 
           if (allImages.length > 0) {
