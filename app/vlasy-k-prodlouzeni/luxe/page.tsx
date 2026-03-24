@@ -12,6 +12,7 @@ type FilterState = {
   colorType: '' | 'nebarvene' | 'barvene';
   shades: number[];
   structures: string[];
+  lengths: number[];
 };
 
 const fadeInUp = {
@@ -43,6 +44,7 @@ export default function LuxeTierPage() {
     colorType: '',
     shades: [],
     structures: [],
+    lengths: [],
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
@@ -76,9 +78,13 @@ export default function LuxeTierPage() {
         const productStructure = product.variants[0]?.structure;
         if (!productStructure || !filters.structures.includes(productStructure)) return false;
       }
+      if (filters.lengths.length > 0) {
+        const productLength = product.variants[0]?.lengthCm;
+        if (!productLength || !filters.lengths.includes(productLength)) return false;
+      }
       return true;
     });
-  }, [products, filters.shades, filters.structures]);
+  }, [products, filters.shades, filters.structures, filters.lengths]);
 
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const paginatedProducts = useMemo(() => {
@@ -108,12 +114,21 @@ export default function LuxeTierPage() {
     }));
   };
 
+  const toggleLength = (length: number) => {
+    setFilters((prev) => ({
+      ...prev,
+      lengths: prev.lengths.includes(length)
+        ? prev.lengths.filter((l) => l !== length)
+        : [...prev.lengths, length],
+    }));
+  };
+
   const setColorType = (ct: '' | 'nebarvene' | 'barvene') => {
     setFilters((prev) => ({ ...prev, colorType: ct }));
   };
 
   const resetFilters = () => {
-    setFilters({ colorType: '', shades: [], structures: [] });
+    setFilters({ colorType: '', shades: [], structures: [], lengths: [] });
     setCurrentPage(1);
   };
 
@@ -239,8 +254,30 @@ export default function LuxeTierPage() {
             </div>
           </div>
 
+          {/* Length filter */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-burgundy mb-3">
+              Délka {filters.lengths.length > 0 && `(${filters.lengths.sort((a, b) => a - b).map(l => `${l}cm`).join(', ')})`}
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {[40, 45, 50, 55, 60, 65, 70, 75, 80].map((length) => (
+                <button
+                  key={length}
+                  onClick={() => toggleLength(length)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                    filters.lengths.includes(length)
+                      ? 'bg-burgundy text-white'
+                      : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
+                  }`}
+                >
+                  {length} cm
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Active filters */}
-          {(filters.colorType || filters.shades.length > 0 || filters.structures.length > 0) && (
+          {(filters.colorType || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
               <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
@@ -257,6 +294,11 @@ export default function LuxeTierPage() {
                 {filters.structures.map((structure) => (
                   <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
                     {structure.charAt(0).toUpperCase() + structure.slice(1)}
+                  </span>
+                ))}
+                {filters.lengths.sort((a, b) => a - b).map((length) => (
+                  <span key={`len-${length}`} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
+                    {length} cm
                   </span>
                 ))}
               </div>
