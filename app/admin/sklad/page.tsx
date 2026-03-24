@@ -198,17 +198,17 @@ function SkuListPageContent() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Sklad (SKU)</h1>
         <div className="flex gap-3">
-          <button
-            onClick={() => setShowQuickAdd(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+          <Link
+            href="/admin/stock-receive"
+            className="px-4 py-2 text-burgundy border border-burgundy rounded-lg hover:bg-burgundy/5 transition font-medium"
           >
-            + Quick Add
-          </button>
+            📦 Doskladnit
+          </Link>
           <Link
             href="/admin/sklad/novy"
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium"
+            className="bg-burgundy text-white px-4 py-2 rounded-lg hover:bg-maroon transition font-medium"
           >
-            Wizard (vice delek)
+            + Nové SKU
           </Link>
         </div>
       </div>
@@ -342,6 +342,12 @@ function SkuListPageContent() {
                 </td>
                 <td className="px-4 py-2">
                   <div className="flex items-center gap-2">
+                    <Link
+                      href={`/admin/stock-receive?skuId=${sku.id}`}
+                      className="text-xs px-3 py-1 bg-burgundy/10 text-burgundy rounded hover:bg-burgundy/20 transition font-medium"
+                    >
+                      +g
+                    </Link>
                     <Link
                       href={`/admin/sklad/${sku.id}/edit`}
                       className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"

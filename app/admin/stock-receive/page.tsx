@@ -1,55 +1,64 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface Sku {
   id: string;
   sku: string;
+  shortCode: string | null;
   name: string | null;
   shadeName: string | null;
   lengthCm: number | null;
+  structure: string | null;
   availableGrams: number | null;
+  customerCategory: string | null;
+  saleMode: string | null;
 }
 
 interface StockMovement {
   id: string;
   grams: number;
-  location: string | null;
-  batchNumber: string | null;
-  costPerGramCzk: number | null;
   note: string | null;
   performedBy: string | null;
   createdAt: string;
   sku: {
     id: string;
     sku: string;
+    shortCode: string | null;
     name: string | null;
   };
 }
 
 export default function StockReceivePage() {
+  const searchParams = useSearchParams();
+  const preselectedSkuId = searchParams.get('skuId');
+
   const [skus, setSkus] = useState<Sku[]>([]);
   const [recentReceipts, setRecentReceipts] = useState<StockMovement[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingSkus, setLoadingSkus] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [lastMovementId, setLastMovementId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [formData, setFormData] = useState({
-    skuId: '',
+    skuId: preselectedSkuId || '',
     grams: '',
-    location: '',
-    batchNumber: '',
-    costPerGramCzk: '',
     note: '',
-    performedBy: '',
   });
 
   useEffect(() => {
     fetchSkus();
     fetchRecentReceipts();
   }, []);
+
+  useEffect(() => {
+    if (preselectedSkuId) {
+      setFormData(prev => ({ ...prev, skuId: preselectedSkuId }));
+    }
+  }, [preselectedSkuId]);
 
   const fetchSkus = async () => {
     try {
@@ -67,7 +76,7 @@ export default function StockReceivePage() {
 
   const fetchRecentReceipts = async () => {
     try {
-      const response = await fetch('/api/admin/stock/receive?limit=20');
+      const response = await fetch('/api/admin/stock/receive?limit=10');
       const data = await response.json();
       if (data.movements) {
         setRecentReceipts(data.movements);
@@ -77,8 +86,23 @@ export default function StockReceivePage() {
     }
   };
 
+  const selectedSku = skus.find(s => s.id === formData.skuId);
+
+  const filteredSkus = skus.filter(sku => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      sku.sku.toLowerCase().includes(q) ||
+      (sku.shortCode && sku.shortCode.toLowerCase().includes(q)) ||
+      (sku.name && sku.name.toLowerCase().includes(q)) ||
+      (sku.shadeName && sku.shadeName.toLowerCase().includes(q))
+    );
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.skuId || !formData.grams) return;
+
     setLoading(true);
     setMessage(null);
 
@@ -89,29 +113,22 @@ export default function StockReceivePage() {
         body: JSON.stringify({
           skuId: formData.skuId,
           grams: parseInt(formData.grams),
-          location: formData.location || null,
-          batchNumber: formData.batchNumber || null,
-          costPerGramCzk: formData.costPerGramCzk ? parseFloat(formData.costPerGramCzk) : null,
           note: formData.note || null,
-          performedBy: formData.performedBy || null,
+          performedBy: null,
+          location: null,
+          batchNumber: null,
+          costPerGramCzk: null,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: data.message || 'Zboží úspěšně naskladněno!' });
-        setLastMovementId(data.movement?.id || null); // Save movement ID for QR code
-        setFormData({
-          skuId: '',
-          grams: '',
-          location: formData.location, // Keep location
-          batchNumber: '',
-          costPerGramCzk: '',
-          note: '',
-          performedBy: formData.performedBy, // Keep performer
-        });
+        setMessage({ type: 'success', text: `Přidáno ${formData.grams}g ke ${selectedSku?.shortCode || selectedSku?.sku}` });
+        setLastMovementId(data.movement?.id || null);
+        setFormData(prev => ({ ...prev, grams: '', note: '' }));
         fetchRecentReceipts();
+        fetchSkus(); // Refresh stock counts
       } else {
         setMessage({ type: 'error', text: data.error || 'Chyba při naskladňování' });
       }
@@ -122,244 +139,198 @@ export default function StockReceivePage() {
     }
   };
 
+  const formatSkuLabel = (sku: Sku) => {
+    const parts = [];
+    if (sku.shortCode) parts.push(sku.shortCode);
+    if (sku.customerCategory) parts.push(sku.customerCategory);
+    if (sku.shadeName) parts.push(sku.shadeName);
+    if (sku.structure) parts.push(sku.structure);
+    if (sku.lengthCm) parts.push(`${sku.lengthCm}cm`);
+    parts.push(`(${sku.availableGrams ?? 0}g skladem)`);
+    return parts.join(' — ');
+  };
+
   return (
-    <div className="max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Příjem zboží (Naskladnění)</h1>
+    <div className="max-w-4xl mx-auto p-8">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">📦 Doskladnit</h1>
+          <p className="text-gray-500 mt-1">Přidejte gramáž k existující položce</p>
+        </div>
+        <div className="flex gap-3">
+          <Link
+            href="/admin/sklad/novy"
+            className="px-4 py-2 text-burgundy hover:text-maroon border border-burgundy rounded-lg hover:bg-burgundy/5 transition font-medium"
+          >
+            + Nové SKU
+          </Link>
+          <Link
+            href="/admin/sklad"
+            className="px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+          >
+            ← Zpět na sklad
+          </Link>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Receive Form */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Naskladnit zboží</h2>
-
-          {message && (
-            <div className={`p-4 rounded-lg mb-6 ${
-              message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
-            }`}>
-              <p>{message.text}</p>
-
-              {/* Show QR code download button after successful stock receipt */}
-              {message.type === 'success' && lastMovementId && (
-                <div className="mt-4 pt-4 border-t border-green-200">
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <p className="font-medium mb-1">QR kód pro tuto položku:</p>
-                      <p className="text-sm text-green-700">
-                        Stáhněte QR kód, vytiskněte a nalepte na produkt pro snadné skenování
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <a
-                        href={`/api/admin/stock/qr-code/${lastMovementId}`}
-                        download
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium inline-flex items-center gap-2"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                        </svg>
-                        Stáhnout QR kód
-                      </a>
-                      <button
-                        onClick={() => setLastMovementId(null)}
-                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
-                      >
-                        Zavřít
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* QR code preview */}
-                  <div className="mt-4 text-center">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Form */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow p-6">
+            {message && (
+              <div className={`p-4 rounded-lg mb-6 ${
+                message.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+              }`}>
+                <p className="font-medium">{message.text}</p>
+                {message.type === 'success' && lastMovementId && (
+                  <div className="mt-3 flex items-center gap-4">
                     <img
                       src={`/api/admin/stock/qr-code/${lastMovementId}`}
                       alt="QR kód"
-                      className="inline-block w-48 h-48 border-2 border-green-300 rounded-lg"
+                      className="w-24 h-24 border rounded"
                     />
-                    <p className="text-xs text-green-700 mt-2">ID: {lastMovementId}</p>
+                    <a
+                      href={`/api/admin/stock/qr-code/${lastMovementId}`}
+                      download
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium"
+                    >
+                      Stáhnout QR kód
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* SKU Selection */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  1. Vyberte SKU
+                </label>
+                <input
+                  type="text"
+                  placeholder="Hledat podle kódu, názvu, odstínu..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-3 focus:ring-2 focus:ring-burgundy focus:border-burgundy"
+                />
+                <select
+                  value={formData.skuId}
+                  onChange={(e) => setFormData({ ...formData, skuId: e.target.value })}
+                  required
+                  disabled={loadingSkus}
+                  size={6}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy"
+                >
+                  <option value="">— Vyberte SKU —</option>
+                  {filteredSkus.map((sku) => (
+                    <option key={sku.id} value={sku.id}>
+                      {formatSkuLabel(sku)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Selected SKU Info */}
+              {selectedSku && (
+                <div className="p-4 bg-burgundy/5 border border-burgundy/20 rounded-lg">
+                  <div className="font-bold text-burgundy text-lg">{selectedSku.shortCode || selectedSku.sku}</div>
+                  <div className="text-sm text-gray-700 mt-1">
+                    {selectedSku.name} — {selectedSku.shadeName} — {selectedSku.structure} — {selectedSku.lengthCm}cm
+                  </div>
+                  <div className="text-sm font-medium mt-1">
+                    Aktuálně skladem: <span className="text-burgundy">{selectedSku.availableGrams ?? 0}g</span>
                   </div>
                 </div>
               )}
-            </div>
-          )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* SKU Select */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                SKU *
-              </label>
-              <select
-                value={formData.skuId}
-                onChange={(e) => setFormData({ ...formData, skuId: e.target.value })}
-                required
-                disabled={loadingSkus}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+              {/* Grams */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  2. Kolik gramů přidáváte?
+                </label>
+                <div className="flex gap-3">
+                  <input
+                    type="number"
+                    value={formData.grams}
+                    onChange={(e) => setFormData({ ...formData, grams: e.target.value })}
+                    required
+                    min="1"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-burgundy"
+                    placeholder="např. 200"
+                  />
+                  <span className="flex items-center text-lg font-medium text-gray-500">gramů</span>
+                </div>
+                {/* Quick buttons */}
+                <div className="flex gap-2 mt-3">
+                  {[50, 100, 200, 300, 500].map(g => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, grams: String(g) })}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border ${
+                        formData.grams === String(g)
+                          ? 'bg-burgundy text-white border-burgundy'
+                          : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {g}g
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Note */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Poznámka <span className="font-normal text-gray-400">(volitelné)</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.note}
+                  onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy"
+                  placeholder="např. nová várka z Indie"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || !formData.skuId || !formData.grams}
+                className="w-full px-6 py-4 bg-burgundy text-white rounded-xl font-bold text-lg hover:bg-maroon disabled:bg-gray-300 disabled:cursor-not-allowed transition"
               >
-                <option value="">Vyberte SKU...</option>
-                {skus.map((sku) => (
-                  <option key={sku.id} value={sku.id}>
-                    {sku.sku} - {sku.name || 'Bez názvu'}
-                    {sku.shadeName && ` (${sku.shadeName})`}
-                    {sku.lengthCm && ` - ${sku.lengthCm}cm`}
-                    {sku.availableGrams !== null && ` - Sklad: ${sku.availableGrams}g`}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Grams */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Množství (gramy) *
-              </label>
-              <input
-                type="number"
-                value={formData.grams}
-                onChange={(e) => setFormData({ ...formData, grams: e.target.value })}
-                required
-                min="1"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                placeholder="např. 100"
-              />
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Lokace (regál/police)
-              </label>
-              <input
-                type="text"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                placeholder="např. A1-3, Shelf B2"
-              />
-            </div>
-
-            {/* Batch Number */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Číslo šarže
-              </label>
-              <input
-                type="text"
-                value={formData.batchNumber}
-                onChange={(e) => setFormData({ ...formData, batchNumber: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                placeholder="např. BATCH-2024-001"
-              />
-            </div>
-
-            {/* Cost per Gram */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nákupní cena za gram (Kč)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.costPerGramCzk}
-                onChange={(e) => setFormData({ ...formData, costPerGramCzk: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                placeholder="např. 15.50"
-              />
-            </div>
-
-            {/* Performed By */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Provedl
-              </label>
-              <input
-                type="text"
-                value={formData.performedBy}
-                onChange={(e) => setFormData({ ...formData, performedBy: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                placeholder="Jméno pracovníka"
-              />
-            </div>
-
-            {/* Note */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Poznámka
-              </label>
-              <textarea
-                value={formData.note}
-                onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-                rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                placeholder="Volitelná poznámka..."
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Naskladňuji...' : '✓ Naskladnit zboží'}
-            </button>
-          </form>
+                {loading ? 'Naskladňuji...' : '✓ Přidat na sklad'}
+              </button>
+            </form>
+          </div>
         </div>
 
-        {/* Recent Receipts */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Poslední příjmy</h2>
-
-          {recentReceipts.length === 0 ? (
-            <p className="text-gray-600 text-center py-8">Žádné záznamy</p>
-          ) : (
-            <div className="space-y-4 max-h-[600px] overflow-y-auto">
-              {recentReceipts.map((receipt) => (
-                <div key={receipt.id} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {receipt.sku.name || receipt.sku.sku}
-                      </p>
-                      <p className="text-sm text-gray-600">SKU: {receipt.sku.sku}</p>
+        {/* Recent Receipts Sidebar */}
+        <div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <h2 className="font-bold text-gray-900 mb-4">Poslední příjmy</h2>
+            {recentReceipts.length === 0 ? (
+              <p className="text-gray-400 text-center py-8 text-sm">Žádné záznamy</p>
+            ) : (
+              <div className="space-y-3">
+                {recentReceipts.map((receipt) => (
+                  <div key={receipt.id} className="border border-gray-100 rounded-lg p-3">
+                    <div className="flex justify-between items-start">
+                      <div className="text-sm">
+                        <p className="font-medium text-gray-900">
+                          {receipt.sku.shortCode || receipt.sku.sku}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(receipt.createdAt).toLocaleDateString('cs-CZ')}
+                        </p>
+                      </div>
+                      <span className="text-sm font-bold text-green-600">+{receipt.grams}g</span>
                     </div>
-                    <p className="text-lg font-bold text-green-600">+{receipt.grams}g</p>
                   </div>
-
-                  {receipt.location && (
-                    <p className="text-sm text-gray-600">📍 {receipt.location}</p>
-                  )}
-                  {receipt.batchNumber && (
-                    <p className="text-sm text-gray-600">📦 Šarže: {receipt.batchNumber}</p>
-                  )}
-                  {receipt.costPerGramCzk && (
-                    <p className="text-sm text-gray-600">
-                      💰 {receipt.costPerGramCzk} Kč/g
-                    </p>
-                  )}
-                  {receipt.performedBy && (
-                    <p className="text-sm text-gray-600">👤 {receipt.performedBy}</p>
-                  )}
-                  {receipt.note && (
-                    <p className="text-sm text-gray-600 italic mt-2">{receipt.note}</p>
-                  )}
-
-                  <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                    <p className="text-xs text-gray-500">
-                      {new Date(receipt.createdAt).toLocaleString('cs-CZ')}
-                    </p>
-                    <a
-                      href={`/api/admin/stock/qr-code/${receipt.id}`}
-                      download
-                      className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition inline-flex items-center gap-1"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
-                      </svg>
-                      QR kód
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
