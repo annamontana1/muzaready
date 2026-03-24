@@ -181,12 +181,14 @@ export default function SkuDetailPage() {
     router.push('/kosik');
   };
 
-  const formatPrice = (price: number) => {
+  const formatPrice = (price: number, forceDecimals = false) => {
+    // Show decimals if price has them (e.g. 89.9) or if forced
+    const hasDecimals = price % 1 !== 0;
     return new Intl.NumberFormat('cs-CZ', {
       style: 'currency',
       currency: 'CZK',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+      minimumFractionDigits: hasDecimals || forceDecimals ? 1 : 0,
+      maximumFractionDigits: hasDecimals || forceDecimals ? 1 : 0,
     }).format(price);
   };
 

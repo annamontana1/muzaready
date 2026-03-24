@@ -78,7 +78,8 @@ export class PriceCalculator {
    * Formátuje cenu s českými tisícovými oddělovači
    */
   formatPrice(price: number): string {
-    return `${price.toLocaleString("cs-CZ")} Kč`;
+    const hasDecimals = price % 1 !== 0;
+    return `${price.toLocaleString("cs-CZ", { minimumFractionDigits: hasDecimals ? 1 : 0, maximumFractionDigits: hasDecimals ? 1 : 0 })} Kč`;
   }
 
   /**
