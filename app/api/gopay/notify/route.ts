@@ -278,6 +278,42 @@ export async function POST(request: NextRequest) {
       console.error('Invoice generation failed (non-critical):', invoiceError);
     }
 
+    // Create invoice in Fakturoid (non-critical)
+    try {
+      const { createInvoiceFromOrder, isFakturoidConfigured } = await import('@/lib/fakturoid');
+      if (isFakturoidConfigured()) {
+        const fakturoidResult = await createInvoiceFromOrder({
+          orderId: result.id.substring(0, 12),
+          customerName: result.companyName || `${result.firstName || ''} ${result.lastName || ''}`.trim(),
+          customerEmail: result.email,
+          customerPhone: result.phone || undefined,
+          customerStreet: result.billingStreet || result.streetAddress || undefined,
+          customerCity: result.billingCity || result.city || undefined,
+          customerZip: result.billingZipCode || result.zipCode || undefined,
+          customerCountry: result.billingCountry || result.country || 'CZ',
+          customerIco: result.ico || undefined,
+          customerDic: result.dic || undefined,
+          items: result.items.map((item: any) => ({
+            name: item.sku?.name || item.skuId,
+            quantity: item.quantity || 1,
+            unitPrice: item.totalPrice || item.grams * (item.sku?.pricePerGramCzk || 0),
+            unit: item.sku?.saleMode === 'PIECE_BY_WEIGHT' ? 'ks' : 'g',
+          })),
+          shippingPrice: result.shippingPrice || 0,
+          shippingName: result.deliveryMethod || 'Doprava',
+          paymentMethod: 'gopay',
+          isPaid: true,
+        });
+        if (fakturoidResult.success) {
+          console.log(`Fakturoid invoice ${fakturoidResult.invoiceNumber} created for order ${result.id}`);
+        } else {
+          console.error('Fakturoid invoice failed:', fakturoidResult.error);
+        }
+      }
+    } catch (fakturoidError) {
+      console.error('Fakturoid integration failed (non-critical):', fakturoidError);
+    }
+
     // Auto-create Zásilkovna shipment if applicable
     const packetaPointId = (result as any).packetaPointId;
     if (packetaPointId && (result as any).deliveryMethod === 'zasilkovna') {
