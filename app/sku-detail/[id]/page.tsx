@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import ProductReviews from '@/components/ProductReviews';
 
 interface Sku {
@@ -268,13 +267,10 @@ export default function SkuDetailPage() {
             {/* Main image */}
             <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-white border border-warm-beige shadow-sm">
               {currentImage ? (
-                <Image
+                <img
                   src={currentImage}
                   alt={sku.name || 'Produkt'}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
               ) : (
                 <div
@@ -318,12 +314,10 @@ export default function SkuDetailPage() {
                         : 'border-warm-beige hover:border-burgundy/50'
                     }`}
                   >
-                    <Image
+                    <img
                       src={img}
                       alt={`${sku.name || 'Produkt'} - foto ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                   </button>
                 ))}

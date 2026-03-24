@@ -18,7 +18,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'bcbqrhkoosopmtrryrcy.supabase.co', 'www.dropbox.com'],
     formats: ['image/webp', 'image/avif'],
   },
   experimental: {
