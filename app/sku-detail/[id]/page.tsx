@@ -150,7 +150,7 @@ export default function SkuDetailPage() {
 
   const handleAddToCart = async () => {
     if (!quote) {
-      alert('Nejdriv klikni "Spocitat cenu"');
+      alert('Nejdřív klikni "Spočítat cenu"');
       return;
     }
 
@@ -218,7 +218,7 @@ export default function SkuDetailPage() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto">
             <p className="text-red-800 font-medium text-lg mb-4">{error || 'SKU nenalezeno'}</p>
             <Link href="/katalog" className="inline-flex items-center gap-2 text-burgundy hover:text-maroon font-medium transition">
-              <span>&larr;</span> Zpet na katalog
+              <span>&larr;</span> Zpět na katalog
             </Link>
           </div>
         </div>
@@ -261,7 +261,7 @@ export default function SkuDetailPage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Zpet na katalog
+            Zpět na katalog
           </Link>
         </nav>
 
@@ -290,7 +290,7 @@ export default function SkuDetailPage() {
                   <svg className="w-16 h-16 text-white/60 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-white/50 text-sm font-medium">Foto neni k dispozici</span>
+                  <span className="text-white/50 text-sm font-medium">Foto není k dispozici</span>
                 </div>
               )}
 
@@ -302,7 +302,7 @@ export default function SkuDetailPage() {
               )}
               {sku.soldOut && (
                 <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
-                  Vyprodano
+                  Vyprodáno
                 </div>
               )}
             </div>
@@ -353,7 +353,7 @@ export default function SkuDetailPage() {
               <div className="bg-white rounded-xl border border-warm-beige p-5 space-y-4">
                 {sku.shadeName && (
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-sm">Odstin</span>
+                    <span className="text-gray-500 text-sm">Odstín</span>
                     <span className="flex items-center gap-2 font-medium text-gray-800">
                       {sku.shadeHex && (
                         <span
@@ -367,7 +367,7 @@ export default function SkuDetailPage() {
                 )}
                 {sku.lengthCm && (
                   <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                    <span className="text-gray-500 text-sm">Delka</span>
+                    <span className="text-gray-500 text-sm">Délka</span>
                     <span className="font-medium text-gray-800">{sku.lengthCm} cm</span>
                   </div>
                 )}
@@ -403,7 +403,7 @@ export default function SkuDetailPage() {
               {/* Ending Selection */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Zakonceni
+                  Zakončení
                 </label>
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                   {ENDING_OPTIONS.map((option) => (
@@ -428,7 +428,7 @@ export default function SkuDetailPage() {
                 <div className="mb-6 space-y-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Delka: <span className="text-burgundy">{bulkLengthValue} cm</span>
+                      Délka: <span className="text-burgundy">{bulkLengthValue} cm</span>
                     </label>
                     <input
                       type="range"
@@ -478,14 +478,14 @@ export default function SkuDetailPage() {
                 }
                 className="w-full bg-burgundy text-white py-3.5 rounded-xl font-semibold hover:bg-maroon transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {quoteLoading ? 'Pocitam...' : 'Spocitat cenu'}
+                {quoteLoading ? 'Počítám...' : 'Spočítat cenu'}
               </button>
             </div>
 
             {/* Price Quote */}
             {quote && (
               <div className="bg-white rounded-xl border-2 border-burgundy p-6 space-y-4">
-                <h3 className="font-playfair text-lg font-bold text-burgundy">Cenovy rozpis</h3>
+                <h3 className="font-playfair text-lg font-bold text-burgundy">Cenový rozpis</h3>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
@@ -495,7 +495,7 @@ export default function SkuDetailPage() {
 
                   {quote.assemblyFeeTotal > 0 && (
                     <div className="flex justify-between items-center text-amber-700">
-                      <span>Zakonceni ({quote.assemblyFeeType})</span>
+                      <span>Zakončení ({quote.assemblyFeeType})</span>
                       <span className="font-medium">{formatPrice(quote.assemblyFeeTotal)}</span>
                     </div>
                   )}
@@ -540,7 +540,7 @@ export default function SkuDetailPage() {
                   onClick={handleAddToCart}
                   className="w-full mt-2 bg-burgundy text-white py-4 rounded-xl font-bold text-lg hover:bg-maroon transition shadow-lg hover:shadow-xl"
                 >
-                  Pridat do kosiku {quantity > 1 ? `(${quantity} ks)` : ''}
+                  Přidat do košíku {quantity > 1 ? `(${quantity} ks)` : ''}
                 </button>
               </div>
             )}
@@ -549,11 +549,11 @@ export default function SkuDetailPage() {
             <div className="bg-burgundy/5 rounded-xl p-5 text-sm text-gray-600">
               <p className="font-semibold text-burgundy mb-2">Jak to funguje</p>
               <ol className="list-decimal list-inside space-y-1.5 text-xs leading-relaxed">
-                <li>Vyber typ zakonceni (keratin nebo bez zakonceni)</li>
-                {sku.saleMode === 'BULK_G' && <li>Nastav pozadovanou delku a pocet gramu</li>}
-                <li>Klikni &quot;Spocitat cenu&quot; pro presny cenovy rozpis</li>
-                <li>Vyber pocet kusu a pridej do kosiku</li>
-                <li>Jdi do kosiku a dokonci nakup</li>
+                <li>Vyber typ zakončení</li>
+                {sku.saleMode === 'BULK_G' && <li>Nastav požadovanou délku a počet gramů</li>}
+                <li>Klikni &quot;Spočítat cenu&quot; pro přesný cenový rozpis</li>
+                <li>Vyber počet kusů a přidej do košíku</li>
+                <li>Jdi do košíku a dokonči nákup</li>
               </ol>
             </div>
           </div>
