@@ -53,8 +53,8 @@ export default function BabyShadesTierPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  // Baby Shades: only shades 7-10
-  const availableShades = [7, 8, 9, 10];
+  // Baby Shades: shades 6-10
+  const availableShades = [6, 7, 8, 9, 10];
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {

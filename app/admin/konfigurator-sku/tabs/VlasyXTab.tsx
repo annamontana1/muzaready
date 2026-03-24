@@ -52,7 +52,7 @@ const getShadeRange = (category: 'nebarvene' | 'barvene' | 'baby_shades', shade:
 
 const getAllowedShadeCodes = (category: 'nebarvene' | 'barvene' | 'baby_shades', tier: 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades') => {
   if (category === 'baby_shades') {
-    return SHADES.filter((shade) => shade.code >= 1 && shade.code <= 4);
+    return SHADES.filter((shade) => shade.code >= 6 && shade.code <= 10);
   }
   if (category === 'barvene') {
     return SHADES.filter((shade) => shade.code >= 5 && shade.code <= 10);

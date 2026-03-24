@@ -76,7 +76,7 @@ const DEFAULT_RATE = 1 / 25.5;
 
 const getAllowedShadeCodes = (category: Category, tier: Tier): ShadeInfo[] => {
   if (category === 'baby_shades') {
-    return SHADES.filter((s) => s.code >= 1 && s.code <= 4);
+    return SHADES.filter((s) => s.code >= 6 && s.code <= 10);
   }
   if (category === 'barvene') {
     return SHADES.filter((s) => s.code >= 5 && s.code <= 10);
