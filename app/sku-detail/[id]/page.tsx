@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import ProductReviews from '@/components/ProductReviews';
 
 interface Sku {
   id: string;
   sku: string;
   name: string | null;
-  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
+  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | 'BABY_SHADES' | null;
   shade: string | null;
   shadeName: string | null;
   lengthCm: number | null;
@@ -22,6 +23,9 @@ interface Sku {
   stepG: number | null;
   inStock: boolean;
   soldOut: boolean;
+  imageUrl: string | null;
+  images: string[];
+  shadeHex: string | null;
 }
 
 interface QuoteItem {
@@ -35,9 +39,22 @@ interface QuoteItem {
 }
 
 const ENDING_OPTIONS = [
-  { id: 'NONE', label: 'Bez zakončení', emoji: '-' },
-  { id: 'KERATIN', label: 'Keratin (5 Kč/g)', emoji: '✨' },
+  { id: 'NONE', label: 'Bez zakonceni', emoji: '-' },
+  { id: 'KERATIN', label: 'Keratin (5 Kc/g)', emoji: '✨' },
 ];
+
+function getCategoryBadge(category: Sku['customerCategory']) {
+  switch (category) {
+    case 'PLATINUM_EDITION':
+      return { label: 'Platinum Edition', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' };
+    case 'LUXE':
+      return { label: 'Luxe', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200' };
+    case 'BABY_SHADES':
+      return { label: 'Baby Shades', bg: 'bg-violet-50', text: 'text-violet-800', border: 'border-violet-200' };
+    default:
+      return { label: 'Standard', bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200' };
+  }
+}
 
 export default function SkuDetailPage() {
   const params = useParams();
@@ -47,6 +64,9 @@ export default function SkuDetailPage() {
   const [sku, setSku] = useState<Sku | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Image gallery state
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Configuration state
   const [selectedEnding, setSelectedEnding] = useState('NONE');
@@ -69,6 +89,12 @@ export default function SkuDetailPage() {
       }
       const found: Sku = await res.json();
       setSku(found);
+      // Set initial selected image
+      if (found.imageUrl) {
+        setSelectedImage(found.imageUrl);
+      } else if (found.images && found.images.length > 0) {
+        setSelectedImage(found.images[0]);
+      }
       if (found.lengthCm) {
         setSelectedLength(Math.min(Math.max(found.lengthCm, 40), 80));
       }
@@ -107,7 +133,7 @@ export default function SkuDetailPage() {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || 'Chyba při kalkulaci ceny');
+        throw new Error(err.error || 'Chyba pri kalkulaci ceny');
       }
 
       const data = await res.json();
@@ -121,7 +147,7 @@ export default function SkuDetailPage() {
 
   const handleAddToCart = async () => {
     if (!quote) {
-      alert('Nejdřív klikni "Spočítat cenu"');
+      alert('Nejdriv klikni "Spocitat cenu"');
       return;
     }
 
@@ -167,9 +193,14 @@ export default function SkuDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-burgundy/5 to-white py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <p className="text-center text-gray-600">Načítám...</p>
+      <div className="min-h-screen bg-ivory py-12">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex items-center justify-center py-32">
+            <div className="animate-pulse flex flex-col items-center gap-4">
+              <div className="w-12 h-12 rounded-full border-4 border-burgundy/30 border-t-burgundy animate-spin" />
+              <p className="text-gray-500 font-playfair">Nacitam produkt...</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -177,18 +208,29 @@ export default function SkuDetailPage() {
 
   if (error || !sku) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-burgundy/5 to-white py-12">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-red-800 font-medium">{error || 'SKU nenalezeno'}</p>
-            <Link href="/katalog" className="mt-4 inline-block text-burgundy hover:text-maroon">
-              ← Zpět na katalog
+      <div className="min-h-screen bg-ivory py-12">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto">
+            <p className="text-red-800 font-medium text-lg mb-4">{error || 'SKU nenalezeno'}</p>
+            <Link href="/katalog" className="inline-flex items-center gap-2 text-burgundy hover:text-maroon font-medium transition">
+              <span>&larr;</span> Zpet na katalog
             </Link>
           </div>
         </div>
       </div>
     );
   }
+
+  // Build the image list: main image first, then additional images
+  const allImages: string[] = [];
+  if (sku.imageUrl) allImages.push(sku.imageUrl);
+  if (sku.images && sku.images.length > 0) {
+    sku.images.forEach((img) => {
+      if (img !== sku.imageUrl) allImages.push(img);
+    });
+  }
+  const hasImages = allImages.length > 0;
+  const currentImage = selectedImage || (hasImages ? allImages[0] : null);
 
   const BULK_MIN_LENGTH = 40;
   const BULK_MAX_LENGTH = 80;
@@ -200,136 +242,194 @@ export default function SkuDetailPage() {
     ? Math.min(Math.max(selectedGrams || bulkMinGrams, bulkMinGrams), Math.max(bulkMaxGrams, bulkMinGrams))
     : selectedGrams;
 
+  const badge = getCategoryBadge(sku.customerCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-burgundy/5 to-white py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-screen bg-ivory">
+      <div className="container mx-auto px-4 max-w-6xl py-8">
         {/* Breadcrumb */}
-        <div className="mb-8">
-          <Link href="/katalog" className="text-burgundy hover:text-maroon flex items-center gap-1">
-            ← Zpět na katalog
+        <nav className="mb-8">
+          <Link
+            href="/katalog"
+            className="inline-flex items-center gap-2 text-burgundy hover:text-maroon transition font-medium"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Zpet na katalog
           </Link>
-        </div>
+        </nav>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Left: Product Info */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h1 className="text-3xl font-bold text-burgundy mb-2">{sku.name || 'Bez názvu'}</h1>
-              <p className="text-sm text-gray-500 mb-4">SKU: {sku.sku}</p>
+        {/* Main two-column layout */}
+        <div className="grid lg:grid-cols-2 gap-10">
 
-              {/* Category Badge */}
-              <div className="mb-4">
-                <span
-                  className={`px-4 py-2 rounded-full text-sm font-bold ${
-                    sku.customerCategory === 'PLATINUM_EDITION'
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : sku.customerCategory === 'LUXE'
-                      ? 'bg-pink-100 text-pink-800'
-                      : 'bg-blue-100 text-blue-800'
-                  }`}
-                >
-                  {sku.customerCategory === 'PLATINUM_EDITION'
-                    ? '✨ Platinum Edition'
-                    : sku.customerCategory === 'LUXE'
-                    ? '💎 Luxe'
-                    : '⭐ Standard'}
-                </span>
-              </div>
-
-              {/* Product Details */}
-              <div className="space-y-3 text-gray-700">
-                {sku.shadeName && (
-                  <div className="flex justify-between">
-                    <span className="font-medium">Odstín:</span>
-                    <span>{sku.shadeName}</span>
-                  </div>
-                )}
-                {sku.lengthCm && (
-                  <div className="flex justify-between">
-                    <span className="font-medium">Délka:</span>
-                    <span>{sku.lengthCm} cm</span>
-                  </div>
-                )}
-                {sku.structure && (
-                  <div className="flex justify-between">
-                    <span className="font-medium">Struktura:</span>
-                    <span className="capitalize">{sku.structure}</span>
-                  </div>
-                )}
-                {/* Struktura label - zobrazit také jako badge */}
-                {sku.structure && (
-                  <div className="mt-2 pt-2 border-t border-gray-200">
-                    <span className="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
-                      Struktura: {sku.structure}
-                    </span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="font-medium">Typ prodeje:</span>
-                  <span>{sku.saleMode === 'PIECE_BY_WEIGHT' ? 'Culík' : 'Gramy'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">Cena za 1g:</span>
-                  <span className="text-lg font-bold text-burgundy">{formatPrice(sku.pricePerGramCzk)}</span>
-                </div>
-              </div>
-
-              {/* Stock Info */}
-              {sku.saleMode === 'PIECE_BY_WEIGHT' ? (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800">
-                    <span className="font-bold">Váha kusu:</span> {sku.weightTotalG}g
-                  </p>
-                  <p className="text-xs text-green-700 mt-2">✓ Na skladě - připraveno k odeslání</p>
-                </div>
+          {/* ===== LEFT COLUMN: Image Gallery ===== */}
+          <div className="space-y-4">
+            {/* Main image */}
+            <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-white border border-warm-beige shadow-sm">
+              {currentImage ? (
+                <Image
+                  src={currentImage}
+                  alt={sku.name || 'Produkt'}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
               ) : (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800">
-                    <span className="font-bold">Na skladě:</span> {sku.availableGrams}g
-                  </p>
-                  <p className="text-xs text-green-700 mt-1">
-                    Minimální objednávka: {sku.minOrderG}g, krok: {sku.stepG}g
-                  </p>
-                  <p className="text-xs text-green-700 mt-2">✓ Připraveno k odeslání</p>
+                <div
+                  className="w-full h-full flex flex-col items-center justify-center"
+                  style={{
+                    background: sku.shadeHex
+                      ? `linear-gradient(135deg, ${sku.shadeHex}33, ${sku.shadeHex}66, ${sku.shadeHex}99)`
+                      : 'linear-gradient(135deg, #f5f0eb, #e8ddd4, #d4c5b9)',
+                  }}
+                >
+                  <svg className="w-16 h-16 text-white/60 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-white/50 text-sm font-medium">Foto neni k dispozici</span>
+                </div>
+              )}
+
+              {/* Stock badge overlay */}
+              {sku.inStock && !sku.soldOut && (
+                <div className="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                  Skladem
+                </div>
+              )}
+              {sku.soldOut && (
+                <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                  Vyprodano
                 </div>
               )}
             </div>
+
+            {/* Thumbnails */}
+            {allImages.length > 1 && (
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {allImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImage(img)}
+                    className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                      currentImage === img
+                        ? 'border-burgundy shadow-md ring-2 ring-burgundy/20'
+                        : 'border-warm-beige hover:border-burgundy/50'
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${sku.name || 'Produkt'} - foto ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Right: Configuration & Quote */}
+          {/* ===== RIGHT COLUMN: Product Info + Configuration ===== */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-burgundy mb-6">Konfigurace</h2>
+
+            {/* Product info card */}
+            <div>
+              {/* Category badge */}
+              <div className="mb-3">
+                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}>
+                  {badge.label}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h1 className="font-playfair text-3xl lg:text-4xl font-bold text-burgundy mb-2">
+                {sku.name || 'Bez nazvu'}
+              </h1>
+              <p className="text-sm text-gray-400 mb-6">SKU: {sku.sku}</p>
+
+              {/* Key details */}
+              <div className="bg-white rounded-xl border border-warm-beige p-5 space-y-4">
+                {sku.shadeName && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500 text-sm">Odstin</span>
+                    <span className="flex items-center gap-2 font-medium text-gray-800">
+                      {sku.shadeHex && (
+                        <span
+                          className="inline-block w-5 h-5 rounded-full border border-gray-200 shadow-inner"
+                          style={{ backgroundColor: sku.shadeHex }}
+                        />
+                      )}
+                      {sku.shadeName}
+                    </span>
+                  </div>
+                )}
+                {sku.lengthCm && (
+                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                    <span className="text-gray-500 text-sm">Delka</span>
+                    <span className="font-medium text-gray-800">{sku.lengthCm} cm</span>
+                  </div>
+                )}
+                {sku.structure && (
+                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                    <span className="text-gray-500 text-sm">Struktura</span>
+                    <span className="font-medium text-gray-800 capitalize">{sku.structure}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                  <span className="text-gray-500 text-sm">Cena za gram</span>
+                  <span className="text-lg font-bold text-burgundy">{formatPrice(sku.pricePerGramCzk)}/g</span>
+                </div>
+              </div>
+
+              {/* Stock status */}
+              {sku.inStock && !sku.soldOut && (
+                <div className="mt-4 flex items-center gap-2">
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-500" />
+                  <span className="text-sm text-green-700 font-medium">
+                    {sku.saleMode === 'PIECE_BY_WEIGHT'
+                      ? `Skladem (${sku.weightTotalG}g)`
+                      : `Skladem (${sku.availableGrams}g)`}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Configuration section */}
+            <div className="bg-white rounded-xl border border-warm-beige p-6">
+              <h2 className="font-playfair text-xl font-bold text-burgundy mb-5">Konfigurace</h2>
 
               {/* Ending Selection */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Zakončení vlasů
+                  Zakonceni
                 </label>
-                <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-3">
                   {ENDING_OPTIONS.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => setSelectedEnding(option.id)}
-                      className={`w-full p-3 rounded-lg text-left transition border-2 ${
+                      className={`p-3 rounded-lg text-center transition border-2 ${
                         selectedEnding === option.id
-                          ? 'bg-burgundy text-white border-burgundy'
-                          : 'bg-white text-gray-700 border-gray-200 hover:border-burgundy'
+                          ? 'bg-burgundy text-white border-burgundy shadow-md'
+                          : 'bg-white text-gray-700 border-gray-200 hover:border-burgundy/50'
                       }`}
                     >
-                      <span className="text-lg mr-2">{option.emoji}</span>
-                      <span className="font-medium">{option.label}</span>
+                      <span className="block text-lg mb-0.5">{option.emoji}</span>
+                      <span className="block text-sm font-medium">{option.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Grams Selection (for BULK_G only) */}
+              {/* BULK_G sliders */}
               {sku.saleMode === 'BULK_G' && (
                 <div className="mb-6 space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Délka (cm)</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Delka: <span className="text-burgundy">{bulkLengthValue} cm</span>
+                    </label>
                     <input
                       type="range"
                       min={BULK_MIN_LENGTH}
@@ -339,14 +439,15 @@ export default function SkuDetailPage() {
                       onChange={(e) => setSelectedLength(Number(e.target.value))}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy"
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-2">
+                    <div className="flex justify-between text-xs text-gray-400 mt-1">
                       <span>{BULK_MIN_LENGTH} cm</span>
                       <span>{BULK_MAX_LENGTH} cm</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2 text-right font-medium">Délka: {bulkLengthValue} cm</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Kolik gramů?</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Gramaz: <span className="text-burgundy">{bulkGramsValue} g</span>
+                    </label>
                     <input
                       type="range"
                       min={bulkMinGrams}
@@ -357,12 +458,13 @@ export default function SkuDetailPage() {
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy disabled:opacity-50"
                       disabled={!bulkMaxGrams}
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-2">
+                    <div className="flex justify-between text-xs text-gray-400 mt-1">
                       <span>{bulkMinGrams} g</span>
                       <span>{Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)} g</span>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2 text-right font-medium">Gramáž: {bulkGramsValue} g</p>
-                    <p className="text-xs text-gray-500 mt-1">Rozsah {bulkMinGrams}–{Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)} g · krok {bulkStepGrams} g</p>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Min. objednavka {bulkMinGrams} g, krok {bulkStepGrams} g
+                    </p>
                   </div>
                 </div>
               )}
@@ -374,89 +476,91 @@ export default function SkuDetailPage() {
                   quoteLoading ||
                   (sku.saleMode === 'BULK_G' && (!selectedGrams || selectedGrams < (sku.minOrderG || 0)))
                 }
-                className="w-full bg-burgundy text-white py-3 rounded-lg font-semibold hover:bg-maroon transition disabled:opacity-50 disabled:cursor-not-allowed mb-6"
+                className="w-full bg-burgundy text-white py-3.5 rounded-xl font-semibold hover:bg-maroon transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {quoteLoading ? '⏳ Počítám...' : '💰 Spočítat cenu'}
+                {quoteLoading ? 'Pocitam...' : 'Spocitat cenu'}
               </button>
+            </div>
 
-              {/* Quote Display */}
-              {quote && (
-                <div className="bg-gradient-to-r from-burgundy/10 to-maroon/10 border-2 border-burgundy rounded-lg p-4 space-y-3">
-                  <h3 className="font-bold text-burgundy">Cenový rozpis:</h3>
+            {/* Price Quote */}
+            {quote && (
+              <div className="bg-white rounded-xl border-2 border-burgundy p-6 space-y-4">
+                <h3 className="font-playfair text-lg font-bold text-burgundy">Cenovy rozpis</h3>
 
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Vlasy ({quote.grams}g × {formatPrice(quote.pricePerGram)}):</span>
-                      <span className="font-medium">{formatPrice(quote.lineTotal)}</span>
-                    </div>
-
-                    {quote.assemblyFeeTotal > 0 && (
-                      <div className="flex justify-between text-amber-700">
-                        <span>Zakončení ({quote.assemblyFeeType}):</span>
-                        <span className="font-medium">{formatPrice(quote.assemblyFeeTotal)}</span>
-                      </div>
-                    )}
-
-                    <div className="pt-2 border-t-2 border-burgundy flex justify-between">
-                      <span className="font-bold">Celkem za 1 ks:</span>
-                      <span className="text-2xl font-bold text-burgundy">{formatPrice(quote.lineGrandTotal)}</span>
-                    </div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Vlasy ({quote.grams}g x {formatPrice(quote.pricePerGram)}/g)</span>
+                    <span className="font-medium">{formatPrice(quote.lineTotal)}</span>
                   </div>
 
-                  {/* Quantity Selector */}
-                  <div className="pt-3 border-t border-burgundy/30">
-                    <label className="text-sm font-medium text-gray-700 block mb-2">Počet kusů:</label>
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="px-3 py-1 border border-burgundy rounded text-burgundy hover:bg-burgundy/10"
-                      >
-                        −
-                      </button>
-                      <span className="text-lg font-bold min-w-[3rem] text-center">{quantity}</span>
-                      <button
-                        onClick={() => setQuantity(quantity + 1)}
-                        className="px-3 py-1 border border-burgundy rounded text-burgundy hover:bg-burgundy/10"
-                      >
-                        +
-                      </button>
+                  {quote.assemblyFeeTotal > 0 && (
+                    <div className="flex justify-between items-center text-amber-700">
+                      <span>Zakonceni ({quote.assemblyFeeType})</span>
+                      <span className="font-medium">{formatPrice(quote.assemblyFeeTotal)}</span>
                     </div>
+                  )}
 
+                  <div className="pt-3 border-t-2 border-burgundy/20 flex justify-between items-end">
+                    <span className="font-semibold text-gray-800">Celkem za 1 ks</span>
+                    <span className="text-2xl font-bold text-burgundy">{formatPrice(quote.lineGrandTotal)}</span>
+                  </div>
+                </div>
+
+                {/* Quantity Selector */}
+                <div className="pt-4 border-t border-gray-100">
+                  <label className="text-sm font-medium text-gray-600 block mb-3">Pocet kusu</label>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-10 h-10 flex items-center justify-center border-2 border-burgundy rounded-lg text-burgundy hover:bg-burgundy/5 transition font-bold"
+                    >
+                      -
+                    </button>
+                    <span className="text-xl font-bold min-w-[3rem] text-center">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-10 h-10 flex items-center justify-center border-2 border-burgundy rounded-lg text-burgundy hover:bg-burgundy/5 transition font-bold"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {quantity > 1 && (
                     <div className="mt-3 text-right">
-                      <p className="text-sm text-gray-600">Celkem:</p>
+                      <p className="text-xs text-gray-400">Celkem za {quantity} ks</p>
                       <p className="text-3xl font-bold text-burgundy">
                         {formatPrice(quote.lineGrandTotal * quantity)}
                       </p>
                     </div>
-                  </div>
-
-                  {/* Add to Cart Button */}
-                  <button
-                    onClick={handleAddToCart}
-                    className="w-full mt-4 bg-burgundy text-white py-3 rounded-lg font-semibold hover:bg-maroon transition shadow-lg"
-                  >
-                    🛒 Přidat do košíku ({quantity} ks)
-                  </button>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Info Box */}
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
-              <p className="font-medium mb-2">ℹ️ Jak to funguje:</p>
-              <ol className="list-decimal list-inside space-y-1 text-xs">
-                <li>Vyber typ zakončení (KERATIN nebo bez zakončení)</li>
-                {sku.saleMode === 'BULK_G' && <li>Zadej počet gramů</li>}
-                <li>Klikni "Spočítat cenu" pro přesný cenový rozpis</li>
-                <li>Vyber počet kusů a přidej do košíku</li>
-                <li>Jdi do košíku a dokončи nákup</li>
+                {/* Add to Cart Button */}
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full mt-2 bg-burgundy text-white py-4 rounded-xl font-bold text-lg hover:bg-maroon transition shadow-lg hover:shadow-xl"
+                >
+                  Pridat do kosiku {quantity > 1 ? `(${quantity} ks)` : ''}
+                </button>
+              </div>
+            )}
+
+            {/* How it works */}
+            <div className="bg-burgundy/5 rounded-xl p-5 text-sm text-gray-600">
+              <p className="font-semibold text-burgundy mb-2">Jak to funguje</p>
+              <ol className="list-decimal list-inside space-y-1.5 text-xs leading-relaxed">
+                <li>Vyber typ zakonceni (keratin nebo bez zakonceni)</li>
+                {sku.saleMode === 'BULK_G' && <li>Nastav pozadovanou delku a pocet gramu</li>}
+                <li>Klikni &quot;Spocitat cenu&quot; pro presny cenovy rozpis</li>
+                <li>Vyber pocet kusu a pridej do kosiku</li>
+                <li>Jdi do kosiku a dokonci nakup</li>
               </ol>
             </div>
           </div>
         </div>
 
         {/* Reviews Section */}
-        <div className="max-w-4xl mx-auto mt-12">
+        <div className="max-w-6xl mx-auto mt-16">
           <ProductReviews skuId={skuId} />
         </div>
       </div>

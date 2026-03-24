@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Product, ProductVariant, HAIR_COLORS } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
@@ -68,6 +68,7 @@ function getTierExplanation(tier: string): { title: string; description: string;
 export default function ProductCard({ product, variant }: ProductCardProps) {
   const [showTierModal, setShowTierModal] = useState(false);
   const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToCart } = useCart();
   const { user } = useAuth();
   const displayVariant = variant || product.variants[0];
@@ -168,51 +169,89 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
             />
           </div>
 
-      {/* Product Image */}
-      <div className="aspect-square overflow-hidden relative">
-        {/* Actual image if available */}
-        {product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? (
-          <img
-            src={product.images.main}
-            alt={listingTitle}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // Fallback to gradient if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              const fallback = target.nextElementSibling as HTMLElement;
-              if (fallback) fallback.style.display = 'flex';
-            }}
-          />
-        ) : null}
-        <div
-          className={`w-full h-full flex items-center justify-center relative ${product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? 'hidden absolute inset-0' : ''}`}
-          style={{
-            background: `linear-gradient(135deg, ${shadeColor.hex} 0%, ${shadeColor.hex}dd 50%, ${shadeColor.hex}bb 100%)`
-          }}
-        >
-          {/* Texture overlay */}
-          <div className="absolute inset-0 opacity-20" style={{
-            backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
-          }} />
+      {/* Product Image Gallery */}
+      <div className="aspect-square overflow-hidden relative group">
+        {(() => {
+          // Build all images array: main + gallery
+          const allImages: string[] = [];
+          if (product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/'))) {
+            allImages.push(product.images.main);
+          }
+          if (product.images?.gallery && Array.isArray(product.images.gallery)) {
+            allImages.push(...product.images.gallery.filter((img: string) => img && img.startsWith('http')));
+          }
 
-          {/* Hair icon/text overlay */}
-          <div className="relative z-10 text-center">
-            <div className="text-white/90 text-sm font-medium mb-1">
-              {displayVariant?.structure || 'Vlasy'}
-            </div>
-            {/* Show length only for Platinum Edition */}
-            {isPlatinum && displayVariant?.length_cm && (
-              <div className="text-white/70 text-xs">
-                {displayVariant.length_cm} cm
+          if (allImages.length > 0) {
+            return (
+              <>
+                <img
+                  src={allImages[currentImageIndex] || allImages[0]}
+                  alt={listingTitle}
+                  className="w-full h-full object-cover transition-opacity duration-300"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+                {/* Navigation arrows - show only if multiple images */}
+                {allImages.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length); }}
+                      className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
+                      aria-label="Předchozí foto"
+                    >
+                      <span className="text-xs font-bold text-gray-700">&larr;</span>
+                    </button>
+                    <button
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev + 1) % allImages.length); }}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
+                      aria-label="Další foto"
+                    >
+                      <span className="text-xs font-bold text-gray-700">&rarr;</span>
+                    </button>
+                    {/* Dots indicator */}
+                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                      {allImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex(idx); }}
+                          className={`w-1.5 h-1.5 rounded-full transition ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
+            );
+          }
+
+          // Fallback gradient when no images
+          return (
+            <div
+              className="w-full h-full flex items-center justify-center relative"
+              style={{
+                background: `linear-gradient(135deg, ${shadeColor.hex} 0%, ${shadeColor.hex}dd 50%, ${shadeColor.hex}bb 100%)`
+              }}
+            >
+              <div className="absolute inset-0 opacity-20" style={{
+                backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
+              }} />
+              <div className="relative z-10 text-center">
+                <div className="text-white/90 text-sm font-medium mb-1">
+                  {displayVariant?.structure || 'Vlasy'}
+                </div>
+                {isPlatinum && displayVariant?.length_cm && (
+                  <div className="text-white/70 text-xs">{displayVariant.length_cm} cm</div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
+          );
+        })()}
 
-        {/* Struktura label pod fotkou */}
+        {/* Struktura label */}
         {displayVariant?.structure && (
-          <div className="absolute bottom-2 left-2 right-2 text-center">
+          <div className="absolute bottom-2 left-2 right-2 text-center pointer-events-none" style={{ bottom: (product.images?.gallery?.length || 0) > 0 ? '1.5rem' : '0.5rem' }}>
             <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
               Struktura: {displayVariant.structure}
             </span>

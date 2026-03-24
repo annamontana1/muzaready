@@ -42,6 +42,9 @@ export async function GET(
         stepG: true,
         inStock: true,
         soldOut: true,
+        imageUrl: true,
+        images: true,
+        shadeHex: true,
       },
     });
 
