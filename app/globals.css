@@ -76,7 +76,7 @@
 
   /* Product Card */
   .product-card {
-    @apply relative bg-warm-beige rounded-lg overflow-hidden shadow-light hover:shadow-card-hover transition-all duration-300;
+    @apply relative bg-white rounded-xl overflow-hidden border border-warm-beige/40 shadow-sm hover:shadow-md transition-all duration-300;
   }
 
   /* Tier Badge */

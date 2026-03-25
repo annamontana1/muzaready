@@ -267,7 +267,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
       </div>
 
       {/* Product Info */}
-      <div className="p-4 bg-ivory">
+      <div className="p-4 bg-soft-cream">
         {displayVariant && (
           <div className="space-y-1">
             {/* Řádek 1: Název (použije product.name, který už je správně formátovaný) */}
@@ -319,7 +319,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         </Link>
 
         {/* CTA Buttons - outside Link to avoid hydration issues */}
-        <div className="p-4 bg-ivory pt-0">
+        <div className="p-4 bg-soft-cream pt-0">
           {displayVariant?.in_stock && (
             <Link
               href={`/sku-detail/${product.id}`}
