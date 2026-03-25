@@ -52,7 +52,7 @@ export default function OblibeneePage() {
   );
 
   return (
-    <div className="py-12 bg-ivory min-h-screen">
+    <div className="py-12 bg-soft-cream min-h-screen">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">

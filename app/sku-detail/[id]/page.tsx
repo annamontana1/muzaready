@@ -198,7 +198,7 @@ export default function SkuDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-ivory py-12">
+      <div className="min-h-screen bg-soft-cream py-12">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex items-center justify-center py-32">
             <div className="animate-pulse flex flex-col items-center gap-4">
@@ -213,7 +213,7 @@ export default function SkuDetailPage() {
 
   if (error || !sku) {
     return (
-      <div className="min-h-screen bg-ivory py-12">
+      <div className="min-h-screen bg-soft-cream py-12">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto">
             <p className="text-red-800 font-medium text-lg mb-4">{error || 'SKU nenalezeno'}</p>
@@ -250,7 +250,7 @@ export default function SkuDetailPage() {
   const badge = getCategoryBadge(sku.customerCategory);
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-soft-cream">
       <div className="container mx-auto px-4 max-w-6xl py-8">
         {/* Breadcrumb */}
         <nav className="mb-8">

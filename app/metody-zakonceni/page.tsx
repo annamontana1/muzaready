@@ -25,7 +25,7 @@ export default function MetodyZakonceniPage() {
   ];
 
   return (
-    <div className="py-12 bg-ivory min-h-screen">
+    <div className="py-12 bg-soft-cream min-h-screen">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Breadcrumb */}
         <div className="text-sm text-gray-600 mb-6">
