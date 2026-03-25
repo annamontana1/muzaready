@@ -99,7 +99,7 @@ export default function SkuDetailPage() {
         setSelectedImage(found.images[0]);
       }
       if (found.lengthCm) {
-        setSelectedLength(Math.min(Math.max(found.lengthCm, 40), 80));
+        setSelectedLength(Math.round(Math.min(Math.max(found.lengthCm, 40), 80) / 5) * 5);
       }
       const initialGrams = found.saleMode === 'BULK_G'
         ? found.minOrderG ?? found.availableGrams ?? 0
@@ -434,7 +434,7 @@ export default function SkuDetailPage() {
                       type="range"
                       min={BULK_MIN_LENGTH}
                       max={BULK_MAX_LENGTH}
-                      step={1}
+                      step={5}
                       value={bulkLengthValue}
                       onChange={(e) => setSelectedLength(Number(e.target.value))}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy"
