@@ -284,9 +284,9 @@ export async function POST(request: NextRequest) {
       return newOrder;
     });
 
-    // --- Fakturoid invoice for all payments ---
+    // --- Fakturoid invoice for card/transfer, receipt for cash ---
     let invoiceResult = null;
-    if (isFakturoidConfigured()) {
+    if (paymentMethod !== 'hotovost' && isFakturoidConfigured()) {
       try {
         invoiceResult = await createInvoiceFromOrder({
           orderId: order.id,

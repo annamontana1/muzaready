@@ -228,7 +228,13 @@ export default function PosNewSalePage() {
         `Prodej vytvořen! Celkem: ${formatPrice(data.order.total)}`,
         'success'
       );
-      router.push('/admin/objednavky');
+
+      // For cash payments, redirect to receipt; otherwise to orders
+      if (paymentMethod === 'hotovost') {
+        router.push(`/admin/prodeje/doklad?id=${data.order.id}`);
+      } else {
+        router.push('/admin/objednavky');
+      }
     } catch (err: any) {
       showToast('Chyba: ' + (err.message || 'Neznámá chyba'), 'error');
     } finally {
