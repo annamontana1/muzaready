@@ -13,11 +13,12 @@ const navigation = {
   main: [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒' },
+    { href: '/admin/prodeje/novy', label: 'Nový prodej', icon: '💳' },
     { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
     { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
   ],
   eshop: [
-    { href: '/admin/uzivatele', label: 'Zákazníci', icon: '👥' },
+    { href: '/admin/zakaznici', label: 'Zákazníci', icon: '👥' },
     { href: '/admin/reviews', label: 'Recenze', icon: '⭐' },
     { href: '/admin/coupons', label: 'Kupóny', icon: '🎟️' },
     { href: '/admin/velkoobchod-zadosti', label: 'Velkoobchod', icon: '🏢' },
