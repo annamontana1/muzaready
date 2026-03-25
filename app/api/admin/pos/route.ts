@@ -284,9 +284,9 @@ export async function POST(request: NextRequest) {
       return newOrder;
     });
 
-    // --- Fakturoid invoice for non-cash payments ---
+    // --- Fakturoid invoice for all payments ---
     let invoiceResult = null;
-    if (paymentMethod !== 'hotovost' && isFakturoidConfigured()) {
+    if (isFakturoidConfigured()) {
       try {
         invoiceResult = await createInvoiceFromOrder({
           orderId: order.id,
@@ -304,7 +304,7 @@ export async function POST(request: NextRequest) {
             unit: item.saleMode === 'BULK_G' ? 'g' : 'ks',
           })),
           paymentMethod: paymentMethodMap[paymentMethod] || 'cash',
-          isPaid: paymentMethod === 'karta',
+          isPaid: paymentMethod !== 'prevod',
         });
       } catch (invoiceError) {
         console.error('Fakturoid invoice error (non-blocking):', invoiceError);
