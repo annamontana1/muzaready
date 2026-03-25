@@ -15,6 +15,7 @@ const navigation = {
     { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒' },
     { href: '/admin/prodeje/novy', label: 'Nový prodej', icon: '💳' },
     { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
+    { href: '/admin/reporty', label: 'Reporty', icon: '📊' },
     { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
   ],
   eshop: [
