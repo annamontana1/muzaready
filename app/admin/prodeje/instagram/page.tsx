@@ -115,6 +115,7 @@ export default function InstagramSalePage() {
     ending: 'bez_zakonceni',
   });
   const [discount, setDiscount] = useState(0); // sleva v Kč
+  const [discountPercent, setDiscountPercent] = useState(0); // sleva v %
   const [priceLoading, setPriceLoading] = useState(false);
   const [currentPricePerGram, setCurrentPricePerGram] = useState<number | null>(null);
   const [priceError, setPriceError] = useState<string | null>(null);
@@ -196,7 +197,10 @@ export default function InstagramSalePage() {
   const currentBasePrice = currentPricePerGram
     ? Math.round(currentPricePerGram * currentItem.grams)
     : 0;
-  const currentLineTotal = Math.max(0, currentBasePrice + currentEndingSurcharge - discount);
+  const subtotalBeforeDiscount = currentBasePrice + currentEndingSurcharge;
+  const percentDiscountAmount = Math.round(subtotalBeforeDiscount * discountPercent / 100);
+  const totalDiscount = discount + percentDiscountAmount;
+  const currentLineTotal = Math.max(0, subtotalBeforeDiscount - totalDiscount);
 
   // ─── Add item to list ────────────────────────────────────────
 
@@ -215,12 +219,13 @@ export default function InstagramSalePage() {
       ...currentItem,
       pricePerGram: currentPricePerGram,
       endingSurcharge: currentEndingSurcharge,
-      discount: discount,
+      discount: totalDiscount,
       lineTotal: currentLineTotal,
     };
 
     setItems((prev) => [...prev, newItem]);
     setDiscount(0);
+    setDiscountPercent(0);
     showToast('Položka přidána', 'success');
   }
 
@@ -506,7 +511,7 @@ export default function InstagramSalePage() {
                 </select>
               </div>
 
-              {/* Discount */}
+              {/* Discount Kč */}
               <div>
                 <label className={labelClass}>Sleva (Kč)</label>
                 <input
@@ -515,6 +520,21 @@ export default function InstagramSalePage() {
                   step={1}
                   value={discount}
                   onChange={(e) => setDiscount(Math.max(0, parseInt(e.target.value) || 0))}
+                  className={inputClass}
+                  placeholder="0"
+                />
+              </div>
+
+              {/* Discount % */}
+              <div>
+                <label className={labelClass}>Sleva (%)</label>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={discountPercent}
+                  onChange={(e) => setDiscountPercent(Math.min(100, Math.max(0, parseInt(e.target.value) || 0)))}
                   className={inputClass}
                   placeholder="0"
                 />
@@ -549,10 +569,10 @@ export default function InstagramSalePage() {
                       <span className="font-medium">{formatPrice(currentEndingSurcharge)}</span>
                     </div>
                   )}
-                  {discount > 0 && (
+                  {totalDiscount > 0 && (
                     <div className="flex justify-between text-sm text-green-700">
-                      <span>Sleva:</span>
-                      <span className="font-medium">-{formatPrice(discount)}</span>
+                      <span>Sleva:{discountPercent > 0 ? ` ${discountPercent}%` : ''}{discount > 0 && discountPercent > 0 ? ' +' : ''}{discount > 0 ? ` ${formatPrice(discount)}` : ''}</span>
+                      <span className="font-medium">-{formatPrice(totalDiscount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-base font-bold border-t border-stone-300 pt-2 mt-2">
