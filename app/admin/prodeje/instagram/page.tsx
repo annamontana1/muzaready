@@ -9,6 +9,7 @@ import { useToast } from '@/components/ui/ToastProvider';
 interface ConfiguredItem {
   id: string; // client-side ID for key
   category: string;
+  dyeType: string;
   structure: string;
   shade: number;
   lengthCm: number;
@@ -16,6 +17,7 @@ interface ConfiguredItem {
   ending: string;
   pricePerGram: number;
   endingSurcharge: number;
+  discount: number;
   lineTotal: number;
 }
 
@@ -47,8 +49,14 @@ const CATEGORIES = [
 
 const STRUCTURES = [
   { value: 'rovné', label: 'Rovné' },
+  { value: 'mírně vlnité', label: 'Mírně vlnité' },
   { value: 'vlnité', label: 'Vlnité' },
   { value: 'kudrnaté', label: 'Kudrnaté' },
+];
+
+const DYE_TYPES = [
+  { value: 'nebarvene', label: 'Nebarvené' },
+  { value: 'barvene', label: 'Barvené' },
 ];
 
 const SHADES = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -56,6 +64,7 @@ const SHADES = Array.from({ length: 10 }, (_, i) => i + 1);
 const LENGTHS = [40, 45, 50, 55, 60, 65, 70, 75, 80];
 
 const ENDINGS = [
+  { value: 'bez_zakonceni', label: 'Bez zakončení', surchargePerGram: 0 },
   { value: 'keratin', label: 'Keratin', surchargePerGram: 10 },
   { value: 'mikrokeratin', label: 'Mikrokeratin', surchargePerGram: 10 },
   { value: 'pásky keratinu', label: 'Pásky keratinu', surchargePerGram: 50 },
@@ -98,12 +107,14 @@ export default function InstagramSalePage() {
   const [items, setItems] = useState<ConfiguredItem[]>([]);
   const [currentItem, setCurrentItem] = useState({
     category: 'STANDARD',
+    dyeType: 'nebarvene',
     structure: 'rovné',
     shade: 1,
     lengthCm: 50,
     grams: 100,
-    ending: 'keratin',
+    ending: 'bez_zakonceni',
   });
+  const [discount, setDiscount] = useState(0); // sleva v Kč
   const [priceLoading, setPriceLoading] = useState(false);
   const [currentPricePerGram, setCurrentPricePerGram] = useState<number | null>(null);
   const [priceError, setPriceError] = useState<string | null>(null);
@@ -129,7 +140,7 @@ export default function InstagramSalePage() {
 
   // ─── Price matrix lookup ─────────────────────────────────────
 
-  const fetchPrice = useCallback(async (category: string, lengthCm: number) => {
+  const fetchPrice = useCallback(async (tierCategory: string, dyeType: string, lengthCm: number) => {
     setPriceLoading(true);
     setPriceError(null);
     try {
@@ -139,8 +150,9 @@ export default function InstagramSalePage() {
         PLATINUM_EDITION: 'platinum',
         BABY_SHADES: 'baby_shades',
       };
-      const tier = tierMap[category] || category.toLowerCase();
-      const res = await fetch(`/api/price-matrix?category=${category}&tier=${tier}`);
+      const tier = tierMap[tierCategory] || tierCategory.toLowerCase();
+      // In DB: category = nebarvene/barvene, tier = standard/luxe/platinum
+      const res = await fetch(`/api/price-matrix?category=${dyeType}&tier=${tier}`);
       if (!res.ok) {
         setPriceError('Nepodařilo se načíst cenu z matice');
         setCurrentPricePerGram(null);
@@ -151,7 +163,7 @@ export default function InstagramSalePage() {
       if (entry) {
         setCurrentPricePerGram(entry.pricePerGramCzk);
       } else {
-        setPriceError(`Cena pro ${category} ${lengthCm}cm nebyla nalezena v matici`);
+        setPriceError(`Cena pro ${tierCategory} ${dyeType} ${lengthCm}cm nebyla nalezena v matici`);
         setCurrentPricePerGram(null);
       }
     } catch {
@@ -162,21 +174,18 @@ export default function InstagramSalePage() {
     }
   }, []);
 
-  // Fetch price when category or length changes
+  // Fetch price when category, dyeType or length changes
   const handleConfigChange = (field: string, value: string | number) => {
     const updated = { ...currentItem, [field]: value };
     setCurrentItem(updated);
-    if (field === 'category' || field === 'lengthCm') {
-      fetchPrice(
-        field === 'category' ? (value as string) : updated.category,
-        field === 'lengthCm' ? (value as number) : updated.lengthCm
-      );
+    if (field === 'category' || field === 'dyeType' || field === 'lengthCm') {
+      fetchPrice(updated.category, updated.dyeType, updated.lengthCm);
     }
   };
 
   // Initial price fetch
   useState(() => {
-    fetchPrice(currentItem.category, currentItem.lengthCm);
+    fetchPrice(currentItem.category, currentItem.dyeType, currentItem.lengthCm);
   });
 
   // ─── Calculate current item price ────────────────────────────
@@ -187,7 +196,7 @@ export default function InstagramSalePage() {
   const currentBasePrice = currentPricePerGram
     ? Math.round(currentPricePerGram * currentItem.grams)
     : 0;
-  const currentLineTotal = currentBasePrice + currentEndingSurcharge;
+  const currentLineTotal = Math.max(0, currentBasePrice + currentEndingSurcharge - discount);
 
   // ─── Add item to list ────────────────────────────────────────
 
@@ -206,10 +215,12 @@ export default function InstagramSalePage() {
       ...currentItem,
       pricePerGram: currentPricePerGram,
       endingSurcharge: currentEndingSurcharge,
+      discount: discount,
       lineTotal: currentLineTotal,
     };
 
     setItems((prev) => [...prev, newItem]);
+    setDiscount(0);
     showToast('Položka přidána', 'success');
   }
 
@@ -399,6 +410,22 @@ export default function InstagramSalePage() {
                 </select>
               </div>
 
+              {/* Dye type */}
+              <div>
+                <label className={labelClass}>Typ</label>
+                <select
+                  value={currentItem.dyeType}
+                  onChange={(e) => handleConfigChange('dyeType', e.target.value)}
+                  className={selectClass}
+                >
+                  {DYE_TYPES.map((dt) => (
+                    <option key={dt.value} value={dt.value}>
+                      {dt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Structure */}
               <div>
                 <label className={labelClass}>Struktura</label>
@@ -452,9 +479,9 @@ export default function InstagramSalePage() {
                 <label className={labelClass}>Gramáž (g)</label>
                 <input
                   type="number"
-                  min={10}
-                  max={1000}
-                  step={10}
+                  min={1}
+                  max={5000}
+                  step={1}
                   value={currentItem.grams}
                   onChange={(e) =>
                     handleConfigChange('grams', Math.max(1, parseInt(e.target.value) || 0))
@@ -473,10 +500,24 @@ export default function InstagramSalePage() {
                 >
                   {ENDINGS.map((ending) => (
                     <option key={ending.value} value={ending.value}>
-                      {ending.label} ({ending.surchargePerGram * 100} Kč/100g)
+                      {ending.label}{ending.surchargePerGram > 0 ? ` (${ending.surchargePerGram * 100} Kč/100g)` : ''}
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Discount */}
+              <div>
+                <label className={labelClass}>Sleva (Kč)</label>
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={discount}
+                  onChange={(e) => setDiscount(Math.max(0, parseInt(e.target.value) || 0))}
+                  className={inputClass}
+                  placeholder="0"
+                />
               </div>
             </div>
 
@@ -500,12 +541,20 @@ export default function InstagramSalePage() {
                     </span>
                     <span className="font-medium">{formatPrice(currentBasePrice)}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-stone-600">
-                      Zakončení ({currentItem.ending}, {endingSurchargePerGram} Kč/g × {currentItem.grams}g):
-                    </span>
-                    <span className="font-medium">{formatPrice(currentEndingSurcharge)}</span>
-                  </div>
+                  {currentItem.ending !== 'bez_zakonceni' && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-stone-600">
+                        Zakončení ({currentItem.ending}, {endingSurchargePerGram} Kč/g × {currentItem.grams}g):
+                      </span>
+                      <span className="font-medium">{formatPrice(currentEndingSurcharge)}</span>
+                    </div>
+                  )}
+                  {discount > 0 && (
+                    <div className="flex justify-between text-sm text-green-700">
+                      <span>Sleva:</span>
+                      <span className="font-medium">-{formatPrice(discount)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-base font-bold border-t border-stone-300 pt-2 mt-2">
                     <span>Celkem za položku:</span>
                     <span className="text-[#722F37]">{formatPrice(currentLineTotal)}</span>
@@ -542,7 +591,8 @@ export default function InstagramSalePage() {
                           {catLabel} {item.structure} #{item.shade} — {item.lengthCm}cm
                         </p>
                         <p className="text-sm text-stone-500">
-                          {item.grams}g · {item.ending} · {item.pricePerGram} Kč/g
+                          {item.grams}g · {item.dyeType === 'barvene' ? 'barvené' : 'nebarvené'} · {item.ending !== 'bez_zakonceni' ? item.ending : 'bez zakončení'} · {item.pricePerGram} Kč/g
+                          {item.discount > 0 && <span className="text-green-700"> · sleva -{formatPrice(item.discount)}</span>}
                         </p>
                       </div>
                       <div className="text-right shrink-0">
