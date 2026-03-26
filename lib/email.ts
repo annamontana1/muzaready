@@ -111,7 +111,7 @@ export const sendOrderConfirmationEmail = async (
     }
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
       to: email,
       subject: `Potvrzení objednávky #${orderId.substring(0, 8)}`,
       html,
@@ -180,7 +180,7 @@ export const sendPaymentConfirmationEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
       to: email,
       subject: `Potvrzení platby #${orderId.substring(0, 8)}`,
       html,
@@ -250,7 +250,7 @@ export const sendShippingNotificationEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
       to: email,
       subject: `Balíček je na cestě #${orderId.substring(0, 8)}`,
       html,
@@ -350,8 +350,8 @@ export const sendAdminOrderNotificationEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
-      to: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
+      to: 'objednavky@mail.muzahair.cz',
       subject: `[ADMIN] Nová objednávka #${orderId.substring(0, 8)}`,
       html,
     });
@@ -417,7 +417,7 @@ export const sendDeliveryConfirmationEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
       to: email,
       subject: `Balíček doručen #${orderId.substring(0, 8)}`,
       html,
@@ -486,7 +486,7 @@ export const sendOrderCancellationEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
       to: email,
       subject: `Objednávka zrušena #${orderId.substring(0, 8)}`,
       html,
@@ -559,7 +559,7 @@ export const sendPaymentReminderEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@muzahair.cz',
+      from: 'objednavky@mail.muzahair.cz',
       to: email,
       subject: `Připomínka platby #${orderId.substring(0, 8)}`,
       html,
@@ -653,7 +653,7 @@ export const sendInvoiceEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'faktury@muzahair.cz',
+      from: 'faktury@mail.muzahair.cz',
       to: email,
       subject: `Faktura ${invoiceNumber} - Mùza Hair`,
       html,
@@ -772,7 +772,7 @@ export const sendLowStockAlert = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'Múza Hair <noreply@muzahair.cz>',
+      from: 'Múza Hair <noreply@mail.muzahair.cz>',
       to: [adminEmail],
       subject: `⚠️ UPOZORNĚNÍ: ${lowStockItems.length} produktů s nízkými zásobami`,
       html,
