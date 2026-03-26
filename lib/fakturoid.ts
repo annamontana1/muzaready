@@ -30,6 +30,7 @@ async function getAccessToken(): Promise<string> {
     headers: {
       'Authorization': `Basic ${credentials}`,
       'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
       'User-Agent': USER_AGENT,
     },
     body: 'grant_type=client_credentials',
@@ -61,6 +62,7 @@ async function fakturoidFetch(path: string, options: RequestInit = {}): Promise<
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
       'User-Agent': USER_AGENT,
       ...options.headers,
     },
