@@ -159,6 +159,7 @@ export interface FakturoidInvoice {
   currency?: string;
   lines: FakturoidInvoiceLine[];
   due?: number; // days until due
+  proforma?: boolean; // create as proforma invoice
 }
 
 /**
@@ -166,9 +167,15 @@ export interface FakturoidInvoice {
  */
 export async function createInvoice(invoice: FakturoidInvoice): Promise<any> {
   try {
+    const { proforma, ...invoiceData } = invoice;
+    const endpoint = proforma ? '/invoices.json' : '/invoices.json';
+    // Fakturoid v3: use document_type to distinguish
+    const body = proforma
+      ? { ...invoiceData, document_type: 'proforma' }
+      : invoiceData;
     return await fakturoidFetch('/invoices.json', {
       method: 'POST',
-      body: JSON.stringify(invoice),
+      body: JSON.stringify(body),
     });
   } catch (error) {
     console.error('Fakturoid create invoice error:', error);
@@ -228,6 +235,7 @@ export interface OrderForInvoice {
   shippingName?: string;
   paymentMethod?: string;
   isPaid?: boolean;
+  proforma?: boolean; // create proforma (zálohová faktura) instead of regular invoice
 }
 
 /**
@@ -264,13 +272,13 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       return { success: false, error: 'Nepodařilo se vytvořit kontakt ve Fakturoid' };
     }
 
-    // 2. Build invoice lines
+    // 2. Build invoice lines (neplátce DPH = 0%)
     const lines: FakturoidInvoiceLine[] = order.items.map((item) => ({
       name: item.name,
       quantity: item.quantity,
       unit_name: item.unit || 'ks',
       unit_price: item.unitPrice,
-      vat_rate: 21, // 21% DPH
+      vat_rate: 0,
     }));
 
     // Add shipping if present
@@ -280,11 +288,11 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
         quantity: 1,
         unit_name: 'ks',
         unit_price: order.shippingPrice,
-        vat_rate: 21,
+        vat_rate: 0,
       });
     }
 
-    // 3. Create invoice
+    // 3. Create invoice (proforma or regular)
     const invoice = await createInvoice({
       subject_id: subjectId,
       order_number: order.orderId,
@@ -292,6 +300,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       currency: 'CZK',
       due: 14,
       lines,
+      proforma: order.proforma || false,
     });
 
     if (!invoice?.id) {

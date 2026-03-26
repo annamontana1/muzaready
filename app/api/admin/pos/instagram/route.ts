@@ -10,13 +10,15 @@ export const dynamic = 'force-dynamic';
 
 interface InstagramItem {
   category: string;       // STANDARD, LUXE, PLATINUM_EDITION, BABY_SHADES
+  dyeType: string;        // nebarvene, barvene
   structure: string;      // rovné, vlnité, kudrnaté
   shade: number;          // 1-10
   lengthCm: number;       // 40-80, step 5
   grams: number;          // weight in grams
-  ending: string;         // keratin, mikrokeratin, pásky keratinu, weft, tapes
+  ending: string;         // bez_zakonceni, keratin, mikrokeratin, pásky keratinu, weft, tapes
   pricePerGram: number;   // from price matrix
   endingSurcharge: number; // calculated surcharge
+  discount: number;       // discount in CZK
   lineTotal: number;      // total for this item
 }
 
@@ -41,6 +43,7 @@ interface InstagramBody {
 // ─── Ending surcharge rates (per gram) ──────────────────────────
 
 const ENDING_SURCHARGE_PER_GRAM: Record<string, number> = {
+  bez_zakonceni: 0,
   keratin: 10,          // 1000 Kč / 100g
   mikrokeratin: 10,     // 1000 Kč / 100g
   'pásky keratinu': 50, // 5000 Kč / 100g
@@ -114,10 +117,12 @@ export async function POST(request: NextRequest) {
       }
 
       // Look up price from matrix
+      // DB schema: category = nebarvene/barvene, tier = standard/luxe/platinum
       const tier = CATEGORY_TIER_MAP[item.category] || item.category.toLowerCase();
+      const dyeType = item.dyeType || 'nebarvene';
       const matrixEntry = await prisma.priceMatrix.findFirst({
         where: {
-          category: item.category,
+          category: dyeType,
           tier,
           lengthCm: item.lengthCm,
         },
@@ -132,9 +137,10 @@ export async function POST(request: NextRequest) {
       const endingSurchargePerGram = ENDING_SURCHARGE_PER_GRAM[item.ending.toLowerCase()] || 0;
       const endingSurcharge = Math.round(endingSurchargePerGram * item.grams);
 
-      // Calculate line total
+      // Calculate line total (with discount)
       const basePrice = Math.round(pricePerGram * item.grams);
-      const lineTotal = basePrice + endingSurcharge;
+      const itemDiscount = item.discount || 0;
+      const lineTotal = Math.max(0, basePrice + endingSurcharge - itemDiscount);
 
       // Build description
       const categoryLabels: Record<string, string> = {
@@ -143,7 +149,9 @@ export async function POST(request: NextRequest) {
         PLATINUM_EDITION: 'Platinum Edition',
         BABY_SHADES: 'Baby Shades',
       };
-      const description = `${categoryLabels[item.category] || item.category} ${item.structure} #${item.shade} ${item.lengthCm}cm ${item.grams}g — ${item.ending}`;
+      const dyeLabel = dyeType === 'barvene' ? 'barvené' : 'nebarvené';
+      const endingLabel = item.ending === 'bez_zakonceni' ? 'bez zakončení' : item.ending;
+      const description = `${categoryLabels[item.category] || item.category} ${dyeLabel} ${item.structure} #${item.shade} ${item.lengthCm}cm ${item.grams}g — ${endingLabel}`;
 
       subtotal += lineTotal;
 
@@ -255,6 +263,7 @@ export async function POST(request: NextRequest) {
           shippingName: shippingLabel,
           paymentMethod: 'bank_transfer',
           isPaid: false,
+          proforma: true, // Instagram = proforma faktura (záloha)
         });
       } catch (invoiceError) {
         console.error('Fakturoid invoice error (non-blocking):', invoiceError);
