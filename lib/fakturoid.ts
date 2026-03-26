@@ -314,8 +314,48 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       await markInvoicePaid(invoice.id);
     }
 
-    // 5. Send invoice email to customer
-    await sendInvoiceByEmail(invoice.id);
+    // 5. Send invoice email via Resend (Fakturoid deliver endpoint unreliable)
+    try {
+      const { Resend } = await import('resend');
+      const resendKey = process.env.RESEND_API_KEY;
+      if (resendKey && order.customerEmail) {
+        const resend = new Resend(resendKey);
+        const invoiceUrl = `https://app.fakturoid.cz/${FAKTUROID_SLUG}/p/${invoice.token}/${invoice.number}`;
+        const isProforma = order.proforma;
+        await resend.emails.send({
+          from: 'Mùza Hair <faktury@mail.muzahair.cz>',
+          to: order.customerEmail,
+          subject: `${isProforma ? 'Proforma faktura' : 'Faktura'} ${invoice.number} — Mùza Hair`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <div style="background: #722F37; color: white; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0; font-size: 22px;">💎 Mùza Hair</h1>
+                <p style="margin: 8px 0 0; opacity: 0.9;">${isProforma ? 'Proforma faktura' : 'Faktura'} za vaši objednávku</p>
+              </div>
+              <div style="background: #fff; padding: 24px; border: 1px solid #e5e5e5; border-top: none;">
+                <p>Dobrý den,</p>
+                <p>${isProforma ? 'vystavili jsme pro vás proforma fakturu' : 'vystavili jsme pro vás fakturu'} <strong>${invoice.number}</strong>.</p>
+                <div style="background: #f9f5f3; padding: 16px; border-radius: 8px; margin: 16px 0; text-align: center;">
+                  <p style="margin: 0 0 12px; font-size: 14px; color: #666;">Celková částka k úhradě:</p>
+                  <p style="margin: 0; font-size: 28px; font-weight: bold; color: #722F37;">${order.items.reduce((s: number, i: any) => s + i.unitPrice * i.quantity, 0).toLocaleString('cs-CZ')} Kč</p>
+                </div>
+                <p style="text-align: center;">
+                  <a href="${invoiceUrl}" style="display: inline-block; padding: 14px 32px; background: #722F37; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                    📄 Zobrazit ${isProforma ? 'proformu' : 'fakturu'}
+                  </a>
+                </p>
+                ${isProforma ? '<p style="color: #666; font-size: 13px;">Po zaplacení vám vystavíme daňový doklad.</p>' : ''}
+                <p>Děkujeme za váš nákup!</p>
+                <p style="color: #999; font-size: 12px; margin-top: 24px; border-top: 1px solid #eee; padding-top: 12px;">Mùza Hair · Praha · www.muzahair.cz</p>
+              </div>
+            </div>
+          `,
+        });
+        console.log('Invoice email sent via Resend to', order.customerEmail);
+      }
+    } catch (emailError) {
+      console.error('Resend invoice email error (non-blocking):', emailError);
+    }
 
     return {
       success: true,
