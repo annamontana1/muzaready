@@ -315,14 +315,16 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
     }
 
     // 5. Send invoice email via Resend (Fakturoid deliver endpoint unreliable)
+    console.log('Fakturoid invoice created:', JSON.stringify({ id: invoice.id, number: invoice.number, token: invoice.token, public_html_url: invoice.public_html_url }));
     try {
       const { Resend } = await import('resend');
       const resendKey = process.env.RESEND_API_KEY;
+      console.log('Resend key available:', !!resendKey, 'Customer email:', order.customerEmail);
       if (resendKey && order.customerEmail) {
         const resend = new Resend(resendKey);
-        const invoiceUrl = `https://app.fakturoid.cz/${FAKTUROID_SLUG}/p/${invoice.token}/${invoice.number}`;
+        const invoiceUrl = invoice.public_html_url || `https://app.fakturoid.cz/${FAKTUROID_SLUG}/p/${invoice.token || 'x'}/${invoice.number}`;
         const isProforma = order.proforma;
-        await resend.emails.send({
+        const resendResult = await resend.emails.send({
           from: 'Mùza Hair <faktury@mail.muzahair.cz>',
           to: order.customerEmail,
           subject: `${isProforma ? 'Proforma faktura' : 'Faktura'} ${invoice.number} — Mùza Hair`,
@@ -351,7 +353,9 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
             </div>
           `,
         });
-        console.log('Invoice email sent via Resend to', order.customerEmail);
+        console.log('Invoice email sent via Resend to', order.customerEmail, 'result:', JSON.stringify(resendResult));
+      } else {
+        console.warn('Resend skipped: key=', !!resendKey, 'email=', order.customerEmail);
       }
     } catch (emailError) {
       console.error('Resend invoice email error (non-blocking):', emailError);
