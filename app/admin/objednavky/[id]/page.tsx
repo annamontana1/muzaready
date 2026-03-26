@@ -75,7 +75,174 @@ interface Order {
   items: OrderItem[];
 }
 
-type TabType = 'customer' | 'items' | 'payment' | 'shipments' | 'metadata' | 'history';
+type TabType = 'customer' | 'items' | 'payment' | 'invoice' | 'shipments' | 'metadata' | 'history';
+
+function InvoiceSection({ order }: { order: Order }) {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ success?: boolean; message?: string; error?: string } | null>(null);
+
+  const isInstagram = order.channel === 'instagram';
+  const isStore = order.channel === 'store';
+  const paymentLabel = order.paymentMethod === 'bank_transfer' ? 'Převod' : order.paymentMethod === 'cash' ? 'Hotovost' : order.paymentMethod || '—';
+
+  async function generateInvoice() {
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}/resend-invoice`, { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResult({ success: true, message: data.message });
+      } else {
+        setResult({ error: data.error || 'Nepodařilo se vytvořit fakturu' });
+      }
+    } catch (err: any) {
+      setResult({ error: err.message || 'Chyba' });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const formatPrice = (v: number) => new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', minimumFractionDigits: 0 }).format(v);
+
+  return (
+    <div className="space-y-6">
+      {/* Invoice preview card */}
+      <div className="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+        {/* Header */}
+        <div className="bg-stone-50 px-6 py-4 border-b border-stone-200 flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-semibold text-stone-800">
+              {isInstagram ? '📄 Proforma faktura' : '📄 Faktura'}
+            </h3>
+            <p className="text-sm text-stone-500">
+              {isInstagram ? 'Zálohová faktura — převod na účet' : isStore ? 'Pokladní doklad' : 'Faktura'}
+            </p>
+          </div>
+          <div className="flex gap-3">
+            {isStore && order.paymentMethod === 'cash' && (
+              <a
+                href={`/admin/prodeje/doklad?id=${order.id}`}
+                target="_blank"
+                className="px-4 py-2 bg-stone-600 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition"
+              >
+                🖨️ Pokladní doklad
+              </a>
+            )}
+            <button
+              onClick={generateInvoice}
+              disabled={loading}
+              className="px-4 py-2 bg-[#722F37] text-white rounded-lg text-sm font-medium hover:bg-[#5a252c] transition disabled:opacity-50"
+            >
+              {loading ? '⏳ Generuji...' : '📨 Vygenerovat a odeslat fakturu'}
+            </button>
+          </div>
+        </div>
+
+        {/* Result message */}
+        {result && (
+          <div className={`px-6 py-3 text-sm ${result.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+            {result.success ? '✅ ' : '❌ '}{result.message || result.error}
+          </div>
+        )}
+
+        {/* Invoice preview */}
+        <div className="p-6">
+          <div className="max-w-lg mx-auto border border-stone-200 rounded-lg p-6 bg-white">
+            {/* Company header */}
+            <div className="text-center mb-4 pb-3 border-b border-dashed border-stone-300">
+              <h4 className="text-xl font-bold text-stone-900">MÙZA HAIR</h4>
+              <p className="text-xs text-stone-500">Panenské vlasy & prodloužení</p>
+              <p className="text-xs text-stone-500">muzahaircz@gmail.com</p>
+            </div>
+
+            {/* Doc type */}
+            <div className="text-center mb-4">
+              <p className="font-bold text-sm uppercase tracking-wider text-stone-700">
+                {isInstagram ? 'Proforma faktura' : isStore && order.paymentMethod === 'cash' ? 'Zjednodušený daňový doklad' : 'Faktura'}
+              </p>
+              <p className="text-xs text-stone-500">Obj. č.: {order.id.substring(0, 12)}</p>
+            </div>
+
+            {/* Customer */}
+            <div className="text-sm mb-4 pb-3 border-b border-stone-200">
+              <div className="flex justify-between">
+                <div>
+                  <p className="font-medium text-stone-700">Odběratel:</p>
+                  <p>{order.firstName} {order.lastName}</p>
+                  {order.email && <p className="text-stone-500">{order.email}</p>}
+                  {order.phone && <p className="text-stone-500">{order.phone}</p>}
+                </div>
+                <div className="text-right">
+                  <p><span className="text-stone-500">Datum:</span> {new Date(order.createdAt).toLocaleDateString('cs-CZ')}</p>
+                  <p><span className="text-stone-500">Platba:</span> {paymentLabel}</p>
+                  <p><span className="text-stone-500">Kanál:</span> {order.channel}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Items */}
+            <table className="w-full text-sm mb-4">
+              <thead>
+                <tr className="border-b border-stone-300">
+                  <th className="text-left py-1 text-stone-600 font-medium">Položka</th>
+                  <th className="text-right py-1 text-stone-600 font-medium">Celkem</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order.items.length > 0 ? order.items.map((item) => (
+                  <tr key={item.id} className="border-b border-stone-100">
+                    <td className="py-1.5">
+                      <p className="text-stone-800">{item.nameSnapshot || item.sku?.name || 'Položka'}</p>
+                      <p className="text-xs text-stone-500">
+                        {item.saleMode === 'BULK_G' ? `${item.grams}g × ${item.pricePerGram} Kč/g` : '1 ks'}
+                        {item.ending && item.ending !== 'NONE' && ` + ${item.ending}`}
+                      </p>
+                    </td>
+                    <td className="text-right py-1.5 font-medium text-stone-800">{formatPrice(item.lineTotal)}</td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td className="py-2 text-stone-500 italic" colSpan={2}>
+                      Položky viz interní poznámka
+                    </td>
+                  </tr>
+                )}
+                {order.shippingCost > 0 && (
+                  <tr className="border-b border-stone-100">
+                    <td className="py-1.5 text-stone-800">Doprava</td>
+                    <td className="text-right py-1.5 font-medium text-stone-800">{formatPrice(order.shippingCost)}</td>
+                  </tr>
+                )}
+                {order.discountAmount > 0 && (
+                  <tr className="border-b border-stone-100">
+                    <td className="py-1.5 text-green-700">Sleva</td>
+                    <td className="text-right py-1.5 font-medium text-green-700">-{formatPrice(order.discountAmount)}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+
+            {/* Total */}
+            <div className="border-t-2 border-dashed border-stone-300 pt-3 flex justify-between items-center">
+              <span className="text-lg font-bold text-stone-900">CELKEM</span>
+              <span className="text-lg font-bold text-[#722F37]">{formatPrice(order.total)}</span>
+            </div>
+            <p className="text-xs text-stone-400 text-right mt-1">Neplátce DPH — cena je konečná</p>
+
+            {/* Internal notes for Instagram orders */}
+            {order.notesInternal && isInstagram && (
+              <div className="mt-4 pt-3 border-t border-stone-200">
+                <p className="text-xs font-medium text-stone-600 mb-1">Detaily objednávky:</p>
+                <pre className="text-xs text-stone-500 whitespace-pre-wrap font-sans">{order.notesInternal}</pre>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -192,6 +359,16 @@ export default function OrderDetailsPage() {
           Platba
         </button>
         <button
+          onClick={() => setActiveTab('invoice')}
+          className={`px-6 py-3 font-medium transition-colors ${
+            activeTab === 'invoice'
+              ? 'border-b-2 border-blue-600 text-blue-600'
+              : 'text-gray-600 hover:text-gray-800'
+          }`}
+        >
+          📄 Faktura
+        </button>
+        <button
           onClick={() => setActiveTab('shipments')}
           className={`px-6 py-3 font-medium transition-colors ${
             activeTab === 'shipments'
@@ -227,6 +404,7 @@ export default function OrderDetailsPage() {
       {activeTab === 'customer' && <CustomerSection order={order} />}
       {activeTab === 'items' && <ItemsSection order={order} />}
       {activeTab === 'payment' && <PaymentSection order={order} />}
+      {activeTab === 'invoice' && <InvoiceSection order={order} />}
       {activeTab === 'shipments' && <ShipmentHistory order={order} onStatusChange={handleStatusChange} />}
       {activeTab === 'metadata' && <MetadataSection order={order} onUpdate={() => {}} />}
       {activeTab === 'history' && <OrderHistorySection orderId={order.id} />}
