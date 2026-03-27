@@ -163,21 +163,24 @@ export async function POST(request: NextRequest) {
         kudrnate: 'CURLY',
       };
 
-      const categoryMap: Record<string, string> = {
-        barvene: 'COLORED',
-        nebarvene: 'VIRGIN',
+      // CustomerCategory enum = STANDARD, LUXE, PLATINUM_EDITION, BABY_SHADES
+      const customerCategoryMap: Record<string, string> = {
+        standard: 'STANDARD',
+        luxe: 'LUXE',
+        platinum_edition: 'PLATINUM_EDITION',
+        baby_shades: 'BABY_SHADES',
       };
+      const custCat = customerCategoryMap[item.category] || 'STANDARD';
 
       let sku = await prisma.sku.findFirst({
         where: {
           shade: String(item.shadeCode),
           structure: structureMap[item.structure] || item.structure,
-          customerCategory: (categoryMap[item.productType] || 'VIRGIN') as any,
+          customerCategory: custCat as any,
         },
       });
 
       if (!sku) {
-        // Create a minimal SKU so we can reference it
         const skuCode = `POS-${item.category}-${item.shadeCode}-${item.structure}-${Date.now()}`;
         sku = await prisma.sku.create({
           data: {
@@ -185,7 +188,7 @@ export async function POST(request: NextRequest) {
             shade: String(item.shadeCode),
             shadeName: `Odstín #${item.shadeCode}`,
             structure: structureMap[item.structure] || 'STRAIGHT',
-            customerCategory: (categoryMap[item.productType] || 'VIRGIN') as any,
+            customerCategory: custCat as any,
             saleMode: 'BULK_G',
             lengthCm: item.lengthCm,
             availableGrams: 0,
