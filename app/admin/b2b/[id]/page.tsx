@@ -195,6 +195,55 @@ export default function B2bPartnerDetailPage() {
     }
   };
 
+  const exportToExcel = async () => {
+    // Dynamically load xlsx library
+    const XLSX = (await import('xlsx')).default;
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: All items from all shipments
+    const allItems = partner.shipments.flatMap((s) =>
+      s.items.map((item) => ({
+        'Zásilka': formatDate(s.date),
+        'Druh': item.druh,
+        'Barva': item.barva,
+        'Délka (cm)': item.delkaCm,
+        'Gramáž (g)': item.gramaz,
+        'Cena/g': item.cenaPerGram,
+        'Celkem (Kč)': item.celkem,
+        'Stav': STATUS_OPTIONS.find((o) => o.value === item.stav)?.label || item.stav,
+        'Poznámka': item.notes || '',
+      }))
+    );
+    const wsItems = XLSX.utils.json_to_sheet(allItems);
+    XLSX.utils.book_append_sheet(wb, wsItems, 'Položky');
+
+    // Sheet 2: Payments
+    const paymentRows = partner.payments.map((p) => ({
+      'Datum': formatDate(p.date),
+      'Částka (Kč)': p.amount,
+      'Způsob': PAYMENT_METHODS.find((m) => m.value === p.method)?.label || p.method,
+      'Poznámka': p.note || '',
+    }));
+    const wsPayments = XLSX.utils.json_to_sheet(paymentRows);
+    XLSX.utils.book_append_sheet(wb, wsPayments, 'Platby');
+
+    // Sheet 3: Summary
+    const summary = [
+      { 'Ukazatel': 'Celkem odesláno', 'Hodnota': partner.stats.totalValue },
+      { 'Ukazatel': 'Zaplaceno', 'Hodnota': partner.stats.totalPaid },
+      { 'Ukazatel': 'Zbývá zaplatit', 'Hodnota': partner.stats.outstanding },
+      { 'Ukazatel': 'Vráceno', 'Hodnota': partner.stats.returnedValue },
+      { 'Ukazatel': 'Celkem gramů', 'Hodnota': partner.stats.totalGrams },
+      { 'Ukazatel': 'Počet položek', 'Hodnota': partner.stats.itemsCount },
+    ];
+    const wsSummary = XLSX.utils.json_to_sheet(summary);
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Souhrn');
+
+    // Download
+    const fileName = `${partner.name.replace(/\s+/g, '_')}_komise_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+  };
+
   const handleImportExcel = async (file: File) => {
     setImporting(true);
     setImportResult(null);
@@ -241,13 +290,21 @@ export default function B2bPartnerDetailPage() {
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-stone-500">
-        <Link href="/admin/b2b" className="hover:text-[#722F37]">
-          B2B Komise
-        </Link>
-        <span>/</span>
-        <span className="text-stone-800 font-medium">{partner.name}</span>
+      {/* Breadcrumb + Export */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm text-stone-500">
+          <Link href="/admin/b2b" className="hover:text-[#722F37]">
+            B2B Komise
+          </Link>
+          <span>/</span>
+          <span className="text-stone-800 font-medium">{partner.name}</span>
+        </div>
+        <button
+          onClick={() => exportToExcel()}
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          📥 Stáhnout Excel
+        </button>
       </div>
 
       {/* ===== SECTION 1: Partner Info Card ===== */}
