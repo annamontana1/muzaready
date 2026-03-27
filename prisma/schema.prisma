@@ -282,8 +282,12 @@ enum SaleMode {
 }
 
 enum EndingOption {
-  KERATIN
   NONE
+  KERATIN
+  MIKROKERATIN
+  PASKY_KERATINU
+  WEFT
+  TAPES
 }
 
 enum MoveType {

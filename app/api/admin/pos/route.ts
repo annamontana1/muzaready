@@ -230,8 +230,22 @@ export async function POST(request: NextRequest) {
           paidAt: paymentMethod !== 'prevod' ? new Date() : null,
           items: {
             create: processedItems.map((item, idx) => {
-              // Map ending string to EndingOption enum (KERATIN | NONE)
-              const endingEnum = item.ending === 'Bez zakončení' || item.ending === 'bez' ? 'NONE' : 'KERATIN';
+              // Map ending string to EndingOption enum
+              const endingMap: Record<string, string> = {
+                'bez': 'NONE',
+                'Bez zakončení': 'NONE',
+                'keratin': 'KERATIN',
+                'Keratin': 'KERATIN',
+                'mikrokeratin': 'MIKROKERATIN',
+                'Mikrokeratin': 'MIKROKERATIN',
+                'pasky_keratinu': 'PASKY_KERATINU',
+                'Pásky keratinu': 'PASKY_KERATINU',
+                'weft': 'WEFT',
+                'Weft': 'WEFT',
+                'tapes': 'TAPES',
+                'Tapes': 'TAPES',
+              };
+              const endingEnum = endingMap[item.ending] || 'NONE';
               return {
                 skuId: itemSkuIds[idx],
                 saleMode: 'BULK_G' as const,
