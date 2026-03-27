@@ -889,22 +889,103 @@ export default function UnifiedNewSalePage() {
         </div>
       )}
 
-      {/* ── 9. SUBMIT ──────────────────────────────────────────── */}
+      {/* ── 9. NÁHLED OBJEDNÁVKY ─────────────────────────────── */}
       {cart.length > 0 && channel !== 'eshop' && (
-        <div className="flex justify-end mb-12">
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isSubmitting || cart.length === 0}
-            className={`${btnPrimary} text-base px-8 py-3`}
-          >
-            {isSubmitting ? 'Vytvářím...' : (
-              <>
-                \ud83d\udcc4 Vytvořit prodej
-                {channel === 'instagram' && ' + odeslat fakturu'}
-              </>
-            )}
-          </button>
+        <div className={sectionClass}>
+          <h2 className="text-lg font-semibold text-stone-800 mb-4">📋 Náhled objednávky</h2>
+          <div className="bg-stone-50 rounded-xl p-6 space-y-4 text-sm">
+            {/* Channel + Customer */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-stone-500 block mb-1">Kanál</span>
+                <span className="font-medium text-stone-800">
+                  {channel === 'prodejna' ? '🏪 Prodejna' : channel === 'instagram' ? '📸 Instagram' : '🌐 E-shop'}
+                </span>
+              </div>
+              <div>
+                <span className="text-stone-500 block mb-1">Zákazník</span>
+                <span className="font-medium text-stone-800">
+                  {customerType === 'anonymous' ? 'Anonymní' : (
+                    <>
+                      {customer.companyName || customer.firstName || 'Nový zákazník'}
+                      {customer.email && <span className="text-stone-500 ml-1">({customer.email})</span>}
+                    </>
+                  )}
+                </span>
+              </div>
+            </div>
+
+            {/* Items */}
+            <div>
+              <span className="text-stone-500 block mb-2">Položky</span>
+              <div className="space-y-2">
+                {cart.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center bg-white rounded-lg px-3 py-2 border border-stone-200">
+                    <div>
+                      <span className="font-medium text-stone-700">{item.label}</span>
+                      <span className="text-stone-500 ml-2">{item.config.grams}g</span>
+                      {item.config.ending !== 'bez' && (
+                        <span className="text-stone-400 ml-1 text-xs">
+                          + {ENDING_OPTIONS.find(e => e.value === item.config.ending)?.label.split(' (')[0]}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-semibold text-stone-800">{formatPrice(item.subtotal)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Totals */}
+            <div className="border-t border-stone-200 pt-3 space-y-1">
+              <div className="flex justify-between">
+                <span className="text-stone-600">Produkty:</span>
+                <span>{formatPrice(cartSubtotal)}</span>
+              </div>
+              {discountPercent > 0 && (
+                <div className="flex justify-between text-red-600">
+                  <span>Sleva {discountPercent}%:</span>
+                  <span>−{formatPrice(discountAmount)}</span>
+                </div>
+              )}
+              {channel === 'instagram' && shippingCost > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-stone-600">Doprava ({SHIPPING_OPTIONS.find(s => s.carrier === shipping.carrier)?.label || shipping.carrier}):</span>
+                  <span>+{formatPrice(shippingCost)}</span>
+                </div>
+              )}
+              <div className="flex justify-between border-t border-stone-300 pt-2 mt-2">
+                <span className="text-lg font-bold text-stone-800">CELKEM:</span>
+                <span className="text-lg font-bold text-[#722F37]">{formatPrice(grandTotal)}</span>
+              </div>
+            </div>
+
+            {/* Payment info */}
+            <div className="bg-white rounded-lg px-3 py-2 border border-stone-200 flex justify-between items-center">
+              <span className="text-stone-500">Platba:</span>
+              <span className="font-medium text-stone-700">
+                {channel === 'instagram' ? 'Převod na účet (proforma faktura)' :
+                  paymentMethod === 'hotovost' ? 'Hotovost (pokladní doklad)' : 'Karta (Fakturoid faktura)'}
+              </span>
+            </div>
+          </div>
+
+          {/* Submit button inside preview */}
+          <div className="flex justify-end mt-6">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting || cart.length === 0}
+              className={`${btnPrimary} text-base px-8 py-3`}
+            >
+              {isSubmitting ? 'Vytvářím...' : (
+                <>
+                  ✅ Potvrdit a vytvořit prodej
+                  {channel === 'instagram' && ' + odeslat fakturu'}
+                </>
+              )}
+            </button>
+          </div>
         </div>
       )}
     </div>
