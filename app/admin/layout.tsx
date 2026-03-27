@@ -12,34 +12,15 @@ import { useOrderNotifications } from '@/lib/hooks/useOrderNotifications';
 const navigation = {
   main: [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
-    { href: '/admin/objednavky', label: 'Objednávky', icon: '🛒' },
-    { href: '/admin/prodeje/novy', label: 'Prodejna', icon: '💳' },
-    { href: '/admin/prodeje/instagram', label: 'Instagram', icon: '📸' },
-    { href: '/admin/marketing', label: 'Marketing', icon: '📈' },
-    { href: '/admin/reporty', label: 'Reporty', icon: '📊' },
-    { href: '/admin/ai-assistant', label: 'AI Assistant', icon: '🤖' },
-  ],
-  eshop: [
+    { href: '/admin/sklad', label: 'Sklad', icon: '📦' },
+    { href: '/admin/prodeje/novy', label: 'Nový prodej', icon: '🛒' },
+    { href: '/admin/objednavky', label: 'Objednávky', icon: '📋' },
     { href: '/admin/zakaznici', label: 'Zákazníci', icon: '👥' },
-    { href: '/admin/reviews', label: 'Recenze', icon: '⭐' },
-    { href: '/admin/coupons', label: 'Kupóny', icon: '🎟️' },
-    { href: '/admin/velkoobchod-zadosti', label: 'Velkoobchod', icon: '🏢' },
+    { href: '/admin/reporty', label: 'Reporty', icon: '📈' },
   ],
-  sklad: [
-    { href: '/admin/sklad', label: 'SKU položky', icon: '📋' },
-    { href: '/admin/stock-receive', label: 'Naskladnění', icon: '📥' },
-    { href: '/admin/inventory', label: 'Inventury', icon: '📊' },
-    { href: '/admin/low-stock-alerts', label: 'Nízký stav', icon: '⚠️' },
+  settings: [
     { href: '/admin/price-matrix', label: 'Matice cen', icon: '💰' },
-    { href: '/admin/konfigurator-sku', label: 'Konfigurátor', icon: '⚙️' },
-    { href: '/admin/warehouse-scanner', label: 'Scanner', icon: '📱' },
-  ],
-  cms: [
     { href: '/admin/nastaveni', label: 'Nastavení', icon: '⚙️' },
-    { href: '/admin/seo', label: 'SEO', icon: '🔍' },
-    { href: '/admin/content', label: 'Obsah', icon: '✏️' },
-    { href: '/admin/redirects', label: 'Redirecty', icon: '🔗' },
-    { href: '/admin/faq', label: 'FAQ', icon: '❓' },
   ],
 };
 
@@ -177,7 +158,7 @@ function AuthenticatedLayout({
   }, [pathname, markAsSeen]);
 
   // Get current page info
-  const allItems = [...navigation.main, ...navigation.eshop, ...navigation.sklad, ...navigation.cms];
+  const allItems = [...navigation.main, ...navigation.settings];
   const currentPage = allItems.find(item => pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href)));
 
   return (
@@ -199,7 +180,7 @@ function AuthenticatedLayout({
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex items-center gap-1">
                 {navigation.main.map(item => {
-                  const isActive = pathname === item.href;
+                  const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
                   const isOrdersLink = item.href === '/admin/objednavky';
                   return (
                     <Link
@@ -217,9 +198,7 @@ function AuthenticatedLayout({
                   );
                 })}
 
-                <NavDropdown label="E-shop" items={navigation.eshop} pathname={pathname} />
-                <NavDropdown label="Sklad" items={navigation.sklad} pathname={pathname} />
-                <NavDropdown label="CMS" items={navigation.cms} pathname={pathname} />
+                <NavDropdown label="Nastavení" items={navigation.settings} pathname={pathname} />
               </nav>
             </div>
 
@@ -301,32 +280,26 @@ function AuthenticatedLayout({
                 </div>
               </div>
 
-              {[
-                { label: 'E-shop', items: navigation.eshop },
-                { label: 'Sklad', items: navigation.sklad },
-                { label: 'CMS', items: navigation.cms },
-              ].map(section => (
-                <div key={section.label}>
-                  <div className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">{section.label}</div>
-                  <div className="space-y-1">
-                    {section.items.map(item => {
-                      const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${
-                            isActive ? 'bg-[#722F37] text-white' : 'text-stone-600 hover:bg-stone-100'
-                          }`}
-                        >
-                          <span>{item.icon}</span>
-                          {item.label}
-                        </Link>
-                      );
-                    })}
-                  </div>
+              <div>
+                <div className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">Nastaveni</div>
+                <div className="space-y-1">
+                  {navigation.settings.map(item => {
+                    const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm ${
+                          isActive ? 'bg-[#722F37] text-white' : 'text-stone-600 hover:bg-stone-100'
+                        }`}
+                      >
+                        <span>{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    );
+                  })}
                 </div>
-              ))}
+              </div>
             </nav>
           </div>
         )}

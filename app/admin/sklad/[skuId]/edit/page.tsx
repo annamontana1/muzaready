@@ -2,34 +2,55 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import MultiImageUpload from '@/components/admin/MultiImageUpload';
-import AdminShadePicker from '@/components/admin/AdminShadePicker';
+import ImageUpload from '@/components/admin/ImageUpload';
 
-interface SkuData {
+interface Movement {
+  id: string;
+  type: 'IN' | 'OUT' | 'ADJUSTMENT';
+  grams: number;
+  note: string | null;
+  refOrderId: string | null;
+  createdAt: string;
+}
+
+interface SkuDetail {
   id: string;
   sku: string;
   shortCode: string | null;
   name: string | null;
-  imageUrl: string | null;
-  images: string[];
   shade: string | null;
   shadeName: string | null;
-  shadeHex: string | null;
-  lengthCm: number | null;
   structure: string | null;
-  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | 'BABY_SHADES' | null;
+  customerCategory: string | null;
   saleMode: string;
   pricePerGramCzk: number | null;
-  pricePerGramEur: number | null;
-  weightTotalG: number | null;
   availableGrams: number | null;
-  minOrderG: number | null;
-  stepG: number | null;
+  weightTotalG: number | null;
+  imageUrl: string | null;
+  images: string[];
   inStock: boolean;
-  isListed: boolean;
-  listingPriority: number | null;
-  soldOut: boolean;
+  movements: Movement[];
+}
+
+function categoryLabel(cat: string | null): string {
+  switch (cat) {
+    case 'STANDARD': return 'Standard';
+    case 'LUXE': return 'Luxe';
+    case 'PLATINUM_EDITION': return 'Platinum Edition';
+    case 'BABY_SHADES': return 'Baby Shades';
+    default: return '-';
+  }
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('cs-CZ', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 export default function SkuEditPage() {
@@ -37,456 +58,305 @@ export default function SkuEditPage() {
   const router = useRouter();
   const skuId = params.skuId as string;
 
-  const [sku, setSku] = useState<SkuData | null>(null);
+  const [sku, setSku] = useState<SkuDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [addGrams, setAddGrams] = useState('');
+  const [addingStock, setAddingStock] = useState(false);
+  const [movements, setMovements] = useState<Movement[]>([]);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    imageUrl: '',
-    images: [] as string[],
-    shade: '',
-    shadeName: '',
-    shadeHex: '',
-    lengthCm: '',
-    structure: '',
-    customerCategory: 'STANDARD',
-    saleMode: 'BULK_G' as 'BULK_G' | 'PIECE_BY_WEIGHT',
-    pricePerGramCzk: '',
-    pricePerGramEur: '',
-    weightTotalG: '',
-    availableGrams: '',
-    minOrderG: '',
-    stepG: '',
-    inStock: false,
-    isListed: false,
-    listingPriority: '',
-    soldOut: false,
-  });
+  // Image management
+  const [editingPhotos, setEditingPhotos] = useState(false);
 
   useEffect(() => {
     fetchSku();
   }, [skuId]);
 
   const fetchSku = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await fetch(`/api/admin/skus/${skuId}`, {
-        credentials: 'include',
-      });
+      const res = await fetch(`/api/admin/skus/${skuId}`, { credentials: 'include' });
+      if (!res.ok) throw new Error('Nenalezeno');
       const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Chyba pri nacitani SKU');
-        return;
-      }
-
       setSku(data);
-      setFormData({
-        name: data.name || '',
-        imageUrl: data.imageUrl || '',
-        images: Array.isArray(data.images) ? data.images : [],
-        shade: data.shade || '',
-        shadeName: data.shadeName || '',
-        shadeHex: data.shadeHex || '',
-        lengthCm: data.lengthCm?.toString() || '',
-        structure: data.structure || '',
-        customerCategory: data.customerCategory || 'STANDARD',
-        saleMode: data.saleMode || 'BULK_G',
-        pricePerGramCzk: data.pricePerGramCzk?.toString() || '',
-        pricePerGramEur: data.pricePerGramEur?.toString() || '',
-        weightTotalG: data.weightTotalG?.toString() || '',
-        availableGrams: data.availableGrams?.toString() || '',
-        minOrderG: data.minOrderG?.toString() || '',
-        stepG: data.stepG?.toString() || '',
-        inStock: data.inStock || false,
-        isListed: data.isListed || false,
-        listingPriority: data.listingPriority?.toString() || '',
-        soldOut: data.soldOut || false,
-      });
-    } catch (err) {
-      setError('Chyba pri komunikaci se serverem');
+      setMovements(data.movements || []);
+    } catch (err: any) {
+      console.error(err);
+      alert('Chyba: ' + err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
+  const handleAddStock = async () => {
+    const gramsNum = Number(addGrams);
+    if (!gramsNum || gramsNum <= 0) return;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    setError(null);
-    setSuccess(false);
-
+    setAddingStock(true);
     try {
-      const payload = {
-        name: formData.name || null,
-        imageUrl: formData.imageUrl || null,
-        images: formData.images || [],
-        shade: formData.shade || null,
-        shadeName: formData.shadeName || null,
-        shadeHex: formData.shadeHex || null,
-        lengthCm: formData.lengthCm ? parseInt(formData.lengthCm) : null,
-        structure: formData.structure || null,
-        customerCategory: formData.customerCategory,
-        saleMode: formData.saleMode,
-        pricePerGramCzk: formData.pricePerGramCzk ? parseFloat(formData.pricePerGramCzk) : null,
-        pricePerGramEur: formData.pricePerGramEur ? parseFloat(formData.pricePerGramEur) : null,
-        weightTotalG: formData.weightTotalG ? parseInt(formData.weightTotalG) : null,
-        availableGrams: formData.availableGrams ? parseInt(formData.availableGrams) : null,
-        minOrderG: formData.minOrderG ? parseInt(formData.minOrderG) : null,
-        stepG: formData.stepG ? parseInt(formData.stepG) : null,
-        inStock: formData.inStock,
-        isListed: formData.isListed,
-        listingPriority: formData.listingPriority ? parseInt(formData.listingPriority) : null,
-        soldOut: formData.soldOut,
-      };
-
-      const res = await fetch(`/api/admin/skus/${skuId}`, {
-        method: 'PATCH',
+      const res = await fetch('/api/admin/stock/receive', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
         credentials: 'include',
+        body: JSON.stringify({
+          skuId,
+          grams: gramsNum,
+          note: 'Manualni naskladneni',
+        }),
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Chyba');
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Chyba pri ukladani');
-      }
-
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setAddGrams('');
+      fetchSku(); // refresh
     } catch (err: any) {
-      setError(err.message);
+      console.error(err);
+      alert('Chyba: ' + err.message);
     } finally {
-      setSaving(false);
+      setAddingStock(false);
+    }
+  };
+
+  const handleAddImage = async (url: string) => {
+    if (!url || !sku) return;
+    const newImages = [...(sku.images || []), url];
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          images: newImages,
+          imageUrl: sku.imageUrl || url,
+        }),
+      });
+      if (!res.ok) throw new Error('Chyba pri ukladani');
+      fetchSku();
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    }
+  };
+
+  const handleRemoveImage = async (index: number) => {
+    if (!sku) return;
+    const newImages = sku.images.filter((_, i) => i !== index);
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          images: newImages,
+          imageUrl: newImages[0] || null,
+        }),
+      });
+      if (!res.ok) throw new Error('Chyba pri ukladani');
+      fetchSku();
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-600">Nacitam...</div>
+      <div className="flex items-center justify-center py-20">
+        <div className="w-6 h-6 border-2 border-[#722F37] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  if (error && !sku) {
+  if (!sku) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-6">{error}</div>
-        <Link href="/admin/sklad" className="text-blue-600 hover:underline">
-          ← Zpet na seznam SKU
-        </Link>
+      <div className="text-center py-20 text-stone-500">
+        SKU nenalezeno.
+        <button onClick={() => router.push('/admin/sklad')} className="block mt-4 text-[#722F37] underline">
+          Zpet na sklad
+        </button>
       </div>
     );
   }
+
+  const currentStock =
+    sku.saleMode === 'PIECE_BY_WEIGHT' ? sku.weightTotalG || 0 : sku.availableGrams || 0;
+
+  const skuType = sku.sku.toUpperCase().includes('-BR-')
+    ? 'Barvene'
+    : sku.sku.toUpperCase().includes('-NB-')
+    ? 'Nebarvene'
+    : '-';
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="mb-8">
-        <Link href="/admin/sklad" className="text-blue-600 hover:underline mb-4 inline-block">
-          ← Zpet na seznam SKU
-        </Link>
-        <h1 className="text-3xl font-bold text-gray-900">Upravit SKU</h1>
-        <div className="mt-2 flex items-center gap-4">
-          <span className="font-mono text-sm bg-gray-100 px-3 py-1 rounded">{sku?.sku}</span>
-          {sku?.shortCode && (
-            <span className="font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded">
-              {sku.shortCode}
+      <div className="flex items-center justify-between">
+        <div>
+          <button
+            onClick={() => router.push('/admin/sklad')}
+            className="text-sm text-stone-500 hover:text-stone-700 mb-1"
+          >
+            &larr; Zpet na sklad
+          </button>
+          <h1 className="text-2xl font-bold text-stone-800">
+            {sku.shadeName || sku.shade || sku.name || sku.sku}
+          </h1>
+          <p className="text-sm text-stone-400 font-mono">{sku.sku}</p>
+        </div>
+      </div>
+
+      {/* Section 1: Info */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-stone-800">Informace</h2>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider">Odstin</span>
+            <span className="text-sm font-medium text-stone-700">
+              {sku.shadeName || sku.shade || '-'}
             </span>
+          </div>
+          <div>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider">Struktura</span>
+            <span className="text-sm font-medium text-stone-700">
+              {sku.structure || '-'}
+            </span>
+          </div>
+          <div>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider">Kategorie</span>
+            <span className="text-sm font-medium text-stone-700">
+              {categoryLabel(sku.customerCategory)}
+            </span>
+          </div>
+          <div>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider">Typ</span>
+            <span className="text-sm font-medium text-stone-700">{skuType}</span>
+          </div>
+          <div>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider">Zpusob prodeje</span>
+            <span className="text-sm font-medium text-stone-700">
+              {sku.saleMode === 'BULK_G' ? 'Na gramy' : 'Cely culik'}
+            </span>
+          </div>
+          <div>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider">Cena/g</span>
+            <span className="text-sm font-medium text-stone-700">
+              {sku.pricePerGramCzk ? `${sku.pricePerGramCzk} Kc` : '-'}
+            </span>
+          </div>
+        </div>
+
+        {/* Photos */}
+        <div className="mt-6 pt-6 border-t border-stone-100">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-semibold text-stone-700">Fotky</span>
+            <button
+              onClick={() => setEditingPhotos(!editingPhotos)}
+              className="text-xs text-[#722F37] hover:underline"
+            >
+              {editingPhotos ? 'Hotovo' : 'Upravit fotky'}
+            </button>
+          </div>
+
+          {sku.images && sku.images.length > 0 ? (
+            <div className="flex flex-wrap gap-3">
+              {sku.images.map((url, i) => (
+                <div key={i} className="relative">
+                  <img
+                    src={url}
+                    alt={`Foto ${i + 1}`}
+                    className="w-24 h-24 object-cover rounded-lg border border-stone-200"
+                  />
+                  {editingPhotos && (
+                    <button
+                      onClick={() => handleRemoveImage(i)}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                    >
+                      x
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-stone-400">Zadne fotky</p>
+          )}
+
+          {editingPhotos && (
+            <div className="mt-3">
+              <ImageUpload value="" onChange={handleAddImage} folder="skus" />
+            </div>
           )}
         </div>
       </div>
 
-      {success && (
-        <div className="bg-green-50 text-green-800 p-4 rounded-lg mb-6">Ulozeno!</div>
-      )}
-      {error && <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-6">{error}</div>}
+      {/* Section 2: Pridat gramaz */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-stone-800 mb-4">Pridat gramaz</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Basic Info */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Zakladni informace</h2>
+        <div className="bg-stone-50 rounded-lg p-4 mb-4">
+          <span className="text-sm text-stone-500">Na sklade:</span>
+          <span className="ml-2 text-2xl font-bold text-stone-800">{currentStock}g</span>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nazev</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                placeholder="Nazev produktu"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kategorie</label>
-              <select
-                name="customerCategory"
-                value={formData.customerCategory}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-              >
-                <option value="STANDARD">STANDARD</option>
-                <option value="LUXE">LUXE</option>
-                <option value="PLATINUM_EDITION">PLATINUM EDITION</option>
-                <option value="BABY_SHADES">BABY SHADES</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Způsob prodeje</label>
-              <select
-                name="saleMode"
-                value={formData.saleMode}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-              >
-                <option value="BULK_G">Na gramy (BULK_G)</option>
-                <option value="PIECE_BY_WEIGHT">Celý culík (PIECE_BY_WEIGHT)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Image Upload */}
-          <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Fotky produktu</label>
-            <MultiImageUpload
-              mainImage={formData.imageUrl}
-              additionalImages={formData.images}
-              onMainImageChange={(url) => setFormData((prev) => ({ ...prev, imageUrl: url }))}
-              onAdditionalImagesChange={(urls) => setFormData((prev) => ({ ...prev, images: urls }))}
-              folder="skus"
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-stone-600">Pridat gramaz:</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="1"
+              value={addGrams}
+              onChange={(e) => setAddGrams(e.target.value)}
+              placeholder="0"
+              className="w-32 px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
             />
+            <span className="text-sm text-stone-500">g</span>
           </div>
-        </div>
-
-        {/* Product Details */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Vlastnosti produktu</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
-              <AdminShadePicker
-                selectedShadeCode={formData.shade}
-                onSelect={(shade) => {
-                  if (shade) {
-                    setFormData((prev) => ({
-                      ...prev,
-                      shade: shade.code,
-                      shadeName: shade.name,
-                      shadeHex: shade.hex,
-                    }));
-                  } else {
-                    setFormData((prev) => ({
-                      ...prev,
-                      shade: '',
-                      shadeName: '',
-                      shadeHex: '',
-                    }));
-                  }
-                }}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Delka (cm)</label>
-              <input
-                type="number"
-                name="lengthCm"
-                value={formData.lengthCm}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-                placeholder="45"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Struktura</label>
-              <select
-                name="structure"
-                value={formData.structure}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-              >
-                <option value="">Vyberte strukturu</option>
-                <option value="rovné">rovné</option>
-                <option value="mírně vlnité">mírně vlnité</option>
-                <option value="vlnité">vlnité</option>
-                <option value="kudrnaté">kudrnaté</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Pricing */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Ceny</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cena za gram (CZK)</label>
-              <input
-                type="number"
-                step="0.01"
-                name="pricePerGramCzk"
-                value={formData.pricePerGramCzk}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-                placeholder="25"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cena za gram (EUR)</label>
-              <input
-                type="number"
-                step="0.01"
-                name="pricePerGramEur"
-                value={formData.pricePerGramEur}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-                placeholder="1.00"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Inventory */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Sklad</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {formData.saleMode === 'PIECE_BY_WEIGHT' ? (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Vaha culicku (g)
-                </label>
-                <input
-                  type="number"
-                  name="weightTotalG"
-                  value={formData.weightTotalG}
-                  onChange={handleInputChange}
-                  className="w-full border rounded-lg px-4 py-2"
-                />
-              </div>
-            ) : (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Dostupne gramy
-                  </label>
-                  <input
-                    type="number"
-                    name="availableGrams"
-                    value={formData.availableGrams}
-                    onChange={handleInputChange}
-                    className="w-full border rounded-lg px-4 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Min. (g)</label>
-                  <input
-                    type="number"
-                    name="minOrderG"
-                    value={formData.minOrderG}
-                    onChange={handleInputChange}
-                    className="w-full border rounded-lg px-4 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Krok (g)</label>
-                  <input
-                    type="number"
-                    name="stepG"
-                    value={formData.stepG}
-                    onChange={handleInputChange}
-                    className="w-full border rounded-lg px-4 py-2"
-                  />
-                </div>
-              </>
-            )}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Priorita zobrazeni
-              </label>
-              <input
-                type="number"
-                name="listingPriority"
-                value={formData.listingPriority}
-                onChange={handleInputChange}
-                className="w-full border rounded-lg px-4 py-2"
-                placeholder="1-10"
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-6">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                name="inStock"
-                checked={formData.inStock}
-                onChange={handleInputChange}
-                className="w-5 h-5 rounded"
-              />
-              <span className="text-sm font-medium">Na sklade</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                name="isListed"
-                checked={formData.isListed}
-                onChange={handleInputChange}
-                className="w-5 h-5 rounded"
-              />
-              <span className="text-sm font-medium">Zobrazit v katalogu</span>
-            </label>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                name="soldOut"
-                checked={formData.soldOut}
-                onChange={handleInputChange}
-                className="w-5 h-5 rounded"
-              />
-              <span className="text-sm font-medium text-red-600">Vyprodano</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Submit */}
-        <div className="flex justify-between items-center">
-          <Link href="/admin/sklad" className="text-gray-600 hover:text-gray-800">
-            Zrusit
-          </Link>
           <button
-            type="submit"
-            disabled={saving}
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium text-lg"
+            onClick={handleAddStock}
+            disabled={!addGrams || Number(addGrams) <= 0 || addingStock}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {saving ? 'Ukladam...' : 'Ulozit zmeny'}
+            {addingStock ? 'Pridavam...' : '+ Pridat na sklad'}
           </button>
         </div>
-      </form>
+      </div>
+
+      {/* Section 3: Movement history */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-stone-800 mb-4">Historie pohybu</h2>
+
+        {movements.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-stone-100">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-stone-500 uppercase">Datum</th>
+                  <th className="px-3 py-2 text-right text-xs font-semibold text-stone-500 uppercase">Mnozstvi</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-stone-500 uppercase">Duvod</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-50">
+                {movements.map((m) => (
+                  <tr key={m.id}>
+                    <td className="px-3 py-2 text-stone-600">{formatDate(m.createdAt)}</td>
+                    <td className={`px-3 py-2 text-right font-mono font-medium ${
+                      m.type === 'IN' ? 'text-green-600' : 'text-red-600'
+                    }`}>
+                      {m.type === 'IN' ? '+' : '-'}{m.grams}g
+                    </td>
+                    <td className="px-3 py-2 text-stone-500">
+                      {m.note || (m.type === 'IN' ? 'Naskladneno' : m.refOrderId ? `Prodej #${m.refOrderId.slice(-6)}` : 'Prodej')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-sm text-stone-400">Zadne pohyby.</p>
+        )}
+      </div>
     </div>
   );
 }
