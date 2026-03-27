@@ -146,6 +146,56 @@ export async function POST(request: NextRequest) {
     const lastName = customer?.lastName || (customerType === 'anonymous' ? 'Místo' : '');
     const email = customer?.email || 'prodejna@muzahair.cz';
 
+    // --- Find or create matching SKUs for each item ---
+    const itemSkuIds: string[] = [];
+    for (const item of items) {
+      // Try to find existing SKU matching this product
+      const tierMap: Record<string, string> = {
+        standard: 'STANDARD',
+        luxe: 'LUXE',
+        platinum_edition: 'PLATINUM_EDITION',
+        baby_shades: 'BABY_SHADES',
+      };
+      const structureMap: Record<string, string> = {
+        rovne: 'STRAIGHT',
+        vlnite: 'WAVY',
+        mirne_vlnite: 'SLIGHTLY_WAVY',
+        kudrnate: 'CURLY',
+      };
+
+      let sku = await prisma.sku.findFirst({
+        where: {
+          shadeCode: String(item.shadeCode),
+          structure: structureMap[item.structure] || item.structure,
+          tier: tierMap[item.category] || item.category,
+        },
+      });
+
+      if (!sku) {
+        // Create a minimal SKU so we can reference it
+        const categoryMap: Record<string, string> = {
+          barvene: 'COLORED',
+          nebarvene: 'VIRGIN',
+        };
+        sku = await prisma.sku.create({
+          data: {
+            shadeCode: String(item.shadeCode),
+            shadeName: `Odstín #${item.shadeCode}`,
+            structure: structureMap[item.structure] || 'STRAIGHT',
+            tier: tierMap[item.category] || 'STANDARD',
+            customerCategory: categoryMap[item.productType] || 'VIRGIN',
+            saleMode: 'BULK_G',
+            lengthCm: item.lengthCm,
+            availableGrams: 0,
+            pricePerGramCzk: item.pricePerGram,
+            isActive: true,
+          },
+        });
+      }
+
+      itemSkuIds.push(sku.id);
+    }
+
     // --- Create order ---
     const order = await prisma.$transaction(async (tx) => {
       const newOrder = await tx.order.create({
@@ -160,7 +210,7 @@ export async function POST(request: NextRequest) {
           city: 'Praha',
           zipCode: '11000',
           country: 'CZ',
-          deliveryMethod: shipping?.carrier || 'personal',
+          deliveryMethod: shipping?.carrier || 'osobni',
           orderStatus: paymentMethod === 'prevod' ? 'pending' : 'paid',
           paymentStatus: paymentMethod === 'prevod' ? 'unpaid' : 'paid',
           deliveryStatus: channel === 'prodejna' ? 'delivered' : 'pending',
@@ -175,7 +225,8 @@ export async function POST(request: NextRequest) {
           notesInternal: note || `POS prodej – ${channel}`,
           paidAt: paymentMethod !== 'prevod' ? new Date() : null,
           items: {
-            create: processedItems.map((item) => ({
+            create: processedItems.map((item, idx) => ({
+              skuId: itemSkuIds[idx],
               saleMode: 'BULK_G',
               grams: item.grams,
               pricePerGram: item.pricePerGram,
