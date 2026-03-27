@@ -282,8 +282,13 @@ export async function POST(request: NextRequest) {
     });
 
     // --- Fakturoid ---
+    // Hotovost pod 10 000 Kč = zjednodušený doklad (bez Fakturoid)
+    // Hotovost nad/rovno 10 000 Kč = plná faktura přes Fakturoid
+    // Karta = vždy Fakturoid faktura
+    // Převod = vždy Fakturoid proforma
+    const needsFakturoid = paymentMethod !== 'hotovost' || total >= 10000;
     let invoiceResult = null;
-    if (paymentMethod !== 'hotovost' && isFakturoidConfigured()) {
+    if (needsFakturoid && isFakturoidConfigured()) {
       try {
         const invoiceLines = processedItems.map((item) => ({
           name: item.name + (item.ending !== 'Bez zakončení' ? ` + ${item.ending}` : ''),

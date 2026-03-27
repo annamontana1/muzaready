@@ -97,8 +97,9 @@ function ReceiptContent() {
           {/* Header */}
           <div className="text-center mb-6 pb-4 border-b-2 border-dashed border-gray-300">
             <h1 className="text-2xl font-bold text-gray-900">MÙZA HAIR</h1>
-            <p className="text-sm text-gray-500 mt-1">Panenské vlasy & prodloužení</p>
-            <p className="text-sm text-gray-500">Praha, Česká republika</p>
+            <p className="text-sm text-gray-500 mt-1">Anna Zvinchuk</p>
+            <p className="text-sm text-gray-500">IČO: 17989230</p>
+            <p className="text-sm text-gray-500">Šrámkova 430/12, Lesná, 638 00 Brno</p>
             <p className="text-sm text-gray-500">muzahaircz@gmail.com</p>
           </div>
 

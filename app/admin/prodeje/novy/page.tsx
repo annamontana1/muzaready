@@ -371,11 +371,13 @@ export default function UnifiedNewSalePage() {
 
       showToast('Prodej byl úspěšně vytvořen', 'success');
 
-      // Redirect based on channel + payment
+      // Redirect based on channel + payment + amount
       const orderId = data.order?.id;
-      if (channel === 'prodejna' && paymentMethod === 'hotovost') {
+      if (paymentMethod === 'hotovost' && grandTotal < 10000) {
+        // Pod 10 000 Kč = zjednodušený doklad
         router.push(`/admin/prodeje/doklad?id=${orderId}`);
       } else {
+        // Nad 10 000 Kč nebo karta/převod = Fakturoid faktura
         router.push('/admin/objednavky');
       }
     } catch (error: any) {
