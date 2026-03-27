@@ -102,6 +102,15 @@ export default function B2bPartnerDetailPage() {
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<string | null>(null);
 
+  // Manual shipment form
+  const [showAddShipment, setShowAddShipment] = useState(false);
+  const [shipmentDate, setShipmentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [shipmentNotes, setShipmentNotes] = useState('');
+  const [manualItems, setManualItems] = useState<Array<{
+    druh: string; barva: string; delkaCm: string; gramaz: string; cenaPerGram: string; notes: string;
+  }>>([{ druh: '', barva: '', delkaCm: '', gramaz: '', cenaPerGram: '', notes: '' }]);
+  const [savingShipment, setSavingShipment] = useState(false);
+
   const fetchPartner = useCallback(async () => {
     try {
       const res = await fetch(`/api/admin/b2b/${id}`);
@@ -453,12 +462,194 @@ export default function B2bPartnerDetailPage() {
 
       {/* ===== SECTION 2 & 3: Zásilky (Shipments) with expandable items ===== */}
       <div className="bg-white rounded-xl shadow-sm">
-        <div className="px-6 py-4 border-b border-stone-100">
-          <h2 className="text-lg font-semibold text-stone-800">Zásilky</h2>
-          <p className="text-sm text-stone-400 mt-0.5">
-            {partner.shipments.length} zásilek, {partner.stats.itemsCount} položek celkem
-          </p>
+        <div className="px-6 py-4 border-b border-stone-100 flex items-start justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-stone-800">Zásilky</h2>
+            <p className="text-sm text-stone-400 mt-0.5">
+              {partner.shipments.length} zásilek, {partner.stats.itemsCount} položek celkem
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAddShipment(!showAddShipment)}
+            className="px-4 py-2 bg-[#722F37] hover:bg-[#5a252c] text-white text-sm font-medium rounded-lg transition-colors"
+          >
+            {showAddShipment ? '✕ Zavřít' : '+ Přidat zásilku'}
+          </button>
         </div>
+
+        {/* Manual add shipment form */}
+        {showAddShipment && (
+          <div className="px-6 py-4 border-b border-stone-200 bg-stone-50 space-y-4">
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">Datum zásilky</label>
+                <input
+                  type="date"
+                  value={shipmentDate}
+                  onChange={(e) => setShipmentDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-stone-700 mb-1">Poznámka k zásilce</label>
+                <input
+                  type="text"
+                  value={shipmentNotes}
+                  onChange={(e) => setShipmentNotes(e.target.value)}
+                  placeholder="Např. 2. dodávka pro salon"
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-700 mb-2">Položky</label>
+              <div className="space-y-2">
+                {manualItems.map((item, idx) => (
+                  <div key={idx} className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={item.druh}
+                      onChange={(e) => {
+                        const updated = [...manualItems];
+                        updated[idx] = { ...updated[idx], druh: e.target.value };
+                        setManualItems(updated);
+                      }}
+                      placeholder="Druh (Standard, Luxe...)"
+                      className="flex-1 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                    />
+                    <input
+                      type="text"
+                      value={item.barva}
+                      onChange={(e) => {
+                        const updated = [...manualItems];
+                        updated[idx] = { ...updated[idx], barva: e.target.value };
+                        setManualItems(updated);
+                      }}
+                      placeholder="Barva (#1, #3...)"
+                      className="w-28 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                    />
+                    <input
+                      type="number"
+                      value={item.delkaCm}
+                      onChange={(e) => {
+                        const updated = [...manualItems];
+                        updated[idx] = { ...updated[idx], delkaCm: e.target.value };
+                        setManualItems(updated);
+                      }}
+                      placeholder="Délka cm"
+                      className="w-24 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                    />
+                    <input
+                      type="number"
+                      value={item.gramaz}
+                      onChange={(e) => {
+                        const updated = [...manualItems];
+                        updated[idx] = { ...updated[idx], gramaz: e.target.value };
+                        setManualItems(updated);
+                      }}
+                      placeholder="Gramáž"
+                      className="w-24 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                    />
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={item.cenaPerGram}
+                      onChange={(e) => {
+                        const updated = [...manualItems];
+                        updated[idx] = { ...updated[idx], cenaPerGram: e.target.value };
+                        setManualItems(updated);
+                      }}
+                      placeholder="Kč/g"
+                      className="w-24 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                    />
+                    <div className="w-24 text-sm font-medium text-stone-700 text-right">
+                      {item.gramaz && item.cenaPerGram
+                        ? `${Math.round(Number(item.gramaz) * Number(item.cenaPerGram)).toLocaleString('cs-CZ')} Kč`
+                        : '—'}
+                    </div>
+                    <input
+                      type="text"
+                      value={item.notes}
+                      onChange={(e) => {
+                        const updated = [...manualItems];
+                        updated[idx] = { ...updated[idx], notes: e.target.value };
+                        setManualItems(updated);
+                      }}
+                      placeholder="Pozn."
+                      className="w-28 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20"
+                    />
+                    {manualItems.length > 1 && (
+                      <button
+                        onClick={() => setManualItems(manualItems.filter((_, i) => i !== idx))}
+                        className="text-red-400 hover:text-red-600 text-lg"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => setManualItems([...manualItems, { druh: '', barva: '', delkaCm: '', gramaz: '', cenaPerGram: '', notes: '' }])}
+                className="mt-2 text-sm text-[#722F37] hover:underline"
+              >
+                + Přidat další položku
+              </button>
+            </div>
+
+            {/* Total */}
+            <div className="flex items-center justify-between pt-2 border-t border-stone-200">
+              <div className="text-sm text-stone-600">
+                Celkem: <span className="font-bold text-stone-800">
+                  {manualItems.reduce((sum, it) => sum + (Number(it.gramaz) || 0) * (Number(it.cenaPerGram) || 0), 0).toLocaleString('cs-CZ')} Kč
+                </span>
+                {' '}({manualItems.reduce((sum, it) => sum + (Number(it.gramaz) || 0), 0)} g)
+              </div>
+              <button
+                onClick={async () => {
+                  const validItems = manualItems.filter((it) => it.druh && it.gramaz && it.cenaPerGram);
+                  if (validItems.length === 0) { showToast('Vyplňte alespoň jednu položku', 'error'); return; }
+                  setSavingShipment(true);
+                  try {
+                    const res = await fetch(`/api/admin/b2b/${id}/shipments`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        date: shipmentDate,
+                        notes: shipmentNotes || null,
+                        items: validItems.map((it) => ({
+                          druh: it.druh,
+                          barva: it.barva || '',
+                          delkaCm: Number(it.delkaCm) || 0,
+                          gramaz: Number(it.gramaz),
+                          cenaPerGram: Number(it.cenaPerGram),
+                          celkem: Math.round(Number(it.gramaz) * Number(it.cenaPerGram)),
+                          stav: 'skladem',
+                          notes: it.notes || null,
+                        })),
+                      }),
+                    });
+                    if (!res.ok) throw new Error('Chyba při ukládání');
+                    showToast('Zásilka přidána', 'success');
+                    setShowAddShipment(false);
+                    setManualItems([{ druh: '', barva: '', delkaCm: '', gramaz: '', cenaPerGram: '', notes: '' }]);
+                    setShipmentNotes('');
+                    fetchPartner();
+                  } catch {
+                    showToast('Nepodařilo se uložit zásilku', 'error');
+                  } finally {
+                    setSavingShipment(false);
+                  }
+                }}
+                disabled={savingShipment}
+                className="px-5 py-2 bg-[#722F37] hover:bg-[#5a252c] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+              >
+                {savingShipment ? 'Ukládám...' : '💾 Uložit zásilku'}
+              </button>
+            </div>
+          </div>
+        )}
 
         {partner.shipments.length === 0 ? (
           <div className="p-8 text-center text-stone-400 text-sm">
