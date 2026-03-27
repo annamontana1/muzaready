@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
       return {
         id: partner.id,
         name: partner.name,
+        type: (partner as any).type || 'komise',
         contactName: partner.contactName,
         email: partner.email,
         phone: partner.phone,
@@ -66,11 +67,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, contactName, email, phone, ico, address, notes } = body;
+    const { name, contactName, email, phone, ico, address, notes, type } = body;
 
     if (!name) {
       return NextResponse.json({ error: 'Název partnera je povinný' }, { status: 400 });
     }
+
+    const partnerType = type === 'splatky' ? 'splatky' : 'komise';
 
     const partner = await prisma.b2bPartner.create({
       data: {
@@ -81,7 +84,8 @@ export async function POST(req: NextRequest) {
         ico: ico || null,
         address: address || null,
         notes: notes || null,
-      },
+        ...(partnerType !== 'komise' && { type: partnerType }),
+      } as any,
     });
 
     return NextResponse.json(partner, { status: 201 });

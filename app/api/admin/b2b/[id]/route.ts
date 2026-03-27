@@ -48,6 +48,7 @@ export async function GET(
 
     return NextResponse.json({
       ...partner,
+      type: (partner as any).type || 'komise',
       stats: {
         totalValue: Math.round(totalValue),
         totalGrams: Math.round(totalGrams),
@@ -74,7 +75,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { name, contactName, email, phone, ico, address, notes } = body;
+    const { name, contactName, email, phone, ico, address, notes, type } = body;
 
     const partner = await prisma.b2bPartner.update({
       where: { id },
@@ -86,7 +87,8 @@ export async function PUT(
         ...(ico !== undefined && { ico }),
         ...(address !== undefined && { address }),
         ...(notes !== undefined && { notes }),
-      },
+        ...(type !== undefined && { type }),
+      } as any,
     });
 
     return NextResponse.json(partner);

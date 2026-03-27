@@ -6,6 +6,7 @@ import Link from 'next/link';
 interface B2bPartnerSummary {
   id: string;
   name: string;
+  type: 'komise' | 'splatky';
   contactName: string | null;
   email: string | null;
   phone: string | null;
@@ -20,10 +21,13 @@ interface B2bPartnerSummary {
   createdAt: string;
 }
 
+type FilterTab = 'all' | 'komise' | 'splatky';
+
 export default function B2bPartnersPage() {
   const [partners, setPartners] = useState<B2bPartnerSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [showNewForm, setShowNewForm] = useState(false);
+  const [filterTab, setFilterTab] = useState<FilterTab>('all');
   const [newPartner, setNewPartner] = useState({
     name: '',
     contactName: '',
@@ -32,6 +36,7 @@ export default function B2bPartnersPage() {
     ico: '',
     address: '',
     notes: '',
+    type: 'komise' as 'komise' | 'splatky',
   });
   const [saving, setSaving] = useState(false);
 
@@ -64,7 +69,7 @@ export default function B2bPartnersPage() {
       });
       if (res.ok) {
         setShowNewForm(false);
-        setNewPartner({ name: '', contactName: '', email: '', phone: '', ico: '', address: '', notes: '' });
+        setNewPartner({ name: '', contactName: '', email: '', phone: '', ico: '', address: '', notes: '', type: 'komise' });
         fetchPartners();
       }
     } catch (err) {
@@ -92,8 +97,8 @@ export default function B2bPartnersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-stone-800">B2B Komisní prodej</h2>
-          <p className="text-sm text-stone-500">Správa partnerů a komisního zboží</p>
+          <h2 className="text-lg font-semibold text-stone-800">B2B Partneři</h2>
+          <p className="text-sm text-stone-500">Správa komisního a splátkového prodeje</p>
         </div>
         <button
           onClick={() => setShowNewForm(!showNewForm)}
@@ -121,6 +126,32 @@ export default function B2bPartnersPage() {
           <div className="text-sm text-stone-500">Celkem gramů</div>
           <div className="text-xl font-bold text-stone-800 mt-1">{totalStats.grams.toLocaleString('cs-CZ')} g</div>
         </div>
+      </div>
+
+      {/* Filter tabs */}
+      <div className="flex gap-1 bg-stone-100 rounded-lg p-1 w-fit">
+        {([
+          { key: 'all' as FilterTab, label: 'Všichni' },
+          { key: 'komise' as FilterTab, label: 'Komisní' },
+          { key: 'splatky' as FilterTab, label: 'Splátkový' },
+        ]).map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setFilterTab(tab.key)}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              filterTab === tab.key
+                ? 'bg-white text-stone-800 shadow-sm'
+                : 'text-stone-500 hover:text-stone-700'
+            }`}
+          >
+            {tab.label}
+            <span className="ml-1.5 text-xs text-stone-400">
+              {tab.key === 'all'
+                ? partners.length
+                : partners.filter((p) => (p.type || 'komise') === tab.key).length}
+            </span>
+          </button>
+        ))}
       </div>
 
       {/* New partner form */}
@@ -185,6 +216,43 @@ export default function B2bPartnersPage() {
                 className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-700 mb-1">Typ spolupráce *</label>
+              <div className="flex gap-3">
+                <label className={`flex-1 flex items-center gap-2 px-4 py-2.5 border rounded-lg cursor-pointer transition-colors ${
+                  newPartner.type === 'komise' ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-stone-300 text-stone-600 hover:bg-stone-50'
+                }`}>
+                  <input
+                    type="radio"
+                    name="partnerType"
+                    value="komise"
+                    checked={newPartner.type === 'komise'}
+                    onChange={() => setNewPartner({ ...newPartner, type: 'komise' })}
+                    className="sr-only"
+                  />
+                  <span className="w-3 h-3 rounded-full border-2 flex items-center justify-center border-current">
+                    {newPartner.type === 'komise' && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
+                  </span>
+                  <span className="text-sm font-medium">Komise</span>
+                </label>
+                <label className={`flex-1 flex items-center gap-2 px-4 py-2.5 border rounded-lg cursor-pointer transition-colors ${
+                  newPartner.type === 'splatky' ? 'border-purple-400 bg-purple-50 text-purple-700' : 'border-stone-300 text-stone-600 hover:bg-stone-50'
+                }`}>
+                  <input
+                    type="radio"
+                    name="partnerType"
+                    value="splatky"
+                    checked={newPartner.type === 'splatky'}
+                    onChange={() => setNewPartner({ ...newPartner, type: 'splatky' })}
+                    className="sr-only"
+                  />
+                  <span className="w-3 h-3 rounded-full border-2 flex items-center justify-center border-current">
+                    {newPartner.type === 'splatky' && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
+                  </span>
+                  <span className="text-sm font-medium">Splátky</span>
+                </label>
+              </div>
+            </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-stone-700 mb-1">Poznámky</label>
               <textarea
@@ -234,6 +302,7 @@ export default function B2bPartnersPage() {
               <thead>
                 <tr className="border-b border-stone-200 bg-stone-50">
                   <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase">Partner</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-stone-500 uppercase">Typ</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase">Kontakt</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-stone-500 uppercase">Celkem Kč</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-stone-500 uppercase">Gramů</th>
@@ -244,13 +313,24 @@ export default function B2bPartnersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
-                {partners.map((partner) => (
+                {partners
+                  .filter((p) => filterTab === 'all' || (p.type || 'komise') === filterTab)
+                  .map((partner) => (
                   <tr key={partner.id} className="hover:bg-stone-50 transition-colors cursor-pointer" onClick={() => window.location.href = `/admin/b2b/${partner.id}`}>
                     <td className="px-4 py-3">
                       <Link href={`/admin/b2b/${partner.id}`} className="font-medium text-stone-800 hover:text-[#722F37]">
                         {partner.name}
                       </Link>
                       {partner.ico && <div className="text-xs text-stone-400 mt-0.5">IČO: {partner.ico}</div>}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <span className={`inline-block px-2.5 py-0.5 text-xs font-medium rounded-full ${
+                        (partner.type || 'komise') === 'komise'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-purple-100 text-purple-700'
+                      }`}>
+                        {(partner.type || 'komise') === 'komise' ? 'Komise' : 'Splátky'}
+                      </span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-sm text-stone-600">{partner.contactName || '—'}</div>
