@@ -511,6 +511,26 @@ export default function B2bPartnerDetailPage() {
                       </div>
                     </div>
                   </button>
+                  {/* Delete shipment button */}
+                  <div className="px-6 -mt-3 mb-1 flex justify-end">
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (!confirm(`Opravdu smazat zásilku z ${formatDate(shipment.date)}? Tato akce je nevratná.`)) return;
+                        try {
+                          const res = await fetch(`/api/admin/b2b/${id}/shipments/${shipment.id}`, { method: 'DELETE' });
+                          if (!res.ok) throw new Error('Chyba při mazání');
+                          fetchPartner();
+                          showToast('Zásilka smazána', 'success');
+                        } catch {
+                          showToast('Nepodařilo se smazat zásilku', 'error');
+                        }
+                      }}
+                      className="text-xs text-red-500 hover:text-red-700 hover:underline transition-colors"
+                    >
+                      🗑️ Smazat zásilku
+                    </button>
+                  </div>
 
                   {/* Expanded items table */}
                   {isExpanded && (
