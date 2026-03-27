@@ -908,3 +908,68 @@ model MarketingMetricsDaily {
   @@index([campaignId])
   @@map("marketing_metrics_daily")
 }
+
+// ============================================
+// B2B Commission Sales (Komisní prodej)
+// ============================================
+
+model B2bPartner {
+  id          String   @id @default(cuid())
+  name        String
+  contactName String?
+  email       String?
+  phone       String?
+  ico         String?
+  address     String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  shipments   B2bShipment[]
+  payments    B2bPayment[]
+
+  @@map("b2b_partners")
+}
+
+model B2bShipment {
+  id          String   @id @default(cuid())
+  partnerId   String
+  partner     B2bPartner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  date        DateTime
+  notes       String?
+  createdAt   DateTime @default(now())
+  items       B2bItem[]
+
+  @@index([partnerId])
+  @@map("b2b_shipments")
+}
+
+model B2bItem {
+  id          String   @id @default(cuid())
+  shipmentId  String
+  shipment    B2bShipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  druh        String   // Panenské, Středoevropské
+  barva       String   // Blond, Hnědé, etc.
+  delkaCm     Float
+  gramaz      Float
+  cenaPerGram Float
+  celkem      Float
+  stav        String   @default("skladem") // skladem, prodano, vraceni, zaplaceno
+  notes       String?
+
+  @@index([shipmentId])
+  @@map("b2b_items")
+}
+
+model B2bPayment {
+  id          String   @id @default(cuid())
+  partnerId   String
+  partner     B2bPartner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  date        DateTime
+  amount      Float
+  method      String   // airbank, hotovost, jiny
+  note        String?
+  createdAt   DateTime @default(now())
+
+  @@index([partnerId])
+  @@map("b2b_payments")
+}

@@ -17,6 +17,7 @@ const navigation = {
     { href: '/admin/objednavky', label: 'Objednávky', icon: '📋' },
     { href: '/admin/zakaznici', label: 'Zákazníci', icon: '👥' },
     { href: '/admin/reporty', label: 'Reporty', icon: '📈' },
+    { href: '/admin/b2b', label: 'B2B Komise', icon: '🤝' },
   ],
   settings: [
     { href: '/admin/price-matrix', label: 'Matice cen', icon: '💰' },
