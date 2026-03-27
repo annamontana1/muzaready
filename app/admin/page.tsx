@@ -138,8 +138,8 @@ export default function AdminDashboard() {
               <span className="text-2xl">📦</span>
             </div>
           </div>
-          <Link href="/admin/produkty" className="text-sm text-[#722F37] font-medium mt-3 inline-block hover:underline">
-            Zobrazit vše →
+          <Link href="/admin/sklad" className="text-sm text-[#722F37] font-medium mt-3 inline-block hover:underline">
+            Zobrazit sklad →
           </Link>
         </div>
 
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           {lowStockSkus.length > 0 ? (
-            <Link href="/admin/low-stock-alerts" className="text-sm text-amber-600 font-medium mt-3 inline-block hover:underline">
+            <Link href="/admin/sklad" className="text-sm text-amber-600 font-medium mt-3 inline-block hover:underline">
               Zkontrolovat →
             </Link>
           ) : (
@@ -230,10 +230,10 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { href: '/admin/produkty/new', icon: '➕', label: 'Nový produkt', color: 'bg-blue-50 text-blue-700' },
-          { href: '/admin/stock-receive', icon: '📥', label: 'Naskladnit', color: 'bg-purple-50 text-purple-700' },
-          { href: '/admin/objednavky', icon: '📋', label: 'Objednávky', color: 'bg-emerald-50 text-emerald-700' },
-          { href: '/admin/seo', icon: '🔍', label: 'SEO správa', color: 'bg-amber-50 text-amber-700' },
+          { href: '/admin/prodeje/novy', icon: '🛒', label: 'Nový prodej', color: 'bg-emerald-50 text-emerald-700' },
+          { href: '/admin/konfigurator-sku', icon: '📥', label: 'Naskladnit', color: 'bg-purple-50 text-purple-700' },
+          { href: '/admin/objednavky', icon: '📋', label: 'Objednávky', color: 'bg-blue-50 text-blue-700' },
+          { href: '/admin/reporty', icon: '📈', label: 'Reporty', color: 'bg-amber-50 text-amber-700' },
         ].map((action) => (
           <Link
             key={action.href}
