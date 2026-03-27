@@ -6,16 +6,31 @@ import { createInvoiceFromOrder, isFakturoidConfigured } from '@/lib/fakturoid';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// Ending surcharges per gram
+const ENDING_SURCHARGE: Record<string, number> = {
+  'Bez zakončení': 0,
+  'Keratin': 10,
+  'Mikrokeratin': 10,
+  'Pásky keratinu': 10,
+  'Weft': 50,
+  'Tapes': 50,
+};
+
 interface PosItem {
-  skuId: string;
-  saleMode: 'BULK_G' | 'PIECE_BY_WEIGHT';
+  category: string;    // 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades'
+  shadeCode: string;
+  structure: string;
+  lengthCm: number;
+  ending: string;
   grams: number;
-  ending?: 'KERATIN' | 'NONE';
-  assemblyFeeCzk?: number;
+  pricePerGram: number;
+  endingPricePerGram: number;
+  productType: string; // 'barvene' | 'nebarvene'
 }
 
 interface PosBody {
-  customerType: 'anonymous' | 'b2b';
+  channel: 'prodejna' | 'instagram' | 'eshop';
+  customerType: 'anonymous' | 'new' | 'b2b';
   customer: {
     firstName?: string;
     lastName?: string;
@@ -23,22 +38,23 @@ interface PosBody {
     phone?: string;
     companyName?: string;
     ico?: string;
+    contactPerson?: string;
   };
   items: PosItem[];
+  discountPercent: number;
+  shipping?: {
+    carrier: string;
+    price: number;
+  } | null;
   paymentMethod: 'hotovost' | 'karta' | 'prevod';
   note?: string;
 }
 
 /**
  * POST /api/admin/pos
- * Create a POS (store) order.
- *
- * 1. Validate input
- * 2. Create Order with channel="store"
- * 3. Create OrderItems
- * 4. Deduct stock from each SKU
- * 5. If payment != hotovost, create Fakturoid invoice
- * 6. Return created order
+ * Create a POS order (prodejna, instagram, or manual e-shop).
+ * Does NOT deduct from stock — items are selected by dropdown, not from inventory.
+ * Calculates price from PriceMatrix + ending surcharges.
  */
 export async function POST(request: NextRequest) {
   const authError = await requireAdmin(request);
@@ -46,7 +62,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: PosBody = await request.json();
-    const { customerType, customer, items, paymentMethod, note } = body;
+    const { channel, customerType, customer, items, discountPercent, shipping, paymentMethod, note } = body;
 
     // --- Validate ---
     if (!items || items.length === 0) {
@@ -63,125 +79,74 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For B2B, require at least company name
-    if (customerType === 'b2b' && !customer?.companyName && !customer?.firstName) {
-      return NextResponse.json(
-        { error: 'Zadejte jméno firmy nebo kontaktní osobu' },
-        { status: 400 }
-      );
-    }
-
-    // --- Fetch SKUs ---
-    const skuIds = items.map((i) => i.skuId);
-    const skus = await prisma.sku.findMany({
-      where: { id: { in: skuIds } },
-    });
-
-    if (skus.length !== new Set(skuIds).size) {
-      return NextResponse.json(
-        { error: 'Jeden nebo více SKU nebylo nalezeno' },
-        { status: 404 }
-      );
-    }
-
-    const skuMap = new Map(skus.map((s) => [s.id, s]));
-
-    // --- Calculate line totals & validate stock ---
+    // --- Calculate totals ---
     let subtotal = 0;
     const processedItems: Array<{
-      skuId: string;
-      sku: any;
-      saleMode: 'BULK_G' | 'PIECE_BY_WEIGHT';
+      name: string;
       grams: number;
       pricePerGram: number;
+      endingPricePerGram: number;
       lineTotal: number;
-      nameSnapshot: string;
-      ending: 'KERATIN' | 'NONE';
-      assemblyFeeCzk: number;
-      assemblyFeeTotal: number;
+      endingTotal: number;
+      ending: string;
+      lengthCm: number;
     }> = [];
 
     for (const item of items) {
-      const sku = skuMap.get(item.skuId);
-      if (!sku) {
-        return NextResponse.json(
-          { error: `SKU ${item.skuId} nebylo nalezeno` },
-          { status: 404 }
-        );
-      }
+      const pricePerGram = item.pricePerGram || 0;
+      const endingPricePerGram = item.endingPricePerGram || 0;
+      const hairCost = Math.round(pricePerGram * item.grams * 10) / 10;
+      const endingCost = Math.round(endingPricePerGram * item.grams * 10) / 10;
+      const lineTotal = Math.round(hairCost + endingCost);
 
-      if (item.saleMode === 'BULK_G') {
-        const available = sku.availableGrams || 0;
-        if (available < item.grams) {
-          return NextResponse.json(
-            {
-              error: `Nedostatečný sklad pro ${sku.shadeName || sku.sku}. Dostupné: ${available}g, požadováno: ${item.grams}g`,
-            },
-            { status: 400 }
-          );
-        }
-        const pricePerGram = sku.pricePerGramCzk || 0;
-        const lineTotal = Math.round(pricePerGram * item.grams);
-        const assemblyFeeCzk = item.assemblyFeeCzk || 0;
-        const assemblyFeeTotal = assemblyFeeCzk * item.grams;
+      const tierNames: Record<string, string> = {
+        standard: 'Standard',
+        luxe: 'Luxe',
+        platinum_edition: 'Platinum Edition',
+        baby_shades: 'Baby Shades',
+      };
 
-        subtotal += lineTotal + assemblyFeeTotal;
+      const name = `${tierNames[item.category] || item.category} – #${item.shadeCode} ${item.structure} ${item.lengthCm}cm`;
 
-        processedItems.push({
-          skuId: item.skuId,
-          sku,
-          saleMode: 'BULK_G',
-          grams: item.grams,
-          pricePerGram: Math.round(pricePerGram),
-          lineTotal,
-          nameSnapshot: sku.name || sku.shadeName || sku.sku,
-          ending: item.ending || 'NONE',
-          assemblyFeeCzk,
-          assemblyFeeTotal,
-        });
-      } else {
-        // PIECE_BY_WEIGHT
-        if (!sku.inStock || sku.soldOut) {
-          return NextResponse.json(
-            { error: `${sku.shadeName || sku.sku} není na skladě` },
-            { status: 400 }
-          );
-        }
-        const totalPrice = sku.priceCzkTotal || 0;
-        const weight = sku.weightTotalG || 0;
-        const pricePerGram = weight > 0 ? Math.round(totalPrice / weight) : 0;
-
-        subtotal += Math.round(totalPrice);
-
-        processedItems.push({
-          skuId: item.skuId,
-          sku,
-          saleMode: 'PIECE_BY_WEIGHT',
-          grams: weight,
-          pricePerGram,
-          lineTotal: Math.round(totalPrice),
-          nameSnapshot: sku.name || sku.shadeName || sku.sku,
-          ending: item.ending || 'NONE',
-          assemblyFeeCzk: 0,
-          assemblyFeeTotal: 0,
-        });
-      }
+      subtotal += lineTotal;
+      processedItems.push({
+        name,
+        grams: item.grams,
+        pricePerGram,
+        endingPricePerGram,
+        lineTotal,
+        endingTotal: Math.round(endingCost),
+        ending: item.ending || 'Bez zakončení',
+        lengthCm: item.lengthCm,
+      });
     }
 
-    const total = subtotal; // No shipping for store sales
+    // Apply discount
+    const discountAmount = discountPercent > 0 ? Math.round(subtotal * (discountPercent / 100)) : 0;
+    const afterDiscount = subtotal - discountAmount;
 
-    // Map payment method to DB value
+    // Add shipping
+    const shippingCost = shipping?.price || 0;
+    const total = afterDiscount + shippingCost;
+
+    // Map payment method and channel
     const paymentMethodMap: Record<string, string> = {
       hotovost: 'cash',
       karta: 'card',
       prevod: 'bank_transfer',
     };
 
-    const firstName = customer?.firstName || 'Prodejní';
-    const lastName = customer?.lastName || 'Místo';
+    const channelMap: Record<string, string> = {
+      prodejna: 'store',
+      instagram: 'instagram',
+      eshop: 'web',
+    };
+
+    const firstName = customer?.contactPerson || customer?.firstName || 'Prodejní';
+    const lastName = customer?.lastName || (customerType === 'anonymous' ? 'Místo' : '');
     const email = customer?.email || 'prodejna@muzahair.cz';
 
-    // --- Create order in transaction ---
+    // --- Create order ---
     const order = await prisma.$transaction(async (tx) => {
       const newOrder = await tx.order.create({
         data: {
@@ -195,78 +160,37 @@ export async function POST(request: NextRequest) {
           city: 'Praha',
           zipCode: '11000',
           country: 'CZ',
-          deliveryMethod: 'personal',
+          deliveryMethod: shipping?.carrier || 'personal',
           orderStatus: paymentMethod === 'prevod' ? 'pending' : 'paid',
           paymentStatus: paymentMethod === 'prevod' ? 'unpaid' : 'paid',
-          deliveryStatus: 'delivered',
+          deliveryStatus: channel === 'prodejna' ? 'delivered' : 'pending',
           paymentMethod: paymentMethodMap[paymentMethod] || 'cash',
-          channel: 'store',
+          channel: channelMap[channel] || 'store',
           subtotal,
-          shippingCost: 0,
-          discountAmount: 0,
+          shippingCost,
+          discountAmount,
           total,
-          tags: JSON.stringify(['pos', 'store']),
+          tags: JSON.stringify(['pos', channel]),
           riskScore: 0,
-          notesInternal: note || 'POS prodej na prodejně',
+          notesInternal: note || `POS prodej – ${channel}`,
           paidAt: paymentMethod !== 'prevod' ? new Date() : null,
           items: {
             create: processedItems.map((item) => ({
-              skuId: item.skuId,
-              saleMode: item.saleMode,
+              saleMode: 'BULK_G',
               grams: item.grams,
               pricePerGram: item.pricePerGram,
-              lineTotal: item.lineTotal + item.assemblyFeeTotal,
-              nameSnapshot: item.nameSnapshot,
+              lineTotal: item.lineTotal,
+              nameSnapshot: item.name,
               ending: item.ending,
-              assemblyFeeCzk: item.assemblyFeeCzk,
-              assemblyFeeTotal: item.assemblyFeeTotal,
+              assemblyFeeCzk: item.endingPricePerGram,
+              assemblyFeeTotal: item.endingTotal,
             })),
           },
         },
         include: {
-          items: {
-            include: {
-              sku: true,
-            },
-          },
+          items: true,
         },
       });
-
-      // Deduct stock
-      for (const item of processedItems) {
-        if (item.saleMode === 'BULK_G') {
-          const newAvailable = (item.sku.availableGrams || 0) - item.grams;
-          await tx.sku.update({
-            where: { id: item.skuId },
-            data: {
-              availableGrams: Math.max(0, newAvailable),
-              inStock: newAvailable > 0,
-              soldOut: newAvailable <= 0,
-            },
-          });
-        } else {
-          // PIECE_BY_WEIGHT - mark as sold
-          await tx.sku.update({
-            where: { id: item.skuId },
-            data: {
-              inStock: false,
-              soldOut: true,
-              availableGrams: 0,
-            },
-          });
-        }
-
-        // Log stock movement
-        await tx.stockMovement.create({
-          data: {
-            skuId: item.skuId,
-            type: 'OUT',
-            grams: item.grams,
-            refOrderId: newOrder.id,
-            reason: `POS prodej #${newOrder.id.substring(0, 8)}`,
-          },
-        });
-      }
 
       // Create order history entry
       await tx.orderHistory.create({
@@ -276,7 +200,7 @@ export async function POST(request: NextRequest) {
           oldValue: null,
           newValue: paymentMethod === 'prevod' ? 'pending' : 'paid',
           changeType: 'status_change',
-          note: `POS prodej na prodejně - ${processedItems.length} položek, platba: ${paymentMethod}`,
+          note: `POS prodej – ${channel} – ${processedItems.length} položek, platba: ${paymentMethod}`,
           changedBy: 'admin',
         },
       });
@@ -284,30 +208,91 @@ export async function POST(request: NextRequest) {
       return newOrder;
     });
 
-    // --- Fakturoid invoice for card/transfer, receipt for cash ---
+    // --- Fakturoid ---
     let invoiceResult = null;
     if (paymentMethod !== 'hotovost' && isFakturoidConfigured()) {
       try {
+        const invoiceLines = processedItems.map((item) => ({
+          name: item.name + (item.ending !== 'Bez zakončení' ? ` + ${item.ending}` : ''),
+          quantity: item.grams,
+          unitPrice: item.pricePerGram + item.endingPricePerGram,
+          unit: 'g',
+        }));
+
+        // Add shipping line
+        if (shippingCost > 0 && shipping) {
+          invoiceLines.push({
+            name: `Doprava – ${shipping.carrier}`,
+            quantity: 1,
+            unitPrice: shippingCost,
+            unit: 'ks',
+          });
+        }
+
+        // Add discount line
+        if (discountAmount > 0) {
+          invoiceLines.push({
+            name: `Sleva ${discountPercent}%`,
+            quantity: 1,
+            unitPrice: -discountAmount,
+            unit: 'ks',
+          });
+        }
+
         invoiceResult = await createInvoiceFromOrder({
           orderId: order.id,
-          customerName: customer?.companyName || `${firstName} ${lastName}`,
+          customerName: customer?.companyName || `${firstName} ${lastName}`.trim(),
           customerEmail: email,
           customerPhone: customer?.phone,
           customerIco: customer?.ico,
-          items: processedItems.map((item) => ({
-            name: item.nameSnapshot,
-            quantity: item.saleMode === 'BULK_G' ? item.grams : 1,
-            unitPrice:
-              item.saleMode === 'BULK_G'
-                ? item.pricePerGram
-                : item.lineTotal,
-            unit: item.saleMode === 'BULK_G' ? 'g' : 'ks',
-          })),
+          items: invoiceLines,
+          shippingPrice: 0, // already included in lines
           paymentMethod: paymentMethodMap[paymentMethod] || 'cash',
           isPaid: paymentMethod !== 'prevod',
+          proforma: paymentMethod === 'prevod', // proforma for bank transfer (instagram)
         });
       } catch (invoiceError) {
         console.error('Fakturoid invoice error (non-blocking):', invoiceError);
+      }
+    }
+
+    // --- Send email via Resend for Instagram orders ---
+    if (channel === 'instagram' && email && email !== 'prodejna@muzahair.cz') {
+      try {
+        const { Resend } = await import('resend');
+        const resend = new Resend(process.env.RESEND_API_KEY);
+
+        const itemsList = processedItems
+          .map((item) => `• ${item.name} – ${item.grams}g – ${item.lineTotal.toLocaleString('cs-CZ')} Kč${item.ending !== 'Bez zakončení' ? ` (+ ${item.ending} ${item.endingTotal} Kč)` : ''}`)
+          .join('\n');
+
+        await resend.emails.send({
+          from: 'Mùza Hair <info@mail.muzahair.cz>',
+          to: email,
+          subject: `Proforma faktura – Objednávka #${order.id.substring(0, 8).toUpperCase()}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #722F37;">Mùza Hair – Proforma faktura</h2>
+              <p>Dobrý den,</p>
+              <p>děkujeme za Vaši objednávku. Níže naleznete souhrn:</p>
+              <hr style="border: 1px solid #eee;" />
+              <pre style="font-family: Arial; white-space: pre-wrap;">${itemsList}</pre>
+              ${discountAmount > 0 ? `<p><strong>Sleva ${discountPercent}%:</strong> -${discountAmount.toLocaleString('cs-CZ')} Kč</p>` : ''}
+              ${shippingCost > 0 ? `<p><strong>Doprava (${shipping?.carrier}):</strong> ${shippingCost.toLocaleString('cs-CZ')} Kč</p>` : ''}
+              <h3 style="color: #722F37;">Celkem k úhradě: ${total.toLocaleString('cs-CZ')} Kč</h3>
+              <hr style="border: 1px solid #eee;" />
+              <p><strong>Platební údaje:</strong></p>
+              <p>Číslo účtu: [doplnit]<br/>
+              Variabilní symbol: ${order.id.substring(0, 8).toUpperCase()}<br/>
+              Částka: ${total.toLocaleString('cs-CZ')} Kč</p>
+              <p>Po připsání platby na účet Vám zašleme daňový doklad.</p>
+              <br/>
+              <p>S pozdravem,<br/><strong>Mùza Hair</strong><br/>www.muzahair.cz</p>
+            </div>
+          `,
+        });
+      } catch (emailError) {
+        console.error('Resend email error (non-blocking):', emailError);
       }
     }
 
@@ -329,7 +314,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('POS order creation error:', error);
     return NextResponse.json(
-      { error: 'Chyba při vytváření prodeje: ' + (error.message || String(error)) },
+      { error: error.message || 'Chyba při vytváření objednávky' },
       { status: 500 }
     );
   }

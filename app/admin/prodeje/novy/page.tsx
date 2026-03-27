@@ -338,17 +338,27 @@ export default function UnifiedNewSalePage() {
                 email: customer.email,
                 phone: customer.phone,
               },
-        items: cart.map((item) => ({
-          category: item.config.category,
-          shadeCode: item.config.shadeCode,
-          structure: item.config.structure,
-          lengthCm: item.config.lengthCm,
-          ending: item.config.ending,
-          grams: item.config.grams,
-          pricePerGram: item.pricePerGram,
-          endingPricePerGram: item.endingPricePerGram,
-          productType: item.config.productType,
-        })),
+        items: cart.map((item) => {
+          const endingMap: Record<string, string> = {
+            bez: 'Bez zakončení',
+            keratin: 'Keratin',
+            mikrokeratin: 'Mikrokeratin',
+            pasky_keratinu: 'Pásky keratinu',
+            weft: 'Weft',
+            tapes: 'Tapes',
+          };
+          return {
+            category: item.config.category,
+            shadeCode: item.config.shadeCode,
+            structure: item.config.structure,
+            lengthCm: item.config.lengthCm,
+            ending: endingMap[item.config.ending] || item.config.ending,
+            grams: item.config.grams,
+            pricePerGram: item.pricePerGram,
+            endingPricePerGram: item.endingPricePerGram,
+            productType: item.config.productType,
+          };
+        }),
         discountPercent,
         shipping: channel === 'instagram'
           ? { carrier: shipping.carrier, price: shippingCost }
