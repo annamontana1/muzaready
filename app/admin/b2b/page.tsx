@@ -245,7 +245,7 @@ export default function B2bPartnersPage() {
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {partners.map((partner) => (
-                  <tr key={partner.id} className="hover:bg-stone-50 transition-colors">
+                  <tr key={partner.id} className="hover:bg-stone-50 transition-colors cursor-pointer" onClick={() => window.location.href = `/admin/b2b/${partner.id}`}>
                     <td className="px-4 py-3">
                       <Link href={`/admin/b2b/${partner.id}`} className="font-medium text-stone-800 hover:text-[#722F37]">
                         {partner.name}
