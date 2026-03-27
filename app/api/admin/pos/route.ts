@@ -163,32 +163,33 @@ export async function POST(request: NextRequest) {
         kudrnate: 'CURLY',
       };
 
+      const categoryMap: Record<string, string> = {
+        barvene: 'COLORED',
+        nebarvene: 'VIRGIN',
+      };
+
       let sku = await prisma.sku.findFirst({
         where: {
           shade: String(item.shadeCode),
           structure: structureMap[item.structure] || item.structure,
-          tier: tierMap[item.category] || item.category,
+          customerCategory: (categoryMap[item.productType] || 'VIRGIN') as any,
         },
       });
 
       if (!sku) {
         // Create a minimal SKU so we can reference it
-        const categoryMap: Record<string, string> = {
-          barvene: 'COLORED',
-          nebarvene: 'VIRGIN',
-        };
+        const skuCode = `POS-${item.category}-${item.shadeCode}-${item.structure}-${Date.now()}`;
         sku = await prisma.sku.create({
           data: {
+            sku: skuCode,
             shade: String(item.shadeCode),
             shadeName: `Odstín #${item.shadeCode}`,
             structure: structureMap[item.structure] || 'STRAIGHT',
-            tier: tierMap[item.category] || 'STANDARD',
-            customerCategory: categoryMap[item.productType] || 'VIRGIN',
+            customerCategory: (categoryMap[item.productType] || 'VIRGIN') as any,
             saleMode: 'BULK_G',
             lengthCm: item.lengthCm,
             availableGrams: 0,
             pricePerGramCzk: item.pricePerGram,
-            isActive: true,
           },
         });
       }
