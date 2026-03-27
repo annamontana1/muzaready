@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
 
       let sku = await prisma.sku.findFirst({
         where: {
-          shadeCode: String(item.shadeCode),
+          shade: String(item.shadeCode),
           structure: structureMap[item.structure] || item.structure,
           tier: tierMap[item.category] || item.category,
         },
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
         };
         sku = await prisma.sku.create({
           data: {
-            shadeCode: String(item.shadeCode),
+            shade: String(item.shadeCode),
             shadeName: `Odstín #${item.shadeCode}`,
             structure: structureMap[item.structure] || 'STRAIGHT',
             tier: tierMap[item.category] || 'STANDARD',
