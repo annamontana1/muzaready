@@ -109,9 +109,9 @@ export default function Filters({ onFilter }: FiltersProps) {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
           >
             <option value="">Všechny kanály</option>
-            <option value="web">Web</option>
-            <option value="pos">POS</option>
-            <option value="ig_dm">Instagram DM</option>
+            <option value="web">E-shop</option>
+            <option value="store">Prodejna</option>
+            <option value="instagram">Instagram</option>
           </select>
         </div>
 
