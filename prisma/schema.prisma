@@ -916,6 +916,7 @@ model MarketingMetricsDaily {
 model B2bPartner {
   id          String   @id @default(cuid())
   name        String
+  type        String   @default("komise")
   contactName String?
   email       String?
   phone       String?
