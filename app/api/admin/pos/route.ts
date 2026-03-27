@@ -360,7 +360,7 @@ export async function POST(request: NextRequest) {
               <h3 style="color: #722F37;">Celkem k úhradě: ${total.toLocaleString('cs-CZ')} Kč</h3>
               <hr style="border: 1px solid #eee;" />
               <p><strong>Platební údaje:</strong></p>
-              <p>Číslo účtu: [doplnit]<br/>
+              <p>Číslo účtu: 321286011/0300 (ČSOB)<br/>
               Variabilní symbol: ${order.id.substring(0, 8).toUpperCase()}<br/>
               Částka: ${total.toLocaleString('cs-CZ')} Kč</p>
               <p>Po připsání platby na účet Vám zašleme daňový doklad.</p>
