@@ -229,17 +229,21 @@ export async function POST(request: NextRequest) {
           notesInternal: note || `POS prodej – ${channel}`,
           paidAt: paymentMethod !== 'prevod' ? new Date() : null,
           items: {
-            create: processedItems.map((item, idx) => ({
-              skuId: itemSkuIds[idx],
-              saleMode: 'BULK_G',
-              grams: item.grams,
-              pricePerGram: item.pricePerGram,
-              lineTotal: item.lineTotal,
-              nameSnapshot: item.name,
-              ending: item.ending,
-              assemblyFeeCzk: item.endingPricePerGram,
-              assemblyFeeTotal: item.endingTotal,
-            })),
+            create: processedItems.map((item, idx) => {
+              // Map ending string to EndingOption enum (KERATIN | NONE)
+              const endingEnum = item.ending === 'Bez zakončení' || item.ending === 'bez' ? 'NONE' : 'KERATIN';
+              return {
+                skuId: itemSkuIds[idx],
+                saleMode: 'BULK_G' as const,
+                grams: item.grams,
+                pricePerGram: item.pricePerGram,
+                lineTotal: item.lineTotal,
+                nameSnapshot: item.name,
+                ending: endingEnum as any,
+                assemblyFeeCzk: item.endingPricePerGram,
+                assemblyFeeTotal: item.endingTotal,
+              };
+            }),
           },
         },
         include: {
