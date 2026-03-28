@@ -43,6 +43,9 @@ interface CustomerData {
   ico: string;
   dic: string;
   contactPerson: string;
+  street: string;
+  city: string;
+  zipCode: string;
 }
 
 interface ShippingOption {
@@ -170,6 +173,9 @@ export default function UnifiedNewSalePage() {
     ico: '',
     dic: '',
     contactPerson: '',
+    street: '',
+    city: '',
+    zipCode: '',
   });
 
   // ARES lookup
@@ -192,9 +198,12 @@ export default function UnifiedNewSalePage() {
       setCustomer((prev) => ({
         ...prev,
         companyName: data.companyName || prev.companyName,
-        dic: data.dic || '',
+        dic: data.dic || prev.dic,
+        street: data.street || prev.street,
+        city: data.city || prev.city,
+        zipCode: data.zipCode || prev.zipCode,
       }));
-      showToast(`Načteno: ${data.companyName}`, 'success');
+      showToast(`Načteno z ARES: ${data.companyName}`, 'success');
     } catch {
       showToast('Chyba při dotazu na ARES', 'error');
     } finally {
@@ -250,7 +259,11 @@ export default function UnifiedNewSalePage() {
       phone: s.phone,
       companyName: s.companyName,
       ico: s.ico,
+      dic: '',
       contactPerson: s.companyName ? s.firstName + ' ' + s.lastName : '',
+      street: '',
+      city: '',
+      zipCode: '',
     });
     if (s.isB2B) setCustomerType('b2b');
     else setCustomerType('new');
@@ -712,6 +725,35 @@ export default function UnifiedNewSalePage() {
                 value={customer.dic}
                 onChange={(e) => setCustomer((p) => ({ ...p, dic: e.target.value }))}
                 placeholder="CZ12345678"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className={labelClass}>Ulice a číslo popisné</label>
+              <input
+                className={inputClass}
+                value={customer.street}
+                onChange={(e) => setCustomer((p) => ({ ...p, street: e.target.value }))}
+                placeholder="Např. Šrámkova 430/12"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Město</label>
+              <input
+                className={inputClass}
+                value={customer.city}
+                onChange={(e) => setCustomer((p) => ({ ...p, city: e.target.value }))}
+                placeholder="Praha"
+              />
+            </div>
+            <div>
+              <label className={labelClass}>PSČ</label>
+              <input
+                className={inputClass}
+                value={customer.zipCode}
+                onChange={(e) => setCustomer((p) => ({ ...p, zipCode: e.target.value }))}
+                placeholder="11000"
+                inputMode="numeric"
+                maxLength={5}
               />
             </div>
             <div>
