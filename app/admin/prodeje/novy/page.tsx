@@ -41,6 +41,7 @@ interface CustomerData {
   phone: string;
   companyName: string;
   ico: string;
+  dic: string;
   contactPerson: string;
 }
 
@@ -167,8 +168,39 @@ export default function UnifiedNewSalePage() {
     phone: '',
     companyName: '',
     ico: '',
+    dic: '',
     contactPerson: '',
   });
+
+  // ARES lookup
+  const [aresLoading, setAresLoading] = useState(false);
+
+  async function fetchAres() {
+    const ico = customer.ico.trim();
+    if (!/^\d{8}$/.test(ico)) {
+      showToast('IČO musí mít 8 číslic', 'error');
+      return;
+    }
+    setAresLoading(true);
+    try {
+      const res = await fetch(`/api/ares?ico=${ico}`);
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Firma nenalezena v ARES', 'error');
+        return;
+      }
+      setCustomer((prev) => ({
+        ...prev,
+        companyName: data.companyName || prev.companyName,
+        dic: data.dic || '',
+      }));
+      showToast(`Načteno: ${data.companyName}`, 'success');
+    } catch {
+      showToast('Chyba při dotazu na ARES', 'error');
+    } finally {
+      setAresLoading(false);
+    }
+  }
 
   // Autocomplete zákazníků
   const [customerQuery, setCustomerQuery] = useState('');
@@ -653,11 +685,33 @@ export default function UnifiedNewSalePage() {
             </div>
             <div>
               <label className={labelClass}>IČO</label>
+              <div className="flex gap-2">
+                <input
+                  className={inputClass}
+                  value={customer.ico}
+                  onChange={(e) => setCustomer((p) => ({ ...p, ico: e.target.value.replace(/\D/g, '').slice(0, 8) }))}
+                  placeholder="12345678"
+                  maxLength={8}
+                  inputMode="numeric"
+                />
+                <button
+                  type="button"
+                  onClick={fetchAres}
+                  disabled={aresLoading || customer.ico.length !== 8}
+                  className="shrink-0 bg-stone-700 hover:bg-stone-800 disabled:opacity-40 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+                  title="Načíst údaje z ARES"
+                >
+                  {aresLoading ? '⏳' : '🔍 ARES'}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className={labelClass}>DIČ</label>
               <input
                 className={inputClass}
-                value={customer.ico}
-                onChange={(e) => setCustomer((p) => ({ ...p, ico: e.target.value }))}
-                placeholder="12345678"
+                value={customer.dic}
+                onChange={(e) => setCustomer((p) => ({ ...p, dic: e.target.value }))}
+                placeholder="CZ12345678"
               />
             </div>
             <div>
