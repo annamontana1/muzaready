@@ -219,7 +219,7 @@ export async function sendInvoiceByEmail(invoiceId: number): Promise<void> {
 export interface OrderForInvoice {
   orderId: string;
   customerName: string;
-  customerEmail: string;
+  customerEmail?: string; // volitelné — faktura se vytvoří i bez emailu, jen se neodešle
   customerPhone?: string;
   customerStreet?: string;
   customerCity?: string;

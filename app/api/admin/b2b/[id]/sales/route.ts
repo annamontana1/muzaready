@@ -157,11 +157,11 @@ export async function POST(
     if (invoiceType === 'fakturoid') {
       try {
         const configured = isFakturoidConfigured();
-        if (configured && partner.email) {
+        if (configured) {
           const result = await createInvoiceFromOrder({
             orderId: sale.id,
             customerName: partner.name,
-            customerEmail: partner.email || '',
+            customerEmail: partner.email || undefined,
             customerIco: partner.ico || undefined,
             items: sale.items.map((si) => ({
               name: `${si.b2bItem.druh} ${si.b2bItem.barva} ${si.b2bItem.delkaCm} cm`,

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useToast } from '@/components/ui/ToastProvider';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -525,6 +526,7 @@ const PAYMENT_METHODS = [
 
 export default function B2bPartnerDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { showToast } = useToast();
   const [partner, setPartner] = useState<B2bPartnerDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>('prehled');
@@ -538,6 +540,25 @@ export default function B2bPartnerDetailPage() {
   // Sales data
   const [sales, setSales] = useState<B2bSale[]>([]);
   const [salesLoading, setSalesLoading] = useState(false);
+  const [generatingInvoice, setGeneratingInvoice] = useState<string | null>(null); // saleId
+
+  async function generateInvoiceForSale(saleId: string) {
+    setGeneratingInvoice(saleId);
+    try {
+      const res = await fetch(`/api/admin/b2b/${id}/sales/${saleId}/invoice`, { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || 'Faktura byla vytvořena', 'success');
+        fetchSales();
+      } else {
+        showToast(data.error || 'Nepodařilo se vytvořit fakturu', 'error');
+      }
+    } catch {
+      showToast('Chyba při generování faktury', 'error');
+    } finally {
+      setGeneratingInvoice(null);
+    }
+  }
 
   // Returns data
   const [returns, setReturns] = useState<B2bReturnRecord[]>([]);
@@ -990,16 +1011,32 @@ export default function B2bPartnerDetailPage() {
                           )}
                         </td>
                         <td className="px-4 py-3">
-                          {sale.invoiceUrl && (
-                            <a
-                              href={sale.invoiceUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-[#722F37] underline"
-                            >
-                              Stáhnout
-                            </a>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {sale.invoiceUrl && (
+                              <a
+                                href={sale.invoiceUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-[#722F37] underline"
+                              >
+                                Stáhnout
+                              </a>
+                            )}
+                            {/* Tlačítko pro zpětné vygenerování faktury */}
+                            {sale.invoiceType !== 'fakturoid' && (
+                              <button
+                                onClick={() => generateInvoiceForSale(sale.id)}
+                                disabled={generatingInvoice === sale.id}
+                                className="text-xs px-2 py-1 rounded bg-[#722F37] text-white hover:bg-[#5a252c] disabled:opacity-50 transition-colors whitespace-nowrap"
+                                title="Vygenerovat Fakturoid fakturu"
+                              >
+                                {generatingInvoice === sale.id ? '⏳' : '🧾 Faktura'}
+                              </button>
+                            )}
+                            {sale.invoiceType === 'fakturoid' && sale.fakturoidId && (
+                              <span className="text-xs text-emerald-600 font-medium">✓ #{sale.invoiceNumber || sale.fakturoidId}</span>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
