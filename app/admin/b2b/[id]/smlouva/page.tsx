@@ -236,7 +236,7 @@ export default function KomisniSmlouvaPage() {
           <ol className="text-sm text-stone-600 space-y-1.5 list-decimal list-inside">
             <li>Minimální prodejní cena zboží je stanovena dle ceníku komitenta uvedeného v tabulce výše.</li>
             <li>Komisář nesmí prodat zboží pod stanovenou minimální cenu bez předchozího písemného souhlasu komitenta.</li>
-            <li>Komisář je povinen uhradit komitentovi výtěžek z prodeje nejpozději do 30 kalendářních dnů od uskutečnění prodeje.</li>
+            <li>Komisář je povinen uhradit komitentovi výtěžek z prodeje v termínu dohodnutém mezi smluvními stranami.</li>
             <li>Platby probíhají bezhotovostním převodem na účet komitenta: 321286011/0300.</li>
             <li>Komitent je neplátce DPH — všechny ceny jsou konečné.</li>
           </ol>
