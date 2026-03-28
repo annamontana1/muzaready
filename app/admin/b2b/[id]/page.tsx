@@ -154,7 +154,7 @@ interface SaleModalProps {
 }
 
 function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalProps) {
-  const [invoiceType, setInvoiceType] = useState<'fakturoid' | 'uctenka' | 'zadna'>('zadna');
+  const [invoiceType, setInvoiceType] = useState<'fakturoid' | 'uctenka' | 'zadna' | null>(null);
   const [sendEmail, setSendEmail] = useState(false);
   const [notes, setNotes] = useState('');
   const [saleDate, setSaleDate] = useState(new Date().toISOString().split('T')[0]);
@@ -163,7 +163,14 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
 
   const totalAmount = selectedItems.reduce((sum, i) => sum + i.celkem, 0);
 
+  function handleTypeSelect(type: 'fakturoid' | 'uctenka') {
+    setInvoiceType(type);
+    // S fakturou → automaticky zaškrtnout email
+    if (type === 'fakturoid') setSendEmail(true);
+  }
+
   const handleSubmit = async () => {
+    if (!invoiceType) { setError('Vyberte typ dokladu'); return; }
     setSaving(true);
     setError('');
     try {
@@ -183,10 +190,10 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
         throw new Error(data.error || 'Chyba při ukládání');
       }
       const data = await res.json();
+      // Otevřít účtenku v novém okně
       if (invoiceType === 'uctenka' && data.receiptHtml) {
         const blob = new Blob([data.receiptHtml], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
+        window.open(URL.createObjectURL(blob), '_blank');
       }
       onSuccess();
     } catch (e: any) {
@@ -199,29 +206,33 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+
+        {/* Header */}
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-800">Zapsat prodej</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
         </div>
-        <div className="p-6 space-y-4">
-          {/* Items */}
+
+        <div className="p-6 space-y-5">
+
+          {/* Položky */}
           <div>
-            <p className="text-sm font-medium text-gray-600 mb-2">Prodávané položky ({selectedItems.length})</p>
-            <div className="space-y-1 max-h-40 overflow-y-auto">
+            <p className="text-sm font-medium text-gray-500 mb-2">Prodávané položky ({selectedItems.length})</p>
+            <div className="space-y-1 max-h-36 overflow-y-auto">
               {selectedItems.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm bg-gray-50 rounded px-3 py-2">
+                <div key={item.id} className="flex justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
                   <span className="text-gray-700">{item.druh} {item.barva} {item.delkaCm} cm, {item.gramaz} g</span>
-                  <span className="font-medium text-gray-900">{formatCzk(item.celkem)}</span>
+                  <span className="font-semibold text-gray-900">{formatCzk(item.celkem)}</span>
                 </div>
               ))}
             </div>
-            <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
-              <span className="text-sm font-semibold text-gray-700">Celkem</span>
-              <span className="text-lg font-bold" style={{ color: '#722F37' }}>{formatCzk(totalAmount)}</span>
+            <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+              <span className="font-semibold text-gray-700">Celkem</span>
+              <span className="text-xl font-bold" style={{ color: '#722F37' }}>{formatCzk(totalAmount)}</span>
             </div>
           </div>
 
-          {/* Date */}
+          {/* Datum */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Datum prodeje</label>
             <input
@@ -232,45 +243,99 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
             />
           </div>
 
-          {/* Invoice type */}
+          {/* ── Hlavní výběr: 2 velká tlačítka ── */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Typ dokladu</label>
-            <select
-              value={invoiceType}
-              onChange={(e) => setInvoiceType(e.target.value as any)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/30"
-            >
-              <option value="zadna">Bez dokladu</option>
-              <option value="uctenka">Jednoduchá účtenka (HTML)</option>
-              <option value="fakturoid">Fakturoid faktura</option>
-            </select>
+            <p className="text-sm font-semibold text-gray-700 mb-3">Chce partner fakturu?</p>
+            <div className="grid grid-cols-2 gap-3">
+
+              {/* S fakturou */}
+              <button
+                type="button"
+                onClick={() => handleTypeSelect('fakturoid')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all text-left ${
+                  invoiceType === 'fakturoid'
+                    ? 'border-[#722F37] bg-[#722F37]/5'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <span className="text-2xl">🧾</span>
+                <span className={`font-semibold text-sm ${invoiceType === 'fakturoid' ? 'text-[#722F37]' : 'text-gray-800'}`}>
+                  ANO — s fakturou
+                </span>
+                <span className="text-xs text-gray-500 text-center leading-snug">
+                  Oficiální faktura přes Fakturoid, automaticky odeslána emailem
+                </span>
+              </button>
+
+              {/* Bez faktury */}
+              <button
+                type="button"
+                onClick={() => handleTypeSelect('uctenka')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all text-left ${
+                  invoiceType === 'uctenka'
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <span className="text-2xl">📋</span>
+                <span className={`font-semibold text-sm ${invoiceType === 'uctenka' ? 'text-blue-700' : 'text-gray-800'}`}>
+                  NE — bez faktury
+                </span>
+                <span className="text-xs text-gray-500 text-center leading-snug">
+                  Jen interní seznam prodaného zboží (účtenka)
+                </span>
+              </button>
+            </div>
+
+            {/* Popis vybraného */}
+            {invoiceType === 'fakturoid' && (
+              <div className="mt-3 bg-[#722F37]/5 border border-[#722F37]/20 rounded-lg px-3 py-2 text-xs text-[#722F37]">
+                ✅ Fakturoid faktura bude vytvořena a odeslána partnerovi emailem
+              </div>
+            )}
+            {invoiceType === 'uctenka' && (
+              <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs text-blue-700">
+                📋 Vygeneruje se jednoduchý přehled prodeje — otevře se v novém okně
+              </div>
+            )}
           </div>
 
-          {/* Send email */}
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={sendEmail}
-              onChange={(e) => setSendEmail(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#722F37]"
-            />
-            <span className="text-sm text-gray-700">Odeslat email partnerovi</span>
-          </label>
+          {/* Email checkbox — viditelné vždy, ale pro fakturoid předzaškrtnuto */}
+          {invoiceType && (
+            <label className="flex items-center gap-3 cursor-pointer bg-gray-50 rounded-lg px-4 py-3">
+              <input
+                type="checkbox"
+                checked={sendEmail}
+                onChange={(e) => setSendEmail(e.target.checked)}
+                className="w-4 h-4 rounded accent-[#722F37]"
+              />
+              <div>
+                <span className="text-sm font-medium text-gray-700">Odeslat email partnerovi</span>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {invoiceType === 'fakturoid'
+                    ? 'Email s fakturou bude odeslán automaticky'
+                    : 'Přehled prodeje bude zaslán na email partnera'}
+                </p>
+              </div>
+            </label>
+          )}
 
-          {/* Notes */}
+          {/* Poznámka */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Poznámka</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Poznámka <span className="text-gray-400 font-normal">(nepovinné)</span></label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/30 resize-none"
-              placeholder="Volitelná poznámka k prodeji..."
+              placeholder="Např. platba v hotovosti, doručeno osobně…"
             />
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
         </div>
+
+        {/* Footer */}
         <div className="p-6 border-t border-gray-100 flex gap-3 justify-end">
           <button
             onClick={onClose}
@@ -280,11 +345,11 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
           </button>
           <button
             onClick={handleSubmit}
-            disabled={saving}
-            className="px-5 py-2 text-sm rounded-lg text-white font-medium disabled:opacity-50"
+            disabled={saving || !invoiceType}
+            className="px-6 py-2 text-sm rounded-lg text-white font-medium disabled:opacity-40 transition-opacity"
             style={{ backgroundColor: '#722F37' }}
           >
-            {saving ? 'Ukládám…' : 'Potvrdit prodej'}
+            {saving ? 'Ukládám…' : '✅ Potvrdit prodej'}
           </button>
         </div>
       </div>
