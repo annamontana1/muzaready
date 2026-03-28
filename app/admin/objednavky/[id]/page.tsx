@@ -119,7 +119,7 @@ function InvoiceSection({ order }: { order: Order }) {
               {isInstagram ? 'Zálohová faktura — převod na účet' : isStore ? 'Pokladní doklad' : 'Faktura'}
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 flex-wrap">
             {isStore && order.paymentMethod === 'cash' && (
               <a
                 href={`/admin/prodeje/doklad?id=${order.id}`}
@@ -130,11 +130,30 @@ function InvoiceSection({ order }: { order: Order }) {
               </a>
             )}
             <button
+              onClick={() => {
+                const url = `${window.location.origin}/nahled/${order.id}`;
+                const text = `Dobrý den, zde je váš doklad z Muzahair.cz:\n${url}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+              }}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition"
+            >
+              📱 WhatsApp
+            </button>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/nahled/${order.id}`;
+                navigator.clipboard.writeText(url).then(() => alert('Odkaz zkopírován!'));
+              }}
+              className="px-4 py-2 bg-stone-200 text-stone-700 rounded-lg text-sm font-medium hover:bg-stone-300 transition"
+            >
+              🔗 Odkaz
+            </button>
+            <button
               onClick={generateInvoice}
               disabled={loading}
               className="px-4 py-2 bg-[#722F37] text-white rounded-lg text-sm font-medium hover:bg-[#5a252c] transition disabled:opacity-50"
             >
-              {loading ? '⏳ Generuji...' : '📨 Vygenerovat a odeslat fakturu'}
+              {loading ? '⏳ Generuji...' : '📨 Fakturoid'}
             </button>
           </div>
         </div>

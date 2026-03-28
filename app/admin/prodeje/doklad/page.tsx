@@ -74,7 +74,7 @@ function ReceiptContent() {
   return (
     <div className="min-h-screen bg-gray-100 p-4 print:bg-white print:p-0">
       {/* Print button - hidden when printing */}
-      <div className="max-w-[600px] mx-auto mb-4 flex gap-3 print:hidden">
+      <div className="max-w-[600px] mx-auto mb-4 flex gap-3 print:hidden flex-wrap">
         <button
           onClick={() => window.print()}
           className="px-6 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium"
@@ -83,8 +83,25 @@ function ReceiptContent() {
         </button>
         <button
           onClick={() => {
-            window.history.back();
+            const url = `${window.location.origin}/nahled/${orderId}`;
+            const text = `Dobrý den, zde je váš doklad z Muzahair.cz:\n${url}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
           }}
+          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-medium"
+        >
+          📱 Sdílet WhatsApp
+        </button>
+        <button
+          onClick={() => {
+            const url = `${window.location.origin}/nahled/${orderId}`;
+            navigator.clipboard.writeText(url).then(() => alert('Odkaz zkopírován!'));
+          }}
+          className="px-6 py-2 bg-stone-200 text-stone-700 rounded-lg hover:bg-stone-300 transition font-medium"
+        >
+          🔗 Kopírovat odkaz
+        </button>
+        <button
+          onClick={() => { window.history.back(); }}
           className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
         >
           ← Zpět
