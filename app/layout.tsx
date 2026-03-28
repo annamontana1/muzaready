@@ -9,6 +9,9 @@ import DevelopmentModal from "@/components/DevelopmentModal";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.muzahair.cz'),
+  icons: {
+    icon: '/favicon.svg',
+  },
   title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna 🇨🇿",
   description: "Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. Nebarvené panenské, barvené blond, keratin, pásky, tresy. LUXE & Platinum kvalita. Dodání do 48h.",
   keywords: [
