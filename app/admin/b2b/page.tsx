@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/ToastProvider';
 
 interface B2bPartnerSummary {
   id: string;
@@ -24,6 +25,7 @@ interface B2bPartnerSummary {
 type FilterTab = 'all' | 'komise' | 'splatky';
 
 export default function B2bPartnersPage() {
+  const { showToast } = useToast();
   const [partners, setPartners] = useState<B2bPartnerSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [showNewForm, setShowNewForm] = useState(false);
@@ -39,6 +41,35 @@ export default function B2bPartnersPage() {
     type: 'komise' as 'komise' | 'splatky',
   });
   const [saving, setSaving] = useState(false);
+  const [aresLoading, setAresLoading] = useState(false);
+
+  async function fetchAres() {
+    const ico = newPartner.ico.trim();
+    if (!/^\d{8}$/.test(ico)) {
+      showToast('IČO musí mít 8 číslic', 'error');
+      return;
+    }
+    setAresLoading(true);
+    try {
+      const res = await fetch(`/api/ares?ico=${ico}`);
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Firma nenalezena v ARES', 'error');
+        return;
+      }
+      const addr = [data.street, data.zipCode, data.city].filter(Boolean).join(', ');
+      setNewPartner((prev) => ({
+        ...prev,
+        name: data.companyName || prev.name,
+        address: addr || prev.address,
+      }));
+      showToast(`Načteno z ARES: ${data.companyName}`, 'success');
+    } catch {
+      showToast('Chyba při dotazu na ARES', 'error');
+    } finally {
+      setAresLoading(false);
+    }
+  }
 
   const fetchPartners = async () => {
     try {
@@ -200,12 +231,26 @@ export default function B2bPartnersPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">IČO</label>
-              <input
-                type="text"
-                value={newPartner.ico}
-                onChange={(e) => setNewPartner({ ...newPartner, ico: e.target.value })}
-                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={8}
+                  value={newPartner.ico}
+                  onChange={(e) => setNewPartner({ ...newPartner, ico: e.target.value.replace(/\D/g, '').slice(0, 8) })}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
+                  placeholder="12345678"
+                />
+                <button
+                  type="button"
+                  onClick={fetchAres}
+                  disabled={aresLoading || newPartner.ico.length !== 8}
+                  className="shrink-0 bg-stone-700 hover:bg-stone-800 disabled:opacity-40 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors whitespace-nowrap"
+                  title="Načíst údaje z ARES"
+                >
+                  {aresLoading ? '⏳' : '🔍 ARES'}
+                </button>
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1">Adresa</label>
