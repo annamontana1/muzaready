@@ -117,27 +117,13 @@ function formatPrice(czk: number): string {
 }
 
 function getShadeRange(category: Category, productType: ProductType): string[] {
-  let start: number;
-  let end: number;
+  // Nebarvené nemá odstín
+  if (productType === 'nebarvene') return [];
 
-  if (category === 'baby_shades') {
-    start = 6;
-    end = 10;
-  } else if (category === 'platinum_edition') {
-    start = 1;
-    end = 10;
-  } else {
-    // standard, luxe
-    if (productType === 'nebarvene') {
-      start = 1;
-      end = 6;
-    } else {
-      start = 1;
-      end = 10;
-    }
-  }
-
-  return Array.from({ length: end - start + 1 }, (_, i) => String(start + i));
+  if (category === 'baby_shades') return Array.from({ length: 5 }, (_, i) => String(i + 6)); // 6-10
+  if (category === 'platinum_edition') return Array.from({ length: 10 }, (_, i) => String(i + 1)); // 1-10
+  // standard, luxe — barvené 1-10
+  return Array.from({ length: 10 }, (_, i) => String(i + 1));
 }
 
 function getEndingPricePerGram(ending: Ending): number {
@@ -150,7 +136,8 @@ function buildProductLabel(config: ProductConfig): string {
   const typ = TYPE_OPTIONS.find((t) => t.value === config.productType)?.label ?? '';
   const str = STRUCTURE_OPTIONS.find((s) => s.value === config.structure)?.label ?? '';
   const end = ENDING_OPTIONS.find((e) => e.value === config.ending)?.label?.split(' (')[0] ?? '';
-  return `${cat} ${typ} ${str} #${config.shadeCode} ${config.lengthCm}cm${config.ending !== 'bez' ? ' / ' + end : ''}`;
+  const shade = config.productType === 'nebarvene' ? '' : ` #${config.shadeCode}`;
+  return `${cat} ${typ} ${str}${shade} ${config.lengthCm}cm${config.ending !== 'bez' ? ' / ' + end : ''}`;
 }
 
 // ─── Component ──────────────────────────────────────────────────
@@ -368,15 +355,34 @@ export default function UnifiedNewSalePage() {
     setManualPricePerGram(0);
   }
 
-  function applyManualPrice() {
-    if (manualPricePerGram <= 0) return;
-    const epg = getEndingPricePerGram(productEnding);
+  function applyManualPrice(ppg?: number, grams?: number, ending?: Ending) {
+    const price = ppg ?? manualPricePerGram;
+    const g = grams ?? productGrams;
+    const e = ending ?? productEnding;
+    if (price <= 0) return;
+    const epg = getEndingPricePerGram(e);
     setPriceCheck({
-      pricePerGram: manualPricePerGram,
-      endingPrice: epg * productGrams,
-      subtotal: Math.round((manualPricePerGram + epg) * productGrams),
+      pricePerGram: price,
+      endingPrice: epg * g,
+      subtotal: Math.round((price + epg) * g),
     });
     setPriceError(null);
+  }
+
+  // Přepočítá cenu při změně gramáže/zakončení (zachová manuální cenu)
+  function recalcIfPriceKnown(newGrams?: number, newEnding?: Ending) {
+    const g = newGrams ?? productGrams;
+    const e = newEnding ?? productEnding;
+    if (priceCheck) {
+      const epg = getEndingPricePerGram(e);
+      setPriceCheck({
+        pricePerGram: priceCheck.pricePerGram,
+        endingPrice: epg * g,
+        subtotal: Math.round((priceCheck.pricePerGram + epg) * g),
+      });
+    } else if (manualPricePerGram > 0) {
+      applyManualPrice(manualPricePerGram, g, e);
+    }
   }
 
   // ─── Add to Cart ─────────────────────────────────────────────
@@ -841,19 +847,21 @@ export default function UnifiedNewSalePage() {
             </select>
           </div>
 
-          {/* Odstín */}
-          <div>
-            <label className={labelClass}>Odstín</label>
-            <select
-              className={selectClass}
-              value={productShade}
-              onChange={(e) => { setProductShade(e.target.value); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
-            >
-              {shadeOptions.map((s) => (
-                <option key={s} value={s}>#{s}</option>
-              ))}
-            </select>
-          </div>
+          {/* Odstín — skryt pro nebarvené */}
+          {productType === 'barvene' && shadeOptions.length > 0 && (
+            <div>
+              <label className={labelClass}>Odstín</label>
+              <select
+                className={selectClass}
+                value={productShade}
+                onChange={(e) => { setProductShade(e.target.value); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
+              >
+                {shadeOptions.map((s) => (
+                  <option key={s} value={s}>#{s}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Délka */}
           <div>
@@ -875,7 +883,7 @@ export default function UnifiedNewSalePage() {
             <select
               className={selectClass}
               value={productEnding}
-              onChange={(e) => { setProductEnding(e.target.value as Ending); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
+              onChange={(e) => { const v = e.target.value as Ending; setProductEnding(v); recalcIfPriceKnown(undefined, v); }}
             >
               {ENDING_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -894,7 +902,7 @@ export default function UnifiedNewSalePage() {
               step={1}
               className={inputClass}
               value={productGrams}
-              onChange={(e) => { setProductGrams(Math.max(1, Number(e.target.value))); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
+              onChange={(e) => { const g = Math.max(1, Number(e.target.value)); setProductGrams(g); recalcIfPriceKnown(g, undefined); }}
             />
           </div>
           <button
