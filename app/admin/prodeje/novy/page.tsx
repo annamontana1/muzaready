@@ -300,6 +300,9 @@ export default function UnifiedNewSalePage() {
   // 8. Payment
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('hotovost');
 
+  // Faktura
+  const [invoiceType, setInvoiceType] = useState<'fakturoid' | 'uctenka' | null>(null);
+
   // Submit
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -420,10 +423,10 @@ export default function UnifiedNewSalePage() {
 
   function handleChannelChange(ch: Channel) {
     setChannel(ch);
-    // Reset payment to default for new channel
     if (ch === 'prodejna') setPaymentMethod('hotovost');
     else if (ch === 'instagram') setPaymentMethod('prevod');
-    else setPaymentMethod('gopay');
+    else setPaymentMethod('hotovost');
+    setInvoiceType(null);
   }
 
   // ─── Submit ──────────────────────────────────────────────────
@@ -478,6 +481,7 @@ export default function UnifiedNewSalePage() {
           ? { carrier: shipping.carrier, price: shippingCost }
           : null,
         paymentMethod,
+        invoiceType: invoiceType || 'uctenka',
       };
 
       const res = await fetch('/api/admin/pos', {
@@ -495,13 +499,10 @@ export default function UnifiedNewSalePage() {
 
       showToast('Prodej byl úspěšně vytvořen', 'success');
 
-      // Redirect based on channel + payment + amount
       const orderId = data.order?.id;
-      if (paymentMethod === 'hotovost' && grandTotal < 10000) {
-        // Pod 10 000 Kč = zjednodušený doklad
+      if (invoiceType === 'uctenka') {
         router.push(`/admin/prodeje/doklad?id=${orderId}`);
       } else {
-        // Nad 10 000 Kč nebo karta/převod = Fakturoid faktura
         router.push('/admin/objednavky');
       }
     } catch (error: any) {
@@ -1172,7 +1173,64 @@ export default function UnifiedNewSalePage() {
         </div>
       )}
 
-      {/* ── 9. NÁHLED OBJEDNÁVKY ─────────────────────────────── */}
+      {/* ── 9. FAKTURA ──────────────────────────────────────── */}
+      {cart.length > 0 && (
+        <div className={sectionClass}>
+          <h2 className="text-lg font-semibold text-stone-800 mb-4">Chce zákazník fakturu?</h2>
+          <div className="grid grid-cols-2 gap-3">
+
+            <button
+              type="button"
+              onClick={() => setInvoiceType('fakturoid')}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                invoiceType === 'fakturoid'
+                  ? 'border-[#722F37] bg-[#722F37]/5'
+                  : 'border-stone-200 hover:border-stone-300'
+              }`}
+            >
+              <span className="text-2xl">🧾</span>
+              <span className={`font-semibold text-sm ${invoiceType === 'fakturoid' ? 'text-[#722F37]' : 'text-stone-800'}`}>
+                ANO — s fakturou
+              </span>
+              <span className="text-xs text-stone-500 text-center leading-snug">
+                Oficiální faktura přes Fakturoid
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setInvoiceType('uctenka')}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                invoiceType === 'uctenka'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-stone-200 hover:border-stone-300'
+              }`}
+            >
+              <span className="text-2xl">📋</span>
+              <span className={`font-semibold text-sm ${invoiceType === 'uctenka' ? 'text-blue-700' : 'text-stone-800'}`}>
+                NE — bez faktury
+              </span>
+              <span className="text-xs text-stone-500 text-center leading-snug">
+                Jednoduchý pokladní doklad
+              </span>
+            </button>
+
+          </div>
+
+          {invoiceType === 'fakturoid' && (
+            <p className="mt-3 text-xs text-[#722F37] bg-[#722F37]/5 border border-[#722F37]/20 rounded-lg px-3 py-2">
+              ✅ Fakturoid faktura bude vytvořena a zákazník ji dostane emailem
+            </p>
+          )}
+          {invoiceType === 'uctenka' && (
+            <p className="mt-3 text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+              📋 Po uložení se otevře jednoduchý pokladní doklad k vytisknutí
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* ── 10. NÁHLED OBJEDNÁVKY ─────────────────────────────── */}
       {cart.length > 0 && (
         <div className={sectionClass}>
           <h2 className="text-lg font-semibold text-stone-800 mb-4">📋 Náhled objednávky</h2>
@@ -1259,15 +1317,14 @@ export default function UnifiedNewSalePage() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={isSubmitting || cart.length === 0}
+              disabled={isSubmitting || cart.length === 0 || !invoiceType}
               className={`${btnPrimary} text-base px-8 py-3`}
             >
-              {isSubmitting ? 'Vytvářím...' : (
-                <>
-                  ✅ Potvrdit a vytvořit prodej
-                  {channel === 'instagram' && ' + odeslat fakturu'}
-                </>
-              )}
+              {isSubmitting ? 'Vytvářím...' : invoiceType === 'fakturoid'
+                ? '🧾 Potvrdit + vytvořit fakturu'
+                : invoiceType === 'uctenka'
+                ? '📋 Potvrdit + vytisknout doklad'
+                : 'Nejprve vyberte typ dokladu ↑'}
             </button>
           </div>
         </div>

@@ -47,6 +47,7 @@ interface PosBody {
     price: number;
   } | null;
   paymentMethod: 'hotovost' | 'karta' | 'prevod';
+  invoiceType?: 'fakturoid' | 'uctenka' | 'zadna';
   note?: string;
 }
 
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body: PosBody = await request.json();
-    const { channel, customerType, customer, items, discountPercent, shipping, paymentMethod, note } = body;
+    const { channel, customerType, customer, items, discountPercent, shipping, paymentMethod, invoiceType, note } = body;
 
     // --- Validate ---
     if (!items || items.length === 0) {
@@ -282,11 +283,9 @@ export async function POST(request: NextRequest) {
     });
 
     // --- Fakturoid ---
-    // Hotovost pod 10 000 Kč = zjednodušený doklad (bez Fakturoid)
-    // Hotovost nad/rovno 10 000 Kč = plná faktura přes Fakturoid
-    // Karta = vždy Fakturoid faktura
-    // Převod = vždy Fakturoid proforma
-    const needsFakturoid = paymentMethod !== 'hotovost' || total >= 10000;
+    // invoiceType 'fakturoid' = vždy Fakturoid
+    // invoiceType 'uctenka' nebo null = zjednodušený doklad, bez Fakturoid
+    const needsFakturoid = invoiceType === 'fakturoid';
     let invoiceResult = null;
     if (needsFakturoid && isFakturoidConfigured()) {
       try {
