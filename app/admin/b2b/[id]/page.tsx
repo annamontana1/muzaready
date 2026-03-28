@@ -454,7 +454,8 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
   const [saleDate, setSaleDate] = useState(new Date().toISOString().split('T')[0]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [savedSaleId, setSavedSaleId] = useState<string | null>(null); // po uložení → sdílení
+  const [savedSaleId, setSavedSaleId] = useState<string | null>(null);
+  const [savedInvoiceUrl, setSavedInvoiceUrl] = useState<string | null>(null);
 
   const totalAmount = selectedItems.reduce((sum, i) => sum + i.celkem, 0);
 
@@ -484,8 +485,9 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
         throw new Error(data.error || 'Chyba při ukládání');
       }
       const data = await res.json();
-      onSuccess(); // refresh dat na pozadí
+      onSuccess();
       setSavedSaleId(data.sale?.id || data.id || null);
+      setSavedInvoiceUrl(data.sale?.invoiceUrl || null);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -508,7 +510,27 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
           </div>
 
           <div className="space-y-3">
-            <p className="text-xs text-stone-500 font-medium uppercase tracking-wide">Sdílet doklad</p>
+            <p className="text-xs text-stone-500 font-medium uppercase tracking-wide">Doklad</p>
+            {/* Náhled — Fakturoid PDF nebo interní stránka */}
+            {savedInvoiceUrl ? (
+              <a
+                href={savedInvoiceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#722F37] text-white rounded-xl font-semibold hover:bg-[#5a252c] transition-colors"
+              >
+                👁 Náhled faktury (PDF)
+              </a>
+            ) : (
+              <a
+                href={shareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#722F37] text-white rounded-xl font-semibold hover:bg-[#5a252c] transition-colors"
+              >
+                👁 Náhled dokladu
+              </a>
+            )}
             <button
               onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank')}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors"
@@ -521,14 +543,6 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
             >
               🔗 Kopírovat odkaz na doklad
             </button>
-            <a
-              href={shareUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-stone-300 text-stone-600 rounded-xl font-semibold hover:bg-stone-50 transition-colors"
-            >
-              👁 Zobrazit doklad
-            </a>
           </div>
 
           <button

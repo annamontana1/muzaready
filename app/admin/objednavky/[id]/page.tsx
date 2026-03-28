@@ -80,6 +80,7 @@ type TabType = 'customer' | 'items' | 'payment' | 'invoice' | 'shipments' | 'met
 function InvoiceSection({ order }: { order: Order }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ success?: boolean; message?: string; error?: string } | null>(null);
+  const [invoiceUrl, setInvoiceUrl] = useState<string | null>(order.invoiceUrl ?? null);
 
   const isInstagram = order.channel === 'instagram';
   const isStore = order.channel === 'store';
@@ -93,6 +94,7 @@ function InvoiceSection({ order }: { order: Order }) {
       const data = await res.json();
       if (res.ok && data.success) {
         setResult({ success: true, message: data.message });
+        if (data.invoiceUrl) setInvoiceUrl(data.invoiceUrl);
       } else {
         setResult({ error: data.error || 'Nepodařilo se vytvořit fakturu' });
       }
@@ -120,18 +122,27 @@ function InvoiceSection({ order }: { order: Order }) {
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
+            {/* Náhled — vždy viditelný */}
+            {invoiceUrl ? (
+              <a href={invoiceUrl} target="_blank" rel="noopener noreferrer"
+                className="px-4 py-2 bg-[#722F37] text-white rounded-lg text-sm font-medium hover:bg-[#5a252c] transition">
+                👁 Náhled faktury
+              </a>
+            ) : (
+              <a href={`/nahled/${order.id}`} target="_blank" rel="noopener noreferrer"
+                className="px-4 py-2 bg-[#722F37] text-white rounded-lg text-sm font-medium hover:bg-[#5a252c] transition">
+                👁 Náhled dokladu
+              </a>
+            )}
             {isStore && order.paymentMethod === 'cash' && (
-              <a
-                href={`/admin/prodeje/doklad?id=${order.id}`}
-                target="_blank"
-                className="px-4 py-2 bg-stone-600 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition"
-              >
+              <a href={`/admin/prodeje/doklad?id=${order.id}`} target="_blank"
+                className="px-4 py-2 bg-stone-600 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition">
                 🖨️ Pokladní doklad
               </a>
             )}
             <button
               onClick={() => {
-                const url = `${window.location.origin}/nahled/${order.id}`;
+                const url = invoiceUrl || `${window.location.origin}/nahled/${order.id}`;
                 const text = `Dobrý den, zde je váš doklad z Muzahair.cz:\n${url}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
@@ -141,18 +152,15 @@ function InvoiceSection({ order }: { order: Order }) {
             </button>
             <button
               onClick={() => {
-                const url = `${window.location.origin}/nahled/${order.id}`;
+                const url = invoiceUrl || `${window.location.origin}/nahled/${order.id}`;
                 navigator.clipboard.writeText(url).then(() => alert('Odkaz zkopírován!'));
               }}
               className="px-4 py-2 bg-stone-200 text-stone-700 rounded-lg text-sm font-medium hover:bg-stone-300 transition"
             >
               🔗 Odkaz
             </button>
-            <button
-              onClick={generateInvoice}
-              disabled={loading}
-              className="px-4 py-2 bg-[#722F37] text-white rounded-lg text-sm font-medium hover:bg-[#5a252c] transition disabled:opacity-50"
-            >
+            <button onClick={generateInvoice} disabled={loading}
+              className="px-4 py-2 bg-stone-700 text-white rounded-lg text-sm font-medium hover:bg-stone-800 transition disabled:opacity-50">
               {loading ? '⏳ Generuji...' : '📨 Fakturoid'}
             </button>
           </div>
