@@ -412,6 +412,18 @@ export default function B2bPartnersPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center text-sm text-stone-500">{partner.shipmentsCount}</td>
+                    <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                      <button
+                        onClick={async () => {
+                          if (!confirm(`Smazat partnera "${partner.name}" a veškerá jeho data?`)) return;
+                          const res = await fetch(`/api/admin/b2b/${partner.id}`, { method: 'DELETE' });
+                          if (res.ok) fetchPartners();
+                          else alert('Chyba při mazání partnera');
+                        }}
+                        className="p-1.5 rounded hover:bg-red-50 text-stone-400 hover:text-red-600 transition-colors"
+                        title="Smazat partnera"
+                      >🗑️</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

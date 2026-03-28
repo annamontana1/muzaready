@@ -97,3 +97,20 @@ export async function PUT(
     return NextResponse.json({ error: 'Chyba při aktualizaci partnera' }, { status: 500 });
   }
 }
+
+// DELETE: Remove partner and all related data
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const admin = await requireAdmin(req);
+  if (admin instanceof NextResponse) return admin;
+  try {
+    const { id } = await params;
+    await prisma.b2bPartner.delete({ where: { id } });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error('B2B partner DELETE error:', error);
+    return NextResponse.json({ error: 'Chyba při mazání partnera' }, { status: 500 });
+  }
+}

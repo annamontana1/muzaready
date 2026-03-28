@@ -147,6 +147,76 @@ function StatusBadge({ stav }: { stav: string }) {
 
 // ─── Modals ───────────────────────────────────────────────────────────────────
 
+// ── Upravit položku zásoby ──────────────────────────────────────────────────
+function EditItemModal({ partnerId, item, onClose, onSuccess }: { partnerId: string; item: B2bItem; onClose: () => void; onSuccess: () => void }) {
+  const { showToast } = useToast();
+  const [druh, setDruh] = useState(item.druh);
+  const [barva, setBarva] = useState(item.barva);
+  const [delkaCm, setDelkaCm] = useState(item.delkaCm);
+  const [gramaz, setGramaz] = useState(item.gramaz);
+  const [cenaPerGram, setCenaPerGram] = useState(Number(item.cenaPerGram));
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave() {
+    setSaving(true);
+    const res = await fetch(`/api/admin/b2b/${partnerId}/items/${item.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ druh, barva, delkaCm, gramaz, cenaPerGram }),
+    });
+    setSaving(false);
+    if (res.ok) { showToast('Položka upravena ✓', 'success'); onSuccess(); }
+    else { const d = await res.json(); showToast(d.error || 'Chyba', 'error'); }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-gray-800">Upravit položku</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+        </div>
+        <div className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Druh</label>
+              <input value={druh} onChange={e => setDruh(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Barva / odstín</label>
+              <input value={barva} onChange={e => setBarva(e.target.value)} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Délka (cm)</label>
+              <input type="number" value={delkaCm} onChange={e => setDelkaCm(Number(e.target.value))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Gramáž (g)</label>
+              <input type="number" value={gramaz} onChange={e => setGramaz(Number(e.target.value))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Cena / g (Kč)</label>
+              <input type="number" value={cenaPerGram} onChange={e => setCenaPerGram(Number(e.target.value))} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div className="flex items-end">
+              <div className="bg-stone-50 rounded-lg px-3 py-2 text-sm w-full border border-stone-200">
+                <span className="text-stone-500 text-xs block">Celkem</span>
+                <span className="font-bold text-[#722F37]">{Math.round(gramaz * cenaPerGram).toLocaleString('cs-CZ')} Kč</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-600 text-sm font-medium hover:bg-gray-50">Zrušit</button>
+            <button onClick={handleSave} disabled={saving} className="flex-1 px-4 py-2.5 bg-[#722F37] text-white rounded-lg text-sm font-semibold hover:bg-[#5a252c] disabled:opacity-50">
+              {saving ? 'Ukládám…' : '✓ Uložit změny'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Přidat zásilku ──────────────────────────────────────────────────────────
 interface ShipmentItem { druh: string; barva: string; delkaCm: number; gramaz: number; cenaPerGram: number; }
 
@@ -707,11 +777,26 @@ export default function B2bPartnerDetailPage() {
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [showShipmentModal, setShowShipmentModal] = useState(false);
+  const [editingItem, setEditingItem] = useState<B2bItem | null>(null);
 
   // Sales data
   const [sales, setSales] = useState<B2bSale[]>([]);
   const [salesLoading, setSalesLoading] = useState(false);
-  const [generatingInvoice, setGeneratingInvoice] = useState<string | null>(null); // saleId
+  const [generatingInvoice, setGeneratingInvoice] = useState<string | null>(null);
+
+  async function deleteItem(itemId: string) {
+    if (!confirm('Smazat tuto položku ze zásoby?')) return;
+    const res = await fetch(`/api/admin/b2b/${id}/items/${itemId}`, { method: 'DELETE' });
+    if (res.ok) { showToast('Položka smazána', 'success'); fetchPartner(); }
+    else showToast('Chyba při mazání', 'error');
+  }
+
+  async function deleteSale(saleId: string) {
+    if (!confirm('Smazat tento prodej? Položky se vrátí do zásoby (stav: Skladem).')) return;
+    const res = await fetch(`/api/admin/b2b/${id}/sales/${saleId}`, { method: 'DELETE' });
+    if (res.ok) { showToast('Prodej smazán, položky obnoveny', 'success'); fetchSales(); fetchPartner(); }
+    else showToast('Chyba při mazání prodeje', 'error');
+  }
 
   async function generateInvoiceForSale(saleId: string) {
     setGeneratingInvoice(saleId);
@@ -1101,6 +1186,7 @@ export default function B2bPartnerDetailPage() {
                     <th className="px-4 py-3 text-right">Cena</th>
                     <th className="px-4 py-3">Stav</th>
                     <th className="px-4 py-3 text-gray-400">Zásilka</th>
+                    <th className="px-4 py-3 w-20"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -1131,6 +1217,14 @@ export default function B2bPartnerDetailPage() {
                         <td className="px-4 py-3"><StatusBadge stav={item.stav} /></td>
                         <td className="px-4 py-3 text-xs text-gray-400">
                           {shipment ? formatDate(shipment.date) : '—'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-1">
+                            <button onClick={() => setEditingItem(item)} title="Upravit"
+                              className="p-1.5 rounded hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors">✏️</button>
+                            <button onClick={() => deleteItem(item.id)} title="Smazat"
+                              className="p-1.5 rounded hover:bg-red-50 text-stone-400 hover:text-red-600 transition-colors">🗑️</button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -1233,6 +1327,13 @@ export default function B2bPartnerDetailPage() {
                               title="Kopírovat odkaz"
                             >
                               🔗
+                            </button>
+                            <button
+                              onClick={() => deleteSale(sale.id)}
+                              className="text-xs px-2 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors whitespace-nowrap"
+                              title="Smazat prodej"
+                            >
+                              🗑️
                             </button>
                           </div>
                         </td>
@@ -1455,6 +1556,15 @@ export default function B2bPartnerDetailPage() {
             fetchPartner();
             if (activeTab === 'vraceni') fetchReturns();
           }}
+        />
+      )}
+
+      {editingItem && (
+        <EditItemModal
+          partnerId={id}
+          item={editingItem}
+          onClose={() => setEditingItem(null)}
+          onSuccess={() => { setEditingItem(null); fetchPartner(); }}
         />
       )}
 
