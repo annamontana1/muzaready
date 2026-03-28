@@ -279,18 +279,19 @@ interface SaleModalProps {
 }
 
 function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalProps) {
+  const { showToast } = useToast();
   const [invoiceType, setInvoiceType] = useState<'fakturoid' | 'uctenka' | 'zadna' | null>(null);
   const [sendEmail, setSendEmail] = useState(false);
   const [notes, setNotes] = useState('');
   const [saleDate, setSaleDate] = useState(new Date().toISOString().split('T')[0]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [savedSaleId, setSavedSaleId] = useState<string | null>(null); // po uložení → sdílení
 
   const totalAmount = selectedItems.reduce((sum, i) => sum + i.celkem, 0);
 
   function handleTypeSelect(type: 'fakturoid' | 'uctenka') {
     setInvoiceType(type);
-    // S fakturou → automaticky zaškrtnout email
     if (type === 'fakturoid') setSendEmail(true);
   }
 
@@ -315,18 +316,63 @@ function SaleModal({ partnerId, selectedItems, onClose, onSuccess }: SaleModalPr
         throw new Error(data.error || 'Chyba při ukládání');
       }
       const data = await res.json();
-      // Otevřít účtenku v novém okně
-      if (invoiceType === 'uctenka' && data.receiptHtml) {
-        const blob = new Blob([data.receiptHtml], { type: 'text/html' });
-        window.open(URL.createObjectURL(blob), '_blank');
-      }
-      onSuccess();
+      onSuccess(); // refresh dat na pozadí
+      setSavedSaleId(data.sale?.id || data.id || null);
     } catch (e: any) {
       setError(e.message);
     } finally {
       setSaving(false);
     }
   };
+
+  // ── Success screen po uložení ──────────────────────────────────────────────
+  if (savedSaleId) {
+    const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : 'https://www.muzahair.cz'}/nahled/${savedSaleId}`;
+    const waText = `Dobrý den, zde je přehled Vašeho prodeje Muzahair.cz:\n${shareUrl}`;
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 text-center space-y-5">
+          <div className="text-5xl">✅</div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-800 mb-1">Prodej zaznamenán</h2>
+            <p className="text-stone-500 text-sm">{selectedItems.length} ks · {formatCzk(totalAmount)}</p>
+            {sendEmail && <p className="text-green-600 text-xs mt-1">📧 Email odeslán partnerovi</p>}
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs text-stone-500 font-medium uppercase tracking-wide">Sdílet doklad</p>
+            <button
+              onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank')}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-colors"
+            >
+              📱 Odeslat přes WhatsApp
+            </button>
+            <button
+              onClick={() => { navigator.clipboard.writeText(shareUrl); showToast('Odkaz zkopírován!', 'success'); }}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-stone-100 text-stone-700 rounded-xl font-semibold hover:bg-stone-200 transition-colors"
+            >
+              🔗 Kopírovat odkaz na doklad
+            </button>
+            <a
+              href={shareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-stone-300 text-stone-600 rounded-xl font-semibold hover:bg-stone-50 transition-colors"
+            >
+              👁 Zobrazit doklad
+            </a>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-full px-4 py-2.5 text-sm text-stone-500 hover:text-stone-700 underline"
+          >
+            Zavřít
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
