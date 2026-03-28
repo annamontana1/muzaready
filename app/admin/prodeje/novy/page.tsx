@@ -271,8 +271,9 @@ export default function UnifiedNewSalePage() {
   const [priceCheck, setPriceCheck] = useState<{ pricePerGram: number; endingPrice: number; subtotal: number } | null>(null);
   const [priceLoading, setPriceLoading] = useState(false);
   const [priceError, setPriceError] = useState<string | null>(null);
-  // Ruční zadání ceny (když není v matici)
+  // Ruční zadání ceny (vždy dostupné)
   const [manualPricePerGram, setManualPricePerGram] = useState<number>(0);
+  const [showManualPrice, setShowManualPrice] = useState(false);
 
   // 4. Cart
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -915,55 +916,68 @@ export default function UnifiedNewSalePage() {
           </button>
         </div>
 
-        {/* Price result */}
+        {/* Price result — error */}
         {priceError && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-4">
-            <p className="text-amber-800 text-sm font-medium mb-2">
-              ⚠️ {priceError} — zadejte cenu ručně:
-            </p>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  min={0}
-                  step={0.5}
-                  className="w-28 border border-amber-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
-                  value={manualPricePerGram || ''}
-                  onChange={(e) => setManualPricePerGram(Number(e.target.value))}
-                  placeholder="0"
-                />
-                <span className="text-sm text-stone-600">Kč / g</span>
-              </div>
-              <button
-                type="button"
-                onClick={applyManualPrice}
-                disabled={manualPricePerGram <= 0}
-                className="bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-40"
-              >
-                Použít tuto cenu
-              </button>
-            </div>
+          <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-2">
+            <p className="text-amber-800 text-sm font-medium">⚠️ {priceError} — zadejte cenu ručně níže</p>
           </div>
         )}
 
+        {/* Cena z matice */}
         {priceCheck && (
-          <div className="bg-stone-50 border border-stone-200 rounded-lg px-4 py-3 mb-4 space-y-1 text-sm">
+          <div className="bg-stone-50 border border-stone-200 rounded-lg px-4 py-3 mb-2 space-y-1 text-sm">
             <div className="flex justify-between">
-              <span className="text-stone-600">Cena z matice:</span>
+              <span className="text-stone-600">{showManualPrice ? 'Ruční cena:' : 'Cena z matice:'}</span>
               <span className="font-medium">{formatPrice(priceCheck.pricePerGram)} / g</span>
             </div>
             {priceCheck.endingPrice > 0 && (
               <div className="flex justify-between">
-                <span className="text-stone-600">Zakončení:</span>
+                <span className="text-stone-600">Zakočení:</span>
                 <span className="font-medium">+{formatPrice(priceCheck.endingPrice)}</span>
               </div>
             )}
             <div className="flex justify-between border-t border-stone-200 pt-1 mt-1">
-              <span className="text-stone-700 font-semibold">Mezisoučet:</span>
+              <span className="text-stone-700 font-semibold">Mezisoučet:</span>
               <span className="font-bold text-[#722F37]">{formatPrice(priceCheck.subtotal)}</span>
             </div>
           </div>
         )}
+
+        {/* Ruční zadání ceny — vždy dostupné */}
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={() => {
+              setShowManualPrice(!showManualPrice);
+              if (showManualPrice) { setManualPricePerGram(0); }
+            }}
+            className="text-xs text-stone-500 hover:text-[#722F37] underline underline-offset-2 transition-colors"
+          >
+            {showManualPrice ? '✕ Zrušit ruční cenu' : '✏️ Zadat cenu ručně'}
+          </button>
+          {(showManualPrice || !!priceError) && (
+            <div className="mt-2 flex items-center gap-3">
+              <input
+                type="number"
+                min={0}
+                step={0.5}
+                className="w-28 border border-stone-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]"
+                value={manualPricePerGram || ''}
+                onChange={(e) => setManualPricePerGram(Number(e.target.value))}
+                placeholder="Kč / g"
+              />
+              <span className="text-sm text-stone-600">Kč / g</span>
+              <button
+                type="button"
+                onClick={() => applyManualPrice()}
+                disabled={manualPricePerGram <= 0}
+                className="bg-[#722F37] hover:bg-[#5a2329] text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-40"
+              >
+                Použít
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Add to cart button */}
         <button
