@@ -147,6 +147,130 @@ function StatusBadge({ stav }: { stav: string }) {
 
 // ─── Modals ───────────────────────────────────────────────────────────────────
 
+// ── Přidat zásilku ──────────────────────────────────────────────────────────
+interface ShipmentItem { druh: string; barva: string; delkaCm: number; gramaz: number; cenaPerGram: number; }
+
+function ShipmentModal({ partnerId, onClose, onSuccess }: { partnerId: string; onClose: () => void; onSuccess: () => void }) {
+  const { showToast } = useToast();
+  const [saving, setSaving] = useState(false);
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [notes, setNotes] = useState('');
+  const emptyItem = (): ShipmentItem => ({ druh: '', barva: '', delkaCm: 50, gramaz: 100, cenaPerGram: 0 });
+  const [items, setItems] = useState<ShipmentItem[]>([emptyItem()]);
+
+  function updateItem(idx: number, field: keyof ShipmentItem, value: string | number) {
+    setItems(prev => prev.map((it, i) => i === idx ? { ...it, [field]: value } : it));
+  }
+
+  async function handleSave() {
+    if (items.some(it => !it.druh || it.cenaPerGram <= 0)) {
+      showToast('Vyplňte druh a cenu u všech položek', 'error'); return;
+    }
+    setSaving(true);
+    const res = await fetch(`/api/admin/b2b/${partnerId}/shipments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, notes, items: items.map(it => ({ ...it, celkem: Math.round(it.gramaz * it.cenaPerGram) })) }),
+    });
+    setSaving(false);
+    if (res.ok) { showToast('Zásilka přidána ✓', 'success'); onSuccess(); }
+    else { const d = await res.json(); showToast(d.error || 'Chyba', 'error'); }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-gray-800">+ Přidat zásilku do komise</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+        </div>
+        <div className="p-6 space-y-5">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Datum zásilky</label>
+              <input type="date" value={date} onChange={e => setDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Poznámka (volitelné)</label>
+              <input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Např. jarní kolekce"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-xs font-medium text-gray-600">Položky</label>
+              <button onClick={() => setItems(prev => [...prev, emptyItem()])}
+                className="text-xs text-[#722F37] hover:underline font-medium">+ Přidat položku</button>
+            </div>
+            <div className="space-y-3">
+              {items.map((item, idx) => (
+                <div key={idx} className="grid grid-cols-6 gap-2 items-end bg-stone-50 rounded-lg p-3 border border-stone-200">
+                  <div className="col-span-2">
+                    <label className="text-xs text-gray-500 mb-1 block">Druh *</label>
+                    <input value={item.druh} onChange={e => updateItem(idx, 'druh', e.target.value)}
+                      placeholder="Platinum, Standard…"
+                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Barva/odstín</label>
+                    <input value={item.barva} onChange={e => updateItem(idx, 'barva', e.target.value)}
+                      placeholder="#6"
+                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Délka (cm)</label>
+                    <input type="number" value={item.delkaCm} onChange={e => updateItem(idx, 'delkaCm', Number(e.target.value))}
+                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Gramáž (g)</label>
+                    <input type="number" value={item.gramaz} onChange={e => updateItem(idx, 'gramaz', Number(e.target.value))}
+                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">Kč/g *</label>
+                    <div className="flex gap-1 items-center">
+                      <input type="number" value={item.cenaPerGram || ''} onChange={e => updateItem(idx, 'cenaPerGram', Number(e.target.value))}
+                        placeholder="95"
+                        className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" />
+                      {items.length > 1 && (
+                        <button onClick={() => setItems(prev => prev.filter((_, i) => i !== idx))}
+                          className="text-red-400 hover:text-red-600 text-lg leading-none flex-shrink-0">×</button>
+                      )}
+                    </div>
+                    {item.gramaz > 0 && item.cenaPerGram > 0 && (
+                      <p className="text-xs text-green-700 mt-0.5 font-medium">= {Math.round(item.gramaz * item.cenaPerGram).toLocaleString('cs-CZ')} Kč</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-stone-50 rounded-lg px-4 py-3 flex justify-between items-center text-sm border border-stone-200">
+            <span className="text-stone-600 font-medium">Celková hodnota zásilky:</span>
+            <span className="text-lg font-bold text-[#722F37]">
+              {items.reduce((s, it) => s + Math.round(it.gramaz * it.cenaPerGram), 0).toLocaleString('cs-CZ')} Kč
+            </span>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-600 text-sm font-medium hover:bg-gray-50">
+              Zrušit
+            </button>
+            <button onClick={handleSave} disabled={saving}
+              className="flex-1 px-4 py-2.5 bg-[#722F37] text-white rounded-lg text-sm font-semibold hover:bg-[#5a252c] disabled:opacity-50">
+              {saving ? 'Ukládám…' : '📦 Uložit zásilku'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface SaleModalProps {
   partnerId: string;
   selectedItems: B2bItem[];
@@ -536,6 +660,7 @@ export default function B2bPartnerDetailPage() {
   const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(new Set());
   const [showSaleModal, setShowSaleModal] = useState(false);
   const [showReturnModal, setShowReturnModal] = useState(false);
+  const [showShipmentModal, setShowShipmentModal] = useState(false);
 
   // Sales data
   const [sales, setSales] = useState<B2bSale[]>([]);
@@ -874,7 +999,13 @@ export default function B2bPartnerDetailPage() {
                   </button>
                 ))}
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  onClick={() => setShowShipmentModal(true)}
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg bg-stone-700 text-white font-medium hover:bg-stone-800 transition-colors"
+                >
+                  + Přidat zásilku
+                </button>
                 {selectedItemIds.size > 0 && (
                   <>
                     {selectedItems.every((i) => i.stav === 'skladem') && (
@@ -1277,6 +1408,17 @@ export default function B2bPartnerDetailPage() {
             setSelectedItemIds(new Set());
             fetchPartner();
             if (activeTab === 'vraceni') fetchReturns();
+          }}
+        />
+      )}
+
+      {showShipmentModal && (
+        <ShipmentModal
+          partnerId={id}
+          onClose={() => setShowShipmentModal(false)}
+          onSuccess={() => {
+            setShowShipmentModal(false);
+            fetchPartner();
           }}
         />
       )}
