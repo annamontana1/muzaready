@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/ToastProvider';
 
@@ -48,6 +48,17 @@ interface ShippingOption {
   carrier: string;
   price: number;
   customPrice?: number;
+}
+
+interface CustomerSuggestion {
+  source: 'registered' | 'order';
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  companyName: string;
+  ico: string;
+  isB2B: boolean;
 }
 
 // ─── Constants ──────────────────────────────────────────────────
@@ -158,6 +169,62 @@ export default function UnifiedNewSalePage() {
     ico: '',
     contactPerson: '',
   });
+
+  // Autocomplete zákazníků
+  const [customerQuery, setCustomerQuery] = useState('');
+  const [customerSuggestions, setCustomerSuggestions] = useState<CustomerSuggestion[]>([]);
+  const [customerSearchLoading, setCustomerSearchLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const customerSearchRef = useRef<HTMLDivElement>(null);
+
+  // Zavřít dropdown při kliknutí mimo
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (customerSearchRef.current && !customerSearchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    if (customerQuery.length < 2) {
+      setCustomerSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setCustomerSearchLoading(true);
+      try {
+        const res = await fetch(`/api/admin/pos/customer-search?q=${encodeURIComponent(customerQuery)}`);
+        const data = await res.json();
+        setCustomerSuggestions(data.customers || []);
+        setShowSuggestions(true);
+      } catch {
+        setCustomerSuggestions([]);
+      } finally {
+        setCustomerSearchLoading(false);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [customerQuery]);
+
+  function selectCustomer(s: CustomerSuggestion) {
+    setCustomer({
+      firstName: s.firstName,
+      lastName: s.lastName,
+      email: s.email,
+      phone: s.phone,
+      companyName: s.companyName,
+      ico: s.ico,
+      contactPerson: s.companyName ? s.firstName + ' ' + s.lastName : '',
+    });
+    if (s.isB2B) setCustomerType('b2b');
+    else setCustomerType('new');
+    setCustomerQuery(s.companyName || `${s.firstName} ${s.lastName}`.trim());
+    setShowSuggestions(false);
+  }
 
   // 3. Product builder
   const [productCategory, setProductCategory] = useState<Category>('standard');
@@ -445,6 +512,75 @@ export default function UnifiedNewSalePage() {
       {/* ── 2. ZÁKAZNÍK ──────────────────────────────────────── */}
       <div className={sectionClass}>
         <h2 className="text-lg font-semibold text-stone-800 mb-4">Zákazník</h2>
+
+        {/* Vyhledat zákazníka */}
+        <div className="relative mb-4" ref={customerSearchRef}>
+          <label className={labelClass}>Vyhledat zákazníka (jméno, email, firma, IČO…)</label>
+          <div className="relative">
+            <input
+              type="text"
+              className={inputClass + ' pr-8'}
+              value={customerQuery}
+              onChange={(e) => { setCustomerQuery(e.target.value); if (!e.target.value) setShowSuggestions(false); }}
+              onFocus={() => { if (customerSuggestions.length > 0) setShowSuggestions(true); }}
+              placeholder="Začněte psát…"
+              autoComplete="off"
+            />
+            {customerSearchLoading && (
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs">⏳</span>
+            )}
+            {customerQuery && !customerSearchLoading && (
+              <button
+                type="button"
+                onClick={() => { setCustomerQuery(''); setCustomerSuggestions([]); setShowSuggestions(false); }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-lg leading-none"
+              >×</button>
+            )}
+          </div>
+
+          {/* Dropdown výsledků */}
+          {showSuggestions && customerSuggestions.length > 0 && (
+            <div className="absolute z-50 left-0 right-0 mt-1 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden">
+              {customerSuggestions.map((s, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onMouseDown={(e) => { e.preventDefault(); selectCustomer(s); }}
+                  className="w-full text-left px-4 py-3 hover:bg-stone-50 transition-colors border-b border-stone-100 last:border-0"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <span className="font-medium text-stone-800">
+                        {s.companyName || `${s.firstName} ${s.lastName}`.trim()}
+                      </span>
+                      {s.companyName && (
+                        <span className="text-stone-500 text-xs ml-2">
+                          {s.firstName} {s.lastName}
+                        </span>
+                      )}
+                    </div>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                      s.isB2B ? 'bg-blue-100 text-blue-700' : 'bg-stone-100 text-stone-600'
+                    }`}>
+                      {s.isB2B ? 'B2B' : 'B2C'}
+                    </span>
+                  </div>
+                  <div className="text-xs text-stone-500 mt-0.5 flex gap-3">
+                    {s.email && <span>{s.email}</span>}
+                    {s.phone && <span>{s.phone}</span>}
+                    {s.ico && <span>IČO: {s.ico}</span>}
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {showSuggestions && customerQuery.length >= 2 && customerSuggestions.length === 0 && !customerSearchLoading && (
+            <div className="absolute z-50 left-0 right-0 mt-1 bg-white border border-stone-200 rounded-xl shadow-lg px-4 py-3 text-sm text-stone-500">
+              Žádný zákazník nenalezen — vyplňte níže jako nového
+            </div>
+          )}
+        </div>
 
         {/* Toggle */}
         <div className="flex gap-2 mb-4">
