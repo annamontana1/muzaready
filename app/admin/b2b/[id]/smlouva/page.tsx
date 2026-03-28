@@ -290,7 +290,7 @@ export default function KomisniSmlouvaPage() {
         {/* Date and signatures */}
         <div className="pt-4">
           <div className="text-sm text-stone-600 mb-16">
-            V Brně dne: {todayStr}
+            V Praze dne: {todayStr}
           </div>
 
           <div className="grid grid-cols-2 gap-16">
