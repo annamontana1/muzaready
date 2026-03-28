@@ -265,6 +265,19 @@ export async function POST(request: NextRequest) {
           isPaid: false,
           proforma: true, // Instagram = proforma faktura (záloha)
         });
+
+        // Save Fakturoid invoice/proforma ID to order
+        if (invoiceResult?.success && invoiceResult.invoiceId) {
+          await prisma.order.update({
+            where: { id: order.id },
+            data: {
+              fakturoidInvoiceId: String(invoiceResult.invoiceId),
+              fakturoidIsProforma: true,
+              fakturoidInvoiceUrl: invoiceResult.invoiceUrl || null,
+              fakturoidInvoiceNum: invoiceResult.invoiceNumber || null,
+            },
+          });
+        }
       } catch (invoiceError) {
         console.error('Fakturoid invoice error (non-blocking):', invoiceError);
       }

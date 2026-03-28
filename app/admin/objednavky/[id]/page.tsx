@@ -73,6 +73,13 @@ interface Order {
   shippedAt: string | null;
   lastStatusChangeAt: string | null;
   items: OrderItem[];
+  // Fakturoid proforma fields
+  fakturoidInvoiceId: string | null;
+  fakturoidIsProforma: boolean;
+  fakturoidInvoiceUrl: string | null;
+  fakturoidInvoiceNum: string | null;
+  // Legacy / computed
+  invoiceUrl?: string | null;
 }
 
 type TabType = 'customer' | 'items' | 'payment' | 'invoice' | 'shipments' | 'metadata' | 'history';
@@ -80,7 +87,9 @@ type TabType = 'customer' | 'items' | 'payment' | 'invoice' | 'shipments' | 'met
 function InvoiceSection({ order }: { order: Order }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ success?: boolean; message?: string; error?: string } | null>(null);
-  const [invoiceUrl, setInvoiceUrl] = useState<string | null>(order.invoiceUrl ?? null);
+  const [invoiceUrl, setInvoiceUrl] = useState<string | null>(order.fakturoidInvoiceUrl ?? order.invoiceUrl ?? null);
+  const [isProforma, setIsProforma] = useState<boolean>(order.fakturoidIsProforma ?? false);
+  const [converting, setConverting] = useState(false);
 
   const isInstagram = order.channel === 'instagram';
   const isStore = order.channel === 'store';
@@ -102,6 +111,26 @@ function InvoiceSection({ order }: { order: Order }) {
       setResult({ error: err.message || 'Chyba' });
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function convertProforma() {
+    setConverting(true);
+    setResult(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}/convert-proforma`, { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setIsProforma(false);
+        if (data.invoiceUrl) setInvoiceUrl(data.invoiceUrl);
+        setResult({ success: true, message: `Faktura ${data.invoiceNumber || ''} byla vytvořena` });
+      } else {
+        setResult({ error: data.error || 'Nepodařilo se převést proformu' });
+      }
+    } catch (err: any) {
+      setResult({ error: err.message || 'Chyba' });
+    } finally {
+      setConverting(false);
     }
   }
 
@@ -165,6 +194,22 @@ function InvoiceSection({ order }: { order: Order }) {
             </button>
           </div>
         </div>
+
+        {/* Proforma banner */}
+        {isProforma && (
+          <div className="px-6 py-3 bg-yellow-50 border-b border-yellow-200 flex items-center justify-between gap-4">
+            <span className="text-sm text-yellow-800 font-medium">
+              ⏳ Proforma faktura — čeká na zaplacení
+            </span>
+            <button
+              onClick={convertProforma}
+              disabled={converting}
+              className="px-4 py-1.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition disabled:opacity-50 whitespace-nowrap"
+            >
+              {converting ? '⏳ Převádím...' : '✅ Vytvořit fakturu'}
+            </button>
+          </div>
+        )}
 
         {/* Result message */}
         {result && (

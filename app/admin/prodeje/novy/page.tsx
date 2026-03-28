@@ -1227,7 +1227,9 @@ export default function UnifiedNewSalePage() {
 
           {invoiceType === 'fakturoid' && (
             <p className="mt-3 text-xs text-[#722F37] bg-[#722F37]/5 border border-[#722F37]/20 rounded-lg px-3 py-2">
-              ✅ Fakturoid faktura bude vytvořena a zákazník ji dostane emailem
+              {paymentMethod === 'prevod'
+                ? '⏳ Převod na účet: nejprve se vytvoří proforma faktura. Po potvrzení platby v detailu objednávky klikněte "Vytvořit fakturu".'
+                : '✅ Fakturoid faktura bude vytvořena a zákazník ji dostane emailem'}
             </p>
           )}
           {invoiceType === 'uctenka' && (

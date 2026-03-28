@@ -186,6 +186,31 @@ export async function createInvoice(invoice: FakturoidInvoice): Promise<any> {
 }
 
 /**
+ * Convert proforma to final invoice in Fakturoid
+ */
+export async function convertProformaToInvoice(proformaId: number): Promise<{ success: boolean; invoiceId?: number; invoiceNumber?: string; invoiceUrl?: string }> {
+  try {
+    // Fire "invoice" event on proforma to convert it
+    await fakturoidFetch(`/invoices/${proformaId}/fire.json`, {
+      method: 'POST',
+      body: JSON.stringify({ event: 'invoice' }),
+    });
+
+    // After conversion, get the new invoice details
+    const invoice = await fakturoidFetch(`/invoices/${proformaId}.json`);
+    return {
+      success: true,
+      invoiceId: invoice?.id,
+      invoiceNumber: invoice?.number,
+      invoiceUrl: invoice?.public_html_url,
+    };
+  } catch (error) {
+    console.error('Fakturoid convertProformaToInvoice error:', error);
+    return { success: false };
+  }
+}
+
+/**
  * Mark invoice as paid
  */
 export async function markInvoicePaid(invoiceId: number): Promise<void> {
@@ -250,6 +275,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
   success: boolean;
   invoiceId?: number;
   invoiceNumber?: string;
+  invoiceUrl?: string;
   error?: string;
 }> {
   try {
@@ -365,6 +391,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       success: true,
       invoiceId: invoice.id,
       invoiceNumber: invoice.number,
+      invoiceUrl: invoice.public_html_url,
     };
   } catch (error: any) {
     console.error('Fakturoid createInvoiceFromOrder error:', error);

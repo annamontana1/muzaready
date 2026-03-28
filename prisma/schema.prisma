@@ -107,6 +107,12 @@ model Order {
   couponCode String? // Snapshot kódu pro historii
   coupon     Coupon? @relation(fields: [couponId], references: [id])
 
+  // Fakturoid
+  fakturoidInvoiceId  String?  // Fakturoid invoice/proforma ID
+  fakturoidIsProforma Boolean  @default(false) // true when it's still a proforma
+  fakturoidInvoiceUrl String?  // public URL to view invoice
+  fakturoidInvoiceNum String?  // invoice number like "202615"
+
   // Tracking
   trackingNumber String?
   carrier        String? // zasilkovna, gls, dpd, ceska_posta, fedex, ups, other
