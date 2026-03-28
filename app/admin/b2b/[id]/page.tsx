@@ -1036,6 +1036,27 @@ export default function B2bPartnerDetailPage() {
                             {sale.invoiceType === 'fakturoid' && sale.fakturoidId && (
                               <span className="text-xs text-emerald-600 font-medium">✓ #{sale.invoiceNumber || sale.fakturoidId}</span>
                             )}
+                            <button
+                              onClick={() => {
+                                const url = `${window.location.origin}/nahled/${sale.id}`;
+                                const text = `Dobrý den, zde je přehled prodeje Muzahair.cz:\n${url}`;
+                                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                              }}
+                              className="text-xs px-2 py-1 rounded bg-green-500 text-white hover:bg-green-600 transition-colors whitespace-nowrap"
+                              title="Sdílet přes WhatsApp"
+                            >
+                              📱 WA
+                            </button>
+                            <button
+                              onClick={() => {
+                                const url = `${window.location.origin}/nahled/${sale.id}`;
+                                navigator.clipboard.writeText(url).then(() => showToast('Odkaz zkopírován!', 'success'));
+                              }}
+                              className="text-xs px-2 py-1 rounded bg-stone-200 text-stone-700 hover:bg-stone-300 transition-colors whitespace-nowrap"
+                              title="Kopírovat odkaz"
+                            >
+                              🔗
+                            </button>
                           </div>
                         </td>
                       </tr>

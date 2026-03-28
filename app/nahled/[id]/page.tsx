@@ -38,7 +38,7 @@ interface ReceiptData {
   invoiceType?: string;
   invoiceNumber?: string;
   notes?: string;
-  b2bItems?: Array<{
+  items?: Array<{
     id: string;
     druh: string;
     barva: string;
@@ -228,7 +228,7 @@ export default function NahledPage() {
               </tr>
             </thead>
             <tbody>
-              {data.b2bItems?.map((item) => (
+              {data.items?.map((item) => (
                 <tr key={item.id} className="border-b border-stone-50">
                   <td className="py-2 text-stone-700">
                     <p>{item.druh} · {item.barva}</p>
