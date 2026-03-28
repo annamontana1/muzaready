@@ -74,9 +74,11 @@ export default function B2bPartnersPage() {
   const fetchPartners = async () => {
     try {
       const res = await fetch('/api/admin/b2b');
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setPartners(data);
+      } else {
+        console.error('Chyba při načítání partnerů:', data.error);
       }
     } catch (err) {
       console.error('Chyba při načítání partnerů:', err);
@@ -91,6 +93,10 @@ export default function B2bPartnersPage() {
 
   const handleCreatePartner = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newPartner.name.trim()) {
+      showToast('Název partnera je povinný', 'error');
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch('/api/admin/b2b', {
@@ -98,13 +104,18 @@ export default function B2bPartnersPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPartner),
       });
+      const data = await res.json();
       if (res.ok) {
+        showToast(`Partner "${data.name}" byl úspěšně vytvořen`, 'success');
         setShowNewForm(false);
         setNewPartner({ name: '', contactName: '', email: '', phone: '', ico: '', address: '', notes: '', type: 'komise' });
         fetchPartners();
+      } else {
+        showToast(data.error || 'Chyba při vytváření partnera', 'error');
       }
     } catch (err) {
       console.error('Chyba při vytváření partnera:', err);
+      showToast('Nepodařilo se spojit se serverem', 'error');
     } finally {
       setSaving(false);
     }
