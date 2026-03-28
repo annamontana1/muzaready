@@ -172,6 +172,8 @@ export default function UnifiedNewSalePage() {
   const [priceCheck, setPriceCheck] = useState<{ pricePerGram: number; endingPrice: number; subtotal: number } | null>(null);
   const [priceLoading, setPriceLoading] = useState(false);
   const [priceError, setPriceError] = useState<string | null>(null);
+  // Ruční zadání ceny (když není v matici)
+  const [manualPricePerGram, setManualPricePerGram] = useState<number>(0);
 
   // 4. Cart
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -238,6 +240,8 @@ export default function UnifiedNewSalePage() {
     const shades = getShadeRange(cat, productType);
     if (!shades.includes(productShade)) setProductShade(shades[0]);
     setPriceCheck(null);
+    setPriceError(null);
+    setManualPricePerGram(0);
   }
 
   function handleTypeChange(typ: ProductType) {
@@ -245,6 +249,19 @@ export default function UnifiedNewSalePage() {
     const shades = getShadeRange(productCategory, typ);
     if (!shades.includes(productShade)) setProductShade(shades[0]);
     setPriceCheck(null);
+    setPriceError(null);
+    setManualPricePerGram(0);
+  }
+
+  function applyManualPrice() {
+    if (manualPricePerGram <= 0) return;
+    const epg = getEndingPricePerGram(productEnding);
+    setPriceCheck({
+      pricePerGram: manualPricePerGram,
+      endingPrice: epg * productGrams,
+      subtotal: Math.round((manualPricePerGram + epg) * productGrams),
+    });
+    setPriceError(null);
   }
 
   // ─── Add to Cart ─────────────────────────────────────────────
@@ -302,11 +319,6 @@ export default function UnifiedNewSalePage() {
   async function handleSubmit() {
     if (cart.length === 0) {
       showToast('Nejdříve přidejte položky do košíku', 'error');
-      return;
-    }
-
-    if (channel === 'eshop') {
-      showToast('E-shop objednávky přicházejí automaticky', 'info');
       return;
     }
 
@@ -588,7 +600,7 @@ export default function UnifiedNewSalePage() {
             <select
               className={selectClass}
               value={productStructure}
-              onChange={(e) => { setProductStructure(e.target.value as Structure); setPriceCheck(null); }}
+              onChange={(e) => { setProductStructure(e.target.value as Structure); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
             >
               {STRUCTURE_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -602,7 +614,7 @@ export default function UnifiedNewSalePage() {
             <select
               className={selectClass}
               value={productShade}
-              onChange={(e) => { setProductShade(e.target.value); setPriceCheck(null); }}
+              onChange={(e) => { setProductShade(e.target.value); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
             >
               {shadeOptions.map((s) => (
                 <option key={s} value={s}>#{s}</option>
@@ -616,7 +628,7 @@ export default function UnifiedNewSalePage() {
             <select
               className={selectClass}
               value={productLength}
-              onChange={(e) => { setProductLength(Number(e.target.value)); setPriceCheck(null); }}
+              onChange={(e) => { setProductLength(Number(e.target.value)); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
             >
               {LENGTH_OPTIONS.map((l) => (
                 <option key={l} value={l}>{l} cm</option>
@@ -630,7 +642,7 @@ export default function UnifiedNewSalePage() {
             <select
               className={selectClass}
               value={productEnding}
-              onChange={(e) => { setProductEnding(e.target.value as Ending); setPriceCheck(null); }}
+              onChange={(e) => { setProductEnding(e.target.value as Ending); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
             >
               {ENDING_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -649,7 +661,7 @@ export default function UnifiedNewSalePage() {
               step={1}
               className={inputClass}
               value={productGrams}
-              onChange={(e) => { setProductGrams(Math.max(1, Number(e.target.value))); setPriceCheck(null); }}
+              onChange={(e) => { setProductGrams(Math.max(1, Number(e.target.value))); setPriceCheck(null); setPriceError(null); setManualPricePerGram(0); }}
             />
           </div>
           <button
@@ -664,8 +676,32 @@ export default function UnifiedNewSalePage() {
 
         {/* Price result */}
         {priceError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-4 text-sm">
-            {priceError}
+          <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-4">
+            <p className="text-amber-800 text-sm font-medium mb-2">
+              ⚠️ {priceError} — zadejte cenu ručně:
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  step={0.5}
+                  className="w-28 border border-amber-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  value={manualPricePerGram || ''}
+                  onChange={(e) => setManualPricePerGram(Number(e.target.value))}
+                  placeholder="0"
+                />
+                <span className="text-sm text-stone-600">Kč / g</span>
+              </div>
+              <button
+                type="button"
+                onClick={applyManualPrice}
+                disabled={manualPricePerGram <= 0}
+                className="bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors disabled:opacity-40"
+              >
+                Použít tuto cenu
+              </button>
+            </div>
           </div>
         )}
 
@@ -884,15 +920,28 @@ export default function UnifiedNewSalePage() {
           )}
 
           {channel === 'eshop' && (
-            <div className="bg-stone-50 rounded-lg px-4 py-3 text-sm text-stone-500 italic">
-              GoPay — E-shop objednávky přicházejí automaticky
+            <div className="flex gap-3">
+              {(['hotovost', 'karta', 'prevod'] as PaymentMethod[]).map((pm) => (
+                <button
+                  key={pm}
+                  type="button"
+                  onClick={() => setPaymentMethod(pm)}
+                  className={`flex-1 py-3 rounded-lg border-2 font-medium transition-all text-sm ${
+                    paymentMethod === pm
+                      ? 'border-[#722F37] bg-[#722F37]/5 text-[#722F37]'
+                      : 'border-stone-200 text-stone-600 hover:border-stone-300'
+                  }`}
+                >
+                  {pm === 'hotovost' ? 'Hotovost' : pm === 'karta' ? 'Karta' : 'Převod'}
+                </button>
+              ))}
             </div>
           )}
         </div>
       )}
 
       {/* ── 9. NÁHLED OBJEDNÁVKY ─────────────────────────────── */}
-      {cart.length > 0 && channel !== 'eshop' && (
+      {cart.length > 0 && (
         <div className={sectionClass}>
           <h2 className="text-lg font-semibold text-stone-800 mb-4">📋 Náhled objednávky</h2>
           <div className="bg-stone-50 rounded-xl p-6 space-y-4 text-sm">
@@ -967,6 +1016,7 @@ export default function UnifiedNewSalePage() {
               <span className="text-stone-500">Platba:</span>
               <span className="font-medium text-stone-700">
                 {channel === 'instagram' ? 'Převod na účet (proforma faktura)' :
+                  paymentMethod === 'prevod' ? 'Převod (proforma faktura)' :
                   paymentMethod === 'hotovost' ? 'Hotovost (pokladní doklad)' : 'Karta (Fakturoid faktura)'}
               </span>
             </div>
