@@ -147,6 +147,104 @@ function StatusBadge({ stav }: { stav: string }) {
 
 // ─── Modals ───────────────────────────────────────────────────────────────────
 
+// ── Upravit profil partnera ─────────────────────────────────────────────────
+function EditPartnerModal({ partner, onClose, onSuccess }: { partner: B2bPartnerDetail; onClose: () => void; onSuccess: () => void }) {
+  const { showToast } = useToast();
+  const [name, setName] = useState(partner.name);
+  const [contactName, setContactName] = useState(partner.contactName ?? '');
+  const [email, setEmail] = useState(partner.email ?? '');
+  const [phone, setPhone] = useState(partner.phone ?? '');
+  const [ico, setIco] = useState(partner.ico ?? '');
+  const [address, setAddress] = useState(partner.address ?? '');
+  const [notes, setNotes] = useState(partner.notes ?? '');
+  const [type, setType] = useState<'komise' | 'splatky'>(partner.type);
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave() {
+    if (!name.trim()) { showToast('Vyplňte název partnera', 'error'); return; }
+    setSaving(true);
+    const res = await fetch(`/api/admin/b2b/${partner.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, contactName, email, phone, ico, address, notes, type }),
+    });
+    setSaving(false);
+    if (res.ok) { showToast('Profil uložen ✓', 'success'); onSuccess(); }
+    else { const d = await res.json(); showToast(d.error || 'Chyba při ukládání', 'error'); }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-gray-800">Upravit profil partnera</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+        </div>
+        <div className="p-6 space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Název / Jméno *</label>
+            <input value={name} onChange={e => setName(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Kontaktní osoba</label>
+              <input value={contactName} onChange={e => setContactName(e.target.value)}
+                placeholder="Jméno příjmení"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Typ spolupráce</label>
+              <select value={type} onChange={e => setType(e.target.value as 'komise' | 'splatky')}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                <option value="komise">Komisní prodej</option>
+                <option value="splatky">Splátkový prodej</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="partner@email.cz"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Telefon</label>
+              <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+                placeholder="+420 xxx xxx xxx"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">IČO</label>
+              <input value={ico} onChange={e => setIco(e.target.value.replace(/\D/g, '').slice(0, 8))}
+                placeholder="12345678" inputMode="numeric"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Adresa</label>
+            <input value={address} onChange={e => setAddress(e.target.value)}
+              placeholder="Ulice č.p., PSČ Město"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Poznámky (interní)</label>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
+              placeholder="Interní poznámky…"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none" />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button onClick={onClose} className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-600 text-sm font-medium hover:bg-gray-50">Zrušit</button>
+            <button onClick={handleSave} disabled={saving}
+              className="flex-1 px-4 py-2.5 bg-[#722F37] text-white rounded-lg text-sm font-semibold hover:bg-[#5a252c] disabled:opacity-50">
+              {saving ? 'Ukládám…' : '✓ Uložit profil'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Upravit položku zásoby ──────────────────────────────────────────────────
 function EditItemModal({ partnerId, item, onClose, onSuccess }: { partnerId: string; item: B2bItem; onClose: () => void; onSuccess: () => void }) {
   const { showToast } = useToast();
@@ -778,6 +876,7 @@ export default function B2bPartnerDetailPage() {
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [showShipmentModal, setShowShipmentModal] = useState(false);
   const [editingItem, setEditingItem] = useState<B2bItem | null>(null);
+  const [showEditPartner, setShowEditPartner] = useState(false);
 
   // Sales data
   const [sales, setSales] = useState<B2bSale[]>([]);
@@ -1003,6 +1102,12 @@ export default function B2bPartnerDetailPage() {
               </div>
             </div>
             <div className="flex gap-2">
+              <button
+                onClick={() => setShowEditPartner(true)}
+                className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium"
+              >
+                ✏️ Upravit profil
+              </button>
               <a
                 href={`/api/admin/b2b/${id}/send-contract`}
                 target="_blank"
@@ -1556,6 +1661,14 @@ export default function B2bPartnerDetailPage() {
             fetchPartner();
             if (activeTab === 'vraceni') fetchReturns();
           }}
+        />
+      )}
+
+      {showEditPartner && partner && (
+        <EditPartnerModal
+          partner={partner}
+          onClose={() => setShowEditPartner(false)}
+          onSuccess={() => { setShowEditPartner(false); fetchPartner(); }}
         />
       )}
 
