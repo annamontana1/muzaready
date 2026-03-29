@@ -346,46 +346,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // --- Send email via Resend for Instagram orders ---
-    if (channel === 'instagram' && email && email !== 'prodejna@muzahair.cz') {
-      try {
-        const { Resend } = await import('resend');
-        const resend = new Resend(process.env.RESEND_API_KEY);
-
-        const itemsList = processedItems
-          .map((item) => `• ${item.name} – ${item.grams}g – ${item.lineTotal.toLocaleString('cs-CZ')} Kč${item.ending !== 'Bez zakončení' ? ` (+ ${item.ending} ${item.endingTotal} Kč)` : ''}`)
-          .join('\n');
-
-        await resend.emails.send({
-          from: 'Mùza Hair <info@mail.muzahair.cz>',
-          to: email,
-          subject: `Proforma faktura – Objednávka #${order.id.substring(0, 8).toUpperCase()}`,
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #722F37;">Mùza Hair – Proforma faktura</h2>
-              <p>Dobrý den,</p>
-              <p>děkujeme za Vaši objednávku. Níže naleznete souhrn:</p>
-              <hr style="border: 1px solid #eee;" />
-              <pre style="font-family: Arial; white-space: pre-wrap;">${itemsList}</pre>
-              ${discountAmount > 0 ? `<p><strong>Sleva ${discountPercent}%:</strong> -${discountAmount.toLocaleString('cs-CZ')} Kč</p>` : ''}
-              ${shippingCost > 0 ? `<p><strong>Doprava (${shipping?.carrier}):</strong> ${shippingCost.toLocaleString('cs-CZ')} Kč</p>` : ''}
-              <h3 style="color: #722F37;">Celkem k úhradě: ${total.toLocaleString('cs-CZ')} Kč</h3>
-              <hr style="border: 1px solid #eee;" />
-              <p><strong>Platební údaje:</strong></p>
-              <p>Číslo účtu: 321286011/0300 (ČSOB)<br/>
-              Variabilní symbol: ${order.id.substring(0, 8).toUpperCase()}<br/>
-              Částka: ${total.toLocaleString('cs-CZ')} Kč</p>
-              <p>Po připsání platby na účet Vám zašleme daňový doklad.</p>
-              <br/>
-              <p>S pozdravem,<br/><strong>Mùza Hair</strong><br/>www.muzahair.cz</p>
-            </div>
-          `,
-        });
-      } catch (emailError) {
-        console.error('Resend email error (non-blocking):', emailError);
-      }
-    }
-
     return NextResponse.json(
       {
         success: true,

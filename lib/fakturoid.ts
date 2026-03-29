@@ -326,7 +326,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       order_number: order.orderId,
       payment_method: order.paymentMethod === 'gopay' ? 'card' : 'bank',
       currency: 'CZK',
-      due: 14,
+      due: order.proforma ? 3 : 14,
       lines,
       proforma: order.proforma || false,
     });
@@ -340,51 +340,16 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       await markInvoicePaid(invoice.id);
     }
 
-    // 5. Send invoice email via Resend (Fakturoid deliver endpoint unreliable)
-    console.log('Fakturoid invoice created:', JSON.stringify({ id: invoice.id, number: invoice.number, token: invoice.token, public_html_url: invoice.public_html_url }));
-    try {
-      const { Resend } = await import('resend');
-      const resendKey = process.env.RESEND_API_KEY;
-      console.log('Resend key available:', !!resendKey, 'Customer email:', order.customerEmail);
-      if (resendKey && order.customerEmail) {
-        const resend = new Resend(resendKey);
-        const invoiceUrl = invoice.public_html_url || `https://app.fakturoid.cz/${FAKTUROID_SLUG}/p/${invoice.token || 'x'}/${invoice.number}`;
-        const isProforma = order.proforma;
-        const resendResult = await resend.emails.send({
-          from: 'Mùza Hair <faktury@mail.muzahair.cz>',
-          to: order.customerEmail,
-          subject: `${isProforma ? 'Proforma faktura' : 'Faktura'} ${invoice.number} — Mùza Hair`,
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: #722F37; color: white; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
-                <h1 style="margin: 0; font-size: 22px;">💎 Mùza Hair</h1>
-                <p style="margin: 8px 0 0; opacity: 0.9;">${isProforma ? 'Proforma faktura' : 'Faktura'} za vaši objednávku</p>
-              </div>
-              <div style="background: #fff; padding: 24px; border: 1px solid #e5e5e5; border-top: none;">
-                <p>Dobrý den,</p>
-                <p>${isProforma ? 'vystavili jsme pro vás proforma fakturu' : 'vystavili jsme pro vás fakturu'} <strong>${invoice.number}</strong>.</p>
-                <div style="background: #f9f5f3; padding: 16px; border-radius: 8px; margin: 16px 0; text-align: center;">
-                  <p style="margin: 0 0 12px; font-size: 14px; color: #666;">Celková částka k úhradě:</p>
-                  <p style="margin: 0; font-size: 28px; font-weight: bold; color: #722F37;">${order.items.reduce((s: number, i: any) => s + i.unitPrice * i.quantity, 0).toLocaleString('cs-CZ')} Kč</p>
-                </div>
-                <p style="text-align: center;">
-                  <a href="${invoiceUrl}" style="display: inline-block; padding: 14px 32px; background: #722F37; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                    📄 Zobrazit ${isProforma ? 'proformu' : 'fakturu'}
-                  </a>
-                </p>
-                ${isProforma ? '<p style="color: #666; font-size: 13px;">Po zaplacení vám vystavíme daňový doklad.</p>' : ''}
-                <p>Děkujeme za váš nákup!</p>
-                <p style="color: #999; font-size: 12px; margin-top: 24px; border-top: 1px solid #eee; padding-top: 12px;">Mùza Hair · Praha · www.muzahair.cz</p>
-              </div>
-            </div>
-          `,
+    // 5. Send invoice/proforma email via Fakturoid (includes QR code)
+    if (order.customerEmail) {
+      try {
+        await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
+          method: 'POST',
         });
-        console.log('Invoice email sent via Resend to', order.customerEmail, 'result:', JSON.stringify(resendResult));
-      } else {
-        console.warn('Resend skipped: key=', !!resendKey, 'email=', order.customerEmail);
+        console.log('Fakturoid email delivered for invoice', invoice.id);
+      } catch (deliverError) {
+        console.error('Fakturoid deliver error (non-blocking):', deliverError);
       }
-    } catch (emailError) {
-      console.error('Resend invoice email error (non-blocking):', emailError);
     }
 
     return {
