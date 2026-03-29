@@ -25,19 +25,31 @@ interface LowStockSku {
   saleMode: string;
 }
 
+interface B2bMonthStats {
+  totalPayments: number;
+  totalSales: number;
+  total: number;
+}
+
 export default function AdminDashboard() {
   const [products, setProducts] = useState<any[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [lowStockSkus, setLowStockSkus] = useState<LowStockSku[]>([]);
   const [loading, setLoading] = useState(true);
+  const [b2bStats, setB2bStats] = useState<B2bMonthStats | null>(null);
+  const [monthlyOrders, setMonthlyOrders] = useState<Order[]>([]);
+
+  const currentMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, ordersRes, skusRes] = await Promise.all([
+        const [productsRes, ordersRes, skusRes, b2bStatsRes, monthlyOrdersRes] = await Promise.all([
           fetch('/api/admin/products'),
           fetch('/api/admin/orders'),
           fetch('/api/admin/skus'),
+          fetch(`/api/admin/b2b/stats?month=${currentMonth}`),
+          fetch(`/api/admin/orders?month=${currentMonth}&limit=100`),
         ]);
 
         if (productsRes.ok) {
@@ -62,6 +74,16 @@ export default function AdminDashboard() {
           });
           setLowStockSkus(lowStock);
         }
+
+        if (b2bStatsRes.ok) {
+          const b2bData = await b2bStatsRes.json();
+          setB2bStats(b2bData);
+        }
+
+        if (monthlyOrdersRes.ok) {
+          const monthlyData = await monthlyOrdersRes.json();
+          setMonthlyOrders(monthlyData.orders || monthlyData);
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -69,7 +91,7 @@ export default function AdminDashboard() {
       }
     };
     fetchData();
-  }, []);
+  }, [currentMonth]);
 
   const totalProducts = products.length;
   const totalOrders = orders.length;
@@ -194,6 +216,57 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Monthly Revenue Summary */}
+      {(b2bStats || monthlyOrders.length > 0) && (() => {
+        const monthlyRetailRevenue = monthlyOrders.reduce((sum: number, o: Order) => sum + (o.total || 0), 0);
+        const monthlyB2bPayments = b2bStats?.totalPayments || 0;
+        const monthlyB2bSales = b2bStats?.totalSales || 0;
+        const monthlyTotal = monthlyRetailRevenue + monthlyB2bPayments + monthlyB2bSales;
+        const monthLabel = new Date(currentMonth + '-01').toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
+        return (
+          <div className="bg-white rounded-2xl shadow-sm border border-stone-100 p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold text-stone-800">Tržby tento měsíc</h2>
+              <span className="text-sm text-stone-400 capitalize">{monthLabel}</span>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-100">
+                <p className="text-xs text-stone-500 font-medium">Retail (objednávky)</p>
+                <p className="text-xl font-bold text-stone-800 mt-1">
+                  {monthlyRetailRevenue.toLocaleString('cs-CZ')}
+                  <span className="text-sm text-stone-400 ml-1">Kč</span>
+                </p>
+                <p className="text-xs text-stone-400 mt-1">{monthlyOrders.length} objednávek</p>
+              </div>
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-100">
+                <p className="text-xs text-stone-500 font-medium">B2B přijaté platby</p>
+                <p className="text-xl font-bold text-stone-800 mt-1">
+                  {monthlyB2bPayments.toLocaleString('cs-CZ')}
+                  <span className="text-sm text-stone-400 ml-1">Kč</span>
+                </p>
+              </div>
+              <div className="bg-stone-50 rounded-xl p-4 border border-stone-100">
+                <p className="text-xs text-stone-500 font-medium">B2B komise (prodeje)</p>
+                <p className="text-xl font-bold text-stone-800 mt-1">
+                  {monthlyB2bSales.toLocaleString('cs-CZ')}
+                  <span className="text-sm text-stone-400 ml-1">Kč</span>
+                </p>
+              </div>
+              <div className="bg-[#722F37]/5 rounded-xl p-4 border border-[#722F37]/20">
+                <p className="text-xs text-stone-500 font-medium">Celkem</p>
+                <p className="text-xl font-bold text-[#722F37] mt-1">
+                  {monthlyTotal.toLocaleString('cs-CZ')}
+                  <span className="text-sm text-[#722F37]/60 ml-1">Kč</span>
+                </p>
+                <Link href="/admin/b2b" className="text-xs text-[#722F37] font-medium mt-1 inline-block hover:underline">
+                  B2B přehled →
+                </Link>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Low Stock Alert */}
       {lowStockSkus.length > 0 && (

@@ -24,12 +24,20 @@ interface B2bPartnerSummary {
 
 type FilterTab = 'all' | 'komise' | 'splatky';
 
+interface MonthlyStats {
+  totalPayments: number;
+  totalSales: number;
+  total: number;
+}
+
 export default function B2bPartnersPage() {
   const { showToast } = useToast();
   const [partners, setPartners] = useState<B2bPartnerSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [showNewForm, setShowNewForm] = useState(false);
   const [filterTab, setFilterTab] = useState<FilterTab>('all');
+  const [filterMonth, setFilterMonth] = useState('');
+  const [monthlyStats, setMonthlyStats] = useState<MonthlyStats | null>(null);
   const [newPartner, setNewPartner] = useState({
     name: '',
     contactName: '',
@@ -90,6 +98,14 @@ export default function B2bPartnersPage() {
   useEffect(() => {
     fetchPartners();
   }, []);
+
+  useEffect(() => {
+    if (!filterMonth) { setMonthlyStats(null); return; }
+    fetch(`/api/admin/b2b/stats?month=${filterMonth}`)
+      .then((r) => r.json())
+      .then(setMonthlyStats)
+      .catch(() => setMonthlyStats(null));
+  }, [filterMonth]);
 
   const handleCreatePartner = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,6 +210,43 @@ export default function B2bPartnersPage() {
             </span>
           </button>
         ))}
+      </div>
+
+      {/* Monthly filter */}
+      <div className="flex gap-3 items-center flex-wrap">
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-stone-600 font-medium">Měsíc:</label>
+          <input
+            type="month"
+            value={filterMonth}
+            onChange={(e) => setFilterMonth(e.target.value)}
+            className="px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
+          />
+          {filterMonth && (
+            <button
+              onClick={() => setFilterMonth('')}
+              className="text-xs text-stone-400 hover:text-stone-600 px-2 py-1 rounded hover:bg-stone-100"
+            >
+              Zrušit
+            </button>
+          )}
+        </div>
+        {monthlyStats && (
+          <div className="flex gap-3 flex-wrap">
+            <div className="bg-white px-4 py-2 rounded-lg border border-stone-200 text-sm">
+              <span className="text-stone-500">Přijaté platby: </span>
+              <span className="font-bold text-stone-800">{monthlyStats.totalPayments.toLocaleString('cs-CZ')} Kč</span>
+            </div>
+            <div className="bg-white px-4 py-2 rounded-lg border border-stone-200 text-sm">
+              <span className="text-stone-500">Prodeje (komise): </span>
+              <span className="font-bold text-stone-800">{monthlyStats.totalSales.toLocaleString('cs-CZ')} Kč</span>
+            </div>
+            <div className="bg-[#722F37]/5 px-4 py-2 rounded-lg border border-[#722F37]/20 text-sm">
+              <span className="text-stone-500">Celkem B2B: </span>
+              <span className="font-bold text-[#722F37]">{monthlyStats.total.toLocaleString('cs-CZ')} Kč</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* New partner form */}
