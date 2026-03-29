@@ -81,7 +81,7 @@ export default function MetadataSection({ order, onUpdate }: MetadataSectionProp
     setSavingNaklad(true);
     try {
       await fetch(`/api/admin/orders/${order.id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ naklad: nakladValue === '' ? null : parseFloat(nakladValue) }),
       });
