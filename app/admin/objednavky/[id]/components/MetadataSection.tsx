@@ -74,6 +74,26 @@ const getRiskLabel = (score: number): string => {
 
 export default function MetadataSection({ order, onUpdate }: MetadataSectionProps) {
   const [showEditModal, setShowEditModal] = useState(false);
+  const [nakladValue, setNakladValue] = useState<string>(((order as any).naklad ?? '').toString());
+  const [savingNaklad, setSavingNaklad] = useState(false);
+
+  const handleSaveNaklad = async () => {
+    setSavingNaklad(true);
+    try {
+      await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ naklad: nakladValue === '' ? null : parseFloat(nakladValue) }),
+      });
+      onUpdate();
+    } finally {
+      setSavingNaklad(false);
+    }
+  };
+
+  const naklad = parseFloat(nakladValue) || 0;
+  const marze = order.total - naklad;
+  const marzePercent = order.total > 0 ? Math.round((marze / order.total) * 100) : 0;
 
   // Parse tags from JSON string to array
   let tags: string[] = [];
@@ -95,6 +115,35 @@ export default function MetadataSection({ order, onUpdate }: MetadataSectionProp
           >
             ✏️ Upravit metadata
           </button>
+        </div>
+
+        {/* Náklad a Marže — pouze pro správce */}
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <h3 className="text-sm font-semibold text-amber-800 mb-3">🔒 Náklad & Marže (pouze správce)</h3>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-amber-700 font-medium">Náklad (Kč):</label>
+              <input
+                type="number"
+                value={nakladValue}
+                onChange={e => setNakladValue(e.target.value)}
+                onBlur={handleSaveNaklad}
+                onKeyDown={e => e.key === 'Enter' && handleSaveNaklad()}
+                placeholder="0"
+                className="w-28 px-3 py-1.5 border border-amber-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
+              />
+              {savingNaklad && <span className="text-xs text-amber-600">Ukládám...</span>}
+            </div>
+            <div className="flex gap-4 text-sm">
+              <span className="text-amber-700">
+                Příjem: <strong>{order.total.toLocaleString('cs-CZ')} Kč</strong>
+              </span>
+              <span className={marze >= 0 ? 'text-green-700' : 'text-red-700'}>
+                Marže: <strong>{marze.toLocaleString('cs-CZ')} Kč ({marzePercent}%)</strong>
+              </span>
+            </div>
+          </div>
+          <p className="text-xs text-amber-600 mt-2">Uloží se automaticky po opuštění pole nebo stisknutí Enter</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
