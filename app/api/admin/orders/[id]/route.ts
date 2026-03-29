@@ -717,7 +717,19 @@ export async function PUT(
               await sendOrderCancellationEmail(updatedOrder.email, id, reason);
             } catch (emailError) {
               console.error('Failed to send cancellation email:', emailError);
-              // Don't fail the update if email fails
+            }
+
+            // Cancel Fakturoid invoice if exists
+            if (currentOrder.fakturoidInvoiceId) {
+              try {
+                const { cancelInvoice } = await import('@/lib/fakturoid');
+                const result = await cancelInvoice(Number(currentOrder.fakturoidInvoiceId));
+                if (!result.success) {
+                  console.warn('Fakturoid cancel warning:', result.message);
+                }
+              } catch (fakturoidError) {
+                console.error('Fakturoid cancel error (non-blocking):', fakturoidError);
+              }
             }
           }
 
