@@ -479,7 +479,7 @@ export default function OrderDetailsPage() {
       {activeTab === 'payment' && <PaymentSection order={order} />}
       {activeTab === 'invoice' && <InvoiceSection order={order} />}
       {activeTab === 'shipments' && <ShipmentHistory order={order} onStatusChange={handleStatusChange} />}
-      {activeTab === 'metadata' && <MetadataSection order={order} onUpdate={() => {}} />}
+      {activeTab === 'metadata' && <MetadataSection order={order} onUpdate={handleStatusChange} />}
       {activeTab === 'history' && <OrderHistorySection orderId={order.id} />}
     </div>
   );
