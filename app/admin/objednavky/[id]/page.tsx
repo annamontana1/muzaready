@@ -78,6 +78,7 @@ interface Order {
   fakturoidIsProforma: boolean;
   fakturoidInvoiceUrl: string | null;
   fakturoidInvoiceNum: string | null;
+  naklad: number | null;
   // Legacy / computed
   invoiceUrl?: string | null;
 }

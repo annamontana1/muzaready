@@ -46,6 +46,7 @@ interface Order {
   shippingCost: number;
   discountAmount: number;
   total: number;
+  naklad: number | null;
   trackingNumber: string | null;
   createdAt: string;
   updatedAt: string;
@@ -74,7 +75,7 @@ const getRiskLabel = (score: number): string => {
 
 export default function MetadataSection({ order, onUpdate }: MetadataSectionProps) {
   const [showEditModal, setShowEditModal] = useState(false);
-  const [nakladValue, setNakladValue] = useState<string>(((order as any).naklad ?? '').toString());
+  const [nakladValue, setNakladValue] = useState<string>((order.naklad ?? '').toString());
   const [savingNaklad, setSavingNaklad] = useState(false);
 
   const handleSaveNaklad = async () => {
