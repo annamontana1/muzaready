@@ -165,9 +165,12 @@ export default function AdminOrdersPage() {
     ? orders.filter((order) => order.channel === filterChannelLocal)
     : orders;
 
-  // Summary totals computed from all filtered orders (server already filtered by month/day)
-  const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-  const totalNaklad = filteredOrders.reduce((sum, o) => sum + ((o as any).naklad ?? 0), 0);
+  // Summary totals — exclude cancelled and refunded orders
+  const activeOrders = filteredOrders.filter(
+    (o) => o.orderStatus !== 'cancelled' && o.paymentStatus !== 'refunded'
+  );
+  const totalRevenue = activeOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+  const totalNaklad = activeOrders.reduce((sum, o) => sum + ((o as any).naklad ?? 0), 0);
   const totalMarze = totalRevenue - totalNaklad;
 
   // Calculate stats from current page (acknowledged limitation: per-page, not global)

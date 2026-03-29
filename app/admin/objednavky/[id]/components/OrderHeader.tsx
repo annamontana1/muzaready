@@ -307,7 +307,7 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
   const handleMarkAsRefunded = async () => {
     if (updating) return;
 
-    if (!confirm('Opravdu chceš označit tuto objednávku jako refunded? Tato akce vrátí zásoby na sklad a odešle email zákazníkovi.')) {
+    if (!confirm('Vrácení zboží — zákazník vrátil vlasy. Objednávka bude odečtena z tržeb. Pokračovat?')) {
       return;
     }
 
@@ -329,7 +329,7 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
       }
 
       const updatedOrder = await response.json();
-      showToast('Objednávka byla označena jako refunded - zásoby byly vráceny na sklad', 'success');
+      showToast('Vrácení zboží zaznamenáno — objednávka odečtena z tržeb', 'success');
       onStatusChange();
     } catch (error) {
       console.error('Error updating payment status:', error);
@@ -447,6 +447,46 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
           }`}
         >
           {updating ? 'Aktualizuji...' : 'Označit jako doručeno'}
+        </button>
+
+        {/* Separator */}
+        <div className="w-px bg-gray-300 mx-1" />
+
+        <button
+          onClick={async () => {
+            if (!confirm('Stornovat objednávku? Odečte se z tržeb a bude označena jako zrušená.')) return;
+            setUpdating(true);
+            try {
+              await fetch(`/api/admin/orders/${order.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderStatus: 'cancelled', paymentStatus: 'refunded' }),
+              });
+              showToast('Objednávka stornována — odečtena z tržeb', 'success');
+              onStatusChange();
+            } catch { showToast('Chyba při stornování', 'error'); }
+            finally { setUpdating(false); }
+          }}
+          disabled={updating || order.orderStatus === 'cancelled'}
+          className={`px-4 py-2 rounded font-medium transition ${
+            updating || order.orderStatus === 'cancelled'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700 text-white'
+          }`}
+        >
+          ❌ Stornovat
+        </button>
+
+        <button
+          onClick={handleMarkAsRefunded}
+          disabled={updating || order.paymentStatus === 'refunded'}
+          className={`px-4 py-2 rounded font-medium transition ${
+            updating || order.paymentStatus === 'refunded'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-orange-600 hover:bg-orange-700 text-white'
+          }`}
+        >
+          🔄 Vrácení zboží
         </button>
       </div>
 
