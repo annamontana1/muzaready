@@ -63,6 +63,29 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /**
+ * PATCH /api/admin/orders/[id]
+ * Update naklad (cost) field. Restricted to owner role.
+ */
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const session = await verifyAdminSession(req);
+  if (!session.valid || !session.admin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (session.admin.role !== 'owner') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+  const { naklad } = await req.json();
+  const order = await prisma.order.update({
+    where: { id: params.id },
+    data: { naklad: naklad !== undefined ? parseFloat(naklad) : null },
+  });
+  return NextResponse.json({ success: true, naklad: order.naklad });
+}
+
+/**
  * GET /api/admin/orders/[id]
  * Fetch single order with full details and items
  *

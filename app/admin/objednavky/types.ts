@@ -26,6 +26,7 @@ export interface Order {
   paymentStatus: string;
   deliveryStatus: string;
   channel: string;
+  naklad: number | null;
   tags: string[];
   riskScore: number;
   itemCount: number;

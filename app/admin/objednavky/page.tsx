@@ -1,6 +1,59 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+
+// Inline editable Náklad cell (owner only)
+function NakladCell({
+  orderId,
+  naklad,
+  onUpdate,
+}: {
+  orderId: string;
+  naklad: number | null;
+  onUpdate: (v: number | null) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(naklad?.toString() || '');
+
+  const save = async () => {
+    const num = value ? parseFloat(value) : null;
+    await fetch(`/api/admin/orders/${orderId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ naklad: num }),
+    });
+    onUpdate(num);
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={save}
+        onKeyDown={(e) => e.key === 'Enter' && save()}
+        autoFocus
+        className="w-24 px-2 py-1 border border-stone-300 rounded text-sm"
+      />
+    );
+  }
+
+  return (
+    <span
+      onClick={() => setEditing(true)}
+      className="cursor-pointer text-stone-600 hover:text-stone-900"
+    >
+      {naklad ? (
+        `${naklad.toLocaleString('cs-CZ')} Kč`
+      ) : (
+        <span className="text-stone-300">+ přidat</span>
+      )}
+    </span>
+  );
+}
 import Link from 'next/link';
 import Filters, { FilterState } from './components/Filters';
 import BulkActions from './components/BulkActions';
@@ -42,6 +95,11 @@ export default function AdminOrdersPage() {
   const [orderToDelete, setOrderToDelete] = useState<{ id: string; shortId: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Month/day/channel quick-filter state (client-side on current page)
+  const [filterMonth, setFilterMonth] = useState('');
+  const [filterDay, setFilterDay] = useState('');
+  const [filterChannelLocal, setFilterChannelLocal] = useState('');
+
   const { showToast } = useToast();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -74,6 +132,48 @@ export default function AdminOrdersPage() {
   // Derive data from React Query response
   const orders = data?.orders || [];
   const totalItems = data?.total || 0;
+
+  // Update naklad optimistically in local React Query cache
+  const updateOrderNaklad = (orderId: string, naklad: number | null) => {
+    queryClient.setQueryData(
+      orderKeys.list({
+        limit: itemsPerPage,
+        offset: (currentPage - 1) * itemsPerPage,
+        orderStatus: filters.orderStatus,
+        paymentStatus: filters.paymentStatus,
+        deliveryStatus: filters.deliveryStatus,
+        channel: filters.channel,
+        email: filters.email,
+        sort: sortField ? (sortDirection === 'desc' ? `-${sortField}` : sortField) : undefined,
+      }),
+      (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          orders: old.orders.map((o: any) =>
+            o.id === orderId ? { ...o, naklad } : o
+          ),
+        };
+      }
+    );
+  };
+
+  // Client-side filters applied on top of the server-paginated page
+  const filteredOrders = orders.filter((order) => {
+    const date = new Date(order.createdAt);
+    if (filterMonth) {
+      const ym = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      if (ym !== filterMonth) return false;
+    }
+    if (filterDay && String(date.getDate()) !== filterDay) return false;
+    if (filterChannelLocal && order.channel !== filterChannelLocal) return false;
+    return true;
+  });
+
+  // Summary totals computed from filtered orders
+  const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+  const totalNaklad = filteredOrders.reduce((sum, o) => sum + ((o as any).naklad || 0), 0);
+  const totalMarze = totalRevenue - totalNaklad;
 
   // Calculate stats from current page (acknowledged limitation: per-page, not global)
   const stats = {
@@ -423,6 +523,73 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
+      {/* Filtered summary totals (náklad/marže owner only) */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="bg-white rounded-lg p-4 border border-stone-200">
+          <p className="text-xs text-stone-500">Celkový příjem</p>
+          <p className="text-xl font-bold text-stone-800">
+            {totalRevenue.toLocaleString('cs-CZ')} Kč
+          </p>
+        </div>
+        {currentUser?.role === 'owner' && (
+          <>
+            <div className="bg-white rounded-lg p-4 border border-stone-200">
+              <p className="text-xs text-stone-500">Celkový náklad</p>
+              <p className="text-xl font-bold text-red-600">
+                {totalNaklad.toLocaleString('cs-CZ')} Kč
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4 border border-stone-200">
+              <p className="text-xs text-stone-500">Celková marže</p>
+              <p className="text-xl font-bold text-green-600">
+                {totalMarze.toLocaleString('cs-CZ')} Kč
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Month / day / channel quick-filters */}
+      <div className="flex gap-3 mb-4 flex-wrap">
+        <input
+          type="month"
+          value={filterMonth}
+          onChange={(e) => setFilterMonth(e.target.value)}
+          className="px-3 py-2 border border-stone-200 rounded-lg text-sm"
+        />
+        <input
+          type="number"
+          placeholder="Den (1-31)"
+          value={filterDay}
+          onChange={(e) => setFilterDay(e.target.value)}
+          min="1"
+          max="31"
+          className="w-28 px-3 py-2 border border-stone-200 rounded-lg text-sm"
+        />
+        <select
+          value={filterChannelLocal}
+          onChange={(e) => setFilterChannelLocal(e.target.value)}
+          className="px-3 py-2 border border-stone-200 rounded-lg text-sm"
+        >
+          <option value="">Všechny kanály</option>
+          <option value="prodejna">Prodejna</option>
+          <option value="instagram">Instagram</option>
+          <option value="web">E-shop</option>
+        </select>
+        {(filterMonth || filterDay || filterChannelLocal) && (
+          <button
+            onClick={() => {
+              setFilterMonth('');
+              setFilterDay('');
+              setFilterChannelLocal('');
+            }}
+            className="px-3 py-2 text-sm text-stone-500 hover:text-stone-800"
+          >
+            ✕ Zrušit filtry
+          </button>
+        )}
+      </div>
+
       {/* Filters */}
       <Filters onFilter={handleFilterChange} />
 
@@ -520,13 +687,23 @@ export default function AdminOrdersPage() {
                   )}
                 </div>
               </th>
+              {currentUser?.role === 'owner' && (
+                <>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                    Náklad
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">
+                    Marže
+                  </th>
+                </>
+              )}
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
                 Akce
               </th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <tr
                 key={order.id}
                 className={`border-b border-gray-200 hover:bg-gray-50 ${
@@ -555,6 +732,23 @@ export default function AdminOrdersPage() {
                 <td className="px-6 py-4 text-sm text-gray-600">
                   {new Date(order.createdAt).toLocaleDateString('cs-CZ')}
                 </td>
+                {currentUser?.role === 'owner' && (
+                  <>
+                    <td className="px-4 py-3 text-sm">
+                      <NakladCell
+                        orderId={order.id}
+                        naklad={(order as any).naklad ?? null}
+                        onUpdate={(v) => updateOrderNaklad(order.id, v)}
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-sm text-stone-600">
+                      {(order as any).naklad != null
+                        ? `${(order.total - (order as any).naklad).toLocaleString('cs-CZ')} Kč`
+                        : <span className="text-stone-300">—</span>
+                      }
+                    </td>
+                  </>
+                )}
                 <td className="px-6 py-4 text-sm space-x-2 flex items-center">
                   <Link
                     href={`/admin/objednavky/${order.id}`}

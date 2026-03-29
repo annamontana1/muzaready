@@ -89,6 +89,7 @@ model Order {
 
   // Channel & metadata
   channel   String  @default("web") // web, pos, ig_dm
+  naklad    Float?  // Náklad (cost) - owner only
   tags      String? // JSON string of tags for filtering/organization
   riskScore Int     @default(0) // fraud detection score
 
