@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 interface ReceiptData {
   type: 'order' | 'b2b_sale';
@@ -104,7 +105,9 @@ export default function NahledPage() {
         <div className="max-w-[560px] mx-auto bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
           {/* Hlavička */}
           <div className="bg-[#722F37] text-white px-6 py-5 text-center">
-            <p className="text-xs font-light tracking-widest uppercase opacity-80 mb-1">Muzahair.cz</p>
+            <div className="flex justify-center mb-2">
+              <Image src="/images/logo/muza-logo.png" alt="Mùza Hair" width={120} height={48} className="object-contain brightness-0 invert" />
+            </div>
             <p className="text-lg font-semibold">Doklad o prodeji</p>
             <p className="text-xs opacity-70 mt-1">{receiptNumber}</p>
           </div>
@@ -183,15 +186,22 @@ export default function NahledPage() {
           </div>
         </div>
 
-        {/* Tlačítko tisk */}
-        <div className="max-w-[560px] mx-auto mt-4 text-center">
+        {/* Tlačítka */}
+        <div className="max-w-[560px] mx-auto mt-4 flex gap-3 justify-center print:hidden">
           <button
             onClick={() => window.print()}
-            className="text-sm text-stone-400 hover:text-stone-600 underline print:hidden"
+            className="px-4 py-2 bg-[#722F37] text-white text-sm rounded-lg hover:bg-[#5a2329] transition font-medium"
+          >
+            📥 Uložit jako PDF
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="px-4 py-2 bg-stone-200 text-stone-700 text-sm rounded-lg hover:bg-stone-300 transition font-medium"
           >
             🖨️ Tisknout
           </button>
         </div>
+        <style>{`@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }`}</style>
       </div>
     );
   }
@@ -202,7 +212,9 @@ export default function NahledPage() {
     <div className="min-h-screen bg-stone-50 py-8 px-4">
       <div className="max-w-[560px] mx-auto bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
         <div className="bg-[#722F37] text-white px-6 py-5 text-center">
-          <p className="text-xs font-light tracking-widest uppercase opacity-80 mb-1">Muzahair.cz</p>
+          <div className="flex justify-center mb-2">
+            <Image src="/images/logo/muza-logo.png" alt="Mùza Hair" width={120} height={48} className="object-contain brightness-0 invert" />
+          </div>
           <p className="text-lg font-semibold">Prodej — přehled zboží</p>
           {data.invoiceNumber && (
             <p className="text-xs opacity-70 mt-1">{data.invoiceNumber}</p>
@@ -258,14 +270,21 @@ export default function NahledPage() {
           </div>
         </div>
       </div>
-      <div className="max-w-[560px] mx-auto mt-4 text-center">
+      <div className="max-w-[560px] mx-auto mt-4 flex gap-3 justify-center print:hidden">
         <button
           onClick={() => window.print()}
-          className="text-sm text-stone-400 hover:text-stone-600 underline print:hidden"
+          className="px-4 py-2 bg-[#722F37] text-white text-sm rounded-lg hover:bg-[#5a2329] transition font-medium"
+        >
+          📥 Uložit jako PDF
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="px-4 py-2 bg-stone-200 text-stone-700 text-sm rounded-lg hover:bg-stone-300 transition font-medium"
         >
           🖨️ Tisknout
         </button>
       </div>
+      <style>{`@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }`}</style>
     </div>
   );
 }
