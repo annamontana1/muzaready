@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
+import Image from 'next/image';
 
 interface OrderData {
   id: string;
@@ -77,9 +78,15 @@ function ReceiptContent() {
       <div className="max-w-[600px] mx-auto mb-4 flex gap-3 print:hidden flex-wrap">
         <button
           onClick={() => window.print()}
-          className="px-6 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium"
+          className="px-6 py-2 bg-[#722F37] text-white rounded-lg hover:bg-[#5a2329] transition font-medium"
         >
-          🖨️ Vytisknout
+          📥 Uložit jako PDF
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="px-6 py-2 bg-stone-700 text-white rounded-lg hover:bg-stone-800 transition font-medium"
+        >
+          🖨️ Tisknout
         </button>
         <button
           onClick={() => {
@@ -113,7 +120,9 @@ function ReceiptContent() {
         <div className="p-8 print:p-6">
           {/* Header */}
           <div className="text-center mb-6 pb-4 border-b-2 border-dashed border-gray-300">
-            <h1 className="text-2xl font-bold text-gray-900">MÙZA HAIR</h1>
+            <div className="flex justify-center mb-3">
+              <Image src="/images/logo/muza-logo.png" alt="Mùza Hair" width={150} height={60} className="object-contain" />
+            </div>
             <p className="text-sm text-gray-500 mt-1">Anna Zvinchuk</p>
             <p className="text-sm text-gray-500">IČO: 17989230</p>
             <p className="text-sm text-gray-500">Šrámkova 430/12, Lesná, 638 00 Brno</p>
