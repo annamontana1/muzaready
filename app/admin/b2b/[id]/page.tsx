@@ -1122,8 +1122,8 @@ export default function B2bPartnerDetailPage() {
   const inStockItems = allItems.filter((i) => i.stav === 'skladem');
   const soldValue = soldItems.reduce((s, i) => s + i.celkem, 0);
   const returnedValue = returnedItems.reduce((s, i) => s + i.celkem, 0);
-  const inStockValue = inStockItems.reduce((s, i) => s + i.celkem, 0);
   const totalGiven = allItems.reduce((s, i) => s + i.celkem, 0);
+  const inStockValue = Math.max(0, totalGiven - returnedValue - stats.totalPaid);
   const soldGrams = soldItems.reduce((s, i) => s + i.gramaz, 0);
   const returnedGrams = returnedItems.reduce((s, i) => s + i.gramaz, 0);
   const inStockGrams = inStockItems.reduce((s, i) => s + i.gramaz, 0);
