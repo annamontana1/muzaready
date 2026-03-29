@@ -1221,14 +1221,14 @@ export default function B2bPartnerDetailPage() {
                 color="green"
               />
               <StatCard
-                label="K doplacení"
+                label={partner.type === 'komise' ? 'K doplacení' : 'Stav zásob'}
                 value={formatCzk(Math.max(0, partner.type === 'komise'
                   ? soldValue - stats.totalPaid
-                  : totalGiven - returnedValue - stats.totalPaid
+                  : totalGiven - stats.totalPaid
                 ))}
                 sub={partner.type === 'komise'
                   ? `Prodáno: ${formatCzk(soldValue)} · Skladem: ${formatCzk(inStockValue)}`
-                  : `Celkem − vráceno − zaplaceno`
+                  : `Dáno: ${formatCzk(totalGiven)} − Zaplaceno: ${formatCzk(stats.totalPaid)}`
                 }
                 color="purple"
               />
