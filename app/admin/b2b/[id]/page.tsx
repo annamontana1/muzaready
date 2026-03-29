@@ -113,7 +113,8 @@ interface B2bPartnerDetail {
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
   skladem: { label: 'Skladem', bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
   prodano: { label: 'Prodáno', bg: 'bg-emerald-100', text: 'text-emerald-700', dot: 'bg-emerald-500' },
-  vraceni: { label: 'Vrácení', bg: 'bg-amber-100', text: 'text-amber-700', dot: 'bg-amber-500' },
+  vraceni: { label: 'Vráceno', bg: 'bg-gray-100', text: 'text-gray-500', dot: 'bg-gray-400' },
+  vraceno: { label: 'Vráceno', bg: 'bg-gray-100', text: 'text-gray-500', dot: 'bg-gray-400' },
   zaplaceno: { label: 'Zaplaceno', bg: 'bg-purple-100', text: 'text-purple-700', dot: 'bg-purple-500' },
 };
 
@@ -861,6 +862,9 @@ function ReturnModal({ partnerId, selectedItems, onClose, onSuccess }: ReturnMod
 
 type TabKey = 'prehled' | 'zasoby' | 'prodeje' | 'vraceni' | 'historie' | 'platby';
 
+// Add 'vraceno' alias support alongside existing 'vraceni'
+const STAV_VRACENO_VALUES = ['vraceni', 'vraceno'] as const;
+
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'prehled', label: 'Přehled' },
   { key: 'zasoby', label: 'Zásoby' },
@@ -928,6 +932,35 @@ export default function B2bPartnerDetailPage() {
       setGeneratingInvoice(null);
     }
   }
+
+  // Bulk return (quick inline, no modal)
+  const [bulkReturnLoading, setBulkReturnLoading] = useState(false);
+  const [returnSuccessMsg, setReturnSuccessMsg] = useState<string | null>(null);
+
+  const handleBulkReturn = async () => {
+    if (selectedItemIds.size === 0) return;
+    setBulkReturnLoading(true);
+    setReturnSuccessMsg(null);
+    try {
+      const res = await fetch(`/api/admin/b2b/${id}/items/return`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemIds: Array.from(selectedItemIds) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Chyba při vrácení');
+      const msg = `Vráceno ${data.returned} položek${partner?.email ? ', potvrzení odesláno emailem' : ''}`;
+      setReturnSuccessMsg(msg);
+      showToast(`✅ ${msg}`, 'success');
+      setSelectedItemIds(new Set());
+      fetchPartner();
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Chyba při vrácení';
+      showToast(message, 'error');
+    } finally {
+      setBulkReturnLoading(false);
+    }
+  };
 
   // Returns data
   const [returns, setReturns] = useState<B2bReturnRecord[]>([]);
@@ -1010,7 +1043,11 @@ export default function B2bPartnerDetailPage() {
   // Flatten all items from all shipments
   const allItems: B2bItem[] = partner?.shipments.flatMap((s) => s.items) ?? [];
 
-  const filteredItems = stavFilter === 'all' ? allItems : allItems.filter((i) => i.stav === stavFilter);
+  const filteredItems = stavFilter === 'all'
+    ? allItems
+    : stavFilter === 'vraceni'
+      ? allItems.filter((i) => STAV_VRACENO_VALUES.includes(i.stav as typeof STAV_VRACENO_VALUES[number]))
+      : allItems.filter((i) => i.stav === stavFilter);
 
   const selectedItems = allItems.filter((i) => selectedItemIds.has(i.id));
 
@@ -1081,7 +1118,7 @@ export default function B2bPartnerDetailPage() {
 
   // Stats computed from partner data
   const soldItems = allItems.filter((i) => i.stav === 'prodano');
-  const returnedItems = allItems.filter((i) => i.stav === 'vraceni');
+  const returnedItems = allItems.filter((i) => STAV_VRACENO_VALUES.includes(i.stav as typeof STAV_VRACENO_VALUES[number]));
   const inStockItems = allItems.filter((i) => i.stav === 'skladem');
   const soldValue = soldItems.reduce((s, i) => s + i.celkem, 0);
   const returnedValue = returnedItems.reduce((s, i) => s + i.celkem, 0);
@@ -1244,7 +1281,11 @@ export default function B2bPartnerDetailPage() {
                   >
                     {s === 'all' ? 'Vše' : STATUS_CONFIG[s]?.label ?? s}
                     <span className="ml-1 opacity-70">
-                      ({s === 'all' ? allItems.length : allItems.filter((i) => i.stav === s).length})
+                      ({s === 'all'
+                        ? allItems.length
+                        : s === 'vraceni'
+                          ? allItems.filter((i) => STAV_VRACENO_VALUES.includes(i.stav as typeof STAV_VRACENO_VALUES[number])).length
+                          : allItems.filter((i) => i.stav === s).length})
                     </span>
                   </button>
                 ))}
@@ -1268,12 +1309,21 @@ export default function B2bPartnerDetailPage() {
                       </button>
                     )}
                     {selectedItems.every((i) => i.stav === 'skladem' || i.stav === 'prodano') && (
-                      <button
-                        onClick={() => setShowReturnModal(true)}
-                        className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg bg-amber-500 text-white font-medium"
-                      >
-                        ↩ Označit jako vráceno ({selectedItemIds.size})
-                      </button>
+                      <>
+                        <button
+                          onClick={handleBulkReturn}
+                          disabled={bulkReturnLoading}
+                          className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg bg-gray-600 text-white font-medium hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                        >
+                          {bulkReturnLoading ? '⏳ Vracím…' : `🔄 Označit jako vráceno (${selectedItemIds.size})`}
+                        </button>
+                        <button
+                          onClick={() => setShowReturnModal(true)}
+                          className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg bg-amber-500 text-white font-medium hover:bg-amber-600 transition-colors"
+                        >
+                          ↩ Vrátit s detaily
+                        </button>
+                      </>
                     )}
                     <button
                       onClick={() => setSelectedItemIds(new Set())}
@@ -1285,6 +1335,14 @@ export default function B2bPartnerDetailPage() {
                 )}
               </div>
             </div>
+
+            {/* Bulk return success message */}
+            {returnSuccessMsg && (
+              <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-sm text-emerald-800">
+                <span>✅ {returnSuccessMsg}</span>
+                <button onClick={() => setReturnSuccessMsg(null)} className="text-emerald-500 hover:text-emerald-700 text-lg leading-none">×</button>
+              </div>
+            )}
 
             {/* Table */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -1316,10 +1374,13 @@ export default function B2bPartnerDetailPage() {
                   )}
                   {filteredItems.map((item) => {
                     const shipment = partner.shipments.find((s) => s.id === item.shipmentId);
+                    const isReturned = STAV_VRACENO_VALUES.includes(item.stav as typeof STAV_VRACENO_VALUES[number]);
                     return (
                       <tr
                         key={item.id}
-                        className={`hover:bg-gray-50 transition-colors ${selectedItemIds.has(item.id) ? 'bg-[#722F37]/5' : ''}`}
+                        className={`hover:bg-gray-50 transition-colors ${
+                          selectedItemIds.has(item.id) ? 'bg-[#722F37]/5' : isReturned ? 'opacity-60' : ''
+                        }`}
                       >
                         <td className="px-4 py-3">
                           <input
@@ -1329,11 +1390,22 @@ export default function B2bPartnerDetailPage() {
                             className="w-4 h-4 rounded accent-[#722F37]"
                           />
                         </td>
-                        <td className="px-4 py-3 font-medium text-gray-800">{item.druh} — {item.barva}</td>
-                        <td className="px-4 py-3 text-gray-600">{item.delkaCm} cm</td>
-                        <td className="px-4 py-3 text-gray-600">{item.gramaz} g</td>
-                        <td className="px-4 py-3 text-right font-medium text-gray-800">{formatCzk(item.celkem)}</td>
-                        <td className="px-4 py-3"><StatusBadge stav={item.stav} /></td>
+                        <td className={`px-4 py-3 font-medium ${isReturned ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
+                          {item.druh} — {item.barva}
+                        </td>
+                        <td className="px-4 py-3 text-gray-500">{item.delkaCm} cm</td>
+                        <td className="px-4 py-3 text-gray-500">{item.gramaz} g</td>
+                        <td className={`px-4 py-3 text-right font-medium ${isReturned ? 'text-gray-400' : 'text-gray-800'}`}>
+                          {formatCzk(item.celkem)}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col gap-0.5">
+                            <StatusBadge stav={item.stav} />
+                            {isReturned && item.returnedAt && (
+                              <span className="text-xs text-gray-400">{formatDate(item.returnedAt)}</span>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-4 py-3 text-xs text-gray-400">
                           {shipment ? formatDate(shipment.date) : '—'}
                         </td>
