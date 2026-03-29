@@ -34,6 +34,8 @@ export async function GET(request: NextRequest) {
     const deliveryStatus = searchParams.get('deliveryStatus');
     const channel = searchParams.get('channel');
     const emailSearch = searchParams.get('email');
+    const filterMonth = searchParams.get('month'); // format: "2026-03"
+    const filterDay = searchParams.get('day'); // format: "15"
 
     // Pagination
     let limit = parseInt(searchParams.get('limit') || '50');
@@ -59,6 +61,24 @@ export async function GET(request: NextRequest) {
     if (paymentStatus) where.paymentStatus = paymentStatus;
     if (deliveryStatus) where.deliveryStatus = deliveryStatus;
     if (channel) where.channel = channel;
+
+    // Date filters - server side for correct totals
+    if (filterMonth) {
+      const [year, month] = filterMonth.split('-').map(Number);
+      const start = new Date(year, month - 1, 1);
+      const end = new Date(year, month, 1);
+      where.createdAt = { gte: start, lt: end };
+    }
+    if (filterDay && !filterMonth) {
+      // day filter without month - less useful but support it
+    }
+    if (filterDay && filterMonth) {
+      const [year, month] = filterMonth.split('-').map(Number);
+      const day = parseInt(filterDay);
+      const start = new Date(year, month - 1, day);
+      const end = new Date(year, month - 1, day + 1);
+      where.createdAt = { gte: start, lt: end };
+    }
 
     // Email search (case-insensitive partial match)
     if (emailSearch) {
@@ -112,6 +132,8 @@ export async function GET(request: NextRequest) {
       channel: (order as any).channel || 'web',
       tags: (order as any).tags ? JSON.parse((order as any).tags) : [],
       riskScore: (order as any).riskScore || 0,
+      naklad: (order as any).naklad ?? null,
+      notesInternal: (order as any).notesInternal || null,
       itemCount: order.items.length,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,

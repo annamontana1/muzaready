@@ -31,6 +31,8 @@ export interface OrderListParams {
   channel?: string;
   email?: string;
   sort?: string;
+  month?: string; // "2026-03"
+  day?: string;   // "15"
 }
 
 /**

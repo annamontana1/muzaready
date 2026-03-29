@@ -116,14 +116,16 @@ export default function AdminOrdersPage() {
 
   // React Query: Fetch orders with automatic caching
   const { data, isLoading } = useOrders({
-    limit: itemsPerPage,
-    offset: (currentPage - 1) * itemsPerPage,
+    limit: 500,
+    offset: 0,
     orderStatus: filters.orderStatus,
     paymentStatus: filters.paymentStatus,
     deliveryStatus: filters.deliveryStatus,
     channel: filters.channel,
     email: filters.email,
     sort: sortField ? (sortDirection === 'desc' ? `-${sortField}` : sortField) : undefined,
+    month: filterMonth || undefined,
+    day: filterDay || undefined,
   });
 
   // React Query: Bulk action mutation
@@ -158,21 +160,14 @@ export default function AdminOrdersPage() {
     );
   };
 
-  // Client-side filters applied on top of the server-paginated page
-  const filteredOrders = orders.filter((order) => {
-    const date = new Date(order.createdAt);
-    if (filterMonth) {
-      const ym = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      if (ym !== filterMonth) return false;
-    }
-    if (filterDay && String(date.getDate()) !== filterDay) return false;
-    if (filterChannelLocal && order.channel !== filterChannelLocal) return false;
-    return true;
-  });
+  // Client-side channel filter (month/day filtered server-side)
+  const filteredOrders = filterChannelLocal
+    ? orders.filter((order) => order.channel === filterChannelLocal)
+    : orders;
 
-  // Summary totals computed from filtered orders
+  // Summary totals computed from all filtered orders (server already filtered by month/day)
   const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-  const totalNaklad = filteredOrders.reduce((sum, o) => sum + ((o as any).naklad || 0), 0);
+  const totalNaklad = filteredOrders.reduce((sum, o) => sum + ((o as any).naklad ?? 0), 0);
   const totalMarze = totalRevenue - totalNaklad;
 
   // Calculate stats from current page (acknowledged limitation: per-page, not global)
