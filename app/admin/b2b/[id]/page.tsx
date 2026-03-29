@@ -1208,24 +1208,49 @@ export default function B2bPartnerDetailPage() {
                 sub={`${totalGrams} g celkem`}
                 color="gray"
               />
-              <StatCard
-                label="Zůstatek skladem"
-                value={formatCzk(inStockValue)}
-                sub={`${inStockGrams} g u ní`}
-                color="blue"
-              />
-              <StatCard
-                label="Vráceno"
-                value={formatCzk(returnedValue)}
-                sub={`${returnedGrams} g vráceno`}
-                color="amber"
-              />
-              <StatCard
-                label="K zaplacení"
-                value={formatCzk(Math.max(0, soldValue - stats.totalPaid))}
-                sub={`Prodáno: ${formatCzk(soldValue)} · Zaplaceno: ${formatCzk(stats.totalPaid)}`}
-                color="purple"
-              />
+              {partner.type === 'komise' ? (
+                <>
+                  <StatCard
+                    label="Zůstatek skladem"
+                    value={formatCzk(inStockValue)}
+                    sub={`${inStockGrams} g u ní`}
+                    color="blue"
+                  />
+                  <StatCard
+                    label="Vráceno"
+                    value={formatCzk(returnedValue)}
+                    sub={`${returnedGrams} g vráceno`}
+                    color="amber"
+                  />
+                  <StatCard
+                    label="K zaplacení"
+                    value={formatCzk(Math.max(0, soldValue - stats.totalPaid))}
+                    sub={`Prodáno: ${formatCzk(soldValue)} · Zaplaceno: ${formatCzk(stats.totalPaid)}`}
+                    color="purple"
+                  />
+                </>
+              ) : (
+                <>
+                  <StatCard
+                    label="Zaplaceno"
+                    value={formatCzk(stats.totalPaid)}
+                    sub={`z ${formatCzk(totalGiven - returnedValue)}`}
+                    color="green"
+                  />
+                  <StatCard
+                    label="Vráceno"
+                    value={formatCzk(returnedValue)}
+                    sub={`${returnedGrams} g vráceno`}
+                    color="amber"
+                  />
+                  <StatCard
+                    label="K zaplacení"
+                    value={formatCzk(Math.max(0, totalGiven - returnedValue - stats.totalPaid))}
+                    sub={`Celkem dáno − vráceno − zaplaceno`}
+                    color="purple"
+                  />
+                </>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
