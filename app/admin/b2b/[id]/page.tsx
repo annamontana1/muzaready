@@ -1204,12 +1204,6 @@ export default function B2bPartnerDetailPage() {
                 color="blue"
               />
               <StatCard
-                label="Prodáno"
-                value={formatCzk(soldValue)}
-                sub={`${soldItems.length} ks`}
-                color="green"
-              />
-              <StatCard
                 label="Vráceno"
                 value={formatCzk(returnedValue)}
                 sub={`${returnedItems.length} ks`}
@@ -1218,7 +1212,7 @@ export default function B2bPartnerDetailPage() {
               <StatCard
                 label="K zaplacení"
                 value={formatCzk(Math.max(0, soldValue - stats.totalPaid))}
-                sub={`Zaplaceno: ${formatCzk(stats.totalPaid)}`}
+                sub={`Prodáno: ${formatCzk(soldValue)} | Zaplaceno: ${formatCzk(stats.totalPaid)}`}
                 color="purple"
               />
             </div>
