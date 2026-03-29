@@ -1198,9 +1198,9 @@ export default function B2bPartnerDetailPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <StatCard
-                label="V komisi celkem"
-                value={formatCzk(stats.totalValue)}
-                sub={`${allItems.length} ks`}
+                label="Zůstatek skladem"
+                value={formatCzk(inStockValue)}
+                sub={`${inStockItems.length} ks skladem`}
                 color="blue"
               />
               <StatCard
