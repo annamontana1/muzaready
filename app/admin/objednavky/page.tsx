@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Filters, { FilterState } from './components/Filters';
 import BulkActions from './components/BulkActions';
@@ -10,7 +10,8 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useSearchShortcut } from '@/hooks/useKeyboardShortcuts';
 import { TableSkeleton, StatsCardSkeleton } from '@/components/ui/Skeleton';
-import { useOrders, useBulkAction } from '@/lib/queries/orders';
+import { useOrders, useBulkAction, orderKeys } from '@/lib/queries/orders';
+import { useQueryClient } from '@tanstack/react-query';
 import CreateOrderModal from './components/CreateOrderModal';
 
 export default function AdminOrdersPage() {
@@ -23,18 +24,37 @@ export default function AdminOrdersPage() {
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
+  // Current admin user (role-gated features)
+  const [currentUser, setCurrentUser] = useState<{ role: string } | null>(null);
+
   // Create order modal state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  // Confirmation dialog state
+  // Confirmation dialog state (bulk actions)
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
     action: 'mark-shipped' | 'mark-paid';
     label: string;
   } | null>(null);
 
+  // Delete confirmation state
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<{ id: string; shortId: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { showToast } = useToast();
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+
+  // Fetch current admin user on mount to determine role-gated UI
+  useEffect(() => {
+    fetch('/api/admin/me', { credentials: 'include' })
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => {
+        if (data?.role) setCurrentUser({ role: data.role });
+      })
+      .catch(() => {});
+  }, []);
 
   // React Query: Fetch orders with automatic caching
   const { data, isLoading } = useOrders({
@@ -141,6 +161,38 @@ export default function AdminOrdersPage() {
 
   const handleClearSelection = () => {
     setSelectedIds([]);
+  };
+
+  // Initiate delete flow for a single order (opens confirmation dialog)
+  const handleDeleteClick = (order: Order) => {
+    setOrderToDelete({ id: order.id, shortId: order.id.substring(0, 8) });
+    setDeleteConfirmOpen(true);
+  };
+
+  // Execute confirmed delete
+  const executeDelete = async () => {
+    if (!orderToDelete) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/orders/${orderToDelete.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: 'Chyba při mazání objednávky' }));
+        throw new Error(data.error || 'Chyba při mazání objednávky');
+      }
+      // Invalidate React Query cache so the list refreshes
+      queryClient.invalidateQueries({ queryKey: orderKeys.lists() });
+      showToast(`Objednávka #${orderToDelete.shortId} byla smazána`, 'success');
+      setSelectedIds((prev) => prev.filter((id) => id !== orderToDelete.id));
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Chyba při mazání objednávky', 'error');
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmOpen(false);
+      setOrderToDelete(null);
+    }
   };
 
   // CSV Export function
@@ -503,13 +555,23 @@ export default function AdminOrdersPage() {
                 <td className="px-6 py-4 text-sm text-gray-600">
                   {new Date(order.createdAt).toLocaleDateString('cs-CZ')}
                 </td>
-                <td className="px-6 py-4 text-sm space-x-2 flex">
+                <td className="px-6 py-4 text-sm space-x-2 flex items-center">
                   <Link
                     href={`/admin/objednavky/${order.id}`}
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Detaily
                   </Link>
+                  {currentUser?.role === 'owner' && (
+                    <button
+                      onClick={() => handleDeleteClick(order)}
+                      className="ml-3 text-red-500 hover:text-red-700 transition-colors"
+                      title={`Smazat objednávku #${order.id.substring(0, 8)}`}
+                      aria-label={`Smazat objednávku #${order.id.substring(0, 8)}`}
+                    >
+                      🗑️
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -551,6 +613,32 @@ export default function AdminOrdersPage() {
         onCancel={() => {
           setConfirmOpen(false);
           setPendingAction(null);
+        }}
+      />
+
+      {/* Delete Order Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirmOpen}
+        title="Smazat objednávku"
+        message={
+          orderToDelete ? (
+            <>
+              Smazat objednávku <strong>#{orderToDelete.shortId}</strong>? Tato akce je nevratná.
+            </>
+          ) : (
+            ''
+          )
+        }
+        confirmText="Smazat"
+        cancelText="Zrušit"
+        type="danger"
+        isLoading={isDeleting}
+        onConfirm={executeDelete}
+        onCancel={() => {
+          if (!isDeleting) {
+            setDeleteConfirmOpen(false);
+            setOrderToDelete(null);
+          }
         }}
       />
 

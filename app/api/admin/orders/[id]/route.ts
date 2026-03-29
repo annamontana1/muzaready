@@ -2,6 +2,63 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin, verifyAdminSession } from '@/lib/admin-auth';
 
+/**
+ * DELETE /api/admin/orders/[id]
+ * Permanently delete an order and all related data.
+ * Restricted to admin users with role 'owner' only.
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  // Only OWNER role may delete orders
+  const session = await verifyAdminSession(request);
+  if (!session.valid || !session.admin) {
+    return NextResponse.json(
+      { error: 'Unauthorized - Admin session required' },
+      { status: 401 }
+    );
+  }
+  if (session.admin.role !== 'owner') {
+    return NextResponse.json(
+      { error: 'Forbidden - Only the owner can delete orders' },
+      { status: 403 }
+    );
+  }
+
+  const { id } = params;
+  if (!id) {
+    return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
+  }
+
+  try {
+    // Verify the order exists
+    const order = await prisma.order.findUnique({ where: { id }, select: { id: true } });
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    // Delete invoice first (no cascade from Order → Invoice)
+    await prisma.invoice.deleteMany({ where: { orderId: id } });
+
+    // OrderItem, OrderHistory and reviews (SetNull) cascade automatically,
+    // but deleteMany is safe to call even when no rows exist.
+    // Delete the order — cascades handle items and history.
+    await prisma.order.delete({ where: { id } });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    return NextResponse.json(
+      {
+        error: 'Failed to delete order',
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
+  }
+}
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
