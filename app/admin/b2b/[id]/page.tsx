@@ -1123,6 +1123,7 @@ export default function B2bPartnerDetailPage() {
   const soldValue = soldItems.reduce((s, i) => s + i.celkem, 0);
   const returnedValue = returnedItems.reduce((s, i) => s + i.celkem, 0);
   const inStockValue = inStockItems.reduce((s, i) => s + i.celkem, 0);
+  const totalGiven = allItems.reduce((s, i) => s + i.celkem, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1198,9 +1199,15 @@ export default function B2bPartnerDetailPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <StatCard
+                label="Celkem dáno"
+                value={formatCzk(totalGiven)}
+                sub={`${allItems.length} ks celkem`}
+                color="gray"
+              />
+              <StatCard
                 label="Zůstatek skladem"
                 value={formatCzk(inStockValue)}
-                sub={`${inStockItems.length} ks skladem`}
+                sub={`${inStockItems.length} ks u ní`}
                 color="blue"
               />
               <StatCard
@@ -1777,12 +1784,13 @@ export default function B2bPartnerDetailPage() {
 
 // ─── Small sub-components ─────────────────────────────────────────────────────
 
-function StatCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: 'blue' | 'green' | 'amber' | 'purple' }) {
+function StatCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: 'blue' | 'green' | 'amber' | 'purple' | 'gray' }) {
   const colors = {
     blue: 'bg-blue-50 border-blue-200 text-blue-700',
     green: 'bg-emerald-50 border-emerald-200 text-emerald-700',
     amber: 'bg-amber-50 border-amber-200 text-amber-700',
     purple: 'bg-purple-50 border-purple-200 text-purple-700',
+    gray: 'bg-gray-50 border-gray-200 text-gray-700',
   };
   return (
     <div className={`rounded-xl border p-4 ${colors[color]}`}>
