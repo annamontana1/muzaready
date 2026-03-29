@@ -45,23 +45,42 @@ export async function POST(req: NextRequest) {
       });
 
       if (b2bSale) {
-        // Log payment received event to B2bEvent history
-        await prisma.b2bEvent.create({
-          data: {
+        // Create B2bPayment record automatically (avoid duplicates)
+        const existingPayment = await prisma.b2bPayment.findFirst({
+          where: {
             partnerId: b2bSale.partnerId,
-            type: 'payment_received',
-            description: `Platba přijata pro fakturu ${invoiceNumber} (${invoice.total} Kč) — automaticky z Fakturoidu`,
-            data: JSON.stringify({
-              invoiceNumber,
-              amount: invoice.total,
-              paidAt: paidAt.toISOString(),
-              b2bSaleId: b2bSale.id,
-            }),
-            createdBy: 'fakturoid_webhook',
+            note: { contains: invoiceNumber },
           },
         });
 
-        console.log(`B2bSale ${b2bSale.id} payment_received event logged via Fakturoid webhook`);
+        if (!existingPayment) {
+          await prisma.b2bPayment.create({
+            data: {
+              partnerId: b2bSale.partnerId,
+              amount: invoice.total,
+              method: 'airbank',
+              date: paidAt,
+              note: `Automaticky z Fakturoidu — faktura ${invoiceNumber}`,
+            },
+          });
+          console.log(`B2bPayment vytvořena: ${invoice.total} Kč pro partnera ${b2bSale.partnerId}`);
+        }
+
+        // Log to B2bHistory
+        try {
+          await prisma.b2bHistory.create({
+            data: {
+              partnerId: b2bSale.partnerId,
+              type: 'payment_received',
+              description: `Platba ${invoice.total} Kč přijata automaticky (faktura ${invoiceNumber})`,
+              amount: invoice.total,
+            },
+          });
+        } catch (e) {
+          console.error('B2bHistory error (non-blocking):', e);
+        }
+
+        console.log(`B2bSale ${b2bSale.id} platba zpracována přes Fakturoid webhook`);
       }
 
       // For proforma_paid: convert to final invoice and deliver to customer
