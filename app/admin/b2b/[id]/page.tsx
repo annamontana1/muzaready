@@ -1124,6 +1124,10 @@ export default function B2bPartnerDetailPage() {
   const returnedValue = returnedItems.reduce((s, i) => s + i.celkem, 0);
   const inStockValue = inStockItems.reduce((s, i) => s + i.celkem, 0);
   const totalGiven = allItems.reduce((s, i) => s + i.celkem, 0);
+  const soldGrams = soldItems.reduce((s, i) => s + i.gramaz, 0);
+  const returnedGrams = returnedItems.reduce((s, i) => s + i.gramaz, 0);
+  const inStockGrams = inStockItems.reduce((s, i) => s + i.gramaz, 0);
+  const totalGrams = allItems.reduce((s, i) => s + i.gramaz, 0);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1201,25 +1205,25 @@ export default function B2bPartnerDetailPage() {
               <StatCard
                 label="Celkem dáno"
                 value={formatCzk(totalGiven)}
-                sub={`${allItems.length} ks celkem`}
+                sub={`${totalGrams} g`}
                 color="gray"
               />
               <StatCard
                 label="Zůstatek skladem"
                 value={formatCzk(inStockValue)}
-                sub={`${inStockItems.length} ks u ní`}
+                sub={`${inStockGrams} g`}
                 color="blue"
               />
               <StatCard
                 label="Vráceno"
                 value={formatCzk(returnedValue)}
-                sub={`${returnedItems.length} ks`}
+                sub={`${returnedGrams} g`}
                 color="amber"
               />
               <StatCard
                 label="K zaplacení"
                 value={formatCzk(Math.max(0, soldValue - stats.totalPaid))}
-                sub={`Prodáno: ${formatCzk(soldValue)} | Zaplaceno: ${formatCzk(stats.totalPaid)}`}
+                sub={`Prodáno: ${formatCzk(soldValue)} (${soldGrams} g) | Zaplaceno: ${formatCzk(stats.totalPaid)}`}
                 color="purple"
               />
             </div>
