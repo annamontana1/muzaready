@@ -1,7 +1,7 @@
 // Register this webhook in Fakturoid:
 // App.fakturoid.cz → Nastavení → Webhooky → Přidat webhook
 // URL: https://muzahair.cz/api/webhooks/fakturoid
-// Events: invoice_paid, proforma_paid
+// Events: invoice_paid, proforma_paid, invoice_overdue
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
@@ -91,6 +91,40 @@ export async function POST(req: NextRequest) {
         } catch (err) {
           console.error('Failed to convert proforma:', err);
         }
+      }
+    }
+
+    // Proforma vypršela — automaticky stornovat objednávku
+    if (event === 'invoice_overdue') {
+      const order = await prisma.order.findFirst({
+        where: { fakturoidInvoiceNum: invoiceNumber, paymentStatus: 'unpaid' },
+      });
+
+      if (order) {
+        await prisma.order.update({
+          where: { id: order.id },
+          data: { orderStatus: 'cancelled', lastStatusChangeAt: new Date() },
+        });
+
+        // Stornovat zálohovku ve Fakturoidu
+        if (order.fakturoidInvoiceId) {
+          try {
+            const { cancelInvoice } = await import('@/lib/fakturoid');
+            await cancelInvoice(Number(order.fakturoidInvoiceId));
+          } catch (e) {
+            console.error('Fakturoid cancel error:', e);
+          }
+        }
+
+        // Poslat email zákazníkovi
+        try {
+          const { sendOrderCancellationEmail } = await import('@/lib/email');
+          await sendOrderCancellationEmail(order.email, order.id, 'Zálohovka vypršela');
+        } catch (e) {
+          console.error('Cancel email error:', e);
+        }
+
+        console.log(`Order ${order.id} automaticky stornována — zálohovka vypršela`);
       }
     }
 
