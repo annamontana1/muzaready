@@ -18,7 +18,7 @@ export default function ObchodniPodminkyPage() {
         <p>IČO: [DOPLNIT] &nbsp;|&nbsp; DIČ: [DOPLNIT, pokud plátce DPH]</p>
         <p>Sídlo: [Přesná adresa sídla firmy], Praha</p>
         <p>Showroom: [Adresa showroomu], Praha</p>
-        <p>E-mail: <a href="mailto:info@muzahair.cz" className="text-burgundy underline">info@muzahair.cz</a></p>
+        <p>E-mail: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
         <p>Telefon: <a href="tel:+420728722880" className="text-burgundy underline">+420 728 722 880</a></p>
         <p>Web: <a href="https://muzahair.cz" className="text-burgundy underline">muzahair.cz</a></p>
       </div>
@@ -61,7 +61,7 @@ export default function ObchodniPodminkyPage() {
           <p><strong>2.2 Způsoby objednání:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>Prostřednictvím e-shopu muzahair.cz – vyplněním objednávkového formuláře</li>
-            <li>E-mailem na adresu info@muzahair.cz</li>
+            <li>E-mailem na adresu muzahaircz@gmail.com</li>
             <li>Osobně v showroomu prodávajícího v Praze</li>
             <li>Telefonicky na čísle +420 728 722 880</li>
           </ul>
@@ -214,7 +214,7 @@ export default function ObchodniPodminkyPage() {
           </ul>
           <p><strong>6.3 Postup pro vrácení zboží:</strong></p>
           <ol className="list-decimal list-inside space-y-2 ml-4">
-            <li>Informujte nás o odstoupení e-mailem na <a href="mailto:info@muzahair.cz" className="text-burgundy underline">info@muzahair.cz</a> nebo písemně. Uveďte číslo objednávky, název zboží a důvod vrácení.</li>
+            <li>Informujte nás o odstoupení e-mailem na <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> nebo písemně. Uveďte číslo objednávky, název zboží a důvod vrácení.</li>
             <li>Zboží zašlete doporučenou zásilkou (<strong>NE na dobírku</strong> – takové zásilky nepřebíráme) na adresu prodávajícího, nebo předejte osobně v showroomu.</li>
             <li>Zboží musí být nepoužité, nepoškozené, v originálním obalu s originálními etiketami.</li>
             <li>Kupující nese náklady na zaslání zboží zpět prodávajícímu.</li>
@@ -255,7 +255,7 @@ export default function ObchodniPodminkyPage() {
           <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 8 – Reklamační řád</h2>
           <p><strong>8.1 Kde reklamaci uplatnit:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>E-mailem: <a href="mailto:reklamace@muzahair.cz" className="text-burgundy underline">reklamace@muzahair.cz</a> (uveďte číslo objednávky, popis vady, fotografie)</li>
+            <li>E-mailem: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> (uveďte číslo objednávky, popis vady, fotografie)</li>
             <li>Osobně: v showroomu Múza Hair Praha (po předchozí domluvě)</li>
             <li>Písemně na adresu: [Adresa prodávajícího], Praha</li>
           </ul>
@@ -322,7 +322,7 @@ export default function ObchodniPodminkyPage() {
             <li>Možnost konzultace vzorků před objednávkou</li>
             <li>Pravidelné zásoby – přednostní zpracování B2B objednávek</li>
           </ul>
-          <p><strong>10.3</strong> Pro registraci jako B2B partner kontaktujte: <a href="mailto:b2b@muzahair.cz" className="text-burgundy underline">b2b@muzahair.cz</a> nebo telefonicky +420 728 722 880.</p>
+          <p><strong>10.3</strong> Pro registraci jako B2B partner kontaktujte: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> nebo telefonicky +420 728 722 880.</p>
           <p><strong>10.4</strong> B2B kupující nemá právo na odstoupení od smlouvy bez udání důvodu. Reklamace se řídí čl. 7 a 8 těchto podmínek, přičemž se nepoužijí ustanovení o spotřebitelských právech.</p>
           <div className="bg-gray-50 border-l-4 border-gray-400 p-4 rounded text-sm">
             <p className="font-semibold">ℹ️ Důležité</p>
@@ -343,7 +343,7 @@ export default function ObchodniPodminkyPage() {
           </ul>
           <p><strong>11.3</strong> Účel zpracování: Plnění kupní smlouvy, komunikace se zákazníkem, zasílání obchodního sdělení (pouze se souhlasem), vedení účetnictví, ochrana práv prodávajícího.</p>
           <p><strong>11.4</strong> Doba uchovávání: Po dobu trvání smluvního vztahu a po zákonem stanovenou dobu poté (účetní záznamy 10 let, daňové doklady 10 let).</p>
-          <p><strong>11.5</strong> Práva subjektu údajů: Právo na přístup, opravu, výmaz, omezení zpracování, přenositelnost dat a právo vznést námitku. Žádost adresujte na: <a href="mailto:info@muzahair.cz" className="text-burgundy underline">info@muzahair.cz</a>.</p>
+          <p><strong>11.5</strong> Práva subjektu údajů: Právo na přístup, opravu, výmaz, omezení zpracování, přenositelnost dat a právo vznést námitku. Žádost adresujte na: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a>.</p>
           <p><strong>11.6</strong> Prodávající nepředává osobní údaje třetím stranám, s výjimkou dopravců (za účelem doručení zásilky) a zpracovatelů plateb.</p>
           <p><strong>11.7</strong> Dozorový orgán: Úřad pro ochranu osobních údajů (ÚOOÚ), Pplk. Sochora 27, 170 00 Praha 7, <a href="https://www.uoou.cz" target="_blank" rel="noopener noreferrer" className="text-burgundy underline">www.uoou.cz</a>.</p>
         </section>
@@ -361,9 +361,9 @@ export default function ObchodniPodminkyPage() {
         <section className="bg-gray-50 rounded-lg p-6 border border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 mb-3">Kontakty pro zákaznickou podporu</h2>
           <ul className="space-y-1 text-sm">
-            <li>Běžné dotazy: <a href="mailto:info@muzahair.cz" className="text-burgundy underline">info@muzahair.cz</a></li>
-            <li>Reklamace: <a href="mailto:reklamace@muzahair.cz" className="text-burgundy underline">reklamace@muzahair.cz</a></li>
-            <li>B2B / Velkoobchod: <a href="mailto:b2b@muzahair.cz" className="text-burgundy underline">b2b@muzahair.cz</a></li>
+            <li>Běžné dotazy: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
+            <li>Reklamace: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
+            <li>B2B / Velkoobchod: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
             <li>Showroom Praha: [Adresa] – Po–So 10–18 h</li>
             <li>Telefon: <a href="tel:+420728722880" className="text-burgundy underline">+420 728 722 880</a></li>
           </ul>
@@ -374,7 +374,7 @@ export default function ObchodniPodminkyPage() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Příloha č. 1 – Vzorový formulář pro odstoupení od smlouvy</h2>
           <p className="text-sm text-gray-600 mb-4">Vyplňte a zašlete pouze v případě, že chcete odstoupit od smlouvy.</p>
           <div className="text-sm space-y-2 text-gray-700">
-            <p><strong>Komu:</strong> Múza Hair Praha s.r.o., [adresa], Praha &nbsp;|&nbsp; <a href="mailto:info@muzahair.cz" className="text-burgundy underline">info@muzahair.cz</a></p>
+            <p><strong>Komu:</strong> Múza Hair Praha s.r.o., [adresa], Praha &nbsp;|&nbsp; <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
             <p>Oznamuji, že tímto odstupuji od kupní smlouvy na zboží:</p>
             <div className="space-y-2 ml-4">
               {[
@@ -394,7 +394,7 @@ export default function ObchodniPodminkyPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs text-gray-500">Vyplněný formulář zašlete e-mailem na info@muzahair.cz nebo doporučeně poštou na adresu prodávajícího. Zboží zašlete doporučenou zásilkou (nikoli na dobírku) nejpozději do 14 dní od odeslání tohoto formuláře.</p>
+            <p className="mt-4 text-xs text-gray-500">Vyplněný formulář zašlete e-mailem na muzahaircz@gmail.com nebo doporučeně poštou na adresu prodávajícího. Zboží zašlete doporučenou zásilkou (nikoli na dobírku) nejpozději do 14 dní od odeslání tohoto formuláře.</p>
           </div>
         </section>
 
