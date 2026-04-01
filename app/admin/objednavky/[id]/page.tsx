@@ -91,6 +91,7 @@ function InvoiceSection({ order }: { order: Order }) {
   const [invoiceUrl, setInvoiceUrl] = useState<string | null>(order.fakturoidInvoiceUrl ?? order.invoiceUrl ?? null);
   const [isProforma, setIsProforma] = useState<boolean>(order.fakturoidIsProforma ?? false);
   const [converting, setConverting] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   const isInstagram = order.channel === 'instagram';
   const isStore = order.channel === 'store';
@@ -112,6 +113,25 @@ function InvoiceSection({ order }: { order: Order }) {
       setResult({ error: err.message || 'Chyba' });
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function cancelFakturoid() {
+    if (!confirm('Stornovat tuto fakturu ve Fakturoidu?')) return;
+    setCancelling(true);
+    setResult(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}/cancel-fakturoid`, { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResult({ success: true, message: 'Faktura stornována ve Fakturoidu ✓' });
+      } else {
+        setResult({ error: data.error || 'Storno se nezdařilo' });
+      }
+    } catch (err: any) {
+      setResult({ error: err.message || 'Chyba' });
+    } finally {
+      setCancelling(false);
     }
   }
 
@@ -193,6 +213,12 @@ function InvoiceSection({ order }: { order: Order }) {
               className="px-4 py-2 bg-stone-700 text-white rounded-lg text-sm font-medium hover:bg-stone-800 transition disabled:opacity-50">
               {loading ? '⏳ Generuji...' : '📨 Fakturoid'}
             </button>
+            {order.fakturoidInvoiceId && (
+              <button onClick={cancelFakturoid} disabled={cancelling}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition disabled:opacity-50">
+                {cancelling ? '⏳...' : '🚫 Storno ve Fakturoidu'}
+              </button>
+            )}
           </div>
         </div>
 
