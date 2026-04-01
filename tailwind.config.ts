@@ -9,31 +9,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Primární burgundy/maroon (rozšířená paleta + DEFAULT pro zpětnou kompatibilitu)
         burgundy: {
-          DEFAULT: '#340C0D', // bg-burgundy bude fungovat jako dřív
-          50: '#FCF3F3',
-          100: '#F9E7E7',
-          200: '#F2CFCF',
-          300: '#E8A7A8',
-          400: '#DC7A7B',
-          500: '#CC5556',
-          600: '#B13D3F',
-          700: '#8B2F31',
-          800: '#5D1F20',
-          900: '#340C0D',
-          950: '#2A0A0B',
-          light: '#5D1F20',
+          DEFAULT: '#4A1520',
+          light: '#6B2535',
           dark: '#2A0A0B',
+          50: '#FCF3F3',
+          100: '#F0D8DB',
+          200: '#DDA8AE',
+          300: '#C47880',
+          400: '#A84E5A',
+          500: '#8B3040',
+          600: '#6B2535',
+          700: '#4A1520',
+          800: '#2A0A0B',
+          900: '#160508',
+          950: '#0A0204',
         },
-        maroon: '#5D1F20',
-        terracotta: '#8B4755',
+        maroon: '#6B2535',
+        terracotta: '#9B3A4A',
 
         // Neutrální
-        ivory: '#e8e1d7',
+        ivory: '#F8F4EF',
+        'ivory-warm': '#F2EBE2',
         'warm-beige': '#D4C4B0',
-        'light-taupe': '#C9B8A8',
-        'soft-cream': '#F5F1ED',
+        beige: '#E8DDD2',
+        'beige-mid': '#D4C4B0',
+        'light-taupe': '#E8DDD2',
+        'soft-cream': '#F8F4EF',
+
+        // Text
+        'text-dark': '#1C0C0F',
+        'text-mid': '#5A3840',
+        'text-soft': '#8C6E73',
+        accent: '#9B3A4A',
 
         // Akcenty
         'dusty-rose': '#B89B9B',
@@ -47,7 +55,9 @@ const config: Config = {
       },
       fontFamily: {
         playfair: ['Playfair Display', 'serif'],
-        inter: ['Inter', 'sans-serif'],
+        cormorant: ['Cormorant Garamond', 'serif'],
+        jost: ['Jost', 'sans-serif'],
+        inter: ['Jost', 'sans-serif'], // alias for backward compat
       },
       fontSize: {
         'h1': ['3rem', { lineHeight: '1.2' }],
@@ -67,10 +77,10 @@ const config: Config = {
         '2xl': '1.5rem',
       },
       boxShadow: {
-        'light': '0 2px 4px rgba(52, 12, 13, 0.08)',
-        'medium': '0 4px 12px rgba(52, 12, 13, 0.12)',
-        'heavy': '0 8px 24px rgba(52, 12, 13, 0.16)',
-        'card-hover': '0 12px 32px rgba(52, 12, 13, 0.20)',
+        'light': '0 2px 4px rgba(74, 21, 32, 0.08)',
+        'medium': '0 4px 12px rgba(74, 21, 32, 0.12)',
+        'heavy': '0 8px 24px rgba(74, 21, 32, 0.16)',
+        'card-hover': '0 12px 32px rgba(74, 21, 32, 0.20)',
       },
       animation: {
         'slide-up': 'slide-up 0.3s ease-out',

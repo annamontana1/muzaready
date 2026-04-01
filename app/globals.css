@@ -4,22 +4,28 @@
 
 @layer base {
   :root {
-    /* Primární burgundy/maroon */
-    --color-burgundy: 52 12 13;
-    --color-maroon: 93 31 32;
-    --color-terracotta: 139 71 85;
+    /* New design system */
+    --burgundy:       #4A1520;
+    --burgundy-light: #6B2535;
+    --ivory:          #F8F4EF;
+    --ivory-warm:     #F2EBE2;
+    --beige:          #E8DDD2;
+    --beige-mid:      #D4C4B0;
+    --text-dark:      #1C0C0F;
+    --text-mid:       #5A3840;
+    --text-soft:      #8C6E73;
+    --accent:         #9B3A4A;
 
-    /* Neutrální */
-    --color-ivory: 233 224 215;
+    /* Tailwind RGB tokens (for bg-opacity etc.) */
+    --color-burgundy: 74 21 32;
+    --color-maroon: 107 37 53;
+    --color-terracotta: 155 58 74;
+    --color-ivory: 248 244 239;
     --color-warm-beige: 212 196 176;
-    --color-light-taupe: 201 184 168;
-    --color-soft-cream: 245 241 237;
-
-    /* Akcenty */
+    --color-light-taupe: 232 221 210;
+    --color-soft-cream: 248 244 239;
     --color-dusty-rose: 184 155 155;
     --color-muted-mauve: 160 121 130;
-
-    /* Systémové */
     --color-success: 74 124 89;
     --color-warning: 212 165 116;
     --color-error: 139 58 58;
@@ -31,11 +37,15 @@
   }
 
   body {
-    @apply bg-soft-cream text-gray-900 font-inter;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    background: var(--ivory);
+    color: var(--text-dark);
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-playfair;
+    font-family: 'Cormorant Garamond', serif;
   }
 }
 
@@ -76,7 +86,7 @@
 
   /* Product Card */
   .product-card {
-    @apply relative bg-white rounded-xl overflow-hidden border border-warm-beige/40 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply relative bg-warm-beige rounded-lg overflow-hidden shadow-light hover:shadow-card-hover transition-all duration-300;
   }
 
   /* Tier Badge */
@@ -129,5 +139,5 @@
   @apply bg-burgundy/50;
 }
 
-/* Playfair Display & Inter Fonts - Import from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap');

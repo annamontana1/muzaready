@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
@@ -11,6 +10,12 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 import { usePreferences } from '@/lib/preferences-context';
 import { useTranslation } from '@/contexts/LanguageContext';
+
+const chevronDown = (
+  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+  </svg>
+);
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
@@ -28,338 +33,170 @@ export default function Header() {
   const { t } = useTranslation();
 
   const favoriteCount = favorites.length;
-  // Count cart items: for BULK_G count each entry as 1, for PIECE_BY_WEIGHT use quantity
   const cartCount = items.reduce((total, item) => {
-    if (item.saleMode === 'BULK_G') {
-      return total + 1; // Each bulk entry = 1 item
-    }
-    return total + item.quantity; // For PIECE_BY_WEIGHT, use quantity
+    if (item.saleMode === 'BULK_G') return total + 1;
+    return total + item.quantity;
   }, 0);
 
-  // Fix hydration mismatch - wait for client-side mount
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
-  // Memoize search overlay close handler - DEPENDENCY: []
   const handleSearchOverlayClose = useCallback(() => {
     setSearchOverlayOpen(false);
   }, []);
 
-  // Body scroll lock pro mobilní menu - DEPENDENCY: [mobileMenuOpen, mounted]
   useEffect(() => {
-    if (!mounted) return; // Wait for client-side mount
-
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (!mounted) return;
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen, mounted]);
+
+  const navLinkClass = "text-[12px] tracking-[0.1em] uppercase font-light transition-colors duration-200 hover:text-burgundy";
+  const dropdownClass = "hidden group-hover:block absolute left-0 w-56 bg-white shadow-medium border border-beige z-50 rounded-sm";
+
+  const dropdownItem = (href: string, label: string) => (
+    <Link
+      key={href}
+      href={href}
+      className="block px-5 py-2.5 text-[12px] tracking-[0.05em] font-light transition-colors hover:bg-ivory"
+      style={{ color: 'var(--text-mid)' }}
+    >
+      {label}
+    </Link>
+  );
 
   return (
     <>
-      {/* Development Banner */}
-      <div className="bg-gradient-to-r from-burgundy via-maroon to-burgundy text-white text-center py-4 px-4">
-        <div className="container mx-auto flex items-center justify-center gap-3">
-          <span className="text-2xl animate-pulse">🚧</span>
-          <div>
-            <p className="font-semibold text-base sm:text-lg">Web je ve vývoji</p>
-            <p className="text-sm opacity-90">Připravujeme pro vás nový e-shop. Děkujeme za trpělivost.</p>
-          </div>
-          <span className="text-2xl animate-pulse">🚧</span>
-        </div>
-      </div>
       <TopContactBar />
-      <header className="sticky top-0 z-50 bg-white shadow-medium" style={{ top: 'env(safe-area-inset-top)' }}>
-      <div className="container mx-auto px-4">
-        {/* Desktop Header */}
-        <div className="hidden lg:flex items-center justify-between py-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center" aria-label="Domů">
-            <Image
-              src="/images/logo/muza-logo.png"
-              alt="Mùza Hair Shop"
-              width={120}
-              height={40}
-              priority
-              className="h-10 w-auto"
-            />
-          </Link>
+      <header
+        className="sticky top-0 z-50 border-b"
+        style={{
+          background: 'rgba(255,255,255,0.97)',
+          borderColor: 'var(--beige)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
 
-          {/* Navigation */}
-          <nav className="flex items-center gap-6 text-sm">
-            <Link href="/" className="text-burgundy font-medium hover:text-maroon transition">
-              {t('nav.home')}
-            </Link>
+          {/* Desktop Header */}
+          <div className="hidden lg:flex items-center justify-between h-[68px] gap-8">
 
-            <div className="relative group">
-              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                {t('nav.hairExtensions')}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
-                <Link
-                  href="/vlasy-k-prodlouzeni/standard"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                >
-                  Standard
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/luxe"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Luxe
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/platinum-edition"
-                  className="block px-6 py-3 hover:bg-ivory transition"
-                >
-                  Platinum Edition
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni/baby-shades"
-                  className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                >
-                  Baby Shades
-                </Link>
-              </div>
-            </div>
-
-            <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                {t('nav.wigs')}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
-                  <Link
-                    href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                  >
-                    {t('nav.wigs_bangs')}
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/toupee"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.wigs_toupee')}
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/vlasove-tresy"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.wigs_wefts')}
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/prave-paruky"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.wigs_real')}
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/clip-in-vlasy"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.wigs_clipIn')}
-                  </Link>
-                  <Link
-                    href="/pricesky-a-paruky/clip-in-culik"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                  >
-                    {t('nav.wigs_clipInPonytail')}
-                  </Link>
-                </div>
-            </div>
-
-            <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                {t('nav.accessories')}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
-                  <Link
-                    href="/prislusenstvi/tavici-kleste"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                  >
-                    {t('nav.accessories_ironPliers')}
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/keratin"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.accessories_keratin')}
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/pomykadlo"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.accessories_slider')}
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/hrebeny"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.accessories_combs')}
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/kosmetika"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    {t('nav.accessories_cosmetics')}
-                  </Link>
-                  <Link
-                    href="/prislusenstvi/ostatni"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                  >
-                    {t('nav.accessories_other')}
-                  </Link>
-                </div>
-            </div>
-
-            <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1 cursor-pointer">
-                {t('nav.methods')}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="hidden group-hover:block absolute left-0 w-64 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
-                  <Link
-                    href="/metody-zakonceni/vlasy-na-keratin"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg"
-                  >
-                    {t('nav.methods_keratin')}
-                  </Link>
-                  <Link
-                    href="/metody-zakonceni/vlasove-pasky-tape-in"
-                    className="block px-6 py-3 hover:bg-ivory transition"
-                  >
-                    Vlasové pásky Tape-In
-                  </Link>
-                  <Link
-                    href="/metody-zakonceni/vlasove-tresy"
-                    className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
-                  >
-                    {t('nav.methods_wefts')}
-                  </Link>
-                </div>
-            </div>
-
-            <Link href="/velkoobchod" className="text-burgundy font-medium hover:text-maroon transition">
-              {t('nav.wholesale')}
-            </Link>
-
-            <div className="relative group">
-              <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
-                Informace
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className="hidden group-hover:block absolute right-0 w-56 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
-                <Link href="/o-nas" className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg">O nás</Link>
-                <Link href="/informace/jak-nakupovat" className="block px-6 py-3 hover:bg-ivory transition">Jak objednat</Link>
-                <Link href="/informace/odeslani-a-stav-objednavky" className="block px-6 py-3 hover:bg-ivory transition">Doprava a doručení</Link>
-                <Link href="/informace/platba-a-vraceni" className="block px-6 py-3 hover:bg-ivory transition">Výměna a vrácení</Link>
-                <Link href="/informace/faq" className="block px-6 py-3 hover:bg-ivory transition">Časté otázky</Link>
-                <Link href="/informace/obchodni-podminky" className="block px-6 py-3 hover:bg-ivory transition">Obchodní podmínky</Link>
-                <Link href="/kontakt" className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg">Showroom Praha</Link>
-              </div>
-            </div>
-          </nav>
-
-          {/* Actions */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <LanguageSwitcher />
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
-                className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+            {/* Logo */}
+            <Link href="/" className="flex items-baseline gap-2 flex-shrink-0" aria-label="Domů">
+              <span
+                className="font-playfair text-[32px] font-bold tracking-[0.06em] leading-none"
+                style={{ color: 'var(--burgundy)' }}
               >
-                <option value="CZK">Kč</option>
-                <option value="EUR">€</option>
-              </select>
-            </div>
-            <button
-              onClick={() => setSearchOverlayOpen(true)}
-              className="text-burgundy hover:text-maroon transition p-2"
-              aria-label={t('common.search')}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-            <Link
-              href="/ucet"
-              className="text-burgundy hover:text-maroon transition p-2"
-              aria-label={t('nav.myAccount')}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </Link>
-            <Link
-              href="/oblibene"
-              className="text-burgundy hover:text-maroon transition p-2 relative"
-              aria-label={t('nav.favorites')}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              <Badge count={favoriteCount} />
-            </Link>
-            <Link
-              href="/kosik"
-              className="text-burgundy hover:text-maroon transition p-2 relative"
-              aria-label={t('nav.cart')}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              <Badge count={cartCount} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Mobile Header */}
-        <div className="lg:hidden">
-          <div className="flex items-center justify-between py-4">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-burgundy text-xl"
-              aria-label="Menu"
-            >
-              ☰
-            </button>
-
-            <Link href="/" className="flex items-center" aria-label="Domů">
-              <Image
-                src="/images/logo/muza-logo.png"
-                alt="Mùza Hair Shop"
-                width={100}
-                height={33}
-                priority
-                className="h-8 w-auto"
-              />
+                MÙZA
+              </span>
+              <span
+                className="text-[10px] font-light tracking-[0.3em] uppercase pb-0.5"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                HAIR SHOP
+              </span>
             </Link>
 
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 text-xs text-gray-600">
+            {/* Navigation */}
+            <nav className="flex items-center gap-9" style={{ color: 'var(--text-mid)' }}>
+
+              {/* Vlasy k prodloužení */}
+              <div className="relative group">
+                <Link href="/vlasy-k-prodlouzeni" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                  Vlasy k prodloužení {chevronDown}
+                </Link>
+                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
+                  {dropdownItem('/vlasy-k-prodlouzeni/nebarvene-panenske', 'Nebarvené panenské')}
+                  {dropdownItem('/vlasy-k-prodlouzeni/barvene-vlasy', 'Barvené blond vlasy')}
+                  {dropdownItem('/katalog', 'Celý katalog')}
+                </div>
+              </div>
+
+              {/* Příčesky & paruky */}
+              <div className="relative group">
+                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                  Příčesky & paruky {chevronDown}
+                </button>
+                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
+                  {dropdownItem('/pricesky-a-paruky/ofiny-z-pravych-vlasu', 'Ofiny z pravých vlasů')}
+                  {dropdownItem('/pricesky-a-paruky/toupee', 'Toupee / tupé')}
+                  {dropdownItem('/pricesky-a-paruky/vlasove-tresy', 'Vlasové tresy')}
+                  {dropdownItem('/pricesky-a-paruky/prave-paruky', 'Pravé paruky')}
+                  {dropdownItem('/pricesky-a-paruky/clip-in-vlasy', 'Clip-in vlasy')}
+                  {dropdownItem('/pricesky-a-paruky/clip-in-culik', 'Clip-in culík')}
+                </div>
+              </div>
+
+              {/* Příslušenství */}
+              <div className="relative group">
+                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                  Příslušenství {chevronDown}
+                </button>
+                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
+                  {dropdownItem('/prislusenstvi/tavici-kleste', 'Tavicí kleště')}
+                  {dropdownItem('/prislusenstvi/keratin', 'Keratin')}
+                  {dropdownItem('/prislusenstvi/pomykadlo', 'Pomykadlo')}
+                  {dropdownItem('/prislusenstvi/hrebeny', 'Hřebeny')}
+                  {dropdownItem('/prislusenstvi/kosmetika', 'Kosmetika')}
+                  {dropdownItem('/prislusenstvi/ostatni', 'Ostatní')}
+                </div>
+              </div>
+
+              {/* Metody zakončení */}
+              <div className="relative group">
+                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                  Metody {chevronDown}
+                </button>
+                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
+                  {dropdownItem('/metody-zakonceni/vlasy-na-keratin', 'Keratin / Mikrokeratin')}
+                  {dropdownItem('/metody-zakonceni/vlasove-pasky-tape-in', 'Vlasové pásky Tape-In')}
+                  {dropdownItem('/metody-zakonceni/vlasove-tresy', 'Vlasové tresy')}
+                  {dropdownItem('/metody-zakonceni', 'Přehled metod')}
+                </div>
+              </div>
+
+              {/* Informace */}
+              <div className="relative group">
+                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                  Informace {chevronDown}
+                </button>
+                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
+                  {dropdownItem('/o-nas', 'O nás')}
+                  {dropdownItem('/informace/jak-nakupovat', 'Jak objednat')}
+                  {dropdownItem('/informace/odeslani-a-stav-objednavky', 'Doprava')}
+                  {dropdownItem('/informace/platba-a-vraceni', 'Výměna a vrácení')}
+                  {dropdownItem('/informace/faq', 'FAQ')}
+                  {dropdownItem('/informace/obchodni-podminky', 'Obchodní podmínky')}
+                  {dropdownItem('/showroom', 'Showroom Praha')}
+                </div>
+              </div>
+
+              {/* Velkoobchod */}
+              <Link href="/velkoobchod" className={navLinkClass} style={{ color: 'var(--text-mid)' }}>
+                Velkoobchod
+              </Link>
+
+              {/* Showroom CTA */}
+              <Link
+                href="/showroom"
+                className="text-[11px] tracking-[0.14em] uppercase font-normal px-5 py-[9px] rounded-sm transition-colors duration-200"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
+              >
+                Showroom
+              </Link>
+            </nav>
+
+            {/* Icons */}
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2 text-xs">
                 <LanguageSwitcher />
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
-                  className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-burgundy"
+                  className="border border-beige rounded px-2 py-1 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-burgundy"
+                  style={{ color: 'var(--text-mid)' }}
                 >
                   <option value="CZK">Kč</option>
                   <option value="EUR">€</option>
@@ -367,331 +204,257 @@ export default function Header() {
               </div>
               <button
                 onClick={() => setSearchOverlayOpen(true)}
-                className="text-burgundy p-2"
-                aria-label={t('common.search')}
+                className="w-5 h-5 transition-colors hover:text-burgundy"
+                style={{ color: 'var(--text-mid)' }}
+                aria-label="Hledat"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
               </button>
               <Link
-                href="/oblibene"
-                className="text-burgundy p-2 relative"
-                aria-label={t('nav.favorites')}
+                href="/ucet"
+                className="w-5 h-5 transition-colors hover:text-burgundy"
+                style={{ color: 'var(--text-mid)' }}
+                aria-label="Můj účet"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
                 </svg>
-                <Badge count={favoriteCount} variant="small" />
+              </Link>
+              <Link
+                href="/oblibene"
+                className="w-5 h-5 transition-colors hover:text-burgundy relative"
+                style={{ color: 'var(--text-mid)' }}
+                aria-label="Oblíbené"
+              >
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <Badge count={favoriteCount} />
               </Link>
               <Link
                 href="/kosik"
-                className="text-burgundy p-2 relative"
-                aria-label={t('nav.cart')}
+                className="w-5 h-5 transition-colors hover:text-burgundy relative"
+                style={{ color: 'var(--text-mid)' }}
+                aria-label="Košík"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                <Badge count={cartCount} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Mobile Header */}
+          <div className="lg:hidden flex items-center justify-between h-16">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 -ml-2 transition-colors hover:text-burgundy"
+              style={{ color: 'var(--text-mid)' }}
+              aria-label="Menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+
+            <Link href="/" className="flex items-baseline gap-1.5" aria-label="Domů">
+              <span className="font-playfair text-2xl font-bold tracking-[0.06em]" style={{ color: 'var(--burgundy)' }}>MÙZA</span>
+              <span className="text-[9px] tracking-[0.25em] uppercase" style={{ color: 'var(--text-soft)' }}>HAIR</span>
+            </Link>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSearchOverlayOpen(true)}
+                className="w-5 h-5 transition-colors"
+                style={{ color: 'var(--text-mid)' }}
+                aria-label="Hledat"
+              >
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+                </svg>
+              </button>
+              <Link href="/oblibene" className="w-5 h-5 relative" style={{ color: 'var(--text-mid)' }} aria-label="Oblíbené">
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <Badge count={favoriteCount} variant="small" />
+              </Link>
+              <Link href="/kosik" className="w-5 h-5 relative" style={{ color: 'var(--text-mid)' }} aria-label="Košík">
+                <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
                 <Badge count={cartCount} variant="small" />
               </Link>
             </div>
           </div>
         </div>
+      </header>
 
-      </div>
-    </header>
-
-    {/* Mobile Menu Overlay + Panel */}
-    {mobileMenuOpen && (
-      <>
-        {/* Overlay */}
-        <div
-          className="fixed inset-0 bg-black/40 z-[60] lg:hidden"
-          style={{
-            height: '100dvh',
-            minHeight: '100dvh',
-            paddingBottom: 'env(safe-area-inset-bottom)',
-          }}
-          onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-
-        {/* Menu Panel */}
-        <div
-          className="fixed left-0 top-0 w-[85%] bg-white z-[70] lg:hidden shadow-2xl"
-          style={{
-            height: '100dvh',
-            minHeight: '100dvh',
-          }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobilní navigace"
-        >
-          {/* Panel Content with Scroll */}
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <>
           <div
-            className="h-full overflow-y-auto -webkit-overflow-scrolling-touch"
-            style={{
-              paddingBottom: 'env(safe-area-inset-bottom)',
-              overscrollBehavior: 'contain',
-            }}
+            className="fixed inset-0 bg-black/40 z-[60] lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            className="fixed left-0 top-0 w-[85%] max-w-sm bg-white z-[70] lg:hidden shadow-2xl"
+            style={{ height: '100dvh' }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobilní navigace"
           >
-            {/* Header uvnitř panelu */}
-            <div className="sticky top-0 bg-white border-b border-warm-beige px-4 py-4 flex items-center justify-between z-10">
-              <Link
-                href="/"
-                className="flex items-center"
-                onClick={() => setMobileMenuOpen(false)}
-                aria-label="Domů"
-              >
-                <Image
-                  src="/images/logo/muza-logo.png"
-                  alt="Mùza Hair Shop"
-                  width={100}
-                  height={33}
-                  className="h-8 w-auto"
-                />
-              </Link>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
-                aria-label="Zavřít menu"
-              >
-                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+            <div className="h-full overflow-y-auto" style={{ overscrollBehavior: 'contain', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+
+              {/* Panel header */}
+              <div className="sticky top-0 bg-white px-5 py-4 flex items-center justify-between border-b border-beige z-10">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-baseline gap-1.5">
+                  <span className="font-playfair text-2xl font-bold tracking-wider" style={{ color: 'var(--burgundy)' }}>MÙZA</span>
+                  <span className="text-[9px] tracking-[0.25em] uppercase" style={{ color: 'var(--text-soft)' }}>HAIR</span>
+                </Link>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 hover:bg-ivory rounded transition"
+                  style={{ color: 'var(--text-soft)' }}
+                  aria-label="Zavřít"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Nav items */}
+              <nav className="px-5 py-4 text-sm" style={{ color: 'var(--text-mid)' }}>
+                {[
+                  {
+                    label: 'Vlasy k prodloužení',
+                    open: vlasySubmenuOpen,
+                    toggle: () => setVlasySubmenuOpen(!vlasySubmenuOpen),
+                    items: [
+                      { href: '/vlasy-k-prodlouzeni/nebarvene-panenske', label: 'Nebarvené panenské' },
+                      { href: '/vlasy-k-prodlouzeni/barvene-vlasy', label: 'Barvené blond vlasy' },
+                    ],
+                  },
+                  {
+                    label: 'Příčesky & paruky',
+                    open: priceskySubmenuOpen,
+                    toggle: () => setPriceskySubmenuOpen(!priceskySubmenuOpen),
+                    items: [
+                      { href: '/pricesky-a-paruky/ofiny-z-pravych-vlasu', label: 'Ofiny' },
+                      { href: '/pricesky-a-paruky/toupee', label: 'Toupee / tupé' },
+                      { href: '/pricesky-a-paruky/vlasove-tresy', label: 'Vlasové tresy' },
+                      { href: '/pricesky-a-paruky/prave-paruky', label: 'Pravé paruky' },
+                      { href: '/pricesky-a-paruky/clip-in-vlasy', label: 'Clip-in vlasy' },
+                      { href: '/pricesky-a-paruky/clip-in-culik', label: 'Clip-in culík' },
+                    ],
+                  },
+                  {
+                    label: 'Příslušenství',
+                    open: prislusenstviSubmenuOpen,
+                    toggle: () => setPrislusenstviSubmenuOpen(!prislusenstviSubmenuOpen),
+                    items: [
+                      { href: '/prislusenstvi/tavici-kleste', label: 'Tavicí kleště' },
+                      { href: '/prislusenstvi/keratin', label: 'Keratin' },
+                      { href: '/prislusenstvi/kosmetika', label: 'Kosmetika' },
+                    ],
+                  },
+                  {
+                    label: 'Metody zakončení',
+                    open: metodySubmenuOpen,
+                    toggle: () => setMetodySubmenuOpen(!metodySubmenuOpen),
+                    items: [
+                      { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Keratin / Mikrokeratin' },
+                      { href: '/metody-zakonceni/vlasove-pasky-tape-in', label: 'Vlasové pásky Tape-In' },
+                      { href: '/metody-zakonceni/vlasove-tresy', label: 'Ručně šité tresy' },
+                    ],
+                  },
+                  {
+                    label: 'Informace',
+                    open: informaceSubmenuOpen,
+                    toggle: () => setInformaceSubmenuOpen(!informaceSubmenuOpen),
+                    items: [
+                      { href: '/o-nas', label: 'O nás' },
+                      { href: '/informace/jak-nakupovat', label: 'Jak objednat' },
+                      { href: '/informace/odeslani-a-stav-objednavky', label: 'Doprava' },
+                      { href: '/informace/platba-a-vraceni', label: 'Výměna a vrácení' },
+                      { href: '/informace/faq', label: 'FAQ' },
+                    ],
+                  },
+                ].map(({ label, open, toggle, items }) => (
+                  <div key={label} className="border-b border-beige/50">
+                    <button
+                      onClick={toggle}
+                      className="w-full flex items-center justify-between py-3 text-[13px] font-light"
+                      style={{ color: 'var(--text-mid)' }}
+                    >
+                      <span>{label}</span>
+                      <svg
+                        className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`}
+                        fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {open && (
+                      <div className="pb-3 pl-4 space-y-2">
+                        {items.map(({ href, label: l }) => (
+                          <Link
+                            key={href}
+                            href={href}
+                            className="block py-1 text-[13px] font-light transition-colors hover:text-burgundy"
+                            style={{ color: 'var(--text-soft)' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {l}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                <Link
+                  href="/velkoobchod"
+                  className="block py-3 text-[13px] font-light border-b border-beige/50"
+                  style={{ color: 'var(--text-mid)' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Velkoobchod
+                </Link>
+                <Link
+                  href="/showroom"
+                  className="block py-3 text-[13px] font-light"
+                  style={{ color: 'var(--text-mid)' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Showroom Praha
+                </Link>
+
+                {/* Currency */}
+                <div className="mt-4 flex items-center gap-3">
+                  <LanguageSwitcher />
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
+                    className="border border-beige rounded px-2 py-1 bg-white text-xs focus:outline-none"
+                    style={{ color: 'var(--text-mid)' }}
+                  >
+                    <option value="CZK">Kč</option>
+                    <option value="EUR">€</option>
+                  </select>
+                </div>
+              </nav>
             </div>
-
-            {/* Navigation */}
-            <nav className="flex flex-col gap-3 text-sm px-4 py-4">
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setVlasySubmenuOpen(!vlasySubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>{t('nav.hairExtensions')}</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${vlasySubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {vlasySubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link href="/vlasy-k-prodlouzeni/standard" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
-                      Standard
-                    </Link>
-                    <Link href="/vlasy-k-prodlouzeni/luxe" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
-                      Luxe
-                    </Link>
-                    <Link href="/vlasy-k-prodlouzeni/platinum-edition" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
-                      Platinum Edition
-                    </Link>
-                    <Link href="/vlasy-k-prodlouzeni/baby-shades" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>
-                      Baby Shades
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setPriceskySubmenuOpen(!priceskySubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>{t('nav.wigs')}</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${priceskySubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {priceskySubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/pricesky-a-paruky/ofiny-z-pravych-vlasu"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Ofiny
-                    </Link>
-                    <Link
-                      href="/pricesky-a-paruky/toupee"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Toupee/tupé
-                    </Link>
-                    <Link
-                      href="/pricesky-a-paruky/vlasove-tresy"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Vlasové tresy
-                    </Link>
-                    <Link
-                      href="/pricesky-a-paruky/prave-paruky"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Pravé paruky
-                    </Link>
-                    <Link
-                      href="/pricesky-a-paruky/clip-in-vlasy"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Clip in vlasy
-                    </Link>
-                    <Link
-                      href="/pricesky-a-paruky/clip-in-culik"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Clip in culík
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setPrislusenstviSubmenuOpen(!prislusenstviSubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>Příslušenství</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${prislusenstviSubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {prislusenstviSubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/prislusenstvi/tavici-kleste"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Tavicí kleště
-                    </Link>
-                    <Link
-                      href="/prislusenstvi/keratin"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Keratin
-                    </Link>
-                    <Link
-                      href="/prislusenstvi/kosmetika"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Kosmetika
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setMetodySubmenuOpen(!metodySubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>Metody zakončení</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${metodySubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {metodySubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link
-                      href="/metody-zakonceni/vlasy-na-keratin"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Keratin / Mikrokeratin
-                    </Link>
-                    <Link
-                      href="/metody-zakonceni/vlasove-pasky-tape-in"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Vlasové pásky Tape-In
-                    </Link>
-                    <Link
-                      href="/metody-zakonceni/vlasove-tresy"
-                      className="block text-burgundy py-1"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Ručně šité vlasové tresy
-                    </Link>
-                  </div>
-                )}
-              </div>
-
-              <Link
-                href="/velkoobchod"
-                className="text-burgundy font-medium py-2 border-b border-warm-beige/50"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Velkoobchod
-              </Link>
-
-              <div className="border-b border-warm-beige/50 pb-2">
-                <button
-                  onClick={() => setInformaceSubmenuOpen(!informaceSubmenuOpen)}
-                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
-                >
-                  <span>Informace</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${informaceSubmenuOpen ? 'rotate-180' : ''}`}
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {informaceSubmenuOpen && (
-                  <div className="pl-4 space-y-2 mt-2">
-                    <Link href="/o-nas" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>O nás</Link>
-                    <Link href="/informace/jak-nakupovat" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Jak objednat</Link>
-                    <Link href="/informace/odeslani-a-stav-objednavky" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Doprava a doručení</Link>
-                    <Link href="/informace/platba-a-vraceni" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Výměna a vrácení</Link>
-                    <Link href="/informace/faq" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Časté otázky</Link>
-                    <Link href="/informace/obchodni-podminky" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Obchodní podmínky</Link>
-                    <Link href="/kontakt" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Showroom Praha</Link>
-                  </div>
-                )}
-              </div>
-
-              <Link
-                href="/kontakt"
-                className="text-burgundy font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Showroom
-              </Link>
-            </nav>
           </div>
-        </div>
-      </>
-    )}
+        </>
+      )}
 
-    <SearchOverlay isOpen={searchOverlayOpen} onClose={handleSearchOverlayClose} />
+      <SearchOverlay isOpen={searchOverlayOpen} onClose={handleSearchOverlayClose} />
     </>
   );
 }
