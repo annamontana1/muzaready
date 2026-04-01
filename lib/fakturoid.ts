@@ -370,6 +370,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       try {
         const deliverRes = await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
           method: 'POST',
+          body: JSON.stringify({ email: order.customerEmail }),
         });
         console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
       } catch (deliverError: any) {
