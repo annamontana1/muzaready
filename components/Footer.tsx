@@ -134,25 +134,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 5: Newsletter */}
-          {settings.newsletterEnabled && (
-            <div>
-              <h3 className="font-playfair text-xl mb-4">{settings.newsletterTitle || 'Newsletter'}</h3>
-              <p className="text-sm text-ivory mb-4">
-                {settings.newsletterSubtitle || 'Získejte slevu 10% na první nákup'}
-              </p>
-              <form className="flex flex-col gap-2">
-                <input
-                  type="email"
-                  placeholder="Váš email"
-                  className="px-4 py-2 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white"
-                />
-                <button className="btn-primary">
-                  Odebírat
-                </button>
-              </form>
-            </div>
-          )}
         </div>
 
         {/* Bottom */}
