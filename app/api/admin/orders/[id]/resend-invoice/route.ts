@@ -67,11 +67,23 @@ export async function POST(
     });
 
     if (result.success) {
+      // Uložit Fakturoid ID zpět do objednávky, aby storno fungovalo
+      await prisma.order.update({
+        where: { id },
+        data: {
+          fakturoidInvoiceId: result.invoiceId ? String(result.invoiceId) : undefined,
+          fakturoidIsProforma: isInstagram,
+          fakturoidInvoiceUrl: result.invoiceUrl ?? undefined,
+          fakturoidInvoiceNum: result.invoiceNumber ?? undefined,
+        },
+      });
+
       return NextResponse.json({
         success: true,
         message: `Faktura ${result.invoiceNumber || ''} byla vytvořena a odeslána na ${order.email}`,
         invoiceId: result.invoiceId,
         invoiceNumber: result.invoiceNumber,
+        invoiceUrl: result.invoiceUrl,
       });
     } else {
       return NextResponse.json({ error: result.error || 'Nepodařilo se vytvořit fakturu' }, { status: 500 });
