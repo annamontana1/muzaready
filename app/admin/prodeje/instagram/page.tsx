@@ -61,7 +61,7 @@ const DYE_TYPES = [
 
 const SHADES = Array.from({ length: 10 }, (_, i) => i + 1);
 
-const LENGTHS = [40, 45, 50, 55, 60, 65, 70, 75, 80];
+const LENGTHS = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
 
 const ENDINGS = [
   { value: 'bez_zakonceni', label: 'Bez zakončení', surchargePerGram: 0 },

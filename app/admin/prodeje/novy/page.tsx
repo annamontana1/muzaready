@@ -95,7 +95,7 @@ const ENDING_OPTIONS: { value: Ending; label: string; pricePerGram: number }[] =
   { value: 'tapes', label: 'Tapes (+50 Kč/g)', pricePerGram: 50 },
 ];
 
-const LENGTH_OPTIONS = Array.from({ length: 11 }, (_, i) => 30 + i * 5); // 30-80
+const LENGTH_OPTIONS = Array.from({ length: 14 }, (_, i) => 30 + i * 5); // 30-95
 
 const SHIPPING_OPTIONS: { carrier: string; label: string; price: number }[] = [
   { carrier: 'zasilkovna', label: 'Zásilkovna', price: 89 },

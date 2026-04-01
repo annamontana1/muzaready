@@ -11,7 +11,7 @@ interface QuickAddSkuModalProps {
 
 type ProductType = 'bulk' | 'piece';
 
-const LENGTHS = [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90];
+const LENGTHS = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
 
 const STRUCTURES = [
   { value: 'STRAIGHT', label: 'Rovne' },

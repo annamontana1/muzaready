@@ -25,7 +25,7 @@ interface ExchangeRateInfo {
 }
 
 const SHADES = getAllShades();
-const LENGTHS = [40, 45, 50, 55, 60, 65, 70, 75, 80];
+const LENGTHS = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
 const STRUCTURES = ['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'];
 const CATEGORY_OPTIONS = [
   { value: 'nebarvene', label: 'Nebarvené panenské vlasy', apiValue: 'nebarvene_panenske' },
