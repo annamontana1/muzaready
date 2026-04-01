@@ -16,6 +16,13 @@ export default function MetodyZakonceniPage() {
       highlights: ['Trvanlivé 3-6 měsíců', 'Přirozený vzhled', 'Pro aktivní životní styl']
     },
     {
+      title: 'Vlasové pásky Tape-In',
+      description: 'Šetrná metoda sendvičového spoje. 6 kolekcí, kudrnaté pásky unikát na CZ trhu. Výroba za 14 dní.',
+      href: '/metody-zakonceni/vlasove-pasky-tape-in',
+      icon: '🩹',
+      highlights: ['Sendvičový spoj — neviditelné', 'Kudrnaté pásky k dispozici', 'Výroba ze zákazničina copu']
+    },
+    {
       title: 'Vlasové tresy',
       description: 'Tradiční metoda bez chemie a tepla. Ideální pro afro a kudrnaté vlasy.',
       href: '/metody-zakonceni/vlasove-tresy',

@@ -240,6 +240,12 @@ export default function Header() {
                     {t('nav.methods_keratin')}
                   </Link>
                   <Link
+                    href="/metody-zakonceni/vlasove-pasky-tape-in"
+                    className="block px-6 py-3 hover:bg-ivory transition"
+                  >
+                    Vlasové pásky Tape-In
+                  </Link>
+                  <Link
                     href="/metody-zakonceni/vlasove-tresy"
                     className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg"
                   >
@@ -619,6 +625,13 @@ export default function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Keratin / Mikrokeratin
+                    </Link>
+                    <Link
+                      href="/metody-zakonceni/vlasove-pasky-tape-in"
+                      className="block text-burgundy py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Vlasové pásky Tape-In
                     </Link>
                     <Link
                       href="/metody-zakonceni/vlasove-tresy"
