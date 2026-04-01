@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect, useCallback } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
@@ -82,19 +83,15 @@ export default function Header() {
           <div className="hidden lg:flex items-center justify-between h-[68px] gap-8">
 
             {/* Logo */}
-            <Link href="/" className="flex items-baseline gap-2 flex-shrink-0" aria-label="Domů">
-              <span
-                className="font-playfair text-[32px] font-bold tracking-[0.06em] leading-none"
-                style={{ color: 'var(--burgundy)' }}
-              >
-                MÙZA
-              </span>
-              <span
-                className="text-[10px] font-light tracking-[0.3em] uppercase pb-0.5"
-                style={{ color: 'var(--text-soft)' }}
-              >
-                HAIR SHOP
-              </span>
+            <Link href="/" className="flex items-center flex-shrink-0" aria-label="Domů">
+              <Image
+                src="/images/logo/muza-logo.png"
+                alt="Mùza Hair Shop"
+                width={120}
+                height={40}
+                priority
+                className="h-10 w-auto"
+              />
             </Link>
 
             {/* Navigation */}
@@ -260,9 +257,15 @@ export default function Header() {
               </svg>
             </button>
 
-            <Link href="/" className="flex items-baseline gap-1.5" aria-label="Domů">
-              <span className="font-playfair text-2xl font-bold tracking-[0.06em]" style={{ color: 'var(--burgundy)' }}>MÙZA</span>
-              <span className="text-[9px] tracking-[0.25em] uppercase" style={{ color: 'var(--text-soft)' }}>HAIR</span>
+            <Link href="/" className="flex items-center" aria-label="Domů">
+              <Image
+                src="/images/logo/muza-logo.png"
+                alt="Mùza Hair Shop"
+                width={100}
+                height={33}
+                priority
+                className="h-8 w-auto"
+              />
             </Link>
 
             <div className="flex items-center gap-3">
@@ -312,9 +315,14 @@ export default function Header() {
 
               {/* Panel header */}
               <div className="sticky top-0 bg-white px-5 py-4 flex items-center justify-between border-b border-beige z-10">
-                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-baseline gap-1.5">
-                  <span className="font-playfair text-2xl font-bold tracking-wider" style={{ color: 'var(--burgundy)' }}>MÙZA</span>
-                  <span className="text-[9px] tracking-[0.25em] uppercase" style={{ color: 'var(--text-soft)' }}>HAIR</span>
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
+                  <Image
+                    src="/images/logo/muza-logo.png"
+                    alt="Mùza Hair Shop"
+                    width={100}
+                    height={33}
+                    className="h-8 w-auto"
+                  />
                 </Link>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
