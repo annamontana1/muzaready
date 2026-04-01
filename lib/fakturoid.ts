@@ -368,13 +368,15 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
     // 5. Send invoice/proforma email via Fakturoid (includes QR code)
     if (order.customerEmail) {
       try {
-        await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
+        const deliverRes = await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
           method: 'POST',
         });
-        console.log('Fakturoid email delivered for invoice', invoice.id);
-      } catch (deliverError) {
-        console.error('Fakturoid deliver error (non-blocking):', deliverError);
+        console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
+      } catch (deliverError: any) {
+        console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
       }
+    } else {
+      console.warn(`⚠️ Fakturoid deliver skipped — no customerEmail for invoice ${invoice.id}`);
     }
 
     return {
