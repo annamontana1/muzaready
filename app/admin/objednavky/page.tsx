@@ -263,7 +263,7 @@ export default function AdminOrdersPage() {
 
   // Initiate delete flow for a single order (opens confirmation dialog)
   const handleDeleteClick = (order: Order) => {
-    setOrderToDelete({ id: order.id, shortId: order.id.substring(0, 8) });
+    setOrderToDelete({ id: order.id, shortId: String(order.orderNumber) });
     setDeleteConfirmOpen(true);
   };
 
@@ -304,7 +304,7 @@ export default function AdminOrdersPage() {
 
     // CSV rows
     const rows = ordersToExport.map(order => [
-      order.id.substring(0, 8),
+      String(order.orderNumber),
       order.email,
       `${order.firstName || ''} ${order.lastName || ''}`.trim(),
       order.total.toLocaleString('cs-CZ'),
@@ -716,7 +716,7 @@ export default function AdminOrdersPage() {
                     className="w-4 h-4 rounded border-gray-300"
                   />
                 </td>
-                <td className="px-6 py-4 text-sm font-mono">{order.id.substring(0, 8)}...</td>
+                <td className="px-6 py-4 text-sm font-mono">{String(order.orderNumber)}...</td>
                 <td className="px-6 py-4 text-sm">{order.email}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{order.itemCount}</td>
                 <td className="px-6 py-4 text-sm font-medium">
@@ -758,8 +758,8 @@ export default function AdminOrdersPage() {
                     <button
                       onClick={() => handleDeleteClick(order)}
                       className="ml-3 text-red-500 hover:text-red-700 transition-colors"
-                      title={`Smazat objednávku #${order.id.substring(0, 8)}`}
-                      aria-label={`Smazat objednávku #${order.id.substring(0, 8)}`}
+                      title={`Smazat objednávku #${String(order.orderNumber)}`}
+                      aria-label={`Smazat objednávku #${String(order.orderNumber)}`}
                     >
                       🗑️
                     </button>

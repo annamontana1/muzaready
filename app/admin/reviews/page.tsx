@@ -24,6 +24,7 @@ interface Review {
   } | null;
   order: {
     id: string;
+    orderNumber: number;
     createdAt: string;
   } | null;
 }
@@ -255,7 +256,7 @@ export default function AdminReviewsPage() {
                 )}
                 {review.order && (
                   <p className="text-sm text-gray-600">
-                    Objednávka: {review.order.id.slice(0, 8)} (
+                    Objednávka: {review.order.orderNumber} (
                     {new Date(review.order.createdAt).toLocaleDateString('cs-CZ')})
                   </p>
                 )}

@@ -38,6 +38,7 @@ interface OrderItem {
 
 interface Order {
   id: string;
+  orderNumber: number;
   email: string;
   firstName: string;
   lastName: string;
@@ -260,7 +261,7 @@ function InvoiceSection({ order }: { order: Order }) {
               <p className="font-bold text-sm uppercase tracking-wider text-stone-700">
                 {isInstagram ? 'Proforma faktura' : isStore && order.paymentMethod === 'cash' ? 'Zjednodušený daňový doklad' : 'Faktura'}
               </p>
-              <p className="text-xs text-stone-500">Obj. č.: {order.id.substring(0, 12)}</p>
+              <p className="text-xs text-stone-500">Obj. č.: {order.orderNumber}</p>
             </div>
 
             {/* Customer */}

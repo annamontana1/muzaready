@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 interface OrderData {
   id: string;
+  orderNumber: number;
   createdAt: string;
   firstName: string;
   lastName: string;
@@ -64,7 +65,7 @@ function ReceiptContent() {
   }
 
   const date = new Date(order.createdAt);
-  const receiptNumber = `PD-${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}-${order.id.substring(0, 6).toUpperCase()}`;
+  const receiptNumber = `PD-${order.orderNumber}`;
 
   const paymentLabel: Record<string, string> = {
     cash: 'Hotovost',

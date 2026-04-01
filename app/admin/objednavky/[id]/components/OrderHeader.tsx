@@ -27,6 +27,7 @@ interface OrderItem {
 
 interface Order {
   id: string;
+  orderNumber: number;
   email: string;
   firstName: string;
   lastName: string;
@@ -339,8 +340,7 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
     }
   };
 
-  // Format order ID to show only first 8 characters
-  const shortId = order.id.substring(0, 8);
+  const shortId = String(order.orderNumber);
 
   return (
     <div className="bg-white rounded-lg shadow p-6 mb-6">

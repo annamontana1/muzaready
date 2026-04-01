@@ -8,8 +8,10 @@ export const sendOrderConfirmationEmail = async (
   email: string,
   orderId: string,
   items: any[],
-  total: number
+  total: number,
+  orderNumber?: number
 ) => {
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendOrderConfirmationEmail');
     return;
@@ -113,7 +115,7 @@ export const sendOrderConfirmationEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: email,
-      subject: `Potvrzení objednávky #${orderId.substring(0, 8)}`,
+      subject: `Potvrzení objednávky #${orderNum}`,
       html,
     });
 
@@ -128,8 +130,10 @@ export const sendOrderConfirmationEmail = async (
 export const sendPaymentConfirmationEmail = async (
   email: string,
   orderId: string,
-  amount: number
+  amount: number,
+  orderNumber?: number
 ) => {
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendPaymentConfirmationEmail');
     return;
@@ -162,7 +166,7 @@ export const sendPaymentConfirmationEmail = async (
               <p>Potvrzujeme, že vaše platba byla úspěšně zpracována.</p>
 
               <div class="info-box">
-                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                <p><strong>Číslo objednávky:</strong> ${orderNum}</p>
                 <p><strong>Zaplacená částka:</strong> ${amount.toLocaleString('cs-CZ')} Kč</p>
               </div>
 
@@ -182,7 +186,7 @@ export const sendPaymentConfirmationEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: email,
-      subject: `Potvrzení platby #${orderId.substring(0, 8)}`,
+      subject: `Potvrzení platby #${orderNum}`,
       html,
     });
 
@@ -198,8 +202,10 @@ export const sendShippingNotificationEmail = async (
   email: string,
   orderId: string,
   trackingInfo?: string,
-  carrier?: string | null
+  carrier?: string | null,
+  orderNumber?: number
 ) => {
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendShippingNotificationEmail');
     return;
@@ -230,7 +236,7 @@ export const sendShippingNotificationEmail = async (
               <p>Vaše objednávka byla odeslána a je na cestě k vám.</p>
 
               <div class="info-box">
-                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                <p><strong>Číslo objednávky:</strong> ${orderNum}</p>
                 ${carrier ? `<p><strong>Dopravce:</strong> ${getCarrierName(carrier)}</p>` : ''}
                 ${trackingInfo ? `<p><strong>Číslo sledování:</strong> ${trackingInfo}</p>` : ''}
                 ${trackingInfo && carrier ? `<p><a href="${getTrackingUrl(carrier, trackingInfo)}" style="color: #007bff; text-decoration: none; font-weight: bold;">→ Sledovat zásilku</a></p>` : ''}
@@ -252,7 +258,7 @@ export const sendShippingNotificationEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: email,
-      subject: `Balíček je na cestě #${orderId.substring(0, 8)}`,
+      subject: `Balíček je na cestě #${orderNum}`,
       html,
     });
 
@@ -268,8 +274,10 @@ export const sendAdminOrderNotificationEmail = async (
   orderId: string,
   customerEmail: string,
   items: any[],
-  total: number
+  total: number,
+  orderNumber?: number
 ) => {
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendAdminOrderNotificationEmail');
     return;
@@ -352,7 +360,7 @@ export const sendAdminOrderNotificationEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: 'objednavky@mail.muzahair.cz',
-      subject: `[ADMIN] Nová objednávka #${orderId.substring(0, 8)}`,
+      subject: `[ADMIN] Nová objednávka #${orderNum}`,
       html,
     });
 
@@ -366,8 +374,10 @@ export const sendAdminOrderNotificationEmail = async (
 
 export const sendDeliveryConfirmationEmail = async (
   email: string,
-  orderId: string
+  orderId: string,
+  orderNumber?: number
 ) => {
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendDeliveryConfirmationEmail');
     return;
@@ -400,7 +410,7 @@ export const sendDeliveryConfirmationEmail = async (
               <p>Vaše objednávka byla úspěšně doručena.</p>
 
               <div class="info-box">
-                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                <p><strong>Číslo objednávky:</strong> ${orderNum}</p>
               </div>
 
               <p>Doufáme, že jste s vaším nákupem spokojeni. Pokud máte jakékoliv dotazy nebo připomínky, neváhejte nás kontaktovat.</p>
@@ -419,7 +429,7 @@ export const sendDeliveryConfirmationEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: email,
-      subject: `Balíček doručen #${orderId.substring(0, 8)}`,
+      subject: `Balíček doručen #${orderNum}`,
       html,
     });
 
@@ -434,8 +444,10 @@ export const sendDeliveryConfirmationEmail = async (
 export const sendOrderCancellationEmail = async (
   email: string,
   orderId: string,
-  reason?: string
+  reason?: string,
+  orderNumber?: number
 ) => {
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendOrderCancellationEmail');
     return;
@@ -466,7 +478,7 @@ export const sendOrderCancellationEmail = async (
               <p>Bohužel jsme museli zrušit vaši objednávku.</p>
 
               <div class="info-box">
-                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                <p><strong>Číslo objednávky:</strong> ${orderNum}</p>
                 ${reason ? `<p><strong>Důvod:</strong> ${reason}</p>` : ''}
               </div>
 
@@ -488,7 +500,7 @@ export const sendOrderCancellationEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: email,
-      subject: `Objednávka zrušena #${orderId.substring(0, 8)}`,
+      subject: `Objednávka zrušena #${orderNum}`,
       html,
     });
 
@@ -537,7 +549,7 @@ export const sendPaymentReminderEmail = async (
               <p>Vaše objednávka čeká na zaplacení již ${daysSinceOrder} ${daysSinceOrder === 1 ? 'den' : 'dnů'}.</p>
 
               <div class="info-box">
-                <p><strong>Číslo objednávky:</strong> ${orderId.substring(0, 8)}</p>
+                <p><strong>Číslo objednávky:</strong> ${orderNum}</p>
                 <p><strong>Částka k úhradě:</strong> ${total.toLocaleString('cs-CZ')} Kč</p>
               </div>
 
@@ -561,7 +573,7 @@ export const sendPaymentReminderEmail = async (
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
       to: email,
-      subject: `Připomínka platby #${orderId.substring(0, 8)}`,
+      subject: `Připomínka platby #${orderNum}`,
       html,
     });
 

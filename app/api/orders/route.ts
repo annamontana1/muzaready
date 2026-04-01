@@ -321,10 +321,10 @@ export async function POST(request: NextRequest) {
       }));
 
       // Send confirmation to customer
-      await sendOrderConfirmationEmail(order.email, order.id, emailItems, order.total);
+      await sendOrderConfirmationEmail(order.email, order.id, emailItems, order.total, order.orderNumber);
 
       // Send notification to admin
-      await sendAdminOrderNotificationEmail(order.id, order.email, emailItems, order.total);
+      await sendAdminOrderNotificationEmail(order.id, order.email, emailItems, order.total, order.orderNumber);
     } catch (emailError) {
       console.error('Failed to send order emails:', emailError);
       // Don't fail the order creation if email fails

@@ -15,6 +15,7 @@ export interface OrderItem {
 
 export interface Order {
   id: string;
+  orderNumber: number;
   email: string;
   firstName: string | null;
   lastName: string | null;
