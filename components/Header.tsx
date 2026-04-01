@@ -19,6 +19,7 @@ export default function Header() {
   const [priceskySubmenuOpen, setPriceskySubmenuOpen] = useState(false);
   const [prislusenstviSubmenuOpen, setPrislusenstviSubmenuOpen] = useState(false);
   const [metodySubmenuOpen, setMetodySubmenuOpen] = useState(false);
+  const [informaceSubmenuOpen, setInformaceSubmenuOpen] = useState(false);
   const [searchOverlayOpen, setSearchOverlayOpen] = useState(false);
 
   const { favorites } = useFavorites();
@@ -251,9 +252,23 @@ export default function Header() {
               {t('nav.wholesale')}
             </Link>
 
-            <Link href="/kontakt" className="text-burgundy font-medium hover:text-maroon transition">
-              {t('nav.showroom')}
-            </Link>
+            <div className="relative group">
+              <button className="text-burgundy font-medium hover:text-maroon transition flex items-center gap-1">
+                Informace
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="hidden group-hover:block absolute right-0 w-56 bg-white shadow-heavy rounded-lg z-50" style={{ top: '100%', paddingTop: '8px' }}>
+                <Link href="/o-nas" className="block px-6 py-3 hover:bg-ivory transition rounded-t-lg">O nás</Link>
+                <Link href="/informace/jak-nakupovat" className="block px-6 py-3 hover:bg-ivory transition">Jak objednat</Link>
+                <Link href="/informace/odeslani-a-stav-objednavky" className="block px-6 py-3 hover:bg-ivory transition">Doprava a doručení</Link>
+                <Link href="/informace/platba-a-vraceni" className="block px-6 py-3 hover:bg-ivory transition">Výměna a vrácení</Link>
+                <Link href="/informace/faq" className="block px-6 py-3 hover:bg-ivory transition">Časté otázky</Link>
+                <Link href="/informace/obchodni-podminky" className="block px-6 py-3 hover:bg-ivory transition">Obchodní podmínky</Link>
+                <Link href="/kontakt" className="block px-6 py-3 hover:bg-ivory transition rounded-b-lg">Showroom Praha</Link>
+              </div>
+            </div>
           </nav>
 
           {/* Actions */}
@@ -623,6 +638,32 @@ export default function Header() {
               >
                 Velkoobchod
               </Link>
+
+              <div className="border-b border-warm-beige/50 pb-2">
+                <button
+                  onClick={() => setInformaceSubmenuOpen(!informaceSubmenuOpen)}
+                  className="w-full flex items-center justify-between font-semibold text-burgundy py-2"
+                >
+                  <span>Informace</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${informaceSubmenuOpen ? 'rotate-180' : ''}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {informaceSubmenuOpen && (
+                  <div className="pl-4 space-y-2 mt-2">
+                    <Link href="/o-nas" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>O nás</Link>
+                    <Link href="/informace/jak-nakupovat" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Jak objednat</Link>
+                    <Link href="/informace/odeslani-a-stav-objednavky" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Doprava a doručení</Link>
+                    <Link href="/informace/platba-a-vraceni" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Výměna a vrácení</Link>
+                    <Link href="/informace/faq" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Časté otázky</Link>
+                    <Link href="/informace/obchodni-podminky" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Obchodní podmínky</Link>
+                    <Link href="/kontakt" className="block text-burgundy py-1" onClick={() => setMobileMenuOpen(false)}>Showroom Praha</Link>
+                  </div>
+                )}
+              </div>
 
               <Link
                 href="/kontakt"
