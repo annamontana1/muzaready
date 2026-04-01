@@ -242,17 +242,23 @@ export async function sendInvoiceByEmail(invoiceId: number): Promise<void> {
  * Works for unpaid invoices. For paid invoices, creates a credit note.
  */
 export async function cancelInvoice(invoiceId: number): Promise<{ success: boolean; message?: string }> {
+  // Step 1: try direct cancel (works for unpaid invoices)
   try {
-    // Try to cancel directly (works for unpaid/proforma)
     await fakturoidFetch(`/invoices/${invoiceId}/cancel.json`, { method: 'POST' });
     return { success: true, message: 'Faktura stornována ve Fakturoidu' };
-  } catch (error: any) {
-    // If already paid, try to fire cancel anyway — Fakturoid will reject with error
-    console.error('Fakturoid cancelInvoice error:', error);
-    return {
-      success: false,
-      message: 'Fakturu nelze automaticky stornovat (pravděpodobně již zaplacena). Stornujte ji ručně ve Fakturoidu.'
-    };
+  } catch (firstError: any) {
+    // Step 2: invoice might be paid — try undepay first, then cancel
+    try {
+      await fakturoidFetch(`/invoices/${invoiceId}/fire.json?event=undepay`, { method: 'POST' });
+      await fakturoidFetch(`/invoices/${invoiceId}/cancel.json`, { method: 'POST' });
+      return { success: true, message: 'Platba odznačena a faktura stornována ve Fakturoidu' };
+    } catch (secondError: any) {
+      console.error('Fakturoid cancelInvoice error:', secondError);
+      return {
+        success: false,
+        message: 'Fakturu nelze stornovat. Stornujte ji ručně ve Fakturoidu.',
+      };
+    }
   }
 }
 
