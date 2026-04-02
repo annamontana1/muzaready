@@ -15,7 +15,7 @@ export default function ObchodniPodminkyPage() {
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-10 text-sm leading-relaxed">
         <p className="font-semibold text-gray-900 mb-1">Prodávající:</p>
         <p>Anna Zvinchuk, Múza Hair Praha s.r.o.</p>
-        <p>IČO: 17989230 &nbsp;|&nbsp; DIČ: [DOPLNIT, pokud plátce DPH]</p>
+        <p>IČO: 17989230 &nbsp;|&nbsp; Prodávající není plátcem DPH.</p>
         <p>Sídlo: Revoluční 8, 198 00 Praha</p>
         <p>Showroom: [Adresa showroomu], Praha</p>
         <p>E-mail: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
@@ -156,11 +156,6 @@ export default function ObchodniPodminkyPage() {
                   <td className="border border-gray-300 px-3 py-2">Osobní odběr – showroom Praha</td>
                   <td className="border border-gray-300 px-3 py-2">Zdarma</td>
                   <td className="border border-gray-300 px-3 py-2">Dle dohody, Po–So 10–18 h</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-3 py-2">Doprava ZDARMA</td>
-                  <td className="border border-gray-300 px-3 py-2">0 Kč</td>
-                  <td className="border border-gray-300 px-3 py-2">Objednávky nad [DOPLNIT] Kč</td>
                 </tr>
               </tbody>
             </table>
@@ -313,20 +308,23 @@ export default function ObchodniPodminkyPage() {
         <section id="cl10">
           <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 10 – Velkoobchodní podmínky (B2B)</h2>
           <p><strong>10.1</strong> Tyto obchodní podmínky se vztahují i na obchodní vztahy s podnikateli (B2B). Na spotřebitele-podnikatele se nevztahuje zákonná ochrana spotřebitele (zejm. právo odstoupit od smlouvy do 14 dní bez udání důvodu).</p>
-          <p><strong>10.2 Velkoobchodní podmínky Múza Hair Praha:</strong></p>
+          <p><strong>10.2 Podmínky pro získání B2B statusu a velkoobchodní slevy:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>Minimální objednávka pro B2B: [DOPLNIT minimální hodnotu nebo množství]</li>
-            <li>Velkoobchodní ceny: přiděleny po registraci jako B2B partner</li>
-            <li>Splatnost faktur: 14 dní (po dohodě možno prodloužit na 30 dní)</li>
-            <li>Možnost osobního odběru v showroomu Praha – po předchozí domluvě</li>
-            <li>Možnost konzultace vzorků před objednávkou</li>
-            <li>Pravidelné zásoby – přednostní zpracování B2B objednávek</li>
+            <li>B2B partner je kadeřník, vlasový technik nebo salon, který aktivně nabízí služby prodlužování vlasů.</li>
+            <li><strong>Podmínka pro přidělení B2B slevy:</strong> Partner musí mít na svých sociálních sítích (Instagram, Facebook nebo TikTok) viditelně prezentováno, že provádí prodlužování vlasů – tj. aktivní profil s příspěvky o prodloužení, reklamou nebo v popisu profilu.</li>
+            <li>Velkoobchodní sleva: <strong>10–20 % z ceníkové ceny</strong> dle objemu odběru a délky spolupráce.</li>
+            <li>Výše slevy je stanovena individuálně po posouzení profilu partnera prodávajícím.</li>
+            <li>Splatnost faktur: 14 dní (po dohodě možno prodloužit na 30 dní).</li>
+            <li>Minimální hodnota objednávky pro B2B není stanovena.</li>
+            <li>Možnost osobního odběru v showroomu Praha – po předchozí domluvě.</li>
+            <li>Možnost konzultace vzorků před objednávkou.</li>
+            <li>Přednostní zpracování B2B objednávek.</li>
           </ul>
-          <p><strong>10.3</strong> Pro registraci jako B2B partner kontaktujte: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> nebo telefonicky +420 728 722 880.</p>
+          <p><strong>10.3</strong> Pro registraci jako B2B partner kontaktujte: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> nebo telefonicky +420 728 722 880. Uveďte odkaz na svůj sociální profil a typ prováděných vlasových služeb.</p>
           <p><strong>10.4</strong> B2B kupující nemá právo na odstoupení od smlouvy bez udání důvodu. Reklamace se řídí čl. 7 a 8 těchto podmínek, přičemž se nepoužijí ustanovení o spotřebitelských právech.</p>
           <div className="bg-gray-50 border-l-4 border-gray-400 p-4 rounded text-sm">
             <p className="font-semibold">ℹ️ Důležité</p>
-            <p>Prodávající poskytuje B2B partnerům: vzorkovník barev, marketingové fotografie k produktům, doporučení pro aplikaci, přednostní zákaznickou podporu.</p>
+            <p>Prodávající poskytuje B2B partnerům: vzorkovník barev, marketingové fotografie k produktům, doporučení pro aplikaci a přednostní zákaznickou podporu. Sleva je přidělena po ověření sociálních sítí partnera a platí po dobu aktivní spolupráce.</p>
           </div>
         </section>
 
