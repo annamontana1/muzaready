@@ -139,7 +139,7 @@ export default function KomisniSmlouvaPage() {
             <div className="text-sm text-stone-800 space-y-1">
               <div className="font-semibold">Anna Zvinchuk</div>
               <div>ICO: 17989230</div>
-              <div>Sramkova 430/12, Lesna</div>
+              <div>Šrámkova 430/12, Lesná</div>
               <div>638 00 Brno</div>
             </div>
           </div>

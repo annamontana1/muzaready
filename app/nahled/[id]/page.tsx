@@ -181,7 +181,7 @@ export default function NahledPage() {
             <div className="text-center text-xs text-stone-400 border-t border-dashed border-stone-200 pt-4">
               <p className="font-medium text-stone-600">Muzahair.cz</p>
               <p>Anna Zvinchuk · IČO 17989230</p>
-              <p>Šrámkova 430/12, Praha 8</p>
+              <p>Šrámkova 430/12, 638 00 Brno</p>
             </div>
           </div>
         </div>
@@ -266,7 +266,7 @@ export default function NahledPage() {
           <div className="text-center text-xs text-stone-400 border-t border-dashed border-stone-200 pt-4">
             <p className="font-medium text-stone-600">Muzahair.cz</p>
             <p>Anna Zvinchuk · IČO 17989230</p>
-            <p>Šrámkova 430/12, Praha 8</p>
+            <p>Šrámkova 430/12, 638 00 Brno</p>
           </div>
         </div>
       </div>
