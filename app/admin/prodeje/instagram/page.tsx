@@ -141,7 +141,7 @@ export default function InstagramSalePage() {
 
   // ─── Price matrix lookup ─────────────────────────────────────
 
-  const fetchPrice = useCallback(async (tierCategory: string, dyeType: string, lengthCm: number) => {
+  const fetchPrice = useCallback(async (tierCategory: string, dyeType: string, lengthCm: number, shade?: number) => {
     setPriceLoading(true);
     setPriceError(null);
     try {
@@ -152,8 +152,23 @@ export default function InstagramSalePage() {
         BABY_SHADES: 'baby_shades',
       };
       const tier = tierMap[tierCategory] || tierCategory.toLowerCase();
-      // In DB: category = nebarvene/barvene, tier = standard/luxe/platinum
-      const res = await fetch(`/api/price-matrix?category=${dyeType}&tier=${tier}`);
+
+      // Určení shade range podle tier + dyeType + shade čísla
+      let shadeStart: number;
+      let shadeEnd: number;
+      if (tier === 'baby_shades') {
+        shadeStart = 7; shadeEnd = 10;
+      } else if (dyeType === 'barvene') {
+        shadeStart = 5; shadeEnd = 10;
+      } else if (tier === 'platinum' && shade && shade >= 5) {
+        shadeStart = 5; shadeEnd = 7;
+      } else {
+        shadeStart = 1; shadeEnd = 4;
+      }
+
+      const res = await fetch(
+        `/api/price-matrix?category=${dyeType}&tier=${tier}&shadeRangeStart=${shadeStart}&shadeRangeEnd=${shadeEnd}`
+      );
       if (!res.ok) {
         setPriceError('Nepodařilo se načíst cenu z matice');
         setCurrentPricePerGram(null);
@@ -179,14 +194,14 @@ export default function InstagramSalePage() {
   const handleConfigChange = (field: string, value: string | number) => {
     const updated = { ...currentItem, [field]: value };
     setCurrentItem(updated);
-    if (field === 'category' || field === 'dyeType' || field === 'lengthCm') {
-      fetchPrice(updated.category, updated.dyeType, updated.lengthCm);
+    if (field === 'category' || field === 'dyeType' || field === 'lengthCm' || field === 'shade') {
+      fetchPrice(updated.category, updated.dyeType, updated.lengthCm, Number(updated.shade));
     }
   };
 
   // Initial price fetch
   useState(() => {
-    fetchPrice(currentItem.category, currentItem.dyeType, currentItem.lengthCm);
+    fetchPrice(currentItem.category, currentItem.dyeType, currentItem.lengthCm, currentItem.shade);
   });
 
   // ─── Calculate current item price ────────────────────────────

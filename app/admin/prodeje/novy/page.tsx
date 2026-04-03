@@ -310,9 +310,10 @@ export default function UnifiedNewSalePage() {
 
     try {
       const params = new URLSearchParams({
-        category: productType, // barvene / nebarvene
-        tier: productCategory,  // standard / luxe / platinum_edition / baby_shades
+        category: productType,
+        tier: productCategory,
         lengthCm: String(productLength),
+        shade: String(productShade),
       });
       const res = await fetch(`/api/admin/pos/price-check?${params}`);
       const data = await res.json();

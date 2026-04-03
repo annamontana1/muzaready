@@ -8,7 +8,7 @@ import ImageUpload from '@/components/admin/ImageUpload';
 interface PriceMatrixEntry {
   id: string;
   category: 'nebarvene' | 'barvene';
-  tier: 'standard' | 'luxe' | 'platinum';
+  tier: 'standard' | 'luxe' | 'platinum' | 'baby_shades';
   shadeRangeStart: number | null;
   shadeRangeEnd: number | null;
   lengthCm: number;

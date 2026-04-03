@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 interface PriceMatrixEntry {
   id: string;
   category: 'nebarvene' | 'barvene';
-  tier: 'standard' | 'luxe' | 'platinum';
+  tier: 'standard' | 'luxe' | 'platinum' | 'baby_shades';
   shadeRangeStart: number | null;
   shadeRangeEnd: number | null;
   lengthCm: number;
@@ -21,22 +21,23 @@ interface ExchangeRateInfo {
   updatedBy: string | null;
 }
 
-const CATEGORIES: Array<{ value: 'nebarvene' | 'barvene'; label: string }> = [
+const CATEGORIES: Array<{ value: string; label: string }> = [
   { value: 'nebarvene', label: 'Nebarvené panenské' },
   { value: 'barvene', label: 'Barvené vlasy' },
 ];
 
-const TIERS: Array<{ value: 'standard' | 'luxe' | 'platinum'; label: string }> = [
+const TIERS: Array<{ value: string; label: string }> = [
   { value: 'standard', label: 'Standard' },
   { value: 'luxe', label: 'LUXE' },
   { value: 'platinum', label: 'Platinum' },
+  { value: 'baby_shades', label: '✨ Baby Shades' },
 ];
 
 const SHADE_RANGES = [
   { label: '1-4', start: 1, end: 4 },
   { label: '5-7', start: 5, end: 7 },
-  { label: '8-10', start: 8, end: 10 },
   { label: '5-10', start: 5, end: 10 },
+  { label: '7-10', start: 7, end: 10 },
 ];
 
 const LENGTHS = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
@@ -50,6 +51,7 @@ const TIER_LABELS: Record<string, string> = {
   standard: 'Standard',
   luxe: 'LUXE',
   platinum: 'Platinum',
+  baby_shades: '✨ Baby Shades',
 };
 
 const formatShadeRange = (start?: number | null, end?: number | null) => {
@@ -300,7 +302,7 @@ export default function PriceMatrixTab() {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <h2 className="text-xl font-semibold text-gray-900">Matice cen (Cena za 1g)</h2>
-            <p className="text-sm text-gray-600">Spravuj 81 kombinací kategorií × linek × délek.</p>
+            <p className="text-sm text-gray-600">Standard/Luxe: nebarvené 1–4, barvené 5–10 · Platinum: nebarvené 1–4, 5–7, barvené 5–10 · Baby Shades: 7–10 · 14 délek = 112 kombinací.</p>
           </div>
           <div className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg p-3 min-w-[240px]">
             <div className="font-semibold text-gray-900">Aktuální kurz</div>
