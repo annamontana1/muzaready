@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'Zásady používání cookies | Mùza Hair Praha',
   description: 'Informace o tom, jak používáme cookies na našem webu',
+  alternates: { canonical: 'https://muzahair.cz/cookies' },
 };
 
 export default function CookiesPage() {

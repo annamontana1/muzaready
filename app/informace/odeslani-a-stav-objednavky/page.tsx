@@ -1,10 +1,9 @@
 import { redirect } from 'next/navigation';
 
-// ISR - revalidate every day
-export const revalidate = 86400;
-
+export const metadata = {
+  alternates: { canonical: 'https://muzahair.cz/sledovani-objednavky' },
+};
 
 export default function Page() {
-  // Redirect to the new order tracking page
   redirect('/sledovani-objednavky');
 }
