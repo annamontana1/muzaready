@@ -180,6 +180,12 @@ const nextConfig = {
         destination: '/metody-zakonceni/vlasove-tresy',
         permanent: true,
       },
+      // Smazané produkty → příslušná kategorie
+      {
+        source: '/produkt/barvene-luxe-svetla-blond',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
     ];
   },
 };
