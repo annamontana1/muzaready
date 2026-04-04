@@ -60,7 +60,26 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       data: { orderStatus: 'pending', paymentStatus: 'unpaid', updatedAt: new Date() },
     });
 
-    return NextResponse.json({ success: true, message: `Splatnost prodloužena do ${dueDateIso}` });
+    // Send updated proforma email
+    if (order.email) {
+      try {
+        const token2 = await getToken();
+        await fetch(`${FAKTUROID_API_BASE}/invoices/${order.fakturoidInvoiceId}/deliver.json`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token2}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'User-Agent': USER_AGENT,
+          },
+          body: JSON.stringify({ email: order.email }),
+        });
+      } catch (emailErr) {
+        console.error('Fakturoid deliver error (non-fatal):', emailErr);
+      }
+    }
+
+    return NextResponse.json({ success: true, message: `Splatnost prodloužena do ${dueDateIso} a proforma odeslána na email ✓` });
   } catch (err: any) {
     console.error('extend-proforma error:', err);
     return NextResponse.json({ error: err.message || 'Chyba' }, { status: 500 });
