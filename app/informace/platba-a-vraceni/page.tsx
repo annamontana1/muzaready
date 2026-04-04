@@ -1,347 +1,259 @@
-'use client';
-
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Platba a vrácení | Múza Hair Praha',
+  description: 'Způsoby platby, doprava a podmínky vrácení zboží. Zásilkovna 89 Kč, DPD 68 Kč, osobní odběr Praha zdarma.',
+  alternates: { canonical: 'https://muzahair.cz/informace/platba-a-vraceni' },
+};
+
+const paymentMethods = [
+  {
+    name: 'Platba kartou online',
+    desc: 'Visa, Mastercard, Maestro — přes zabezpečenou bránu GoPay. Okamžité zpracování platby.',
+    badge: 'Doporučeno',
+  },
+  {
+    name: 'Bankovní převod',
+    desc: 'Platba převodem na náš bankovní účet. Objednávka se expeduje po připsání platby (1–2 pracovní dny).',
+    badge: null,
+  },
+  {
+    name: 'Hotovost v showroomu',
+    desc: 'Platba v hotovosti při osobním odběru v showroomu Praha. Zdarma bez příplatků.',
+    badge: null,
+  },
+];
+
+const shippingMethods = [
+  {
+    name: 'Zásilkovna',
+    price: '89 Kč',
+    time: '2–3 pracovní dny',
+    desc: 'Vyzvednutí na výdejním místě dle výběru. Více než 7 000 poboček v ČR.',
+    available: true,
+  },
+  {
+    name: 'DPD',
+    price: '68 Kč',
+    time: '1–2 pracovní dny',
+    desc: 'Doručení kurýrem přímo na adresu v pracovní dny.',
+    available: true,
+  },
+  {
+    name: 'Balikovná',
+    price: '—',
+    time: '—',
+    desc: 'Připravujeme. Balikovná bude brzy dostupná jako způsob doručení.',
+    available: false,
+  },
+  {
+    name: 'Osobní odběr — showroom Praha',
+    price: 'Zdarma',
+    time: 'Po domluvě',
+    desc: 'Revoluční 8, Praha. Po–So 10:00–18:00. Termín domluvte předem.',
+    available: true,
+  },
+];
 
 export default function PlatbaAVraceniPage() {
-  const paymentMethods = [
-    {
-      name: 'Platba kartou online',
-      icon: '💳',
-      description: 'Visa, Mastercard, Maestro přes zabezpečenou bránu GoPay',
-      details: 'Okamžité zpracování, bezpečné šifrování',
-      recommended: true,
-    },
-    {
-      name: 'Bankovní převod',
-      icon: '🏦',
-      description: 'Převod na náš bankovní účet',
-      details: 'Zpracování do 1-2 pracovních dnů po připsání platby',
-      recommended: false,
-    },
-    {
-      name: 'Dobírka',
-      icon: '📦',
-      description: 'Platba při převzetí zásilky',
-      details: 'Příplatek 50 Kč za službu dobírky',
-      recommended: false,
-    },
-  ];
-
-  const shippingMethods = [
-    {
-      name: 'Zásilkovna',
-      icon: '📍',
-      price: '65 Kč',
-      freeFrom: '3 000 Kč',
-      time: '1-2 pracovní dny',
-      description: 'Vyzvednutí na více než 7 000 výdejních místech',
-    },
-    {
-      name: 'PPL kurýr',
-      icon: '🚚',
-      price: '150 Kč',
-      freeFrom: '3 000 Kč',
-      time: '1-2 pracovní dny',
-      description: 'Doručení na adresu v pracovních dnech',
-    },
-    {
-      name: 'Osobní odběr Praha',
-      icon: '🏪',
-      price: 'Zdarma',
-      freeFrom: null,
-      time: 'Po domluvě',
-      description: 'V našem showroomu v centru Prahy',
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <div className="bg-gradient-to-b from-blue-50 to-white py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Platba a vrácení
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Bezpečné platby, rychlé doručení a snadné vrácení
+    <main className="max-w-4xl mx-auto px-4 py-16">
+
+      {/* Breadcrumb */}
+      <nav className="text-sm text-gray-400 mb-8 flex gap-2">
+        <Link href="/" className="hover:text-gray-700 transition">Domů</Link>
+        <span>/</span>
+        <Link href="/informace" className="hover:text-gray-700 transition">Informace</Link>
+        <span>/</span>
+        <span className="text-gray-700">Platba a vrácení</span>
+      </nav>
+
+      {/* Heading */}
+      <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Platba a vrácení</h1>
+      <p className="text-lg text-gray-500 mb-14">Způsoby platby, dopravní podmínky a postup při vrácení zboží.</p>
+
+      {/* Způsoby platby */}
+      <section className="mb-16">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">Způsoby platby</h2>
+        <div className="space-y-3">
+          {paymentMethods.map((m) => (
+            <div key={m.name} className="flex items-start justify-between gap-4 p-5 bg-white border border-gray-200 rounded-xl">
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <span className="font-semibold text-gray-900">{m.name}</span>
+                  {m.badge && (
+                    <span className="text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{m.badge}</span>
+                  )}
+                </div>
+                <p className="text-sm text-gray-500">{m.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-xl">
+          <p className="text-sm text-red-700 font-medium">Platba dobírkou není dostupná.</p>
+          <p className="text-sm text-red-600 mt-1">Vlasy jsou prémiové zboží — z hygienických a bezpečnostních důvodů nezasíláme na dobírku.</p>
+        </div>
+      </section>
+
+      {/* Doprava */}
+      <section className="mb-16">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">Doprava a doručení</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {shippingMethods.map((m) => (
+            <div
+              key={m.name}
+              className={`p-5 border rounded-xl ${m.available ? 'bg-white border-gray-200' : 'bg-gray-50 border-gray-100 opacity-60'}`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className={`font-semibold ${m.available ? 'text-gray-900' : 'text-gray-400'}`}>{m.name}</span>
+                {!m.available && (
+                  <span className="text-xs bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full">Připravujeme</span>
+                )}
+              </div>
+              <p className="text-sm text-gray-500 mb-3">{m.desc}</p>
+              {m.available && (
+                <div className="flex gap-6 text-sm">
+                  <div>
+                    <span className="text-gray-400 block text-xs uppercase tracking-wide mb-0.5">Cena</span>
+                    <span className="font-semibold text-gray-900">{m.price}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block text-xs uppercase tracking-wide mb-0.5">Doba doručení</span>
+                    <span className="font-semibold text-gray-900">{m.time}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Vrácení zboží */}
+      <section className="mb-16">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">Vrácení zboží</h2>
+
+        <div className="p-5 bg-amber-50 border border-amber-200 rounded-xl mb-6">
+          <p className="font-semibold text-amber-900 mb-2">Důležité — specifika vlasových produktů</p>
+          <p className="text-sm text-amber-800 leading-relaxed">
+            Vlasy lze vrátit pouze v <strong>nerozbaléném originálním balení</strong>. Rozbalené, použité, aplikované nebo chemicky upravené vlasy nelze z hygienických důvodů vrátit ani vyměnit. Toto opatření chrání všechny zákaznice před nákupem již použitého zboží.
           </p>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        {/* Payment Methods */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            💳 Způsoby platby
-          </h2>
-          <div className="space-y-4">
-            {paymentMethods.map((method) => (
-              <div
-                key={method.name}
-                className={`bg-white rounded-xl p-6 border-2 ${
-                  method.recommended ? 'border-green-200' : 'border-gray-100'
-                } shadow-sm`}
+        <div className="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="font-semibold text-gray-900 mb-4">Podmínky vrácení</h3>
+            <ul className="space-y-3 text-sm text-gray-700">
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 font-bold mt-0.5">✓</span>
+                Lhůta 14 dní od převzetí zboží
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 font-bold mt-0.5">✓</span>
+                Nerozbalené v originálním obalu s etiketami
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 font-bold mt-0.5">✓</span>
+                Peníze vrátíme do 14 dní od přijetí zboží
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 font-bold mt-0.5">✓</span>
+                Poplatek 100 Kč/položka za opětovné naskladnění
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 font-bold mt-0.5">✗</span>
+                <span className="text-gray-500">Zakázková výroba (pásky, weft, keratin)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 font-bold mt-0.5">✗</span>
+                <span className="text-gray-500">Rozbalené nebo použité zboží</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 font-bold mt-0.5">✗</span>
+                <span className="text-gray-500">Chemicky nebo mechanicky upravené vlasy</span>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-gray-900 mb-4">Jak vrátit zboží</h3>
+            <ol className="space-y-4 text-sm text-gray-700">
+              {[
+                { n: '1', text: 'Napište na muzahaircz@gmail.com — uveďte číslo objednávky a důvod vrácení.' },
+                { n: '2', text: 'Vyplňte formulář pro odstoupení od smlouvy (ke stažení níže nebo zašleme e-mailem).' },
+                { n: '3', text: 'Zboží zašlete doporučeně na adresu: Šrámkova 430/12, 638 00 Brno. Nezasílejte na dobírku — taková zásilka nebude převzata.' },
+                { n: '4', text: 'Po obdržení zboží vrátíme peníze na bankovní účet do 14 dnů.' },
+              ].map((s) => (
+                <li key={s.n} className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-6 h-6 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center text-xs font-bold">
+                    {s.n}
+                  </span>
+                  <span>{s.text}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="mt-5">
+              <a
+                href="mailto:muzahaircz@gmail.com?subject=Vrácení zboží"
+                className="inline-block px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition"
               >
-                <div className="flex items-start gap-4">
-                  <div className="text-3xl">{method.icon}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-gray-900">{method.name}</h3>
-                      {method.recommended && (
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                          Doporučeno
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-gray-600 mt-1">{method.description}</p>
-                    <p className="text-sm text-gray-500 mt-1">{method.details}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Shipping Methods */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            🚚 Způsoby doručení
-          </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {shippingMethods.map((method) => (
-              <div
-                key={method.name}
-                className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm"
-              >
-                <div className="text-3xl mb-3">{method.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{method.name}</h3>
-                <div className="space-y-2 text-sm">
-                  <p className="text-gray-600">{method.description}</p>
-                  <div className="pt-2 border-t border-gray-100">
-                    <p className="flex justify-between">
-                      <span className="text-gray-500">Cena:</span>
-                      <span className="font-semibold">{method.price}</span>
-                    </p>
-                    {method.freeFrom && (
-                      <p className="flex justify-between">
-                        <span className="text-gray-500">Zdarma od:</span>
-                        <span className="font-semibold text-green-600">{method.freeFrom}</span>
-                      </p>
-                    )}
-                    <p className="flex justify-between">
-                      <span className="text-gray-500">Doba:</span>
-                      <span className="font-semibold">{method.time}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 p-4 bg-green-50 rounded-lg text-center">
-            <p className="text-green-800 font-medium">
-              🎉 Doprava zdarma při objednávce nad 3 000 Kč
-            </p>
-          </div>
-        </section>
-
-        {/* Returns */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            ↩️ Vrácení zboží
-          </h2>
-
-          {/* Important notice */}
-          <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-6 mb-6">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">⚠️</span>
-              <div>
-                <h3 className="font-bold text-amber-800 mb-2">Důležité upozornění k vrácení vlasů</h3>
-                <p className="text-amber-700 mb-3">
-                  Vlasy lze vrátit <strong>pouze v nerozbalené originální folii</strong> - například pokud vám nevyhovuje odstín
-                  a vlasy jste si pouze přiložili k obličeji pro kontrolu barvy, aniž byste je rozbalili.
-                </p>
-                <p className="text-amber-700 mb-3">
-                  <strong>Rozbalené vlasy nelze vrátit</strong> dle § 1837 občanského zákoníku, protože:
-                </p>
-                <ul className="text-amber-700 text-sm space-y-1 ml-4 list-disc">
-                  <li>Po rozbalení z ochranné folie nelze ověřit, zda nedošlo k poškození produktu</li>
-                  <li>Vlasy mohly být česány, zkoušeny, upravovány nebo aplikovány kadeřnicí</li>
-                  <li>Jakákoliv manipulace (rozbalení, česání, barvení, střih, aplikace) znemožňuje další prodej</li>
-                </ul>
-                <p className="text-amber-600 text-sm mt-3 italic">
-                  Toto opatření chrání všechny zákaznice před nákupem již použitého zboží.
-                </p>
-              </div>
+                Napsat o vrácení →
+              </a>
             </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-bold text-gray-900 mb-4 text-lg">
-                  14 dní na vrácení
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Máte právo odstoupit od smlouvy do 14 dnů od převzetí zboží.
-                </p>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    Vlasy musí být <strong>nerozbalené v originální folii</strong>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    Vraťte kompletní balení včetně příslušenství
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    Peníze vrátíme do 14 dnů od obdržení vráceného zboží
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500">✗</span>
-                    <span className="text-gray-600">Rozbalené nebo zkoušené vlasy nelze vrátit</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 mb-4 text-lg">
-                  Jak vrátit zboží
-                </h3>
-                <ol className="space-y-3 text-gray-700">
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-sm font-bold">
-                      1
-                    </span>
-                    <span>Kontaktujte nás na info@muzahair.cz</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-sm font-bold">
-                      2
-                    </span>
-                    <span>Vyplňte formulář pro odstoupení od smlouvy</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-sm font-bold">
-                      3
-                    </span>
-                    <span>Zboží zašlete na naši adresu</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-sm font-bold">
-                      4
-                    </span>
-                    <span>Peníze vrátíme na váš účet</span>
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Complaints */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            🔧 Reklamace
-          </h2>
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
-                  ⏰
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900">Záruční doba 24 měsíců</h3>
-                  <p className="text-gray-600">
-                    Na všechny produkty poskytujeme záruku 24 měsíců od data nákupu.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
-                  📧
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900">Nahlášení reklamace</h3>
-                  <p className="text-gray-600">
-                    Kontaktujte nás na info@muzahair.cz s popisem závady a fotodokumentací.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
-                  ⚡
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900">Rychlé vyřízení</h3>
-                  <p className="text-gray-600">
-                    Reklamace vyřizujeme do 30 dnů. Obvykle však mnohem rychleji.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            ❓ Časté dotazy
-          </h2>
-          <div className="space-y-4">
-            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-              <h3 className="font-bold text-gray-900 mb-2">Mohu změnit způsob platby po odeslání objednávky?</h3>
-              <p className="text-gray-600">
-                Ano, kontaktujte nás co nejdříve a pokusíme se změnu provést, pokud ještě nebyla objednávka zpracována.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-              <h3 className="font-bold text-gray-900 mb-2">Kdy dostanu peníze zpět při vrácení?</h3>
-              <p className="text-gray-600">
-                Peníze vracíme do 14 dnů od přijetí vráceného zboží, stejnou metodou jakou jste platili.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-              <h3 className="font-bold text-gray-900 mb-2">Kdo hradí poštovné při vrácení?</h3>
-              <p className="text-gray-600">
-                Při odstoupení od smlouvy do 14 dnů hradí poštovné zákazník. Při reklamaci hradíme poštovné my.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Links */}
-        <div className="pt-8 border-t border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Související informace:
-          </h3>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/informace/obchodni-podminky"
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
-            >
-              Obchodní podmínky
-            </Link>
-            <Link
-              href="/reklamace"
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
-            >
-              Reklamační řád
-            </Link>
-            <Link
-              href="/sledovani-objednavky"
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
-            >
-              Sledování objednávky
-            </Link>
-            <Link
-              href="/kontakt"
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
-            >
-              Kontakt
-            </Link>
           </div>
         </div>
+      </section>
+
+      {/* Reklamace */}
+      <section className="mb-16">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6 pb-3 border-b border-gray-200">Reklamace</h2>
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          {[
+            { label: 'Záruční doba', value: '24 měsíců', note: 'na výrobní vady nepoužitého zboží' },
+            { label: 'Vyřízení reklamace', value: 'do 30 dní', note: 'od uplatnění, obvykle rychleji' },
+            { label: 'Kontakt', value: 'muzahaircz@gmail.com', note: 'foto + číslo objednávky' },
+          ].map((i) => (
+            <div key={i.label} className="p-5 bg-white border border-gray-200 rounded-xl">
+              <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">{i.label}</p>
+              <p className="font-semibold text-gray-900 mb-1">{i.value}</p>
+              <p className="text-xs text-gray-500">{i.note}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="p-5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-600 space-y-2">
+          <p className="font-medium text-gray-800">Co není vadou zboží:</p>
+          <ul className="space-y-1 text-gray-500">
+            <li>— Přirozená odchylka v odstínu barvy oproti zobrazení na monitoru</li>
+            <li>— Mírná přirozená vlnitost slovanských vlasů</li>
+            <li>— Změna struktury vlivem nesprávné péče nebo chemické úpravy kupujícím</li>
+            <li>— Opotřebení způsobené obvyklým používáním</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Související */}
+      <div className="pt-8 border-t border-gray-200">
+        <p className="text-sm text-gray-500 mb-4">Související stránky</p>
+        <div className="flex flex-wrap gap-3">
+          {[
+            { href: '/obchodni-podminky', label: 'Obchodní podmínky' },
+            { href: '/reklamace', label: 'Reklamační řád' },
+            { href: '/sledovani-objednavky', label: 'Sledování objednávky' },
+            { href: '/kontakt', label: 'Kontakt' },
+          ].map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:border-gray-400 hover:text-gray-900 transition"
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
+
+    </main>
   );
 }
