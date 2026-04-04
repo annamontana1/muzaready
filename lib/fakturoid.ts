@@ -227,14 +227,22 @@ export async function markInvoicePaid(invoiceId: number): Promise<void> {
 /**
  * Send invoice by email
  */
-export async function sendInvoiceByEmail(invoiceId: number): Promise<void> {
+export async function sendInvoiceByEmail(invoiceId: number, email?: string): Promise<void> {
   try {
     await fakturoidFetch(`/invoices/${invoiceId}/deliver.json`, {
       method: 'POST',
+      ...(email ? { body: JSON.stringify({ email }) } : {}),
     });
   } catch (error) {
     console.error('Fakturoid send email error:', error);
   }
+}
+
+export async function updateInvoiceDueDate(invoiceId: number, dueDateIso: string): Promise<void> {
+  await fakturoidFetch(`/invoices/${invoiceId}.json`, {
+    method: 'PATCH',
+    body: JSON.stringify({ due_on: dueDateIso }),
+  });
 }
 
 /**
