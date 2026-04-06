@@ -20,6 +20,7 @@ export async function sendProformaReminder({
   try {
     await resend.emails.send({
       from: 'Mùza Hair <info@mail.muzahair.cz>',
+      replyTo: 'muzahaircz@gmail.com',
       to: customerEmail,
       subject: `Připomínka platby — Proforma ${invoiceNumber}`,
       html: `

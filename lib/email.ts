@@ -114,6 +114,7 @@ export const sendOrderConfirmationEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Potvrzení objednávky #${orderNum}`,
       html,
@@ -185,6 +186,7 @@ export const sendPaymentConfirmationEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Potvrzení platby #${orderNum}`,
       html,
@@ -257,6 +259,7 @@ export const sendShippingNotificationEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Balíček je na cestě #${orderNum}`,
       html,
@@ -359,6 +362,7 @@ export const sendAdminOrderNotificationEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: 'objednavky@mail.muzahair.cz',
       subject: `[ADMIN] Nová objednávka #${orderNum}`,
       html,
@@ -428,6 +432,7 @@ export const sendDeliveryConfirmationEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Balíček doručen #${orderNum}`,
       html,
@@ -484,7 +489,7 @@ export const sendOrderCancellationEmail = async (
 
               <p>Pokud byla platba již provedena, peníze budou vráceny na váš účet do 5-7 pracovních dnů.</p>
 
-              <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>info@muzahair.cz</strong>.</p>
+              <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>muzahaircz@gmail.com</strong>.</p>
 
               <p>Omlouváme se za případné nepříjemnosti.</p>
 
@@ -499,6 +504,7 @@ export const sendOrderCancellationEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Objednávka zrušena #${orderNum}`,
       html,
@@ -559,7 +565,7 @@ export const sendPaymentReminderEmail = async (
                 <a href="https://muzahair.cz/sledovani-objednavky" class="button">Sledovat objednávku</a>
               </p>
 
-              <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>info@muzahair.cz</strong>.</p>
+              <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>muzahaircz@gmail.com</strong>.</p>
 
               <div class="footer">
                 <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
@@ -572,6 +578,7 @@ export const sendPaymentReminderEmail = async (
 
     const result = await resend.emails.send({
       from: 'objednavky@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Připomínka platby #${orderNum}`,
       html,
@@ -640,7 +647,7 @@ export const sendInvoiceEmail = async (
               <ul>
                 <li>Faktura slouží jako daňový doklad</li>
                 <li>Prosím uschovejte si ji pro případné reklamace</li>
-                <li>V případě dotazů nás kontaktujte na info@muzahair.cz</li>
+                <li>V případě dotazů nás kontaktujte na muzahaircz@gmail.com</li>
               </ul>
 
               <p style="margin-top: 30px;">Děkujeme za vaši důvěru a těšíme se na další spolupráci!</p>
@@ -655,7 +662,7 @@ export const sendInvoiceEmail = async (
               <p>
                 <strong>Mùza Hair s.r.o.</strong><br>
                 Revoluční 8, Praha<br>
-                Tel: +420 728 722 880 | Email: info@muzahair.cz<br>
+                Tel: +420 728 722 880 | Email: muzahaircz@gmail.com<br>
                 <a href="https://muzahair.cz" style="color: #3a2020;">www.muzahair.cz</a>
               </p>
             </div>
@@ -666,6 +673,7 @@ export const sendInvoiceEmail = async (
 
     const result = await resend.emails.send({
       from: 'faktury@mail.muzahair.cz',
+      replyTo: 'muzahaircz@gmail.com',
       to: email,
       subject: `Faktura ${invoiceNumber} - Mùza Hair`,
       html,
@@ -785,6 +793,7 @@ export const sendLowStockAlert = async (
 
     const result = await resend.emails.send({
       from: 'Múza Hair <noreply@mail.muzahair.cz>',
+      replyTo: 'muzahaircz@gmail.com',
       to: [adminEmail],
       subject: `⚠️ UPOZORNĚNÍ: ${lowStockItems.length} produktů s nízkými zásobami`,
       html,

@@ -232,7 +232,7 @@ export function generateNearMeSchema(userLocation?: { lat: number; lng: number }
     },
     hasMap: 'https://goo.gl/maps/muzahair',
     telephone: '+420728722880',
-    email: 'info@muzahair.cz',
+    email: 'muzahaircz@gmail.com',
     url: 'https://muzahair.cz',
     priceRange: '$$',
     currenciesAccepted: 'CZK, EUR',
