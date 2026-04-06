@@ -372,6 +372,7 @@ export default function Header() {
                   },
                   {
                     label: 'Metody zakončení',
+                    href: '/metody-zakonceni',
                     open: metodySubmenuOpen,
                     toggle: () => setMetodySubmenuOpen(!metodySubmenuOpen),
                     items: [
@@ -394,21 +395,34 @@ export default function Header() {
                       { href: '/informace/faq', label: 'FAQ' },
                     ],
                   },
-                ].map(({ label, open, toggle, items }) => (
+                ].map(({ label, href: sectionHref, open, toggle, items }) => (
                   <div key={label} className="border-b border-beige/50">
-                    <button
-                      onClick={toggle}
-                      className="w-full flex items-center justify-between py-3 text-[13px] font-light"
-                      style={{ color: 'var(--text-mid)' }}
-                    >
-                      <span>{label}</span>
-                      <svg
-                        className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`}
-                        fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"
+                    <div className="flex items-center justify-between py-3">
+                      {sectionHref ? (
+                        <Link
+                          href={sectionHref}
+                          className="text-[13px] font-light flex-1"
+                          style={{ color: 'var(--text-mid)' }}
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {label}
+                        </Link>
+                      ) : (
+                        <span className="text-[13px] font-light flex-1" style={{ color: 'var(--text-mid)' }}>{label}</span>
+                      )}
+                      <button
+                        onClick={toggle}
+                        className="p-1"
+                        style={{ color: 'var(--text-mid)' }}
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
+                        <svg
+                          className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`}
+                          fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
                     {open && (
                       <div className="pb-3 pl-4 space-y-2">
                         {items.map(({ href, label: l }) => (
