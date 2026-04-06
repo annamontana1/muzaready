@@ -77,9 +77,12 @@ export default function KeratinPage() {
           <div className="bg-burgundy/5 p-6 rounded-lg border border-burgundy/20">
             <h2 className="text-2xl font-playfair text-burgundy mb-3">Orientační cena aplikace</h2>
             <p className="text-2xl font-bold text-burgundy mb-2">2 500 – 6 000 Kč</p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 mb-4">
               Cena závisí na délce vlasů, množství pramínků a salonu. Cena neobsahuje vlasy.
             </p>
+            <Link href="/ceny-aplikaci" className="inline-block px-6 py-3 bg-burgundy text-white text-sm font-medium rounded-xl hover:opacity-90 transition">
+              Ceník aplikace keratinu →
+            </Link>
           </div>
 
           {/* Údržba */}
