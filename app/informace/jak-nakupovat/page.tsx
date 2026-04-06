@@ -25,7 +25,7 @@ const steps = [
     title: 'Zvolte délku a odstín',
     description: 'Délka se měří od temene k zakončení pramínku.',
     details: [
-      'Délky: 40 cm / 50 cm / 60 cm / 70 cm / 80 cm',
+      'Délky od 35 cm do 80 cm po 5 cm krocích (35 / 40 / 45 / 50 / 55 / 60 / 65 / 70 / 75 / 80 cm)',
       'Odstíny 1–10 (1 = černá, 10 = světlá blond)',
       'Nejste si jistá? Pošlete fotku na WhatsApp nebo navštivte showroom',
       'Doporučujeme zvolit o půl odstínu světlejší než vaše vlastní vlasy',
@@ -34,24 +34,26 @@ const steps = [
   {
     number: '3',
     title: 'Nastavte gramáž',
-    description: 'Gramáž určuje hustotu a výsledný efekt prodloužení.',
+    description: 'Gramáž určuje hustotu a výsledný efekt prodloužení. Lze objednat od 50 g po 10 g krocích.',
     details: [
       '100 g — lehké zhušťění, jemný efekt',
       '150 g — střední hustota, přirozený look',
       '200 g — plný objem, výrazné prodloužení',
       '250 g a více — maximální hustota, dramatický efekt',
+      'Přesnou gramáž nastavíte v konfigurátoru (po 10 g krocích)',
     ],
   },
   {
     number: '4',
     title: 'Vyberte zakončení',
-    description: 'Zakončení určuje, jakou metodou budou vlasy aplikovány.',
+    description: 'Vyrábíme vlasy na všechny níže uvedené metody. Cena výroby se počítá podle gramáže a nakonfiguruje se přímo v košíku.',
     details: [
-      'Bez zakončení — pro clip-in nebo vlastní úpravu',
-      'Mikrokeratin / Standart keratin — klasické keratinové bondy',
-      'Pásky keratinu — tenké ploché pramínky',
-      'Weft (vlasové tresy) — šitý pás vlasů pro hollywoodské prodloužení',
-      'Tapes / Nano tapes — oboustranná lepicí páska, rychlá aplikace',
+      'Bez zakončení — surové vlasy, vhodné pro clip-in nebo vlastní úpravu',
+      'Mikrokeratin — klasické keratinové bondy, cena dle gramáže',
+      'Standart keratin — standardní keratinové bondy, cena dle gramáže',
+      'Pásky keratinu — tenké ploché pramínky, cena dle gramáže',
+      'Weft (vlasové tresy) — šitý pás vlasů pro hollywoodské prodloužení, cena dle gramáže',
+      'Tapes / Nano tapes — oboustranná lepicí páska, rychlá aplikace, cena dle gramáže',
     ],
   },
   {
@@ -136,6 +138,19 @@ export default function JakNakupovatPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Upozornění — zpracované vlasy nelze vrátit */}
+        <div className="bg-white border border-amber-200 rounded-xl p-5 mb-10 text-sm text-amber-800">
+          <p className="font-semibold text-gray-900 mb-1">Důležité — vlasy zpracované na metodu nelze vrátit</p>
+          <p className="leading-relaxed">
+            Vlasy objednané <strong>s konkrétním zakončením</strong> (mikrokeratin, keratin, pásky, weft, tapes) jsou vyráběny na zakázku podle vašich parametrů.
+            Na toto zboží se <strong>nevztahuje právo na odstoupení od smlouvy</strong> do 14 dní dle § 1837 písm. d) občanského zákoníku.
+            Vrátit lze pouze vlasy <strong>bez zakončení</strong> v původním, neporušeném stavu.{' '}
+            <Link href="/informace/obchodni-podminky" className="underline hover:text-amber-900">
+              Více v obchodních podmínkách
+            </Link>.
+          </p>
         </div>
 
         {/* Tips */}
