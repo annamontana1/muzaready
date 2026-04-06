@@ -141,9 +141,9 @@ export default function Header() {
 
               {/* Metody zakončení */}
               <div className="relative group">
-                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <Link href="/metody-zakonceni" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
                   Metody {chevronDown}
-                </button>
+                </Link>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
                   {dropdownItem('/metody-zakonceni/vlasy-na-keratin', 'Keratin / Mikrokeratin')}
                   {dropdownItem('/metody-zakonceni/vlasove-pasky-tape-in', 'Vlasové pásky Tape-In')}
