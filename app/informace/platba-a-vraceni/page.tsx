@@ -168,17 +168,25 @@ export default function PlatbaAVraceniPage() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Jak vrátit zboží</h3>
               <ol className="space-y-4 text-sm text-gray-700">
-                {[
+                {([
                   'Napište na muzahaircz@gmail.com — uveďte číslo objednávky a důvod vrácení.',
-                  'Vyplňte formulář pro odstoupení od smlouvy (zašleme e-mailem).',
+                  null,
                   'Zboží zašlete doporučeně na adresu: Šrámkova 430/12, 638 00 Brno. Nezasílejte na dobírku.',
                   'Po obdržení zboží vrátíme peníze na bankovní účet do 14 dnů.',
-                ].map((s, i) => (
+                ] as (string | null)[]).map((s, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-ivory border border-burgundy/20 text-burgundy rounded-full flex items-center justify-center text-xs font-bold">
                       {i + 1}
                     </span>
-                    <span>{s}</span>
+                    <span>
+                      {i === 1 ? (
+                        <>Stáhněte, vyplňte a vytiskněte{' '}
+                          <Link href="/informace/odstoupeni-od-smlouvy" className="text-burgundy underline hover:opacity-80">
+                            formulář pro odstoupení od smlouvy
+                          </Link>
+                          {' '}a přiložte ho do balíku.</>
+                      ) : s}
+                    </span>
                   </li>
                 ))}
               </ol>
@@ -227,6 +235,7 @@ export default function PlatbaAVraceniPage() {
           <p className="text-sm text-gray-400 mb-4">Související stránky</p>
           <div className="flex flex-wrap gap-3">
             {[
+              { href: '/informace/odstoupeni-od-smlouvy', label: 'Formulář odstoupení od smlouvy' },
               { href: '/obchodni-podminky', label: 'Obchodní podmínky' },
               { href: '/reklamace', label: 'Reklamační řád' },
               { href: '/sledovani-objednavky', label: 'Sledování objednávky' },

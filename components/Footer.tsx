@@ -148,6 +148,7 @@ export default function Footer() {
               { href: '/informace/jak-nakupovat', label: 'Jak nakupovat' },
               { href: '/informace/odeslani-a-stav-objednavky', label: 'Doprava a platba' },
               { href: '/informace/platba-a-vraceni', label: 'Vracení a výměna' },
+              { href: '/informace/odstoupeni-od-smlouvy', label: 'Odstoupení od smlouvy' },
               { href: '/informace/faq', label: 'FAQ' },
               { href: '/informace/obchodni-podminky', label: 'Obchodní podmínky' },
             ].map(({ href, label }) => (

@@ -45,6 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/informace/jak-nakupovat`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/informace/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/informace/platba-a-vraceni`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/informace/odstoupeni-od-smlouvy`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
     { url: `${baseUrl}/informace/nas-pribeh`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
 
     // Blog
