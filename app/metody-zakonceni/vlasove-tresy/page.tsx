@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import WeftInfoBanner from '@/components/WeftInfoBanner';
 
 export const metadata: Metadata = {
   title: 'Vlasové tresy (Weft) | Ručně šité i strojové | Múza Hair Praha',
@@ -88,6 +89,8 @@ export default function VlasoveTresyPage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Vlasové tresy (Weft)
           </h1>
+
+          <WeftInfoBanner />
 
           {/* TL;DR */}
           <div className="bg-ivory border-l-4 border-burgundy p-6 rounded-xl mb-10">

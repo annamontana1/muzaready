@@ -23,11 +23,11 @@ export default function MetodyZakonceniPage() {
       highlights: ['Sendvičový spoj — neviditelné', 'Kudrnaté pásky k dispozici', 'Výroba ze zákazničina copu']
     },
     {
-      title: 'Vlasové tresy',
-      description: 'Tradiční metoda bez chemie a tepla. Ideální pro afro a kudrnaté vlasy.',
+      title: 'Vlasové tresy (Weft)',
+      description: 'Přišívají se na copánky bez chemie a tepla. Vyrábíme na zakázku z jakýchkoliv vlasů — 14 pracovních dní. Cena dle gramáže v konfigurátoru.',
       href: '/metody-zakonceni/vlasove-tresy',
       icon: '🧵',
-      highlights: ['100% přírodní metoda', 'Bez chemie a tepla', 'Pro afro vlasy']
+      highlights: ['Výroba z vašeho culíku', 'Bez chemie a tepla', 'Výroba 14 dní']
     },
   ];
 
