@@ -102,7 +102,6 @@ export default function VelkoobchodPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             <div className="bg-ivory p-6 rounded-xl border border-warm-beige">
-              <div className="text-3xl md:text-4xl mb-4">🏭</div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Vlastní barvírna v ČR
               </h3>
@@ -112,7 +111,6 @@ export default function VelkoobchodPage() {
             </div>
 
             <div className="bg-ivory p-6 rounded-xl border border-warm-beige">
-              <div className="text-3xl md:text-4xl mb-4">💎</div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Široké spektrum produktů
               </h3>
@@ -122,7 +120,6 @@ export default function VelkoobchodPage() {
             </div>
 
             <div className="bg-ivory p-6 rounded-xl border border-warm-beige">
-              <div className="text-3xl md:text-4xl mb-4">⚙️</div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Konfigurace na míru
               </h3>
@@ -132,7 +129,6 @@ export default function VelkoobchodPage() {
             </div>
 
             <div className="bg-ivory p-6 rounded-xl border border-warm-beige">
-              <div className="text-3xl md:text-4xl mb-4">🚚</div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Rychlá logistika
               </h3>
@@ -142,17 +138,15 @@ export default function VelkoobchodPage() {
             </div>
 
             <div className="bg-ivory p-6 rounded-xl border border-warm-beige">
-              <div className="text-3xl md:text-4xl mb-4">💰</div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Velkoobchodní ceny
               </h3>
               <p className="text-sm md:text-base text-gray-700">
-                Sleva 10% po schválení B2B účtu
+                Individuální slevové podmínky po schválení B2B účtu
               </p>
             </div>
 
             <div className="bg-ivory p-6 rounded-xl border border-warm-beige">
-              <div className="text-3xl md:text-4xl mb-4">🤝</div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Podpora a poradenství
               </h3>
@@ -198,7 +192,7 @@ export default function VelkoobchodPage() {
               </div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">Nákup za B2B ceny</h3>
               <p className="text-sm md:text-base text-gray-700">
-                Po přihlášení vidíte velkoobchodní ceny se slevou 10%
+                Po přihlášení vidíte velkoobchodní ceny
               </p>
             </div>
 
@@ -309,8 +303,8 @@ export default function VelkoobchodPage() {
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
               <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
-                Aktuálně poskytujeme slevu 10% z běžných cen. U velkých odběrů nebo pravidelné
-                spolupráce je možné dohodnout individuální podmínky.
+                Výše slevy je individuální a závisí na objemu odběru a podmínkách spolupráce.
+                Kontaktujte nás pro konkrétní nabídku.
               </p>
             </details>
 
@@ -344,7 +338,7 @@ export default function VelkoobchodPage() {
               </summary>
               <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
                 Platinum Edition má často specifické požadavky. Přidejte produkt do košíku a odešlete
-                poptávku, nebo nás kontaktujte přímo na info@muzahair.cz s detaily vašich požadavků.
+                poptávku, nebo nás kontaktujte přímo na muzahaircz@gmail.com s detaily vašich požadavků.
               </p>
             </details>
           </div>
@@ -363,15 +357,15 @@ export default function VelkoobchodPage() {
             <div className="grid sm:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
               <div>
                 <div className="text-xs md:text-sm opacity-75 mb-1">E-mail</div>
-                <a href="mailto:info@muzahair.cz" className="text-lg md:text-xl hover:underline">
-                  info@muzahair.cz
+                <a href="mailto:muzahaircz@gmail.com" className="text-lg md:text-xl hover:underline">
+                  muzahaircz@gmail.com
                 </a>
               </div>
 
               <div>
                 <div className="text-xs md:text-sm opacity-75 mb-1">Telefon</div>
-                <a href="tel:+420123456789" className="text-lg md:text-xl hover:underline">
-                  +420 123 456 789
+                <a href="tel:+420728722880" className="text-lg md:text-xl hover:underline">
+                  +420 728 722 880
                 </a>
               </div>
             </div>
