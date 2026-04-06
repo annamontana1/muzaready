@@ -13,7 +13,7 @@ export default function PriceskyAParukyPage() {
         <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-6">
           Příčesky a paruky
         </h1>
-        <p className="text-lg text-gray-700 mb-12 max-w-3xl">
+        <p className="text-lg text-text-mid mb-12 max-w-3xl">
           Objevte naši kolekci příčesků a paruk. Clip-in ofiny, culíky, příčešky na temeno i paruky na míru.
         </p>
 
@@ -31,7 +31,7 @@ export default function PriceskyAParukyPage() {
             >
               <div className="text-4xl mb-4">{item.icon}</div>
               <h3 className="text-2xl font-playfair text-burgundy mb-3">{item.title}</h3>
-              <p className="text-gray-700 mb-4">{item.desc}</p>
+              <p className="text-text-mid mb-4">{item.desc}</p>
               <span className="text-burgundy font-medium group-hover:underline">
                 Zobrazit produkty →
               </span>

@@ -90,11 +90,11 @@ export function Modal({
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-warm-beige">
             {title && (
               <h2
                 id="modal-title"
-                className="text-xl font-semibold text-gray-900"
+                className="text-xl font-semibold text-text-dark"
               >
                 {title}
               </h2>
@@ -103,7 +103,7 @@ export function Modal({
               <button
                 type="button"
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors ml-auto"
+                className="text-text-soft hover:text-text-mid transition-colors ml-auto"
                 aria-label="Zavřít"
               >
                 <svg

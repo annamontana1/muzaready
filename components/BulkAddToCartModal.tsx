@@ -97,9 +97,9 @@ export default function BulkAddToCartModal({
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <h2 className="text-xl font-bold text-gray-900 mb-1">Přidat do košíku</h2>
-        <p className="text-sm text-gray-600 mb-1">{productName}</p>
-        <p className="text-xs text-gray-500 mb-4">
+        <h2 className="text-xl font-bold text-text-dark mb-1">Přidat do košíku</h2>
+        <p className="text-sm text-text-mid mb-1">{productName}</p>
+        <p className="text-xs text-text-soft mb-4">
           {lengthCm} cm · {shadeName} (#{shade}) · {structure}
         </p>
 
@@ -112,14 +112,14 @@ export default function BulkAddToCartModal({
 
         {/* Grams selector */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-text-mid mb-2">
             Gramáž
           </label>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setGrams(Math.max(50, grams - 10))}
               disabled={grams <= 50 || isAdding}
-              className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="px-3 py-2 border border-warm-beige rounded-lg hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               −
             </button>
@@ -131,30 +131,30 @@ export default function BulkAddToCartModal({
                 setGrams(Math.max(50, Math.min(300, val)));
               }}
               disabled={isAdding}
-              className="w-20 text-center border border-gray-300 rounded-lg py-2 focus:outline-none focus:ring-2 focus:ring-burgundy disabled:opacity-50"
+              className="w-20 text-center border border-warm-beige rounded-lg py-2 focus:outline-none focus:ring-2 focus:ring-burgundy disabled:opacity-50"
               min="50"
               max="300"
               step="10"
             />
-            <span className="text-sm text-gray-600">g</span>
+            <span className="text-sm text-text-mid">g</span>
             <button
               onClick={() => setGrams(Math.min(300, grams + 10))}
               disabled={grams >= 300 || isAdding}
-              className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="px-3 py-2 border border-warm-beige rounded-lg hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               +
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-1">Rozsah: 50-300 g (kroky po 10 g)</p>
+          <p className="text-xs text-text-soft mt-1">Rozsah: 50-300 g (kroky po 10 g)</p>
         </div>
 
         {/* Ending selector */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-text-mid mb-2">
             Zakončení
           </label>
           <div className="space-y-2">
-            <label className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-ivory transition">
+            <label className="flex items-center gap-2 p-3 border border-warm-beige rounded-lg cursor-pointer hover:bg-ivory transition">
               <input
                 type="radio"
                 name="ending"
@@ -165,13 +165,13 @@ export default function BulkAddToCartModal({
                 className="text-burgundy focus:ring-burgundy"
               />
               <div className="flex-1">
-                <div className="font-medium text-gray-900">Surový cop</div>
-                <div className="text-xs text-gray-500">Bez zpracování</div>
+                <div className="font-medium text-text-dark">Surový cop</div>
+                <div className="text-xs text-text-soft">Bez zpracování</div>
               </div>
-              <div className="text-sm font-semibold text-gray-700">+0 Kč</div>
+              <div className="text-sm font-semibold text-text-mid">+0 Kč</div>
             </label>
 
-            <label className="flex items-center gap-2 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-ivory transition">
+            <label className="flex items-center gap-2 p-3 border border-warm-beige rounded-lg cursor-pointer hover:bg-ivory transition">
               <input
                 type="radio"
                 name="ending"
@@ -182,10 +182,10 @@ export default function BulkAddToCartModal({
                 className="text-burgundy focus:ring-burgundy"
               />
               <div className="flex-1">
-                <div className="font-medium text-gray-900">Keratinové kapky</div>
-                <div className="text-xs text-gray-500">5 Kč/gram</div>
+                <div className="font-medium text-text-dark">Keratinové kapky</div>
+                <div className="text-xs text-text-soft">5 Kč/gram</div>
               </div>
-              <div className="text-sm font-semibold text-gray-700">
+              <div className="text-sm font-semibold text-text-mid">
                 +{(assemblyFees.KERATIN.fee * grams).toFixed(0)} Kč
               </div>
             </label>
@@ -193,23 +193,23 @@ export default function BulkAddToCartModal({
         </div>
 
         {/* Price breakdown */}
-        <div className="mb-6 p-4 bg-ivory rounded-lg border border-gray-200">
+        <div className="mb-6 p-4 bg-ivory rounded-lg border border-warm-beige">
           <div className="flex justify-between mb-2">
-            <span className="text-gray-600">Vlasy:</span>
-            <span className="font-medium text-gray-900">
+            <span className="text-text-mid">Vlasy:</span>
+            <span className="font-medium text-text-dark">
               {grams} g × {pricePerGramCzk}/g = {lineTotal.toFixed(0)} Kč
             </span>
           </div>
           {assemblyFeeTotal > 0 && (
             <div className="flex justify-between mb-2">
-              <span className="text-gray-600">Montáž:</span>
-              <span className="font-medium text-gray-900">
+              <span className="text-text-mid">Montáž:</span>
+              <span className="font-medium text-text-dark">
                 +{assemblyFeeTotal.toFixed(0)} Kč
               </span>
             </div>
           )}
-          <div className="flex justify-between pt-2 border-t border-gray-300">
-            <span className="font-semibold text-gray-900">Celkem:</span>
+          <div className="flex justify-between pt-2 border-t border-warm-beige">
+            <span className="font-semibold text-text-dark">Celkem:</span>
             <span className="text-lg font-bold text-burgundy">
               {lineGrandTotal.toFixed(0)} Kč
             </span>
@@ -221,7 +221,7 @@ export default function BulkAddToCartModal({
           <button
             onClick={onClose}
             disabled={isAdding}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="flex-1 px-4 py-3 border border-warm-beige rounded-lg text-text-mid font-medium hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Zrušit
           </button>

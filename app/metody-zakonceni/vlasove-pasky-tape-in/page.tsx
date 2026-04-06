@@ -144,7 +144,7 @@ export default function TapeInPage() {
         <div className="container mx-auto px-4 max-w-4xl">
 
           {/* Breadcrumb */}
-          <div className="text-sm text-gray-500 mb-6">
+          <div className="text-sm text-text-soft mb-6">
             <Link href="/" className="hover:text-burgundy">Domů</Link>
             {' / '}
             <Link href="/metody-zakonceni" className="hover:text-burgundy">Metody zakončení</Link>
@@ -160,12 +160,12 @@ export default function TapeInPage() {
           {/* TL;DR blok */}
           <div className="bg-white border-l-4 border-burgundy rounded-xl p-6 mb-10 shadow-sm">
             <p className="text-sm font-semibold text-burgundy uppercase tracking-wide mb-2">Stručně</p>
-            <p className="text-gray-800 leading-relaxed">
+            <p className="text-text-dark leading-relaxed">
               Múza Hair Praha nabízí vlasové pásky tape-in z pravých slovanských vlasů — Standard, Luxe a Platinum, nebarvené i barvené v naší vlastní pražské barvírně. Pásky jsou dostupné v délkách 30–95 cm ve čtyřech strukturách: rovné, mírně vlnité, vlnité a <strong>kudrnaté</strong> — unikát na českém trhu. Výroba na zakázku trvá 14 dní, skladové varianty odesíláme ihned. Osobní výběr v showroomu Praha zdarma.
             </p>
           </div>
 
-          <div className="space-y-12 text-gray-700">
+          <div className="space-y-12 text-text-mid">
 
             {/* Jak to funguje */}
             <section>
@@ -185,7 +185,7 @@ export default function TapeInPage() {
                   <div key={i.title} className="bg-white rounded-xl p-5 text-center shadow-sm">
                     <div className="text-3xl mb-2">{i.icon}</div>
                     <div className="font-semibold text-burgundy mb-1">{i.title}</div>
-                    <div className="text-sm text-gray-600">{i.text}</div>
+                    <div className="text-sm text-text-mid">{i.text}</div>
                   </div>
                 ))}
               </div>
@@ -210,14 +210,14 @@ export default function TapeInPage() {
                 ].map((s) => (
                   <div
                     key={s.struktura}
-                    className={`rounded-xl p-5 border ${s.highlight ? 'bg-burgundy/5 border-burgundy' : 'bg-white border-gray-200'} shadow-sm`}
+                    className={`rounded-xl p-5 border ${s.highlight ? 'bg-burgundy/5 border-burgundy' : 'bg-white border-warm-beige'} shadow-sm`}
                   >
-                    <div className={`font-semibold mb-1 ${s.highlight ? 'text-burgundy' : 'text-gray-900'}`}>{s.struktura}</div>
-                    <div className="text-sm text-gray-700">{s.popis}</div>
+                    <div className={`font-semibold mb-1 ${s.highlight ? 'text-burgundy' : 'text-text-dark'}`}>{s.struktura}</div>
+                    <div className="text-sm text-text-mid">{s.popis}</div>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-sm text-gray-600 italic">
+              <p className="mt-4 text-sm text-text-mid italic">
                 Kudrnaté tape-in vlasy hledáte dlouho bez úspěchu? Napište nám — pomůžeme vám vybrat správnou strukturu a kolekci.
               </p>
             </section>
@@ -225,22 +225,22 @@ export default function TapeInPage() {
             {/* Kolekce */}
             <section>
               <h2 className="text-3xl font-playfair text-burgundy mb-2">6 kolekcí vlasových pásek — nebarvené i barvené</h2>
-              <p className="mb-6 text-gray-600">
+              <p className="mb-6 text-text-mid">
                 Zákaznice si nejprve vybere kolekci vlasů, poté zakončení — vlasové pásky tape-in. Každý culík pochází od jednoho dárce a je ručně tříděn naším týmem v Praze. Vlasy od různých dárkyň nikdy nemícháme.
               </p>
               <div className="space-y-4">
                 {KOLEKCE.map((k) => (
                   <div key={k.nazev} className={`rounded-xl p-6 border ${k.color}`}>
                     <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
-                      <h3 className="font-semibold text-gray-900 text-lg">{k.nazev}</h3>
-                      <span className="text-xs bg-white px-3 py-1 rounded-full border border-gray-200 text-gray-600">{k.tag}</span>
+                      <h3 className="font-semibold text-text-dark text-lg">{k.nazev}</h3>
+                      <span className="text-xs bg-white px-3 py-1 rounded-full border border-warm-beige text-text-mid">{k.tag}</span>
                     </div>
-                    <p className="text-sm text-gray-700 mb-2">{k.popis}</p>
-                    <p className="text-xs text-gray-500"><strong>Pro koho:</strong> {k.pro}</p>
+                    <p className="text-sm text-text-mid mb-2">{k.popis}</p>
+                    <p className="text-xs text-text-soft"><strong>Pro koho:</strong> {k.pro}</p>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-sm text-gray-500 italic">Baby Shades kolekce — popis bude doplněn. Dostupná ve vybraných délkách a strukturách.</p>
+              <p className="mt-4 text-sm text-text-soft italic">Baby Shades kolekce — popis bude doplněn. Dostupná ve vybraných délkách a strukturách.</p>
             </section>
 
             {/* Gramáže */}
@@ -260,16 +260,16 @@ export default function TapeInPage() {
                   </thead>
                   <tbody>
                     {GRAMAZE.map((r, i) => (
-                      <tr key={r.delka} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr key={r.delka} className={i % 2 === 0 ? 'bg-white' : 'bg-soft-cream'}>
                         <td className="px-4 py-3 font-medium">{r.delka} cm</td>
                         <td className="px-4 py-3">{r.gramaz} g</td>
-                        <td className="px-4 py-3 text-gray-500">10</td>
+                        <td className="px-4 py-3 text-text-soft">10</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="text-xs text-gray-500 mt-2">Gramáže jsou přibližné. Přesná gramáž může mírně kolísat v závislosti na kolekci a struktuře vlasů.</p>
+              <p className="text-xs text-text-soft mt-2">Gramáže jsou přibližné. Přesná gramáž může mírně kolísat v závislosti na kolekci a struktuře vlasů.</p>
             </section>
 
             {/* Kolik balení */}
@@ -288,7 +288,7 @@ export default function TapeInPage() {
                   </thead>
                   <tbody>
                     {BALENI.map((r, i) => (
-                      <tr key={r.typ} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr key={r.typ} className={i % 2 === 0 ? 'bg-white' : 'bg-soft-cream'}>
                         <td className="px-4 py-3 font-medium">{r.typ}</td>
                         <td className="px-4 py-3 text-center">{r.kratke} bal.</td>
                         <td className="px-4 py-3 text-center">{r.stredni} bal.</td>
@@ -298,7 +298,7 @@ export default function TapeInPage() {
                   </tbody>
                 </table>
               </div>
-              <p className="text-xs text-gray-500 mt-2">Orientační hodnoty. Přesný počet doporučíme při osobní konzultaci v showroomu Praha.</p>
+              <p className="text-xs text-text-soft mt-2">Orientační hodnoty. Přesný počet doporučíme při osobní konzultaci v showroomu Praha.</p>
             </section>
 
             {/* Výroba na zakázku */}
@@ -336,7 +336,7 @@ export default function TapeInPage() {
                   <div key={o.title} className="bg-white rounded-xl p-5 shadow-sm text-center">
                     <div className="text-3xl mb-3">{o.icon}</div>
                     <div className="font-semibold text-burgundy mb-2">{o.title}</div>
-                    <div className="text-sm text-gray-600">{o.text}</div>
+                    <div className="text-sm text-text-mid">{o.text}</div>
                   </div>
                 ))}
               </div>
@@ -347,9 +347,9 @@ export default function TapeInPage() {
               <h2 className="text-3xl font-playfair text-burgundy mb-6">Časté otázky — vlasové pásky tape-in</h2>
               <div className="space-y-5">
                 {faqs.map((faq) => (
-                  <div key={faq.q} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                    <h3 className="font-semibold text-gray-900 mb-2">{faq.q}</h3>
-                    <p className="text-gray-700 text-sm leading-relaxed">{faq.a}</p>
+                  <div key={faq.q} className="bg-white rounded-xl p-6 shadow-sm border border-warm-beige">
+                    <h3 className="font-semibold text-text-dark mb-2">{faq.q}</h3>
+                    <p className="text-text-mid text-sm leading-relaxed">{faq.a}</p>
                   </div>
                 ))}
               </div>
@@ -362,10 +362,10 @@ export default function TapeInPage() {
             <Link href="/ceny-aplikaci#nanotapes" className="inline-block px-6 py-3 bg-burgundy text-white text-sm font-medium rounded-xl hover:opacity-90 transition mb-6">
               Ceník aplikace nanotapes →
             </Link>
-            <p className="text-sm text-gray-500 mb-4">Vlasové pásky nanotapes dodáváme do celé ČR:</p>
+            <p className="text-sm text-text-soft mb-4">Vlasové pásky nanotapes dodáváme do celé ČR:</p>
             <div className="flex flex-wrap justify-center gap-2">
               {['brno','ostrava','plzen','olomouc','hradec-kralove','pardubice','ceske-budejovice','liberec'].map((slug) => (
-                <Link key={slug} href={`/vlasy/${slug}`} className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-burgundy hover:text-burgundy transition capitalize">
+                <Link key={slug} href={`/vlasy/${slug}`} className="px-3 py-1.5 bg-soft-cream border border-warm-beige rounded-lg text-xs text-text-mid hover:border-burgundy hover:text-burgundy transition capitalize">
                   {slug.replace(/-/g,' ')}
                 </Link>
               ))}

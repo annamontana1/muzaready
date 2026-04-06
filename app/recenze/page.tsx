@@ -12,7 +12,7 @@ export default function RecenzePage() {
         <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-6">
           Recenze zákazníků
         </h1>
-        <p className="text-lg text-gray-700 mb-12 max-w-3xl">
+        <p className="text-lg text-text-mid mb-12 max-w-3xl">
           Přečtěte si recenze našich spokojených zákazníků. Jejich reálné zkušenosti
           s našimi produkty a službami.
         </p>
@@ -24,7 +24,7 @@ export default function RecenzePage() {
             <div className="flex items-center gap-1 mb-3 text-burgundy">
               {'★'.repeat(5)}
             </div>
-            <p className="text-gray-700 mb-4 italic">
+            <p className="text-text-mid mb-4 italic">
               &ldquo;LUXE kvalita je naprosto skvělá! Vlasy vypadají úžasně přirozeně
               a jsou neuvěřitelně hebké. Určitě budu objednávat znovu.&rdquo;
             </p>
@@ -38,7 +38,7 @@ export default function RecenzePage() {
             <div className="flex items-center gap-1 mb-3 text-burgundy">
               {'★'.repeat(5)}
             </div>
-            <p className="text-gray-700 mb-4 italic">
+            <p className="text-text-mid mb-4 italic">
               &ldquo;Objednala jsem si Platinum edition a jsem nadšená! Kvalita je
               perfektní, vlasy vydrží dlouho a stále vypadají skvěle.&rdquo;
             </p>
@@ -52,7 +52,7 @@ export default function RecenzePage() {
             <div className="flex items-center gap-1 mb-3 text-burgundy">
               {'★'.repeat(5)}
             </div>
-            <p className="text-gray-700 mb-4 italic">
+            <p className="text-text-mid mb-4 italic">
               &ldquo;Skvělý poměr ceny a kvality! Standard kvalita je úplně dostačující
               a vlasy vypadají krásně. Rychlé doručení, profesionální přístup.&rdquo;
             </p>
@@ -66,19 +66,19 @@ export default function RecenzePage() {
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
             <div className="text-4xl font-playfair text-burgundy mb-2">4.9</div>
-            <div className="text-sm text-gray-600">Průměrné hodnocení</div>
+            <div className="text-sm text-text-mid">Průměrné hodnocení</div>
           </div>
           <div>
             <div className="text-4xl font-playfair text-burgundy mb-2">500+</div>
-            <div className="text-sm text-gray-600">Spokojených zákaznic</div>
+            <div className="text-sm text-text-mid">Spokojených zákaznic</div>
           </div>
           <div>
             <div className="text-4xl font-playfair text-burgundy mb-2">98%</div>
-            <div className="text-sm text-gray-600">Míra spokojenosti</div>
+            <div className="text-sm text-text-mid">Míra spokojenosti</div>
           </div>
           <div>
             <div className="text-4xl font-playfair text-burgundy mb-2">8+</div>
-            <div className="text-sm text-gray-600">Let na trhu</div>
+            <div className="text-sm text-text-mid">Let na trhu</div>
           </div>
         </div>
       </div>

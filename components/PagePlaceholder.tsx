@@ -12,11 +12,11 @@ export default function PagePlaceholder({ title, description, icon = '🚧' }: P
         <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-6">
           {title}
         </h1>
-        <p className="text-lg text-gray-700 mb-8">
+        <p className="text-lg text-text-mid mb-8">
           {description}
         </p>
         <div className="p-6 bg-ivory rounded-lg">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-mid">
             Tato stránka je ve vývoji. Brzy zde najdete kompletní informace a produkty.
           </p>
         </div>

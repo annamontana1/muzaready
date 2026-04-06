@@ -41,16 +41,16 @@ export default function DevelopmentModal() {
 
         {/* Content */}
         <div className="p-6 sm:p-8 text-center">
-          <p className="text-lg text-gray-700 mb-4">
+          <p className="text-lg text-text-mid mb-4">
             Připravujeme pro vás <strong>nový e-shop</strong> s pravými vlasy nejvyšší kvality.
           </p>
 
-          <p className="text-gray-600 mb-6">
+          <p className="text-text-mid mb-6">
             Některé funkce zatím nemusí fungovat správně. Děkujeme za trpělivost a pochopení.
           </p>
 
           <div className="bg-ivory rounded-lg p-4 mb-6">
-            <p className="text-sm text-gray-600 mb-2">Máte dotaz? Kontaktujte nás:</p>
+            <p className="text-sm text-text-mid mb-2">Máte dotaz? Kontaktujte nás:</p>
             <a
               href="https://wa.me/420728722880"
               target="_blank"

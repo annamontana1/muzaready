@@ -226,12 +226,12 @@ export default function NebarvenePanenskePage() {
             <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setActiveModal(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+                className="absolute top-4 right-4 text-text-soft hover:text-burgundy text-2xl"
               >
                 ×
               </button>
               <h2 className="text-3xl font-playfair text-burgundy mb-4">Standard</h2>
-              <div className="space-y-4 text-gray-700">
+              <div className="space-y-4 text-text-mid">
                 <p className="text-sm">
                   Výběrové východoevropské panenské vlasy z výkupu z jedné hlavy. <strong>Původ:</strong> Indie,
                   Kambodža, Uzbekistán. Přirozeně pevnější a odolné, skvěle drží tvar účesu a přidají objem.
@@ -256,12 +256,12 @@ export default function NebarvenePanenskePage() {
             <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setActiveModal(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+                className="absolute top-4 right-4 text-text-soft hover:text-burgundy text-2xl"
               >
                 ×
               </button>
               <h2 className="text-3xl font-playfair text-burgundy mb-4">LUXE</h2>
-              <div className="space-y-4 text-gray-700">
+              <div className="space-y-4 text-text-mid">
                 <p className="text-sm">
                   Luxusní evropské nebarvené vlasy z výkupu. <strong>Původ:</strong> Ukrajina, Polsko, Bělorusko.
                   Jemné a lesklé, &ldquo;zlatá střední cesta&rdquo; – jemnější než východoevropské, ale pevnější než dětské;
@@ -286,12 +286,12 @@ export default function NebarvenePanenskePage() {
             <div className="bg-white rounded-xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setActiveModal(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-burgundy text-2xl"
+                className="absolute top-4 right-4 text-text-soft hover:text-burgundy text-2xl"
               >
                 ×
               </button>
               <h2 className="text-3xl font-playfair text-burgundy mb-4">Platinum Edition</h2>
-              <div className="space-y-4 text-gray-700">
+              <div className="space-y-4 text-text-mid">
                 <p className="text-sm">
                   Nejvzácnější culíky z našeho výkupu v ČR a SR. Panenské vlasy nejvyšší kvality – mimořádně hebké
                   a lesklé, s hustými konci. Přirozené textury od extra jemných rovných po normální až pevnější.
@@ -321,7 +321,7 @@ export default function NebarvenePanenskePage() {
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
             Nebarvené panenské vlasy
           </h1>
-          <p className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed mb-4">
+          <p className="text-sm md:text-base text-text-mid max-w-4xl leading-relaxed mb-4">
             <strong>100 % nebarvené panenské vlasy z našeho výkupu.</strong> Přirozené odstíny, dlouhá životnost,
             vhodné pro profesionální barvení a odbarvování. Prémiové vlasy k prodloužení pro salony i koncové
             klientky – Praha i celá ČR.
@@ -333,7 +333,7 @@ export default function NebarvenePanenskePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <p className="text-xs text-gray-600 mb-3">
+            <p className="text-xs text-text-mid mb-3">
               Připravíme na metodu zakončení:
             </p>
 
@@ -390,7 +390,7 @@ export default function NebarvenePanenskePage() {
             </div>
 
             {/* Popis */}
-            <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
+            <p className="text-xs md:text-sm text-text-mid leading-relaxed text-center">
               Výběrové východoevropské vlasy z výkupu
             </p>
             </Link>
@@ -420,7 +420,7 @@ export default function NebarvenePanenskePage() {
             </div>
 
             {/* Popis */}
-            <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
+            <p className="text-xs md:text-sm text-text-mid leading-relaxed text-center">
               Výběrové evropské vlasy z výkupu
             </p>
             </Link>
@@ -450,7 +450,7 @@ export default function NebarvenePanenskePage() {
             </div>
 
             {/* Popis */}
-            <p className="text-xs md:text-sm text-gray-700 leading-relaxed text-center">
+            <p className="text-xs md:text-sm text-text-mid leading-relaxed text-center">
               Nejvzácnější culíky na trhu z výkupu ČR
             </p>
             </Link>
@@ -566,7 +566,7 @@ export default function NebarvenePanenskePage() {
           {/* Aktivní filtry - sjednocené odstíny */}
           {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
-              <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
+              <p className="text-sm text-text-mid mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
                 {filters.tier !== 'all' && (
                   <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
@@ -598,14 +598,14 @@ export default function NebarvenePanenskePage() {
         {loading && (
           <div className="text-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy mx-auto mb-4"></div>
-            <p className="text-gray-600">Načítám produkty...</p>
+            <p className="text-text-mid">Načítám produkty...</p>
           </div>
         )}
 
         {/* Počet výsledků */}
         {!loading && (
           <div className="mb-6">
-            <p className="text-gray-600">
+            <p className="text-text-mid">
               Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
               {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
             </p>
@@ -812,7 +812,7 @@ export default function NebarvenePanenskePage() {
             <h3 className="text-2xl font-playfair text-burgundy mb-2">
               Žádné produkty nenalezeny
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-text-mid mb-6">
               Zkuste změnit filtry nebo je vymažte a prohlédněte si celou nabídku.
             </p>
             <button

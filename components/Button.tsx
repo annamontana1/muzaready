@@ -16,11 +16,11 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary:
     'bg-burgundy text-white hover:bg-maroon focus:ring-burgundy disabled:bg-gray-400 active:scale-95',
   secondary:
-    'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500 disabled:bg-gray-100 active:scale-95',
+    'bg-soft-cream text-text-dark hover:bg-gray-200 focus:ring-gray-500 disabled:bg-soft-cream active:scale-95',
   outline:
-    'border-2 border-burgundy text-burgundy hover:bg-burgundy hover:text-white focus:ring-burgundy disabled:border-gray-300 disabled:text-gray-300',
+    'border-2 border-burgundy text-burgundy hover:bg-burgundy hover:text-white focus:ring-burgundy disabled:border-warm-beige disabled:text-text-soft',
   ghost:
-    'text-burgundy hover:bg-burgundy/10 focus:ring-burgundy disabled:text-gray-400',
+    'text-burgundy hover:bg-burgundy/10 focus:ring-burgundy disabled:text-text-soft',
   danger:
     'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-gray-400 active:scale-95',
 };

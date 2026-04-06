@@ -12,7 +12,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const variantStyles: Record<InputVariant, string> = {
-  default: 'border-gray-300 focus:border-burgundy focus:ring-burgundy',
+  default: 'border-warm-beige focus:border-burgundy focus:ring-burgundy',
   error: 'border-red-500 focus:border-red-500 focus:ring-red-500',
   success: 'border-green-500 focus:border-green-500 focus:ring-green-500',
 };
@@ -30,20 +30,20 @@ export default function Input({
 }: InputProps) {
   const widthStyles = fullWidth ? 'w-full' : '';
   const baseStyles =
-    'px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50';
+    'px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:bg-soft-cream disabled:cursor-not-allowed disabled:opacity-50';
   const finalVariant = error ? 'error' : variant;
 
   return (
     <div className={widthStyles}>
       {label && (
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-text-mid mb-2">
           {label}
         </label>
       )}
 
       <div className="relative flex items-center">
         {icon && (
-          <span className="absolute left-3 flex items-center justify-center text-gray-500 pointer-events-none">
+          <span className="absolute left-3 flex items-center justify-center text-text-soft pointer-events-none">
             {icon}
           </span>
         )}
@@ -66,7 +66,7 @@ export default function Input({
       )}
 
       {hint && !error && (
-        <p className="mt-1.5 text-sm text-gray-500">{hint}</p>
+        <p className="mt-1.5 text-sm text-text-soft">{hint}</p>
       )}
     </div>
   );

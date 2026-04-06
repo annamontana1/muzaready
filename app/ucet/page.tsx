@@ -91,9 +91,9 @@ export default function UcetPage() {
       cancelled: 'bg-red-100 text-red-800',
       paid: 'bg-green-100 text-green-800',
       unpaid: 'bg-red-100 text-red-800',
-      refunded: 'bg-gray-100 text-gray-800',
+      refunded: 'bg-soft-cream text-text-dark',
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-soft-cream text-text-dark';
   };
 
   const getStatusText = (status: string) => {
@@ -114,7 +114,7 @@ export default function UcetPage() {
     return (
       <div className="max-w-6xl mx-auto py-8 px-4">
         <div className="text-center py-12">
-          <p className="text-gray-600">Načítání...</p>
+          <p className="text-text-mid">Načítání...</p>
         </div>
       </div>
     );
@@ -127,10 +127,10 @@ export default function UcetPage() {
   return (
     <div className="max-w-6xl mx-auto py-8 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-text-dark mb-2">
           Můj účet
         </h1>
-        <p className="text-gray-600">
+        <p className="text-text-mid">
           Vítejte, {user.firstName || user.email}
           {user.isWholesale && (
             <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
@@ -141,14 +141,14 @@ export default function UcetPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-warm-beige mb-6">
         <nav className="flex gap-8">
           <button
             onClick={() => setActiveTab('orders')}
             className={`pb-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'orders'
                 ? 'border-burgundy text-burgundy'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-text-soft hover:text-text-mid'
             }`}
           >
             Moje objednávky ({orders.length})
@@ -158,7 +158,7 @@ export default function UcetPage() {
             className={`pb-4 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'profile'
                 ? 'border-burgundy text-burgundy'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-text-soft hover:text-text-mid'
             }`}
           >
             Profil a nastavení
@@ -170,8 +170,8 @@ export default function UcetPage() {
       {activeTab === 'orders' && (
         <div>
           {orders.length === 0 ? (
-            <div className="bg-gray-50 rounded-lg p-8 text-center">
-              <p className="text-gray-600 mb-4">Zatím nemáte žádné objednávky</p>
+            <div className="bg-soft-cream rounded-lg p-8 text-center">
+              <p className="text-text-mid mb-4">Zatím nemáte žádné objednávky</p>
               <Link
                 href="/katalog"
                 className="inline-block px-6 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition"
@@ -188,10 +188,10 @@ export default function UcetPage() {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-text-soft">
                         Objednávka č. {order.id.slice(0, 8).toUpperCase()}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-text-soft">
                         {new Date(order.createdAt).toLocaleDateString('cs-CZ', {
                           year: 'numeric',
                           month: 'long',
@@ -200,7 +200,7 @@ export default function UcetPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-bold text-gray-900">
+                      <p className="text-xl font-bold text-text-dark">
                         {order.total.toLocaleString('cs-CZ')} Kč
                       </p>
                     </div>
@@ -249,7 +249,7 @@ export default function UcetPage() {
                   <div className="flex gap-3">
                     <Link
                       href={`/order-confirmation/${order.id}`}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm"
+                      className="px-4 py-2 bg-soft-cream text-text-mid rounded-lg hover:bg-gray-200 transition text-sm"
                     >
                       Detail objednávky
                     </Link>
@@ -277,27 +277,27 @@ export default function UcetPage() {
             <h2 className="text-xl font-semibold mb-4">Osobní údaje</h2>
             <div className="space-y-3">
               <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="text-gray-900">{user.email}</p>
+                <p className="text-sm text-text-soft">Email</p>
+                <p className="text-text-dark">{user.email}</p>
               </div>
               {user.firstName && (
                 <div>
-                  <p className="text-sm text-gray-500">Jméno</p>
-                  <p className="text-gray-900">
+                  <p className="text-sm text-text-soft">Jméno</p>
+                  <p className="text-text-dark">
                     {user.firstName} {user.lastName}
                   </p>
                 </div>
               )}
               {user.phone && (
                 <div>
-                  <p className="text-sm text-gray-500">Telefon</p>
-                  <p className="text-gray-900">{user.phone}</p>
+                  <p className="text-sm text-text-soft">Telefon</p>
+                  <p className="text-text-dark">{user.phone}</p>
                 </div>
               )}
               {user.streetAddress && (
                 <div>
-                  <p className="text-sm text-gray-500">Adresa</p>
-                  <p className="text-gray-900">
+                  <p className="text-sm text-text-soft">Adresa</p>
+                  <p className="text-text-dark">
                     {user.streetAddress}
                     <br />
                     {user.zipCode} {user.city}
@@ -313,20 +313,20 @@ export default function UcetPage() {
             <h2 className="text-xl font-semibold mb-4">Informace o účtu</h2>
             <div className="space-y-3 mb-6">
               <div>
-                <p className="text-sm text-gray-500">Typ účtu</p>
-                <p className="text-gray-900">
+                <p className="text-sm text-text-soft">Typ účtu</p>
+                <p className="text-text-dark">
                   {user.isWholesale ? 'Velkoobchod' : 'Běžný zákazník'}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Účet vytvořen</p>
-                <p className="text-gray-900">
+                <p className="text-sm text-text-soft">Účet vytvořen</p>
+                <p className="text-text-dark">
                   {new Date(user.createdAt).toLocaleDateString('cs-CZ')}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Celkový počet objednávek</p>
-                <p className="text-gray-900">{orders.length}</p>
+                <p className="text-sm text-text-soft">Celkový počet objednávek</p>
+                <p className="text-text-dark">{orders.length}</p>
               </div>
             </div>
 
@@ -341,7 +341,7 @@ export default function UcetPage() {
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                className="w-full px-4 py-2 bg-soft-cream text-text-mid rounded-lg hover:bg-gray-200 transition"
               >
                 Odhlásit se
               </button>
@@ -354,9 +354,9 @@ export default function UcetPage() {
               Ochrana osobních údajů (GDPR)
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-warm-beige rounded-lg p-4">
                 <h3 className="font-medium mb-2">Stáhnout moje data</h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-text-mid mb-3">
                   Získejte kompletní export všech vašich osobních údajů a historie
                   objednávek.
                 </p>
@@ -379,9 +379,9 @@ export default function UcetPage() {
                   Exportovat data
                 </button>
               </div>
-              <div className="border border-gray-200 rounded-lg p-4">
+              <div className="border border-warm-beige rounded-lg p-4">
                 <h3 className="font-medium mb-2">Smazat můj účet</h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-text-mid mb-3">
                   Požádat o smazání účtu a osobních údajů (objednávky mladší 7 let
                   budou anonymizovány).
                 </p>

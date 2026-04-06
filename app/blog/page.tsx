@@ -22,7 +22,7 @@ export default function BlogPage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Blog & Magazín
           </h1>
-          <p className="text-gray-700 max-w-2xl mx-auto">
+          <p className="text-text-mid max-w-2xl mx-auto">
             Tipy, průvodce a expertní rady o prodlužování vlasů, péči a výběru správné kvality.
             Vše od profesionálů z Mùza Hair.
           </p>
@@ -47,7 +47,7 @@ export default function BlogPage() {
               {/* Content */}
               <div className="p-6">
                 {/* Category & Read Time */}
-                <div className="flex items-center gap-3 mb-3 text-xs text-gray-600">
+                <div className="flex items-center gap-3 mb-3 text-xs text-text-mid">
                   <span className="px-2 py-1 bg-burgundy/10 text-burgundy rounded-full">
                     {article.category}
                   </span>
@@ -60,12 +60,12 @@ export default function BlogPage() {
                 </h2>
 
                 {/* Excerpt */}
-                <p className="text-sm text-gray-700 mb-4 line-clamp-3">
+                <p className="text-sm text-text-mid mb-4 line-clamp-3">
                   {article.excerpt}
                 </p>
 
                 {/* Meta */}
-                <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
+                <div className="flex items-center justify-between text-xs text-text-soft pt-4 border-t border-warm-beige">
                   <span>{article.author}</span>
                   <time dateTime={article.publishedAt}>
                     {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
@@ -86,7 +86,7 @@ export default function BlogPage() {
             <h3 className="text-2xl font-playfair text-burgundy mb-3">
               Máte otázku o prodlužování vlasů?
             </h3>
-            <p className="text-gray-700 mb-6">
+            <p className="text-text-mid mb-6">
               Náš tým expertů vám rád poradí s výběrem správné délky, kvality a péče.
             </p>
             <Link href="/kontakt" className="btn-primary inline-block">

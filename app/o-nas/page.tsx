@@ -23,12 +23,12 @@ export default function ONasPage() {
 
         {/* TL;DR blok */}
         <div className="bg-ivory border-l-4 border-burgundy p-6 rounded-xl mb-10">
-          <p className="text-gray-800 leading-relaxed">
+          <p className="text-text-dark leading-relaxed">
             Múza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze. Zakladatelka Anna nabízí vlasy ve čtyřech liniích — Standard, Luxe, Platinum a Baby Shades — z východoevropských, středoevropských i dětských vlasů nejvyšší kvality. V pražském ateliéru vyrábíme tape-in pásky, wefty, clip-in vlasy a keratin prameny z vlasů s ověřeným původem.
           </p>
         </div>
 
-        <div className="prose prose-lg max-w-none text-gray-700">
+        <div className="prose prose-lg max-w-none text-text-mid">
 
           <h2 className="text-3xl font-playfair text-burgundy mb-4">
             Jak jeden darovaný copánek změnil můj pohled na vlasy
@@ -97,19 +97,19 @@ export default function ONasPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-gray-200">
+                <tr className="border-b border-warm-beige">
                   <td className="px-4 py-3 font-medium">Standard</td>
                   <td className="px-4 py-3">Spolehlivá kvalita pro každodenní nošení a salony</td>
                 </tr>
-                <tr className="border-b border-gray-200 bg-gray-50">
+                <tr className="border-b border-warm-beige bg-soft-cream">
                   <td className="px-4 py-3 font-medium">Luxe</td>
                   <td className="px-4 py-3">Prémiový výběr pro náročnější zákaznice a stylisty</td>
                 </tr>
-                <tr className="border-b border-gray-200">
+                <tr className="border-b border-warm-beige">
                   <td className="px-4 py-3 font-medium">Platinum</td>
                   <td className="px-4 py-3">Nejlepší culíky z naší nabídky — pro ty, pro které je kvalita na prvním místě</td>
                 </tr>
-                <tr className="bg-gray-50">
+                <tr className="bg-soft-cream">
                   <td className="px-4 py-3 font-medium">Baby Shades</td>
                   <td className="px-4 py-3">Exkluzivní světlé odstíny z nejjemnějších vlasů — přirozeně, bez přebarvování</td>
                 </tr>
@@ -155,7 +155,7 @@ export default function ONasPage() {
             ].map((item) => (
               <div key={item.title} className="bg-ivory p-5 rounded-xl">
                 <h3 className="font-semibold text-burgundy mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-700">{item.text}</p>
+                <p className="text-sm text-text-mid">{item.text}</p>
               </div>
             ))}
           </div>
@@ -188,9 +188,9 @@ export default function ONasPage() {
                 a: 'Záleží na produktu. Tape-in pásky, wefty a clip-in vlasy vyrábíme za 14 dní. Keratin prameny, micro keratin a micro ring jsou připraveny za 3 dny. Skladové barvy expedujeme ihned. Přesné termíny potvrdíme při objednávce.',
               },
             ].map((faq) => (
-              <div key={faq.q} className="border-b border-gray-200 pb-5">
-                <h3 className="font-semibold text-gray-900 mb-2">{faq.q}</h3>
-                <p className="text-gray-700">{faq.a}</p>
+              <div key={faq.q} className="border-b border-warm-beige pb-5">
+                <h3 className="font-semibold text-text-dark mb-2">{faq.q}</h3>
+                <p className="text-text-mid">{faq.a}</p>
               </div>
             ))}
           </div>

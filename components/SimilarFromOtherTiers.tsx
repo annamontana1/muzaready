@@ -77,7 +77,7 @@ export default function SimilarFromOtherTiers({ currentTier, activeShades }: Pro
             ? 'Podobný odstín v jiných kategoriích'
             : 'Nenašli jste co hledáte?'}
         </h2>
-        <p className="text-gray-600">
+        <p className="text-text-mid">
           {activeShades.length > 0
             ? 'Podívejte se na stejný odstín v jiné kvalitě vlasů'
             : 'Prozkoumejte jiné kategorie vlasů'}

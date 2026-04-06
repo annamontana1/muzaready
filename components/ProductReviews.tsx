@@ -111,7 +111,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
           <svg
             key={star}
             className={`${sizeClass} ${
-              star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              star <= rating ? 'text-yellow-400 fill-current' : 'text-text-soft'
             }`}
             viewBox="0 0 20 20"
           >
@@ -127,14 +127,14 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
 
     return (
       <div className="flex items-center gap-2 text-sm">
-        <span className="w-12 text-gray-600">{stars} ★</span>
+        <span className="w-12 text-text-mid">{stars} ★</span>
         <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-yellow-400"
             style={{ width: `${percentage}%` }}
           />
         </div>
-        <span className="w-8 text-gray-600 text-right">{count}</span>
+        <span className="w-8 text-text-mid text-right">{count}</span>
       </div>
     );
   };
@@ -142,7 +142,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
   if (loading) {
     return (
       <div className="py-8">
-        <p className="text-gray-600 text-center">Načítání recenzí...</p>
+        <p className="text-text-mid text-center">Načítání recenzí...</p>
       </div>
     );
   }
@@ -153,15 +153,15 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
 
       {/* Summary */}
       {summary && summary.totalReviews > 0 && (
-        <div className="bg-gray-50 rounded-lg p-6 mb-8">
+        <div className="bg-soft-cream rounded-lg p-6 mb-8">
           <div className="grid md:grid-cols-2 gap-6">
             {/* Average Rating */}
             <div className="text-center">
-              <div className="text-5xl font-bold text-gray-900 mb-2">
+              <div className="text-5xl font-bold text-text-dark mb-2">
                 {summary.averageRating.toFixed(1)}
               </div>
               {renderStars(Math.round(summary.averageRating), 'lg')}
-              <p className="text-gray-600 mt-2">
+              <p className="text-text-mid mt-2">
                 {summary.totalReviews}{' '}
                 {summary.totalReviews === 1 ? 'hodnocení' : 'hodnocení'}
               </p>
@@ -195,7 +195,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
         ) : (
           <button
             onClick={() => setShowReviewForm(false)}
-            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            className="px-6 py-3 bg-gray-200 text-text-mid rounded-lg hover:bg-gray-300 transition"
           >
             Zrušit
           </button>
@@ -204,7 +204,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
 
       {/* Review Form */}
       {showReviewForm && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
+        <div className="bg-white rounded-lg border border-warm-beige p-6 mb-8">
           <h3 className="text-xl font-semibold mb-4">Napište recenzi</h3>
           <form onSubmit={handleSubmitReview} className="space-y-4">
             {/* Rating */}
@@ -224,7 +224,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
                       className={`w-8 h-8 ${
                         star <= formData.rating
                           ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
+                          : 'text-text-soft'
                       }`}
                       viewBox="0 0 20 20"
                     >
@@ -246,7 +246,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                 placeholder="Shrňte svou zkušenost"
               />
             </div>
@@ -264,7 +264,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
                 required
                 minLength={10}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                 placeholder="Popište svou zkušenost s tímto produktem..."
               />
             </div>
@@ -281,7 +281,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
                   setFormData({ ...formData, customerName: e.target.value })
                 }
                 required
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                 placeholder="Jméno"
               />
             </div>
@@ -297,7 +297,7 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, customerEmail: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                 placeholder="email@example.com"
               />
             </div>
@@ -328,14 +328,14 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
       {/* Reviews List */}
       <div className="space-y-6">
         {reviews.length === 0 ? (
-          <div className="text-center py-8 text-gray-600">
+          <div className="text-center py-8 text-text-mid">
             <p>Zatím žádné recenze. Buďte první, kdo ohodnotí tento produkt!</p>
           </div>
         ) : (
           reviews.map((review) => (
             <div
               key={review.id}
-              className="bg-white rounded-lg border border-gray-200 p-6"
+              className="bg-white rounded-lg border border-warm-beige p-6"
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
@@ -347,27 +347,27 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
                       </span>
                     )}
                   </div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-text-dark">
                     {review.customerName}
                   </p>
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-text-soft">
                   {new Date(review.createdAt).toLocaleDateString('cs-CZ')}
                 </p>
               </div>
 
               {review.title && (
-                <h4 className="font-semibold text-gray-900 mb-2">
+                <h4 className="font-semibold text-text-dark mb-2">
                   {review.title}
                 </h4>
               )}
 
-              <p className="text-gray-700 whitespace-pre-wrap">
+              <p className="text-text-mid whitespace-pre-wrap">
                 {review.comment}
               </p>
 
               {review.helpfulCount > 0 && (
-                <p className="mt-3 text-sm text-gray-600">
+                <p className="mt-3 text-sm text-text-mid">
                   {review.helpfulCount}{' '}
                   {review.helpfulCount === 1
                     ? 'člověk považuje tuto recenzi za užitečnou'

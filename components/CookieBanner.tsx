@@ -80,17 +80,17 @@ export default function CookieBanner() {
 
       {/* Banner */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6">
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl border border-warm-beige overflow-hidden">
           {!showSettings ? (
             // Main Banner
             <div className="p-6">
               <div className="flex items-start gap-4">
                 <div className="text-3xl">🍪</div>
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold text-gray-900 mb-2">
+                  <h2 className="text-lg font-bold text-text-dark mb-2">
                     Používáme cookies
                   </h2>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-text-mid text-sm mb-4">
                     Na našich stránkách používáme cookies pro zajištění správné funkčnosti,
                     analýzu návštěvnosti a personalizaci obsahu. Kliknutím na "Přijmout vše"
                     souhlasíte s jejich používáním.
@@ -104,20 +104,20 @@ export default function CookieBanner() {
                     </button>
                     <button
                       onClick={acceptNecessary}
-                      className="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition text-sm"
+                      className="px-6 py-2.5 bg-soft-cream text-text-mid rounded-full font-semibold hover:bg-gray-200 transition text-sm"
                     >
                       Pouze nezbytné
                     </button>
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="px-6 py-2.5 text-gray-600 hover:text-gray-900 transition text-sm font-medium"
+                      className="px-6 py-2.5 text-text-mid hover:text-text-dark transition text-sm font-medium"
                     >
                       Nastavení
                     </button>
                   </div>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-warm-beige">
                 <Link
                   href="/ochrana-osobnich-udaju"
                   className="text-sm text-pink-600 hover:text-pink-700"
@@ -130,10 +130,10 @@ export default function CookieBanner() {
             // Settings Panel
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-gray-900">Nastavení cookies</h2>
+                <h2 className="text-lg font-bold text-text-dark">Nastavení cookies</h2>
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-text-soft hover:text-text-mid"
                 >
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -143,23 +143,23 @@ export default function CookieBanner() {
 
               <div className="space-y-4">
                 {/* Necessary */}
-                <div className="flex items-start justify-between p-4 bg-gray-50 rounded-xl">
+                <div className="flex items-start justify-between p-4 bg-soft-cream rounded-xl">
                   <div className="flex-1 mr-4">
-                    <h3 className="font-semibold text-gray-900">Nezbytné cookies</h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <h3 className="font-semibold text-text-dark">Nezbytné cookies</h3>
+                    <p className="text-sm text-text-mid mt-1">
                       Tyto cookies jsou nutné pro fungování webu. Nelze je vypnout.
                     </p>
                   </div>
                   <div className="flex items-center">
-                    <span className="text-sm text-gray-500">Vždy aktivní</span>
+                    <span className="text-sm text-text-soft">Vždy aktivní</span>
                   </div>
                 </div>
 
                 {/* Analytics */}
-                <div className="flex items-start justify-between p-4 bg-gray-50 rounded-xl">
+                <div className="flex items-start justify-between p-4 bg-soft-cream rounded-xl">
                   <div className="flex-1 mr-4">
-                    <h3 className="font-semibold text-gray-900">Analytické cookies</h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <h3 className="font-semibold text-text-dark">Analytické cookies</h3>
+                    <p className="text-sm text-text-mid mt-1">
                       Pomáhají nám pochopit, jak návštěvníci používají web. Anonymní statistiky.
                     </p>
                   </div>
@@ -170,15 +170,15 @@ export default function CookieBanner() {
                       onChange={(e) => setConsent({ ...consent, analytics: e.target.checked })}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-beige after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
                   </label>
                 </div>
 
                 {/* Marketing */}
-                <div className="flex items-start justify-between p-4 bg-gray-50 rounded-xl">
+                <div className="flex items-start justify-between p-4 bg-soft-cream rounded-xl">
                   <div className="flex-1 mr-4">
-                    <h3 className="font-semibold text-gray-900">Marketingové cookies</h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <h3 className="font-semibold text-text-dark">Marketingové cookies</h3>
+                    <p className="text-sm text-text-mid mt-1">
                       Slouží k zobrazování personalizované reklamy na základě vašich zájmů.
                     </p>
                   </div>
@@ -189,7 +189,7 @@ export default function CookieBanner() {
                       onChange={(e) => setConsent({ ...consent, marketing: e.target.checked })}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-warm-beige after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
                   </label>
                 </div>
               </div>
@@ -203,7 +203,7 @@ export default function CookieBanner() {
                 </button>
                 <button
                   onClick={acceptAll}
-                  className="flex-1 px-6 py-2.5 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition text-sm"
+                  className="flex-1 px-6 py-2.5 bg-soft-cream text-text-mid rounded-full font-semibold hover:bg-gray-200 transition text-sm"
                 >
                   Přijmout vše
                 </button>

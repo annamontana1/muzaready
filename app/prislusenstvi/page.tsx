@@ -14,7 +14,7 @@ export default function PrislusenstviPage() {
     <div className="py-12">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-playfair text-burgundy mb-6">Příslušenství</h1>
-        <p className="text-lg text-gray-700 mb-12">Vše potřebné pro práci s vlasy a péči o ně.</p>
+        <p className="text-lg text-text-mid mb-12">Vše potřebné pro práci s vlasy a péči o ně.</p>
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((item) => (
             <Link

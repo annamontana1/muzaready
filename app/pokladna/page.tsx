@@ -340,7 +340,7 @@ export default function PokladnaPage() {
       />
 
       <div className="max-w-6xl mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('checkout.title')}</h1>
+        <h1 className="text-3xl font-bold text-text-dark mb-8">{t('checkout.title')}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
@@ -360,7 +360,7 @@ export default function PokladnaPage() {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-mid mb-2">
                 {t('checkout.shipping.email')} *
               </label>
               <input
@@ -370,7 +370,7 @@ export default function PokladnaPage() {
                 onChange={handleInputChange}
                 required
                 disabled={loading}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                 placeholder={language === 'cs' ? 'vase@email.cz' : 'your@email.com'}
               />
             </div>
@@ -378,7 +378,7 @@ export default function PokladnaPage() {
             {/* Name */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-text-mid mb-2">
                   {t('checkout.shipping.firstName')} *
                 </label>
                 <input
@@ -388,12 +388,12 @@ export default function PokladnaPage() {
                   onChange={handleInputChange}
                   required
                   disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                  className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                   placeholder={t('checkout.shipping.firstName')}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-text-mid mb-2">
                   {t('checkout.shipping.lastName')} *
                 </label>
                 <input
@@ -403,7 +403,7 @@ export default function PokladnaPage() {
                   onChange={handleInputChange}
                   required
                   disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                  className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                   placeholder={t('checkout.shipping.lastName')}
                 />
               </div>
@@ -411,7 +411,7 @@ export default function PokladnaPage() {
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-mid mb-2">
                 {t('checkout.shipping.phoneOptional')}
               </label>
               <input
@@ -420,18 +420,18 @@ export default function PokladnaPage() {
                 value={formData.phone}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                 placeholder="+420 123 456 789"
               />
             </div>
 
             {/* Delivery Method Selection */}
-            <div className="border-t border-gray-200 pt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+            <div className="border-t border-warm-beige pt-6">
+              <label className="block text-sm font-medium text-text-mid mb-3">
                 {t('checkout.shippingMethod.title')} *
               </label>
               <div className="space-y-3">
-                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-soft-cream transition">
                   <input
                     type="radio"
                     name="deliveryMethod"
@@ -444,24 +444,24 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">{t('checkout.shippingMethod.standard')}</p>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="font-medium text-text-dark">{t('checkout.shippingMethod.standard')}</p>
+                        <p className="text-sm text-text-mid mt-1">
                           {t('checkout.shippingMethod.standardDesc')}
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-text-dark">
                         {total >= shippingThreshold ? t('common.free') : '150 Kč'}
                       </p>
                     </div>
                     {total < shippingThreshold && (
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-text-soft mt-2">
                         {t('checkout.shippingMethod.standardFree', { threshold: shippingThreshold.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US') })}
                       </p>
                     )}
                   </div>
                 </label>
 
-                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-soft-cream transition">
                   <input
                     type="radio"
                     name="deliveryMethod"
@@ -474,12 +474,12 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">{t('checkout.shippingMethod.pickup')}</p>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="font-medium text-text-dark">{t('checkout.shippingMethod.pickup')}</p>
+                        <p className="text-sm text-text-mid mt-1">
                           {t('checkout.shippingMethod.pickupDesc')}
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900">65 Kč</p>
+                      <p className="font-medium text-text-dark">65 Kč</p>
                     </div>
                     {formData.deliveryMethod === 'zasilkovna' && (
                       <div className="mt-3">
@@ -517,7 +517,7 @@ export default function PokladnaPage() {
                   </div>
                 </label>
 
-                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-soft-cream transition">
                   <input
                     type="radio"
                     name="deliveryMethod"
@@ -530,17 +530,17 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">DPD</p>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="font-medium text-text-dark">DPD</p>
+                        <p className="text-sm text-text-mid mt-1">
                           Doručení na adresu kurýrem DPD (1–2 pracovní dny)
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900">99 Kč</p>
+                      <p className="font-medium text-text-dark">99 Kč</p>
                     </div>
                   </div>
                 </label>
 
-                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-soft-cream transition">
                   <input
                     type="radio"
                     name="deliveryMethod"
@@ -553,17 +553,17 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">PPL</p>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="font-medium text-text-dark">PPL</p>
+                        <p className="text-sm text-text-mid mt-1">
                           Doručení na adresu kurýrem PPL (1–2 pracovní dny)
                         </p>
                       </div>
-                      <p className="font-medium text-gray-900">99 Kč</p>
+                      <p className="font-medium text-text-dark">99 Kč</p>
                     </div>
                   </div>
                 </label>
 
-                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-soft-cream transition">
                   <input
                     type="radio"
                     name="deliveryMethod"
@@ -576,8 +576,8 @@ export default function PokladnaPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">{t('checkout.shippingMethod.showroom')}</p>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="font-medium text-text-dark">{t('checkout.shippingMethod.showroom')}</p>
+                        <p className="text-sm text-text-mid mt-1">
                           {t('checkout.shippingMethod.showroomDesc')}
                         </p>
                       </div>
@@ -603,10 +603,10 @@ export default function PokladnaPage() {
 
             {/* Address - show for standard, DPD, PPL delivery */}
             {needsAddress && (
-              <div className="border-t border-gray-200 pt-6 space-y-4">
-                <h3 className="text-lg font-medium text-gray-900">{t('checkout.deliveryAddress')}</h3>
+              <div className="border-t border-warm-beige pt-6 space-y-4">
+                <h3 className="text-lg font-medium text-text-dark">{t('checkout.deliveryAddress')}</h3>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-text-mid mb-2">
                     {t('checkout.shipping.address')} *
                   </label>
                   <input
@@ -616,7 +616,7 @@ export default function PokladnaPage() {
                     onChange={handleInputChange}
                     required={needsAddress}
                     disabled={loading}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                    className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                     placeholder={t('checkout.shipping.address')}
                   />
                 </div>
@@ -624,7 +624,7 @@ export default function PokladnaPage() {
                 {/* City and Postal Code */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-text-mid mb-2">
                       {t('checkout.shipping.city')} *
                     </label>
                     <input
@@ -634,12 +634,12 @@ export default function PokladnaPage() {
                       onChange={handleInputChange}
                       required={needsAddress}
                       disabled={loading}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                      className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                       placeholder={language === 'cs' ? 'Praha' : 'Prague'}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-text-mid mb-2">
                       {t('checkout.shipping.zip')} *
                     </label>
                     <input
@@ -649,7 +649,7 @@ export default function PokladnaPage() {
                       onChange={handleInputChange}
                       required={needsAddress}
                       disabled={loading}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                      className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                       placeholder="110 00"
                     />
                   </div>
@@ -657,7 +657,7 @@ export default function PokladnaPage() {
 
                 {/* Country */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-text-mid mb-2">
                     {t('checkout.shipping.country')}
                   </label>
                   <select
@@ -665,7 +665,7 @@ export default function PokladnaPage() {
                     value={formData.country}
                     onChange={handleInputChange}
                     disabled={loading}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                    className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
                   >
                     <option value="CZ">{t('checkout.countries.CZ')}</option>
                     <option value="SK">{t('checkout.countries.SK')}</option>
@@ -686,7 +686,7 @@ export default function PokladnaPage() {
               {loading ? t('checkout.payment.processing') : t('checkout.payment.continueToPayment')}
             </button>
 
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-text-soft text-center">
               {t('checkout.required')}
             </p>
           </form>
@@ -695,25 +695,25 @@ export default function PokladnaPage() {
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow p-6 sticky top-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('cart.orderSummary')}</h2>
+            <h2 className="text-xl font-bold text-text-dark mb-4">{t('cart.orderSummary')}</h2>
 
-            <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
+            <div className="space-y-4 mb-6 border-b border-warm-beige pb-6">
               {items.map((item) => (
                 <div key={item.skuId} className="flex justify-between text-sm">
                   <div>
-                    <p className="text-gray-900 font-medium">{item.skuName}</p>
-                    <p className="text-gray-600">
+                    <p className="text-text-dark font-medium">{item.skuName}</p>
+                    <p className="text-text-mid">
                       {item.saleMode === 'BULK_G'
                         ? `${item.grams}g @ ${item.pricePerGram.toLocaleString('cs-CZ')} Kč/g`
                         : `${item.quantity}x`}
                     </p>
                     {item.assemblyFeeTotal > 0 && (
-                      <p className="text-gray-500 text-xs">
+                      <p className="text-text-soft text-xs">
                         Poplatek: {item.assemblyFeeTotal.toLocaleString('cs-CZ')} Kč
                       </p>
                     )}
                   </div>
-                  <p className="text-gray-900 font-medium">
+                  <p className="text-text-dark font-medium">
                     {item.lineGrandTotal.toLocaleString('cs-CZ')} Kč
                   </p>
                 </div>
@@ -721,8 +721,8 @@ export default function PokladnaPage() {
             </div>
 
             {/* Coupon Input */}
-            <div className="mb-6 border-b border-gray-200 pb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="mb-6 border-b border-warm-beige pb-6">
+              <label className="block text-sm font-medium text-text-mid mb-2">
                 {t('cart.coupon.title')}?
               </label>
               {!couponApplied ? (
@@ -733,7 +733,7 @@ export default function PokladnaPage() {
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                     placeholder="KÓD KUPÓNU"
                     disabled={couponLoading}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy text-sm uppercase"
+                    className="flex-1 px-3 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy text-sm uppercase"
                   />
                   <button
                     onClick={handleApplyCoupon}
@@ -766,20 +766,20 @@ export default function PokladnaPage() {
 
             <div className="space-y-3">
               <div className="flex justify-between">
-                <p className="text-gray-600">{t('cart.subtotal')}:</p>
-                <p className="text-gray-900 font-medium">{total.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč</p>
+                <p className="text-text-mid">{t('cart.subtotal')}:</p>
+                <p className="text-text-dark font-medium">{total.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč</p>
               </div>
               {couponApplied && couponDiscount > 0 && (
                 <div className="flex justify-between">
-                  <p className="text-gray-600">{t('common.discount')} ({couponCode}):</p>
+                  <p className="text-text-mid">{t('common.discount')} ({couponCode}):</p>
                   <p className="text-green-600 font-medium">
                     -{couponDiscount.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
                   </p>
                 </div>
               )}
               <div className="flex justify-between">
-                <p className="text-gray-600">{t('cart.shipping')}:</p>
-                <p className="text-gray-900 font-medium">
+                <p className="text-text-mid">{t('cart.shipping')}:</p>
+                <p className="text-text-dark font-medium">
                   {shipping === 0 ? (
                     <span className="text-green-600">{t('common.free')}</span>
                   ) : (
@@ -788,13 +788,13 @@ export default function PokladnaPage() {
                 </p>
               </div>
               {total <= shippingThreshold && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-text-soft">
                   {t('cart.freeShippingRemaining')} {(shippingThreshold - total).toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
                 </p>
               )}
-              <div className="border-t border-gray-200 pt-3">
+              <div className="border-t border-warm-beige pt-3">
                 <div className="flex justify-between">
-                  <p className="text-lg font-bold text-gray-900">{t('cart.total')}:</p>
+                  <p className="text-lg font-bold text-text-dark">{t('cart.total')}:</p>
                   <p className="text-lg font-bold text-burgundy">
                     {(total - couponDiscount + shipping).toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
                   </p>

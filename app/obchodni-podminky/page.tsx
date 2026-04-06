@@ -9,11 +9,11 @@ export default function ObchodniPodminkyPage() {
   return (
     <main className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-3xl md:text-4xl font-bold mb-2">Obchodní podmínky</h1>
-      <p className="text-sm text-gray-500 mb-10">Verze platná od: 1. 5. 2025 · muzahair.cz</p>
+      <p className="text-sm text-text-soft mb-10">Verze platná od: 1. 5. 2025 · muzahair.cz</p>
 
       {/* Kontaktní údaje prodávajícího */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-10 text-sm leading-relaxed">
-        <p className="font-semibold text-gray-900 mb-1">Prodávající:</p>
+      <div className="bg-soft-cream border border-warm-beige rounded-lg p-5 mb-10 text-sm leading-relaxed">
+        <p className="font-semibold text-text-dark mb-1">Prodávající:</p>
         <p>Anna Zvinchuk, Múza Hair Praha s.r.o.</p>
         <p>IČO: 17989230 &nbsp;|&nbsp; Prodávající není plátcem DPH.</p>
         <p>Sídlo: Revoluční 8, 198 00 Praha</p>
@@ -26,7 +26,7 @@ export default function ObchodniPodminkyPage() {
       {/* Obsah */}
       <div className="bg-ivory border border-beige rounded-lg p-5 mb-10 text-sm">
         <p className="font-semibold mb-2">Obsah obchodních podmínek:</p>
-        <ol className="list-decimal list-inside space-y-1 text-gray-700">
+        <ol className="list-decimal list-inside space-y-1 text-text-mid">
           <li><a href="#cl1" className="hover:underline">Úvodní ustanovení a základní pojmy</a></li>
           <li><a href="#cl2" className="hover:underline">Uzavření kupní smlouvy a objednávka</a></li>
           <li><a href="#cl3" className="hover:underline">Ceny, platba a fakturace</a></li>
@@ -42,11 +42,11 @@ export default function ObchodniPodminkyPage() {
         </ol>
       </div>
 
-      <div className="prose prose-lg max-w-none space-y-10 text-gray-800">
+      <div className="prose prose-lg max-w-none space-y-10 text-text-dark">
 
         {/* Čl. 1 */}
         <section id="cl1">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 1 – Úvodní ustanovení a základní pojmy</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 1 – Úvodní ustanovení a základní pojmy</h2>
           <p><strong>1.1</strong> Tyto všeobecné obchodní podmínky (dále jen „obchodní podmínky") se vztahují na smlouvy uzavřené prostřednictvím e-shopu Múza Hair Praha umístněného na webovém rozhraní <strong>www.muzahair.cz</strong> (dále jen „webové rozhraní") a dále na smlouvy uzavřené osobně v showroomu prodávajícího.</p>
           <p><strong>1.2 Prodávajícím</strong> je: Anna Zvinchuk, Múza Hair Praha s.r.o., IČO: 17989230, se sídlem Revoluční 8, 198 00 Praha (dále jen „prodávající").</p>
           <p><strong>1.3 Kupujícím</strong> je fyzická nebo právnická osoba, která uzavírá smlouvu s prodávajícím (dále jen „kupující"). Kupující-spotřebitel je fyzická osoba jednající mimo rámec své podnikatelské činnosti.</p>
@@ -56,7 +56,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 2 */}
         <section id="cl2">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 2 – Uzavření kupní smlouvy a objednávka</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 2 – Uzavření kupní smlouvy a objednávka</h2>
           <p><strong>2.1</strong> Prezentace zboží na webovém rozhraní je informativního charakteru a nepředstavuje návrh na uzavření smlouvy. Smlouva je uzavřena okamžikem potvrzení objednávky prodávajícím.</p>
           <p><strong>2.2 Způsoby objednání:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
@@ -73,44 +73,44 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 3 */}
         <section id="cl3">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 3 – Ceny, platba a fakturace</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 3 – Ceny, platba a fakturace</h2>
           <p><strong>3.1</strong> Ceny zboží jsou uvedeny na webovém rozhraní v českých korunách (CZK). Prodávající není plátcem DPH.</p>
           <p><strong>3.2</strong> Ceny jsou platné v okamžiku odeslání objednávky. Prodávající si vyhrazuje právo změnit ceny zboží; změna cen se nevztahuje na již potvrzené objednávky.</p>
           <p><strong>3.3 Způsoby platby:</strong></p>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse border border-gray-300 rounded">
-              <thead className="bg-gray-100">
+            <table className="w-full text-sm border-collapse border border-warm-beige rounded">
+              <thead className="bg-soft-cream">
                 <tr>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Způsob platby</th>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Poplatek</th>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Poznámka</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Způsob platby</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Poplatek</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Poznámka</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-3 py-2">Platba kartou online</td>
-                  <td className="border border-gray-300 px-3 py-2">Zdarma</td>
-                  <td className="border border-gray-300 px-3 py-2">Okamžitá úhrada přes platební bránu</td>
+                  <td className="border border-warm-beige px-3 py-2">Platba kartou online</td>
+                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
+                  <td className="border border-warm-beige px-3 py-2">Okamžitá úhrada přes platební bránu</td>
                 </tr>
-                <tr className="bg-gray-50">
-                  <td className="border border-gray-300 px-3 py-2">Bankovní převod</td>
-                  <td className="border border-gray-300 px-3 py-2">Zdarma</td>
-                  <td className="border border-gray-300 px-3 py-2">Zboží expedováno po přijetí platby</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-3 py-2">Hotově v showroomu</td>
-                  <td className="border border-gray-300 px-3 py-2">Zdarma</td>
-                  <td className="border border-gray-300 px-3 py-2">Pouze při osobním odběru Praha</td>
-                </tr>
-                <tr className="bg-gray-50">
-                  <td className="border border-gray-300 px-3 py-2">Dobírka (PPL / Zásilkovna)</td>
-                  <td className="border border-gray-300 px-3 py-2">Dle dopravce</td>
-                  <td className="border border-gray-300 px-3 py-2">Platba při převzetí zásilky</td>
+                <tr className="bg-soft-cream">
+                  <td className="border border-warm-beige px-3 py-2">Bankovní převod</td>
+                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
+                  <td className="border border-warm-beige px-3 py-2">Zboží expedováno po přijetí platby</td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-3 py-2">Záloha 50 % (zakázková výroba)</td>
-                  <td className="border border-gray-300 px-3 py-2">Zdarma</td>
-                  <td className="border border-gray-300 px-3 py-2">Zbývající část při předání</td>
+                  <td className="border border-warm-beige px-3 py-2">Hotově v showroomu</td>
+                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
+                  <td className="border border-warm-beige px-3 py-2">Pouze při osobním odběru Praha</td>
+                </tr>
+                <tr className="bg-soft-cream">
+                  <td className="border border-warm-beige px-3 py-2">Dobírka (PPL / Zásilkovna)</td>
+                  <td className="border border-warm-beige px-3 py-2">Dle dopravce</td>
+                  <td className="border border-warm-beige px-3 py-2">Platba při převzetí zásilky</td>
+                </tr>
+                <tr>
+                  <td className="border border-warm-beige px-3 py-2">Záloha 50 % (zakázková výroba)</td>
+                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
+                  <td className="border border-warm-beige px-3 py-2">Zbývající část při předání</td>
                 </tr>
               </tbody>
             </table>
@@ -125,37 +125,37 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 4 */}
         <section id="cl4">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 4 – Dodání zboží – doprava a dodací lhůty</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 4 – Dodání zboží – doprava a dodací lhůty</h2>
           <p><strong>4.1 Způsoby dodání:</strong></p>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse border border-gray-300 rounded">
-              <thead className="bg-gray-100">
+            <table className="w-full text-sm border-collapse border border-warm-beige rounded">
+              <thead className="bg-soft-cream">
                 <tr>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Způsob dopravy</th>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Cena</th>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Dodání</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Způsob dopravy</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Cena</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Dodání</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-3 py-2">Zásilkovna (výdejní místo)</td>
-                  <td className="border border-gray-300 px-3 py-2">79 Kč</td>
-                  <td className="border border-gray-300 px-3 py-2">2–3 pracovní dny</td>
+                  <td className="border border-warm-beige px-3 py-2">Zásilkovna (výdejní místo)</td>
+                  <td className="border border-warm-beige px-3 py-2">79 Kč</td>
+                  <td className="border border-warm-beige px-3 py-2">2–3 pracovní dny</td>
                 </tr>
-                <tr className="bg-gray-50">
-                  <td className="border border-gray-300 px-3 py-2">PPL – doručení na adresu</td>
-                  <td className="border border-gray-300 px-3 py-2">119 Kč</td>
-                  <td className="border border-gray-300 px-3 py-2">1–2 pracovní dny</td>
+                <tr className="bg-soft-cream">
+                  <td className="border border-warm-beige px-3 py-2">PPL – doručení na adresu</td>
+                  <td className="border border-warm-beige px-3 py-2">119 Kč</td>
+                  <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-3 py-2">PPL – doručení na adresu (dobírka)</td>
-                  <td className="border border-gray-300 px-3 py-2">149 Kč</td>
-                  <td className="border border-gray-300 px-3 py-2">1–2 pracovní dny</td>
+                  <td className="border border-warm-beige px-3 py-2">PPL – doručení na adresu (dobírka)</td>
+                  <td className="border border-warm-beige px-3 py-2">149 Kč</td>
+                  <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
                 </tr>
-                <tr className="bg-gray-50">
-                  <td className="border border-gray-300 px-3 py-2">Osobní odběr – showroom Praha</td>
-                  <td className="border border-gray-300 px-3 py-2">Zdarma</td>
-                  <td className="border border-gray-300 px-3 py-2">Dle dohody, Po–So 10–18 h</td>
+                <tr className="bg-soft-cream">
+                  <td className="border border-warm-beige px-3 py-2">Osobní odběr – showroom Praha</td>
+                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
+                  <td className="border border-warm-beige px-3 py-2">Dle dohody, Po–So 10–18 h</td>
                 </tr>
               </tbody>
             </table>
@@ -174,7 +174,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 5 */}
         <section id="cl5">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 5 – Specifika zboží – lidské vlasy</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 5 – Specifika zboží – lidské vlasy</h2>
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded text-sm mb-4">
             <p className="font-semibold">⚠️ Důležité</p>
             <p>Lidské vlasy jsou přírodní produkt. Z hygienických důvodů nelze vrátit ani reklamovat vlasy, které byly použity (aplikovány na hlavu), chemicky upraveny (barveny, zesvětlovány) nebo mechanicky poškozeny nevhodnou péčí.</p>
@@ -193,7 +193,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 6 */}
         <section id="cl6">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 6 – Odstoupení od smlouvy – vrácení zboží do 14 dní</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 6 – Odstoupení od smlouvy – vrácení zboží do 14 dní</h2>
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded text-sm mb-4">
             <p className="font-semibold">Zákonné právo</p>
             <p>Kupující-spotřebitel má právo odstoupit od kupní smlouvy uzavřené přes e-shop nebo mimo obchodní prostory (telefon, e-mail) bez udání důvodu ve lhůtě <strong>14 dní</strong> od převzetí zboží. Toto právo se nevztahuje na zboží upravené na míru (zakázková výroba), použité zboží a zboží z hygienických důvodů nevhodné k vrácení po otevření.</p>
@@ -225,7 +225,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 7 */}
         <section id="cl7">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 7 – Práva z vadného plnění – záruční podmínky</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 7 – Práva z vadného plnění – záruční podmínky</h2>
           <p><strong>7.1 Záruční doba:</strong> Na nepoužité zboží poskytujeme záruční dobu <strong>24 měsíců</strong> od převzetí zboží.</p>
           <p><strong>7.2 Co je vadou zboží:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
@@ -247,7 +247,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 8 */}
         <section id="cl8">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 8 – Reklamační řád</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 8 – Reklamační řád</h2>
           <p><strong>8.1 Kde reklamaci uplatnit:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>E-mailem: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> (uveďte číslo objednávky, popis vady, fotografie)</li>
@@ -279,23 +279,23 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 9 */}
         <section id="cl9">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 9 – Výroba na zakázku</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 9 – Výroba na zakázku</h2>
           <p><strong>9.1</strong> Zakázkovou výrobou se rozumí výroba vlasových produktů dle specifikace kupujícího – zejména vlasové pásky, weft, clip-in a keratin prameny vyrobené z culíku kupujícího nebo z naší zásoby dle přesného požadavku.</p>
           <p><strong>9.2 Výrobní lhůty:</strong></p>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse border border-gray-300 rounded">
-              <thead className="bg-gray-100">
+            <table className="w-full text-sm border-collapse border border-warm-beige rounded">
+              <thead className="bg-soft-cream">
                 <tr>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Typ výroby</th>
-                  <th className="border border-gray-300 px-3 py-2 text-left">Lhůta</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Typ výroby</th>
+                  <th className="border border-warm-beige px-3 py-2 text-left">Lhůta</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td className="border border-gray-300 px-3 py-2">Vlasové pásky (tape-in)</td><td className="border border-gray-300 px-3 py-2">14 pracovních dnů</td></tr>
-                <tr className="bg-gray-50"><td className="border border-gray-300 px-3 py-2">Weft (Hollywood prodloužení)</td><td className="border border-gray-300 px-3 py-2">14 pracovních dnů</td></tr>
-                <tr><td className="border border-gray-300 px-3 py-2">Clip-in vlasy</td><td className="border border-gray-300 px-3 py-2">14 pracovních dnů</td></tr>
-                <tr className="bg-gray-50"><td className="border border-gray-300 px-3 py-2">Keratin prameny</td><td className="border border-gray-300 px-3 py-2">3 pracovní dny</td></tr>
-                <tr><td className="border border-gray-300 px-3 py-2">Micro keratin prameny</td><td className="border border-gray-300 px-3 py-2">3 pracovní dny</td></tr>
+                <tr><td className="border border-warm-beige px-3 py-2">Vlasové pásky (tape-in)</td><td className="border border-warm-beige px-3 py-2">14 pracovních dnů</td></tr>
+                <tr className="bg-soft-cream"><td className="border border-warm-beige px-3 py-2">Weft (Hollywood prodloužení)</td><td className="border border-warm-beige px-3 py-2">14 pracovních dnů</td></tr>
+                <tr><td className="border border-warm-beige px-3 py-2">Clip-in vlasy</td><td className="border border-warm-beige px-3 py-2">14 pracovních dnů</td></tr>
+                <tr className="bg-soft-cream"><td className="border border-warm-beige px-3 py-2">Keratin prameny</td><td className="border border-warm-beige px-3 py-2">3 pracovní dny</td></tr>
+                <tr><td className="border border-warm-beige px-3 py-2">Micro keratin prameny</td><td className="border border-warm-beige px-3 py-2">3 pracovní dny</td></tr>
               </tbody>
             </table>
           </div>
@@ -306,7 +306,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 10 */}
         <section id="cl10">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 10 – Velkoobchodní podmínky (B2B)</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 10 – Velkoobchodní podmínky (B2B)</h2>
           <p><strong>10.1</strong> Tyto obchodní podmínky se vztahují i na obchodní vztahy s podnikateli (B2B). Na spotřebitele-podnikatele se nevztahuje zákonná ochrana spotřebitele (zejm. právo odstoupit od smlouvy do 14 dní bez udání důvodu).</p>
           <p><strong>10.2 Podmínky pro získání B2B statusu a velkoobchodní slevy:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
@@ -322,7 +322,7 @@ export default function ObchodniPodminkyPage() {
           </ul>
           <p><strong>10.3</strong> Pro registraci jako B2B partner kontaktujte: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> nebo telefonicky +420 728 722 880. Uveďte odkaz na svůj sociální profil a typ prováděných vlasových služeb.</p>
           <p><strong>10.4</strong> B2B kupující nemá právo na odstoupení od smlouvy bez udání důvodu. Reklamace se řídí čl. 7 a 8 těchto podmínek, přičemž se nepoužijí ustanovení o spotřebitelských právech.</p>
-          <div className="bg-gray-50 border-l-4 border-gray-400 p-4 rounded text-sm">
+          <div className="bg-soft-cream border-l-4 border-warm-beige p-4 rounded text-sm">
             <p className="font-semibold">ℹ️ Důležité</p>
             <p>Prodávající poskytuje B2B partnerům: vzorkovník barev, marketingové fotografie k produktům, doporučení pro aplikaci a přednostní zákaznickou podporu. Sleva je přidělena po ověření sociálních sítí partnera a platí po dobu aktivní spolupráce.</p>
           </div>
@@ -330,7 +330,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 11 */}
         <section id="cl11">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 11 – Ochrana osobních údajů (GDPR)</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 11 – Ochrana osobních údajů (GDPR)</h2>
           <p><strong>11.1</strong> Správcem osobních údajů je: Anna Zvinchuk, Múza Hair Praha s.r.o., IČO: 17989230.</p>
           <p><strong>11.2 Jaké údaje zpracováváme:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
@@ -348,7 +348,7 @@ export default function ObchodniPodminkyPage() {
 
         {/* Čl. 12 */}
         <section id="cl12">
-          <h2 className="text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">Článek 12 – Závěrečná ustanovení</h2>
+          <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 12 – Závěrečná ustanovení</h2>
           <p><strong>12.1</strong> Tyto obchodní podmínky jsou platné a účinné od <strong>1. 5. 2025</strong>. Prodávající si vyhrazuje právo tyto podmínky měnit – změny vstupují v platnost dnem zveřejnění na webovém rozhraní.</p>
           <p><strong>12.2</strong> Mimosoudní řešení spotřebitelských sporů: Kupující-spotřebitel má právo obrátit se na Českou obchodní inspekci (ČOI) – <a href="https://www.coi.cz" target="_blank" rel="noopener noreferrer" className="text-burgundy underline">www.coi.cz</a>, nebo na platformu pro řešení sporů online: <a href="http://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-burgundy underline">ec.europa.eu/consumers/odr</a>.</p>
           <p><strong>12.3</strong> Tyto obchodní podmínky jsou dostupné na webovém rozhraní muzahair.cz/obchodni-podminky/ a jsou k dispozici v showroomu Múza Hair Praha.</p>
@@ -356,8 +356,8 @@ export default function ObchodniPodminkyPage() {
         </section>
 
         {/* Kontakty */}
-        <section className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Kontakty pro zákaznickou podporu</h2>
+        <section className="bg-soft-cream rounded-lg p-6 border border-warm-beige">
+          <h2 className="text-lg font-semibold text-text-dark mb-3">Kontakty pro zákaznickou podporu</h2>
           <ul className="space-y-1 text-sm">
             <li>Běžné dotazy: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
             <li>Reklamace: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
@@ -368,10 +368,10 @@ export default function ObchodniPodminkyPage() {
         </section>
 
         {/* Příloha 1 */}
-        <section id="priloha1" className="border-2 border-dashed border-gray-300 rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Příloha č. 1 – Vzorový formulář pro odstoupení od smlouvy</h2>
-          <p className="text-sm text-gray-600 mb-4">Vyplňte a zašlete pouze v případě, že chcete odstoupit od smlouvy.</p>
-          <div className="text-sm space-y-2 text-gray-700">
+        <section id="priloha1" className="border-2 border-dashed border-warm-beige rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-text-dark mb-4">Příloha č. 1 – Vzorový formulář pro odstoupení od smlouvy</h2>
+          <p className="text-sm text-text-mid mb-4">Vyplňte a zašlete pouze v případě, že chcete odstoupit od smlouvy.</p>
+          <div className="text-sm space-y-2 text-text-mid">
             <p><strong>Komu:</strong> Múza Hair Praha s.r.o., [adresa], Praha &nbsp;|&nbsp; <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
             <p>Oznamuji, že tímto odstupuji od kupní smlouvy na zboží:</p>
             <div className="space-y-2 ml-4">
@@ -388,11 +388,11 @@ export default function ObchodniPodminkyPage() {
               ].map((label) => (
                 <div key={label} className="flex gap-2">
                   <span className="min-w-[200px] font-medium">{label}:</span>
-                  <span className="flex-1 border-b border-gray-400">&nbsp;</span>
+                  <span className="flex-1 border-b border-warm-beige">&nbsp;</span>
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs text-gray-500">Vyplněný formulář zašlete e-mailem na muzahaircz@gmail.com nebo doporučeně poštou na adresu prodávajícího. Zboží zašlete doporučenou zásilkou (nikoli na dobírku) nejpozději do 14 dní od odeslání tohoto formuláře.</p>
+            <p className="mt-4 text-xs text-text-soft">Vyplněný formulář zašlete e-mailem na muzahaircz@gmail.com nebo doporučeně poštou na adresu prodávajícího. Zboží zašlete doporučenou zásilkou (nikoli na dobírku) nejpozději do 14 dní od odeslání tohoto formuláře.</p>
           </div>
         </section>
 

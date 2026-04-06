@@ -8,9 +8,9 @@ export default function ReturnsPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8">Reklamace a vrácení zboží</h1>
 
-      <div className="prose prose-lg max-w-none space-y-6 text-gray-700">
+      <div className="prose prose-lg max-w-none space-y-6 text-text-mid">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">1. Právo na odstoupení od smlouvy (14 dnů)</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">1. Právo na odstoupení od smlouvy (14 dnů)</h2>
           <p>
             <strong>1.1</strong> Jako spotřebitel máte právo odstoupit od smlouvy do <strong>14 dnů</strong>
             od převzetí zboží bez udání důvodu.
@@ -42,7 +42,7 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">2. Výjimky z práva na odstoupení</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">2. Výjimky z práva na odstoupení</h2>
           <p>Právo na odstoupení nelze uplatnit u:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Zboží na míru:</strong> vlasy vyrobené podle vašich specifikací (délka, barva, metoda)</li>
@@ -52,7 +52,7 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">3. Reklamace vadného zboží (záruka 24 měsíců)</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">3. Reklamace vadného zboží (záruka 24 měsíců)</h2>
           <p>
             <strong>3.1 Záruční doba:</strong> <strong>24 měsíců</strong> od převzetí zboží.
           </p>
@@ -77,7 +77,7 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">4. Jak podat reklamaci</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">4. Jak podat reklamaci</h2>
           <p><strong>Krok 1:</strong> Kontaktujte nás co nejdříve</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>E-mail: <strong>info@muzahair.cz</strong></li>
@@ -104,8 +104,8 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">5. Reklamační formulář</h2>
-          <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">5. Reklamační formulář</h2>
+          <div className="bg-soft-cream p-6 rounded-lg border border-warm-beige">
             <p className="font-semibold mb-2">Údaje pro vyplnění:</p>
             <ul className="space-y-1 text-sm">
               <li>• Jméno a příjmení</li>
@@ -125,7 +125,7 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">6. Náklady na reklamaci</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">6. Náklady na reklamaci</h2>
           <p>
             <strong>6.1</strong> Pokud je reklamace oprávněná:
           </p>
@@ -143,7 +143,7 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">7. Doporučení pro péči o vlasy</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">7. Doporučení pro péči o vlasy</h2>
           <p>Pro zachování kvality vlasů doporučujeme:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Používat kvalitní šampony a kondicionéry pro prodloužené vlasy</li>
@@ -159,7 +159,7 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">8. Mimosoudní řešení sporů</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">8. Mimosoudní řešení sporů</h2>
           <p>
             V případě sporu se můžete obrátit na:
           </p>
@@ -177,33 +177,33 @@ export default function ReturnsPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">9. Časté dotazy (FAQ)</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">9. Časté dotazy (FAQ)</h2>
           <div className="space-y-4">
             <div>
-              <p className="font-semibold text-gray-900">❓ Mohu vrátit vlasy, pokud mi nesedí barva?</p>
+              <p className="font-semibold text-text-dark">❓ Mohu vrátit vlasy, pokud mi nesedí barva?</p>
               <p>Ano, do 14 dnů bez udání důvodu, pokud jsou vlasy nepoužité a nepoškozené.</p>
             </div>
             <div>
-              <p className="font-semibold text-gray-900">❓ Mohu vrátit vlasy, které jsem si nechala aplikovat?</p>
+              <p className="font-semibold text-text-dark">❓ Mohu vrátit vlasy, které jsem si nechala aplikovat?</p>
               <p>Ne, aplikované vlasy nelze vrátit (hygienické důvody).</p>
             </div>
             <div>
-              <p className="font-semibold text-gray-900">❓ Jak dlouho trvá vyřízení reklamace?</p>
+              <p className="font-semibold text-text-dark">❓ Jak dlouho trvá vyřízení reklamace?</p>
               <p>Maximálně 30 dnů od obdržení reklamovaného zboží.</p>
             </div>
             <div>
-              <p className="font-semibold text-gray-900">❓ Kdo hradí poštovné při vrácení zboží?</p>
+              <p className="font-semibold text-text-dark">❓ Kdo hradí poštovné při vrácení zboží?</p>
               <p>Při odstoupení od smlouvy: vy. Při oprávněné reklamaci: my.</p>
             </div>
             <div>
-              <p className="font-semibold text-gray-900">❓ Mohu si vyměnit vlasy za jinou délku?</p>
+              <p className="font-semibold text-text-dark">❓ Mohu si vyměnit vlasy za jinou délku?</p>
               <p>Ano, do 14 dnů, pokud jsou nepoužité. Případný cenový rozdíl doplatíte/vrátíme.</p>
             </div>
           </div>
         </section>
 
         <section className="border-t pt-6 mt-8 bg-blue-50 p-6 rounded-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">📞 Potřebujete pomoc?</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">📞 Potřebujete pomoc?</h2>
           <p>
             Pokud si nejste jistí, zda je váš problém reklamace nebo máte jakékoli dotazy,
             neváhejte nás kontaktovat. Rádi vám poradíme!
@@ -218,7 +218,7 @@ export default function ReturnsPage() {
         </section>
 
         <section className="mt-8">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-mid">
             <strong>Platnost:</strong> Tyto podmínky jsou platné od 7. prosince 2025.<br />
             <strong>Související dokumenty:</strong>{' '}
             <a href="/obchodni-podminky" className="text-blue-600 hover:underline">Obchodní podmínky</a>,{' '}

@@ -56,14 +56,14 @@ export default function NasPribehPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-soft-cream">
       {/* Hero */}
       <div className="bg-gradient-to-b from-rose-50 to-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-text-dark mb-6">
             Náš příběh
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-text-mid max-w-2xl mx-auto leading-relaxed">
             Již více než 8 let pomáháme ženám cítit se krásně a sebevědomě.
             Jsme česká rodinná firma s vášní pro kvalitní vlasy.
           </p>
@@ -73,10 +73,10 @@ export default function NasPribehPage() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Story Section */}
         <section className="mb-20">
-          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-gray-100">
-            <div className="prose prose-lg max-w-none text-gray-700">
+          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-warm-beige">
+            <div className="prose prose-lg max-w-none text-text-mid">
               <p className="text-xl leading-relaxed">
-                <strong className="text-gray-900">Mùza Hair</strong> vznikla z jednoduché myšlenky:
+                <strong className="text-text-dark">Mùza Hair</strong> vznikla z jednoduché myšlenky:
                 každá žena si zaslouží mít vlasy svých snů, aniž by musela utratit celé jmění.
               </p>
               <p>
@@ -99,7 +99,7 @@ export default function NasPribehPage() {
 
         {/* Timeline */}
         <section className="mb-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-text-dark mb-8 text-center">
             Naše cesta
           </h2>
           <div className="relative">
@@ -119,10 +119,10 @@ export default function NasPribehPage() {
 
                   {/* Content */}
                   <div className={`ml-16 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
-                    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <div className="bg-white rounded-xl p-6 shadow-sm border border-warm-beige">
                       <span className="text-pink-600 font-bold text-lg">{item.year}</span>
-                      <h3 className="font-bold text-gray-900 mt-1">{item.title}</h3>
-                      <p className="text-gray-600 text-sm mt-2">{item.description}</p>
+                      <h3 className="font-bold text-text-dark mt-1">{item.title}</h3>
+                      <p className="text-text-mid text-sm mt-2">{item.description}</p>
                     </div>
                   </div>
                 </div>
@@ -133,18 +133,18 @@ export default function NasPribehPage() {
 
         {/* Values */}
         <section className="mb-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-text-dark mb-8 text-center">
             Naše hodnoty
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {values.map((value) => (
               <div
                 key={value.title}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
+                className="bg-white rounded-xl p-6 shadow-sm border border-warm-beige"
               >
                 <div className="text-3xl mb-4">{value.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2">{value.title}</h3>
-                <p className="text-gray-600">{value.description}</p>
+                <h3 className="font-bold text-text-dark mb-2">{value.title}</h3>
+                <p className="text-text-mid">{value.description}</p>
               </div>
             ))}
           </div>
@@ -152,16 +152,16 @@ export default function NasPribehPage() {
 
         {/* Team */}
         <section className="mb-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-text-dark mb-8 text-center">
             Kdo za Mùza Hair stojí
           </h2>
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 text-center">
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-warm-beige text-center">
             <div className="w-24 h-24 bg-pink-100 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl">
               👩‍💼
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Anna</h3>
+            <h3 className="text-xl font-bold text-text-dark mb-2">Anna</h3>
             <p className="text-pink-600 font-medium mb-4">Zakladatelka & CEO</p>
-            <p className="text-gray-600 max-w-lg mx-auto">
+            <p className="text-text-mid max-w-lg mx-auto">
               "Věřím, že krásné vlasy nejsou luxus jen pro vyvolené. Každá žena si zaslouží cítit se
               výjimečně, a my jsme tu od toho, abychom jí v tom pomohli."
             </p>
@@ -191,22 +191,22 @@ export default function NasPribehPage() {
         </section>
 
         {/* Contact */}
-        <section className="mt-12 pt-8 border-t border-gray-200">
+        <section className="mt-12 pt-8 border-t border-warm-beige">
           <div className="grid md:grid-cols-3 gap-6 text-center">
             <div>
               <div className="text-2xl mb-2">📍</div>
-              <h3 className="font-semibold text-gray-900">Showroom Praha</h3>
-              <p className="text-gray-600 text-sm">Centrum Prahy (přesná adresa po domluvě)</p>
+              <h3 className="font-semibold text-text-dark">Showroom Praha</h3>
+              <p className="text-text-mid text-sm">Centrum Prahy (přesná adresa po domluvě)</p>
             </div>
             <div>
               <div className="text-2xl mb-2">📞</div>
-              <h3 className="font-semibold text-gray-900">Telefon</h3>
-              <p className="text-gray-600 text-sm">+420 728 722 880</p>
+              <h3 className="font-semibold text-text-dark">Telefon</h3>
+              <p className="text-text-mid text-sm">+420 728 722 880</p>
             </div>
             <div>
               <div className="text-2xl mb-2">✉️</div>
-              <h3 className="font-semibold text-gray-900">Email</h3>
-              <p className="text-gray-600 text-sm">info@muzahair.cz</p>
+              <h3 className="font-semibold text-text-dark">Email</h3>
+              <p className="text-text-mid text-sm">info@muzahair.cz</p>
             </div>
           </div>
         </section>

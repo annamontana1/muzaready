@@ -44,7 +44,7 @@ export default function LoginPage() {
         <h1 className="text-2xl font-playfair text-burgundy mb-2 text-center">
           Přihlášení
         </h1>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-text-mid text-center mb-8">
           Přihlaste se ke svému účtu
         </p>
 
@@ -56,7 +56,7 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-mid mb-2">
               Email
             </label>
             <input
@@ -65,13 +65,13 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="vas@email.cz"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-mid mb-2">
               Heslo
             </label>
             <input
@@ -80,7 +80,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="Vaše heslo"
             />
           </div>
@@ -101,7 +101,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+          <p className="text-text-mid text-sm">
             Nemáte účet?{' '}
             <Link href="/registrace" className="text-burgundy hover:text-maroon font-medium">
               Zaregistrujte se

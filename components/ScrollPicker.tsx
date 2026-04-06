@@ -109,9 +109,9 @@ export default function ScrollPicker({
       <button
         type="button"
         onClick={handleOpen}
-        className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-lg text-left flex items-center justify-between hover:border-burgundy/30 transition"
+        className="w-full px-4 py-3 bg-white border-2 border-warm-beige rounded-lg text-left flex items-center justify-between hover:border-burgundy/30 transition"
       >
-        <span className={`${value === null ? 'text-gray-400' : 'text-gray-900'}`}>{displayText}</span>
+        <span className={`${value === null ? 'text-text-soft' : 'text-text-dark'}`}>{displayText}</span>
         <svg
           className={`w-5 h-5 text-burgundy transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
@@ -137,7 +137,7 @@ export default function ScrollPicker({
             <div className="flex items-center justify-between p-4 border-b">
               <button
                 onClick={handleCancel}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-text-soft hover:text-text-mid"
               >
                 Zrušit
               </button>
@@ -161,10 +161,10 @@ export default function ScrollPicker({
                     disabled={option.disabled}
                     className={`w-full p-4 rounded-lg text-left transition ${
                       option.disabled
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        ? 'bg-soft-cream text-text-soft cursor-not-allowed'
                         : tempValue === option.value
                         ? 'bg-burgundy text-white'
-                        : 'bg-gray-50 text-gray-900 hover:bg-burgundy/10'
+                        : 'bg-soft-cream text-text-dark hover:bg-burgundy/10'
                     }`}
                     title={option.disabled ? option.tooltip : undefined}
                   >
@@ -194,10 +194,10 @@ export default function ScrollPicker({
                 disabled={option.disabled}
                 className={`w-full px-4 py-3 rounded-md text-left transition ${
                   option.disabled
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    ? 'bg-soft-cream text-text-soft cursor-not-allowed'
                     : value === option.value
                     ? 'bg-burgundy text-white'
-                    : 'text-gray-900 hover:bg-burgundy/10'
+                    : 'text-text-dark hover:bg-burgundy/10'
                 }`}
                 title={option.disabled ? option.tooltip : undefined}
               >

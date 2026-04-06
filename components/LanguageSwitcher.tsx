@@ -13,7 +13,7 @@ export default function LanguageSwitcher() {
     <select
       value={language}
       onChange={handleLanguageChange}
-      className="border border-gray-200 rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-burgundy text-sm"
+      className="border border-warm-beige rounded-md px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-burgundy text-sm"
       aria-label="Select language"
     >
       <option value="cs">🇨🇿 Čeština</option>

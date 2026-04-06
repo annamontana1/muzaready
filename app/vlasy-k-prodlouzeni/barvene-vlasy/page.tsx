@@ -195,7 +195,7 @@ export default function BarveneBlondPage() {
             Barvené blond vlasy
           </motion.h1>
           <motion.p
-            className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed"
+            className="text-sm md:text-base text-text-mid max-w-4xl leading-relaxed"
             variants={fadeInUp}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
@@ -212,7 +212,7 @@ export default function BarveneBlondPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <h3 className="text-base font-semibold text-burgundy mb-2">✨ Vlastní barvírna</h3>
-          <p className="text-xs text-gray-700">
+          <p className="text-xs text-text-mid">
             Všechny blond vlasy jsou profesionálně obarvené v naší pražské barvírně.
             Garantujeme krásné, rovnoměrné odstíny a dlouhou životnost.
           </p>
@@ -232,7 +232,7 @@ export default function BarveneBlondPage() {
               className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block h-full"
             >
               <h3 className="text-xl font-playfair text-burgundy mb-2">Standard</h3>
-              <p className="text-xs text-gray-700 leading-relaxed">
+              <p className="text-xs text-text-mid leading-relaxed">
                 Profesionálně barvené vlasy s krásným blond odstínem. Délky 35–75 cm.
               </p>
             </Link>
@@ -245,7 +245,7 @@ export default function BarveneBlondPage() {
               className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block h-full"
             >
               <h3 className="text-xl font-playfair text-burgundy mb-2">LUXE</h3>
-              <p className="text-xs text-gray-700 leading-relaxed">
+              <p className="text-xs text-text-mid leading-relaxed">
                 Vyšší kvalita barvení, hustší konce. Délky 40–85 cm.
               </p>
             </Link>
@@ -258,7 +258,7 @@ export default function BarveneBlondPage() {
               className="p-5 rounded-xl border-2 border-warm-beige bg-white hover:border-burgundy/50 hover:shadow-lg transition-all text-left block h-full"
             >
               <h3 className="text-xl font-playfair text-burgundy mb-2">Platinum Edition</h3>
-              <p className="text-xs text-gray-700 leading-relaxed">
+              <p className="text-xs text-text-mid leading-relaxed">
                 Premium barvené vlasy, exkluzivní kvalita. Délky 45–90 cm.
               </p>
             </Link>
@@ -370,7 +370,7 @@ export default function BarveneBlondPage() {
           {/* Aktivní filtry - sjednocené odstíny */}
           {(filters.tier !== 'all' || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
-              <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
+              <p className="text-sm text-text-mid mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
                 {filters.tier !== 'all' && (
                   <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
@@ -402,14 +402,14 @@ export default function BarveneBlondPage() {
         {loading && (
           <div className="text-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-burgundy mx-auto mb-4"></div>
-            <p className="text-gray-600">Načítám produkty...</p>
+            <p className="text-text-mid">Načítám produkty...</p>
           </div>
         )}
 
         {/* Počet výsledků */}
         {!loading && (
           <div className="mb-6">
-            <p className="text-gray-600">
+            <p className="text-text-mid">
               Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
               {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
             </p>
@@ -612,7 +612,7 @@ export default function BarveneBlondPage() {
             <h3 className="text-2xl font-playfair text-burgundy mb-2">
               Žádné produkty nenalezeny
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-text-mid mb-6">
               Zkuste změnit filtry nebo je vymažte a prohlédněte si celou nabídku.
             </p>
             <button

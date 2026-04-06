@@ -54,7 +54,7 @@ const config: Config = {
         info: '#6B7A8F',
       },
       fontFamily: {
-        playfair: ['Playfair Display', 'serif'],
+        playfair: ['Cormorant Garamond', 'serif'], // alias → sjednoceno s cormorant
         cormorant: ['Cormorant Garamond', 'serif'],
         jost: ['Jost', 'sans-serif'],
         inter: ['Jost', 'sans-serif'], // alias for backward compat

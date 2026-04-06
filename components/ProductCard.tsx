@@ -201,14 +201,14 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                       className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
                       aria-label="Předchozí foto"
                     >
-                      <span className="text-xs font-bold text-gray-700">&larr;</span>
+                      <span className="text-xs font-bold text-text-mid">&larr;</span>
                     </button>
                     <button
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev + 1) % allImages.length); }}
                       className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
                       aria-label="Další foto"
                     >
-                      <span className="text-xs font-bold text-gray-700">&rarr;</span>
+                      <span className="text-xs font-bold text-text-mid">&rarr;</span>
                     </button>
                     {/* Dots indicator */}
                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
@@ -252,7 +252,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
         {/* Struktura label */}
         {displayVariant?.structure && (
           <div className="absolute bottom-2 left-2 right-2 text-center pointer-events-none" style={{ bottom: (product.images?.gallery?.length || 0) > 0 ? '1.5rem' : '0.5rem' }}>
-            <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
+            <span className="px-2 py-1 bg-white/90 text-text-dark text-xs font-medium rounded">
               Struktura: {displayVariant.structure}
             </span>
           </div>
@@ -277,7 +277,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
             {/* Řádek 2: Gramáž (pouze pro Standard/LUXE) */}
             {!isPlatinum ? (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-text-soft">
                 100 g
               </p>
             ) : (
@@ -294,7 +294,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                 <>
                   {isB2B ? (
                     <div className="space-y-1">
-                      <p className="text-xs line-through text-gray-400">
+                      <p className="text-xs line-through text-text-soft">
                         {priceCalculator.formatPrice(displayPrice)}
                       </p>
                       <p className="text-base font-semibold text-burgundy">
@@ -333,7 +333,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           {!isPlatinum && displayVariant && !displayVariant.in_stock && (
             <button
               disabled
-              className="mt-3 w-full py-2 px-4 bg-gray-300 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
+              className="mt-3 w-full py-2 px-4 bg-gray-300 text-text-soft text-sm font-medium rounded-lg cursor-not-allowed"
             >
               Vyprodáno
             </button>
@@ -368,7 +368,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           {/* Close button */}
           <button
             onClick={closeTierModal}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            className="absolute top-4 right-4 text-text-soft hover:text-text-mid"
             aria-label="Zavřít"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,13 +382,13 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Co to je?</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">{tierInfo.description}</p>
+                <h4 className="text-sm font-semibold text-text-mid mb-2">Co to je?</h4>
+                <p className="text-sm text-text-mid leading-relaxed">{tierInfo.description}</p>
               </div>
 
               <div>
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Pro koho?</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">{tierInfo.forWho}</p>
+                <h4 className="text-sm font-semibold text-text-mid mb-2">Pro koho?</h4>
+                <p className="text-sm text-text-mid leading-relaxed">{tierInfo.forWho}</p>
               </div>
             </div>
 

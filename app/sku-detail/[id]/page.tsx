@@ -203,7 +203,7 @@ export default function SkuDetailPage() {
           <div className="flex items-center justify-center py-32">
             <div className="animate-pulse flex flex-col items-center gap-4">
               <div className="w-12 h-12 rounded-full border-4 border-burgundy/30 border-t-burgundy animate-spin" />
-              <p className="text-gray-500 font-playfair">Nacitam produkt...</p>
+              <p className="text-text-soft font-playfair">Nacitam produkt...</p>
             </div>
           </div>
         </div>
@@ -347,17 +347,17 @@ export default function SkuDetailPage() {
               <h1 className="font-playfair text-3xl lg:text-4xl font-bold text-burgundy mb-2">
                 {sku.name || 'Bez nazvu'}
               </h1>
-              <p className="text-sm text-gray-400 mb-6">SKU: {sku.sku}</p>
+              <p className="text-sm text-text-soft mb-6">SKU: {sku.sku}</p>
 
               {/* Key details */}
               <div className="bg-white rounded-xl border border-warm-beige p-5 space-y-4">
                 {sku.shadeName && (
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-sm">Odstín</span>
-                    <span className="flex items-center gap-2 font-medium text-gray-800">
+                    <span className="text-text-soft text-sm">Odstín</span>
+                    <span className="flex items-center gap-2 font-medium text-text-dark">
                       {sku.shadeHex && (
                         <span
-                          className="inline-block w-5 h-5 rounded-full border border-gray-200 shadow-inner"
+                          className="inline-block w-5 h-5 rounded-full border border-warm-beige shadow-inner"
                           style={{ backgroundColor: sku.shadeHex }}
                         />
                       )}
@@ -366,19 +366,19 @@ export default function SkuDetailPage() {
                   </div>
                 )}
                 {sku.lengthCm && (
-                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                    <span className="text-gray-500 text-sm">Délka</span>
-                    <span className="font-medium text-gray-800">{sku.lengthCm} cm</span>
+                  <div className="flex items-center justify-between border-t border-warm-beige pt-4">
+                    <span className="text-text-soft text-sm">Délka</span>
+                    <span className="font-medium text-text-dark">{sku.lengthCm} cm</span>
                   </div>
                 )}
                 {sku.structure && (
-                  <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                    <span className="text-gray-500 text-sm">Struktura</span>
-                    <span className="font-medium text-gray-800 capitalize">{sku.structure}</span>
+                  <div className="flex items-center justify-between border-t border-warm-beige pt-4">
+                    <span className="text-text-soft text-sm">Struktura</span>
+                    <span className="font-medium text-text-dark capitalize">{sku.structure}</span>
                   </div>
                 )}
-                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                  <span className="text-gray-500 text-sm">Cena za gram</span>
+                <div className="flex items-center justify-between border-t border-warm-beige pt-4">
+                  <span className="text-text-soft text-sm">Cena za gram</span>
                   <span className="text-lg font-bold text-burgundy">{formatPrice(sku.pricePerGramCzk)}/g</span>
                 </div>
               </div>
@@ -402,7 +402,7 @@ export default function SkuDetailPage() {
 
               {/* Ending Selection */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-text-mid mb-3">
                   Zakončení
                 </label>
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
@@ -413,11 +413,11 @@ export default function SkuDetailPage() {
                       className={`p-3 rounded-xl text-left transition-all border-2 ${
                         selectedEnding === option.id
                           ? 'bg-burgundy text-white border-burgundy shadow-md'
-                          : 'bg-white text-gray-700 border-gray-200 hover:border-burgundy/50'
+                          : 'bg-white text-text-mid border-warm-beige hover:border-burgundy/50'
                       }`}
                     >
                       <span className="block text-sm font-semibold">{option.label}</span>
-                      <span className={`block text-xs mt-0.5 ${selectedEnding === option.id ? 'text-white/70' : 'text-gray-400'}`}>{option.price}</span>
+                      <span className={`block text-xs mt-0.5 ${selectedEnding === option.id ? 'text-white/70' : 'text-text-soft'}`}>{option.price}</span>
                     </button>
                   ))}
                 </div>
@@ -427,7 +427,7 @@ export default function SkuDetailPage() {
               {sku.saleMode === 'BULK_G' && (
                 <div className="mb-6 space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    <label className="block text-sm font-semibold text-text-mid mb-3">
                       Délka: <span className="text-burgundy">{bulkLengthValue} cm</span>
                     </label>
                     <input
@@ -439,13 +439,13 @@ export default function SkuDetailPage() {
                       onChange={(e) => setSelectedLength(Number(e.target.value))}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy"
                     />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
+                    <div className="flex justify-between text-xs text-text-soft mt-1">
                       <span>{BULK_MIN_LENGTH} cm</span>
                       <span>{BULK_MAX_LENGTH} cm</span>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    <label className="block text-sm font-semibold text-text-mid mb-3">
                       Gramaz: <span className="text-burgundy">{bulkGramsValue} g</span>
                     </label>
                     <input
@@ -458,11 +458,11 @@ export default function SkuDetailPage() {
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy disabled:opacity-50"
                       disabled={!bulkMaxGrams}
                     />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
+                    <div className="flex justify-between text-xs text-text-soft mt-1">
                       <span>{bulkMinGrams} g</span>
                       <span>{Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)} g</span>
                     </div>
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-text-soft mt-2">
                       Min. objednavka {bulkMinGrams} g, krok {bulkStepGrams} g
                     </p>
                   </div>
@@ -489,7 +489,7 @@ export default function SkuDetailPage() {
 
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Vlasy ({quote.grams}g x {formatPrice(quote.pricePerGram)}/g)</span>
+                    <span className="text-text-mid">Vlasy ({quote.grams}g x {formatPrice(quote.pricePerGram)}/g)</span>
                     <span className="font-medium">{formatPrice(quote.lineTotal)}</span>
                   </div>
 
@@ -501,14 +501,14 @@ export default function SkuDetailPage() {
                   )}
 
                   <div className="pt-3 border-t-2 border-burgundy/20 flex justify-between items-end">
-                    <span className="font-semibold text-gray-800">Celkem za 1 ks</span>
+                    <span className="font-semibold text-text-dark">Celkem za 1 ks</span>
                     <span className="text-2xl font-bold text-burgundy">{formatPrice(quote.lineGrandTotal)}</span>
                   </div>
                 </div>
 
                 {/* Quantity Selector */}
-                <div className="pt-4 border-t border-gray-100">
-                  <label className="text-sm font-medium text-gray-600 block mb-3">Pocet kusu</label>
+                <div className="pt-4 border-t border-warm-beige">
+                  <label className="text-sm font-medium text-text-mid block mb-3">Pocet kusu</label>
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -527,7 +527,7 @@ export default function SkuDetailPage() {
 
                   {quantity > 1 && (
                     <div className="mt-3 text-right">
-                      <p className="text-xs text-gray-400">Celkem za {quantity} ks</p>
+                      <p className="text-xs text-text-soft">Celkem za {quantity} ks</p>
                       <p className="text-3xl font-bold text-burgundy">
                         {formatPrice(quote.lineGrandTotal * quantity)}
                       </p>
@@ -546,7 +546,7 @@ export default function SkuDetailPage() {
             )}
 
             {/* How it works */}
-            <div className="bg-burgundy/5 rounded-xl p-5 text-sm text-gray-600">
+            <div className="bg-burgundy/5 rounded-xl p-5 text-sm text-text-mid">
               <p className="font-semibold text-burgundy mb-2">Jak to funguje</p>
               <ol className="list-decimal list-inside space-y-1.5 text-xs leading-relaxed">
                 <li>Vyber typ zakončení</li>

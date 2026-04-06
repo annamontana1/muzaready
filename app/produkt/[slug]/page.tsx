@@ -176,7 +176,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
         <div className="container mx-auto px-4">
           {/* Breadcrumb Navigation */}
           <nav className="mb-6 text-sm">
-            <ol className="flex items-center gap-2 text-gray-600">
+            <ol className="flex items-center gap-2 text-text-mid">
               <li>
                 <a href="/" className="hover:text-burgundy transition">
                   Domů
@@ -234,7 +234,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                 {/* Struktura label pod fotkou */}
                 {variant?.structure && (
                   <div className="absolute bottom-4 left-4 right-4 text-center">
-                    <span className="px-3 py-1.5 bg-white/95 text-gray-800 text-xs font-medium rounded shadow-md">
+                    <span className="px-3 py-1.5 bg-white/95 text-text-dark text-xs font-medium rounded shadow-md">
                       Struktura: {variant.structure}
                     </span>
                   </div>
@@ -291,7 +291,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
               {/* 2. Description */}
               <div className="mb-6">
-                <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                <p className="text-text-mid leading-relaxed">{product.description}</p>
               </div>
 
               {/* 3. Configurator - moved here after description */}
@@ -313,7 +313,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                   <h3 className="text-lg font-semibold text-burgundy mb-3">Vlastnosti</h3>
                   <ul className="space-y-2">
                     {product.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                      <li key={index} className="flex items-start gap-2 text-sm text-text-mid">
                         <span className="text-burgundy mt-1">✓</span>
                         <span>{feature}</span>
                       </li>
@@ -328,10 +328,10 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                   <h3 className="text-lg font-semibold text-burgundy mb-4">Specifikace culíku</h3>
                   <dl className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <dt className="text-gray-600 mb-1">Odstín</dt>
+                      <dt className="text-text-mid mb-1">Odstín</dt>
                       <dd className="flex items-center gap-2">
                         <div
-                          className="w-5 h-5 rounded-full border border-gray-300"
+                          className="w-5 h-5 rounded-full border border-warm-beige"
                           style={{ backgroundColor: color?.hex }}
                         />
                         <span className="font-medium">
@@ -340,19 +340,19 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-gray-600 mb-1">Délka</dt>
+                      <dt className="text-text-mid mb-1">Délka</dt>
                       <dd className="font-medium">{variant.length_cm} cm</dd>
                     </div>
                     <div>
-                      <dt className="text-gray-600 mb-1">Struktura</dt>
+                      <dt className="text-text-mid mb-1">Struktura</dt>
                       <dd className="font-medium capitalize">{variant.structure}</dd>
                     </div>
                     <div>
-                      <dt className="text-gray-600 mb-1">Gramáž</dt>
+                      <dt className="text-text-mid mb-1">Gramáž</dt>
                       <dd className="font-medium">{variant.weight_g} g</dd>
                     </div>
                     <div>
-                      <dt className="text-gray-600 mb-1">SKU</dt>
+                      <dt className="text-text-mid mb-1">SKU</dt>
                       <dd className="font-medium text-xs">{variant.sku}</dd>
                     </div>
                   </dl>
@@ -367,13 +367,13 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
               {product.care_instructions && (
                 <div className="p-6 bg-ivory rounded-xl">
                   <h3 className="text-xl font-playfair text-burgundy mb-4">Péče o vlasy</h3>
-                  <p className="text-sm text-gray-700">{product.care_instructions}</p>
+                  <p className="text-sm text-text-mid">{product.care_instructions}</p>
                 </div>
               )}
               {product.how_to_use && (
                 <div className="p-6 bg-ivory rounded-xl">
                   <h3 className="text-xl font-playfair text-burgundy mb-4">Jak použít</h3>
-                  <p className="text-sm text-gray-700">{product.how_to_use}</p>
+                  <p className="text-sm text-text-mid">{product.how_to_use}</p>
                 </div>
               )}
             </div>

@@ -136,7 +136,7 @@ export default function MestoPage({ params }: Props) {
         <div className="container mx-auto px-4 max-w-5xl">
 
           {/* Breadcrumb */}
-          <div className="text-sm text-gray-600 mb-6">
+          <div className="text-sm text-text-mid mb-6">
             <Link href="/" className="hover:text-burgundy">Domů</Link>
             {' / '}
             <Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link>
@@ -150,21 +150,21 @@ export default function MestoPage({ params }: Props) {
             <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
               Vlasy k prodloužení {mesto.name}
             </h1>
-            <p className="text-lg text-gray-700 max-w-2xl leading-relaxed">
+            <p className="text-lg text-text-mid max-w-2xl leading-relaxed">
               Objednávka online — keratinové pramínky, vlasové pásky nanotapes a vlasové tresy weft
               s doručením přímo {mesto.inCity}. Pravé vlasy od českého výrobce z Prahy.
             </p>
           </div>
 
           {/* Doprava info */}
-          <div className="bg-ivory border-l-4 border-burgundy p-5 rounded-xl mb-10 text-sm text-gray-700 flex flex-col sm:flex-row gap-4 sm:items-center">
+          <div className="bg-ivory border-l-4 border-burgundy p-5 rounded-xl mb-10 text-sm text-text-mid flex flex-col sm:flex-row gap-4 sm:items-center">
             <div className="flex-1">
-              <p className="font-semibold text-gray-900 mb-1">Doručení do {mesto.name}</p>
+              <p className="font-semibold text-text-dark mb-1">Doručení do {mesto.name}</p>
               Objednávka online · Doprava PPL / Zásilkovna · Expedice do 2 pracovních dní
             </div>
             {isNearPrague && (
-              <div className="border-l border-burgundy/20 pl-4 text-xs text-gray-500">
-                <span className="block font-medium text-gray-700">Osobní odběr Praha</span>
+              <div className="border-l border-burgundy/20 pl-4 text-xs text-text-soft">
+                <span className="block font-medium text-text-mid">Osobní odběr Praha</span>
                 Showroom Revoluční 8, Praha 1<br />
                 Vlakem z {mesto.name}: <strong>{mesto.trainHours}</strong>
               </div>
@@ -185,7 +185,7 @@ export default function MestoPage({ params }: Props) {
                 <p className="text-xs text-white/70 mt-0.5">Standart · Mikrokeratin · Platinum</p>
               </div>
               <div className="p-5 flex-1 flex flex-col">
-                <ul className="text-sm text-gray-600 space-y-1.5 mb-4 flex-1">
+                <ul className="text-sm text-text-mid space-y-1.5 mb-4 flex-1">
                   <li>✓ 130–230 pramenů / 100 g</li>
                   <li>✓ Délky 40–70 cm</li>
                   <li>✓ Nebarvené i barvené odstíny</li>
@@ -208,7 +208,7 @@ export default function MestoPage({ params }: Props) {
                 <p className="text-xs text-white/70 mt-0.5">Tape-In · 2,8 cm · 4 cm</p>
               </div>
               <div className="p-5 flex-1 flex flex-col">
-                <ul className="text-sm text-gray-600 space-y-1.5 mb-4 flex-1">
+                <ul className="text-sm text-text-mid space-y-1.5 mb-4 flex-1">
                   <li>✓ 10 spojů / balení</li>
                   <li>✓ Sendvičový spoj bez lepidla</li>
                   <li>✓ Korekce po 1,5–2 měsících</li>
@@ -231,7 +231,7 @@ export default function MestoPage({ params }: Props) {
                 <p className="text-xs text-white/70 mt-0.5">Hollywoodské prodloužení</p>
               </div>
               <div className="p-5 flex-1 flex flex-col">
-                <ul className="text-sm text-gray-600 space-y-1.5 mb-4 flex-1">
+                <ul className="text-sm text-text-mid space-y-1.5 mb-4 flex-1">
                   <li>✓ Ručně šité na zakázku</li>
                   <li>✓ Bez lepidla, bez tepla</li>
                   <li>✓ Korekce po 2–3 měsících</li>
@@ -256,22 +256,22 @@ export default function MestoPage({ params }: Props) {
               <div className="flex gap-3">
                 <span className="text-2xl font-playfair text-burgundy/30 leading-none">1</span>
                 <div>
-                  <p className="font-semibold text-gray-800 mb-1">Nakonfigurujte vlasy</p>
-                  <p className="text-gray-600">Vyberte metodu, délku, gramáž a odstín v online konfigurátoru. Poradíme s výběrem.</p>
+                  <p className="font-semibold text-text-dark mb-1">Nakonfigurujte vlasy</p>
+                  <p className="text-text-mid">Vyberte metodu, délku, gramáž a odstín v online konfigurátoru. Poradíme s výběrem.</p>
                 </div>
               </div>
               <div className="flex gap-3">
                 <span className="text-2xl font-playfair text-burgundy/30 leading-none">2</span>
                 <div>
-                  <p className="font-semibold text-gray-800 mb-1">Objednávka a výroba</p>
-                  <p className="text-gray-600">Vlasové tresy vyrábíme na zakázku (14 dní). Pramínky a pásky expedujeme ihned ze skladu.</p>
+                  <p className="font-semibold text-text-dark mb-1">Objednávka a výroba</p>
+                  <p className="text-text-mid">Vlasové tresy vyrábíme na zakázku (14 dní). Pramínky a pásky expedujeme ihned ze skladu.</p>
                 </div>
               </div>
               <div className="flex gap-3">
                 <span className="text-2xl font-playfair text-burgundy/30 leading-none">3</span>
                 <div>
-                  <p className="font-semibold text-gray-800 mb-1">Doručení {mesto.inCity}</p>
-                  <p className="text-gray-600">PPL nebo Zásilkovna přímo na vaši adresu. Aplikaci provede vaše kadeřnice.</p>
+                  <p className="font-semibold text-text-dark mb-1">Doručení {mesto.inCity}</p>
+                  <p className="text-text-mid">PPL nebo Zásilkovna přímo na vaši adresu. Aplikaci provede vaše kadeřnice.</p>
                 </div>
               </div>
             </div>
@@ -280,26 +280,26 @@ export default function MestoPage({ params }: Props) {
           {/* Ceny aplikace info */}
           <div className="bg-ivory border border-burgundy/15 rounded-xl p-6 mb-10 text-sm">
             <h2 className="font-playfair text-xl text-burgundy mb-3">Ceny aplikace vlasů</h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-text-mid mb-4">
               Aplikaci vlasů zajistí vaše kadeřnice {mesto.inCity}, nebo přijeďte do našeho showroomu v Praze
               {isNearPrague ? ` — z ${mesto.name} to je pouze ${mesto.trainHours} vlakem` : ''}.
               Orientační ceník aplikace:
             </p>
             <div className="grid sm:grid-cols-3 gap-3">
-              <div className="bg-white rounded-lg p-3 border border-gray-100">
-                <p className="font-semibold text-gray-800 text-xs uppercase tracking-wide mb-1">Keratin / Mikrokeratin</p>
+              <div className="bg-white rounded-lg p-3 border border-warm-beige">
+                <p className="font-semibold text-text-dark text-xs uppercase tracking-wide mb-1">Keratin / Mikrokeratin</p>
                 <p className="text-burgundy font-bold">od 4 000 Kč</p>
-                <p className="text-gray-400 text-xs">/ 100 g, Praha showroom</p>
+                <p className="text-text-soft text-xs">/ 100 g, Praha showroom</p>
               </div>
-              <div className="bg-white rounded-lg p-3 border border-gray-100">
-                <p className="font-semibold text-gray-800 text-xs uppercase tracking-wide mb-1">Nanotapes / Tape-In</p>
+              <div className="bg-white rounded-lg p-3 border border-warm-beige">
+                <p className="font-semibold text-text-dark text-xs uppercase tracking-wide mb-1">Nanotapes / Tape-In</p>
                 <p className="text-burgundy font-bold">55 Kč / spoj</p>
-                <p className="text-gray-400 text-xs">Praha showroom</p>
+                <p className="text-text-soft text-xs">Praha showroom</p>
               </div>
-              <div className="bg-white rounded-lg p-3 border border-gray-100">
-                <p className="font-semibold text-gray-800 text-xs uppercase tracking-wide mb-1">Weft (Hollywoodské)</p>
+              <div className="bg-white rounded-lg p-3 border border-warm-beige">
+                <p className="font-semibold text-text-dark text-xs uppercase tracking-wide mb-1">Weft (Hollywoodské)</p>
                 <p className="text-burgundy font-bold">posun 3 800 Kč</p>
-                <p className="text-gray-400 text-xs">Praha showroom</p>
+                <p className="text-text-soft text-xs">Praha showroom</p>
               </div>
             </div>
             <p className="mt-3">
@@ -333,9 +333,9 @@ export default function MestoPage({ params }: Props) {
                   a: `Ne — vlasy si objednáte online a doručíme ${mesto.inCity}. Aplikaci provede vaše kadeřnice. Pokud chcete aplikaci přímo od nás, showroom Múza Hair je na Revoluční 8, Praha 1${isNearPrague ? ` — z ${mesto.name} to je ${mesto.trainHours} vlakem` : ''}.`,
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5">
-                  <p className="font-semibold text-gray-900 mb-2">{item.q}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.a}</p>
+                <div key={i} className="bg-white border border-warm-beige rounded-xl p-5">
+                  <p className="font-semibold text-text-dark mb-2">{item.q}</p>
+                  <p className="text-sm text-text-mid leading-relaxed">{item.a}</p>
                 </div>
               ))}
             </div>
@@ -349,7 +349,7 @@ export default function MestoPage({ params }: Props) {
                 <Link
                   key={m.slug}
                   href={`/vlasy/${m.slug}`}
-                  className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:border-burgundy hover:text-burgundy transition"
+                  className="px-3 py-1.5 bg-white border border-warm-beige rounded-lg text-sm text-text-mid hover:border-burgundy hover:text-burgundy transition"
                 >
                   {m.name}
                 </Link>
@@ -362,7 +362,7 @@ export default function MestoPage({ params }: Props) {
             <p className="font-playfair text-2xl text-burgundy mb-2">
               Nakonfigurujte si vlasy online
             </p>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-text-soft text-sm mb-6">
               Vyberte délku, gramáž a odstín — doručíme {mesto.inCity} do 2 pracovních dní.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

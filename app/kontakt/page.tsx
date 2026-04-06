@@ -15,14 +15,14 @@ export default function KontaktPage() {
         <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
           Kontakt
         </h1>
-        <p className="text-gray-500 mb-10 text-lg">
+        <p className="text-text-soft mb-10 text-lg">
           Showroom v Praze — navštivte nás osobně nebo nás kontaktujte předem.
         </p>
 
         {/* Důležité upozornění */}
         <div className="bg-ivory border-l-4 border-burgundy p-6 rounded-xl mb-10">
-          <p className="font-semibold text-gray-900 mb-1">Showroom pouze na objednání</p>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="font-semibold text-text-dark mb-1">Showroom pouze na objednání</p>
+          <p className="text-text-mid text-sm leading-relaxed">
             Každé setkání věnujeme plnou pozornost. Prosím, zavolejte nebo napište předem — domluvíme konkrétní čas jen pro vás.
           </p>
         </div>
@@ -31,7 +31,7 @@ export default function KontaktPage() {
 
           {/* Kontaktní údaje */}
           <div className="space-y-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-warm-beige rounded-xl p-6">
               <h2 className="text-xl font-playfair text-burgundy mb-5">Kontaktní údaje</h2>
               <div className="space-y-4 text-sm">
 
@@ -43,8 +43,8 @@ export default function KontaktPage() {
                     </svg>
                   </span>
                   <div>
-                    <p className="font-medium text-gray-900">Showroom Praha</p>
-                    <p className="text-gray-500">Revoluční 8, Praha</p>
+                    <p className="font-medium text-text-dark">Showroom Praha</p>
+                    <p className="text-text-soft">Revoluční 8, Praha</p>
                   </div>
                 </div>
 
@@ -55,8 +55,8 @@ export default function KontaktPage() {
                     </svg>
                   </span>
                   <div>
-                    <p className="font-medium text-gray-900">Otevírací doba</p>
-                    <p className="text-gray-500">Po–Ne: 10:00–20:00</p>
+                    <p className="font-medium text-text-dark">Otevírací doba</p>
+                    <p className="text-text-soft">Po–Ne: 10:00–20:00</p>
                     <p className="text-xs text-amber-600 font-medium mt-0.5">Pouze na objednání</p>
                   </div>
                 </div>
@@ -68,7 +68,7 @@ export default function KontaktPage() {
                     </svg>
                   </span>
                   <div>
-                    <p className="font-medium text-gray-900">Telefon</p>
+                    <p className="font-medium text-text-dark">Telefon</p>
                     <a href="tel:+420728722880" className="text-burgundy hover:underline">
                       +420 728 722 880
                     </a>
@@ -82,7 +82,7 @@ export default function KontaktPage() {
                     </svg>
                   </span>
                   <div>
-                    <p className="font-medium text-gray-900">Email</p>
+                    <p className="font-medium text-text-dark">Email</p>
                     <a href="mailto:muzahaircz@gmail.com" className="text-burgundy hover:underline">
                       muzahaircz@gmail.com
                     </a>
@@ -97,7 +97,7 @@ export default function KontaktPage() {
                     </svg>
                   </span>
                   <div>
-                    <p className="font-medium text-gray-900">Instagram</p>
+                    <p className="font-medium text-text-dark">Instagram</p>
                     <a
                       href="https://www.instagram.com/muzahair.cz"
                       target="_blank"
@@ -138,7 +138,7 @@ export default function KontaktPage() {
           </div>
 
           {/* Mapa */}
-          <div className="rounded-xl overflow-hidden border border-gray-200 h-full min-h-[350px]">
+          <div className="rounded-xl overflow-hidden border border-warm-beige h-full min-h-[350px]">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2559.8!2d14.4285!3d50.0908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94f7a8c17c5d%3A0x0!2sRevolu%C4%8Dn%C3%AD+8%2C+110+00+Praha+1!5e0!3m2!1scs!2scz!4v1"
               width="100%"
@@ -154,7 +154,7 @@ export default function KontaktPage() {
         </div>
 
         {/* FAQ */}
-        <div className="border-t border-gray-200 pt-10">
+        <div className="border-t border-warm-beige pt-10">
           <h2 className="text-2xl font-playfair text-burgundy mb-6">Časté otázky o návštěvě</h2>
           <div className="space-y-4">
             {[
@@ -175,9 +175,9 @@ export default function KontaktPage() {
                 a: 'Standardní konzultace trvá 30–60 minut. Vyhraďte si prosím dostatek času, ať není třeba spěchat.',
               },
             ].map((item, i) => (
-              <div key={i} className="bg-white border border-gray-200 rounded-xl p-5">
-                <p className="font-semibold text-gray-900 mb-2">{item.q}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">{item.a}</p>
+              <div key={i} className="bg-white border border-warm-beige rounded-xl p-5">
+                <p className="font-semibold text-text-dark mb-2">{item.q}</p>
+                <p className="text-sm text-text-mid leading-relaxed">{item.a}</p>
               </div>
             ))}
           </div>
@@ -186,7 +186,7 @@ export default function KontaktPage() {
         {/* Dolní CTA */}
         <div className="mt-10 bg-ivory border border-burgundy/10 rounded-xl p-8 text-center">
           <p className="font-playfair text-2xl text-burgundy mb-2">Těšíme se na vás</p>
-          <p className="text-gray-500 text-sm mb-6">Zavolejte nám nebo napište na Instagram — domluvíme čas, který vám bude vyhovovat.</p>
+          <p className="text-text-soft text-sm mb-6">Zavolejte nám nebo napište na Instagram — domluvíme čas, který vám bude vyhovovat.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="tel:+420728722880"

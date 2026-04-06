@@ -82,7 +82,7 @@ export default function OrderStatusTimeline({ currentStatus }: OrderStatusTimeli
                         ? 'bg-green-500 text-white'
                         : isActive
                           ? 'bg-burgundy text-white ring-2 ring-burgundy ring-offset-2'
-                          : 'bg-gray-200 text-gray-500'
+                          : 'bg-gray-200 text-text-soft'
                     }`}
                   >
                     {step.icon}
@@ -101,12 +101,12 @@ export default function OrderStatusTimeline({ currentStatus }: OrderStatusTimeli
                 <div className={`flex-1 pt-1 ${isUpcoming ? 'opacity-50' : ''}`}>
                   <p
                     className={`font-semibold transition-colors ${
-                      isCompleted || isActive ? 'text-burgundy' : 'text-gray-600'
+                      isCompleted || isActive ? 'text-burgundy' : 'text-text-mid'
                     }`}
                   >
                     {step.label}
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">{step.description}</p>
+                  <p className="text-sm text-text-mid mt-1">{step.description}</p>
                 </div>
               </div>
             );

@@ -9,9 +9,9 @@ export default function CookiesPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8">Zásady používání cookies</h1>
 
-      <div className="prose prose-lg max-w-none space-y-6 text-gray-700">
+      <div className="prose prose-lg max-w-none space-y-6 text-text-mid">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">1. Co jsou cookies?</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">1. Co jsou cookies?</h2>
           <p>
             Cookies jsou malé textové soubory, které se ukládají do vašeho počítače, tabletu nebo
             mobilního telefonu při návštěvě našeho webu. Pomáhají nám zajistit, aby web fungoval správně,
@@ -20,17 +20,17 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">2. Jak používáme cookies</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">2. Jak používáme cookies</h2>
           <p>
             Na našem webu muzahair.cz používáme následující typy cookies:
           </p>
 
           <div className="space-y-6 mt-4">
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">2.1 Nezbytné cookies</h3>
+              <h3 className="text-xl font-semibold mb-2 text-text-dark">2.1 Nezbytné cookies</h3>
               <p><strong>Účel:</strong> Zajištění základní funkčnosti webu</p>
               <p><strong>Souhlas:</strong> Není vyžadován (technicky nutné pro provoz)</p>
-              <div className="bg-gray-50 p-4 rounded-lg mt-2">
+              <div className="bg-soft-cream p-4 rounded-lg mt-2">
                 <p className="font-semibold mb-2">Používané cookies:</p>
                 <ul className="list-disc pl-6 space-y-1">
                   <li><strong>admin-session</strong> – přihlášení do admin panelu (trvání: 24 hodin)</li>
@@ -41,10 +41,10 @@ export default function CookiesPage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">2.2 Analytické cookies</h3>
+              <h3 className="text-xl font-semibold mb-2 text-text-dark">2.2 Analytické cookies</h3>
               <p><strong>Účel:</strong> Měření návštěvnosti a analýza chování uživatelů</p>
               <p><strong>Souhlas:</strong> Vyžadován</p>
-              <div className="bg-gray-50 p-4 rounded-lg mt-2">
+              <div className="bg-soft-cream p-4 rounded-lg mt-2">
                 <p className="font-semibold mb-2">Používané služby:</p>
                 <ul className="list-disc pl-6 space-y-1">
                   <li><strong>Google Analytics</strong> (pokud používáte) – analýza návštěvnosti, trvání: 2 roky</li>
@@ -58,10 +58,10 @@ export default function CookiesPage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">2.3 Marketingové cookies</h3>
+              <h3 className="text-xl font-semibold mb-2 text-text-dark">2.3 Marketingové cookies</h3>
               <p><strong>Účel:</strong> Přizpůsobení reklam a měření kampaní</p>
               <p><strong>Souhlas:</strong> Vyžadován</p>
-              <div className="bg-gray-50 p-4 rounded-lg mt-2">
+              <div className="bg-soft-cream p-4 rounded-lg mt-2">
                 <p className="font-semibold mb-2">Používané služby:</p>
                 <ul className="list-disc pl-6 space-y-1">
                   <li><strong>Facebook Pixel</strong> (pokud používáte) – remarketing, trvání: 90 dní</li>
@@ -75,10 +75,10 @@ export default function CookiesPage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">2.4 Preferenční cookies</h3>
+              <h3 className="text-xl font-semibold mb-2 text-text-dark">2.4 Preferenční cookies</h3>
               <p><strong>Účel:</strong> Zapamatování vašich preferencí</p>
               <p><strong>Souhlas:</strong> Vyžadován</p>
-              <div className="bg-gray-50 p-4 rounded-lg mt-2">
+              <div className="bg-soft-cream p-4 rounded-lg mt-2">
                 <p className="font-semibold mb-2">Používané cookies:</p>
                 <ul className="list-disc pl-6 space-y-1">
                   <li><strong>language</strong> – preferovaný jazyk (CZ/EN), trvání: 1 rok</li>
@@ -91,7 +91,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">3. Cookies třetích stran</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">3. Cookies třetích stran</h2>
           <p>
             Některé cookies mohou být nastaveny třetími stranami, jejichž služby na našem webu využíváme:
           </p>
@@ -103,7 +103,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">4. Jak spravovat cookies</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">4. Jak spravovat cookies</h2>
           <p>
             Cookies můžete kdykoli ovládat a spravovat v nastavení svého prohlížeče.
             Můžete je zcela zakázat nebo je mazat po každé návštěvě webu.
@@ -126,8 +126,8 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">5. Doba uchování cookies</h2>
-          <div className="bg-gray-50 p-4 rounded-lg">
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">5. Doba uchování cookies</h2>
+          <div className="bg-soft-cream p-4 rounded-lg">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
@@ -166,7 +166,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">6. Váš souhlas</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">6. Váš souhlas</h2>
           <p>
             Při první návštěvě našeho webu vás požádáme o souhlas s používáním cookies prostřednictvím
             informační lišty (cookie banner). Můžete zvolit:
@@ -183,7 +183,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">7. Aktualizace těchto zásad</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">7. Aktualizace těchto zásad</h2>
           <p>
             Tyto zásady používání cookies můžeme občas aktualizovat, abychom odráželi změny
             v našich praktikách nebo z právních důvodů. O významných změnách vás budeme informovat
@@ -193,7 +193,7 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">8. Další informace</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">8. Další informace</h2>
           <p>
             Pokud máte jakékoli dotazy týkající se používání cookies na našem webu, kontaktujte nás:
           </p>
@@ -209,7 +209,7 @@ export default function CookiesPage() {
         </section>
 
         <section className="bg-green-50 p-6 rounded-lg mt-8">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">💡 Užitečné zdroje</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">💡 Užitečné zdroje</h2>
           <p>Více informací o cookies a ochraně soukromí:</p>
           <ul className="list-disc pl-6 space-y-2 mt-2">
             <li>

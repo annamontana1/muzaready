@@ -177,7 +177,7 @@ export default function ProdlouzeniVlasuPrahaPage() {
         <div className="container mx-auto px-4 max-w-5xl">
 
           {/* Breadcrumb */}
-          <div className="text-sm text-gray-600 mb-6">
+          <div className="text-sm text-text-mid mb-6">
             <Link href="/" className="hover:text-burgundy">Domů</Link>
             {' / '}
             <span className="text-burgundy">Prodloužení vlasů Praha</span>
@@ -188,10 +188,10 @@ export default function ProdlouzeniVlasuPrahaPage() {
             <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
               Prodloužení vlasů Praha
             </h1>
-            <p className="text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-text-mid max-w-2xl mx-auto leading-relaxed">
               Showroom Praha 1 · Keratin · Nanotapes · Weft (Hollywoodské prodloužení)
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-text-soft mt-2">
               Vlastní barvírna · Pravé vlasy · 3 úrovně kvality · Od roku 2016
             </p>
           </div>
@@ -234,7 +234,7 @@ export default function ProdlouzeniVlasuPrahaPage() {
                   <p className="text-xs text-white/70 mt-0.5">{m.subtitle}</p>
                 </div>
                 <div className="p-5 flex-1 flex flex-col">
-                  <ul className="text-sm text-gray-600 space-y-1.5 mb-4 flex-1">
+                  <ul className="text-sm text-text-mid space-y-1.5 mb-4 flex-1">
                     {m.items.map((item) => (
                       <li key={item}>✓ {item}</li>
                     ))}
@@ -276,13 +276,13 @@ export default function ProdlouzeniVlasuPrahaPage() {
                 <div key={item.title} className="flex gap-3">
                   <span className="text-burgundy mt-0.5 flex-shrink-0">✓</span>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-0.5">{item.title}</p>
-                    <p className="text-gray-600">{item.desc}</p>
+                    <p className="font-semibold text-text-dark mb-0.5">{item.title}</p>
+                    <p className="text-text-mid">{item.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-6 pt-5 border-t border-gray-100 flex gap-4 text-sm">
+            <div className="mt-6 pt-5 border-t border-warm-beige flex gap-4 text-sm">
               <Link href="/o-nas" className="text-burgundy font-semibold hover:underline">Náš příběh →</Link>
               <Link href="/recenze" className="text-burgundy font-semibold hover:underline">Recenze zákaznic →</Link>
             </div>
@@ -293,19 +293,19 @@ export default function ProdlouzeniVlasuPrahaPage() {
             <h2 className="text-2xl font-playfair text-burgundy mb-3">
               Přijeďte z celé České republiky
             </h2>
-            <p className="text-sm text-gray-600 mb-5">
+            <p className="text-sm text-text-mid mb-5">
               Zákaznice přijíždějí za kvalitou z celé ČR. Showroom je u metra B — Náměstí Republiky,
               Praha je vlakové centrum celé republiky.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
               {CITIES_NEAR.map((c) => (
-                <div key={c.name} className="bg-white rounded-lg p-3 border border-gray-100 text-center">
-                  <p className="font-medium text-gray-800">{c.name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">vlakem {c.time}</p>
+                <div key={c.name} className="bg-white rounded-lg p-3 border border-warm-beige text-center">
+                  <p className="font-medium text-text-dark">{c.name}</p>
+                  <p className="text-xs text-text-soft mt-0.5">vlakem {c.time}</p>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-4">
+            <p className="text-xs text-text-soft mt-4">
               Vlasy si můžete také objednat online s doručením domů —{' '}
               <Link href="/vlasy-k-prodlouzeni" className="text-burgundy hover:underline">nakonfigurujte je v e-shopu</Link>.
             </p>
@@ -339,9 +339,9 @@ export default function ProdlouzeniVlasuPrahaPage() {
                   a: 'Zavolejte na +420 728 722 880 nebo napište na Instagram @muzahair.cz. Showroom Revoluční 8, Praha 1 — Po–Ne 10:00–20:00, pouze na objednání.',
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5">
-                  <p className="font-semibold text-gray-900 mb-2">{item.q}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.a}</p>
+                <div key={i} className="bg-white border border-warm-beige rounded-xl p-5">
+                  <p className="font-semibold text-text-dark mb-2">{item.q}</p>
+                  <p className="text-sm text-text-mid leading-relaxed">{item.a}</p>
                 </div>
               ))}
             </div>
@@ -350,7 +350,7 @@ export default function ProdlouzeniVlasuPrahaPage() {
           {/* CTA */}
           <div className="bg-ivory border border-burgundy/10 rounded-xl p-8 text-center">
             <p className="font-playfair text-2xl text-burgundy mb-2">Domluvte si konzultaci</p>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-text-soft text-sm mb-6">
               Vybereme metodu i vlasy přímo pro vás. Showroom Praha 1, Revoluční 8.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

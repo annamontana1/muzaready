@@ -99,7 +99,7 @@ export default function WholesaleRegistrationModal({
           <h2 className="text-2xl font-bold text-burgundy">Registrace na velkoobchod</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-light"
+            className="text-text-soft hover:text-text-mid text-2xl font-light"
           >
             ×
           </button>
@@ -112,7 +112,7 @@ export default function WholesaleRegistrationModal({
             </div>
           )}
 
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-text-mid mb-4">
             Vyplňte formulář pro registraci na velkoobchodní program. Po odeslání budeme vaši žádost
             zpracovávat.
           </p>
@@ -120,25 +120,25 @@ export default function WholesaleRegistrationModal({
           {/* Row 1: Personal Info */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Jméno *</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Jméno *</label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Příjmení *</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Příjmení *</label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
@@ -146,52 +146,52 @@ export default function WholesaleRegistrationModal({
           {/* Row 2: Contact */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Email *</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Telefon</label>
               <input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
 
           {/* Row 3: Company */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Název firmy *</label>
+            <label className="block text-sm font-medium text-text-mid mb-1">Název firmy *</label>
             <input
               type="text"
               name="companyName"
               value={formData.companyName}
               onChange={handleChange}
               disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
             />
           </div>
 
           {/* Row 4: Business Details */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Typ firmy</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Typ firmy</label>
               <select
                 name="businessType"
                 value={formData.businessType}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               >
                 <option value="">Vyberte typ...</option>
                 <option value="salon">Salon krásy</option>
@@ -202,14 +202,14 @@ export default function WholesaleRegistrationModal({
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">DIČ</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">DIČ</label>
               <input
                 type="text"
                 name="taxId"
                 value={formData.taxId}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
@@ -217,7 +217,7 @@ export default function WholesaleRegistrationModal({
           {/* Row 5: Web */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-mid mb-1">
                 Webové stránky
               </label>
               <input
@@ -227,11 +227,11 @@ export default function WholesaleRegistrationModal({
                 onChange={handleChange}
                 disabled={loading}
                 placeholder="https://..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Instagram</label>
               <input
                 type="text"
                 name="instagram"
@@ -239,7 +239,7 @@ export default function WholesaleRegistrationModal({
                 onChange={handleChange}
                 disabled={loading}
                 placeholder="@vaseJmeno"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function WholesaleRegistrationModal({
           {/* Row 6: Address */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Země</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Země</label>
               <input
                 type="text"
                 name="country"
@@ -255,43 +255,43 @@ export default function WholesaleRegistrationModal({
                 onChange={handleChange}
                 disabled={loading}
                 placeholder="ČR"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Město</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Město</label>
               <input
                 type="text"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">PSČ</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">PSČ</label>
               <input
                 type="text"
                 name="zipCode"
                 value={formData.zipCode}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Adresa</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Adresa</label>
               <input
                 type="text"
                 name="streetAddress"
                 value={formData.streetAddress}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
@@ -299,19 +299,19 @@ export default function WholesaleRegistrationModal({
           {/* Row 7: Password */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Heslo *</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Heslo *</label>
               <input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-500 mt-1">Min. 8 znaků</p>
+              <p className="text-xs text-text-soft mt-1">Min. 8 znaků</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-mid mb-1">
                 Potvrzení hesla *
               </label>
               <input
@@ -320,7 +320,7 @@ export default function WholesaleRegistrationModal({
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
               />
             </div>
           </div>
@@ -338,13 +338,13 @@ export default function WholesaleRegistrationModal({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 bg-gray-200 text-gray-800 py-2 rounded-md font-medium hover:bg-gray-300 disabled:bg-gray-100 transition"
+              className="flex-1 bg-gray-200 text-text-dark py-2 rounded-md font-medium hover:bg-gray-300 disabled:bg-soft-cream transition"
             >
               Zrušit
             </button>
           </div>
 
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-text-soft text-center">
             Již máte účet?{' '}
             <a href="/auth/login" className="text-burgundy hover:underline font-medium">
               Přihlaste se

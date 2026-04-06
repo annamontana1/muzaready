@@ -130,7 +130,7 @@ export default function LuxeCategoryPage() {
       <div className="container mx-auto px-4">
         {/* Breadcrumbs */}
         <nav className="text-sm mb-6" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-gray-600">
+          <ol className="flex items-center space-x-2 text-text-mid">
             <li><Link href="/" className="hover:text-burgundy">Domů</Link></li>
             <li><span className="mx-2">›</span></li>
             <li><Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link></li>
@@ -156,7 +156,7 @@ export default function LuxeCategoryPage() {
             Nebarvené panenské vlasy — LUXE
           </motion.h1>
           <motion.p
-            className="text-sm md:text-base text-gray-700 max-w-4xl leading-relaxed"
+            className="text-sm md:text-base text-text-mid max-w-4xl leading-relaxed"
             variants={fadeInUp}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
@@ -229,7 +229,7 @@ export default function LuxeCategoryPage() {
           {/* Aktivní filtry */}
           {(filters.shades.length > 0 || filters.structures.length > 0) && (
             <div className="pt-4 border-t border-warm-beige">
-              <p className="text-sm text-gray-600 mb-2">Aktivní filtry:</p>
+              <p className="text-sm text-text-mid mb-2">Aktivní filtry:</p>
               <div className="flex flex-wrap gap-2">
                 {filters.shades.sort((a, b) => a - b).map((shade) => (
                   <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
@@ -250,13 +250,13 @@ export default function LuxeCategoryPage() {
         {loading ? (
           <div className="text-center py-16">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-burgundy border-r-transparent" />
-            <p className="mt-4 text-gray-600">Načítání produktů...</p>
+            <p className="mt-4 text-text-mid">Načítání produktů...</p>
           </div>
         ) : (
         <>
         {/* Počet výsledků */}
         <div className="mb-6">
-          <p className="text-gray-600">
+          <p className="text-text-mid">
             Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'produktu' : filteredProducts.length < 5 ? 'produktů' : 'produktů'}
             {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
           </p>
@@ -458,7 +458,7 @@ export default function LuxeCategoryPage() {
             <h3 className="text-2xl font-playfair text-burgundy mb-2">
               Žádné produkty nenalezeny
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-text-mid mb-6">
               Zkuste změnit filtry nebo je vymažte a prohlédněte si celou nabídku.
             </p>
             <button onClick={resetFilters} className="btn-primary">

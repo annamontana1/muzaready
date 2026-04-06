@@ -49,7 +49,7 @@ export default function ColorSwatchSelector({
                 ${
                   isSelected
                     ? 'border-burgundy scale-110 shadow-md ring-2 ring-burgundy/30'
-                    : 'border-gray-300 hover:border-gray-400 hover:scale-105'
+                    : 'border-warm-beige hover:border-warm-beige hover:scale-105'
                 }
               `}
               style={{ backgroundColor: color.hex }}
@@ -68,7 +68,7 @@ export default function ColorSwatchSelector({
 
       {/* Selected shade info */}
       {selectedShade && HAIR_COLORS[selectedShade] && (
-        <div className="mt-3 text-sm text-gray-700">
+        <div className="mt-3 text-sm text-text-mid">
           <strong>{HAIR_COLORS[selectedShade].name}</strong>
           {' '}(S{selectedShade.toString().padStart(2, '0')})
         </div>

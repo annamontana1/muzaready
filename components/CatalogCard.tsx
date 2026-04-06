@@ -118,7 +118,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
     ) : (
       <Link
         href={`/produkt/${props.slug}`}
-        className="mt-3 w-full py-2 px-4 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-all text-center block"
+        className="mt-3 w-full py-2 px-4 bg-gray-200 text-text-mid text-sm font-medium rounded-lg hover:bg-gray-300 transition-all text-center block"
       >
         Zadat poptávku
       </Link>
@@ -126,7 +126,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
 
     return (
       <div className="product-card group h-full">
-        <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-gray-200">
+        <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
           {/* Image Section */}
           <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
             <div
@@ -157,7 +157,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           {/* Struktura label pod fotkou */}
           {props.structure && (
             <div className="absolute bottom-2 left-2 right-2 text-center">
-              <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
+              <span className="px-2 py-1 bg-white/90 text-text-dark text-xs font-medium rounded">
                 Struktura: {props.structure}
               </span>
             </div>
@@ -169,7 +169,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </div>
 
             {/* Tier Badge */}
-            <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-gray-800 bg-gradient-to-r ${tierColorClass} shadow-light`}>
+            <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-text-dark bg-gradient-to-r ${tierColorClass} shadow-light`}>
               {tierLabel}
             </div>
           </div>
@@ -182,27 +182,27 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </h3>
 
             {/* Specs */}
-            <div className="text-xs text-gray-600 space-y-0.5 flex-1">
+            <div className="text-xs text-text-mid space-y-0.5 flex-1">
               {props.shadeName && <div>{props.shadeName}</div>}
               {/* Struktura se zobrazuje pod fotkou, ne zde */}
               {props.lengthCm && <div>{props.lengthCm} cm</div>}
             </div>
 
             {/* Price section */}
-            <div className="pt-2 mt-2 border-t border-gray-200">
+            <div className="pt-2 mt-2 border-t border-warm-beige">
               {props.pricePerGramCzk ? (
                 <>
                   <p className="text-base font-semibold text-burgundy">
                     od {formatCurrencyValue(currency === 'CZK' ? props.pricePerGramCzk : props.pricePerGramCzk * rate, currency)}/g
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-text-soft">
                     {currency === 'CZK'
                       ? `${formatCurrencyValue(props.pricePerGramCzk * rate, 'EUR')}/g`
                       : `${formatCurrencyValue(props.pricePerGramCzk, 'CZK')}/g`}
                   </p>
                 </>
               ) : (
-                <p className="text-sm text-gray-500">Cena na dotaz</p>
+                <p className="text-sm text-text-soft">Cena na dotaz</p>
               )}
             </div>
 
@@ -228,7 +228,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
       />
 
       <Link href={`/sku-detail/${props.id}`} className="product-card group h-full block">
-      <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-gray-200">
+      <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
         {/* Image Section */}
         <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
           <div
@@ -262,7 +262,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           {/* Struktura label pod fotkou */}
           {props.structure && (
             <div className="absolute bottom-2 left-2 right-2 text-center">
-              <span className="px-2 py-1 bg-white/90 text-gray-800 text-xs font-medium rounded">
+              <span className="px-2 py-1 bg-white/90 text-text-dark text-xs font-medium rounded">
                 Struktura: {props.structure}
               </span>
             </div>
@@ -281,7 +281,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           </div>
 
           {/* Tier Badge */}
-          <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-gray-800 bg-gradient-to-r ${tierColorClass} shadow-light`}>
+          <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-text-dark bg-gradient-to-r ${tierColorClass} shadow-light`}>
             {tierLabel}
           </div>
         </div>
@@ -294,7 +294,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           </h3>
 
           {/* Specs */}
-          <div className="text-xs text-gray-600 space-y-0.5 flex-1">
+          <div className="text-xs text-text-mid space-y-0.5 flex-1">
             {props.shadeName && <div>{props.shadeName}</div>}
             {/* Struktura se zobrazuje pod fotkou, ne zde */}
             {props.lengthCm && <div>{props.lengthCm} cm</div>}
@@ -302,20 +302,20 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           </div>
 
           {/* Price section */}
-          <div className="pt-2 mt-2 border-t border-gray-200">
+          <div className="pt-2 mt-2 border-t border-warm-beige">
             {props.priceCzk ? (
               <>
                 <p className="text-base font-semibold text-burgundy">
                   {formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency)}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-text-soft">
                   {currency === 'CZK'
                     ? formatCurrencyValue(props.priceCzk * rate, 'EUR')
                     : formatCurrencyValue(props.priceCzk, 'CZK')}
                 </p>
               </>
             ) : (
-              <p className="text-sm text-gray-500">Cena na dotaz</p>
+              <p className="text-sm text-text-soft">Cena na dotaz</p>
             )}
           </div>
 
@@ -330,7 +330,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           ) : (
             <Link
               href={`/custom?kind=HAIR&prefill=${encodeURIComponent(JSON.stringify({ shade: props.shade, lengthCm: props.lengthCm, structure: props.structure }))}`}
-              className="mt-3 w-full py-2 px-4 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-all text-center block"
+              className="mt-3 w-full py-2 px-4 bg-gray-200 text-text-mid text-sm font-medium rounded-lg hover:bg-gray-300 transition-all text-center block"
             >
               Zadat poptávku
             </Link>

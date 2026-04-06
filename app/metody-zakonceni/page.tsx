@@ -35,7 +35,7 @@ export default function MetodyZakonceniPage() {
     <div className="py-12 bg-soft-cream min-h-screen">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Breadcrumb */}
-        <div className="text-sm text-gray-600 mb-6">
+        <div className="text-sm text-text-mid mb-6">
           <Link href="/" className="hover:text-burgundy">Domů</Link>
           {' / '}
           <span className="text-burgundy">Metody zakončení</span>
@@ -46,7 +46,7 @@ export default function MetodyZakonceniPage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Metody zakončení vlasů
           </h1>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+          <p className="text-lg text-text-mid max-w-3xl mx-auto">
             Vyberte si metodu aplikace, která nejlépe vyhovuje vašim vlasům a životnímu stylu.
             Každá metoda má své specifické výhody a je vhodná pro různé typy vlasů.
           </p>
@@ -64,12 +64,12 @@ export default function MetodyZakonceniPage() {
               <h2 className="text-2xl font-playfair text-burgundy mb-3 group-hover:text-maroon transition">
                 {method.title}
               </h2>
-              <p className="text-gray-700 mb-4 text-sm">
+              <p className="text-text-mid mb-4 text-sm">
                 {method.description}
               </p>
               <ul className="space-y-2 mb-6">
                 {method.highlights.map((highlight, idx) => (
-                  <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
+                  <li key={idx} className="text-sm text-text-mid flex items-start gap-2">
                     <span className="text-burgundy mt-0.5">✓</span>
                     <span>{highlight}</span>
                   </li>

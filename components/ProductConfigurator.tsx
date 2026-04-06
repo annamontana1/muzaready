@@ -177,8 +177,8 @@ export default function ProductConfigurator({
     <div className="space-y-6">
       {/* Struktura - zobrazení (ne výběr) pro Standard/LUXE */}
       {!isPlatinum && product.variants[0]?.structure && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-700">
+        <div className="mb-4 p-3 bg-soft-cream rounded-lg border border-warm-beige">
+          <p className="text-sm text-text-mid">
             <span className="font-medium">Struktura:</span> {product.variants[0].structure}
           </p>
         </div>
@@ -225,7 +225,7 @@ export default function ProductConfigurator({
         {isPlatinum ? (
           // Platinum: Bez zobrazení ceny, jen "Surový cop" info
           <div className="mb-4">
-            <p className="text-base text-gray-600">
+            <p className="text-base text-text-mid">
               Platinum culík - cena se určí po konzultaci
             </p>
           </div>
@@ -239,7 +239,7 @@ export default function ProductConfigurator({
                     <p className="text-sm text-green-600 font-medium mb-2">
                       ✓ Máte B2B slevu -10%
                     </p>
-                    <p className="text-sm line-through text-gray-400 mb-1">
+                    <p className="text-sm line-through text-text-soft mb-1">
                       Původní cena: {priceCalculator.formatPrice(finalPrice / (1 - priceCalculator.getB2BDiscountPercent() / 100))}
                     </p>
                   </>
@@ -247,12 +247,12 @@ export default function ProductConfigurator({
                 <p className="text-3xl font-semibold text-burgundy">
                   {priceCalculator.formatPrice(finalPrice)}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-text-mid mt-1">
                   Cena je za tento culík ({selectedWeight} g / {selectedLength} cm)
                 </p>
               </>
             ) : (
-              <p className="text-lg text-gray-500">Vyberte všechny možnosti pro zobrazení ceny</p>
+              <p className="text-lg text-text-soft">Vyberte všechny možnosti pro zobrazení ceny</p>
             )}
           </div>
         )}
@@ -283,7 +283,7 @@ export default function ProductConfigurator({
         </button>
 
         {!isConfigComplete && (
-          <p className="mt-3 text-xs text-center text-gray-500">
+          <p className="mt-3 text-xs text-center text-text-soft">
             {isPlatinum
               ? 'Vyberte zakončení pro aktivaci tlačítka'
               : 'Vyberte délku, gramáž a zakončení pro aktivaci tlačítka'}

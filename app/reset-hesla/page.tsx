@@ -71,7 +71,7 @@ function ResetPasswordForm() {
             </svg>
           </div>
           <h1 className="text-2xl font-playfair text-burgundy mb-4">Neplatný odkaz</h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-text-mid mb-6">
             Tento odkaz pro reset hesla je neplatný nebo vypršel.
           </p>
           <Link
@@ -95,7 +95,7 @@ function ResetPasswordForm() {
             </svg>
           </div>
           <h1 className="text-2xl font-playfair text-burgundy mb-4">Heslo změněno</h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-text-mid mb-6">
             Vaše heslo bylo úspěšně změněno. Budete přesměrováni na přihlášení...
           </p>
           <Link
@@ -115,7 +115,7 @@ function ResetPasswordForm() {
         <h1 className="text-2xl font-playfair text-burgundy mb-2 text-center">
           Nové heslo
         </h1>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-text-mid text-center mb-8">
           Zadejte své nové heslo.
         </p>
 
@@ -127,7 +127,7 @@ function ResetPasswordForm() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-mid mb-2">
               Nové heslo
             </label>
             <input
@@ -137,13 +137,13 @@ function ResetPasswordForm() {
               required
               disabled={loading}
               minLength={8}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="Minimálně 8 znaků"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-mid mb-2">
               Potvrdit heslo
             </label>
             <input
@@ -153,7 +153,7 @@ function ResetPasswordForm() {
               required
               disabled={loading}
               minLength={8}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="Zadejte heslo znovu"
             />
           </div>

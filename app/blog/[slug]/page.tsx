@@ -107,7 +107,7 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Breadcrumb */}
           <nav className="mb-6 text-sm">
-            <ol className="flex items-center gap-2 text-gray-600">
+            <ol className="flex items-center gap-2 text-text-mid">
               <li>
                 <Link href="/" className="hover:text-burgundy transition">
                   Domů
@@ -139,10 +139,10 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
             </h1>
 
             {/* Excerpt */}
-            <p className="text-xl text-gray-700 mb-6">{article.excerpt}</p>
+            <p className="text-xl text-text-mid mb-6">{article.excerpt}</p>
 
             {/* Meta */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 pb-6 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-text-mid pb-6 border-b border-warm-beige">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-burgundy">{article.author}</span>
               </div>
@@ -182,7 +182,7 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
                   .replace(/✅ (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2 text-green-600">✅ $1</li>')
                   .replace(/❌ (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2 text-red-600">❌ $1</li>')
                   .replace(/⚠️ (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2 text-orange-600">⚠️ $1</li>')
-                  .replace(/---(<br \/>|$)/g, '<hr class="my-8 border-gray-200" />')
+                  .replace(/---(<br \/>|$)/g, '<hr class="my-8 border-warm-beige" />')
                   .replace(/# (.*?)(<br \/>|$)/g, '<h1 class="text-3xl font-playfair text-burgundy mt-8 mb-4">$1</h1>'),
               }}
             />
@@ -190,13 +190,13 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
 
           {/* Tags */}
           {article.tags && article.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-gray-200">
+            <div className="mt-12 pt-8 border-t border-warm-beige">
               <div className="flex flex-wrap gap-2">
-                <span className="text-sm text-gray-600 font-medium">Štítky:</span>
+                <span className="text-sm text-text-mid font-medium">Štítky:</span>
                 {article.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-ivory text-gray-700 rounded-full text-sm"
+                    className="px-3 py-1 bg-ivory text-text-mid rounded-full text-sm"
                   >
                     {tag}
                   </span>
@@ -210,7 +210,7 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
             <h3 className="text-2xl font-playfair text-burgundy mb-3">
               Připraveni vyzkoušet naše vlasy?
             </h3>
-            <p className="text-gray-700 mb-6">
+            <p className="text-text-mid mb-6">
               Prohlédněte si naši kompletní nabídku prémiových vlasů k prodloužení
             </p>
             <Link href="/vlasy-k-prodlouzeni" className="btn-primary inline-block">
@@ -237,7 +237,7 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
                     <h4 className="text-lg font-semibold text-burgundy mt-2 mb-2">
                       {relatedArticle.title}
                     </h4>
-                    <p className="text-sm text-gray-700 line-clamp-2">
+                    <p className="text-sm text-text-mid line-clamp-2">
                       {relatedArticle.excerpt}
                     </p>
                   </Link>

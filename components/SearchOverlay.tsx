@@ -110,7 +110,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
       {/* Header s inputem */}
-      <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3">
+      <div className="sticky top-0 bg-white border-b border-warm-beige px-4 py-3">
         <div className="flex items-center gap-3">
           <div className="flex-1 relative">
             <input
@@ -124,11 +124,11 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 }
               }}
               placeholder="Hledat vlasy, metody, příčesky…"
-              className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-burgundy"
+              className="w-full px-4 py-2 pl-10 border border-warm-beige rounded-lg focus:outline-none focus:border-burgundy"
               aria-label="Vyhledávací pole"
             />
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-soft"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -138,10 +138,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-soft-cream rounded-lg transition"
             aria-label="Zavřít vyhledávání"
           >
-            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-text-mid" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -153,7 +153,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         {/* Historie hledání */}
         {searchHistory.length > 0 && !searchQuery && (
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Poslední hledání</h3>
+            <h3 className="text-sm font-semibold text-text-mid mb-3">Poslední hledání</h3>
             <div className="flex flex-wrap gap-2">
               {searchHistory.map((query, index) => (
                 <button
@@ -171,7 +171,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         {/* Rychlé návrhy */}
         {!searchQuery && (
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Oblíbené kategorie</h3>
+            <h3 className="text-sm font-semibold text-text-mid mb-3">Oblíbené kategorie</h3>
             <div className="flex flex-wrap gap-2">
               {quickSuggestions.map((suggestion, index) => (
                 <button
@@ -189,7 +189,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         {/* Výsledky vyhledávání */}
         {searchQuery && searchResults && (
           <div>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-text-soft mb-4">
               {searchResults.totalCount > 0 ? (
                 <>Nalezeno <strong>{searchResults.totalCount}</strong> {searchResults.totalCount === 1 ? 'produkt' : searchResults.totalCount < 5 ? 'produkty' : 'produktů'} pro: <strong>{searchQuery}</strong></>
               ) : (
@@ -200,7 +200,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             {/* Aktivní filtry */}
             {searchResults.totalCount > 0 && (searchResults.query.tier || searchResults.query.shadeCode !== null || searchResults.query.shadesByName.length > 0 || searchResults.query.shadesByFamily.length > 0 || searchResults.query.length || searchResults.query.structure || searchResults.query.ending) && (
               <div className="mb-4">
-                <p className="text-xs text-gray-500 mb-2">Aktivní filtry:</p>
+                <p className="text-xs text-text-soft mb-2">Aktivní filtry:</p>
                 <div className="flex flex-wrap gap-2">
                   {searchResults.query.tier && (
                     <span className="px-3 py-1 bg-burgundy/10 text-burgundy text-xs rounded-full">
@@ -246,7 +246,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             {/* Products */}
             {searchResults.products.length > 0 && (
               <div className="space-y-3 mb-6">
-                <h3 className="text-sm font-semibold text-gray-700">Produkty</h3>
+                <h3 className="text-sm font-semibold text-text-mid">Produkty</h3>
                 {searchResults.products.map((product) => {
                   // Add ?len=X query param for Standard/LUXE products when length is in search query
                   const isPlatinum = product.tier === 'Platinum edition';
@@ -260,16 +260,16 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                       key={product.id}
                       href={productHref}
                       onClick={onClose}
-                      className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-burgundy hover:shadow-sm transition"
+                      className="block p-4 bg-white rounded-lg border border-warm-beige hover:border-burgundy hover:shadow-sm transition"
                     >
 
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-16 h-16 bg-gray-100 rounded"></div>
+                      <div className="flex-shrink-0 w-16 h-16 bg-soft-cream rounded"></div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-semibold text-burgundy truncate">
                           {product.name}
                         </h4>
-                        <p className="text-xs text-gray-600 line-clamp-2 mt-1">
+                        <p className="text-xs text-text-mid line-clamp-2 mt-1">
                           {product.description}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
@@ -291,7 +291,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             {/* No results - fallback CTA */}
             {searchResults.totalCount === 0 && (
               <div className="bg-ivory rounded-lg p-6 text-center">
-                <p className="text-gray-600 mb-4">Nenašli jsme žádné produkty odpovídající vašemu dotazu.</p>
+                <p className="text-text-mid mb-4">Nenašli jsme žádné produkty odpovídající vašemu dotazu.</p>
 
                 {/* Fallback CTA */}
                 {(() => {
@@ -310,7 +310,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 {/* Suggested queries */}
                 {searchResults.suggestedQueries && searchResults.suggestedQueries.length > 0 && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">Zkuste hledat:</p>
+                    <p className="text-sm text-text-mid mb-2">Zkuste hledat:</p>
                     <div className="flex flex-wrap gap-2 justify-center">
                       {searchResults.suggestedQueries.map((suggestion, idx) => (
                         <button
@@ -333,17 +333,17 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         {searchQuery && isSearching && (
           <div className="text-center py-8">
             <div className="inline-block w-8 h-8 border-4 border-burgundy/20 border-t-burgundy rounded-full animate-spin"></div>
-            <p className="text-sm text-gray-500 mt-3">Hledám...</p>
+            <p className="text-sm text-text-soft mt-3">Hledám...</p>
           </div>
         )}
 
         {/* Prázdný stav */}
         {!searchQuery && searchHistory.length === 0 && (
           <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-16 h-16 mx-auto text-text-soft mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <p className="text-gray-500 text-sm">Začněte psát pro vyhledávání</p>
+            <p className="text-text-soft text-sm">Začněte psát pro vyhledávání</p>
           </div>
         )}
       </div>

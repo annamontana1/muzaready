@@ -51,11 +51,11 @@ export default function Modal({
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          {title && <h2 className="text-2xl font-bold text-gray-900">{title}</h2>}
+          {title && <h2 className="text-2xl font-bold text-text-dark">{title}</h2>}
           {closeButton && (
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition text-2xl font-bold leading-none"
+              className="text-text-soft hover:text-text-mid transition text-2xl font-bold leading-none"
               aria-label="Close modal"
             >
               ✕

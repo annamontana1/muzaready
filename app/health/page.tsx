@@ -45,7 +45,7 @@ export default function HealthPage() {
           {loading ? (
             <div className="text-center py-8">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-burgundy"></div>
-              <p className="mt-4 text-gray-600">Checking system status...</p>
+              <p className="mt-4 text-text-mid">Checking system status...</p>
             </div>
           ) : status ? (
             <div className="space-y-4">
@@ -62,7 +62,7 @@ export default function HealthPage() {
                     <p className="font-semibold text-lg">
                       {status.ok ? 'System Operational' : 'System Error'}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-text-mid mt-1">
                       Database: <span className="font-medium">{status.db}</span>
                     </p>
                   </div>
@@ -77,19 +77,19 @@ export default function HealthPage() {
                 </div>
               )}
 
-              <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500">
+              <div className="pt-4 border-t border-warm-beige">
+                <p className="text-xs text-text-soft">
                   Last checked: {timestamp || 'N/A'}
                 </p>
               </div>
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-600">Unable to fetch health status</p>
+              <p className="text-text-mid">Unable to fetch health status</p>
             </div>
           )}
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="mt-8 pt-6 border-t border-warm-beige">
             <a
               href="/"
               className="text-burgundy hover:text-maroon text-sm"

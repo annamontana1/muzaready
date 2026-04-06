@@ -946,8 +946,8 @@ export default function FAQPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4">Často kladené otázky (FAQ)</h1>
-      <p className="text-lg text-gray-600 mb-8">
+      <h1 className="text-4xl font-bold text-text-dark mb-4">Často kladené otázky (FAQ)</h1>
+      <p className="text-lg text-text-mid mb-8">
         Máte otázky? Najděte odpovědi na nejčastější dotazy o našich produktech, objednávání, dopravě a péči o vlasy.
       </p>
 
@@ -958,7 +958,7 @@ export default function FAQPage() {
           placeholder="Hledat v FAQ..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+          className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
         />
       </div>
 
@@ -969,7 +969,7 @@ export default function FAQPage() {
           className={`px-4 py-2 rounded-full text-sm font-medium transition ${
             selectedCategory === 'Všechny'
               ? 'bg-purple-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              : 'bg-soft-cream text-text-mid hover:bg-gray-200'
           }`}
         >
           Všechny
@@ -981,7 +981,7 @@ export default function FAQPage() {
             className={`px-4 py-2 rounded-full text-sm font-medium transition ${
               selectedCategory === category
                 ? 'bg-purple-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-soft-cream text-text-mid hover:bg-gray-200'
             }`}
           >
             {category}
@@ -992,27 +992,27 @@ export default function FAQPage() {
       {/* FAQ items */}
       <div className="space-y-4">
         {filteredFAQs.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-text-soft">
             <p className="text-lg mb-2">Nenašli jsme odpověď na váš dotaz.</p>
             <p>Zkuste jiné hledání nebo nás kontaktujte na <a href="mailto:info@muzahair.cz" className="text-purple-600 hover:underline">info@muzahair.cz</a></p>
           </div>
         ) : (
           filteredFAQs.map((item, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div key={index} className="bg-white rounded-lg shadow-sm border border-warm-beige overflow-hidden">
               <button
                 onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
-                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition"
+                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-soft-cream transition"
               >
                 <div>
                   <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">
                     {item.category}
                   </span>
-                  <h3 className="text-lg font-semibold text-gray-900 mt-1">
+                  <h3 className="text-lg font-semibold text-text-dark mt-1">
                     {item.question}
                   </h3>
                 </div>
                 <svg
-                  className={`w-6 h-6 text-gray-400 transition-transform ${
+                  className={`w-6 h-6 text-text-soft transition-transform ${
                     openQuestion === index ? 'transform rotate-180' : ''
                   }`}
                   fill="none"
@@ -1024,9 +1024,9 @@ export default function FAQPage() {
               </button>
 
               {openQuestion === index && (
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div className="px-6 py-4 bg-soft-cream border-t border-warm-beige">
                   <div
-                    className="prose prose-sm max-w-none text-gray-700"
+                    className="prose prose-sm max-w-none text-text-mid"
                     dangerouslySetInnerHTML={{
                       __html: item.answer
                         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -1044,8 +1044,8 @@ export default function FAQPage() {
 
       {/* Contact CTA */}
       <div className="mt-12 bg-purple-50 rounded-lg p-8 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Nenašli jste odpověď?</h2>
-        <p className="text-gray-700 mb-6">
+        <h2 className="text-2xl font-bold text-text-dark mb-2">Nenašli jste odpověď?</h2>
+        <p className="text-text-mid mb-6">
           Rádi vám poradíme! Kontaktujte nás a odpovíme do 24 hodin.
         </p>
         <div className="flex flex-wrap justify-center gap-4">

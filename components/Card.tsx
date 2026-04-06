@@ -10,7 +10,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-white border border-gray-200 rounded-lg shadow-light',
+  default: 'bg-white border border-warm-beige rounded-lg shadow-light',
   elevated: 'bg-white rounded-lg shadow-md',
   outlined: 'bg-white border-2 border-burgundy rounded-lg',
 };

@@ -8,9 +8,9 @@ export default function PrivacyPolicyPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8">Ochrana osobních údajů (GDPR)</h1>
 
-      <div className="prose prose-lg max-w-none space-y-6 text-gray-700">
+      <div className="prose prose-lg max-w-none space-y-6 text-text-mid">
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">1. Správce osobních údajů</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">1. Správce osobních údajů</h2>
           <p>
             <strong>Mùza Hair Praha</strong><br />
             Revoluční 8, 110 00 Praha 1<br />
@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">2. Jaké osobní údaje zpracováváme</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">2. Jaké osobní údaje zpracováváme</h2>
           <p>V rámci poskytování našich služeb a prodeje produktů zpracováváme následující osobní údaje:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Identifikační údaje:</strong> jméno, příjmení</li>
@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">3. Účel zpracování osobních údajů</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">3. Účel zpracování osobních údajů</h2>
           <p>Vaše osobní údaje zpracováváme za následujícími účely:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Realizace objednávky:</strong> vyřízení a doručení objednávky, komunikace o stavu objednávky</li>
@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">4. Právní základ zpracování</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">4. Právní základ zpracování</h2>
           <p>Osobní údaje zpracováváme na základě:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Plnění smlouvy</strong> (čl. 6 odst. 1 písm. b GDPR) – vyřízení objednávky</li>
@@ -54,7 +54,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">5. Doba uložení údajů</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">5. Doba uložení údajů</h2>
           <p>Vaše osobní údaje uchováváme po dobu:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Účetní doklady:</strong> 10 let (dle zákona o účetnictví)</li>
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">6. Komu předáváme osobní údaje</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">6. Komu předáváme osobní údaje</h2>
           <p>Vaše osobní údaje můžeme předat těmto kategoriím příjemců:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Dopravci:</strong> Česká pošta, DPD, PPL (pro doručení objednávek)</li>
@@ -78,7 +78,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">7. Vaše práva</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">7. Vaše práva</h2>
           <p>Máte následující práva týkající se ochrany osobních údajů:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong>Právo na přístup:</strong> můžete požádat o kopii svých osobních údajů</li>
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">8. Cookies</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">8. Cookies</h2>
           <p>
             Náš web používá cookies pro zajištění funkčnosti e-shopu, zlepšení uživatelského zážitku a analytické účely.
             Podrobné informace o používaných cookies naleznete v našich{' '}
@@ -102,7 +102,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">9. Zabezpečení údajů</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">9. Zabezpečení údajů</h2>
           <p>
             Zavázali jsme se chránit vaše osobní údaje před neoprávněným přístupem, ztrátou nebo zneužitím.
             Používáme technická a organizační opatření, jako například:
@@ -116,7 +116,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">10. Změny zásad ochrany osobních údajů</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">10. Změny zásad ochrany osobních údajů</h2>
           <p>
             Tyto zásady mohou být občas aktualizovány. O významných změnách vás budeme informovat
             prostřednictvím e-mailu nebo oznámení na webu.
@@ -125,7 +125,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">11. Stížnost na dozorový orgán</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">11. Stížnost na dozorový orgán</h2>
           <p>
             Pokud se domníváte, že zpracování vašich osobních údajů porušuje GDPR, máte právo podat stížnost
             u dozorového orgánu:
@@ -140,7 +140,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="border-t pt-6 mt-8">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-900">Kontakt</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-text-dark">Kontakt</h2>
           <p>
             V případě jakýchkoli dotazů týkajících se ochrany osobních údajů nás prosím kontaktujte:
           </p>

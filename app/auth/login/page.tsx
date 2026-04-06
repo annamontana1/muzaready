@@ -37,11 +37,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-soft-cream flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow p-8">
           <h1 className="text-2xl font-bold text-center mb-2">Přihlášení</h1>
-          <p className="text-gray-600 text-center mb-6">Přihlaste se ke svému účtu</p>
+          <p className="text-text-mid text-center mb-6">Přihlaste se ke svému účtu</p>
 
           {(error || authError) && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -51,7 +51,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-mid mb-1">
                 Email
               </label>
               <input
@@ -59,13 +59,13 @@ export default function LoginPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
                 disabled={loading}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-mid mb-1">
                 Heslo
               </label>
               <input
@@ -73,7 +73,7 @@ export default function LoginPage() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
                 disabled={loading}
               />
             </div>
@@ -88,13 +88,13 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center space-y-3">
-            <p className="text-gray-600 text-sm">
+            <p className="text-text-mid text-sm">
               Nemáte ještě účet?{' '}
               <Link href="/auth/register" className="text-blue-600 hover:underline font-medium">
                 Zaregistrujte se
               </Link>
             </p>
-            <p className="text-gray-600 text-sm">
+            <p className="text-text-mid text-sm">
               Chcete velkoobchodní ceník?{' '}
               <Link href="/velkoobchod" className="text-blue-600 hover:underline font-medium">
                 Zaregistrujte se jako salon

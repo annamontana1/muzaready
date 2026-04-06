@@ -47,8 +47,8 @@ export default function CartPage() {
                   {t('nav.home')}
                 </Link>
               </li>
-              <li className="text-gray-400">/</li>
-              <li className="text-gray-600">{t('cart.title')}</li>
+              <li className="text-text-soft">/</li>
+              <li className="text-text-mid">{t('cart.title')}</li>
             </ol>
           </nav>
 
@@ -56,7 +56,7 @@ export default function CartPage() {
           <div className="bg-white rounded-xl shadow-soft p-12 text-center">
             <div className="max-w-md mx-auto">
               <svg
-                className="w-24 h-24 mx-auto mb-6 text-gray-300"
+                className="w-24 h-24 mx-auto mb-6 text-text-soft"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -71,7 +71,7 @@ export default function CartPage() {
               <h1 className="text-2xl font-semibold text-burgundy mb-3">
                 {t('cart.empty')}
               </h1>
-              <p className="text-gray-600 mb-8">
+              <p className="text-text-mid mb-8">
                 {t('cart.emptyDescription')}
               </p>
               <Link
@@ -98,8 +98,8 @@ export default function CartPage() {
                 {t('nav.home')}
               </Link>
             </li>
-            <li className="text-gray-400">/</li>
-            <li className="text-gray-600">{t('cart.title')}</li>
+            <li className="text-text-soft">/</li>
+            <li className="text-text-mid">{t('cart.title')}</li>
           </ol>
         </nav>
 
@@ -107,7 +107,7 @@ export default function CartPage() {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-burgundy">
             {t('cart.shoppingCart')}
-            <span className="text-lg font-normal text-gray-600 ml-3">
+            <span className="text-lg font-normal text-text-mid ml-3">
               ({items.length} {items.length === 1 ? t('cart.item', { count: items.length }) : items.length < 5 ? t('cart.itemsPlural', { count: items.length }) : t('cart.items', { count: items.length })})
             </span>
           </h1>
@@ -115,7 +115,7 @@ export default function CartPage() {
             <button
               onClick={handleClearCart}
               disabled={isClearing}
-              className="text-sm text-gray-500 hover:text-burgundy transition disabled:opacity-50"
+              className="text-sm text-text-soft hover:text-burgundy transition disabled:opacity-50"
             >
               {t('cart.clearCart')}
             </button>
@@ -138,7 +138,7 @@ export default function CartPage() {
                     </h3>
 
                     {/* Product Details */}
-                    <div className="space-y-1 text-sm text-gray-600 mb-4">
+                    <div className="space-y-1 text-sm text-text-mid mb-4">
                       <div>
                         <span className="font-medium">{t('cart.category')}:</span>{' '}
                         {item.shade && (item.shade === 'barvene_blond' || item.shade.includes('BLONDE') || item.shade.includes('barvene'))
@@ -176,8 +176,8 @@ export default function CartPage() {
                       {/* Quantity/Grams Selector */}
                       {item.saleMode === 'BULK_G' ? (
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600">{t('cart.gramsLabel')}:</span>
-                          <div className="flex items-center border border-gray-300 rounded-lg">
+                          <span className="text-sm text-text-mid">{t('cart.gramsLabel')}:</span>
+                          <div className="flex items-center border border-warm-beige rounded-lg">
                             <button
                               onClick={() =>
                                 item.grams > 50 && updateGrams(item.skuId, item.grams - 50)
@@ -200,8 +200,8 @@ export default function CartPage() {
                         </div>
                       ) : (
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-600">{t('cart.quantityLabel')}:</span>
-                          <div className="flex items-center border border-gray-300 rounded-lg">
+                          <span className="text-sm text-text-mid">{t('cart.quantityLabel')}:</span>
+                          <div className="flex items-center border border-warm-beige rounded-lg">
                             <button
                               onClick={() =>
                                 item.quantity > 1 && updateQuantity(item.skuId, item.quantity - 1)
@@ -226,7 +226,7 @@ export default function CartPage() {
 
                       {/* Price */}
                       <div className="text-right">
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-text-soft">
                           {item.saleMode === 'BULK_G'
                             ? `${formatPrice(item.pricePerGram)}/g`
                             : `${formatPrice(item.lineTotal / item.quantity)}/ks`}
@@ -240,14 +240,14 @@ export default function CartPage() {
                 </div>
 
                 {/* Remove Button */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="mt-4 pt-4 border-t border-warm-beige">
                   <button
                     onClick={() => {
                       if (confirm(t('cart.removeConfirm'))) {
                         removeFromCart(item.skuId);
                       }
                     }}
-                    className="text-sm text-gray-500 hover:text-red-600 transition flex items-center gap-1"
+                    className="text-sm text-text-soft hover:text-red-600 transition flex items-center gap-1"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -270,11 +270,11 @@ export default function CartPage() {
               <h2 className="text-xl font-semibold text-burgundy mb-6">{t('cart.orderSummary')}</h2>
 
               <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-text-mid">
                   <span>{t('cart.subtotal')}:</span>
                   <span className="font-medium">{formatPrice(subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-text-mid">
                   <span>{t('cart.shipping')}:</span>
                   <span className="font-medium">
                     {shipping === 0 ? (
@@ -288,7 +288,7 @@ export default function CartPage() {
                 {/* Free shipping progress */}
                 {subtotal < shippingThreshold && (
                   <div className="pt-2">
-                    <div className="text-sm text-gray-600 mb-2">
+                    <div className="text-sm text-text-mid mb-2">
                       {t('cart.freeShippingRemaining')}{' '}
                       <span className="font-semibold text-burgundy">
                         {formatPrice(shippingThreshold - subtotal)}
@@ -303,7 +303,7 @@ export default function CartPage() {
                   </div>
                 )}
 
-                <div className="pt-3 border-t border-gray-200">
+                <div className="pt-3 border-t border-warm-beige">
                   <div className="flex justify-between text-lg font-bold text-burgundy">
                     <span>{t('cart.total')}:</span>
                     <span>{formatPrice(total)}</span>
@@ -328,7 +328,7 @@ export default function CartPage() {
               </div>
 
               {/* Trust Badges */}
-              <div className="mt-6 pt-6 border-t border-gray-200 space-y-2 text-sm text-gray-600">
+              <div className="mt-6 pt-6 border-t border-warm-beige space-y-2 text-sm text-text-mid">
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                     <path

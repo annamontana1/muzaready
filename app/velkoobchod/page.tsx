@@ -42,7 +42,7 @@ export default function VelkoobchodPage() {
     <div className="min-h-screen">
       {/* Breadcrumbs */}
       <nav className="container mx-auto px-4 py-6 text-sm" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-2 text-gray-600">
+        <ol className="flex items-center space-x-2 text-text-mid">
           <li><Link href="/" className="hover:text-burgundy">Domů</Link></li>
           <li><span className="mx-2">›</span></li>
           <li className="text-burgundy font-medium">Velkoobchod</li>
@@ -66,14 +66,14 @@ export default function VelkoobchodPage() {
             </motion.h1>
 
             <motion.h2
-              className="text-lg md:text-2xl text-gray-700 mb-8"
+              className="text-lg md:text-2xl text-text-mid mb-8"
               variants={fadeInUp}
             >
               Získejte velkoobchodní ceny na nebarvené a barvené vlasy – Standard, LUXE, Platinum Edition
             </motion.h2>
 
             <motion.p
-              className="text-base md:text-lg text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed"
+              className="text-base md:text-lg text-text-mid mb-8 max-w-3xl mx-auto leading-relaxed"
               variants={fadeInUp}
             >
               Jsme český výrobce se svou barvírnou. Dodáváme nebarvené i barvené vlasy k prodloužení
@@ -105,7 +105,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Vlastní barvírna v ČR
               </h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Kontrola kvality každého culíku přímo v naší výrobě
               </p>
             </div>
@@ -114,7 +114,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Široké spektrum produktů
               </h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Nebarvené i barvené vlasy ve třech kvalitách: Standard, LUXE, Platinum Edition
               </p>
             </div>
@@ -123,7 +123,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Konfigurace na míru
               </h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Délka, gramáž, zakončení (keratin, mikrokeratin, tape-in, vlasové tresy)
               </p>
             </div>
@@ -132,7 +132,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Rychlá logistika
               </h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Efektivní dodání po celé ČR a SR
               </p>
             </div>
@@ -141,7 +141,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Velkoobchodní ceny
               </h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Individuální slevové podmínky po schválení B2B účtu
               </p>
             </div>
@@ -150,7 +150,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">
                 Podpora a poradenství
               </h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Pomoc při výběru produktů, péče o vlasy, v budoucnu i školení
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function VelkoobchodPage() {
                 1
               </div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">Registrace</h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Vyplňte B2B registrační formulář s údaji o vaší firmě
               </p>
             </div>
@@ -181,7 +181,7 @@ export default function VelkoobchodPage() {
                 2
               </div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">Schválení</h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Vaši registraci schválíme do 24–48 hodin
               </p>
             </div>
@@ -191,7 +191,7 @@ export default function VelkoobchodPage() {
                 3
               </div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">Nákup za B2B ceny</h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Po přihlášení vidíte velkoobchodní ceny
               </p>
             </div>
@@ -201,7 +201,7 @@ export default function VelkoobchodPage() {
                 4
               </div>
               <h3 className="text-lg md:text-xl font-semibold text-burgundy mb-3">Výroba a dodání</h3>
-              <p className="text-sm md:text-base text-gray-700">
+              <p className="text-sm md:text-base text-text-mid">
                 Standardní doba dodání podle kategorie produktu
               </p>
             </div>
@@ -215,7 +215,7 @@ export default function VelkoobchodPage() {
           <h2 className="text-2xl md:text-4xl font-playfair text-burgundy text-center mb-4">
             B2B kategorie produktů
           </h2>
-          <p className="text-center text-sm md:text-base text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto">
+          <p className="text-center text-sm md:text-base text-text-mid mb-8 md:mb-12 max-w-2xl mx-auto">
             {!isLoggedIn || !isApproved ? (
               <span className="text-burgundy font-medium">
                 Velkoobchodní ceny dostupné po přihlášení a schválení účtu
@@ -234,7 +234,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-xl md:text-2xl font-playfair text-burgundy mb-3 md:mb-4 group-hover:text-maroon transition">
                 Nebarvené panenské vlasy
               </h3>
-              <p className="text-sm md:text-base text-gray-700 mb-4">
+              <p className="text-sm md:text-base text-text-mid mb-4">
                 Tři úrovně kvality: Standard / LUXE / Platinum Edition
               </p>
               <div className="text-sm md:text-base text-burgundy font-medium">
@@ -250,7 +250,7 @@ export default function VelkoobchodPage() {
               <h3 className="text-xl md:text-2xl font-playfair text-burgundy mb-3 md:mb-4 group-hover:text-maroon transition">
                 Barvené & Blond vlasy
               </h3>
-              <p className="text-sm md:text-base text-gray-700 mb-4">
+              <p className="text-sm md:text-base text-text-mid mb-4">
                 Standard / LUXE / Platinum Edition (individuální ceny)
               </p>
               <div className="text-sm md:text-base text-burgundy font-medium">
@@ -260,7 +260,7 @@ export default function VelkoobchodPage() {
           </div>
 
           <div className="mt-6 md:mt-8 text-center">
-            <p className="text-xs md:text-sm text-gray-600 italic">
+            <p className="text-xs md:text-sm text-text-mid italic">
               * Platinum Edition může mít individuální ceny – kontaktujte nás pro detaily
             </p>
           </div>
@@ -280,7 +280,7 @@ export default function VelkoobchodPage() {
                 <span>Kdo může požádat o B2B účet?</span>
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
-              <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
+              <p className="mt-4 text-sm md:text-base text-text-mid leading-relaxed">
                 B2B účet je určen pro kadeřnické salony, profesionální kadeřníky na OSVČ,
                 e-shopy se zaměřením na vlasy a další podnikatelské subjekty v beauty odvětví.
               </p>
@@ -291,7 +291,7 @@ export default function VelkoobchodPage() {
                 <span>Za jak dlouho schvalujete registrace?</span>
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
-              <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
+              <p className="mt-4 text-sm md:text-base text-text-mid leading-relaxed">
                 Standardně do 24–48 hodin od odeslání kompletního registračního formuláře.
                 O schválení vás budeme informovat e-mailem.
               </p>
@@ -302,7 +302,7 @@ export default function VelkoobchodPage() {
                 <span>Jaká je výše slevy pro schválené B2B účty?</span>
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
-              <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
+              <p className="mt-4 text-sm md:text-base text-text-mid leading-relaxed">
                 Výše slevy je individuální a závisí na objemu odběru a podmínkách spolupráce.
                 Kontaktujte nás pro konkrétní nabídku.
               </p>
@@ -313,7 +313,7 @@ export default function VelkoobchodPage() {
                 <span>Jsou minimální objednávky (MOQ)?</span>
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
-              <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
+              <p className="mt-4 text-sm md:text-base text-text-mid leading-relaxed">
                 Standardně nemáme nastavené MOQ. U velkých zakázek řešíme podmínky individuálně
                 – kontaktujte nás pro detaily.
               </p>
@@ -324,7 +324,7 @@ export default function VelkoobchodPage() {
                 <span>Jak řešíte dostupnost produktů?</span>
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
-              <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
+              <p className="mt-4 text-sm md:text-base text-text-mid leading-relaxed">
                 Část produktů máme na skladě, část vyrábíme na objednávku. Doba dodání se liší
                 podle typu produktu a je vždy uvedena u každé položky. Pro B2B partnery zajišťujeme
                 přednostní výrobu.
@@ -336,7 +336,7 @@ export default function VelkoobchodPage() {
                 <span>Jak funguje individuální cena u Platinum Edition?</span>
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
-              <p className="mt-4 text-sm md:text-base text-gray-700 leading-relaxed">
+              <p className="mt-4 text-sm md:text-base text-text-mid leading-relaxed">
                 Platinum Edition má často specifické požadavky. Přidejte produkt do košíku a odešlete
                 poptávku, nebo nás kontaktujte přímo na muzahaircz@gmail.com s detaily vašich požadavků.
               </p>

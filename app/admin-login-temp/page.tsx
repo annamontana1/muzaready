@@ -42,8 +42,8 @@ export default function TempAdminLoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Mùza Hair</h1>
-          <p className="text-gray-600">Dočasné admin přihlášení</p>
+          <h1 className="text-3xl font-bold text-text-dark mb-2">Mùza Hair</h1>
+          <p className="text-text-mid">Dočasné admin přihlášení</p>
           <p className="text-sm text-orange-600 mt-2">⚠️ Temporary workaround endpoint</p>
         </div>
 
@@ -55,27 +55,27 @@ export default function TempAdminLoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-mid mb-1">
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={loading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-mid mb-1">
               Heslo
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={loading}
             />
           </div>
@@ -89,7 +89,7 @@ export default function TempAdminLoginPage() {
           </button>
         </form>
 
-        <div className="mt-4 text-center text-sm text-gray-600">
+        <div className="mt-4 text-center text-sm text-text-mid">
           <p>Credentials pre-filled for testing</p>
           <p className="mt-2">Once logged in, regular /admin/login should work</p>
         </div>

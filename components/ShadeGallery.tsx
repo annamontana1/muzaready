@@ -145,14 +145,14 @@ export default function ShadeGallery({
                   <div className="text-center">
                     <p
                       className={`text-xs font-semibold transition ${
-                        isSelected ? 'text-[#4A1E1A]' : 'text-gray-700 group-hover:text-[#4A1E1A]'
+                        isSelected ? 'text-[#4A1E1A]' : 'text-text-mid group-hover:text-[#4A1E1A]'
                       }`}
                     >
                       #{shade}
                     </p>
                     <p
                       className={`text-[10px] transition ${
-                        isSelected ? 'text-[#4A1E1A]' : 'text-gray-500'
+                        isSelected ? 'text-[#4A1E1A]' : 'text-text-soft'
                       }`}
                     >
                       {color?.name}
@@ -183,7 +183,7 @@ export default function ShadeGallery({
             {/* Close button */}
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-gray-600 hover:text-[#4A1E1A] transition shadow-lg"
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-text-mid hover:text-[#4A1E1A] transition shadow-lg"
               aria-label="Zavřít"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +214,7 @@ export default function ShadeGallery({
               <h3 className="text-xl font-playfair text-[#4A1E1A] mb-2">
                 {HAIR_COLORS[showModal]?.name} #{showModal}
               </h3>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-text-mid">
                 Klikněte na fotografii pro výběr tohoto odstínu.
               </p>
               <button
@@ -224,7 +224,7 @@ export default function ShadeGallery({
                 }}
                 className={`mt-4 w-full py-2 px-4 rounded-lg font-medium transition ${
                   selectedShades.includes(showModal)
-                    ? 'bg-gray-200 text-gray-600'
+                    ? 'bg-gray-200 text-text-mid'
                     : 'bg-[#4A1E1A] text-white hover:bg-[#6E2A2A]'
                 }`}
               >

@@ -18,8 +18,8 @@ export default function ShowroomPage() {
                 Domů
               </Link>
             </li>
-            <li className="text-gray-400">/</li>
-            <li className="text-gray-600">Showroom</li>
+            <li className="text-text-soft">/</li>
+            <li className="text-text-mid">Showroom</li>
           </ol>
         </nav>
 
@@ -28,7 +28,7 @@ export default function ShowroomPage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Showroom Praha
           </h1>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+          <p className="text-lg text-text-mid max-w-2xl mx-auto">
             Navštivte náš showroom v centru Prahy. Osobní konzultace, ukázky vlasů
             a profesionální poradenství od našich specialistů.
           </p>
@@ -49,9 +49,9 @@ export default function ShowroomPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Adresa</h3>
-                  <p className="text-gray-600">Revoluční 8</p>
-                  <p className="text-gray-600">110 00 Praha 1</p>
+                  <h3 className="font-semibold text-text-dark">Adresa</h3>
+                  <p className="text-text-mid">Revoluční 8</p>
+                  <p className="text-text-mid">110 00 Praha 1</p>
                 </div>
               </div>
 
@@ -62,7 +62,7 @@ export default function ShowroomPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Telefon</h3>
+                  <h3 className="font-semibold text-text-dark">Telefon</h3>
                   <a href="tel:+420728722880" className="text-burgundy hover:text-maroon">
                     +420 728 722 880
                   </a>
@@ -76,7 +76,7 @@ export default function ShowroomPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Email</h3>
+                  <h3 className="font-semibold text-text-dark">Email</h3>
                   <a href="mailto:info@muzahair.cz" className="text-burgundy hover:text-maroon">
                     info@muzahair.cz
                   </a>
@@ -90,22 +90,22 @@ export default function ShowroomPage() {
             <h2 className="text-2xl font-playfair text-burgundy mb-6">Otevírací doba</h2>
 
             <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="text-gray-700">Pondělí - Pátek</span>
-                <span className="font-medium text-gray-900">10:00 - 18:00</span>
+              <div className="flex justify-between py-2 border-b border-warm-beige">
+                <span className="text-text-mid">Pondělí - Pátek</span>
+                <span className="font-medium text-text-dark">10:00 - 18:00</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="text-gray-700">Sobota</span>
-                <span className="font-medium text-gray-900">10:00 - 14:00</span>
+              <div className="flex justify-between py-2 border-b border-warm-beige">
+                <span className="text-text-mid">Sobota</span>
+                <span className="font-medium text-text-dark">10:00 - 14:00</span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-gray-700">Neděle</span>
-                <span className="font-medium text-gray-500">Zavřeno</span>
+                <span className="text-text-mid">Neděle</span>
+                <span className="font-medium text-text-soft">Zavřeno</span>
               </div>
             </div>
 
             <div className="mt-6 p-4 bg-burgundy/5 rounded-lg">
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-text-mid">
                 <strong>Tip:</strong> Pro osobní konzultaci doporučujeme předem
                 rezervovat termín telefonicky nebo emailem.
               </p>
@@ -124,8 +124,8 @@ export default function ShowroomPage() {
               <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">💇‍♀️</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Osobní konzultace</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="font-semibold text-text-dark mb-2">Osobní konzultace</h3>
+              <p className="text-text-mid text-sm">
                 Poradíme vám s výběrem správného typu vlasů a metody aplikace.
               </p>
             </div>
@@ -134,8 +134,8 @@ export default function ShowroomPage() {
               <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">✨</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Ukázky vlasů</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="font-semibold text-text-dark mb-2">Ukázky vlasů</h3>
+              <p className="text-text-mid text-sm">
                 Prohlédněte si všechny naše kolekce a kvality vlasů osobně.
               </p>
             </div>
@@ -144,8 +144,8 @@ export default function ShowroomPage() {
               <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">🎨</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Barvení na míru</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="font-semibold text-text-dark mb-2">Barvení na míru</h3>
+              <p className="text-text-mid text-sm">
                 Nabízíme profesionální barvení vlasů přímo v našem studiu.
               </p>
             </div>

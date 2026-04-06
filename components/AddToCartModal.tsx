@@ -73,8 +73,8 @@ export default function AddToCartModal({
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-lg">
         {/* Header */}
-        <h2 className="text-xl font-bold text-gray-900 mb-1">Přidat do košíku</h2>
-        <p className="text-sm text-gray-600 mb-4">{productName}</p>
+        <h2 className="text-xl font-bold text-text-dark mb-1">Přidat do košíku</h2>
+        <p className="text-sm text-text-mid mb-4">{productName}</p>
 
         {/* Error message */}
         {error && (
@@ -85,14 +85,14 @@ export default function AddToCartModal({
 
         {/* Quantity selector */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-text-mid mb-2">
             Počet kusů
           </label>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
               disabled={quantity <= 1 || isAdding}
-              className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="px-3 py-2 border border-warm-beige rounded-lg hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               −
             </button>
@@ -104,13 +104,13 @@ export default function AddToCartModal({
                 setQuantity(Math.max(1, val));
               }}
               disabled={isAdding}
-              className="w-16 text-center border border-gray-300 rounded-lg py-2 focus:outline-none focus:ring-2 focus:ring-burgundy disabled:opacity-50"
+              className="w-16 text-center border border-warm-beige rounded-lg py-2 focus:outline-none focus:ring-2 focus:ring-burgundy disabled:opacity-50"
               min="1"
             />
             <button
               onClick={() => setQuantity(quantity + 1)}
               disabled={isAdding}
-              className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="px-3 py-2 border border-warm-beige rounded-lg hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               +
             </button>
@@ -118,19 +118,19 @@ export default function AddToCartModal({
         </div>
 
         {/* Price display */}
-        <div className="mb-6 p-4 bg-ivory rounded-lg border border-gray-200">
+        <div className="mb-6 p-4 bg-ivory rounded-lg border border-warm-beige">
           <div className="flex justify-between mb-2">
-            <span className="text-gray-600">Cena za kus:</span>
-            <span className="font-medium text-gray-900">{price.toFixed(0)} Kč</span>
+            <span className="text-text-mid">Cena za kus:</span>
+            <span className="font-medium text-text-dark">{price.toFixed(0)} Kč</span>
           </div>
           {quantity > 1 && (
             <div className="flex justify-between mb-2 text-sm">
-              <span className="text-gray-600">Počet:</span>
-              <span className="text-gray-600">× {quantity}</span>
+              <span className="text-text-mid">Počet:</span>
+              <span className="text-text-mid">× {quantity}</span>
             </div>
           )}
-          <div className="flex justify-between pt-2 border-t border-gray-300">
-            <span className="font-semibold text-gray-900">Celkem:</span>
+          <div className="flex justify-between pt-2 border-t border-warm-beige">
+            <span className="font-semibold text-text-dark">Celkem:</span>
             <span className="text-lg font-bold text-burgundy">
               {totalPrice.toFixed(0)} Kč
             </span>
@@ -142,7 +142,7 @@ export default function AddToCartModal({
           <button
             onClick={onClose}
             disabled={isAdding}
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="flex-1 px-4 py-3 border border-warm-beige rounded-lg text-text-mid font-medium hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Zrušit
           </button>

@@ -74,7 +74,7 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-playfair text-burgundy mb-2 text-center">
           Registrace
         </h1>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-text-mid text-center mb-8">
           Vytvořte si účet pro snadnější nakupování
         </p>
 
@@ -87,7 +87,7 @@ export default function RegisterPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-mid mb-1">
                 Jméno *
               </label>
               <input
@@ -97,11 +97,11 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 disabled={loading}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2.5 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-text-mid mb-1">
                 Příjmení *
               </label>
               <input
@@ -111,13 +111,13 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 disabled={loading}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+                className="w-full px-4 py-2.5 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-mid mb-1">
               Email *
             </label>
             <input
@@ -127,13 +127,13 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               disabled={loading}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-2.5 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="vas@email.cz"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-mid mb-1">
               Telefon
             </label>
             <input
@@ -142,13 +142,13 @@ export default function RegisterPage() {
               value={formData.phone}
               onChange={handleChange}
               disabled={loading}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-2.5 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="+420 123 456 789"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-mid mb-1">
               Heslo *
             </label>
             <input
@@ -159,13 +159,13 @@ export default function RegisterPage() {
               required
               disabled={loading}
               minLength={8}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-2.5 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="Minimálně 8 znaků"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-text-mid mb-1">
               Potvrdit heslo *
             </label>
             <input
@@ -176,7 +176,7 @@ export default function RegisterPage() {
               required
               disabled={loading}
               minLength={8}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-2.5 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
             />
           </div>
 
@@ -190,7 +190,7 @@ export default function RegisterPage() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
+          <p className="text-text-mid text-sm">
             Již máte účet?{' '}
             <Link href="/prihlaseni" className="text-burgundy hover:text-maroon font-medium">
               Přihlaste se
@@ -198,7 +198,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <p className="mt-4 text-xs text-gray-500 text-center">
+        <p className="mt-4 text-xs text-text-soft text-center">
           Registrací souhlasíte s{' '}
           <Link href="/informace/obchodni-podminky" className="text-burgundy hover:underline">
             obchodními podmínkami

@@ -97,7 +97,7 @@ export default function JakNakupovatPage() {
       <div className="container mx-auto px-4 max-w-3xl">
 
         {/* Breadcrumb */}
-        <div className="text-sm text-gray-600 mb-6">
+        <div className="text-sm text-text-mid mb-6">
           <Link href="/" className="hover:text-burgundy">Domů</Link>
           {' / '}
           <Link href="/informace" className="hover:text-burgundy">Informace</Link>
@@ -110,7 +110,7 @@ export default function JakNakupovatPage() {
           <h1 className="text-3xl md:text-4xl font-playfair text-burgundy mb-3">
             Jak nakupovat
           </h1>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-text-mid leading-relaxed">
             Průvodce nákupem vlasů k prodloužení v 5 krocích — od výběru kvality až po doručení domů.
           </p>
         </div>
@@ -128,10 +128,10 @@ export default function JakNakupovatPage() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-gray-900 group-hover:text-green-700 transition">Nejste si jistá? Napište nám na WhatsApp</p>
-            <p className="text-xs text-gray-500">+420 728 722 880 — poradíme s výběrem délky, odstínu i gramáže</p>
+            <p className="text-sm font-semibold text-text-dark group-hover:text-green-700 transition">Nejste si jistá? Napište nám na WhatsApp</p>
+            <p className="text-xs text-text-soft">+420 728 722 880 — poradíme s výběrem délky, odstínu i gramáže</p>
           </div>
-          <svg className="w-4 h-4 text-gray-400 group-hover:text-green-500 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-text-soft group-hover:text-green-500 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </a>
@@ -139,17 +139,17 @@ export default function JakNakupovatPage() {
         {/* Steps */}
         <div className="space-y-6 mb-12">
           {steps.map((step) => (
-            <div key={step.number} className="bg-white border border-gray-200 rounded-xl p-6">
+            <div key={step.number} className="bg-white border border-warm-beige rounded-xl p-6">
               <div className="flex items-start gap-5">
                 <div className="flex-shrink-0 w-10 h-10 bg-burgundy text-white rounded-full flex items-center justify-center text-sm font-bold">
                   {step.number}
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-1">{step.title}</h2>
-                  <p className="text-sm text-gray-500 mb-3">{step.description}</p>
+                  <h2 className="text-lg font-semibold text-text-dark mb-1">{step.title}</h2>
+                  <p className="text-sm text-text-soft mb-3">{step.description}</p>
                   <ul className="space-y-1.5">
                     {step.details.map((detail, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                      <li key={i} className="flex items-start gap-2 text-sm text-text-mid">
                         <span className="text-burgundy mt-0.5 flex-shrink-0">—</span>
                         {detail}
                       </li>
@@ -168,7 +168,7 @@ export default function JakNakupovatPage() {
 
         {/* Upozornění — zpracované vlasy nelze vrátit */}
         <div className="bg-white border border-amber-200 rounded-xl p-5 mb-10 text-sm text-amber-800">
-          <p className="font-semibold text-gray-900 mb-1">Důležité — vlasy zpracované na metodu nelze vrátit</p>
+          <p className="font-semibold text-text-dark mb-1">Důležité — vlasy zpracované na metodu nelze vrátit</p>
           <p className="leading-relaxed">
             Vlasy objednané <strong>s konkrétním zakončením</strong> (mikrokeratin, keratin, pásky, weft, tapes) jsou vyráběny na zakázku podle vašich parametrů.
             Na toto zboží se <strong>nevztahuje právo na odstoupení od smlouvy</strong> do 14 dní dle § 1837 písm. d) občanského zákoníku.
@@ -185,8 +185,8 @@ export default function JakNakupovatPage() {
           <div className="grid md:grid-cols-3 gap-4">
             {tips.map((tip) => (
               <div key={tip.title} className="bg-ivory border border-burgundy/10 rounded-xl p-5">
-                <h3 className="font-semibold text-gray-900 text-sm mb-2">{tip.title}</h3>
-                <p className="text-gray-500 text-sm mb-3 leading-relaxed">{tip.content}</p>
+                <h3 className="font-semibold text-text-dark text-sm mb-2">{tip.title}</h3>
+                <p className="text-text-soft text-sm mb-3 leading-relaxed">{tip.content}</p>
                 <Link href={tip.href} className="text-burgundy text-sm font-medium hover:opacity-80">
                   {tip.linkText} →
                 </Link>
@@ -218,8 +218,8 @@ export default function JakNakupovatPage() {
         </div>
 
         {/* Quick Links */}
-        <div className="pt-8 border-t border-gray-200">
-          <p className="text-sm text-gray-400 mb-4">Může se vám také hodit</p>
+        <div className="pt-8 border-t border-warm-beige">
+          <p className="text-sm text-text-soft mb-4">Může se vám také hodit</p>
           <div className="flex flex-wrap gap-3">
             {[
               { href: '/informace/platba-a-vraceni', label: 'Platba a vrácení' },
@@ -231,7 +231,7 @@ export default function JakNakupovatPage() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:border-burgundy hover:text-burgundy transition"
+                className="px-4 py-2 border border-warm-beige text-text-mid text-sm rounded-lg hover:border-burgundy hover:text-burgundy transition"
               >
                 {l.label}
               </Link>

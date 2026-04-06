@@ -22,7 +22,7 @@ export default function VlasyIndexPage() {
       <div className="container mx-auto px-4 max-w-5xl">
 
         {/* Breadcrumb */}
-        <div className="text-sm text-gray-600 mb-6">
+        <div className="text-sm text-text-mid mb-6">
           <Link href="/" className="hover:text-burgundy">Domů</Link>
           {' / '}
           <span className="text-burgundy">Vlasy k prodloužení — doručení po ČR</span>
@@ -32,7 +32,7 @@ export default function VlasyIndexPage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Vlasy k prodloužení — doručení po celé ČR
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-text-mid max-w-2xl mx-auto">
             Objednávka online. Keratinové pramínky, vlasové pásky nanotapes a vlasové tresy
             zasíláme na celou Českou republiku. Expedice do 2 pracovních dní.
           </p>
@@ -43,7 +43,7 @@ export default function VlasyIndexPage() {
           <div className="bg-white rounded-xl shadow-medium p-6">
             <span className="text-3xl">💎</span>
             <h2 className="font-playfair text-xl text-burgundy mt-3 mb-2">Keratinové pramínky</h2>
-            <p className="text-sm text-gray-600 mb-4">Standart, mikrokeratin, platinum. Délky 40–70 cm, nebarvené i barvené.</p>
+            <p className="text-sm text-text-mid mb-4">Standart, mikrokeratin, platinum. Délky 40–70 cm, nebarvené i barvené.</p>
             <Link href="/vlasy-k-prodlouzeni" className="text-burgundy text-sm font-semibold hover:underline">
               Nakonfigurovat →
             </Link>
@@ -51,7 +51,7 @@ export default function VlasyIndexPage() {
           <div className="bg-white rounded-xl shadow-medium p-6">
             <span className="text-3xl">🩹</span>
             <h2 className="font-playfair text-xl text-burgundy mt-3 mb-2">Vlasové pásky Nanotapes</h2>
-            <p className="text-sm text-gray-600 mb-4">Tape-In 2,8 cm i 4 cm. 10 spojů / balení. Bez tepla a chemie.</p>
+            <p className="text-sm text-text-mid mb-4">Tape-In 2,8 cm i 4 cm. 10 spojů / balení. Bez tepla a chemie.</p>
             <Link href="/metody-zakonceni/vlasove-pasky-tape-in" className="text-burgundy text-sm font-semibold hover:underline">
               Zobrazit →
             </Link>
@@ -59,7 +59,7 @@ export default function VlasyIndexPage() {
           <div className="bg-white rounded-xl shadow-medium p-6">
             <span className="text-3xl">🧵</span>
             <h2 className="font-playfair text-xl text-burgundy mt-3 mb-2">Vlasové tresy Weft</h2>
-            <p className="text-sm text-gray-600 mb-4">Ručně šité na zakázku. Výroba 14 dní. Hollywoodské prodloužení.</p>
+            <p className="text-sm text-text-mid mb-4">Ručně šité na zakázku. Výroba 14 dní. Hollywoodské prodloužení.</p>
             <Link href="/metody-zakonceni/vlasove-tresy" className="text-burgundy text-sm font-semibold hover:underline">
               Zobrazit →
             </Link>
@@ -73,16 +73,16 @@ export default function VlasyIndexPage() {
             <Link
               key={m.slug}
               href={`/vlasy/${m.slug}`}
-              className="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-burgundy hover:shadow-medium transition group"
+              className="bg-white border border-warm-beige rounded-xl p-4 text-center hover:border-burgundy hover:shadow-medium transition group"
             >
-              <p className="font-semibold text-gray-800 group-hover:text-burgundy transition">{m.name}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{m.region.replace(' kraj', '')}</p>
+              <p className="font-semibold text-text-dark group-hover:text-burgundy transition">{m.name}</p>
+              <p className="text-xs text-text-soft mt-0.5">{m.region.replace(' kraj', '')}</p>
             </Link>
           ))}
         </div>
 
         <div className="mt-10 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-text-soft">
             Vaše město tu není?{' '}
             <Link href="/vlasy-k-prodlouzeni" className="text-burgundy hover:underline font-medium">
               Objednávka je možná kamkoliv v ČR →

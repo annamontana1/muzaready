@@ -93,7 +93,7 @@ export default function CatalogPage() {
       <div className="min-h-screen bg-soft-cream py-12">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center py-12">
-            <p className="text-gray-600">Načítám katalog...</p>
+            <p className="text-text-mid">Načítám katalog...</p>
           </div>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function CatalogPage() {
           <h1 className="text-h2 md:text-h1 font-playfair text-burgundy mb-3">
             Katalog vlasů
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-text-mid max-w-2xl mx-auto">
             Vyberte si z naší prémiové kolekce vlasů pro prodloužení. Čistě přírodní vlasy v různých kvalitách a stylech.
           </p>
         </div>
@@ -156,12 +156,12 @@ export default function CatalogPage() {
           </select>
         </div>
 
-        <div className="text-sm text-gray-600 mb-6">Zobrazeno {sortedItems.length} produktů</div>
+        <div className="text-sm text-text-mid mb-6">Zobrazeno {sortedItems.length} produktů</div>
 
         {/* Grid */}
         {sortedItems.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-600 text-lg">Není dostupný žádný produkt v této kategorii.</p>
+            <p className="text-text-mid text-lg">Není dostupný žádný produkt v této kategorii.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

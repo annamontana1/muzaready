@@ -158,26 +158,26 @@ export default function VlasoveTresyPage() {
       <main className="max-w-5xl mx-auto px-4 py-12">
         <WeftInfoBanner />
         {/* Breadcrumb */}
-        <nav className="text-sm text-gray-500 mb-6 flex gap-2 flex-wrap">
+        <nav className="text-sm text-text-soft mb-6 flex gap-2 flex-wrap">
           <Link href="/" className="hover:text-burgundy">Domů</Link>
           <span>/</span>
           <Link href="/pricesky-a-paruky" className="hover:text-burgundy">Příčesky a paruky</Link>
           <span>/</span>
-          <span className="text-gray-800">Vlasové tresy</span>
+          <span className="text-text-dark">Vlasové tresy</span>
         </nav>
 
         {/* H1 */}
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-text-dark mb-4">
           Vlasové tresy (Weft)
         </h1>
-        <p className="text-xl text-gray-500 mb-8">
+        <p className="text-xl text-text-soft mb-8">
           Ručně šité — Praha · 4 kolekce · 45–80 cm · výroba z vlastního culíku
         </p>
 
         {/* TL;DR */}
         <div className="bg-burgundy/5 border border-burgundy/20 rounded-2xl p-6 mb-12">
           <p className="text-sm font-semibold text-burgundy uppercase tracking-wide mb-3">TL;DR — rychlý přehled</p>
-          <ul className="space-y-2 text-gray-700">
+          <ul className="space-y-2 text-text-mid">
             <li>✂️ <strong>Ručně šité vlasové tresy</strong> (hand-tied weft) z pravých lidských vlasů</li>
             <li>📦 Balení: <strong>100 g</strong> / tram délky cca 60–70 cm · dostupné v délkách 45–80 cm</li>
             <li>🎨 4 kolekce: <strong>Standard, Luxe, Platinum, Baby Shades</strong> · nebarvené i barvené</li>
@@ -188,8 +188,8 @@ export default function VlasoveTresyPage() {
 
         {/* Co jsou weft tresy */}
         <section className="mb-14">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Co jsou vlasové tresy a jak fungují?</h2>
-          <div className="prose prose-lg max-w-none text-gray-700 space-y-4">
+          <h2 className="text-3xl font-bold text-text-dark mb-4">Co jsou vlasové tresy a jak fungují?</h2>
+          <div className="prose prose-lg max-w-none text-text-mid space-y-4">
             <p>
               <strong>Vlasové tresy</strong> (anglicky <em>weft</em>) jsou prameny pravých lidských vlasů přišité na tenkou tkanou základnu — tram. Vzniká tak plynulý pás vlasů, který lze připevnit několika metodami:
             </p>
@@ -206,7 +206,7 @@ export default function VlasoveTresyPage() {
 
         {/* Ručně vs strojově */}
         <section className="mb-14">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Ručně šité vs. strojově šité tresy</h2>
+          <h2 className="text-3xl font-bold text-text-dark mb-6">Ručně šité vs. strojově šité tresy</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-green-50 border border-green-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-green-900 mb-3">✋ Ručně šité (Hand-tied weft)</h3>
@@ -218,9 +218,9 @@ export default function VlasoveTresyPage() {
                 <li>✅ Přirozenější pohyb vlasů</li>
               </ul>
             </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-              <h3 className="text-lg font-bold text-gray-700 mb-3">🔧 Strojově šité (Machine weft)</h3>
-              <ul className="space-y-2 text-gray-600 text-sm">
+            <div className="bg-soft-cream border border-warm-beige rounded-xl p-6">
+              <h3 className="text-lg font-bold text-text-mid mb-3">🔧 Strojově šité (Machine weft)</h3>
+              <ul className="space-y-2 text-text-mid text-sm">
                 <li>⚠️ Silnější tram — viditelnější profil</li>
                 <li>⚠️ Nelze stříhat (vlasy vypadnou)</li>
                 <li>✅ Nižší cena</li>
@@ -229,24 +229,24 @@ export default function VlasoveTresyPage() {
               </ul>
             </div>
           </div>
-          <p className="mt-4 text-gray-600 text-sm">
+          <p className="mt-4 text-text-mid text-sm">
             <strong>Múza Hair Praha nabízí výhradně ručně šité vlasové tresy</strong> — všechny kolekce (Standard, Luxe, Platinum, Baby Shades).
           </p>
         </section>
 
         {/* Kolekce */}
         <section className="mb-14">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">4 kolekce vlasových tresů</h2>
+          <h2 className="text-3xl font-bold text-text-dark mb-6">4 kolekce vlasových tresů</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {KOLEKCE.map((k) => (
               <div key={k.nazev} className={`border rounded-2xl p-6 ${k.barva}`}>
                 <div className="flex items-center gap-3 mb-3">
-                  <h3 className="text-xl font-bold text-gray-900">{k.nazev}</h3>
+                  <h3 className="text-xl font-bold text-text-dark">{k.nazev}</h3>
                   <span className={`text-xs font-semibold px-2 py-1 rounded-full ${k.badge}`}>{k.tag}</span>
                 </div>
-                <p className="text-gray-700 text-sm mb-3">{k.popis}</p>
-                <p className="text-xs text-gray-500 mb-1"><strong>Vhodné pro:</strong> {k.pro}</p>
-                <p className="text-xs text-gray-500"><strong>Odstíny:</strong> {k.odstiny}</p>
+                <p className="text-text-mid text-sm mb-3">{k.popis}</p>
+                <p className="text-xs text-text-soft mb-1"><strong>Vhodné pro:</strong> {k.pro}</p>
+                <p className="text-xs text-text-soft"><strong>Odstíny:</strong> {k.odstiny}</p>
               </div>
             ))}
           </div>
@@ -254,25 +254,25 @@ export default function VlasoveTresyPage() {
 
         {/* Gramáže tabulka */}
         <section className="mb-14">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Gramáže vlasových tresů</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-3xl font-bold text-text-dark mb-4">Gramáže vlasových tresů</h2>
+          <p className="text-text-mid mb-6">
             Jedno balení vlasových tresů obsahuje <strong>100 g vlasů</strong>. Tram má délku přibližně 60–70 cm a lze ho dle potřeby stříhat.
           </p>
-          <div className="overflow-x-auto rounded-xl border border-gray-200">
+          <div className="overflow-x-auto rounded-xl border border-warm-beige">
             <table className="min-w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-soft-cream">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Délka vlasů</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Gramáž / balení</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Doporučený počet balení</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-text-mid">Délka vlasů</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-text-mid">Gramáž / balení</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-text-mid">Doporučený počet balení</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
                 {GRAMAZE.map((r) => (
-                  <tr key={r.delka} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{r.delka} cm</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{r.gramaz} g</td>
-                    <td className="px-6 py-3 text-sm text-gray-500">
+                  <tr key={r.delka} className="hover:bg-soft-cream">
+                    <td className="px-6 py-3 text-sm font-medium text-text-dark">{r.delka} cm</td>
+                    <td className="px-6 py-3 text-sm text-text-mid">{r.gramaz} g</td>
+                    <td className="px-6 py-3 text-sm text-text-soft">
                       {r.delka <= 55 ? '1 balení (jemné) / 1–2 balení (husté)' :
                        r.delka <= 70 ? '1–2 balení' : '2 balení'}
                     </td>
@@ -281,17 +281,17 @@ export default function VlasoveTresyPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-gray-500 mt-2">* Uvedená cena je za 100 g. Přesné doporučení závisí na hustotě vlastních vlasů — doporučujeme konzultaci v showroomu.</p>
+          <p className="text-xs text-text-soft mt-2">* Uvedená cena je za 100 g. Přesné doporučení závisí na hustotě vlastních vlasů — doporučujeme konzultaci v showroomu.</p>
         </section>
 
         {/* Výroba z culíku */}
         <section className="mb-14 bg-amber-50 border border-amber-200 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">Výroba tresů z vlastního culíku</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-2xl font-bold text-text-dark mb-3">Výroba tresů z vlastního culíku</h2>
+          <p className="text-text-mid mb-4">
             Máte vlastní culík pravých vlasů? Ručně ho zpracujeme do vlasových tresů přesně na míru.
             Výsledné tresy budou mít barvu, strukturu a délku odpovídající vašim vlastním vlasům.
           </p>
-          <ul className="space-y-2 text-gray-700 text-sm mb-4">
+          <ul className="space-y-2 text-text-mid text-sm mb-4">
             <li>✂️ Culík přinesete osobně do showroomu nebo zašlete poštou</li>
             <li>⏱️ Výroba trvá <strong>14 pracovních dní</strong></li>
             <li>📏 Minimální délka culíku: 30 cm</li>
@@ -307,15 +307,15 @@ export default function VlasoveTresyPage() {
 
         {/* FAQ */}
         <section className="mb-14">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Časté otázky o vlasových tresech</h2>
+          <h2 className="text-3xl font-bold text-text-dark mb-8">Časté otázky o vlasových tresech</h2>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <details key={i} className="group border border-gray-200 rounded-xl overflow-hidden">
-                <summary className="flex items-center justify-between p-5 cursor-pointer font-medium text-gray-900 hover:bg-gray-50 list-none">
+              <details key={i} className="group border border-warm-beige rounded-xl overflow-hidden">
+                <summary className="flex items-center justify-between p-5 cursor-pointer font-medium text-text-dark hover:bg-soft-cream list-none">
                   <span>{faq.q}</span>
-                  <span className="ml-4 text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                  <span className="ml-4 text-text-soft group-open:rotate-180 transition-transform">▼</span>
                 </summary>
-                <div className="px-5 pb-5 text-gray-700 text-sm leading-relaxed border-t border-gray-100 pt-4">
+                <div className="px-5 pb-5 text-text-mid text-sm leading-relaxed border-t border-warm-beige pt-4">
                   {faq.a}
                 </div>
               </details>
@@ -326,19 +326,19 @@ export default function VlasoveTresyPage() {
         {/* CTA */}
         <section className="bg-gray-900 text-white rounded-2xl p-8 md:p-12 text-center">
           <h2 className="text-3xl font-bold mb-4">Vyberte si vlasové tresy na míru</h2>
-          <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+          <p className="text-text-soft mb-8 max-w-xl mx-auto">
             Konzultace v showroomu Praha je zdarma a nezávazná. Pomůžeme vám vybrat správnou kolekci, délku a gramáž.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/vlasy-k-prodlouzeni"
-              className="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
+              className="bg-white text-text-dark px-8 py-3 rounded-lg font-semibold hover:bg-soft-cream transition"
             >
               Prohlédnout kolekce
             </Link>
             <Link
               href="/kontakt"
-              className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition"
+              className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-text-dark transition"
             >
               Rezervovat konzultaci
             </Link>
@@ -346,16 +346,16 @@ export default function VlasoveTresyPage() {
         </section>
 
         {/* Interní prolinkování */}
-        <section className="mt-12 pt-8 border-t border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Další metody zakončení vlasů</h3>
+        <section className="mt-12 pt-8 border-t border-warm-beige">
+          <h3 className="text-lg font-semibold text-text-dark mb-4">Další metody zakončení vlasů</h3>
           <div className="flex flex-wrap gap-3">
-            <Link href="/metody-zakonceni/vlasove-pasky-tape-in" className="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200 transition">
+            <Link href="/metody-zakonceni/vlasove-pasky-tape-in" className="px-4 py-2 bg-soft-cream rounded-lg text-sm hover:bg-gray-200 transition">
               Vlasové pásky Tape-In
             </Link>
-            <Link href="/metody-zakonceni/vlasy-na-keratin" className="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200 transition">
+            <Link href="/metody-zakonceni/vlasy-na-keratin" className="px-4 py-2 bg-soft-cream rounded-lg text-sm hover:bg-gray-200 transition">
               Keratin prameny
             </Link>
-            <Link href="/metody-zakonceni" className="px-4 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200 transition">
+            <Link href="/metody-zakonceni" className="px-4 py-2 bg-soft-cream rounded-lg text-sm hover:bg-gray-200 transition">
               Všechny metody →
             </Link>
           </div>

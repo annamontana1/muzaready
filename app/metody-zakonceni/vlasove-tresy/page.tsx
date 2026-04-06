@@ -77,12 +77,12 @@ export default function VlasoveTresyPage() {
       <div className="py-12">
         <div className="container mx-auto px-4 max-w-4xl">
 
-          <nav className="text-sm text-gray-400 mb-6 flex gap-2">
+          <nav className="text-sm text-text-soft mb-6 flex gap-2">
             <Link href="/" className="hover:text-burgundy transition">Domů</Link>
             <span>/</span>
             <Link href="/metody-zakonceni" className="hover:text-burgundy transition">Metody zakončení</Link>
             <span>/</span>
-            <span className="text-gray-600">Vlasové tresy</span>
+            <span className="text-text-mid">Vlasové tresy</span>
           </nav>
 
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
@@ -92,12 +92,12 @@ export default function VlasoveTresyPage() {
           <WeftInfoBanner />
 
           <div className="bg-ivory border-l-4 border-burgundy p-6 rounded-xl mb-10">
-            <p className="text-gray-800 leading-relaxed">
+            <p className="text-text-dark leading-relaxed">
               Vyrábíme výhradně ručně šité vlasové tresy z vámi vybraných panenských, středoevropských nebo dětských vlasů nejvyšší kvality. Tresy přišíváme na copánky metodou Hollywoodského prodloužení — bez chemie, bez tepla. Délky 45–80 cm, výrobní doba 14 pracovních dní, platba 100 % předem.
             </p>
           </div>
 
-          <div className="prose prose-lg max-w-none text-gray-700">
+          <div className="prose prose-lg max-w-none text-text-mid">
 
             <h2 className="text-3xl font-playfair text-burgundy mb-4">Co je vlasový tres?</h2>
             <p>
@@ -127,10 +127,10 @@ export default function VlasoveTresyPage() {
                   badge: 'Baby Shades',
                 },
               ].map((t) => (
-                <div key={t.name} className="bg-white border border-gray-200 rounded-xl p-5">
+                <div key={t.name} className="bg-white border border-warm-beige rounded-xl p-5">
                   <span className="text-xs font-medium bg-burgundy/10 text-burgundy px-2 py-0.5 rounded-full mb-3 inline-block">{t.badge}</span>
-                  <h3 className="font-semibold text-gray-900 mb-2 text-sm">{t.name}</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">{t.desc}</p>
+                  <h3 className="font-semibold text-text-dark mb-2 text-sm">{t.name}</h3>
+                  <p className="text-xs text-text-mid leading-relaxed">{t.desc}</p>
                 </div>
               ))}
             </div>
@@ -155,7 +155,7 @@ export default function VlasoveTresyPage() {
               ].map((i) => (
                 <div key={i.use} className="bg-ivory border border-burgundy/10 rounded-xl p-4">
                   <p className="font-semibold text-burgundy text-sm mb-2">{i.use}</p>
-                  <p className="text-xs text-gray-600 leading-relaxed">{i.note}</p>
+                  <p className="text-xs text-text-mid leading-relaxed">{i.note}</p>
                 </div>
               ))}
             </div>
@@ -177,7 +177,7 @@ export default function VlasoveTresyPage() {
                   <span className="flex-shrink-0 w-6 h-6 bg-ivory border border-burgundy/20 text-burgundy rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
                     {i + 1}
                   </span>
-                  <p className="text-sm text-gray-700 leading-relaxed">{step}</p>
+                  <p className="text-sm text-text-mid leading-relaxed">{step}</p>
                 </div>
               ))}
             </div>
@@ -211,9 +211,9 @@ export default function VlasoveTresyPage() {
                     ['80 cm', '100 g', 'Maximální délka'],
                   ].map(([len, weight, note], i) => (
                     <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-ivory'}>
-                      <td className="px-4 py-3 font-medium text-gray-900">{len}</td>
-                      <td className="px-4 py-3 text-gray-700">{weight}</td>
-                      <td className="px-4 py-3 text-gray-500">{note}</td>
+                      <td className="px-4 py-3 font-medium text-text-dark">{len}</td>
+                      <td className="px-4 py-3 text-text-mid">{weight}</td>
+                      <td className="px-4 py-3 text-text-soft">{note}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -222,8 +222,8 @@ export default function VlasoveTresyPage() {
 
             <h2 className="text-3xl font-playfair text-burgundy mt-10 mb-4">Péče o vlasové tresy</h2>
 
-            <div className="not-prose bg-white border border-gray-200 rounded-xl p-6 mb-10">
-              <p className="text-sm text-gray-700 mb-4 leading-relaxed">
+            <div className="not-prose bg-white border border-warm-beige rounded-xl p-6 mb-10">
+              <p className="text-sm text-text-mid mb-4 leading-relaxed">
                 Panenské a středoevropské vlasy se chovají stejně jako vaše vlastní — potřebují mytí, ošetřování a úpravu. Je to znak jejich kvality.
               </p>
               <div className="grid md:grid-cols-2 gap-3">
@@ -235,7 +235,7 @@ export default function VlasoveTresyPage() {
                   'Upravujte tresy (foukat, žehlit) jednou za 2–3 týdny',
                   'Choďte na korekci po 2–3 měsících',
                 ].map((tip, i) => (
-                  <div key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                  <div key={i} className="flex items-start gap-2 text-sm text-text-mid">
                     <span className="text-green-500 font-bold mt-0.5">✓</span>
                     <span>{tip}</span>
                   </div>
@@ -273,9 +273,9 @@ export default function VlasoveTresyPage() {
                   link: null,
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-white border border-gray-200 rounded-xl p-5">
-                  <p className="font-semibold text-gray-900 mb-2">{item.q}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.a}</p>
+                <div key={i} className="bg-white border border-warm-beige rounded-xl p-5">
+                  <p className="font-semibold text-text-dark mb-2">{item.q}</p>
+                  <p className="text-sm text-text-mid leading-relaxed">{item.a}</p>
                   {item.link && (
                     <Link href={item.link.href} className="text-sm text-burgundy underline mt-2 inline-block hover:opacity-75">
                       {item.link.label}
@@ -289,7 +289,7 @@ export default function VlasoveTresyPage() {
 
           <div className="bg-ivory border border-burgundy/10 rounded-xl p-8 text-center">
             <p className="font-playfair text-2xl text-burgundy mb-2">Máte zájem o vlasové tresy?</p>
-            <p className="text-gray-500 text-sm mb-6">Prohlédněte si nabídku nebo nás kontaktujte pro konzultaci.</p>
+            <p className="text-text-soft text-sm mb-6">Prohlédněte si nabídku nebo nás kontaktujte pro konzultaci.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/vlasy-k-prodlouzeni" className="px-6 py-3 bg-burgundy text-white text-sm font-medium rounded-xl hover:opacity-90 transition">
                 Vybrat vlasy k prodloužení
@@ -297,21 +297,21 @@ export default function VlasoveTresyPage() {
               <Link href="/ceny-aplikaci" className="px-6 py-3 border border-burgundy text-burgundy text-sm font-medium rounded-xl hover:bg-white transition">
                 Ceny aplikací
               </Link>
-              <Link href="/kontakt" className="px-6 py-3 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:border-burgundy hover:text-burgundy transition">
+              <Link href="/kontakt" className="px-6 py-3 border border-warm-beige text-text-mid text-sm font-medium rounded-xl hover:border-burgundy hover:text-burgundy transition">
                 Kontakt
               </Link>
             </div>
           </div>
 
-          <div className="pt-8 mt-8 border-t border-gray-200">
-            <p className="text-sm text-gray-400 mb-4">Další metody zakončení</p>
+          <div className="pt-8 mt-8 border-t border-warm-beige">
+            <p className="text-sm text-text-soft mb-4">Další metody zakončení</p>
             <div className="flex flex-wrap gap-3">
               {[
                 { href: '/metody-zakonceni/vlasove-pasky-tape-in', label: 'Vlasové pásky Tape-In' },
                 { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Keratin prameny' },
                 { href: '/metody-zakonceni', label: 'Všechny metody' },
               ].map((l) => (
-                <Link key={l.href} href={l.href} className="px-4 py-2 border border-gray-200 text-gray-600 text-sm rounded-lg hover:border-burgundy hover:text-burgundy transition">
+                <Link key={l.href} href={l.href} className="px-4 py-2 border border-warm-beige text-text-mid text-sm rounded-lg hover:border-burgundy hover:text-burgundy transition">
                   {l.label}
                 </Link>
               ))}

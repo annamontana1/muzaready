@@ -108,7 +108,7 @@ export default function OrderTrackingPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-burgundy mb-3">Sledování objednávky</h1>
-          <p className="text-gray-600">
+          <p className="text-text-mid">
             Vyhledejte si svou objednávku pomocí e-mailu a ID objednávky
           </p>
         </div>
@@ -173,27 +173,27 @@ export default function OrderTrackingPage() {
             <Card variant="default" padding="lg">
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
-                  <p className="text-gray-600 text-sm mb-1">ID objednávky</p>
-                  <p className="text-2xl font-bold text-gray-900 break-all">{order.id}</p>
+                  <p className="text-text-mid text-sm mb-1">ID objednávky</p>
+                  <p className="text-2xl font-bold text-text-dark break-all">{order.id}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm mb-1">E-mail</p>
-                  <p className="text-lg font-semibold text-gray-900">{order.email}</p>
+                  <p className="text-text-mid text-sm mb-1">E-mail</p>
+                  <p className="text-lg font-semibold text-text-dark">{order.email}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm mb-1">Datum objednávky</p>
-                  <p className="text-lg text-gray-900">{formatDate(order.createdAt)}</p>
+                  <p className="text-text-mid text-sm mb-1">Datum objednávky</p>
+                  <p className="text-lg text-text-dark">{formatDate(order.createdAt)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm mb-1">Poslední aktualizace</p>
-                  <p className="text-lg text-gray-900">{formatDate(order.updatedAt)}</p>
+                  <p className="text-text-mid text-sm mb-1">Poslední aktualizace</p>
+                  <p className="text-lg text-text-dark">{formatDate(order.updatedAt)}</p>
                 </div>
               </div>
             </Card>
 
             {/* Status Timeline */}
             <Card variant="default" padding="lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Stav objednávky</h2>
+              <h2 className="text-2xl font-bold text-text-dark mb-6">Stav objednávky</h2>
               <OrderStatusTimeline currentStatus={order.orderStatus} />
               
               {/* Status Badges */}
@@ -204,14 +204,14 @@ export default function OrderTrackingPage() {
                   order.orderStatus === 'processing' ? 'bg-yellow-100 text-yellow-800' :
                   order.orderStatus === 'pending' ? 'bg-orange-100 text-orange-800' :
                   order.orderStatus === 'cancelled' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
+                  'bg-soft-cream text-text-dark'
                 }`}>
                   Objednávka: {order.orderStatus}
                 </span>
                 <span className={`px-4 py-2 rounded-full text-sm font-medium ${
                   order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
                   order.paymentStatus === 'partial' ? 'bg-yellow-100 text-yellow-800' :
-                  order.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                  order.paymentStatus === 'refunded' ? 'bg-soft-cream text-text-dark' :
                   'bg-red-100 text-red-800'
                 }`}>
                   Platba: {order.paymentStatus}
@@ -229,9 +229,9 @@ export default function OrderTrackingPage() {
               {/* Tracking Number */}
               {order.trackingNumber && (
                 <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Dopravce:</p>
-                  <p className="text-base font-semibold text-gray-800 mb-2">{getCarrierName(order.carrier)}</p>
-                  <p className="text-sm text-gray-600 mb-1">Číslo sledování:</p>
+                  <p className="text-sm text-text-mid mb-1">Dopravce:</p>
+                  <p className="text-base font-semibold text-text-dark mb-2">{getCarrierName(order.carrier)}</p>
+                  <p className="text-sm text-text-mid mb-1">Číslo sledování:</p>
                   <p className="text-lg font-bold text-blue-800">{order.trackingNumber}</p>
                   <a
                     href={getTrackingUrl(order.carrier, order.trackingNumber)}
@@ -247,18 +247,18 @@ export default function OrderTrackingPage() {
 
             {/* Order Items */}
             <Card variant="default" padding="lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Obsah objednávky</h2>
+              <h2 className="text-2xl font-bold text-text-dark mb-6">Obsah objednávky</h2>
               <div className="space-y-4">
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
+                    className="border border-warm-beige rounded-lg p-4 hover:shadow-md transition"
                   >
                     <div className="grid md:grid-cols-2 gap-4">
                       {/* Item Details */}
                       <div>
-                        <p className="font-semibold text-gray-900 mb-2">{item.skuName || 'Neznámý produkt'}</p>
-                        <div className="text-sm text-gray-600 space-y-1">
+                        <p className="font-semibold text-text-dark mb-2">{item.skuName || 'Neznámý produkt'}</p>
+                        <div className="text-sm text-text-mid space-y-1">
                           {item.shade && <p>Odstín: {item.shade}</p>}
                           {item.lengthCm && <p>Délka: {item.lengthCm} cm</p>}
                           {item.structure && <p>Struktura: {item.structure}</p>}
@@ -271,23 +271,23 @@ export default function OrderTrackingPage() {
                       {/* Pricing */}
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Cena za gram:</span>
-                          <span className="font-semibold text-gray-900">{formatPrice(item.pricePerGram)}</span>
+                          <span className="text-text-mid">Cena za gram:</span>
+                          <span className="font-semibold text-text-dark">{formatPrice(item.pricePerGram)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Řádek celkem:</span>
-                          <span className="font-semibold text-gray-900">{formatPrice(item.lineTotal)}</span>
+                          <span className="text-text-mid">Řádek celkem:</span>
+                          <span className="font-semibold text-text-dark">{formatPrice(item.lineTotal)}</span>
                         </div>
                         {item.assemblyFeeTotal !== null && item.assemblyFeeTotal > 0 && (
                           <>
                             <div className="flex justify-between text-sm">
-                              <span className="text-gray-600">Poplatek za montáž:</span>
-                              <span className="font-semibold text-gray-900">
+                              <span className="text-text-mid">Poplatek za montáž:</span>
+                              <span className="font-semibold text-text-dark">
                                 {formatPrice(item.assemblyFeeTotal)}
                               </span>
                             </div>
                             <div className="border-t pt-2 flex justify-between">
-                              <span className="font-semibold text-gray-900">Součet:</span>
+                              <span className="font-semibold text-text-dark">Součet:</span>
                               <span className="text-lg font-bold text-burgundy">
                                 {formatPrice(item.lineGrandTotal)}
                               </span>
@@ -296,7 +296,7 @@ export default function OrderTrackingPage() {
                         )}
                         {(!item.assemblyFeeTotal || item.assemblyFeeTotal === 0) && (
                           <div className="border-t pt-2 flex justify-between">
-                            <span className="font-semibold text-gray-900">Součet:</span>
+                            <span className="font-semibold text-text-dark">Součet:</span>
                             <span className="text-lg font-bold text-burgundy">
                               {formatPrice(item.lineTotal)}
                             </span>
@@ -309,9 +309,9 @@ export default function OrderTrackingPage() {
               </div>
 
               {/* Order Total */}
-              <div className="border-t border-gray-200 mt-6 pt-6">
+              <div className="border-t border-warm-beige mt-6 pt-6">
                 <div className="flex justify-between items-center">
-                  <span className="text-xl font-bold text-gray-900">Celková suma objednávky:</span>
+                  <span className="text-xl font-bold text-text-dark">Celková suma objednávky:</span>
                   <span className="text-3xl font-bold text-burgundy">{formatPrice(order.total)}</span>
                 </div>
               </div>

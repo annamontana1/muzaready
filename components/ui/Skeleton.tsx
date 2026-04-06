@@ -34,7 +34,7 @@ export function TableSkeleton({ rows = 5, columns = 6 }: TableSkeletonProps) {
   return (
     <div className="space-y-3" role="status" aria-label="Načítání tabulky...">
       {/* Header */}
-      <div className="flex gap-4 pb-2 border-b border-gray-200">
+      <div className="flex gap-4 pb-2 border-b border-warm-beige">
         {Array.from({ length: columns }).map((_, i) => (
           <div key={`header-${i}`} className="flex-1">
             <Skeleton height="1.5rem" />

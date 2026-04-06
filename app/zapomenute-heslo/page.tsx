@@ -45,10 +45,10 @@ export default function ForgotPasswordPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-playfair text-burgundy mb-4">Email odeslán</h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-text-mid mb-6">
             Pokud existuje účet s emailem <strong>{email}</strong>, obdržíte odkaz pro reset hesla.
           </p>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text-text-soft mb-6">
             Zkontrolujte také složku spam.
           </p>
           <Link
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
         <h1 className="text-2xl font-playfair text-burgundy mb-2 text-center">
           Zapomenuté heslo
         </h1>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-text-mid text-center mb-8">
           Zadejte svůj email a pošleme vám odkaz pro reset hesla.
         </p>
 
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-mid mb-2">
               Email
             </label>
             <input
@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
+              className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-burgundy"
               placeholder="vas@email.cz"
             />
           </div>

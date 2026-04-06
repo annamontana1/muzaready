@@ -115,7 +115,7 @@ export function Toast({ message, onClose }: ToastProps) {
         <button
           type="button"
           onClick={handleClose}
-          className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+          className="flex-shrink-0 text-text-soft hover:text-text-mid transition-colors"
           aria-label="Zavřít"
         >
           <svg

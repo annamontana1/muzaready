@@ -59,7 +59,7 @@ export default function OblibeneePage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Oblíbené produkty
           </h1>
-          <p className="text-gray-600">
+          <p className="text-text-mid">
             {favoriteCount === 0
               ? 'Nemáte žádné oblíbené produkty'
               : `Máte ${favoriteCount} ${favoriteCount === 1 ? 'oblíbený produkt' : favoriteCount < 5 ? 'oblíbené produkty' : 'oblíbených produktů'}`
@@ -71,7 +71,7 @@ export default function OblibeneePage() {
         {loading && favoriteCount > 0 && (
           <div className="bg-white rounded-xl p-12 text-center shadow-medium">
             <div className="animate-spin w-12 h-12 border-4 border-burgundy border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-gray-600">Načítám oblíbené produkty...</p>
+            <p className="text-text-mid">Načítám oblíbené produkty...</p>
           </div>
         )}
 
@@ -79,7 +79,7 @@ export default function OblibeneePage() {
         {!loading && favoriteCount === 0 && (
           <div className="bg-white rounded-xl p-12 text-center shadow-medium">
             <svg
-              className="w-24 h-24 mx-auto text-gray-300 mb-6"
+              className="w-24 h-24 mx-auto text-text-soft mb-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -94,7 +94,7 @@ export default function OblibeneePage() {
             <h2 className="text-2xl font-playfair text-burgundy mb-4">
               Zatím nemáte žádné oblíbené
             </h2>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            <p className="text-text-mid mb-8 max-w-md mx-auto">
               Začněte procházet naše produkty a přidávejte si je do oblíbených kliknutím na ikonu srdce.
             </p>
             <Link
@@ -179,7 +179,7 @@ export default function OblibeneePage() {
                           {product.name}
                         </h3>
                       </Link>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                      <p className="text-sm text-text-mid mb-3 line-clamp-2">
                         {product.description}
                       </p>
                       <div className="flex items-center justify-between mb-4">
@@ -187,9 +187,9 @@ export default function OblibeneePage() {
                           Od {priceCalculator.formatPrice(product.base_price_per_100g_45cm)}
                         </span>
                         {variant && (
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <div className="flex items-center gap-1 text-xs text-text-soft">
                             <div
-                              className="w-3 h-3 rounded-full border border-gray-300"
+                              className="w-3 h-3 rounded-full border border-warm-beige"
                               style={{ backgroundColor: color?.hex }}
                             />
                             <span>{variant.shade}</span>
@@ -240,10 +240,10 @@ export default function OblibeneePage() {
                     className="bg-white rounded-xl p-6 shadow-medium flex items-center justify-between mb-4"
                   >
                     <div>
-                      <p className="text-gray-700 font-medium">
+                      <p className="text-text-mid font-medium">
                         {fav.name || 'Oblíbený produkt'}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-text-soft">
                         Tento produkt momentálně není k dispozici v katalogu.
                       </p>
                     </div>

@@ -12,7 +12,7 @@ export default function PrintButton() {
         </svg>
         Vytisknout formulář
       </button>
-      <p className="text-xs text-gray-400 mt-2">nebo uložit jako PDF (Ctrl+P → Uložit jako PDF)</p>
+      <p className="text-xs text-text-soft mt-2">nebo uložit jako PDF (Ctrl+P → Uložit jako PDF)</p>
     </div>
   );
 }

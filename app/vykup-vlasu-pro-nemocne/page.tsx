@@ -7,15 +7,15 @@ export default function VykupVlasuPage() {
         </h1>
 
         <div className="bg-ivory p-8 rounded-xl mb-8">
-          <p className="text-xl text-gray-700 mb-4">
+          <p className="text-xl text-text-mid mb-4">
             <strong className="text-burgundy">Každý 10. culík pro děti s onkologickým onemocněním</strong>
           </p>
-          <p className="text-gray-700">
+          <p className="text-text-mid">
             Pomáháme nemocným dětem tím, že z nakoupených vlasů zdarma vyrábíme paruky.
           </p>
         </div>
 
-        <div className="prose prose-lg max-w-none text-gray-700">
+        <div className="prose prose-lg max-w-none text-text-mid">
           <h2 className="text-2xl font-playfair text-burgundy">Jak to funguje?</h2>
           <p>
             Pokud máte zdravé, dlouhé vlasy, které chcete darovat, kontaktujte nás.
