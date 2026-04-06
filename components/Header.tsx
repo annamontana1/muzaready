@@ -117,7 +117,6 @@ export default function Header() {
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
                   {dropdownItem('/pricesky-a-paruky/ofiny-z-pravych-vlasu', 'Ofiny z pravých vlasů')}
                   {dropdownItem('/pricesky-a-paruky/toupee', 'Toupee / tupé')}
-                  {dropdownItem('/pricesky-a-paruky/vlasove-tresy', 'Vlasové tresy')}
                   {dropdownItem('/pricesky-a-paruky/prave-paruky', 'Pravé paruky')}
                   {dropdownItem('/pricesky-a-paruky/clip-in-vlasy', 'Clip-in vlasy')}
                   {dropdownItem('/pricesky-a-paruky/clip-in-culik', 'Clip-in culík')}
@@ -356,7 +355,6 @@ export default function Header() {
                     items: [
                       { href: '/pricesky-a-paruky/ofiny-z-pravych-vlasu', label: 'Ofiny' },
                       { href: '/pricesky-a-paruky/toupee', label: 'Toupee / tupé' },
-                      { href: '/pricesky-a-paruky/vlasove-tresy', label: 'Vlasové tresy' },
                       { href: '/pricesky-a-paruky/prave-paruky', label: 'Pravé paruky' },
                       { href: '/pricesky-a-paruky/clip-in-vlasy', label: 'Clip-in vlasy' },
                       { href: '/pricesky-a-paruky/clip-in-culik', label: 'Clip-in culík' },
