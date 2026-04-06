@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { MESTA } from '@/lib/mesta';
 
 const tiers = [
   {
@@ -99,6 +100,19 @@ export default function VlasyKProdlouzenLanding() {
                 Filtrujte podle typu: rovné, mírně vlnité, vlnité, kudrnaté
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Doručujeme po celé ČR */}
+        <div className="mt-12 text-center">
+          <h2 className="text-2xl font-playfair text-burgundy mb-2">Doručujeme po celé České republice</h2>
+          <p className="text-sm text-gray-500 mb-6">Vyberte své město — stránka s informacemi o produktech a dopravě přímo k vám</p>
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+            {MESTA.map((m) => (
+              <Link key={m.slug} href={`/vlasy/${m.slug}`} className="bg-white border border-gray-200 rounded-lg px-3 py-2.5 text-center hover:border-burgundy hover:text-burgundy text-sm text-gray-600 transition">
+                {m.name}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

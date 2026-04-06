@@ -357,6 +357,21 @@ export default function TapeInPage() {
 
           </div>
 
+          {/* Ceny a města */}
+          <div className="mt-10 text-center">
+            <Link href="/ceny-aplikaci#nanotapes" className="inline-block px-6 py-3 bg-burgundy text-white text-sm font-medium rounded-xl hover:opacity-90 transition mb-6">
+              Ceník aplikace nanotapes →
+            </Link>
+            <p className="text-sm text-gray-500 mb-4">Vlasové pásky nanotapes dodáváme do celé ČR:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['brno','ostrava','plzen','olomouc','hradec-kralove','pardubice','ceske-budejovice','liberec'].map((slug) => (
+                <Link key={slug} href={`/vlasy/${slug}`} className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-burgundy hover:text-burgundy transition capitalize">
+                  {slug.replace(/-/g,' ')}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* CTA */}
           <div className="bg-burgundy text-white rounded-2xl p-8 mt-12 text-center">
             <h2 className="text-2xl font-playfair mb-3">Přijďte si vybrat vlasové pásky osobně</h2>
