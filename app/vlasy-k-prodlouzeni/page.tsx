@@ -8,114 +8,142 @@ const tiers = [
     name: 'Standard',
     href: '/vlasy-k-prodlouzeni/standard',
     description: 'Kvalitní panenské vlasy za výhodnou cenu.',
-    color: 'bg-warm-beige',
+    note: 'Ideální volba pro první prodloužení',
   },
   {
     name: 'Luxe',
     href: '/vlasy-k-prodlouzeni/luxe',
     description: 'Prémiové vlasy s hedvábnou strukturou.',
-    color: 'bg-warm-beige',
+    note: 'Nejprodávanější kolekce',
   },
   {
     name: 'Platinum Edition',
     href: '/vlasy-k-prodlouzeni/platinum-edition',
     description: 'Exkluzivní culíky v limitované edici.',
-    color: 'bg-warm-beige',
+    note: 'Limitovaná edice · nejvyšší kvalita',
   },
   {
     name: 'Baby Shades',
     href: '/vlasy-k-prodlouzeni/baby-shades',
     description: 'Jemné dětské vlasy v přirozených odstínech.',
-    color: 'bg-warm-beige',
+    note: 'Přirozené odstíny · ultra jemná textura',
   },
 ];
 
 export default function VlasyKProdlouzenLanding() {
   return (
-    <div className="min-h-screen bg-soft-cream py-16">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Breadcrumb */}
-        <nav className="mb-8 text-sm">
-          <ol className="flex items-center gap-2 text-text-mid">
-            <li>
-              <Link href="/" className="hover:text-burgundy transition">
-                Domu
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="text-burgundy font-medium">Vlasy k prodloužení</li>
-          </ol>
-        </nav>
+    <div style={{ background: 'var(--white)' }}>
 
-        {/* Page Header */}
-        <div className="mb-16 text-center">
-          <h1 className="text-5xl md:text-6xl font-playfair text-burgundy mb-6">
-            Vlasy k prodloužení
-          </h1>
-          <p className="text-xl text-text-mid max-w-2xl mx-auto">
-            Vyberte si kvalitu panenských vlasu a prohlédněte si naši kompletní nabídku s možností filtrování
-          </p>
+      {/* Hero section */}
+      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+        <div
+          className="text-[11px] tracking-[0.15em] uppercase font-light mb-10"
+          style={{ color: 'var(--text-soft)' }}
+        >
+          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
+          {' — '}
+          <span style={{ color: 'var(--text-mid)' }}>Vlasy k prodloužení</span>
         </div>
 
-        {/* Tier Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {tiers.map((tier) => (
-            <Link key={tier.name} href={tier.href} className="group">
-              <div className={`${tier.color} rounded-2xl shadow-light hover:shadow-card-hover transition-all p-12 text-center h-full flex flex-col justify-center items-center border border-warm-beige hover:border-burgundy`}>
-                <h2 className="text-3xl font-playfair font-bold text-burgundy mb-3 group-hover:text-maroon transition">
+        <div
+          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          style={{ color: 'var(--accent)' }}
+        >
+          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+          KOLEKCE
+        </div>
+
+        <h1
+          className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6"
+          style={{ color: 'var(--text-dark)' }}
+        >
+          Vlasy k prodloužení
+        </h1>
+
+        <p
+          className="text-[15px] leading-[1.8] font-light max-w-[520px]"
+          style={{ color: 'var(--text-soft)' }}
+        >
+          Vyberte si kvalitu panenských vlasů a prohlédněte si naši kompletní nabídku.
+          Čtyři kolekce pro každou příležitost — od každodenního nošení po výjimečné momenty.
+        </p>
+      </section>
+
+      {/* Tiers list */}
+      <section style={{ background: 'var(--beige)' }}>
+        {tiers.map((tier, index) => (
+          <Link key={tier.name} href={tier.href} className="group block">
+            <div
+              className="px-8 lg:px-20 py-12 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 transition-all"
+              style={{ borderColor: 'var(--border-light)' }}
+            >
+              <div className="flex-1">
+                <div
+                  className="text-[11px] tracking-[0.15em] uppercase font-light mb-2"
+                  style={{ color: 'var(--text-soft)' }}
+                >
+                  0{index + 1} — {tier.note}
+                </div>
+                <h2
+                  className="font-cormorant text-[clamp(26px,3vw,38px)] font-light mb-2 transition-colors group-hover:opacity-80"
+                  style={{ color: 'var(--text-dark)' }}
+                >
                   {tier.name}
                 </h2>
-                <p className="text-text-mid mb-6">
+                <p
+                  className="text-[15px] leading-[1.8] font-light"
+                  style={{ color: 'var(--text-soft)' }}
+                >
                   {tier.description}
                 </p>
-                <span className="text-burgundy font-semibold group-hover:text-maroon transition">
-                  Prohlédnout katalog &rarr;
-                </span>
               </div>
+              <div
+                className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-all group-hover:gap-4"
+                style={{ color: 'var(--text-mid)' }}
+              >
+                Prohlédnout katalog →
+              </div>
+            </div>
+          </Link>
+        ))}
+      </section>
+
+      {/* City SEO section */}
+      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+        <div className="w-12 h-px mb-8" style={{ background: 'var(--accent)' }} />
+        <div
+          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          style={{ color: 'var(--accent)' }}
+        >
+          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+          MESTA
+        </div>
+        <h2
+          className="font-cormorant text-[clamp(26px,3vw,38px)] font-light mb-4"
+          style={{ color: 'var(--text-dark)' }}
+        >
+          Doručujeme po celé České republice
+        </h2>
+        <p
+          className="text-[15px] leading-[1.8] font-light mb-10 max-w-[440px]"
+          style={{ color: 'var(--text-soft)' }}
+        >
+          Vyberte své město — stránka s informacemi o produktech a dopravě přímo k vám.
+        </p>
+        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-8 gap-x-6 gap-y-3">
+          {MESTA.map((m) => (
+            <Link
+              key={m.slug}
+              href={`/vlasy/${m.slug}`}
+              className="text-[12px] tracking-[0.05em] uppercase font-light transition-colors hover:underline"
+              style={{ color: 'var(--text-mid)' }}
+            >
+              {m.name}
             </Link>
           ))}
         </div>
+      </section>
 
-        {/* Info Section */}
-        <div className="mt-16 bg-white rounded-xl shadow-light p-8 text-center border border-warm-beige">
-          <h3 className="text-2xl font-semibold text-burgundy mb-4">
-            Jak funguje filtrování?
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div>
-              <div className="font-semibold text-burgundy mb-2">Typ vlasu</div>
-              <p className="text-text-mid text-sm">
-                Filtrujte podle typu: nebarvené panenské nebo barvené blond vlasy
-              </p>
-            </div>
-            <div>
-              <div className="font-semibold text-burgundy mb-2">Odstín</div>
-              <p className="text-text-mid text-sm">
-                Vyberte si z dostupných odstínu 1-10 podle galerie barev
-              </p>
-            </div>
-            <div>
-              <div className="font-semibold text-burgundy mb-2">Struktura</div>
-              <p className="text-text-mid text-sm">
-                Filtrujte podle typu: rovné, mírně vlnité, vlnité, kudrnaté
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Doručujeme po celé ČR */}
-        <div className="mt-12 text-center">
-          <h2 className="text-2xl font-playfair text-burgundy mb-2">Doručujeme po celé České republice</h2>
-          <p className="text-sm text-text-soft mb-6">Vyberte své město — stránka s informacemi o produktech a dopravě přímo k vám</p>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-            {MESTA.map((m) => (
-              <Link key={m.slug} href={`/vlasy/${m.slug}`} className="bg-white border border-warm-beige rounded-lg px-3 py-2.5 text-center hover:border-burgundy hover:text-burgundy text-sm text-text-mid transition">
-                {m.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

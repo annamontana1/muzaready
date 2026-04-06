@@ -8,160 +8,166 @@ export const metadata: Metadata = {
 
 export default function ShowroomPage() {
   return (
-    <div className="min-h-screen bg-warm-beige py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Breadcrumb */}
-        <nav className="text-sm mb-8">
-          <ol className="flex items-center gap-2">
-            <li>
-              <Link href="/" className="text-burgundy hover:text-maroon transition">
-                Domů
-              </Link>
-            </li>
-            <li className="text-text-soft">/</li>
-            <li className="text-text-mid">Showroom</li>
-          </ol>
-        </nav>
+    <div style={{ background: 'var(--white)' }}>
 
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
-            Showroom Praha
-          </h1>
-          <p className="text-lg text-text-mid max-w-2xl mx-auto">
-            Navštivte náš showroom v centru Prahy. Osobní konzultace, ukázky vlasů
-            a profesionální poradenství od našich specialistů.
+      {/* Hero section */}
+      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+        <div
+          className="text-[11px] tracking-[0.15em] uppercase font-light mb-10"
+          style={{ color: 'var(--text-soft)' }}
+        >
+          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
+          {' — '}
+          <span style={{ color: 'var(--text-mid)' }}>Showroom</span>
+        </div>
+
+        <div
+          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          style={{ color: 'var(--accent)' }}
+        >
+          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+          SHOWROOM PRAHA
+        </div>
+
+        <h1
+          className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6"
+          style={{ color: 'var(--text-dark)' }}
+        >
+          Showroom Praha
+        </h1>
+
+        <p
+          className="text-[15px] leading-[1.8] font-light max-w-[520px] mb-12"
+          style={{ color: 'var(--text-soft)' }}
+        >
+          Navštivte náš showroom v centru Prahy. Osobní konzultace, ukázky vlasů
+          a profesionální poradenství od našich specialistů.
+        </p>
+
+        {/* Address & phone large display */}
+        <div className="flex flex-col gap-4 mb-12">
+          <div className="w-12 h-px" style={{ background: 'var(--accent)' }} />
+          <p
+            className="font-cormorant text-[clamp(22px,2.5vw,32px)] font-light"
+            style={{ color: 'var(--text-dark)' }}
+          >
+            Revoluční 8, Praha 1
           </p>
-        </div>
-
-        {/* Main Content */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Address & Contact */}
-          <div className="bg-white rounded-xl shadow-soft p-8">
-            <h2 className="text-2xl font-playfair text-burgundy mb-6">Kontaktní údaje</h2>
-
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-burgundy/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-text-dark">Adresa</h3>
-                  <p className="text-text-mid">Revoluční 8</p>
-                  <p className="text-text-mid">110 00 Praha 1</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-burgundy/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-text-dark">Telefon</h3>
-                  <a href="tel:+420728722880" className="text-burgundy hover:text-maroon">
-                    +420 728 722 880
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-burgundy/10 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-text-dark">Email</h3>
-                  <a href="mailto:info@muzahair.cz" className="text-burgundy hover:text-maroon">
-                    info@muzahair.cz
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Opening Hours */}
-          <div className="bg-white rounded-xl shadow-soft p-8">
-            <h2 className="text-2xl font-playfair text-burgundy mb-6">Otevírací doba</h2>
-
-            <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-warm-beige">
-                <span className="text-text-mid">Pondělí - Pátek</span>
-                <span className="font-medium text-text-dark">10:00 - 18:00</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-warm-beige">
-                <span className="text-text-mid">Sobota</span>
-                <span className="font-medium text-text-dark">10:00 - 14:00</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-text-mid">Neděle</span>
-                <span className="font-medium text-text-soft">Zavřeno</span>
-              </div>
-            </div>
-
-            <div className="mt-6 p-4 bg-burgundy/5 rounded-lg">
-              <p className="text-sm text-text-mid">
-                <strong>Tip:</strong> Pro osobní konzultaci doporučujeme předem
-                rezervovat termín telefonicky nebo emailem.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Services */}
-        <div className="mt-12 bg-white rounded-xl shadow-soft p-8">
-          <h2 className="text-2xl font-playfair text-burgundy mb-6 text-center">
-            Co vás u nás čeká
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">💇‍♀️</span>
-              </div>
-              <h3 className="font-semibold text-text-dark mb-2">Osobní konzultace</h3>
-              <p className="text-text-mid text-sm">
-                Poradíme vám s výběrem správného typu vlasů a metody aplikace.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">✨</span>
-              </div>
-              <h3 className="font-semibold text-text-dark mb-2">Ukázky vlasů</h3>
-              <p className="text-text-mid text-sm">
-                Prohlédněte si všechny naše kolekce a kvality vlasů osobně.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-burgundy/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🎨</span>
-              </div>
-              <h3 className="font-semibold text-text-dark mb-2">Barvení na míru</h3>
-              <p className="text-text-mid text-sm">
-                Nabízíme profesionální barvení vlasů přímo v našem studiu.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-12 text-center">
           <a
             href="tel:+420728722880"
-            className="inline-block bg-burgundy text-white px-8 py-3 rounded-lg font-medium hover:bg-maroon transition shadow-medium"
+            className="font-cormorant text-[clamp(20px,2vw,28px)] font-light transition-opacity hover:opacity-70"
+            style={{ color: 'var(--burgundy)' }}
+          >
+            +420 728 722 880
+          </a>
+        </div>
+
+        <div className="flex gap-6 flex-wrap">
+          <a
+            href="tel:+420728722880"
+            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Zavolejte nám
           </a>
+          <a
+            href="https://wa.me/420728722880"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            style={{ color: 'var(--text-mid)' }}
+          >
+            WhatsApp →
+          </a>
         </div>
-      </div>
+      </section>
+
+      {/* Hours & appointment info */}
+      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+        <div
+          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          style={{ color: 'var(--accent)' }}
+        >
+          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+          OTEVÍRACÍ DOBA
+        </div>
+
+        <h2
+          className="font-cormorant text-[clamp(26px,3vw,38px)] font-light mb-8"
+          style={{ color: 'var(--text-dark)' }}
+        >
+          Pouze na objednání
+        </h2>
+
+        <div className="max-w-md">
+          <div
+            className="flex justify-between py-4 border-b text-[15px] font-light"
+            style={{ borderColor: 'var(--border-light)', color: 'var(--text-soft)' }}
+          >
+            <span>Pondělí — Neděle</span>
+            <span style={{ color: 'var(--text-dark)' }}>10:00 — 20:00</span>
+          </div>
+          <div
+            className="py-6 text-[15px] leading-[1.8] font-light"
+            style={{ color: 'var(--text-soft)' }}
+          >
+            Showroom je otevřen výhradně po předchozí domluvě.
+            Pro rezervaci termínu nás kontaktujte telefonicky nebo emailem.
+          </div>
+        </div>
+      </section>
+
+      {/* Contact details */}
+      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory-warm)' }}>
+        <div
+          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          style={{ color: 'var(--accent)' }}
+        >
+          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+          KONTAKT
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
+          {[
+            { label: 'Adresa', value: 'Revoluční 8, 110 00 Praha 1', href: undefined },
+            { label: 'Telefon', value: '+420 728 722 880', href: 'tel:+420728722880' },
+            { label: 'Email', value: 'muzahaircz@gmail.com', href: 'mailto:muzahaircz@gmail.com' },
+            { label: 'WhatsApp', value: '+420 728 722 880', href: 'https://wa.me/420728722880' },
+          ].map((item, i) => (
+            <div
+              key={item.label}
+              className="py-8 pr-8 border-b md:border-b-0 md:border-r last:border-r-0"
+              style={{ borderColor: 'var(--border-light)' }}
+            >
+              <div
+                className="text-[11px] tracking-[0.15em] uppercase font-light mb-3"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                {item.label}
+              </div>
+              {item.href ? (
+                <a
+                  href={item.href}
+                  target={item.href.startsWith('http') ? '_blank' : undefined}
+                  rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="text-[15px] font-light transition-opacity hover:opacity-70"
+                  style={{ color: 'var(--text-dark)' }}
+                >
+                  {item.value}
+                </a>
+              ) : (
+                <span
+                  className="text-[15px] font-light"
+                  style={{ color: 'var(--text-dark)' }}
+                >
+                  {item.value}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 }
