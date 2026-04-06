@@ -148,6 +148,8 @@ export default function Header() {
                   {dropdownItem('/metody-zakonceni/vlasy-na-keratin', 'Keratin / Mikrokeratin')}
                   {dropdownItem('/metody-zakonceni/vlasove-pasky-tape-in', 'Vlasové pásky Tape-In')}
                   {dropdownItem('/metody-zakonceni/vlasove-tresy', 'Vlasové tresy')}
+                  {dropdownItem('/ceny-aplikaci', 'Ceny aplikace')}
+                  {dropdownItem('/prodlouzeni-vlasu-praha', 'Prodloužení vlasů Praha')}
                   {dropdownItem('/metody-zakonceni', 'Přehled metod')}
                 </div>
               </div>
@@ -379,6 +381,8 @@ export default function Header() {
                       { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Keratin / Mikrokeratin' },
                       { href: '/metody-zakonceni/vlasove-pasky-tape-in', label: 'Vlasové pásky Tape-In' },
                       { href: '/metody-zakonceni/vlasove-tresy', label: 'Ručně šité tresy' },
+                      { href: '/ceny-aplikaci', label: 'Ceny aplikace' },
+                      { href: '/prodlouzeni-vlasu-praha', label: 'Prodloužení vlasů Praha' },
                     ],
                   },
                   {

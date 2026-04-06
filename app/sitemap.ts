@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { blogArticles } from '@/lib/blog-articles';
+import { MESTA } from '@/lib/mesta';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://muzahair.cz';
@@ -30,6 +31,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Informační stránky
     { url: `${baseUrl}/o-nas`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/kontakt`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/ceny-aplikaci`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/prodlouzeni-vlasu-praha`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/vlasy`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/cenik`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/velkoobchod`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/vykup-vlasu-pro-nemocne`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
@@ -61,6 +65,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: Failed to fetch products from DB:', error);
   }
 
+  // City product pages
+  const cityPages: MetadataRoute.Sitemap = MESTA.map((m) => ({
+    url: `${baseUrl}/vlasy/${m.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
   // Blog articles
   const blogPages = blogArticles.map((article) => ({
     url: `${baseUrl}/blog/${article.slug}`,
@@ -69,5 +81,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...productPages, ...blogPages];
+  return [...staticPages, ...productPages, ...cityPages, ...blogPages];
 }

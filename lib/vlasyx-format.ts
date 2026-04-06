@@ -7,8 +7,8 @@ const toNumber = (value?: number | string | null): number | null => {
   return Number.isFinite(parsed) ? Number(parsed) : null;
 };
 
-export type VlasyXCategory = 'nebarvene' | 'barvene';
-export type VlasyXTier = 'standard' | 'luxe';
+export type VlasyXCategory = 'nebarvene' | 'barvene' | 'baby_shades';
+export type VlasyXTier = 'standard' | 'luxe' | 'platinum' | 'platinum_edition' | 'baby_shades';
 
 export const generateVlasyXName = (
   lengthCm: number | string | null | undefined,

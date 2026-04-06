@@ -178,6 +178,8 @@ export default function Footer() {
               { href: '/vlasy-k-prodlouzeni/barvene-vlasy', label: 'Barvené blond vlasy' },
               { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Vlasy na keratin' },
               { href: '/metody-zakonceni/vlasove-pasky-tape-in', label: 'Vlasové pásky Tape-In' },
+              { href: '/ceny-aplikaci', label: 'Ceny aplikace' },
+              { href: '/prodlouzeni-vlasu-praha', label: 'Prodloužení vlasů Praha' },
               { href: '/prislusenstvi', label: 'Příslušenství' },
             ].map(({ href, label }) => (
               <li key={href}>
