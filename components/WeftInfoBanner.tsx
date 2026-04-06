@@ -7,7 +7,7 @@ export default function WeftInfoBanner() {
       <div className="grid md:grid-cols-3 gap-4 text-sm">
         <div className="flex items-start gap-2 text-gray-700">
           <span className="text-burgundy font-bold mt-0.5">—</span>
-          <span>Tresy vyrábíme na zakázku z jakýchkoliv vlasů — z vaší zásoby i z vašeho vlastního culíku. Hotové tresy na skladě nemáme.</span>
+          <span>Tresy vyrábíme na zakázku z vámi vybraných <strong>panenských, středoevropských nebo dětských vlasů</strong> z naší zásoby. Hotové tresy na skladě nemáme.</span>
         </div>
         <div className="flex items-start gap-2 text-gray-700">
           <span className="text-burgundy font-bold mt-0.5">—</span>
