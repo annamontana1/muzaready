@@ -1,6 +1,17 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy init – nezhavaruje při buildu bez RESEND_API_KEY
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) {
+    if (!process.env.RESEND_API_KEY) throw new Error('Missing RESEND_API_KEY');
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
+const resend = new Proxy({} as Resend, {
+  get(_t, prop) { return (getResend() as Record<string | symbol, unknown>)[prop]; },
+});
 
 export async function sendProformaReminder({
   customerEmail,
