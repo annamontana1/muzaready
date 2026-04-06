@@ -54,6 +54,7 @@ const steps = [
       'Weft (vlasové tresy) — šitý pás vlasů pro hollywoodské prodloužení, cena dle gramáže',
       'Tapes / Nano tapes — oboustranná lepicí páska, rychlá aplikace, cena dle gramáže',
     ],
+    link: { href: '/metody-zakonceni', text: 'Přehled metod zakončení →' },
   },
   {
     number: '5',
@@ -154,6 +155,11 @@ export default function JakNakupovatPage() {
                       </li>
                     ))}
                   </ul>
+                  {'link' in step && step.link && (
+                    <Link href={step.link.href} className="inline-block mt-3 text-sm text-burgundy font-medium hover:opacity-70 transition">
+                      {step.link.text}
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
