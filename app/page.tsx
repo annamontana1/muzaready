@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { blogArticles } from '@/lib/blog-articles';
 
 const StarIcon = () => (
   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--burgundy)' }}>
@@ -327,6 +328,107 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── METODY PRODLOUŽENÍ ─── */}
+      <section className="py-24 px-6 md:px-12 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
+              Metody prodloužení vlasů
+              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
+            </div>
+            <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
+              Keratin · Nanotapes · <em className="italic" style={{ color: 'var(--burgundy)' }}>Weft</em>
+            </h2>
+            <p className="text-[14px] mt-3 font-light" style={{ color: 'var(--text-soft)' }}>
+              Aplikace v showroomu Praha 1 · Vlasy dodáme poštou kamkoliv v ČR
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: 'var(--beige)' }}>
+            {[
+              {
+                icon: '💎',
+                name: 'Keratin / Mikrokeratin',
+                desc: 'Keratinové pramínky přilepené k vlastním vlasům. Standart i mikrokeratin — diskrétní, přirozený výsledek.',
+                price: 'Nasazení od 4 000 Kč',
+                detail: '130–230 pramenů / 100 g · Korekce po 2,5–3 měs.',
+                href: '/metody-zakonceni/vlasy-na-keratin',
+                cenikHref: '/ceny-aplikaci#keratin',
+              },
+              {
+                icon: '🩹',
+                name: 'Nanotapes / Tape-In',
+                desc: 'Vlasové pásky 2,8 cm nebo 4 cm — sendvičový spoj bez tepla a chemie. Rychlá korekce.',
+                price: '55–65 Kč / spoj',
+                detail: 'Korekce po 1,5–2 měs. · Aplikace 1,5–2 hod',
+                href: '/metody-zakonceni/vlasove-pasky-tape-in',
+                cenikHref: '/ceny-aplikaci#nanotapes',
+              },
+              {
+                icon: '🧵',
+                name: 'Weft — Hollywoodské',
+                desc: 'Ručně šité vlasové tresy přišívané na copánky. Bez lepidla, bez tepla. Maximální objem.',
+                price: 'Posun 3 800 Kč',
+                detail: 'Korekce po 2–3 měs. · Tresy na zakázku 14 dní',
+                href: '/metody-zakonceni/vlasove-tresy',
+                cenikHref: '/ceny-aplikaci#weft',
+              },
+            ].map((m) => (
+              <div key={m.name} className="bg-white p-10 flex flex-col">
+                <div className="text-3xl mb-5">{m.icon}</div>
+                <h3 className="font-cormorant text-[22px] font-normal mb-2" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
+                <p className="text-[13px] leading-[1.7] font-light mb-4 flex-1" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
+                <div className="text-[13px] font-normal mb-1" style={{ color: 'var(--burgundy)' }}>{m.price}</div>
+                <div className="text-[11px] font-light mb-6" style={{ color: 'var(--text-soft)' }}>{m.detail}</div>
+                <div className="flex gap-3 flex-wrap">
+                  <Link href={m.href} className="text-[11px] tracking-[0.1em] uppercase px-4 py-2 rounded-sm border transition-all hover:-translate-y-px" style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}>
+                    Více o metodě
+                  </Link>
+                  <Link href={m.cenikHref} className="text-[11px] tracking-[0.1em] uppercase px-4 py-2 rounded-sm transition-all hover:-translate-y-px" style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}>
+                    Ceník aplikace
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link href="/prodlouzeni-vlasu-praha" className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy justify-center" style={{ color: 'var(--text-mid)' }}>
+              Prodloužení vlasů Praha — showroom, ceny, metody →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── JAK TO FUNGUJE ─── */}
+      <section className="py-20 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
+              Jak to funguje
+            </div>
+            <h2 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light" style={{ color: 'var(--text-dark)' }}>
+              Vlasy online, aplikace u vás nebo v <em className="italic" style={{ color: 'var(--burgundy)' }}>Praze</em>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {[
+              { step: '1', title: 'Nakonfigurujte vlasy', desc: 'Vyberte metodu, délku, gramáž a odstín v online konfigurátoru. Rádi poradíme na +420 728 722 880.' },
+              { step: '2', title: 'Doručíme kamkoliv v ČR', desc: 'Keratinové pramínky a pásky expedujeme ihned. Vlasové tresy vyrábíme na zakázku (14 dní).' },
+              { step: '3', title: 'Aplikace u vás nebo v Praze', desc: 'Vlasy aplikuje vaše kadeřnice, nebo přijeďte do showroomu Revoluční 8, Praha 1.' },
+            ].map((s) => (
+              <div key={s.step} className="flex gap-5">
+                <span className="font-cormorant text-[48px] font-light leading-none flex-shrink-0" style={{ color: 'rgba(74,21,32,0.12)' }}>{s.step}</span>
+                <div className="pt-2">
+                  <p className="font-normal text-[15px] mb-1.5" style={{ color: 'var(--text-dark)' }}>{s.title}</p>
+                  <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── ACCESSORIES ─── */}
       <section className="py-24 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-7xl mx-auto">
@@ -405,6 +507,78 @@ export default function Home() {
                   </span>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── BLOG PREVIEW ─── */}
+      {(() => {
+        const latest = blogArticles.slice(-3).reverse();
+        return (
+          <section className="py-24 px-6 md:px-12 bg-white">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex justify-between items-end mb-14">
+                <div>
+                  <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'var(--accent)' }}>
+                    <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
+                    Blog
+                  </div>
+                  <h2 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
+                    Průvodce prodloužením <em className="italic" style={{ color: 'var(--burgundy)' }}>vlasů</em>
+                  </h2>
+                </div>
+                <Link href="/blog" className="text-[12px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-2 hover:text-burgundy transition" style={{ color: 'var(--text-mid)' }}>
+                  Všechny články →
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: 'var(--beige)' }}>
+                {latest.map((article) => (
+                  <Link key={article.slug} href={`/blog/${article.slug}`} className="bg-white p-8 group block hover:bg-ivory transition-colors">
+                    <div className="text-[10px] tracking-[0.16em] uppercase mb-2 font-normal" style={{ color: 'var(--accent)' }}>{article.category}</div>
+                    <h3 className="font-cormorant text-[19px] font-normal leading-[1.35] mb-3 group-hover:text-burgundy transition-colors" style={{ color: 'var(--text-dark)' }}>
+                      {article.title}
+                    </h3>
+                    <p className="text-[13px] leading-[1.65] font-light mb-5" style={{ color: 'var(--text-soft)' }}>
+                      {article.excerpt.slice(0, 100)}…
+                    </p>
+                    <span className="text-[11px] tracking-[0.1em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+                      Číst článek →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+
+      {/* ─── FAQ ─── */}
+      <section className="py-20 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light" style={{ color: 'var(--text-dark)' }}>
+              Časté <em className="italic" style={{ color: 'var(--burgundy)' }}>dotazy</em>
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {[
+              { q: 'Kolik stojí prodloužení vlasů v Praze?', a: 'Keratin od 4 000 Kč, mikrokeratin od 5 000 Kč (za 100 g vlasů). Nanotapes 55–65 Kč/spoj. Weft posun 3 800 Kč. Cena vlasů se účtuje zvlášť. Kompletní ceník na stránce Ceny aplikace.' },
+              { q: 'Musím přijet do Prahy, nebo si mohu vlasy objednat online?', a: 'Vlasy si objednáte online — doručíme kamkoliv v ČR do 2 pracovních dní. Aplikaci pak provede vaše kadeřnice, nebo přijeďte do showroomu Revoluční 8, Praha 1.' },
+              { q: 'Jaký je rozdíl mezi nanotapes a keratinem?', a: 'Nanotapes jsou vlasové pásky — sendvičový spoj bez tepla, korekce po 1,5–2 měsících. Keratin jsou pramínky přilepené keratinovou kapsulí, korekce po 2,5–3 měsících. Nanotapes jsou rychlejší na aplikaci, keratin drží déle.' },
+              { q: 'Jak dlouho vydrží prodloužené vlasy?', a: 'Keratin 2,5–3 měsíce, nanotapes 1,5–2 měsíce, weft 2–3 měsíce do korekce. Životnost závisí na péči — vhodný šampon, česání od konečků, ochrana před teplem.' },
+              { q: 'Jsou vlasy pravé?', a: 'Ano — 100 % pravé vlasy. Vlastní barvírna v Praze, vlastní výroba od roku 2016. Nabízíme nebarvené panenské vlasy i profesionálně barvené blond odstíny.' },
+            ].map((item, i) => (
+              <details key={i} className="bg-white border rounded-sm group" style={{ borderColor: 'var(--beige)' }}>
+                <summary className="px-6 py-4 cursor-pointer text-[14px] font-normal list-none flex justify-between items-center" style={{ color: 'var(--text-dark)' }}>
+                  {item.q}
+                  <span className="text-[18px] font-light ml-4 flex-shrink-0 group-open:rotate-45 transition-transform duration-200" style={{ color: 'var(--burgundy)' }}>+</span>
+                </summary>
+                <div className="px-6 pb-5 text-[13px] leading-[1.75] font-light" style={{ color: 'var(--text-soft)' }}>
+                  {item.a}{' '}
+                  {i === 0 && <Link href="/ceny-aplikaci" className="underline" style={{ color: 'var(--burgundy)' }}>Zobrazit ceník →</Link>}
+                </div>
+              </details>
             ))}
           </div>
         </div>

@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'cs_CZ',
     url: 'https://www.muzahair.cz',
-    siteName: 'Mùza Hair',
-    title: '💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení',
-    description: 'Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. LUXE & Platinum kvalita. Dodání do 48h.',
+    siteName: 'Múza Hair',
+    title: 'Múza Hair Praha | Pravé vlasy k prodloužení | Keratin, Nanotapes, Weft',
+    description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy. Showroom Revoluční 8, Praha 1.',
     images: [
       {
         url: '/og-image.jpg',
@@ -62,8 +62,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '💎 Mùza Hair Praha | Panenské Vlasy',
-    description: 'Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. LUXE & Platinum kvalita.',
+    title: 'Múza Hair Praha | Pravé vlasy k prodloužení',
+    description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna Praha. Keratin, nanotapes, weft.',
     images: ['/og-image.jpg'],
   },
   verification: {
@@ -113,6 +113,75 @@ export default function RootLayout({
             />
           </>
         )}
+
+        {/* JSON-LD: LocalBusiness + Organization + WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'LocalBusiness',
+                '@id': 'https://muzahair.cz/#business',
+                name: 'Múza Hair',
+                url: 'https://muzahair.cz',
+                telephone: '+420728722880',
+                email: 'muzahaircz@gmail.com',
+                priceRange: '4 000 Kč – 11 000 Kč',
+                image: 'https://muzahair.cz/og-image.jpg',
+                description: 'Český výrobce pravých vlasů k prodloužení od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy weft. Standard, Luxe, Platinum.',
+                address: {
+                  '@type': 'PostalAddress',
+                  streetAddress: 'Revoluční 8',
+                  addressLocality: 'Praha 1',
+                  postalCode: '110 00',
+                  addressCountry: 'CZ',
+                },
+                geo: { '@type': 'GeoCoordinates', latitude: 50.0916, longitude: 14.4282 },
+                openingHoursSpecification: {
+                  '@type': 'OpeningHoursSpecification',
+                  dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+                  opens: '10:00',
+                  closes: '20:00',
+                },
+                sameAs: [
+                  'https://www.instagram.com/muzahair.cz',
+                  'https://www.facebook.com/muzahair',
+                ],
+                hasOfferCatalog: {
+                  '@type': 'OfferCatalog',
+                  name: 'Vlasy k prodloužení',
+                  itemListElement: [
+                    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Keratinové prodloužení vlasů Praha' }, price: '4000', priceCurrency: 'CZK' },
+                    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Nanotapes prodloužení vlasů Praha' }, price: '55', priceCurrency: 'CZK' },
+                    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Weft hollywoodské prodloužení vlasů Praha' }, price: '3800', priceCurrency: 'CZK' },
+                  ],
+                },
+              },
+              {
+                '@type': 'Organization',
+                '@id': 'https://muzahair.cz/#organization',
+                name: 'Múza Hair s.r.o.',
+                url: 'https://muzahair.cz',
+                logo: { '@type': 'ImageObject', url: 'https://muzahair.cz/logo.png' },
+                foundingDate: '2016',
+                sameAs: ['https://www.instagram.com/muzahair.cz', 'https://www.facebook.com/muzahair'],
+              },
+              {
+                '@type': 'WebSite',
+                '@id': 'https://muzahair.cz/#website',
+                url: 'https://muzahair.cz',
+                name: 'Múza Hair',
+                publisher: { '@id': 'https://muzahair.cz/#organization' },
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: { '@type': 'EntryPoint', urlTemplate: 'https://muzahair.cz/katalog?q={search_term_string}' },
+                  'query-input': 'required name=search_term_string',
+                },
+              },
+            ],
+          })}}
+        />
 
         <Providers>
           <MainLayout>
