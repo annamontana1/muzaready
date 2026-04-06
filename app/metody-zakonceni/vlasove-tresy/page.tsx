@@ -287,6 +287,29 @@ export default function VlasoveTresyPage() {
 
           </div>
 
+          {/* Ceny aplikace — editorial flat section */}
+          <div className="mb-8">
+            <div
+              className="px-8 py-10"
+              style={{ borderLeft: '3px solid var(--accent)', background: 'var(--beige)' }}
+            >
+              <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+                <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+                CENY APLIKACE
+              </div>
+              <p className="text-text-mid text-sm mb-4 leading-relaxed">
+                Ceny Hollywoodského prodloužení přišíváním tresů na copánky závisí na množství tresů a délce vlasů. Kompletní přehled sazeb najdete na stránce cen aplikací.
+              </p>
+              <Link
+                href="/ceny-aplikaci"
+                className="text-sm font-medium hover:opacity-75 transition"
+                style={{ color: 'var(--accent)' }}
+              >
+                Přehled cen aplikace →
+              </Link>
+            </div>
+          </div>
+
           <div className="bg-ivory border border-burgundy/10 rounded-xl p-8 text-center">
             <p className="font-playfair text-2xl text-burgundy mb-2">Máte zájem o vlasové tresy?</p>
             <p className="text-text-soft text-sm mb-6">Prohlédněte si nabídku nebo nás kontaktujte pro konzultaci.</p>
