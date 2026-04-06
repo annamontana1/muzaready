@@ -150,7 +150,6 @@ export default function Header() {
                   {dropdownItem('/metody-zakonceni/vlasove-tresy', 'Vlasové tresy')}
                   {dropdownItem('/ceny-aplikaci', 'Ceny aplikace')}
                   {dropdownItem('/prodlouzeni-vlasu-praha', 'Prodloužení vlasů Praha')}
-                  {dropdownItem('/metody-zakonceni', 'Přehled metod')}
                 </div>
               </div>
 
