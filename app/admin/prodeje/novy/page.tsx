@@ -11,7 +11,7 @@ type CustomerType = 'anonymous' | 'new' | 'b2b';
 type PaymentMethod = 'hotovost' | 'karta' | 'prevod' | 'gopay';
 
 type Category = 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades';
-type ProductType = 'barvene' | 'nebarvene';
+type ProductType = 'barvene' | 'nebarvene' | 'nebarvene_svetle';
 type Structure = 'rovne' | 'vlnite' | 'mirne_vlnite' | 'kudrnate';
 type Ending = 'bez' | 'keratin' | 'mikrokeratin' | 'pasky_keratinu' | 'weft' | 'tapes';
 
@@ -75,8 +75,9 @@ const CATEGORY_OPTIONS: { value: Category; label: string }[] = [
 ];
 
 const TYPE_OPTIONS: { value: ProductType; label: string }[] = [
-  { value: 'barvene', label: 'Barvené' },
-  { value: 'nebarvene', label: 'Nebarvené' },
+  { value: 'barvene', label: 'Barvené (5–10)' },
+  { value: 'nebarvene', label: 'Nebarvené (1–4)' },
+  { value: 'nebarvene_svetle', label: 'Nebarvené přírodní (5–10)' },
 ];
 
 const STRUCTURE_OPTIONS: { value: Structure; label: string }[] = [
@@ -117,8 +118,10 @@ function formatPrice(czk: number): string {
 }
 
 function getShadeRange(category: Category, productType: ProductType): string[] {
-  // Nebarvené nemá odstín
+  // Nebarvené (1-4) nemá výběr odstínu
   if (productType === 'nebarvene') return [];
+  // Nebarvené přírodní (5-10) — stejný rozsah jako barvené ale přírodní
+  if (productType === 'nebarvene_svetle') return Array.from({ length: 6 }, (_, i) => String(i + 5)); // 5-10
 
   if (category === 'baby_shades') return Array.from({ length: 5 }, (_, i) => String(i + 6)); // 6-10
   if (category === 'platinum_edition') return Array.from({ length: 10 }, (_, i) => String(i + 1)); // 1-10
@@ -137,6 +140,7 @@ function buildProductLabel(config: ProductConfig): string {
   const str = STRUCTURE_OPTIONS.find((s) => s.value === config.structure)?.label ?? '';
   const end = ENDING_OPTIONS.find((e) => e.value === config.ending)?.label?.split(' (')[0] ?? '';
   const shade = config.productType === 'nebarvene' ? '' : ` #${config.shadeCode}`;
+  // nebarvene_svetle zobrazíme jako "Nebarvené př." v labelu
   return `${cat} ${typ} ${str}${shade} ${config.lengthCm}cm${config.ending !== 'bez' ? ' / ' + end : ''}`;
 }
 
@@ -309,8 +313,10 @@ export default function UnifiedNewSalePage() {
     setPriceCheck(null);
 
     try {
+      // nebarvene_svetle má stejnou cenu jako barvene
+      const priceCategory = productType === 'nebarvene_svetle' ? 'barvene' : productType;
       const params = new URLSearchParams({
-        category: productType,
+        category: priceCategory,
         tier: productCategory,
         lengthCm: String(productLength),
         shade: String(productShade),
@@ -850,7 +856,7 @@ export default function UnifiedNewSalePage() {
           </div>
 
           {/* Odstín — skryt pro nebarvené */}
-          {productType === 'barvene' && shadeOptions.length > 0 && (
+          {(productType === 'barvene' || productType === 'nebarvene_svetle') && shadeOptions.length > 0 && (
             <div>
               <label className={labelClass}>Odstín</label>
               <select
