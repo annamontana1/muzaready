@@ -88,6 +88,10 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
   const [extending, setExtending] = useState(false);
   const [extendDate, setExtendDate] = useState('');
   const [showExtend, setShowExtend] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [depositAmount, setDepositAmount] = useState('');
+  const [depositNote, setDepositNote] = useState('');
+  const [creatingDeposit, setCreatingDeposit] = useState(false);
 
   const isCancelled = order.orderStatus === 'cancelled';
   const isInstagram = order.channel === 'instagram';
@@ -151,6 +155,31 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
     } finally { setRestoring(false); }
   }
 
+  async function createDeposit() {
+    const amount = parseFloat(depositAmount.replace(/\s/g, '').replace(',', '.'));
+    if (!amount || amount <= 0) return;
+    setCreatingDeposit(true); setResult(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}/create-deposit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, note: depositNote || undefined }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResult({ success: true, message: data.message });
+        if (data.invoiceUrl) setInvoiceUrl(data.invoiceUrl);
+        setIsProforma(true);
+        setShowDeposit(false);
+        setDepositAmount('');
+        setDepositNote('');
+        onRefresh();
+      } else setResult({ error: data.error || 'Zálohu se nepodařilo vytvořit' });
+    } catch (err: any) {
+      setResult({ error: err.message || 'Chyba' });
+    } finally { setCreatingDeposit(false); }
+  }
+
   async function extendProforma() {
     if (!extendDate) return;
     setExtending(true); setResult(null);
@@ -205,6 +234,10 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
             >
               📱 WhatsApp
             </button>
+            <button onClick={() => setShowDeposit(v => !v)} disabled={loading}
+              className="px-3 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition disabled:opacity-50">
+              💰 Záloha
+            </button>
             <button onClick={generateInvoice} disabled={loading}
               className="px-3 py-2 bg-stone-700 text-white rounded-lg text-sm font-medium hover:bg-stone-800 transition disabled:opacity-50">
               {loading ? '⏳...' : '📨 Fakturoid'}
@@ -217,6 +250,45 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
             )}
           </div>
         </div>
+
+        {/* Deposit panel */}
+        {showDeposit && (
+          <div className="px-6 py-4 bg-amber-50 border-b border-amber-200">
+            <p className="text-sm font-semibold text-amber-900 mb-3">
+              Zálohová faktura — celková cena objednávky je <strong>{formatPrice(order.total)}</strong>
+            </p>
+            <div className="flex items-end gap-3 flex-wrap">
+              <div>
+                <label className="block text-xs font-medium text-amber-800 mb-1">Částka zálohy (Kč)</label>
+                <input
+                  type="number"
+                  value={depositAmount}
+                  onChange={e => setDepositAmount(e.target.value)}
+                  placeholder={String(Math.round(order.total / 2))}
+                  className="w-36 px-3 py-1.5 border border-amber-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-400"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-amber-800 mb-1">Poznámka (nepovinné)</label>
+                <input
+                  type="text"
+                  value={depositNote}
+                  onChange={e => setDepositNote(e.target.value)}
+                  placeholder="např. 1. splátka"
+                  className="w-44 px-3 py-1.5 border border-amber-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-400"
+                />
+              </div>
+              <button onClick={createDeposit} disabled={creatingDeposit || !depositAmount}
+                className="px-4 py-1.5 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition disabled:opacity-50">
+                {creatingDeposit ? '⏳ Vytvářím...' : '✅ Vytvořit zálohu'}
+              </button>
+              <button onClick={() => setShowDeposit(false)} className="text-sm text-stone-500 hover:text-stone-700">Zrušit</button>
+            </div>
+            <p className="text-xs text-amber-700 mt-2">
+              Zákazník dostane proformu na zadanou částku. Po zaplacení převedeš na fakturu tlačítkem "Vytvořit fakturu".
+            </p>
+          </div>
+        )}
 
         {/* Cancelled banner */}
         {isCancelled && (
