@@ -69,6 +69,7 @@ export async function PATCH(
       weightGrams,
       availableGrams,
       minOrderG,
+      isDyed,
       stepG,
       inStock,
       isListed,
@@ -93,6 +94,7 @@ export async function PATCH(
     if (weightGrams !== undefined) updateData.weightGrams = weightGrams;
     if (availableGrams !== undefined) updateData.availableGrams = availableGrams;
     if (minOrderG !== undefined) updateData.minOrderG = minOrderG;
+    if (isDyed !== undefined) updateData.isDyed = isDyed;
     if (stepG !== undefined) updateData.stepG = stepG;
     if (isListed !== undefined) updateData.isListed = isListed;
     if (listingPriority !== undefined) updateData.listingPriority = listingPriority;

@@ -29,6 +29,7 @@ interface SkuDetail {
   imageUrl: string | null;
   images: string[];
   inStock: boolean;
+  isDyed: boolean;
   movements: Movement[];
 }
 
@@ -64,6 +65,10 @@ export default function SkuEditPage() {
   const [addingStock, setAddingStock] = useState(false);
   const [movements, setMovements] = useState<Movement[]>([]);
 
+  // isDyed toggle (Platinum Edition)
+  const [isDyed, setIsDyed] = useState<boolean>(false);
+  const [savingIsDyed, setSavingIsDyed] = useState(false);
+
   // Image management
   const [editingPhotos, setEditingPhotos] = useState(false);
 
@@ -78,6 +83,7 @@ export default function SkuEditPage() {
       if (!res.ok) throw new Error('Nenalezeno');
       const data = await res.json();
       setSku(data);
+      setIsDyed(data.isDyed ?? false);
       setMovements(data.movements || []);
     } catch (err: any) {
       console.error(err);
@@ -157,6 +163,23 @@ export default function SkuEditPage() {
     }
   };
 
+  const handleSaveIsDyed = async (value: boolean) => {
+    setSavingIsDyed(true);
+    try {
+      await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ isDyed: value }),
+      });
+      setIsDyed(value);
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setSavingIsDyed(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -232,6 +255,48 @@ export default function SkuEditPage() {
             <span className="block text-xs text-stone-400 uppercase tracking-wider">Typ</span>
             <span className="text-sm font-medium text-stone-700">{skuType}</span>
           </div>
+
+          {/* isDyed selector — jen pro Platinum Edition */}
+          {sku.customerCategory === 'PLATINUM_EDITION' && (
+            <div className="col-span-2 sm:col-span-3 pt-3 border-t border-stone-100">
+              <span className="block text-xs text-stone-400 uppercase tracking-wider mb-2">
+                Barevná kategorie (Platinum)
+              </span>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { label: 'Nebarvené (1–4)', value: false, shades: '1–4', disabled: Number(sku.shade) >= 5 },
+                  { label: 'Nebarvené přírodní (5–10)', value: false, shades: '5–10', disabled: Number(sku.shade) < 5 },
+                  { label: 'Barvené (5–10)', value: true, shades: '5–10', disabled: Number(sku.shade) < 5 },
+                ].map((opt) => {
+                  const isActive =
+                    opt.value === isDyed &&
+                    (opt.shades === '1–4' ? Number(sku.shade) < 5 : Number(sku.shade) >= 5);
+                  return (
+                    <button
+                      key={opt.label}
+                      disabled={opt.disabled || savingIsDyed}
+                      onClick={() => !opt.disabled && handleSaveIsDyed(opt.value)}
+                      className={`px-3 py-1.5 rounded text-sm font-medium transition border ${
+                        isActive
+                          ? 'bg-[#722F37] text-white border-[#722F37]'
+                          : opt.disabled
+                          ? 'bg-stone-100 text-stone-300 border-stone-200 cursor-not-allowed'
+                          : 'bg-white text-stone-700 border-stone-300 hover:border-[#722F37]'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+                {savingIsDyed && <span className="text-xs text-stone-400 self-center">Ukládám...</span>}
+              </div>
+              <p className="text-xs text-stone-400 mt-1">
+                Aktuální odstín: <strong>{sku.shade}</strong>
+                {' · '}
+                {isDyed ? 'Barvené' : 'Nebarvené'}
+              </p>
+            </div>
+          )}
           <div>
             <span className="block text-xs text-stone-400 uppercase tracking-wider">Zpusob prodeje</span>
             <span className="text-sm font-medium text-stone-700">
