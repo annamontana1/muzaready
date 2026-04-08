@@ -16,7 +16,7 @@ export const ASSEMBLY_FEE_CONFIG: Record<string, { type: 'FLAT' | 'PER_GRAM'; pr
   STANDARD_KERATIN: { type: 'PER_GRAM', pricePerGram: 10 }, // Standart keratin — 1 000 Kč/100g
   PASKY_KERATINU: { type: 'PER_GRAM', pricePerGram: 10 },   // Pásky keratinu — 1 000 Kč/100g
   WEFT: { type: 'PER_GRAM', pricePerGram: 50 },             // Weft — 5 000 Kč/100g
-  TAPES: { type: 'PER_GRAM', pricePerGram: 50 },            // Tapes — 5 000 Kč/100g
+  TAPES: { type: 'PER_GRAM', pricePerGram: 40 },            // Tapes — 4 000 Kč/100g
 };
 
 export function validateBulkChoice(grams: number, min?: number | null, step?: number | null): boolean {

@@ -43,7 +43,7 @@ const ENDING_OPTIONS = [
   { id: 'STANDARD_KERATIN', label: 'Standart keratin', price: '10 Kč/g' },
   { id: 'PASKY_KERATINU', label: 'Pásky keratinu', price: '10 Kč/g' },
   { id: 'WEFT', label: 'Weft', price: '50 Kč/g' },
-  { id: 'TAPES', label: 'Tapes', price: '50 Kč/g' },
+  { id: 'TAPES', label: 'Tapes', price: '40 Kč/g' },
 ];
 
 function getCategoryBadge(category: Sku['customerCategory']) {

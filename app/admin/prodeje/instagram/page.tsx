@@ -69,7 +69,7 @@ const ENDINGS = [
   { value: 'mikrokeratin', label: 'Mikrokeratin', surchargePerGram: 10 },
   { value: 'pásky keratinu', label: 'Pásky keratinu', surchargePerGram: 50 },
   { value: 'weft', label: 'Weft', surchargePerGram: 50 },
-  { value: 'tapes', label: 'Tapes', surchargePerGram: 50 },
+  { value: 'tapes', label: 'Tapes', surchargePerGram: 40 },
 ];
 
 const SHIPPING_OPTIONS = [
