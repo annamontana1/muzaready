@@ -15,84 +15,92 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <div className="py-12 bg-soft-cream min-h-screen">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
-            Blog & Magazín
+    <div style={{ background: 'var(--ivory)' }} className="min-h-screen">
+      {/* Header */}
+      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-4xl">
+          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            BLOG
+          </div>
+          <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
+            Magazín & Tipy
           </h1>
-          <p className="text-text-mid max-w-2xl mx-auto">
-            Tipy, průvodce a expertní rady o prodlužování vlasů, péči a výběru správné kvality.
-            Vše od profesionálů z Mùza Hair.
+          <p className="text-[15px] leading-[1.8] font-light max-w-2xl" style={{ color: 'var(--text-soft)' }}>
+            Průvodce, tipy a expertní rady o prodlužování vlasů, péči a výběru správné kvality. Vše od profesionálů z Mùza Hair.
           </p>
         </div>
+      </div>
 
-        {/* Articles Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {blogArticles.map((article) => (
-            <Link
-              key={article.slug}
-              href={`/blog/${article.slug}`}
-              className="bg-white rounded-xl overflow-hidden shadow-medium hover:shadow-heavy transition-all duration-300 group"
-            >
-              {/* Image */}
-              <div className="aspect-video bg-gradient-to-br from-burgundy/20 to-maroon/20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-burgundy/10 group-hover:bg-burgundy/5 transition-colors" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-6xl">📰</span>
+      {/* Articles list */}
+      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+        <div className="max-w-4xl">
+          {blogArticles.map((article, index) => (
+            <article key={article.slug} className="border-b" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+              <Link href={`/blog/${article.slug}`} className="block py-10 group">
+                <div className="flex flex-col md:flex-row md:items-baseline md:gap-8">
+                  <div className="flex-1">
+                    {/* Meta */}
+                    <div className="flex items-center gap-4 mb-3">
+                      <span className="text-[10px] tracking-[0.18em] uppercase font-normal" style={{ color: 'var(--accent)' }}>
+                        {article.category}
+                      </span>
+                      <span className="text-[10px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                        <time dateTime={article.publishedAt}>
+                          {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })}
+                        </time>
+                      </span>
+                      <span className="text-[10px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                        {article.readTime} min čtení
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="font-cormorant text-[clamp(22px,2.2vw,30px)] font-light leading-tight mb-3 group-hover:opacity-70 transition-opacity" style={{ color: 'var(--text-dark)' }}>
+                      {article.title}
+                    </h2>
+
+                    {/* Excerpt */}
+                    <p className="text-[15px] leading-[1.8] font-light mb-4 max-w-2xl" style={{ color: 'var(--text-soft)' }}>
+                      {article.excerpt}
+                    </p>
+
+                    {/* Link */}
+                    <span className="text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+                      Číst →
+                    </span>
+                  </div>
                 </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                {/* Category & Read Time */}
-                <div className="flex items-center gap-3 mb-3 text-xs text-text-mid">
-                  <span className="px-2 py-1 bg-burgundy/10 text-burgundy rounded-full">
-                    {article.category}
-                  </span>
-                  <span>📖 {article.readTime} min čtení</span>
-                </div>
-
-                {/* Title */}
-                <h2 className="text-xl font-semibold text-burgundy mb-3 line-clamp-2 group-hover:text-maroon transition">
-                  {article.title}
-                </h2>
-
-                {/* Excerpt */}
-                <p className="text-sm text-text-mid mb-4 line-clamp-3">
-                  {article.excerpt}
-                </p>
-
-                {/* Meta */}
-                <div className="flex items-center justify-between text-xs text-text-soft pt-4 border-t border-warm-beige">
-                  <span>{article.author}</span>
-                  <time dateTime={article.publishedAt}>
-                    {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </time>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </article>
           ))}
         </div>
+      </div>
 
-        {/* CTA */}
-        <div className="mt-16 text-center">
-          <div className="bg-white rounded-xl p-8 shadow-medium max-w-2xl mx-auto">
-            <h3 className="text-2xl font-playfair text-burgundy mb-3">
-              Máte otázku o prodlužování vlasů?
-            </h3>
-            <p className="text-text-mid mb-6">
-              Náš tým expertů vám rád poradí s výběrem správné délky, kvality a péče.
-            </p>
-            <Link href="/kontakt" className="btn-primary inline-block">
-              Kontaktujte nás
-            </Link>
+      {/* CTA */}
+      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-4xl">
+          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            PORADENSTVÍ
           </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+            Máte otázku o prodlužování vlasů?
+          </h2>
+          <p className="text-[15px] leading-[1.8] font-light mb-8 max-w-xl" style={{ color: 'var(--text-soft)' }}>
+            Náš tým expertů vám rád poradí s výběrem správné délky, kvality a péče.
+          </p>
+          <Link
+            href="/kontakt"
+            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+          >
+            Kontaktujte nás
+          </Link>
         </div>
       </div>
     </div>

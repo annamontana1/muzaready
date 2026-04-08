@@ -34,10 +34,6 @@
     {
       "path": "/api/cron/proforma-reminders",
       "schedule": "0 8 * * *"
-    },
-    {
-      "path": "/api/cron/send-pending-invoices",
-      "schedule": "0 9 * * *"
     }
   ],
   "headers": [

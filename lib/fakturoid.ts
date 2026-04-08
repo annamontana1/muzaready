@@ -4,24 +4,6 @@
  * Docs: https://www.fakturoid.cz/api/v3
  */
 
-/**
- * Kontrola odesílacího okna — Praha, 9:00–20:00
- * Vrací true pokud je aktuální čas v povoleném rozsahu.
- */
-export function isWithinSendingHours(): boolean {
-  const now = new Date();
-  // Pražský čas (CET = UTC+1, CEST = UTC+2 — Intl.DateTimeFormat to řeší)
-  const pragueHour = parseInt(
-    new Intl.DateTimeFormat('cs-CZ', {
-      timeZone: 'Europe/Prague',
-      hour: 'numeric',
-      hour12: false,
-    }).format(now),
-    10
-  );
-  return pragueHour >= 9 && pragueHour < 20;
-}
-
 const FAKTUROID_SLUG = 'annazvinchuk1';
 const FAKTUROID_CLIENT_ID = process.env.FAKTUROID_CLIENT_ID || '';
 const FAKTUROID_CLIENT_SECRET = process.env.FAKTUROID_CLIENT_SECRET || '';
@@ -327,8 +309,6 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
   invoiceId?: number;
   invoiceNumber?: string;
   invoiceUrl?: string;
-  emailSent?: boolean;
-  emailDelayed?: boolean;
   error?: string;
 }> {
   try {
@@ -393,42 +373,17 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       await markInvoicePaid(invoice.id);
     }
 
-    // 5. Send invoice/proforma email via Fakturoid (includes QR code)
-    //    Odesíláme pouze v čase 9:00–20:00 pražského času.
-    //    Mimo okno se email uloží jako pending a cron ho pošle v 9:00.
-    let emailSent = false;
+    // 5. Send invoice/proforma email via Fakturoid
+    //    Fakturoid sám řeší odesílací okno (nastaveno na fakturoid.cz).
     if (order.customerEmail) {
-      if (isWithinSendingHours()) {
-        try {
-          await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
-            method: 'POST',
-            body: JSON.stringify({ email: order.customerEmail }),
-          });
-          emailSent = true;
-          console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
-          // Ujisti se že pending je false (pro případ opakování)
-          try {
-            const prisma = (await import('./prisma')).default;
-            await prisma.order.updateMany({
-              where: { fakturoidInvoiceId: String(invoice.id) },
-              data: { fakturoidEmailPending: false },
-            });
-          } catch { /* neblokující */ }
-        } catch (deliverError: any) {
-          console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
-        }
-      } else {
-        // Mimo odesílací okno — uloží se jako pending, cron pošle v 9:00
-        console.warn(`⏰ Fakturoid email odložen (mimo 9–20 Praha) — invoice ${invoice.id} (${invoice.number}) pro ${order.customerEmail}`);
-        try {
-          const prisma = (await import('./prisma')).default;
-          await prisma.order.updateMany({
-            where: { fakturoidInvoiceId: String(invoice.id) },
-            data: { fakturoidEmailPending: true },
-          });
-        } catch (e) {
-          console.error('Nepodařilo se uložit fakturoidEmailPending:', e);
-        }
+      try {
+        await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
+          method: 'POST',
+          body: JSON.stringify({ email: order.customerEmail }),
+        });
+        console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
+      } catch (deliverError: any) {
+        console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
       }
     } else {
       console.warn(`⚠️ Fakturoid deliver skipped — no customerEmail for invoice ${invoice.id}`);
@@ -439,8 +394,6 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       invoiceId: invoice.id,
       invoiceNumber: invoice.number,
       invoiceUrl: invoice.public_html_url,
-      emailSent,
-      emailDelayed: order.customerEmail ? !emailSent : false,
     };
   } catch (error: any) {
     console.error('Fakturoid createInvoiceFromOrder error:', error);

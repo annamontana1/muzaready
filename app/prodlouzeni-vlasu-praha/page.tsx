@@ -127,21 +127,18 @@ const jsonLd = [
 
 const METHODS = [
   {
-    icon: '💎',
     name: 'Keratin / Mikrokeratin',
     subtitle: 'Keratinové pramínky',
     items: ['Standart keratin — nasazení 4 000 Kč / 100g', 'Mikrokeratin — nasazení 5 000 Kč / 100g', 'Korekce po 2,5–3 měsících', 'Aplikace 3–4 hodiny'],
     href: '/metody-zakonceni/vlasy-na-keratin',
   },
   {
-    icon: '🩹',
     name: 'Nanotapes / Tape-In',
     subtitle: 'Vlasové pásky',
     items: ['2,8 cm pásky — 55 Kč / spoj', '4 cm pásky — 65 Kč / spoj', 'Korekce po 1,5–2 měsících', 'Bez tepla a chemie'],
     href: '/metody-zakonceni/vlasove-pasky-tape-in',
   },
   {
-    icon: '🧵',
     name: 'Weft — Hollywoodské',
     subtitle: 'Vlasové tresy',
     items: ['Posun / korekce tresů 3 800 Kč', 'Nasazení na dotaz / konzultace', 'Korekce po 2–3 měsících', 'Bez lepidla, bez tepla'],
@@ -173,40 +170,47 @@ export default function ProdlouzeniVlasuPrahaPage() {
         />
       ))}
 
-      <div className="py-12 bg-soft-cream min-h-screen">
-        <div className="container mx-auto px-4 max-w-5xl">
+      <div style={{ background: 'var(--ivory)' }} className="min-h-screen">
 
-          {/* Breadcrumb */}
-          <div className="text-sm text-text-mid mb-6">
-            <Link href="/" className="hover:text-burgundy">Domů</Link>
-            {' / '}
-            <span className="text-burgundy">Prodloužení vlasů Praha</span>
-          </div>
+        {/* Hero */}
+        <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+          <div className="max-w-5xl">
+            {/* Breadcrumb */}
+            <div className="text-[12px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+              <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
+              {' / '}
+              <span style={{ color: 'var(--text-dark)' }}>Prodloužení vlasů Praha</span>
+            </div>
 
-          {/* Header */}
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              SHOWROOM PRAHA 1
+            </div>
+            <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
               Prodloužení vlasů Praha
             </h1>
-            <p className="text-lg text-text-mid max-w-2xl mx-auto leading-relaxed">
+            <p className="text-[15px] leading-[1.8] font-light max-w-2xl mb-2" style={{ color: 'var(--text-soft)' }}>
               Showroom Praha 1 · Keratin · Nanotapes · Weft (Hollywoodské prodloužení)
             </p>
-            <p className="text-sm text-text-soft mt-2">
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
               Vlastní barvírna · Pravé vlasy · 3 úrovně kvality · Od roku 2016
             </p>
           </div>
+        </div>
 
-          {/* Showroom info */}
-          <div className="bg-burgundy text-white rounded-xl p-6 mb-10 flex flex-col md:flex-row gap-6 items-start md:items-center">
-            <div className="flex-1">
-              <p className="font-playfair text-xl mb-1">Showroom Múza Hair</p>
-              <p className="text-white/80 text-sm">Revoluční 8, Praha 1 · metro B Náměstí Republiky (3 min pěšky)</p>
-              <p className="text-white/70 text-xs mt-1">Po–Ne 10:00–20:00 · Pouze na objednání</p>
+        {/* Showroom info bar */}
+        <div className="px-8 lg:px-20 py-12" style={{ background: 'var(--burgundy)' }}>
+          <div className="max-w-5xl flex flex-col md:flex-row gap-8 md:items-center justify-between">
+            <div>
+              <p className="font-cormorant text-[22px] font-light mb-1" style={{ color: 'var(--ivory)' }}>Showroom Múza Hair</p>
+              <p className="text-[14px] font-light" style={{ color: 'rgba(255,255,255,0.75)' }}>Revoluční 8, Praha 1 · metro B Náměstí Republiky (3 min pěšky)</p>
+              <p className="text-[13px] font-light mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Po–Ne 10:00–20:00 · Pouze na objednání</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href="tel:+420728722880"
-                className="px-5 py-2.5 bg-white text-burgundy text-sm font-semibold rounded-lg hover:opacity-90 transition text-center"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                style={{ background: 'var(--ivory)', color: 'var(--burgundy)' }}
               >
                 +420 728 722 880
               </a>
@@ -214,57 +218,73 @@ export default function ProdlouzeniVlasuPrahaPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 border border-white/40 text-white text-sm font-medium rounded-lg hover:bg-white/10 transition text-center"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'var(--ivory)' }}
               >
                 @muzahair.cz
               </a>
             </div>
           </div>
+        </div>
 
-          {/* Metody + ceny */}
-          <h2 className="text-2xl font-playfair text-burgundy mb-6">
-            Metody prodloužení vlasů Praha — ceník aplikace
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {METHODS.map((m) => (
-              <div key={m.name} className="bg-white rounded-xl shadow-medium overflow-hidden flex flex-col">
-                <div className="bg-burgundy px-5 py-4">
-                  <span className="text-xl">{m.icon}</span>
-                  <h3 className="font-playfair text-white text-lg mt-1">{m.name}</h3>
-                  <p className="text-xs text-white/70 mt-0.5">{m.subtitle}</p>
-                </div>
-                <div className="p-5 flex-1 flex flex-col">
-                  <ul className="text-sm text-text-mid space-y-1.5 mb-4 flex-1">
+        {/* Metody + ceny */}
+        <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+          <div className="max-w-5xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              CENÍK APLIKACE
+            </div>
+            <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
+              Metody prodloužení vlasů Praha
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+              {METHODS.map((m) => (
+                <div key={m.name} className="border-b md:border-b-0 md:border-r py-8 md:pr-8 md:last:border-r-0 md:last:pr-0 md:pl-8 md:first:pl-0" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <p className="text-[11px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{m.subtitle}</p>
+                  <h3 className="font-cormorant text-[20px] font-light mb-5" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
+                  <ul className="space-y-2 mb-6">
                     {m.items.map((item) => (
-                      <li key={item}>✓ {item}</li>
+                      <li key={item} className="text-[14px] leading-[1.7] font-light flex gap-2" style={{ color: 'var(--text-soft)' }}>
+                        <span style={{ color: 'var(--accent)' }}>—</span>
+                        {item}
+                      </li>
                     ))}
                   </ul>
                   <Link
                     href={m.href}
-                    className="block text-center py-2.5 border border-burgundy text-burgundy text-sm font-medium rounded-lg hover:bg-burgundy/5 transition"
+                    className="text-[12px] tracking-[0.12em] uppercase font-normal hover:underline"
+                    style={{ color: 'var(--burgundy)' }}
                   >
                     Více o metodě →
                   </Link>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div className="text-center mb-12">
-            <Link
-              href="/ceny-aplikaci"
-              className="inline-block px-8 py-3 bg-burgundy text-white font-medium rounded-xl hover:opacity-90 transition"
-            >
-              Kompletní ceník aplikace →
-            </Link>
+            <div className="mt-10 pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+              <Link
+                href="/ceny-aplikaci"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+              >
+                Kompletní ceník aplikace →
+              </Link>
+            </div>
           </div>
+        </div>
 
-          {/* Proč Múza Hair */}
-          <section className="bg-white rounded-xl shadow-medium p-6 md:p-8 mb-10">
-            <h2 className="text-2xl font-playfair text-burgundy mb-6">
+        {/* Proč Múza Hair */}
+        <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+          <div className="max-w-5xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              PROČ MY
+            </div>
+            <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
               Proč prodloužení vlasů u Múza Hair Praha?
             </h2>
-            <div className="grid sm:grid-cols-2 gap-5 text-sm">
+            <div className="grid sm:grid-cols-2 gap-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               {[
                 { title: 'Vlastní barvírna v Praze', desc: 'Barvíme vlasy sami — žádné přebarvování nakoupených vlasů. Vlastní technologie, přesné odstíny.' },
                 { title: 'Pravé středoevropské vlasy', desc: 'Nebarvené panenské, barvené a dětské vlasy. 3 úrovně kvality: Standard, Luxe, Platinum.' },
@@ -273,50 +293,59 @@ export default function ProdlouzeniVlasuPrahaPage() {
                 { title: 'Konzultace zdarma', desc: 'Pomůžeme vybrat správnou metodu i vlasy. Zavolejte nebo napište na Instagram.' },
                 { title: 'Od roku 2016', desc: 'Zkušenosti z tisíců aplikací. Zákaznice se k nám vrací — přečtěte si recenze.' },
               ].map((item) => (
-                <div key={item.title} className="flex gap-3">
-                  <span className="text-burgundy mt-0.5 flex-shrink-0">✓</span>
-                  <div>
-                    <p className="font-semibold text-text-dark mb-0.5">{item.title}</p>
-                    <p className="text-text-mid">{item.desc}</p>
-                  </div>
+                <div key={item.title} className="border-b py-7 sm:odd:pr-10 sm:even:pl-10 sm:odd:border-r" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <p className="text-[15px] font-normal mb-1" style={{ color: 'var(--text-dark)' }}>{item.title}</p>
+                  <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
-            <div className="mt-6 pt-5 border-t border-warm-beige flex gap-4 text-sm">
-              <Link href="/o-nas" className="text-burgundy font-semibold hover:underline">Náš příběh →</Link>
-              <Link href="/recenze" className="text-burgundy font-semibold hover:underline">Recenze zákaznic →</Link>
+            <div className="mt-8 flex gap-6 text-[12px] tracking-[0.1em] uppercase font-normal">
+              <Link href="/o-nas" className="hover:underline" style={{ color: 'var(--burgundy)' }}>Náš příběh →</Link>
+              <Link href="/recenze" className="hover:underline" style={{ color: 'var(--burgundy)' }}>Recenze zákaznic →</Link>
             </div>
-          </section>
+          </div>
+        </div>
 
-          {/* Přijeďte z celé ČR */}
-          <section className="bg-ivory border border-burgundy/15 rounded-xl p-6 md:p-8 mb-10">
-            <h2 className="text-2xl font-playfair text-burgundy mb-3">
+        {/* Přijeďte z celé ČR */}
+        <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+          <div className="max-w-5xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              DOSTUPNOST
+            </div>
+            <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
               Přijeďte z celé České republiky
             </h2>
-            <p className="text-sm text-text-mid mb-5">
+            <p className="text-[15px] leading-[1.8] font-light mb-8 max-w-2xl" style={{ color: 'var(--text-soft)' }}>
               Zákaznice přijíždějí za kvalitou z celé ČR. Showroom je u metra B — Náměstí Republiky,
               Praha je vlakové centrum celé republiky.
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-0 border-t border-l" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               {CITIES_NEAR.map((c) => (
-                <div key={c.name} className="bg-white rounded-lg p-3 border border-warm-beige text-center">
-                  <p className="font-medium text-text-dark">{c.name}</p>
-                  <p className="text-xs text-text-soft mt-0.5">vlakem {c.time}</p>
+                <div key={c.name} className="border-b border-r px-4 py-5" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <p className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>{c.name}</p>
+                  <p className="text-[12px] font-light mt-0.5" style={{ color: 'var(--text-soft)' }}>vlakem {c.time}</p>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-text-soft mt-4">
+            <p className="text-[13px] font-light mt-6" style={{ color: 'var(--text-soft)' }}>
               Vlasy si můžete také objednat online s doručením domů —{' '}
-              <Link href="/vlasy-k-prodlouzeni" className="text-burgundy hover:underline">nakonfigurujte je v e-shopu</Link>.
+              <Link href="/vlasy-k-prodlouzeni" className="hover:underline" style={{ color: 'var(--burgundy)' }}>nakonfigurujte je v e-shopu</Link>.
             </p>
-          </section>
+          </div>
+        </div>
 
-          {/* FAQ */}
-          <section className="mb-10">
-            <h2 className="text-2xl font-playfair text-burgundy mb-6">
-              Časté dotazy — prodloužení vlasů Praha
+        {/* FAQ */}
+        <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+          <div className="max-w-5xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              ČASTÉ DOTAZY
+            </div>
+            <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
+              Prodloužení vlasů Praha — odpovědi
             </h2>
-            <div className="space-y-4">
+            <div>
               {[
                 {
                   q: 'Kde se prodlužují vlasy v Praze?',
@@ -339,24 +368,33 @@ export default function ProdlouzeniVlasuPrahaPage() {
                   a: 'Zavolejte na +420 728 722 880 nebo napište na Instagram @muzahair.cz. Showroom Revoluční 8, Praha 1 — Po–Ne 10:00–20:00, pouze na objednání.',
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-white border border-warm-beige rounded-xl p-5">
-                  <p className="font-semibold text-text-dark mb-2">{item.q}</p>
-                  <p className="text-sm text-text-mid leading-relaxed">{item.a}</p>
+                <div key={i} className="border-b py-7" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <p className="text-[16px] font-normal mb-2" style={{ color: 'var(--text-dark)' }}>{item.q}</p>
+                  <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.a}</p>
                 </div>
               ))}
             </div>
-          </section>
+          </div>
+        </div>
 
-          {/* CTA */}
-          <div className="bg-ivory border border-burgundy/10 rounded-xl p-8 text-center">
-            <p className="font-playfair text-2xl text-burgundy mb-2">Domluvte si konzultaci</p>
-            <p className="text-text-soft text-sm mb-6">
+        {/* CTA */}
+        <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+          <div className="max-w-5xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              REZERVACE
+            </div>
+            <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+              Domluvte si konzultaci
+            </h2>
+            <p className="text-[15px] leading-[1.8] font-light mb-8 max-w-xl" style={{ color: 'var(--text-soft)' }}>
               Vybereme metodu i vlasy přímo pro vás. Showroom Praha 1, Revoluční 8.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="tel:+420728722880"
-                className="px-6 py-3 bg-burgundy text-white text-sm font-medium rounded-xl hover:opacity-90 transition"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 +420 728 722 880
               </a>
@@ -364,20 +402,22 @@ export default function ProdlouzeniVlasuPrahaPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 border border-burgundy text-burgundy text-sm font-medium rounded-xl hover:bg-white transition"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 @muzahair.cz na Instagramu
               </a>
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="px-6 py-3 border border-burgundy text-burgundy text-sm font-medium rounded-xl hover:bg-white transition"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
               >
                 Nakonfigurovat vlasy
               </Link>
             </div>
           </div>
-
         </div>
+
       </div>
     </>
   );

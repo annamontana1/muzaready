@@ -241,19 +241,19 @@ Pokud si nejste jistí, **napište nám** - pošleme vám kalkulačku nebo vám 
     question: 'Jaké způsoby platby přijímáte?',
     answer: `Nabízíme **3 způsoby platby:**
 
-**1. Online kartou** 💳
+**1. Online kartou**
 - Okamžitá platba přes platební bránu
 - **Výhody:** Rychlé, bezpečné, objednávka se okamžitě zpracuje
 - Přijímáme: Visa, Mastercard, Maestro
 
-**2. Bankovní převod** 🏦
+**2. Bankovní převod**
 - Platba na účet
 - **Výhody:** Tradiční způsob
 - Variabilní symbol: číslo objednávky
 - IBAN: CZ55 5500 0000 0064 2442 3004
 - Objednávka se expeduje po připsání platby (1-3 dny)
 
-**3. Dobírka** 📦 (pouze ČR)
+**3. Dobírka** (pouze ČR)
 - Zaplatíte kurýrovi při převzetí
 - **Výhody:** Platíte až když vidíte balík
 - Poplatek: +50 Kč
@@ -305,21 +305,21 @@ Plánujeme přidat EUR platby v roce 2026!`
     question: 'Máte nějaké slevy nebo slevové kódy?',
     answer: `**Ano! Máme několik způsobů, jak ušetřit:**
 
-**1. Newsletter sleva** 📧
+**1. Newsletter sleva**
 - Přihlaste se k newsletteru
 - Dostanete **10% slevu na první nákup**
 
-**2. Velkoobchodní ceny** 💼
+**2. Velkoobchodní ceny**
 - Pro kadeřnické salóny a firemní zákazníky
 - Sleva od **15-30%** podle objemu
 - Kontaktujte nás: obchod@muzahair.cz
 
-**3. Sezónní akce** 🎉
+**3. Sezónní akce**
 - Black Friday (listopad)
 - Vánoční slevy (prosinec)
 - Jarní výprodej (březen)
 
-**4. Věrnostní program** ⭐
+**4. Věrnostní program**
 - Při 3. nákupu: 5% sleva
 - Při 5. nákupu: 10% sleva
 - Od 10. nákupu: 15% permanentní sleva
@@ -337,29 +337,29 @@ Plánujeme přidat EUR platby v roce 2026!`
     question: 'Jaké dopravní možnosti nabízíte a kolik stojí?',
     answer: `**V ČESKU:**
 
-📦 **Zásilkovna** - 79 Kč
+Zásilkovna - 79 Kč
 - Doručení na výdejní místo (5000+ míst)
 - 2-3 pracovní dny
 - Sledování zásilky
 
-📮 **Česká pošta - Balík na poštu** - 89 Kč
+Česká pošta - Balík na poštu - 89 Kč
 - Doručení na vybranou pobočku
 - 2-4 pracovní dny
 
-🚚 **Česká pošta - Balík do ruky** - 119 Kč
+Česká pošta - Balík do ruky - 119 Kč
 - Doručení kurýrem na adresu
 - 2-3 pracovní dny
 - SMS notifikace
 
-🏃 **PPL** - 139 Kč
+PPL - 139 Kč
 - Expresní doručení do 24h
 - Pouze Praha a velká města
 
-**✨ DOPRAVA ZDARMA od 3 000 Kč!**
+**DOPRAVA ZDARMA od 3 000 Kč!**
 
 **DO ZAHRANIČÍ:**
 
-🌍 **Evropa** - od 299 Kč
+Evropa - od 299 Kč
 - 5-10 pracovních dnů
 - Sledování zásilky
 - Celní prohlášení zajištěno`
@@ -375,9 +375,9 @@ Plánujeme přidat EUR platby v roce 2026!`
 - PPL Express: 1-2 dny
 
 **Celkem od objednávky:**
-- ⚡ Express (PPL): 2-3 dny
-- 📦 Standardní: 3-5 dní
-- 🌍 Zahraniční: 7-14 dní
+- Express (PPL): 2-3 dny
+- Standardní: 3-5 dní
+- Zahraniční: 7-14 dní
 
 **Co ovlivňuje rychlost:**
 ✅ **Zrychlí:**
@@ -399,7 +399,7 @@ Tracking číslo dostanete emailem po expedici.`
     question: 'Můžu si vyzvednout objednávku osobně?',
     answer: `**Ano!** Máte 2 možnosti:
 
-**1. Osobní odběr v showroomu** ⭐ **ZDARMA**
+**1. Osobní odběr v showroomu** ZDARMA
 - Adresa: Revoluční 8, Praha 1, 110 00
 - Otevírací doba:
   - Po-Pá: 10:00 - 18:00
@@ -440,20 +440,20 @@ Tracking číslo dostanete emailem po expedici.`
 
 **Balík je poškozený:**
 
-⚠️ **DŮLEŽITÉ:** Zkontrolujte balík **PŘED převzetím od kurýra!**
+DŮLEŽITÉ: Zkontrolujte balík **PŘED převzetím od kurýra!**
 
 **Postup:**
 1. **Vizuální kontrola** - pomačkaná krabice, díry, mokrý obal
 2. **Pokud vypadá poškozeně:**
-   - ❌ **NEPŘEBÍREJTE BALÍK**
-   - 📝 Sepište s kurýrem protokol o poškození
-   - 📸 Vyfoťte balík
-   - ✉️ Napište nám: info@muzahair.cz
+   - NEPŘEBÍREJTE BALÍK
+   - Sepište s kurýrem protokol o poškození
+   - Vyfoťte balík
+   - Napište nám: info@muzahair.cz
 
 3. **Pokud zjistíte poškození až doma:**
-   - 📸 Vyfoťte balík i obsah
-   - 📧 Napište nám do 24h: info@muzahair.cz
-   - 🔄 Vyřešíme reklamaci
+   - Vyfoťte balík i obsah
+   - Napište nám do 24h: info@muzahair.cz
+   - Vyřešíme reklamaci
 
 **Garance:**
 Pokud je zboží poškozené, **pošleme náhradní ZDARMA** nebo vrátíme peníze (dle vaší volby).`
@@ -610,33 +610,33 @@ Tracking funguje mezinárodně - uvidíte, kde je váš balík.
     question: 'Jak správně pečovat o vlasy k prodloužení?',
     answer: `**Základní péče - 5 ZLATÝCH PRAVIDEL:**
 
-**1. MYTÍ** 🚿
+**1. MYTÍ**
 - **2-3x týdně** (ne denně!)
 - Vlažná voda (ne horká)
 - Šampon **bez sulfátů**
 - Mytí od kořínků směrem dolů (ne kruhovými pohyby)
 - Důkladně vypláchnout
 
-**2. KONDICIONÉR** 💧
+**2. KONDICIONÉR**
 - **Vždy** po šamponu
 - Nanášet od poloviny délky ke konci
 - **NE na keratin bondy** (uvolní se)
 - Nechat působit 3-5 minut
 - Důkladně vypláchnout
 
-**3. ČESÁNÍ** 🪮
+**3. ČESÁNÍ**
 - Pouze **speciální kartáč** (s kulatými hroty)
 - **Od konců směrem nahoru**
 - Před mytím rozčesat suché vlasy
 - Po mytí nechat částečně oschnout, pak česat
 
-**4. SUŠENÍ** 💨
+**4. SUŠENÍ**
 - Nejlépe **přirozeně** (ručník + vzduch)
 - Pokud fén: **studený/vlažný vzduch**
 - Termická ochrana VŽDY
 - Nesušit vlasy "hlavou dolů" (zamotají se)
 
-**5. SPANÍ** 😴
+**5. SPANÍ**
 - **Zapletené** nebo volný cop
 - Nebo hedvábný čepec/šátek
 - **NIKDY** s mokrými vlasy
@@ -671,14 +671,14 @@ Tracking funguje mezinárodně - uvidíte, kde je váš balík.
 - Hrubé: 180-200°C (výjimečně)
 
 **TRVALÁ/CHEMICKÉ ÚPRAVY:**
-⚠️ **NEDOPORUČUJEME**
+NEDOPORUČUJEME
 - Výrazně zkracuje životnost
 - Může poškodit strukturu
 - Pokud nutně: pouze profesionál
 - A pak extra péče
 
 **BĚLENÍ/MELÍROVÁNÍ:**
-❌ **NEDOPORUČUJEME**
+NEDOPORUČUJEME
 - Velmi agresivní proces
 - Zničí vlasy
 - Raději si kupte již obarvené vlasy ve světlém odstínu
@@ -688,32 +688,32 @@ Tracking funguje mezinárodně - uvidíte, kde je váš balík.
   {
     category: 'Péče o vlasy',
     question: 'Jaké produkty doporučujete?',
-    answer: `**ŠAMPONY (bez sulfátů):** 🧴
+    answer: `**ŠAMPONY (bez sulfátů):**
 - Kerastase Bain Satin
 - Redken All Soft
 - Olaplex No. 4
 - Matrix Biolage
 - Nebo cokoliv s označením "sulfate-free"
 
-**KONDICIONÉRY:** 💧
+**KONDICIONÉRY:**
 - Kerastase Lait Vital
 - Redken All Soft Conditioner
 - Olaplex No. 5
 - Matrix Biolage Conditioner
 
-**MASKY (1x týdně):** 🥥
+**MASKY (1x týdně):**
 - Kerastase Masquintense
 - Olaplex No. 8
 - Redken All Soft Mega Mask
 - Nebo kokosový olej (100% přírodní)
 
-**OLEJE/SÉRA:** ✨
+**OLEJE/SÉRA:**
 - Moroccanoil Treatment
 - Kerastase Elixir Ultime
 - Redken Diamond Oil
 - Argonový olej
 
-**TERMICKÁ OCHRANA:** 🔥
+**TERMICKÁ OCHRANA:**
 - GHD Heat Protect Spray
 - Tigi Blow Out Balm
 - Kerastase Ciment Thermique
@@ -733,20 +733,19 @@ Tracking funguje mezinárodně - uvidíte, kde je váš balík.
     question: 'Můžu si vlasy nasadit sama doma?',
     answer: `**Záleží na typu zakončení:**
 
-**✅ ANO - Clip-in vlasy**
+**ANO - Clip-in vlasy**
 - Nejjednodušší
 - Nasadíte za 5 minut
 - Sundáte před spaním
 - Ideální pro začátečníky
-- Tutoriál: [odkaz na YouTube]
 
-**⚠️ MOŽNÉ, ale nedoporučujeme - Tape-in**
+**MOŽNÉ, ale nedoporučujeme - Tape-in**
 - Potřebujete speciální pásky a nářadí
 - Těžké dostat na správné místo
 - Riziko špatného držení
 - Raději kadeřník
 
-**❌ NE - Keratin bondy (I-tip, U-tip)**
+**NE - Keratin bondy (I-tip, U-tip)**
 - Potřebujete **speciální kleště**
 - Technika je složitá
 - Špatná aplikace = poškození vlasů
@@ -825,11 +824,11 @@ Pokud to děláte poprvé, **jděte ke kadeřníkovi**. Budete mít jistotu, že
     question: 'Můžu navštívit váš showroom? Kde jste?',
     answer: `**Ano! Máme showroom v Praze:**
 
-📍 **Adresa:**
+Adresa:
 Revoluční 8
 Praha 1, 110 00
 
-🕐 **Otevírací doba:**
+Otevírací doba:
 - **Pondělí - Pátek:** 10:00 - 18:00
 - **Sobota:** 10:00 - 14:00
 - **Neděle:** Zavřeno
@@ -843,13 +842,10 @@ Praha 1, 110 00
 ✅ Prohlédnout si různé **typy zakončení**
 
 **Doporučujeme:**
-📞 Zavolejte předem: **+420 728 722 880**
+Zavolejte předem: **+420 728 722 880**
 - Domluvíme si čas
 - Budeme mít pro vás připravené vzorky
 - Věnujeme vám plnou pozornost
-
-**Parkování:** [info o parkování]
-**MHD:** Metro/tramvaj [číslo linky], zastávka [název]
 
 **Vstup ZDARMA** - nemusíte nic kupovat, můžete jen nakouknout!`
   },
@@ -858,7 +854,7 @@ Praha 1, 110 00
     question: 'Nabízíte konzultaci před koupí?',
     answer: `**Ano! Máme 3 typy konzultací:**
 
-**1. ONLINE konzultace** 💬 **ZDARMA**
+**1. ONLINE konzultace** ZDARMA
 - Napište nám na WhatsApp: +420 728 722 880
 - Pošlete selfie vašich vlasů
 - Poradíme vám:
@@ -867,13 +863,13 @@ Praha 1, 110 00
   - Jakou délku zvolit
   - Jaký typ zakončení
 
-**2. VIDEO hovor** 📹 **ZDARMA**
+**2. VIDEO hovor** ZDARMA
 - Videohovor (WhatsApp/Messenger)
-- Trv㏁ 15-20 minut
+- Trvá 15-20 minut
 - Ukážeme vám vzorky naživo
 - Objednejte si na: info@muzahair.cz
 
-**3. OSOBNÍ konzultace** 🏢 **ZDARMA**
+**3. OSOBNÍ konzultace** ZDARMA
 - Přímo v showroomu
 - Objednejte si termín: +420 728 722 880
 - Trvá 30-60 minut
@@ -893,29 +889,29 @@ Nabízíme **profesionální školení** aplikace vlasů:
     question: 'Jak vás můžu kontaktovat?',
     answer: `**Máme několik způsobů:**
 
-📧 **Email:**
+Email:
 - Obecné dotazy: info@muzahair.cz
 - Objednávky: objednavky@muzahair.cz
 - Reklamace: reklamace@muzahair.cz
 - Pro kadeřnictví: obchod@muzahair.cz
 
-📱 **WhatsApp/SMS:**
+WhatsApp/SMS:
 - +420 728 722 880
 - Nejrychlejší odpověď (do 1 hodiny v pracovní době)
 
-📞 **Telefon:**
+Telefon:
 - +420 728 722 880
 - Po-Pá: 9:00 - 17:00
 
-💬 **Live chat:**
+Live chat:
 - Na webu (vpravo dole)
 - Online Po-Pá: 10:00 - 18:00
 
-📍 **Osobně:**
+Osobně:
 - Showroom v Praze (viz otázka výše)
 - Doporučujeme předchozí objednání
 
-📱 **Sociální sítě:**
+Sociální sítě:
 - Instagram: @muzahair
 - Facebook: Mùza Hair
 - TikTok: @muzahair
@@ -945,130 +941,162 @@ export default function FAQPage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-text-dark mb-4">Často kladené otázky (FAQ)</h1>
-      <p className="text-lg text-text-mid mb-8">
-        Máte otázky? Najděte odpovědi na nejčastější dotazy o našich produktech, objednávání, dopravě a péči o vlasy.
-      </p>
-
-      {/* Search */}
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Hledat v FAQ..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-3 border border-warm-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-        />
-      </div>
-
-      {/* Category filters */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        <button
-          onClick={() => setSelectedCategory('Všechny')}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-            selectedCategory === 'Všechny'
-              ? 'bg-purple-600 text-white'
-              : 'bg-soft-cream text-text-mid hover:bg-gray-200'
-          }`}
-        >
-          Všechny
-        </button>
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-              selectedCategory === category
-                ? 'bg-purple-600 text-white'
-                : 'bg-soft-cream text-text-mid hover:bg-gray-200'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* FAQ items */}
-      <div className="space-y-4">
-        {filteredFAQs.length === 0 ? (
-          <div className="text-center py-12 text-text-soft">
-            <p className="text-lg mb-2">Nenašli jsme odpověď na váš dotaz.</p>
-            <p>Zkuste jiné hledání nebo nás kontaktujte na <a href="mailto:info@muzahair.cz" className="text-purple-600 hover:underline">info@muzahair.cz</a></p>
+    <div style={{ background: 'var(--ivory)' }} className="min-h-screen">
+      {/* Hero section */}
+      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-4xl">
+          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            ČASTÉ DOTAZY
           </div>
-        ) : (
-          filteredFAQs.map((item, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-sm border border-warm-beige overflow-hidden">
-              <button
-                onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
-                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-soft-cream transition"
-              >
-                <div>
-                  <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">
-                    {item.category}
-                  </span>
-                  <h3 className="text-lg font-semibold text-text-dark mt-1">
-                    {item.question}
-                  </h3>
-                </div>
-                <svg
-                  className={`w-6 h-6 text-text-soft transition-transform ${
-                    openQuestion === index ? 'transform rotate-180' : ''
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+          <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
+            Odpovědi na vaše otázky
+          </h1>
+          <p className="text-[15px] leading-[1.8] font-light max-w-2xl" style={{ color: 'var(--text-soft)' }}>
+            Najděte odpovědi na nejčastější dotazy o našich produktech, objednávání, dopravě a péči o vlasy.
+          </p>
+        </div>
+      </div>
 
-              {openQuestion === index && (
-                <div className="px-6 py-4 bg-soft-cream border-t border-warm-beige">
-                  <div
-                    className="prose prose-sm max-w-none text-text-mid"
-                    dangerouslySetInnerHTML={{
-                      __html: item.answer
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\n\n/g, '</p><p class="mt-4">')
-                        .replace(/\n/g, '<br />')
-                        .replace(/^(.*)$/gm, '<p>$1</p>')
-                    }}
-                  />
+      {/* Filters + content */}
+      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+        <div className="max-w-4xl">
+          {/* Search */}
+          <div className="mb-8">
+            <input
+              type="text"
+              placeholder="Hledat v FAQ..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 text-[15px] font-light border-b border-[var(--beige)] focus:outline-none focus:border-[var(--burgundy)] bg-transparent transition-colors"
+              style={{ color: 'var(--text-dark)', borderColor: 'rgba(0,0,0,0.15)' }}
+            />
+          </div>
+
+          {/* Category filters — flat text tabs */}
+          <div className="flex flex-wrap gap-0 mb-10 border-b" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+            {['Všechny', ...categories].map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-3 text-[12px] tracking-[0.1em] uppercase font-normal transition-colors border-b-2 -mb-px ${
+                  selectedCategory === category
+                    ? 'border-[var(--burgundy)]'
+                    : 'border-transparent hover:border-[var(--text-soft)]'
+                }`}
+                style={{
+                  color: selectedCategory === category ? 'var(--burgundy)' : 'var(--text-soft)',
+                }}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {/* FAQ items */}
+          <div>
+            {filteredFAQs.length === 0 ? (
+              <div className="py-12">
+                <p className="text-[15px] font-light mb-2" style={{ color: 'var(--text-dark)' }}>Nenašli jsme odpověď na váš dotaz.</p>
+                <p className="text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>
+                  Zkuste jiné hledání nebo nás kontaktujte na{' '}
+                  <a href="mailto:info@muzahair.cz" style={{ color: 'var(--burgundy)' }} className="hover:underline">info@muzahair.cz</a>
+                </p>
+              </div>
+            ) : (
+              filteredFAQs.map((item, index) => (
+                <div key={index} className="border-b" style={{ borderColor: 'var(--beige)' }}>
+                  <button
+                    onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
+                    className="w-full py-5 flex justify-between items-start gap-4 text-left group"
+                  >
+                    <div className="flex-1">
+                      <span
+                        className="text-[10px] tracking-[0.18em] uppercase font-normal block mb-1"
+                        style={{ color: 'var(--accent)' }}
+                      >
+                        {item.category}
+                      </span>
+                      <span
+                        className="text-[16px] font-light leading-snug"
+                        style={{ color: 'var(--text-dark)' }}
+                      >
+                        {item.question}
+                      </span>
+                    </div>
+                    <svg
+                      className={`w-4 h-4 flex-shrink-0 mt-1 transition-transform duration-200 ${
+                        openQuestion === index ? 'rotate-180' : ''
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {openQuestion === index && (
+                    <div className="pb-6">
+                      <div
+                        className="text-[14px] leading-[1.9] font-light"
+                        style={{ color: 'var(--text-soft)' }}
+                        dangerouslySetInnerHTML={{
+                          __html: item.answer
+                            .replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight:500;color:var(--text-dark)">$1</strong>')
+                            .replace(/\n\n/g, '</p><p style="margin-top:0.75rem">')
+                            .replace(/\n/g, '<br />')
+                            .replace(/^(.*)$/, '<p>$1</p>')
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))
-        )}
+              ))
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Contact CTA */}
-      <div className="mt-12 bg-purple-50 rounded-lg p-8 text-center">
-        <h2 className="text-2xl font-bold text-text-dark mb-2">Nenašli jste odpověď?</h2>
-        <p className="text-text-mid mb-6">
-          Rádi vám poradíme! Kontaktujte nás a odpovíme do 24 hodin.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <a
-            href="mailto:info@muzahair.cz"
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium"
-          >
-            Napsat email
-          </a>
-          <a
-            href="https://wa.me/420728722880"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
-          >
-            WhatsApp
-          </a>
-          <a
-            href="tel:+420728722880"
-            className="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition font-medium"
-          >
-            Zavolat
-          </a>
+      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-4xl">
+          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            KONTAKT
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+            Nenašli jste odpověď?
+          </h2>
+          <p className="text-[15px] leading-[1.8] font-light mb-8 max-w-xl" style={{ color: 'var(--text-soft)' }}>
+            Rádi vám poradíme! Kontaktujte nás a odpovíme do 24 hodin.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <a
+              href="mailto:info@muzahair.cz"
+              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+              style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+            >
+              Napsat email
+            </a>
+            <a
+              href="https://wa.me/420728722880"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+              style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
+            >
+              WhatsApp
+            </a>
+            <a
+              href="tel:+420728722880"
+              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+              style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
+            >
+              Zavolat
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -78,15 +78,9 @@ export async function POST(
         },
       });
 
-      const message = result.emailDelayed
-        ? `Faktura ${result.invoiceNumber || ''} byla vytvořena, ale email bude odeslán až v 9–20 hod (nyní je mimo odesílací okno).`
-        : `Faktura ${result.invoiceNumber || ''} byla vytvořena a odeslána na ${order.email}`;
-
       return NextResponse.json({
         success: true,
-        message,
-        emailSent: result.emailSent,
-        emailDelayed: result.emailDelayed,
+        message: `Faktura ${result.invoiceNumber || ''} byla vytvořena a odeslána na ${order.email}`,
         invoiceId: result.invoiceId,
         invoiceNumber: result.invoiceNumber,
         invoiceUrl: result.invoiceUrl,
