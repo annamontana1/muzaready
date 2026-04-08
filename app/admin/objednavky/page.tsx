@@ -620,7 +620,7 @@ export default function AdminOrdersPage() {
                 />
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                ID
+                Zákazník
               </th>
               <th
                 onClick={() => handleSort('email')}
@@ -716,7 +716,14 @@ export default function AdminOrdersPage() {
                     className="w-4 h-4 rounded border-gray-300"
                   />
                 </td>
-                <td className="px-6 py-4 text-sm font-mono">{String(order.orderNumber)}...</td>
+                <td className="px-6 py-4 text-sm">
+                  <div className="font-medium text-gray-900">
+                    {order.firstName || order.lastName
+                      ? `${order.firstName ?? ''} ${order.lastName ?? ''}`.trim()
+                      : <span className="text-gray-400 italic">Bez jména</span>}
+                  </div>
+                  <div className="text-xs text-gray-400 font-mono">#{String(order.orderNumber)}</div>
+                </td>
                 <td className="px-6 py-4 text-sm">{order.email}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{order.itemCount}</td>
                 <td className="px-6 py-4 text-sm font-medium">
