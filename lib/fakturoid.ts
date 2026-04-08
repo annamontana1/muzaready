@@ -4,6 +4,24 @@
  * Docs: https://www.fakturoid.cz/api/v3
  */
 
+/**
+ * Kontrola odesílacího okna — Praha, 9:00–20:00
+ * Vrací true pokud je aktuální čas v povoleném rozsahu.
+ */
+export function isWithinSendingHours(): boolean {
+  const now = new Date();
+  // Pražský čas (CET = UTC+1, CEST = UTC+2 — Intl.DateTimeFormat to řeší)
+  const pragueHour = parseInt(
+    new Intl.DateTimeFormat('cs-CZ', {
+      timeZone: 'Europe/Prague',
+      hour: 'numeric',
+      hour12: false,
+    }).format(now),
+    10
+  );
+  return pragueHour >= 9 && pragueHour < 20;
+}
+
 const FAKTUROID_SLUG = 'annazvinchuk1';
 const FAKTUROID_CLIENT_ID = process.env.FAKTUROID_CLIENT_ID || '';
 const FAKTUROID_CLIENT_SECRET = process.env.FAKTUROID_CLIENT_SECRET || '';
@@ -309,6 +327,8 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
   invoiceId?: number;
   invoiceNumber?: string;
   invoiceUrl?: string;
+  emailSent?: boolean;
+  emailDelayed?: boolean;
   error?: string;
 }> {
   try {
@@ -374,15 +394,23 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
     }
 
     // 5. Send invoice/proforma email via Fakturoid (includes QR code)
+    //    Odesíláme pouze v čase 9:00–20:00 pražského času.
+    let emailSent = false;
     if (order.customerEmail) {
-      try {
-        const deliverRes = await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
-          method: 'POST',
-          body: JSON.stringify({ email: order.customerEmail }),
-        });
-        console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
-      } catch (deliverError: any) {
-        console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
+      if (isWithinSendingHours()) {
+        try {
+          await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
+            method: 'POST',
+            body: JSON.stringify({ email: order.customerEmail }),
+          });
+          emailSent = true;
+          console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
+        } catch (deliverError: any) {
+          console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
+        }
+      } else {
+        // Mimo odesílací okno — faktura vytvořena, email odložen
+        console.warn(`⏰ Fakturoid deliver SKIPPED (mimo 9–20 hod Praha) — invoice ${invoice.id} (${invoice.number}) pro ${order.customerEmail}. Pošli ručně přes admin nebo cron.`);
       }
     } else {
       console.warn(`⚠️ Fakturoid deliver skipped — no customerEmail for invoice ${invoice.id}`);
@@ -393,6 +421,8 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       invoiceId: invoice.id,
       invoiceNumber: invoice.number,
       invoiceUrl: invoice.public_html_url,
+      emailSent,
+      emailDelayed: order.customerEmail ? !emailSent : false,
     };
   } catch (error: any) {
     console.error('Fakturoid createInvoiceFromOrder error:', error);
