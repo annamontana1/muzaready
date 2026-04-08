@@ -1,14 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin-auth';
 import prisma from '@/lib/prisma';
-import { createInvoiceFromOrder, isFakturoidConfigured, sendInvoiceByEmail } from '@/lib/fakturoid';
+import { createInvoiceFromOrder, isFakturoidConfigured } from '@/lib/fakturoid';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+/** Hezký název zakončení pro fakturu */
+function endingLabel(ending: string | null): string {
+  switch (ending) {
+    case 'MICRO_KERATIN':    return 'Mikrokeratin';
+    case 'STANDARD_KERATIN': return 'Standart keratin';
+    case 'PASKY_KERATINU':   return 'Pásky keratinu';
+    case 'WEFT':             return 'Weft (tresy)';
+    case 'TAPES':            return 'Tapes / Nano tapes';
+    default:                 return '';
+  }
+}
+
 /**
  * POST /api/admin/orders/[id]/resend-invoice
- * Resend or create invoice for an order
+ * Vytvoří fakturu ve Fakturoid s položkami gramáž + cena/g
  */
 export async function POST(
   request: NextRequest,
@@ -33,41 +45,72 @@ export async function POST(
       return NextResponse.json({ error: 'Fakturoid není nakonfigurován' }, { status: 500 });
     }
 
-    // Build items for invoice
-    const invoiceItems = order.items.length > 0
-      ? order.items.map((item) => ({
-          name: item.nameSnapshot || `Položka`,
-          quantity: 1,
-          unitPrice: Number(item.lineTotal) || 0,
-          unit: 'ks',
-        }))
-      : [{
-          name: `Objednávka ${order.id.substring(0, 8)}`,
-          quantity: 1,
-          unitPrice: Number(order.total),
-          unit: 'ks',
-        }];
+    // ── Sestavení položek faktury ──────────────────────────────────────────
+    const invoiceItems: { name: string; quantity: number; unitPrice: number; unit: string }[] = [];
+
+    if (order.items.length > 0) {
+      for (const item of order.items) {
+        // Název: nameSnapshot nebo sku.name, doplníme odstín
+        const baseName =
+          (item.nameSnapshot && item.nameSnapshot !== 'undefined')
+            ? item.nameSnapshot
+            : item.sku?.name || 'Vlasy k prodloužení';
+
+        const shadePart = item.sku?.shadeName
+          ? ` — odstín ${item.sku.shadeName}`
+          : '';
+
+        const ending = endingLabel(item.ending);
+
+        const itemName = `${baseName}${shadePart}`.trim();
+
+        // Vlasy: quantity = gramy, unit = g, unitPrice = cena/g
+        invoiceItems.push({
+          name: itemName,
+          quantity: item.grams,
+          unitPrice: Number(item.pricePerGram) || 0,
+          unit: 'g',
+        });
+
+        // Výroba zakončení jako samostatná položka (pokud je)
+        if (ending && item.assemblyFeeTotal && Number(item.assemblyFeeTotal) > 0) {
+          invoiceItems.push({
+            name: `Výroba — ${ending}`,
+            quantity: item.grams,
+            unitPrice: Number(item.assemblyFeeCzk) || 0,
+            unit: 'g',
+          });
+        }
+      }
+    } else {
+      // Fallback — žádné položky v DB
+      invoiceItems.push({
+        name: `Objednávka č. ${order.orderNumber}`,
+        quantity: 1,
+        unitPrice: Number(order.total),
+        unit: 'ks',
+      });
+    }
 
     const isInstagram = order.channel === 'instagram';
 
     const result = await createInvoiceFromOrder({
-      orderId: order.id,
-      customerName: `${order.firstName} ${order.lastName}`.trim(),
-      customerEmail: order.email,
-      customerPhone: order.phone || undefined,
-      customerStreet: order.streetAddress || undefined,
-      customerCity: order.city || undefined,
-      customerZip: order.zipCode || undefined,
+      orderId: String(order.orderNumber), // číslo objednávky, ne UUID
+      customerName: `${order.firstName ?? ''} ${order.lastName ?? ''}`.trim() || 'Zákazník',
+      customerEmail: order.email ?? undefined,
+      customerPhone: order.phone ?? undefined,
+      customerStreet: order.streetAddress ?? undefined,
+      customerCity: order.city ?? undefined,
+      customerZip: order.zipCode ?? undefined,
       items: invoiceItems,
       shippingPrice: Number(order.shippingCost) || 0,
       shippingName: 'Doprava',
-      paymentMethod: order.paymentMethod || 'bank_transfer',
+      paymentMethod: order.paymentMethod ?? 'bank_transfer',
       isPaid: order.paymentStatus === 'paid',
-      proforma: isInstagram, // proforma for Instagram orders
+      proforma: isInstagram,
     });
 
     if (result.success) {
-      // Uložit Fakturoid ID zpět do objednávky, aby storno fungovalo
       await prisma.order.update({
         where: { id },
         data: {
