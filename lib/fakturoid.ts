@@ -395,6 +395,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
 
     // 5. Send invoice/proforma email via Fakturoid (includes QR code)
     //    Odesíláme pouze v čase 9:00–20:00 pražského času.
+    //    Mimo okno se email uloží jako pending a cron ho pošle v 9:00.
     let emailSent = false;
     if (order.customerEmail) {
       if (isWithinSendingHours()) {
@@ -405,12 +406,29 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
           });
           emailSent = true;
           console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
+          // Ujisti se že pending je false (pro případ opakování)
+          try {
+            const prisma = (await import('./prisma')).default;
+            await prisma.order.updateMany({
+              where: { fakturoidInvoiceId: String(invoice.id) },
+              data: { fakturoidEmailPending: false },
+            });
+          } catch { /* neblokující */ }
         } catch (deliverError: any) {
           console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
         }
       } else {
-        // Mimo odesílací okno — faktura vytvořena, email odložen
-        console.warn(`⏰ Fakturoid deliver SKIPPED (mimo 9–20 hod Praha) — invoice ${invoice.id} (${invoice.number}) pro ${order.customerEmail}. Pošli ručně přes admin nebo cron.`);
+        // Mimo odesílací okno — uloží se jako pending, cron pošle v 9:00
+        console.warn(`⏰ Fakturoid email odložen (mimo 9–20 Praha) — invoice ${invoice.id} (${invoice.number}) pro ${order.customerEmail}`);
+        try {
+          const prisma = (await import('./prisma')).default;
+          await prisma.order.updateMany({
+            where: { fakturoidInvoiceId: String(invoice.id) },
+            data: { fakturoidEmailPending: true },
+          });
+        } catch (e) {
+          console.error('Nepodařilo se uložit fakturoidEmailPending:', e);
+        }
       }
     } else {
       console.warn(`⚠️ Fakturoid deliver skipped — no customerEmail for invoice ${invoice.id}`);

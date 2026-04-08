@@ -110,10 +110,11 @@ model Order {
   coupon     Coupon? @relation(fields: [couponId], references: [id])
 
   // Fakturoid
-  fakturoidInvoiceId  String?  // Fakturoid invoice/proforma ID
-  fakturoidIsProforma Boolean  @default(false) // true when it's still a proforma
-  fakturoidInvoiceUrl String?  // public URL to view invoice
-  fakturoidInvoiceNum String?  // invoice number like "202615"
+  fakturoidInvoiceId    String?  // Fakturoid invoice/proforma ID
+  fakturoidIsProforma   Boolean  @default(false) // true when it's still a proforma
+  fakturoidInvoiceUrl   String?  // public URL to view invoice
+  fakturoidInvoiceNum   String?  // invoice number like "202615"
+  fakturoidEmailPending Boolean  @default(false) // true = faktura vytvořena, email čeká na odesílací okno
 
   // Tracking
   trackingNumber String?
