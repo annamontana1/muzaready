@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import SimilarFromOtherTiers from '@/components/SimilarFromOtherTiers';
 
 type FilterState = {
-  colorType: '' | 'nebarvene' | 'barvene';
+  colorType: '' | 'nebarvene' | 'barvene' | 'nebarvene_svetle';
   shades: number[];
   structures: string[];
   lengths: number[];
@@ -124,7 +124,7 @@ export default function PlatinumEditionTierPage() {
     }));
   };
 
-  const setColorType = (ct: '' | 'nebarvene' | 'barvene') => {
+  const setColorType = (ct: '' | 'nebarvene' | 'barvene' | 'nebarvene_svetle') => {
     setFilters((prev) => ({ ...prev, colorType: ct }));
   };
 
@@ -185,11 +185,12 @@ export default function PlatinumEditionTierPage() {
           {/* Typ vlasu toggle */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-burgundy mb-3">Typ vlasu</label>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {([
                 { label: 'Všechny', value: '' as const },
-                { label: 'Nebarvené', value: 'nebarvene' as const },
-                { label: 'Barvené', value: 'barvene' as const },
+                { label: 'Nebarvené (odstíny 1–4)', value: 'nebarvene' as const },
+                { label: 'Barvené blond (5–10)', value: 'barvene' as const },
+                { label: 'Nebarvené přírodní (5–10)', value: 'nebarvene_svetle' as const },
               ]).map(({ label, value }) => (
                 <button
                   key={value}
@@ -204,6 +205,11 @@ export default function PlatinumEditionTierPage() {
                 </button>
               ))}
             </div>
+            {filters.colorType === 'nebarvene_svetle' && (
+              <p className="mt-3 text-xs text-text-mid italic">
+                Přírodní světlé vlasy v odstínech 5–10 — stejná cena jako barvené
+              </p>
+            )}
           </div>
 
           {/* Shades gallery */}
@@ -284,7 +290,7 @@ export default function PlatinumEditionTierPage() {
               <div className="flex flex-wrap gap-2">
                 {filters.colorType && (
                   <span className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {filters.colorType === 'nebarvene' ? 'Nebarvené' : 'Barvené'}
+                    {filters.colorType === 'nebarvene' ? 'Nebarvené (1–4)' : filters.colorType === 'barvene' ? 'Barvené blond (5–10)' : 'Nebarvené přírodní (5–10)'}
                   </span>
                 )}
                 {filters.shades.sort((a, b) => a - b).map((shade) => (

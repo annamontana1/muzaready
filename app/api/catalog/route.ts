@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category') as ProductCategory | null;
     const tier = searchParams.get('tier') as ProductTier | null;
-    const colorType = searchParams.get('colorType') as 'barvene' | 'nebarvene' | null;
+    const colorType = searchParams.get('colorType') as 'barvene' | 'nebarvene' | 'nebarvene_svetle' | null;
 
     const products = await getCatalogProducts(category || undefined, tier || undefined, colorType || undefined);
 

@@ -154,6 +154,12 @@ export default function BabyShadesTierPage() {
           >
             Jemné dětské nebarvené vlasy v přirozených odstínech.
           </motion.p>
+          <motion.div variants={fadeInUp} transition={{ duration: 0.6, delay: 0.2 }}>
+            <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-light" style={{ background: 'var(--beige)', color: 'var(--text-mid)' }}>
+              <span className="block w-4 h-px" style={{ background: 'var(--accent)' }} />
+              Vždy nebarvené — přírodní odstíny
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Filter Bar */}

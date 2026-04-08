@@ -19,14 +19,14 @@ const tiers = [
   {
     name: 'Platinum Edition',
     href: '/vlasy-k-prodlouzeni/platinum-edition',
-    description: 'Exkluzivní culíky v limitované edici.',
+    description: 'Exkluzivní culíky — nebarvené (1–4), barvené blond (5–10) nebo nebarvené přírodní (5–10).',
     note: 'Limitovaná edice · nejvyšší kvalita',
   },
   {
     name: 'Baby Shades',
     href: '/vlasy-k-prodlouzeni/baby-shades',
     description: 'Jemné dětské vlasy v přirozených odstínech.',
-    note: 'Přirozené odstíny · ultra jemná textura',
+    note: 'Vždy nebarvené · přírodní odstíny',
   },
 ];
 

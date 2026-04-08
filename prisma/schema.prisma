@@ -193,6 +193,7 @@ model Sku {
   shadeHex         String?
   shadeRangeStart  Int?
   shadeRangeEnd    Int?
+  isDyed           Boolean           @default(false) // true = barvené (dyed), false = nebarvené (natural)
   lengthCm         Int?
   structure        String?
   ending           String?

@@ -139,7 +139,7 @@ function createSlug(
 export async function getCatalogProducts(
   categoryParam?: ProductCategory,
   tier?: ProductTier,
-  colorType?: 'barvene' | 'nebarvene'
+  colorType?: 'barvene' | 'nebarvene' | 'nebarvene_svetle'
 ): Promise<Product[]> {
   const where: any = {
     isListed: true,
@@ -174,12 +174,17 @@ export async function getCatalogProducts(
     }
   }
 
-  // Filtrování podle colorType (barvene/nebarvene)
+  // Filtrování podle colorType (barvene/nebarvene/nebarvene_svetle)
   if (colorType) {
     if (colorType === 'nebarvene') {
       where.shade = { in: ['1', '2', '3', '4'] };
     } else if (colorType === 'barvene') {
       where.shade = { in: ['5', '6', '7', '8', '9', '10'] };
+      where.isDyed = true;
+    } else if (colorType === 'nebarvene_svetle') {
+      // Nebarvené světlé (odstíny 5-10, ale přírodní — nedybarvené)
+      where.shade = { in: ['5', '6', '7', '8', '9', '10'] };
+      where.isDyed = false;
     }
   }
 
