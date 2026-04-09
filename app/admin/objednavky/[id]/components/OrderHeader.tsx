@@ -170,7 +170,11 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
   const [updating, setUpdating] = useState(false);
   const [showCaptureModal, setShowCaptureModal] = useState(false);
   const [showShipmentModal, setShowShipmentModal] = useState(false);
+  const [localPaymentStatus, setLocalPaymentStatus] = useState<string | null>(null);
   const { showToast } = useToast();
+
+  // Effective payment status: prefer local optimistic state
+  const effectivePaymentStatus = localPaymentStatus ?? order.paymentStatus;
 
   const handleMarkAsPaid = async () => {
     if (updating) return;
@@ -193,7 +197,8 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
         throw new Error(errorData.error || 'Failed to update payment status');
       }
 
-      const updatedOrder = await response.json();
+      await response.json();
+      setLocalPaymentStatus('paid');
       showToast('Objednávka byla označena jako zaplaceno', 'success');
       onStatusChange();
     } catch (error) {
@@ -207,11 +212,6 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
   const handleMarkAsUnpaid = async () => {
     if (updating) return;
 
-    // Potvrzení před změnou zpět na nezaplaceno
-    if (!confirm('Opravdu chceš označit tuto objednávku jako nezaplaceno? Tato akce vrátí status platby zpět.')) {
-      return;
-    }
-
     setUpdating(true);
     try {
       const response = await fetch(`/api/admin/orders/${order.id}`, {
@@ -221,7 +221,7 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
         },
         body: JSON.stringify({
           paymentStatus: 'unpaid',
-          orderStatus: order.orderStatus === 'completed' ? 'pending' : order.orderStatus === 'shipped' ? 'pending' : order.orderStatus === 'processing' ? 'pending' : order.orderStatus,
+          orderStatus: ['completed', 'shipped', 'processing'].includes(order.orderStatus) ? 'pending' : order.orderStatus,
         }),
       });
 
@@ -230,7 +230,8 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
         throw new Error(errorData.error || 'Failed to update payment status');
       }
 
-      const updatedOrder = await response.json();
+      await response.json();
+      setLocalPaymentStatus('unpaid');
       showToast('Objednávka byla označena jako nezaplaceno', 'success');
       onStatusChange();
     } catch (error) {
@@ -367,8 +368,8 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
           <span className={`px-4 py-2 rounded-full text-sm font-medium ${getOrderStatusColor(order.orderStatus)}`}>
             {getOrderStatusLabel(order.orderStatus)}
           </span>
-          <span className={`px-4 py-2 rounded-full text-sm font-medium ${getPaymentStatusColor(order.paymentStatus)}`}>
-            {getPaymentStatusLabel(order.paymentStatus)}
+          <span className={`px-4 py-2 rounded-full text-sm font-medium ${getPaymentStatusColor(effectivePaymentStatus)}`}>
+            {getPaymentStatusLabel(effectivePaymentStatus)}
           </span>
           <span className={`px-4 py-2 rounded-full text-sm font-medium ${getDeliveryStatusColor(order.deliveryStatus)}`}>
             {getDeliveryStatusLabel(order.deliveryStatus)}
@@ -379,9 +380,9 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
       <div className="flex gap-3 flex-wrap">
         <button
           onClick={handleMarkAsPaid}
-          disabled={updating || order.paymentStatus === 'paid'}
+          disabled={updating || effectivePaymentStatus === 'paid'}
           className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.paymentStatus === 'paid'
+            updating || effectivePaymentStatus === 'paid'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'bg-blue-600 hover:bg-blue-700 text-white'
           }`}
@@ -391,9 +392,9 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
 
         <button
           onClick={handleMarkAsUnpaid}
-          disabled={updating || order.paymentStatus === 'unpaid'}
+          disabled={updating || effectivePaymentStatus === 'unpaid'}
           className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.paymentStatus === 'unpaid'
+            updating || effectivePaymentStatus === 'unpaid'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'bg-orange-600 hover:bg-orange-700 text-white'
           }`}
