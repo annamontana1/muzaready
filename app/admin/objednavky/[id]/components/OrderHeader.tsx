@@ -167,179 +167,146 @@ const getDeliveryStatusColor = (status: string) => {
 };
 
 export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps) {
-  const [updating, setUpdating] = useState(false);
+  // Per-action loading state — prevents one slow request from disabling ALL buttons
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [showCaptureModal, setShowCaptureModal] = useState(false);
   const [showShipmentModal, setShowShipmentModal] = useState(false);
   const [localPaymentStatus, setLocalPaymentStatus] = useState<string | null>(null);
+  const [localDeliveryStatus, setLocalDeliveryStatus] = useState<string | null>(null);
+  const [localOrderStatus, setLocalOrderStatus] = useState<string | null>(null);
   const { showToast } = useToast();
 
-  // Effective payment status: prefer local optimistic state
+  // Effective statuses — prefer local optimistic state over stale server data
   const effectivePaymentStatus = localPaymentStatus ?? order.paymentStatus;
+  const effectiveDeliveryStatus = localDeliveryStatus ?? order.deliveryStatus;
+  const effectiveOrderStatus = localOrderStatus ?? order.orderStatus;
+
+  async function apiUpdate(action: string, body: Record<string, string>) {
+    setLoadingAction(action);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Chyba serveru' }));
+        throw new Error(err.error || 'Chyba serveru');
+      }
+      return await res.json();
+    } finally {
+      setLoadingAction(null);
+    }
+  }
 
   const handleMarkAsPaid = async () => {
-    if (updating) return;
-
-    setUpdating(true);
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          paymentStatus: 'paid',
-          orderStatus: order.orderStatus === 'pending' ? 'processing' : order.orderStatus,
-        }),
+      await apiUpdate('paid', {
+        paymentStatus: 'paid',
+        orderStatus: order.orderStatus === 'pending' ? 'processing' : order.orderStatus,
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to update payment status' }));
-        throw new Error(errorData.error || 'Failed to update payment status');
-      }
-
-      await response.json();
       setLocalPaymentStatus('paid');
-      showToast('Objednávka byla označena jako zaplaceno', 'success');
+      if (order.orderStatus === 'pending') setLocalOrderStatus('processing');
+      showToast('Označeno jako zaplaceno ✓', 'success');
       onStatusChange();
-    } catch (error) {
-      console.error('Error updating payment status:', error);
-      showToast(error instanceof Error ? error.message : 'Chyba při aktualizaci stavu platby', 'error');
-    } finally {
-      setUpdating(false);
+    } catch (e: any) {
+      showToast(e.message || 'Chyba', 'error');
     }
   };
 
   const handleMarkAsUnpaid = async () => {
-    if (updating) return;
-
-    setUpdating(true);
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          paymentStatus: 'unpaid',
-          orderStatus: ['completed', 'shipped', 'processing'].includes(order.orderStatus) ? 'pending' : order.orderStatus,
-        }),
+      const newOrderStatus = ['completed', 'shipped', 'processing'].includes(effectiveOrderStatus) ? 'pending' : effectiveOrderStatus;
+      await apiUpdate('unpaid', {
+        paymentStatus: 'unpaid',
+        orderStatus: newOrderStatus,
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to update payment status' }));
-        throw new Error(errorData.error || 'Failed to update payment status');
-      }
-
-      await response.json();
       setLocalPaymentStatus('unpaid');
-      showToast('Objednávka byla označena jako nezaplaceno', 'success');
+      setLocalOrderStatus(newOrderStatus);
+      showToast('Označeno jako nezaplaceno ✓', 'success');
       onStatusChange();
-    } catch (error) {
-      console.error('Error updating payment status:', error);
-      showToast(error instanceof Error ? error.message : 'Chyba při aktualizaci stavu platby', 'error');
-    } finally {
-      setUpdating(false);
+    } catch (e: any) {
+      showToast(e.message || 'Chyba', 'error');
     }
   };
 
   const handleMarkAsShipped = async () => {
-    if (updating) return;
-
-    setUpdating(true);
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          deliveryStatus: 'shipped',
-          orderStatus: order.orderStatus === 'processing' ? 'shipped' : order.orderStatus,
-        }),
+      await apiUpdate('shipped', {
+        deliveryStatus: 'shipped',
+        orderStatus: order.orderStatus === 'processing' ? 'shipped' : order.orderStatus,
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to update delivery status' }));
-        throw new Error(errorData.error || 'Failed to update delivery status');
-      }
-
-      const updatedOrder = await response.json();
-      showToast('Objednávka byla označena jako odeslána', 'success');
+      setLocalDeliveryStatus('shipped');
+      if (order.orderStatus === 'processing') setLocalOrderStatus('shipped');
+      showToast('Označeno jako odesláno ✓', 'success');
       onStatusChange();
-    } catch (error) {
-      console.error('Error updating delivery status:', error);
-      showToast(error instanceof Error ? error.message : 'Chyba při aktualizaci stavu dopravy', 'error');
-    } finally {
-      setUpdating(false);
+    } catch (e: any) {
+      showToast(e.message || 'Chyba', 'error');
     }
   };
 
   const handleMarkAsDelivered = async () => {
-    if (updating) return;
-
-    setUpdating(true);
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          deliveryStatus: 'delivered',
-          orderStatus: 'completed',
-        }),
+      await apiUpdate('delivered', {
+        deliveryStatus: 'delivered',
+        orderStatus: 'completed',
       });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to update delivery status' }));
-        throw new Error(errorData.error || 'Failed to update delivery status');
-      }
-
-      const updatedOrder = await response.json();
-      showToast('Objednávka byla označena jako doručena', 'success');
+      setLocalDeliveryStatus('delivered');
+      setLocalOrderStatus('completed');
+      showToast('Označeno jako doručeno ✓', 'success');
       onStatusChange();
-    } catch (error) {
-      console.error('Error updating delivery status:', error);
-      showToast(error instanceof Error ? error.message : 'Chyba při aktualizaci stavu doručení', 'error');
-    } finally {
-      setUpdating(false);
+    } catch (e: any) {
+      showToast(e.message || 'Chyba', 'error');
     }
   };
 
   const handleMarkAsRefunded = async () => {
-    if (updating) return;
-
-    if (!confirm('Vrácení zboží — zákazník vrátil vlasy. Objednávka bude odečtena z tržeb. Pokračovat?')) {
-      return;
-    }
-
-    setUpdating(true);
     try {
-      const response = await fetch(`/api/admin/orders/${order.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          paymentStatus: 'refunded',
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to update payment status' }));
-        throw new Error(errorData.error || 'Failed to update payment status');
-      }
-
-      const updatedOrder = await response.json();
-      showToast('Vrácení zboží zaznamenáno — objednávka odečtena z tržeb', 'success');
+      await apiUpdate('refunded', { paymentStatus: 'refunded' });
+      setLocalPaymentStatus('refunded');
+      showToast('Vrácení zboží zaznamenáno ✓', 'success');
       onStatusChange();
-    } catch (error) {
-      console.error('Error updating payment status:', error);
-      showToast(error instanceof Error ? error.message : 'Chyba při aktualizaci stavu platby', 'error');
-    } finally {
-      setUpdating(false);
+    } catch (e: any) {
+      showToast(e.message || 'Chyba', 'error');
     }
   };
+
+  const handleCancel = async () => {
+    try {
+      await apiUpdate('cancel', { orderStatus: 'cancelled', paymentStatus: 'refunded' });
+      setLocalOrderStatus('cancelled');
+      setLocalPaymentStatus('refunded');
+      showToast('Objednávka stornována ✓', 'success');
+      onStatusChange();
+    } catch (e: any) {
+      showToast(e.message || 'Chyba při stornování', 'error');
+    }
+  };
+
+  function btn(
+    label: string,
+    action: string,
+    onClick: () => void,
+    disabled: boolean,
+    color: string
+  ) {
+    const isLoading = loadingAction === action;
+    const isDisabled = disabled || loadingAction !== null;
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={isDisabled}
+        className={`px-4 py-2 rounded font-medium transition ${
+          isDisabled
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : `${color} text-white cursor-pointer`
+        }`}
+      >
+        {isLoading ? '⏳...' : label}
+      </button>
+    );
+  }
 
   const shortId = String(order.orderNumber);
 
@@ -364,131 +331,54 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
           </p>
         </div>
 
-        <div className="flex gap-2">
-          <span className={`px-4 py-2 rounded-full text-sm font-medium ${getOrderStatusColor(order.orderStatus)}`}>
-            {getOrderStatusLabel(order.orderStatus)}
+        <div className="flex gap-2 flex-wrap justify-end">
+          <span className={`px-4 py-2 rounded-full text-sm font-medium ${getOrderStatusColor(effectiveOrderStatus)}`}>
+            {getOrderStatusLabel(effectiveOrderStatus)}
           </span>
           <span className={`px-4 py-2 rounded-full text-sm font-medium ${getPaymentStatusColor(effectivePaymentStatus)}`}>
             {getPaymentStatusLabel(effectivePaymentStatus)}
           </span>
-          <span className={`px-4 py-2 rounded-full text-sm font-medium ${getDeliveryStatusColor(order.deliveryStatus)}`}>
-            {getDeliveryStatusLabel(order.deliveryStatus)}
+          <span className={`px-4 py-2 rounded-full text-sm font-medium ${getDeliveryStatusColor(effectiveDeliveryStatus)}`}>
+            {getDeliveryStatusLabel(effectiveDeliveryStatus)}
           </span>
         </div>
       </div>
 
       <div className="flex gap-3 flex-wrap">
-        <button
-          onClick={handleMarkAsPaid}
-          disabled={updating || effectivePaymentStatus === 'paid'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || effectivePaymentStatus === 'paid'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
-          }`}
-        >
-          {updating ? 'Aktualizuji...' : 'Označit jako zaplaceno'}
-        </button>
+        {btn('Označit jako zaplaceno', 'paid', handleMarkAsPaid,
+          effectivePaymentStatus === 'paid',
+          'bg-blue-600 hover:bg-blue-700')}
 
-        <button
-          onClick={handleMarkAsUnpaid}
-          disabled={updating || effectivePaymentStatus === 'unpaid'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || effectivePaymentStatus === 'unpaid'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-orange-600 hover:bg-orange-700 text-white'
-          }`}
-        >
-          {updating ? 'Aktualizuji...' : 'Označit jako nezaplaceno'}
-        </button>
+        {btn('Označit jako nezaplaceno', 'unpaid', handleMarkAsUnpaid,
+          effectivePaymentStatus === 'unpaid',
+          'bg-orange-600 hover:bg-orange-700')}
 
-        <button
-          onClick={handleMarkAsShipped}
-          disabled={updating || order.deliveryStatus === 'shipped' || order.deliveryStatus === 'delivered'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.deliveryStatus === 'shipped' || order.deliveryStatus === 'delivered'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 text-white'
-          }`}
-        >
-          {updating ? 'Aktualizuji...' : 'Označit jako odesláno'}
-        </button>
+        {btn('Označit jako odesláno', 'shipped', handleMarkAsShipped,
+          effectiveDeliveryStatus === 'shipped' || effectiveDeliveryStatus === 'delivered',
+          'bg-blue-600 hover:bg-blue-700')}
 
-        <button
-          onClick={() => setShowCaptureModal(true)}
-          disabled={updating || order.paymentStatus === 'paid'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.paymentStatus === 'paid'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          }`}
-        >
-          {updating ? 'Aktualizuji...' : 'Zaznamenat platbu'}
-        </button>
+        {btn('Zaznamenat platbu', 'capture', () => setShowCaptureModal(true),
+          effectivePaymentStatus === 'paid',
+          'bg-green-600 hover:bg-green-700')}
 
-        <button
-          onClick={() => setShowShipmentModal(true)}
-          disabled={updating || order.deliveryStatus === 'shipped' || order.deliveryStatus === 'delivered'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.deliveryStatus === 'shipped' || order.deliveryStatus === 'delivered'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-purple-600 hover:bg-purple-700 text-white'
-          }`}
-        >
-          {updating ? 'Aktualizuji...' : 'Vytvořit zásilku'}
-        </button>
+        {btn('Vytvořit zásilku', 'shipment', () => setShowShipmentModal(true),
+          effectiveDeliveryStatus === 'shipped' || effectiveDeliveryStatus === 'delivered',
+          'bg-purple-600 hover:bg-purple-700')}
 
-        <button
-          onClick={handleMarkAsDelivered}
-          disabled={updating || order.deliveryStatus !== 'shipped' || order.deliveryStatus === 'delivered'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.deliveryStatus !== 'shipped' || order.deliveryStatus === 'delivered'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-green-600 hover:bg-green-700 text-white'
-          }`}
-        >
-          {updating ? 'Aktualizuji...' : 'Označit jako doručeno'}
-        </button>
+        {btn('Označit jako doručeno', 'delivered', handleMarkAsDelivered,
+          effectiveDeliveryStatus !== 'shipped',
+          'bg-green-600 hover:bg-green-700')}
 
         {/* Separator */}
         <div className="w-px bg-gray-300 mx-1" />
 
-        <button
-          onClick={async () => {
-            if (!confirm('Stornovat objednávku? Odečte se z tržeb a bude označena jako zrušená.')) return;
-            setUpdating(true);
-            try {
-              await fetch(`/api/admin/orders/${order.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ orderStatus: 'cancelled', paymentStatus: 'refunded' }),
-              });
-              showToast('Objednávka stornována — odečtena z tržeb', 'success');
-              onStatusChange();
-            } catch { showToast('Chyba při stornování', 'error'); }
-            finally { setUpdating(false); }
-          }}
-          disabled={updating || order.orderStatus === 'cancelled'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.orderStatus === 'cancelled'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-red-600 hover:bg-red-700 text-white'
-          }`}
-        >
-          ❌ Stornovat
-        </button>
+        {btn('❌ Stornovat', 'cancel', handleCancel,
+          effectiveOrderStatus === 'cancelled',
+          'bg-red-600 hover:bg-red-700')}
 
-        <button
-          onClick={handleMarkAsRefunded}
-          disabled={updating || order.paymentStatus === 'refunded'}
-          className={`px-4 py-2 rounded font-medium transition ${
-            updating || order.paymentStatus === 'refunded'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-orange-600 hover:bg-orange-700 text-white'
-          }`}
-        >
-          🔄 Vrácení zboží
-        </button>
+        {btn('🔄 Vrácení zboží', 'refunded', handleMarkAsRefunded,
+          effectivePaymentStatus === 'refunded',
+          'bg-orange-600 hover:bg-orange-700')}
       </div>
 
       <CapturePaymentModal
