@@ -28,6 +28,7 @@ export interface Order {
   deliveryStatus: string;
   channel: string;
   naklad: number | null;
+  notesInternal: string | null;
   tags: string[];
   riskScore: number;
   itemCount: number;

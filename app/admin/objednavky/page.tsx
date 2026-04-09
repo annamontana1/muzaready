@@ -2,6 +2,61 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+// Inline editable Poznámka/Záloha cell
+function PoznamkaCell({
+  orderId,
+  note,
+  onUpdate,
+}: {
+  orderId: string;
+  note: string | null;
+  onUpdate: (v: string | null) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(note || '');
+
+  const save = async () => {
+    const trimmed = value.trim() || null;
+    await fetch(`/api/admin/orders/${orderId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ notesInternal: trimmed }),
+    });
+    onUpdate(trimmed);
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={save}
+        onKeyDown={(e) => { if (e.key === 'Enter') save(); if (e.key === 'Escape') setEditing(false); }}
+        autoFocus
+        placeholder="záloha, poznámka..."
+        className="w-40 px-2 py-1 border border-amber-400 rounded text-sm focus:outline-none focus:ring-1 focus:ring-amber-400"
+      />
+    );
+  }
+
+  return (
+    <span
+      onClick={() => setEditing(true)}
+      className="cursor-pointer block max-w-[160px] truncate"
+      title={note || ''}
+    >
+      {note ? (
+        <span className="text-amber-700 font-medium text-xs bg-amber-50 px-2 py-0.5 rounded">{note}</span>
+      ) : (
+        <span className="text-stone-300 text-xs hover:text-stone-500">+ poznámka</span>
+      )}
+    </span>
+  );
+}
+
 // Inline editable Náklad cell (owner only)
 function NakladCell({
   orderId,
@@ -136,6 +191,13 @@ export default function AdminOrdersPage() {
   const totalItems = data?.total || 0;
 
   // Update naklad optimistically in local React Query cache
+  const updateOrderNote = (orderId: string, note: string | null) => {
+    queryClient.setQueryData(orderKeys.lists(), (old: any) => {
+      if (!old?.orders) return old;
+      return { ...old, orders: old.orders.map((o: Order) => o.id === orderId ? { ...o, notesInternal: note } : o) };
+    });
+  };
+
   const updateOrderNaklad = (orderId: string, naklad: number | null) => {
     queryClient.setQueryData(
       orderKeys.list({
@@ -622,27 +684,8 @@ export default function AdminOrdersPage() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
                 Zákazník
               </th>
-              <th
-                onClick={() => handleSort('email')}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase cursor-pointer hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-center gap-1">
-                  <span className={sortField === 'email' ? 'font-bold text-blue-600' : ''}>
-                    Email
-                  </span>
-                  {sortField === 'email' ? (
-                    sortDirection === 'desc' ? (
-                      <span className="text-blue-600">↓</span>
-                    ) : (
-                      <span className="text-blue-600">↑</span>
-                    )
-                  ) : (
-                    <span className="text-gray-400">⇅</span>
-                  )}
-                </div>
-              </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                Položky
+                Záloha / Poznámka
               </th>
               <th
                 onClick={() => handleSort('total')}
@@ -724,8 +767,13 @@ export default function AdminOrdersPage() {
                   </div>
                   <div className="text-xs text-gray-400 font-mono">#{String(order.orderNumber)}</div>
                 </td>
-                <td className="px-6 py-4 text-sm">{order.email}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{order.itemCount}</td>
+                <td className="px-4 py-4">
+                  <PoznamkaCell
+                    orderId={order.id}
+                    note={order.notesInternal ?? null}
+                    onUpdate={(v) => updateOrderNote(order.id, v)}
+                  />
+                </td>
                 <td className="px-6 py-4 text-sm font-medium">
                   {formatPrice(order.total)}
                 </td>
