@@ -499,7 +499,7 @@ export default function OrderDetailsPage() {
       </div>
 
       {activeTab === 'customer' && <CustomerSection order={order} />}
-      {activeTab === 'items' && <ItemsSection order={order} />}
+      {activeTab === 'items' && <ItemsSection order={order} onRefresh={handleStatusChange} />}
       {activeTab === 'payment' && <PaymentSection order={order} />}
       {activeTab === 'invoice' && <InvoiceSection order={order} onRefresh={handleStatusChange} />}
       {activeTab === 'shipments' && <ShipmentHistory order={order} onStatusChange={handleStatusChange} />}
