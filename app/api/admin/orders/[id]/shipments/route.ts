@@ -102,20 +102,63 @@ export async function POST(
 
       if (invalidItems.length > 0) {
         return NextResponse.json(
-          {
-            error: `Invalid item IDs: ${invalidItems.join(', ')}`,
-          },
+          { error: `Invalid item IDs: ${invalidItems.join(', ')}` },
           { status: 400 }
         );
       }
     }
 
+    let finalTrackingNumber = trackingNumber;
+
+    // ── Auto-create Zásilkovna packet if carrier is zasilkovna and no tracking number provided ──
+    if (carrier === 'zasilkovna' && !trackingNumber) {
+      const packetaPointId = (order as any).packetaPointId;
+      if (!packetaPointId) {
+        return NextResponse.json(
+          { error: 'Objednávka nemá přiřazené výdejní místo Zásilkovny (packetaPointId). Zadejte tracking číslo ručně.' },
+          { status: 400 }
+        );
+      }
+
+      const { createPacket } = await import('@/lib/zasilkovna');
+      const result = await createPacket(
+        String((order as any).orderNumber),
+        {
+          firstName: order.firstName,
+          lastName: order.lastName,
+          email: order.email,
+          phone: order.phone || '',
+        },
+        parseInt(packetaPointId, 10),
+        order.total,
+        0.5, // weight kg
+        0,   // COD — prepaid
+        notes || undefined
+      );
+
+      if (!result.success) {
+        return NextResponse.json(
+          { error: `Zásilkovna: ${result.error}` },
+          { status: 502 }
+        );
+      }
+
+      finalTrackingNumber = result.barcode!;
+    }
+
+    if (!finalTrackingNumber) {
+      return NextResponse.json(
+        { error: 'Sledovací číslo je povinné' },
+        { status: 400 }
+      );
+    }
+
     // Build shipment data
     const shipmentData = {
       carrier,
-      trackingNumber,
+      trackingNumber: finalTrackingNumber,
       shippedAt: new Date(),
-      items: items || order.items.map((item) => item.id), // Ship all items by default
+      items: items || order.items.map((item) => item.id),
       notes,
     };
 
@@ -125,8 +168,8 @@ export async function POST(
       data: {
         deliveryStatus: 'shipped',
         lastStatusChangeAt: new Date(),
-        trackingNumber: trackingNumber,
-        carrier: carrier, // Save carrier to database
+        trackingNumber: finalTrackingNumber,
+        carrier: carrier,
         shippedAt: new Date(),
       },
       include: {
