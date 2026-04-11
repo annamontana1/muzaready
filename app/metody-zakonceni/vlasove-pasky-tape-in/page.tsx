@@ -78,7 +78,6 @@ const KOLEKCE = [
     popis:
       'Východoevropské panenské vlasy z Indie, Kambodže a Uzbekistánu. Pevnější struktura, přirozený lesk, drží tvar. Každý culík pochází z jedné hlavy — originální barva, nikdy nemíchané. Ideální pro tónování i odbarvování.',
     pro: 'Ženy s hustšími vlasy, které hledají spolehlivou kvalitu za rozumnou cenu.',
-    color: 'bg-stone-50 border-stone-200',
   },
   {
     nazev: 'Luxe Nebarvené',
@@ -86,7 +85,6 @@ const KOLEKCE = [
     popis:
       'Luxusní evropské vlasy z Ukrajiny, Polska a Běloruska. Jemnější než Standard, ale pevnější než Platinum — ideální střed. Nadýchaný objem, husté konce, přirozené odstíny 1–4. Každý culík z jedné hlavy.',
     pro: 'Ženy se středně hustými vlasy, které chtějí objem bez těžkého pocitu a plánují barvit.',
-    color: 'bg-amber-50 border-amber-200',
   },
   {
     nazev: 'Platinum Edition Nebarvené',
@@ -94,7 +92,6 @@ const KOLEKCE = [
     popis:
       'Panenské vlasy výhradně z přímého výkupu v České republice a Slovensku. Mimořádná hebkost, lesk a hustota konců. Nejjemnější textura — od extra jemných rovných po přirozenou strukturu. Každý culík prochází individuální kontrolou.',
     pro: 'Ženy s jemnými vlasy, které vyžadují maximální kvalitu a plánují zesvětlovat.',
-    color: 'bg-purple-50 border-purple-200',
   },
   {
     nazev: 'Standard Barvené',
@@ -102,7 +99,6 @@ const KOLEKCE = [
     popis:
       'Vlasy z Indie, Kambodže a Kazachstánu šetrně odbarvené a tónované v naší vlastní pražské barvírně. Ruční třídění a kontrola kvality. Pevnější struktura, přirozený lesk, skvěle drží tvar.',
     pro: 'Ženy s hustšími vlasy, které chtějí obměňovat look a držet rozumný rozpočet.',
-    color: 'bg-stone-50 border-stone-200',
   },
   {
     nazev: 'Luxe Barvené',
@@ -110,7 +106,6 @@ const KOLEKCE = [
     popis:
       'Evropské vlasy z Ukrajiny a Polska ručně zesvětlené tak, aby si zachovaly pružnost a hebkost. Střední jemnost, husté konce, přirozený objem. Barveny postupně pod dohledem specialistů v naší pražské barvírně.',
     pro: 'Ženy se středně hustými nebo jemnějšími vlasy, které chtějí lesklé blond nebo hnědé pásky.',
-    color: 'bg-amber-50 border-amber-200',
   },
   {
     nazev: 'Platinum Edition Barvené',
@@ -118,7 +113,6 @@ const KOLEKCE = [
     popis:
       'Nejluxusnější odbarvované panenské vlasy z přímého výkupu v ČR. Každý culík zpracován individuálně pod dohledem odborníků v naší pražské barvírně — maximální lesk, hebkost a pružnost. Dlouhá životnost i po opakovaném přelepení.',
     pro: 'Ženy s jemnými až velmi jemnými vlasy, které hledají dokonalý blond vzhled s nejvyšší životností.',
-    color: 'bg-purple-50 border-purple-200',
   },
 ];
 
@@ -140,285 +134,367 @@ export default function TapeInPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="py-12 bg-soft-cream min-h-screen">
-        <div className="container mx-auto px-4 max-w-4xl">
+      {/* Hero sekce */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <nav className="text-sm mb-8 flex gap-2" style={{ color: 'var(--text-soft)' }}>
+            <Link href="/" className="hover:opacity-70 transition">Domů</Link>
+            <span>/</span>
+            <Link href="/metody-zakonceni" className="hover:opacity-70 transition">Metody zakončení</Link>
+            <span>/</span>
+            <span style={{ color: 'var(--burgundy)' }}>Vlasové pásky Tape-In</span>
+          </nav>
 
-          {/* Breadcrumb */}
-          <div className="text-sm text-text-soft mb-6">
-            <Link href="/" className="hover:text-burgundy">Domů</Link>
-            {' / '}
-            <Link href="/metody-zakonceni" className="hover:text-burgundy">Metody zakončení</Link>
-            {' / '}
-            <span className="text-burgundy">Vlasové pásky Tape-In</span>
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Metody zakončení</span>
           </div>
 
-          {/* H1 */}
-          <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-6 leading-tight">
+          <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-6" style={{ color: 'var(--text-dark)' }}>
             Vlasové pásky Tape-In Praha: pravé vlasy v 6 kolekcích, včetně kudrnatých
           </h1>
 
-          {/* TL;DR blok */}
-          <div className="bg-white border-l-4 border-burgundy rounded-xl p-6 mb-10 shadow-sm">
-            <p className="text-sm font-semibold text-burgundy uppercase tracking-wide mb-2">Stručně</p>
-            <p className="text-text-dark leading-relaxed">
+          <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }}>
+            <p className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal" style={{ color: 'var(--accent)' }}>
+              Stručně
+            </p>
+            <p className="leading-relaxed" style={{ color: 'var(--text-dark)' }}>
               Múza Hair Praha nabízí vlasové pásky tape-in z pravých slovanských vlasů — Standard, Luxe a Platinum, nebarvené i barvené v naší vlastní pražské barvírně. Pásky jsou dostupné v délkách 30–95 cm ve čtyřech strukturách: rovné, mírně vlnité, vlnité a <strong>kudrnaté</strong> — unikát na českém trhu. Výroba na zakázku trvá 14 dní, skladové varianty odesíláme ihned. Osobní výběr v showroomu Praha zdarma.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="space-y-12 text-text-mid">
-
-            {/* Jak to funguje */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Jak fungují vlasové pásky tape-in?</h2>
-              <p className="mb-4">
-                Vlasové pásky tape-in jsou jednou z nejšetrnějších metod prodloužení vlasů. Princip je jednoduchý: dva tenké prameny opatřené speciální lepicí páskou šířky <strong>2,8 cm</strong> se přiloží nad a pod přirozený vlas zákaznice a spojí do tzv. <strong>sendvičového spoje</strong>. Pásky drží pevně, jsou neviditelné i při rozepnutých vlasech a nevyžadují žádné tepelné ani chemické zpracování při aplikaci.
-              </p>
-              <p className="mb-4">
-                Jedno balení obsahuje <strong>20 pásků = 10 sendvičových spojů</strong>. Aplikace celé sady trvá zhruba 1–2 hodiny a pásky vydrží 6–10 týdnů, poté je nutné přelepení (repositioning). Při správné péči lze pásky používat opakovaně — kvalitní pásky z kolekcí Luxe a Platinum zvládnou 3–5 přelepení.
-              </p>
-              <div className="grid sm:grid-cols-3 gap-4 mt-6">
-                {[
-                  { icon: '🤝', title: 'Sendvičový spoj', text: '2 pásky + přirozený vlas = neviditelné spojení' },
-                  { icon: '⚡', title: 'Rychlá aplikace', text: '1–2 hodiny, bez tepla ani chemie' },
-                  { icon: '🔄', title: 'Opakované použití', text: '3–5 přelepení při správné péči' },
-                ].map((i) => (
-                  <div key={i.title} className="bg-white rounded-xl p-5 text-center shadow-sm">
-                    <div className="text-3xl mb-2">{i.icon}</div>
-                    <div className="font-semibold text-burgundy mb-1">{i.title}</div>
-                    <div className="text-sm text-text-mid">{i.text}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Struktury — kudrnaté unikát */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Čtyři struktury — včetně kudrnatých jako unikát na CZ trhu</h2>
-              <p className="mb-4">
-                Všechny naše vlasové pásky tape-in jsou dostupné ve čtyřech strukturách. Zatímco rovné a mírně vlnité pásky nabízí většina dodavatelů, <strong>kudrnaté vlasové pásky tape-in jsou v České republice dostupné jen ojediněle</strong> — a u nás je najdete ve všech délkách i kolekcích.
-              </p>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  { struktura: 'Rovné', popis: 'Klasická hladká textura, snadno splývá s přirozeně rovnými vlasy.' },
-                  { struktura: 'Mírně vlnité', popis: 'Přirozený pohyb vlasů, ideální pro každodenní styling.' },
-                  { struktura: 'Vlnité', popis: 'Výraznější vlna, bohatý objem, romantický look.' },
-                  {
-                    struktura: '✨ Kudrnaté',
-                    popis: 'Jedinečná struktura dostupná u mála výrobců v ČR. Vlasové pásky pro kudrnaté vlasy — splývají přirozeně s vaší texturou bez nutnosti rovnání.',
-                    highlight: true,
-                  },
-                ].map((s) => (
-                  <div
-                    key={s.struktura}
-                    className={`rounded-xl p-5 border ${s.highlight ? 'bg-burgundy/5 border-burgundy' : 'bg-white border-warm-beige'} shadow-sm`}
-                  >
-                    <div className={`font-semibold mb-1 ${s.highlight ? 'text-burgundy' : 'text-text-dark'}`}>{s.struktura}</div>
-                    <div className="text-sm text-text-mid">{s.popis}</div>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm text-text-mid italic">
-                Kudrnaté tape-in vlasy hledáte dlouho bez úspěchu? Napište nám — pomůžeme vám vybrat správnou strukturu a kolekci.
-              </p>
-            </section>
-
-            {/* Kolekce */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-2">6 kolekcí vlasových pásek — nebarvené i barvené</h2>
-              <p className="mb-6 text-text-mid">
-                Zákaznice si nejprve vybere kolekci vlasů, poté zakončení — vlasové pásky tape-in. Každý culík pochází od jednoho dárce a je ručně tříděn naším týmem v Praze. Vlasy od různých dárkyň nikdy nemícháme.
-              </p>
-              <div className="space-y-4">
-                {KOLEKCE.map((k) => (
-                  <div key={k.nazev} className={`rounded-xl p-6 border ${k.color}`}>
-                    <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
-                      <h3 className="font-semibold text-text-dark text-lg">{k.nazev}</h3>
-                      <span className="text-xs bg-white px-3 py-1 rounded-full border border-warm-beige text-text-mid">{k.tag}</span>
-                    </div>
-                    <p className="text-sm text-text-mid mb-2">{k.popis}</p>
-                    <p className="text-xs text-text-soft"><strong>Pro koho:</strong> {k.pro}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-sm text-text-soft italic">Baby Shades kolekce — popis bude doplněn. Dostupná ve vybraných délkách a strukturách.</p>
-            </section>
-
-            {/* Gramáže */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Gramáže vlasových pásek dle délky</h2>
-              <p className="mb-4">
-                Každé balení obsahuje <strong>20 pásků (10 sendvičových spojů)</strong>. Níže najdete přesné gramáže pro délky 30–95 cm.
-              </p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-burgundy text-white">
-                      <th className="px-4 py-3 text-left font-semibold">Délka</th>
-                      <th className="px-4 py-3 text-left font-semibold">Gramáž / balení (20 ks)</th>
-                      <th className="px-4 py-3 text-left font-semibold">Sendvičových spojů</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {GRAMAZE.map((r, i) => (
-                      <tr key={r.delka} className={i % 2 === 0 ? 'bg-white' : 'bg-soft-cream'}>
-                        <td className="px-4 py-3 font-medium">{r.delka} cm</td>
-                        <td className="px-4 py-3">{r.gramaz} g</td>
-                        <td className="px-4 py-3 text-text-soft">10</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-xs text-text-soft mt-2">Gramáže jsou přibližné. Přesná gramáž může mírně kolísat v závislosti na kolekci a struktuře vlasů.</p>
-            </section>
-
-            {/* Kolik balení */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Kolik balení potřebuji?</h2>
-              <p className="mb-4">Počet balení závisí na hustotě vašich přirozených vlasů a požadované délce.</p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-burgundy text-white">
-                      <th className="px-4 py-3 text-left font-semibold">Typ vlasů</th>
-                      <th className="px-4 py-3 text-center font-semibold">Krátké (30–45 cm)</th>
-                      <th className="px-4 py-3 text-center font-semibold">Střední (50–65 cm)</th>
-                      <th className="px-4 py-3 text-center font-semibold">Dlouhé (70–95 cm)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {BALENI.map((r, i) => (
-                      <tr key={r.typ} className={i % 2 === 0 ? 'bg-white' : 'bg-soft-cream'}>
-                        <td className="px-4 py-3 font-medium">{r.typ}</td>
-                        <td className="px-4 py-3 text-center">{r.kratke} bal.</td>
-                        <td className="px-4 py-3 text-center">{r.stredni} bal.</td>
-                        <td className="px-4 py-3 text-center">{r.dlouhe} bal.</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-xs text-text-soft mt-2">Orientační hodnoty. Přesný počet doporučíme při osobní konzultaci v showroomu Praha.</p>
-            </section>
-
-            {/* Výroba na zakázku */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Výroba vlasových pásek ze zákazničina vlastního copu</h2>
-              <p className="mb-4">
-                Máte vlastní culík pravých vlasů a chcete ho proměnit ve vlasové pásky tape-in na míru? Tato služba je u nás velmi oblíbená. Váš culík zpracujeme do pásků přesně odpovídajících vaší délce, gramáži a textuře — výroba trvá <strong>14 dní</strong> od převzetí materiálu.
-              </p>
-              <p>
-                Skladové varianty pásků v dostupných délkách a strukturách odesíláme <strong>ihned</strong>. Výroba pásků na zakázku (z culíku nebo ve specifické délce/barvě) trvá 14 pracovních dní.
-              </p>
-            </section>
-
-            {/* Jak objednat */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-4">Jak objednat vlasové pásky tape-in Praha</h2>
-              <div className="grid sm:grid-cols-3 gap-4">
-                {[
-                  {
-                    icon: '🛍️',
-                    title: 'Online e-shop',
-                    text: 'Vyberte kolekci vlasů, zvolte zakončení Vlasové pásky, délku a strukturu. Skladové varianty ihned, zakázka 14 dní.',
-                  },
-                  {
-                    icon: '🏡',
-                    title: 'Showroom Praha',
-                    text: 'Přijďte si vlasy osobně prohlédnout, osahat a vybrat přesný odstín a strukturu. Konzultace zdarma, termín předem.',
-                  },
-                  {
-                    icon: '💼',
-                    title: 'B2B — salony',
-                    text: 'Spolupracujeme se salony a extension technicians po celé ČR. Velkoobchodní ceny, komisní prodej, osobní odběr v Praze.',
-                  },
-                ].map((o) => (
-                  <div key={o.title} className="bg-white rounded-xl p-5 shadow-sm text-center">
-                    <div className="text-3xl mb-3">{o.icon}</div>
-                    <div className="font-semibold text-burgundy mb-2">{o.title}</div>
-                    <div className="text-sm text-text-mid">{o.text}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* FAQ */}
-            <section>
-              <h2 className="text-3xl font-playfair text-burgundy mb-6">Časté otázky — vlasové pásky tape-in</h2>
-              <div className="space-y-5">
-                {faqs.map((faq) => (
-                  <div key={faq.q} className="bg-white rounded-xl p-6 shadow-sm border border-warm-beige">
-                    <h3 className="font-semibold text-text-dark mb-2">{faq.q}</h3>
-                    <p className="text-text-mid text-sm leading-relaxed">{faq.a}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
+      {/* Jak fungují */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Princip</span>
           </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
+            Jak fungují vlasové pásky tape-in?
+          </h2>
+          <p className="mb-4 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Vlasové pásky tape-in jsou jednou z nejšetrnějších metod prodloužení vlasů. Princip je jednoduchý: dva tenké prameny opatřené speciální lepicí páskou šířky <strong style={{ color: 'var(--text-dark)' }}>2,8 cm</strong> se přiloží nad a pod přirozený vlas zákaznice a spojí do tzv. <strong style={{ color: 'var(--text-dark)' }}>sendvičového spoje</strong>. Pásky drží pevně, jsou neviditelné i při rozepnutých vlasech a nevyžadují žádné tepelné ani chemické zpracování při aplikaci.
+          </p>
+          <p className="mb-8 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Jedno balení obsahuje <strong style={{ color: 'var(--text-dark)' }}>20 pásků = 10 sendvičových spojů</strong>. Aplikace celé sady trvá zhruba 1–2 hodiny a pásky vydrží 6–10 týdnů, poté je nutné přelepení (repositioning). Při správné péči lze pásky používat opakovaně — kvalitní pásky z kolekcí Luxe a Platinum zvládnou 3–5 přelepení.
+          </p>
 
-          {/* Ceny aplikace — editorial flat section */}
-          <div className="mt-12">
-            <div
-              className="px-8 py-10"
-              style={{ borderLeft: '3px solid var(--accent)', background: 'var(--beige)' }}
-            >
-              <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-                <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-                CENY APLIKACE
+          <div className="grid sm:grid-cols-3 gap-0 border-t" style={{ borderColor: 'var(--text-dark)', borderTopWidth: '1px' }}>
+            {[
+              { title: 'Sendvičový spoj', text: '2 pásky + přirozený vlas = neviditelné spojení' },
+              { title: 'Rychlá aplikace', text: '1–2 hodiny, bez tepla ani chemie' },
+              { title: 'Opakované použití', text: '3–5 přelepení při správné péči' },
+            ].map((i, idx) => (
+              <div key={i.title} className={`py-6 ${idx > 0 ? 'sm:pl-8 sm:border-l' : ''}`} style={{ borderColor: 'var(--text-soft)' }}>
+                <div className="text-[11px] tracking-[0.2em] uppercase mb-2 font-normal" style={{ color: 'var(--accent)' }}>{i.title}</div>
+                <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{i.text}</div>
               </div>
-              <p className="text-text-mid text-sm mb-4 leading-relaxed">
-                Ceny přelepení a repositioningu vlasových pásek tape-in se liší podle salonu a množství pásků. Přehled orientačních sazeb najdete na stránce cen aplikací.
-              </p>
-              <Link
-                href="/ceny-aplikaci"
-                className="text-sm font-medium hover:opacity-75 transition"
-                style={{ color: 'var(--accent)' }}
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Struktury */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Textury</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
+            Čtyři struktury — včetně kudrnatých jako unikát na CZ trhu
+          </h2>
+          <p className="mb-8 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Všechny naše vlasové pásky tape-in jsou dostupné ve čtyřech strukturách. Zatímco rovné a mírně vlnité pásky nabízí většina dodavatelů, <strong style={{ color: 'var(--text-dark)' }}>kudrnaté vlasové pásky tape-in jsou v České republice dostupné jen ojediněle</strong> — a u nás je najdete ve všech délkách i kolekcích.
+          </p>
+
+          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
+            {[
+              { struktura: 'Rovné', popis: 'Klasická hladká textura, snadno splývá s přirozeně rovnými vlasy.', highlight: false },
+              { struktura: 'Mírně vlnité', popis: 'Přirozený pohyb vlasů, ideální pro každodenní styling.', highlight: false },
+              { struktura: 'Vlnité', popis: 'Výraznější vlna, bohatý objem, romantický look.', highlight: false },
+              {
+                struktura: 'Kudrnaté',
+                popis: 'Jedinečná struktura dostupná u mála výrobců v ČR. Vlasové pásky pro kudrnaté vlasy — splývají přirozeně s vaší texturou bez nutnosti rovnání.',
+                highlight: true,
+              },
+            ].map((s) => (
+              <div
+                key={s.struktura}
+                className="flex items-start justify-between gap-6 py-5 border-b"
+                style={{ borderColor: 'var(--beige)' }}
               >
-                Přehled cen aplikace →
-              </Link>
-            </div>
+                <div className="flex-1">
+                  <div
+                    className="font-cormorant text-lg font-light mb-1"
+                    style={{ color: s.highlight ? 'var(--burgundy)' : 'var(--text-dark)' }}
+                  >
+                    {s.struktura}
+                    {s.highlight && <span className="ml-2 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--accent)' }}>Unikát</span>}
+                  </div>
+                  <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{s.popis}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-sm italic" style={{ color: 'var(--text-soft)' }}>
+            Kudrnaté tape-in vlasy hledáte dlouho bez úspěchu? Napište nám — pomůžeme vám vybrat správnou strukturu a kolekci.
+          </p>
+        </div>
+      </section>
+
+      {/* Kolekce */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Kolekce</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-3" style={{ color: 'var(--text-dark)' }}>
+            6 kolekcí vlasových pásek — nebarvené i barvené
+          </h2>
+          <p className="mb-8 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Zákaznice si nejprve vybere kolekci vlasů, poté zakončení — vlasové pásky tape-in. Každý culík pochází od jednoho dárce a je ručně tříděn naším týmem v Praze. Vlasy od různých dárkyň nikdy nemícháme.
+          </p>
+
+          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
+            {KOLEKCE.map((k) => (
+              <div key={k.nazev} className="py-6 border-b" style={{ borderColor: 'var(--ivory)' }}>
+                <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
+                  <h3 className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>{k.nazev}</h3>
+                  <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{k.tag}</span>
+                </div>
+                <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--text-soft)' }}>{k.popis}</p>
+                <p className="text-xs" style={{ color: 'var(--text-soft)' }}><strong style={{ color: 'var(--text-dark)' }}>Pro koho:</strong> {k.pro}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-sm italic" style={{ color: 'var(--text-soft)' }}>Baby Shades kolekce — popis bude doplněn. Dostupná ve vybraných délkách a strukturách.</p>
+        </div>
+      </section>
+
+      {/* Gramáže */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Gramáže</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+            Gramáže vlasových pásek dle délky
+          </h2>
+          <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Každé balení obsahuje <strong style={{ color: 'var(--text-dark)' }}>20 pásků (10 sendvičových spojů)</strong>. Níže najdete přesné gramáže pro délky 30–95 cm.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
+                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
+                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž / balení (20 ks)</th>
+                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Sendvičových spojů</th>
+                </tr>
+              </thead>
+              <tbody>
+                {GRAMAZE.map((r) => (
+                  <tr key={r.delka} className="border-b" style={{ borderColor: 'var(--beige)' }}>
+                    <td className="py-3" style={{ color: 'var(--text-dark)' }}>{r.delka} cm</td>
+                    <td className="py-3" style={{ color: 'var(--text-soft)' }}>{r.gramaz} g</td>
+                    <td className="py-3" style={{ color: 'var(--text-soft)' }}>10</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs mt-2" style={{ color: 'var(--text-soft)' }}>Gramáže jsou přibližné. Přesná gramáž může mírně kolísat v závislosti na kolekci a struktuře vlasů.</p>
+        </div>
+      </section>
+
+      {/* Kolik balení */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Kalkulace</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+            Kolik balení potřebuji?
+          </h2>
+          <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-soft)' }}>Počet balení závisí na hustotě vašich přirozených vlasů a požadované délce.</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
+                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Typ vlasů</th>
+                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Krátké (30–45 cm)</th>
+                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Střední (50–65 cm)</th>
+                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Dlouhé (70–95 cm)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {BALENI.map((r) => (
+                  <tr key={r.typ} className="border-b" style={{ borderColor: 'var(--ivory)' }}>
+                    <td className="py-3" style={{ color: 'var(--text-dark)' }}>{r.typ}</td>
+                    <td className="py-3 text-center" style={{ color: 'var(--text-soft)' }}>{r.kratke} bal.</td>
+                    <td className="py-3 text-center" style={{ color: 'var(--text-soft)' }}>{r.stredni} bal.</td>
+                    <td className="py-3 text-center" style={{ color: 'var(--text-soft)' }}>{r.dlouhe} bal.</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs mt-2" style={{ color: 'var(--text-soft)' }}>Orientační hodnoty. Přesný počet doporučíme při osobní konzultaci v showroomu Praha.</p>
+        </div>
+      </section>
+
+      {/* Výroba na zakázku + Jak objednat */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Výroba na míru</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+            Výroba vlasových pásek ze zákazničina vlastního copu
+          </h2>
+          <p className="mb-4 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Máte vlastní culík pravých vlasů a chcete ho proměnit ve vlasové pásky tape-in na míru? Tato služba je u nás velmi oblíbená. Váš culík zpracujeme do pásků přesně odpovídajících vaší délce, gramáži a textuře — výroba trvá <strong style={{ color: 'var(--text-dark)' }}>14 dní</strong> od převzetí materiálu.
+          </p>
+          <p className="mb-10 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+            Skladové varianty pásků v dostupných délkách a strukturách odesíláme <strong style={{ color: 'var(--text-dark)' }}>ihned</strong>. Výroba pásků na zakázku (z culíku nebo ve specifické délce/barvě) trvá 14 pracovních dní.
+          </p>
+
+          <div className="flex items-center gap-3 mb-6" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Jak objednat</span>
           </div>
 
-          {/* Ceny a města */}
-          <div className="mt-10 text-center">
-            <Link href="/ceny-aplikaci#nanotapes" className="inline-block px-6 py-3 bg-burgundy text-white text-sm font-medium rounded-xl hover:opacity-90 transition mb-6">
+          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
+            {[
+              {
+                title: 'Online e-shop',
+                text: 'Vyberte kolekci vlasů, zvolte zakončení Vlasové pásky, délku a strukturu. Skladové varianty ihned, zakázka 14 dní.',
+              },
+              {
+                title: 'Showroom Praha',
+                text: 'Přijďte si vlasy osobně prohlédnout, osahat a vybrat přesný odstín a strukturu. Konzultace zdarma, termín předem.',
+              },
+              {
+                title: 'B2B — salony',
+                text: 'Spolupracujeme se salony a extension technicians po celé ČR. Velkoobchodní ceny, komisní prodej, osobní odběr v Praze.',
+              },
+            ].map((o) => (
+              <div key={o.title} className="py-5 border-b" style={{ borderColor: 'var(--beige)' }}>
+                <div className="font-cormorant text-lg font-light mb-1" style={{ color: 'var(--text-dark)' }}>{o.title}</div>
+                <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{o.text}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Časté otázky</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
+            Vlasové pásky tape-in — co se nejčastěji ptáte
+          </h2>
+          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
+            {faqs.map((faq) => (
+              <div key={faq.q} className="py-6 border-b" style={{ borderColor: 'var(--ivory)' }}>
+                <h3 className="font-cormorant text-lg font-light mb-2" style={{ color: 'var(--text-dark)' }}>{faq.q}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ceny aplikace + města */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-10">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              Ceny aplikace
+            </div>
+            <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+              Ceny přelepení a repositioningu vlasových pásek tape-in se liší podle salonu a množství pásků. Přehled orientačních sazeb najdete na stránce cen aplikací.
+            </p>
+            <Link
+              href="/ceny-aplikaci"
+              className="text-sm font-medium hover:opacity-75 transition"
+              style={{ color: 'var(--accent)' }}
+            >
+              Přehled cen aplikace →
+            </Link>
+          </div>
+
+          <div className="mb-8">
+            <Link
+              href="/ceny-aplikaci#nanotapes"
+              className="inline-block px-6 py-3 text-sm font-medium rounded-sm transition hover:opacity-80"
+              style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+            >
               Ceník aplikace nanotapes →
             </Link>
-            <p className="text-sm text-text-soft mb-4">Vlasové pásky nanotapes dodáváme do celé ČR:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['brno','ostrava','plzen','olomouc','hradec-kralove','pardubice','ceske-budejovice','liberec'].map((slug) => (
-                <Link key={slug} href={`/vlasy/${slug}`} className="px-3 py-1.5 bg-soft-cream border border-warm-beige rounded-lg text-xs text-text-mid hover:border-burgundy hover:text-burgundy transition capitalize">
-                  {slug.replace(/-/g,' ')}
-                </Link>
-              ))}
-            </div>
           </div>
 
-          {/* CTA */}
-          <div className="bg-burgundy text-white rounded-2xl p-8 mt-12 text-center">
-            <h2 className="text-2xl font-playfair mb-3">Přijďte si vybrat vlasové pásky osobně</h2>
-            <p className="mb-6 opacity-90 leading-relaxed">
-              V pražském showroomu si pásky prohlédnete, osaháte a vyberete přesnou strukturu a odstín. Poradíme vám s kolekci, gramáží i počtem balení — konzultace je zdarma a nezávazná.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
+          <p className="text-sm mb-4" style={{ color: 'var(--text-soft)' }}>Vlasové pásky nanotapes dodáváme do celé ČR:</p>
+          <div className="flex flex-wrap gap-2">
+            {['brno','ostrava','plzen','olomouc','hradec-kralove','pardubice','ceske-budejovice','liberec'].map((slug) => (
               <Link
-                href="/kontakt"
-                className="inline-block bg-white text-burgundy font-semibold px-6 py-3 rounded-full hover:bg-ivory transition-colors"
+                key={slug}
+                href={`/vlasy/${slug}`}
+                className="px-3 py-1.5 border text-xs transition capitalize hover:opacity-70"
+                style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
               >
-                Sjednat konzultaci v showroomu
+                {slug.replace(/-/g,' ')}
               </Link>
-              <Link
-                href="/vlasy-k-prodlouzeni"
-                className="inline-block border border-white text-white font-semibold px-6 py-3 rounded-full hover:bg-white/10 transition-colors"
-              >
-                Prohlédnout kolekce vlasů
-              </Link>
-            </div>
+            ))}
           </div>
-
         </div>
-      </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ background: 'var(--burgundy)' }} className="px-8 lg:px-20 py-16 text-center">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Showroom Praha</span>
+            <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,3vw,40px)] font-light mb-4" style={{ color: 'var(--ivory)' }}>
+            Přijďte si vybrat vlasové pásky osobně
+          </h2>
+          <p className="mb-8 leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
+            V pražském showroomu si pásky prohlédnete, osaháte a vyberete přesnou strukturu a odstín. Poradíme vám s kolekci, gramáží i počtem balení — konzultace je zdarma a nezávazná.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link
+              href="/kontakt"
+              className="inline-block px-6 py-3 text-sm font-medium rounded-sm transition hover:opacity-90"
+              style={{ background: 'var(--ivory)', color: 'var(--burgundy)' }}
+            >
+              Sjednat konzultaci v showroomu
+            </Link>
+            <Link
+              href="/vlasy-k-prodlouzeni"
+              className="inline-block border px-6 py-3 text-sm font-medium rounded-sm transition hover:opacity-90"
+              style={{ borderColor: 'rgba(255,255,255,0.5)', color: 'var(--ivory)' }}
+            >
+              Prohlédnout kolekce vlasů
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

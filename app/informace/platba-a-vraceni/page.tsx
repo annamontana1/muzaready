@@ -9,34 +9,47 @@ export const metadata: Metadata = {
 
 export default function PlatbaAVraceniPage() {
   return (
-    <div className="py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <>
+      {/* Hero */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <nav className="text-sm mb-8 flex gap-2" style={{ color: 'var(--text-soft)' }}>
+            <Link href="/" className="hover:opacity-70 transition">Domů</Link>
+            <span>/</span>
+            <Link href="/informace" className="hover:opacity-70 transition">Informace</Link>
+            <span>/</span>
+            <span style={{ color: 'var(--burgundy)' }}>Platba a vrácení</span>
+          </nav>
 
-        {/* Breadcrumb */}
-        <nav className="text-sm text-text-soft mb-6 flex gap-2">
-          <Link href="/" className="hover:text-burgundy transition">Domů</Link>
-          <span>/</span>
-          <Link href="/informace" className="hover:text-burgundy transition">Informace</Link>
-          <span>/</span>
-          <span className="text-text-mid">Platba a vrácení</span>
-        </nav>
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Informace</span>
+          </div>
 
-        <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-6">
-          Platba a vrácení
-        </h1>
+          <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-8" style={{ color: 'var(--text-dark)' }}>
+            Platba a vrácení
+          </h1>
 
-        <div className="bg-ivory border-l-4 border-burgundy p-6 rounded-xl mb-12">
-          <p className="text-text-dark leading-relaxed">
-            Přijímáme platbu kartou online a bankovním převodem. Dobírka není dostupná. Zásilky expedujeme přes Zásilkovnu (89 Kč) a DPD (68 Kč). Osobní odběr v showroomu Praha je zdarma. Nerozbalené vlasy lze vrátit do 14 dní.
-          </p>
+          <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }}>
+            <p className="leading-relaxed" style={{ color: 'var(--text-dark)' }}>
+              Přijímáme platbu kartou online a bankovním převodem. Dobírka není dostupná. Zásilky expedujeme přes Zásilkovnu (89 Kč) a DPD (68 Kč). Osobní odběr v showroomu Praha je zdarma. Nerozbalené vlasy lze vrátit do 14 dní.
+            </p>
+          </div>
         </div>
+      </section>
 
-        <div className="prose prose-lg max-w-none text-text-mid">
+      {/* Způsoby platby */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Platba</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
+            Způsoby platby
+          </h2>
 
-          {/* Způsoby platby */}
-          <h2 className="text-3xl font-playfair text-burgundy mb-6">Způsoby platby</h2>
-
-          <div className="not-prose space-y-3 mb-4">
+          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
             {[
               {
                 name: 'Platba kartou online',
@@ -54,29 +67,39 @@ export default function PlatbaAVraceniPage() {
                 badge: null,
               },
             ].map((m) => (
-              <div key={m.name} className="flex items-start justify-between gap-4 p-5 bg-white border border-warm-beige rounded-xl">
+              <div key={m.name} className="flex items-start justify-between gap-6 py-5 border-b" style={{ borderColor: 'var(--ivory)' }}>
                 <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className="font-semibold text-text-dark">{m.name}</span>
+                  <div className="flex items-center gap-4 mb-1">
+                    <span className="font-cormorant text-lg font-light" style={{ color: 'var(--text-dark)' }}>{m.name}</span>
                     {m.badge && (
-                      <span className="text-xs font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{m.badge}</span>
+                      <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{m.badge}</span>
                     )}
                   </div>
-                  <p className="text-sm text-text-soft">{m.desc}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="not-prose p-5 bg-red-50 border border-red-100 rounded-xl mb-10">
-            <p className="font-semibold text-red-800 mb-1">Dobírka není dostupná</p>
-            <p className="text-sm text-red-700">Vlasy jsou prémiové zboží — z hygienických a bezpečnostních důvodů nezasíláme na dobírku.</p>
+          <div className="mt-6 py-4 border-l-4 pl-5" style={{ borderColor: 'var(--burgundy)', background: 'transparent' }}>
+            <p className="font-cormorant text-lg font-light mb-1" style={{ color: 'var(--burgundy)' }}>Dobírka není dostupná</p>
+            <p className="text-sm" style={{ color: 'var(--text-soft)' }}>Vlasy jsou prémiové zboží — z hygienických a bezpečnostních důvodů nezasíláme na dobírku.</p>
           </div>
+        </div>
+      </section>
 
-          {/* Doprava */}
-          <h2 className="text-3xl font-playfair text-burgundy mb-6">Doprava a doručení</h2>
+      {/* Doprava */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Doprava</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
+            Doprava a doručení
+          </h2>
 
-          <div className="not-prose grid md:grid-cols-2 gap-4 mb-10">
+          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
             {[
               {
                 name: 'Zásilkovna',
@@ -109,45 +132,60 @@ export default function PlatbaAVraceniPage() {
             ].map((m) => (
               <div
                 key={m.name}
-                className={`p-5 border rounded-xl ${m.available ? 'bg-white border-warm-beige' : 'bg-soft-cream border-warm-beige opacity-50'}`}
+                className="py-5 border-b"
+                style={{ borderColor: 'var(--beige)', opacity: m.available ? 1 : 0.45 }}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-text-dark">{m.name}</span>
-                  {!m.available && (
-                    <span className="text-xs bg-gray-200 text-text-soft px-2 py-0.5 rounded-full">Připravujeme</span>
+                <div className="flex items-start justify-between flex-wrap gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-cormorant text-lg font-light" style={{ color: 'var(--text-dark)' }}>{m.name}</span>
+                      {!m.available && (
+                        <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Připravujeme</span>
+                      )}
+                    </div>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
+                  </div>
+                  {m.available && (
+                    <div className="flex gap-8 text-sm flex-shrink-0">
+                      <div>
+                        <span className="block text-[11px] tracking-[0.15em] uppercase mb-0.5" style={{ color: 'var(--text-soft)' }}>Cena</span>
+                        <span className="font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>{m.price}</span>
+                      </div>
+                      <div>
+                        <span className="block text-[11px] tracking-[0.15em] uppercase mb-0.5" style={{ color: 'var(--text-soft)' }}>Doba doručení</span>
+                        <span style={{ color: 'var(--text-dark)' }}>{m.time}</span>
+                      </div>
+                    </div>
                   )}
                 </div>
-                <p className="text-sm text-text-soft mb-3">{m.desc}</p>
-                {m.available && (
-                  <div className="flex gap-6 text-sm pt-3 border-t border-warm-beige">
-                    <div>
-                      <span className="text-text-soft text-xs uppercase tracking-wide block mb-0.5">Cena</span>
-                      <span className="font-semibold text-text-dark">{m.price}</span>
-                    </div>
-                    <div>
-                      <span className="text-text-soft text-xs uppercase tracking-wide block mb-0.5">Doba doručení</span>
-                      <span className="font-semibold text-text-dark">{m.time}</span>
-                    </div>
-                  </div>
-                )}
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Vrácení */}
-          <h2 className="text-3xl font-playfair text-burgundy mb-6">Vrácení zboží</h2>
+      {/* Vrácení */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Vrácení</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
+            Vrácení zboží
+          </h2>
 
-          <div className="not-prose bg-ivory border-l-4 border-amber-400 p-6 rounded-xl mb-6">
-            <p className="font-semibold text-text-dark mb-2">Specifika vlasových produktů</p>
-            <p className="text-sm text-text-mid leading-relaxed">
-              Vlasy lze vrátit pouze v <strong>nerozbaléném originálním balení</strong>. Rozbalené, použité, aplikované nebo chemicky upravené vlasy nelze z hygienických důvodů vrátit ani vyměnit.
+          <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-8">
+            <p className="font-cormorant text-lg font-light mb-2" style={{ color: 'var(--text-dark)' }}>Specifika vlasových produktů</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>
+              Vlasy lze vrátit pouze v <strong style={{ color: 'var(--text-dark)' }}>nerozbaléném originálním balení</strong>. Rozbalené, použité, aplikované nebo chemicky upravené vlasy nelze z hygienických důvodů vrátit ani vyměnit.
             </p>
           </div>
 
-          <div className="not-prose grid md:grid-cols-2 gap-8 mb-10">
+          <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h3 className="font-semibold text-text-dark mb-4">Podmínky vrácení</h3>
-              <ul className="space-y-3 text-sm text-text-mid">
+              <h3 className="text-[11px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--accent)' }}>Podmínky vrácení</h3>
+              <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {[
                   { ok: true, text: 'Lhůta 14 dní od převzetí zboží' },
                   { ok: true, text: 'Nerozbalené v originálním obalu s etiketami' },
@@ -157,82 +195,105 @@ export default function PlatbaAVraceniPage() {
                   { ok: false, text: 'Rozbalené nebo použité zboží' },
                   { ok: false, text: 'Chemicky nebo mechanicky upravené vlasy' },
                 ].map((i, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className={`font-bold mt-0.5 ${i.ok ? 'text-green-500' : 'text-red-400'}`}>{i.ok ? '✓' : '✗'}</span>
-                    <span className={i.ok ? '' : 'text-text-soft'}>{i.text}</span>
-                  </li>
+                  <div key={idx} className="flex items-start gap-4 py-3 border-b text-sm" style={{ borderColor: 'var(--ivory)' }}>
+                    <span style={{ color: i.ok ? 'var(--accent)' : 'var(--burgundy)', fontWeight: 600 }}>{i.ok ? '+' : '—'}</span>
+                    <span style={{ color: i.ok ? 'var(--text-soft)' : 'var(--text-soft)', opacity: i.ok ? 1 : 0.65 }}>{i.text}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
             <div>
-              <h3 className="font-semibold text-text-dark mb-4">Jak vrátit zboží</h3>
-              <ol className="space-y-4 text-sm text-text-mid">
+              <h3 className="text-[11px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--accent)' }}>Jak vrátit zboží</h3>
+              <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {([
                   'Napište na muzahaircz@gmail.com — uveďte číslo objednávky a důvod vrácení.',
                   null,
                   'Zboží zašlete doporučeně na adresu: Šrámkova 430/12, 638 00 Brno. Nezasílejte na dobírku.',
                   'Po obdržení zboží vrátíme peníze na bankovní účet do 14 dnů.',
                 ] as (string | null)[]).map((s, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-ivory border border-burgundy/20 text-burgundy rounded-full flex items-center justify-center text-xs font-bold">
-                      {i + 1}
+                  <div key={i} className="flex items-start gap-5 py-4 border-b text-sm" style={{ borderColor: 'var(--ivory)' }}>
+                    <span className="flex-shrink-0 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--accent)', minWidth: '1.5rem' }}>
+                      {String(i + 1).padStart(2, '0')}
                     </span>
-                    <span>
+                    <span style={{ color: 'var(--text-soft)' }}>
                       {i === 1 ? (
                         <>Stáhněte, vyplňte a vytiskněte{' '}
-                          <Link href="/informace/odstoupeni-od-smlouvy" className="text-burgundy underline hover:opacity-80">
+                          <Link href="/informace/odstoupeni-od-smlouvy" className="underline hover:opacity-75" style={{ color: 'var(--burgundy)' }}>
                             formulář pro odstoupení od smlouvy
                           </Link>
                           {' '}a přiložte ho do balíku.</>
                       ) : s}
                     </span>
-                  </li>
+                  </div>
                 ))}
-              </ol>
-              <div className="mt-5">
+              </div>
+              <div className="mt-6">
                 <a
                   href="mailto:muzahaircz@gmail.com?subject=Vrácení zboží"
-                  className="inline-block px-5 py-2.5 bg-burgundy text-white text-sm font-medium rounded-lg hover:opacity-90 transition"
+                  className="inline-block px-5 py-2.5 text-sm font-medium rounded-sm transition hover:opacity-80"
+                  style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                 >
                   Napsat o vrácení →
                 </a>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Reklamace */}
-          <h2 className="text-3xl font-playfair text-burgundy mb-6">Reklamace</h2>
+      {/* Reklamace */}
+      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
+            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Reklamace</span>
+          </div>
+          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
+            Reklamace
+          </h2>
 
-          <div className="not-prose grid md:grid-cols-3 gap-4 mb-6">
+          <div className="border-t mb-8" style={{ borderColor: 'var(--text-dark)' }}>
             {[
               { label: 'Záruční doba', value: '24 měsíců', note: 'na výrobní vady nepoužitého zboží' },
               { label: 'Vyřízení', value: 'do 30 dní', note: 'od uplatnění reklamace' },
               { label: 'Kontakt', value: 'muzahaircz@gmail.com', note: 'foto + číslo objednávky' },
             ].map((i) => (
-              <div key={i.label} className="p-5 bg-ivory border border-burgundy/10 rounded-xl">
-                <p className="text-xs text-text-soft uppercase tracking-wide mb-1">{i.label}</p>
-                <p className="font-semibold text-burgundy mb-1 text-sm">{i.value}</p>
-                <p className="text-xs text-text-soft">{i.note}</p>
+              <div key={i.label} className="flex items-start gap-8 py-5 border-b" style={{ borderColor: 'var(--beige)' }}>
+                <div className="w-40 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                  {i.label}
+                </div>
+                <div>
+                  <div className="font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>{i.value}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>{i.note}</div>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="not-prose p-5 bg-white border border-warm-beige rounded-xl text-sm text-text-mid mb-12">
-            <p className="font-medium text-text-dark mb-3">Co není vadou zboží:</p>
-            <ul className="space-y-1.5 text-text-soft">
-              <li>— Přirozená odchylka v odstínu barvy oproti zobrazení na monitoru</li>
-              <li>— Mírná přirozená vlnitost slovanských vlasů</li>
-              <li>— Změna struktury vlivem nesprávné péče nebo chemické úpravy kupujícím</li>
-              <li>— Opotřebení způsobené obvyklým používáním</li>
-            </ul>
+          <div>
+            <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--text-soft)' }}>Co není vadou zboží:</p>
+            <div className="border-t" style={{ borderColor: 'var(--beige)' }}>
+              {[
+                'Přirozená odchylka v odstínu barvy oproti zobrazení na monitoru',
+                'Mírná přirozená vlnitost slovanských vlasů',
+                'Změna struktury vlivem nesprávné péče nebo chemické úpravy kupujícím',
+                'Opotřebení způsobené obvyklým používáním',
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-4 py-3 border-b text-sm" style={{ borderColor: 'var(--beige)', color: 'var(--text-soft)' }}>
+                  <span style={{ color: 'var(--accent)' }}>—</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
-
         </div>
+      </section>
 
-        {/* Související */}
-        <div className="pt-8 border-t border-warm-beige">
-          <p className="text-sm text-text-soft mb-4">Související stránky</p>
+      {/* Související */}
+      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--text-soft)' }}>Související stránky</p>
           <div className="flex flex-wrap gap-3">
             {[
               { href: '/informace/odstoupeni-od-smlouvy', label: 'Formulář odstoupení od smlouvy' },
@@ -244,15 +305,15 @@ export default function PlatbaAVraceniPage() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="px-4 py-2 border border-warm-beige text-text-mid text-sm rounded-lg hover:border-burgundy hover:text-burgundy transition"
+                className="px-4 py-2 border text-sm transition hover:opacity-70"
+                style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
               >
                 {l.label}
               </Link>
             ))}
           </div>
         </div>
-
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
