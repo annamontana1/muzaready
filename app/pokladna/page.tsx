@@ -45,6 +45,18 @@ export default function PokladnaPage() {
   const [success, setSuccess] = useState('');
   const [packetaLoaded, setPacketaLoaded] = useState(false);
 
+  // Backup polling — onLoad ne vždy spolehlivě funguje v Next.js
+  useEffect(() => {
+    if (packetaLoaded) return;
+    const interval = setInterval(() => {
+      if (typeof window !== 'undefined' && window.Packeta) {
+        setPacketaLoaded(true);
+        clearInterval(interval);
+      }
+    }, 300);
+    return () => clearInterval(interval);
+  }, [packetaLoaded]);
+
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -337,7 +349,7 @@ export default function PokladnaPage() {
     <>
       {/* Packeta Widget Library */}
       <Script
-        src="https://widget.packeta.com/www/js/library.js"
+        src="https://widget.packeta.com/v6/www/js/library.js"
         strategy="afterInteractive"
         onLoad={() => setPacketaLoaded(true)}
       />
