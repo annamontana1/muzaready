@@ -55,10 +55,6 @@ export default function TopContactBar() {
         <a href="/showroom" className="hover:opacity-80 transition">
           Showroom: {addressStreet}, {addressCity}
         </a>
-        <span style={{ color: 'rgba(248,244,239,0.3)' }}>·</span>
-        <a href="/informace/jak-nakupovat" className="hover:opacity-80 transition">
-          Doprava zdarma od 3 000 Kč
-        </a>
       </div>
       <div className="md:hidden">
         <a href="/showroom" className="hover:opacity-80 transition">

@@ -81,15 +81,13 @@ export default function PokladnaPage() {
 
   // Calculate totals using new cart structure
   const total = getTotalPrice();
-  const shippingThreshold = 3000;
-
-  // Ceny dopravy: Zásilkovna 65 Kč, DPD 99 Kč, PPL 99 Kč, Standard 150 Kč (zdarma od 3000), Showroom zdarma
+  // Ceny dopravy: Zásilkovna 65 Kč, DPD 99 Kč, PPL 99 Kč, Standard 150 Kč, Showroom zdarma
   const getShippingCost = () => {
     if (formData.deliveryMethod === 'zasilkovna') return 65;
     if (formData.deliveryMethod === 'dpd') return 99;
     if (formData.deliveryMethod === 'ppl') return 99;
     if (formData.deliveryMethod === 'showroom') return 0;
-    return total >= shippingThreshold ? 0 : 150;
+    return 150;
   };
 
   // Metody vyžadující doručovací adresu
@@ -464,15 +462,8 @@ export default function PokladnaPage() {
                           {t('checkout.shippingMethod.standardDesc')}
                         </p>
                       </div>
-                      <p className="font-medium text-text-dark">
-                        {total >= shippingThreshold ? t('common.free') : '150 Kč'}
-                      </p>
+                      <p className="font-medium text-text-dark">150 Kč</p>
                     </div>
-                    {total < shippingThreshold && (
-                      <p className="text-xs text-text-soft mt-2">
-                        {t('checkout.shippingMethod.standardFree', { threshold: shippingThreshold.toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US') })}
-                      </p>
-                    )}
                   </div>
                 </label>
 
@@ -803,11 +794,6 @@ export default function PokladnaPage() {
                   )}
                 </p>
               </div>
-              {total <= shippingThreshold && (
-                <p className="text-xs text-text-soft">
-                  {t('cart.freeShippingRemaining')} {(shippingThreshold - total).toLocaleString(language === 'cs' ? 'cs-CZ' : 'en-US')} Kč
-                </p>
-              )}
               <div className="border-t border-warm-beige pt-3">
                 <div className="flex justify-between">
                   <p className="text-lg font-bold text-text-dark">{t('cart.total')}:</p>

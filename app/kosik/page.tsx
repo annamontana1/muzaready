@@ -30,9 +30,7 @@ export default function CartPage() {
   };
 
   const subtotal = getTotalPrice();
-  const shippingThreshold = 3000;
-  const shipping = subtotal >= shippingThreshold ? 0 : 150;
-  const total = subtotal + shipping;
+  const total = subtotal;
 
   // Empty cart state
   if (items.length === 0) {
@@ -285,23 +283,6 @@ export default function CartPage() {
                   </span>
                 </div>
 
-                {/* Free shipping progress */}
-                {subtotal < shippingThreshold && (
-                  <div className="pt-2">
-                    <div className="text-sm text-text-mid mb-2">
-                      {t('cart.freeShippingRemaining')}{' '}
-                      <span className="font-semibold text-burgundy">
-                        {formatPrice(shippingThreshold - subtotal)}
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-burgundy h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${(subtotal / shippingThreshold) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
 
                 <div className="pt-3 border-t border-warm-beige">
                   <div className="flex justify-between text-lg font-bold text-burgundy">
