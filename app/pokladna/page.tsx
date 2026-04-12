@@ -91,8 +91,11 @@ export default function PokladnaPage() {
       return;
     }
 
-    // API klíč - POZNÁMKA: Tento klíč je placeholder, musíte ho nahradit skutečným API klíčem ze Zásilkovny
-    const apiKey = process.env.NEXT_PUBLIC_PACKETA_API_KEY || 'demo-api-key';
+    const apiKey = process.env.NEXT_PUBLIC_PACKETA_API_KEY;
+    if (!apiKey) {
+      alert('Zásilkovna API klíč není nastaven.');
+      return;
+    }
 
     window.Packeta.Widget.pick(
       apiKey,
@@ -103,7 +106,7 @@ export default function PokladnaPage() {
         }
       },
       {
-        country: formData.country,
+        country: formData.country.toLowerCase(), // Packeta vyžaduje malá písmena: 'cz'
         language: 'cs',
       }
     );
