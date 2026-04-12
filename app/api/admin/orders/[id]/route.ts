@@ -136,6 +136,7 @@ export async function GET(
                 id: true,
                 sku: true,
                 name: true,
+                shade: true,
                 shadeName: true,
                 lengthCm: true,
               },

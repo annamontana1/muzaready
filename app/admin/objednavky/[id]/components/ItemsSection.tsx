@@ -18,6 +18,7 @@ interface OrderItem {
     id: string;
     sku: string;
     name: string | null;
+    shade: string | null;
     shadeName: string | null;
     lengthCm: number | null;
   };
@@ -59,6 +60,7 @@ function EditableRow({ item, orderId, onSaved, onDeleted }: EditableRowProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const productName = item.nameSnapshot || item.sku?.name || 'Neznámý produkt';
+  const shadeLabel = item.sku?.shade ? ` · #${item.sku.shade}` : '';
   const skuLabel = item.sku ? `${item.sku.sku}` : '';
 
   const [edit, setEdit] = useState<EditState>({
@@ -115,7 +117,7 @@ function EditableRow({ item, orderId, onSaved, onDeleted }: EditableRowProps) {
     return (
       <tr className="border-b border-gray-100 hover:bg-gray-50 group">
         <td className="px-4 py-3 text-sm text-gray-900">
-          <div>{productName}</div>
+          <div>{productName}{shadeLabel}</div>
           {skuLabel && <div className="text-xs text-stone-400">{skuLabel}</div>}
           {item.ending && item.ending !== 'NONE' && (
             <div className="text-xs text-stone-500">Zakončení: {item.ending}</div>
@@ -309,7 +311,7 @@ export default function ItemsSection({ order, onRefresh }: ItemsSectionProps) {
               ) : (
                 <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-900">
-                    <div>{item.nameSnapshot || item.sku?.name || 'Neznámý produkt'}</div>
+                    <div>{item.nameSnapshot || item.sku?.name || 'Neznámý produkt'}{item.sku?.shade ? ` · #${item.sku.shade}` : ''}</div>
                     {item.sku && <div className="text-xs text-stone-400">{item.sku.sku}</div>}
                     {item.ending && item.ending !== 'NONE' && (
                       <div className="text-xs text-stone-500">Zakončení: {item.ending}</div>

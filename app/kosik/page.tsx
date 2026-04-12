@@ -132,7 +132,7 @@ export default function CartPage() {
                   {/* SKU Info */}
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-burgundy hover:text-maroon transition mb-2">
-                      {item.skuName}
+                      {item.skuName}{item.shade ? <span className="text-text-soft font-normal"> · #{item.shade}</span> : null}
                     </h3>
 
                     {/* Product Details */}

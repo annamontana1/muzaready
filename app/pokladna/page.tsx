@@ -708,7 +708,7 @@ export default function PokladnaPage() {
               {items.map((item) => (
                 <div key={item.skuId} className="flex justify-between text-sm">
                   <div>
-                    <p className="text-text-dark font-medium">{item.skuName}</p>
+                    <p className="text-text-dark font-medium">{item.skuName}{item.shade ? <span className="text-text-soft font-normal"> · #{item.shade}</span> : null}</p>
                     <p className="text-text-mid">
                       {item.saleMode === 'BULK_G'
                         ? `${item.grams}g @ ${item.pricePerGram.toLocaleString('cs-CZ')} Kč/g`
