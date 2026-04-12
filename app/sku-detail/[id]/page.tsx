@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
+import { useSkuCart } from '@/contexts/SkuCartContext';
 
 interface Sku {
   id: string;
@@ -63,6 +64,7 @@ export default function SkuDetailPage() {
   const params = useParams();
   const router = useRouter();
   const skuId = params.id as string;
+  const { addToCart } = useSkuCart();
 
   const [sku, setSku] = useState<Sku | null>(null);
   const [loading, setLoading] = useState(true);
@@ -148,23 +150,19 @@ export default function SkuDetailPage() {
     }
   };
 
-  const handleAddToCart = async () => {
-    if (!quote) {
+  const handleAddToCart = () => {
+    if (!quote || !sku) {
       alert('Nejdřív klikni "Spočítat cenu"');
       return;
     }
 
-    // Store in localStorage with timestamp to detect stale prices
-    // SkuCartContext stores { version, items, savedAt }, not a plain array
-    const raw = JSON.parse(localStorage.getItem('sku-cart') || '{"version":2,"items":[]}');
-    const cartItems: any[] = Array.isArray(raw) ? raw : (raw.items || []);
-    const timestamp = new Date().getTime();
     for (let i = 0; i < quantity; i++) {
-      cartItems.push({
-        skuId: sku!.id,
-        skuName: sku!.name,
-        customerCategory: sku!.customerCategory,
-        saleMode: sku!.saleMode,
+      addToCart({
+        skuId: sku.id,
+        skuName: sku.name || sku.sku,
+        customerCategory: sku.customerCategory,
+        saleMode: sku.saleMode,
+        shade: sku.shade || undefined,
         grams: quote.grams,
         pricePerGram: quote.pricePerGram,
         lineTotal: quote.lineTotal,
@@ -174,14 +172,8 @@ export default function SkuDetailPage() {
         assemblyFeeTotal: quote.assemblyFeeTotal,
         lineGrandTotal: quote.lineGrandTotal,
         quantity: 1,
-        addedAt: timestamp,
       });
     }
-    localStorage.setItem('sku-cart', JSON.stringify({
-      version: 2,
-      items: cartItems,
-      savedAt: new Date().toISOString(),
-    }));
     router.push('/kosik');
   };
 
