@@ -338,7 +338,7 @@ export default function PokladnaPage() {
       {/* Packeta Widget Library */}
       <Script
         src="https://widget.packeta.com/www/js/library.js"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onLoad={() => setPacketaLoaded(true)}
       />
 
@@ -510,9 +510,10 @@ export default function PokladnaPage() {
                           <button
                             type="button"
                             onClick={openPacketaWidget}
-                            className="w-full px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium"
+                            disabled={!packetaLoaded}
+                            className="w-full px-4 py-2 bg-burgundy text-white rounded-lg hover:bg-maroon transition font-medium disabled:opacity-50 disabled:cursor-wait"
                           >
-                            {t('checkout.shippingMethod.selectPickupPoint')}
+                            {packetaLoaded ? t('checkout.shippingMethod.selectPickupPoint') : 'Načítám Zásilkovnu…'}
                           </button>
                         )}
                       </div>
