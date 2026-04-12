@@ -274,13 +274,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between text-text-mid">
                   <span>{t('cart.shipping')}:</span>
-                  <span className="font-medium">
-                    {shipping === 0 ? (
-                      <span className="text-green-600">{t('common.free').toUpperCase()}</span>
-                    ) : (
-                      formatPrice(shipping)
-                    )}
-                  </span>
+                  <span className="font-medium text-text-soft">dle dopravce</span>
                 </div>
 
 

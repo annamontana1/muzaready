@@ -2,13 +2,13 @@
 export interface SkuCartItem {
   skuId: string;
   skuName: string | null;
-  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | null;
+  customerCategory: 'STANDARD' | 'LUXE' | 'PLATINUM_EDITION' | 'BABY_SHADES' | null;
   shade: string | null; // Hair color/shade (e.g., 'barvene_blond', 'nebarvene_cerne', etc.)
   saleMode: 'PIECE_BY_WEIGHT' | 'BULK_G';
   grams: number;
   pricePerGram: number;
   lineTotal: number;
-  ending: 'KERATIN' | 'NONE';
+  ending: 'NONE' | 'MICRO_KERATIN' | 'STANDARD_KERATIN' | 'PASKY_KERATINU' | 'WEFT' | 'TAPES' | 'KERATIN';
   assemblyFeeType: 'FLAT' | 'PER_GRAM';
   assemblyFeeCzk: number;
   assemblyFeeTotal: number;
