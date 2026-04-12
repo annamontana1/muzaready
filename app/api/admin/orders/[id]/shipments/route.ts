@@ -44,9 +44,16 @@ export async function POST(
     }
 
     // Validate required fields
-    if (!carrier || !trackingNumber) {
+    // trackingNumber is optional for Zásilkovna auto-mode (assigned automatically from API)
+    if (!carrier) {
       return NextResponse.json(
-        { error: 'carrier and trackingNumber are required' },
+        { error: 'carrier is required' },
+        { status: 400 }
+      );
+    }
+    if (!trackingNumber && carrier !== 'zasilkovna') {
+      return NextResponse.json(
+        { error: 'trackingNumber is required' },
         { status: 400 }
       );
     }
@@ -208,7 +215,7 @@ export async function POST(
     return NextResponse.json(
       {
         success: true,
-        message: `Shipment created with carrier ${carrier}. Tracking: ${trackingNumber}`,
+        message: `Shipment created with carrier ${carrier}. Tracking: ${finalTrackingNumber}`,
         shipment: shipmentData,
         order: transformedOrder,
       },

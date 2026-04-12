@@ -98,16 +98,9 @@ export default function Header() {
             <nav className="flex items-center gap-9" style={{ color: 'var(--text-mid)' }}>
 
               {/* Vlasy k prodloužení */}
-              <div className="relative group">
-                <Link href="/vlasy-k-prodlouzeni" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
-                  Vlasy k prodloužení {chevronDown}
-                </Link>
-                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
-                  {dropdownItem('/vlasy-k-prodlouzeni/nebarvene-panenske', 'Nebarvené panenské')}
-                  {dropdownItem('/vlasy-k-prodlouzeni/barvene-vlasy', 'Barvené blond vlasy')}
-                  {dropdownItem('/katalog', 'Celý katalog')}
-                </div>
-              </div>
+              <Link href="/vlasy-k-prodlouzeni" className={navLinkClass} style={{ color: 'var(--text-mid)' }}>
+                Vlasy k prodloužení
+              </Link>
 
               {/* Příčesky & paruky */}
               <div className="relative group">
@@ -341,12 +334,10 @@ export default function Header() {
                 {[
                   {
                     label: 'Vlasy k prodloužení',
-                    open: vlasySubmenuOpen,
-                    toggle: () => setVlasySubmenuOpen(!vlasySubmenuOpen),
-                    items: [
-                      { href: '/vlasy-k-prodlouzeni/nebarvene-panenske', label: 'Nebarvené panenské' },
-                      { href: '/vlasy-k-prodlouzeni/barvene-vlasy', label: 'Barvené blond vlasy' },
-                    ],
+                    href: '/vlasy-k-prodlouzeni',
+                    open: false,
+                    toggle: () => {},
+                    items: [],
                   },
                   {
                     label: 'Příčesky & paruky',

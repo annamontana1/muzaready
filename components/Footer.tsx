@@ -175,8 +175,9 @@ export default function Footer() {
           </h3>
           <ul className="space-y-2.5">
             {[
-              { href: '/vlasy-k-prodlouzeni/nebarvene-panenske', label: 'Nebarvené panenské' },
-              { href: '/vlasy-k-prodlouzeni/barvene-vlasy', label: 'Barvené blond vlasy' },
+              { href: '/vlasy-k-prodlouzeni/standard', label: 'Standard vlasy' },
+              { href: '/vlasy-k-prodlouzeni/luxe', label: 'Luxe vlasy' },
+              { href: '/vlasy-k-prodlouzeni/platinum-edition', label: 'Platinum Edition' },
               { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Vlasy na keratin' },
               { href: '/metody-zakonceni/vlasove-pasky-tape-in', label: 'Vlasové pásky Tape-In' },
               { href: '/ceny-aplikaci', label: 'Ceny aplikace' },
