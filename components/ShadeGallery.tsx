@@ -96,6 +96,7 @@ export default function ShadeGallery({
                         ? 'ring-2 ring-[#4A1E1A] ring-offset-2 shadow-lg'
                         : 'hover:ring-2 hover:ring-[#4A1E1A] hover:shadow-md'
                     }`}
+                    style={{ background: `linear-gradient(135deg, ${color?.hex} 0%, ${color?.hex}dd 100%)` }}
                   >
                     <Image
                       src={getShadeImagePath(shade)}
@@ -105,13 +106,9 @@ export default function ShadeGallery({
                       sizes="(max-width: 768px) 75px, 90px"
                       unoptimized
                       onError={(e) => {
-                        // Fallback na barevný gradient pokud obrázek neexistuje
+                        // Skryj img, gradient pozadí zůstane viditelné
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
-                        const parent = target.parentElement;
-                        if (parent) {
-                          parent.style.background = `linear-gradient(135deg, ${color?.hex} 0%, ${color?.hex}dd 100%)`;
-                        }
                       }}
                     />
 
@@ -197,7 +194,10 @@ export default function ShadeGallery({
             </button>
 
             {/* Detail fotky */}
-            <div className="relative aspect-[3/4] w-full">
+            <div
+              className="relative aspect-[3/4] w-full"
+              style={{ background: `linear-gradient(135deg, ${HAIR_COLORS[showModal]?.hex} 0%, ${HAIR_COLORS[showModal]?.hex}dd 100%)` }}
+            >
               <Image
                 src={getShadeImagePath(showModal)}
                 alt={`${HAIR_COLORS[showModal]?.name} #${showModal}`}
@@ -206,6 +206,9 @@ export default function ShadeGallery({
                 sizes="(max-width: 768px) 100vw, 672px"
                 unoptimized
                 priority
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
               />
             </div>
 
