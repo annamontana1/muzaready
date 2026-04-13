@@ -278,7 +278,7 @@ export default function SkuDetailPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-8">
+      <div className="max-w-7xl mx-auto px-3 md:px-12 py-4 md:py-8">
 
         {/* ── Breadcrumb ── */}
         <nav className="mb-10">
@@ -296,17 +296,18 @@ export default function SkuDetailPage() {
           </button>
         </nav>
 
-        {/* ── Main two-column layout ── */}
-        <div className="grid lg:grid-cols-[1fr_480px] gap-12 md:gap-16">
+        {/* ── Mobile: image + quick info side by side ── */}
+        {/* ── Desktop: two-column full layout ── */}
+        <div className="grid lg:grid-cols-[1fr_480px] gap-8 md:gap-12 lg:gap-16">
 
           {/* ═════════════════════════════════════════
               LEFT COLUMN: Image Gallery
           ═════════════════════════════════════════ */}
-          <div className="space-y-4">
+          <div className="space-y-3">
 
             {/* Main image */}
             <div
-              className="relative w-full aspect-[3/4] rounded-sm overflow-hidden border"
+              className="relative w-full rounded-sm overflow-hidden border h-[56vw] md:h-auto md:aspect-[3/4]"
               style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
             >
               {currentImage ? (
@@ -406,7 +407,7 @@ export default function SkuDetailPage() {
               {/* Title */}
               <h1
                 className="font-cormorant font-light leading-[1.1] mb-2"
-                style={{ fontSize: 'clamp(32px,4vw,44px)', color: 'var(--text-dark)' }}
+                style={{ fontSize: 'clamp(26px,4vw,44px)', color: 'var(--text-dark)' }}
               >
                 {sku.name || 'Bez názvu'}
               </h1>
