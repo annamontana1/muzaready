@@ -477,9 +477,9 @@ export default function LuxeTierPage() {
 
               {filteredProducts.length > 0 ? (
                 <>
-                  <div className="grid grid-cols-1 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px" style={{ background: 'var(--beige)' }}>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                     {paginatedProducts.map((product) => (
-                      <div key={product.id} style={{ background: 'var(--white)' }}>
+                      <div key={product.id}>
                         <ProductCard product={product} />
                       </div>
                     ))}
