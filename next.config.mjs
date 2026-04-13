@@ -59,6 +59,12 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // /katalog → /vlasy-k-prodlouzeni
+      {
+        source: '/katalog',
+        destination: '/vlasy-k-prodlouzeni',
+        permanent: true,
+      },
       // Stará struktura nebarvené/barvené → nová tier-first struktura
       {
         source: '/vlasy-k-prodlouzeni/nebarvene-panenske/standard',
