@@ -47,16 +47,16 @@ const ENDING_OPTIONS = [
   { id: 'TAPES', label: 'Tapes', price: '40 Kč/g' },
 ];
 
-function getCategoryBadge(category: Sku['customerCategory']) {
+function getCategoryInfo(category: Sku['customerCategory']) {
   switch (category) {
     case 'PLATINUM_EDITION':
-      return { label: 'Platinum Edition', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' };
+      return { label: 'Platinum Edition', bg: 'rgba(180,140,30,0.1)', color: '#7a5c00' };
     case 'LUXE':
-      return { label: 'Luxe', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200' };
+      return { label: 'Luxe', bg: 'rgba(74,21,32,0.08)', color: 'var(--burgundy)' };
     case 'BABY_SHADES':
-      return { label: 'Baby Shades', bg: 'bg-violet-50', text: 'text-violet-800', border: 'border-violet-200' };
+      return { label: 'Baby Shades', bg: 'rgba(100,60,130,0.08)', color: '#6b3d8a' };
     default:
-      return { label: 'Standard', bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200' };
+      return { label: 'Standard', bg: 'rgba(30,80,140,0.08)', color: '#1e508c' };
   }
 }
 
@@ -190,12 +190,20 @@ export default function SkuDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-soft-cream py-12">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="flex items-center justify-center py-32">
-            <div className="animate-pulse flex flex-col items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-4 border-burgundy/30 border-t-burgundy animate-spin" />
-              <p className="text-text-soft font-playfair">Nacitam produkt...</p>
+      <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-7xl mx-auto px-4 md:px-12 py-8">
+          <div className="flex items-center justify-center py-40">
+            <div className="flex flex-col items-center gap-5">
+              <div
+                className="w-8 h-8 rounded-full border-2 animate-spin"
+                style={{ borderColor: 'var(--burgundy)', borderRightColor: 'transparent' }}
+              />
+              <p
+                className="text-[12px] tracking-[0.1em] uppercase font-light"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                Načítám produkt…
+              </p>
             </div>
           </div>
         </div>
@@ -205,12 +213,24 @@ export default function SkuDetailPage() {
 
   if (error || !sku) {
     return (
-      <div className="min-h-screen bg-soft-cream py-12">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto">
-            <p className="text-red-800 font-medium text-lg mb-4">{error || 'SKU nenalezeno'}</p>
-            <Link href="/katalog" className="inline-flex items-center gap-2 text-burgundy hover:text-maroon font-medium transition">
-              <span>&larr;</span> Zpět na katalog
+      <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-7xl mx-auto px-4 md:px-12 py-8">
+          <div
+            className="rounded-sm border p-10 text-center max-w-lg mx-auto mt-20"
+            style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
+          >
+            <p
+              className="font-cormorant font-light text-[22px] mb-4"
+              style={{ color: 'var(--text-dark)' }}
+            >
+              {error || 'SKU nenalezeno'}
+            </p>
+            <Link
+              href="/katalog"
+              className="text-[11px] tracking-[0.12em] uppercase font-light inline-flex items-center gap-2 transition-colors"
+              style={{ color: 'var(--text-soft)' }}
+            >
+              ← Zpět na katalog
             </Link>
           </div>
         </div>
@@ -239,31 +259,56 @@ export default function SkuDetailPage() {
     ? Math.min(Math.max(selectedGrams || bulkMinGrams, bulkMinGrams), Math.max(bulkMaxGrams, bulkMinGrams))
     : selectedGrams;
 
-  const badge = getCategoryBadge(sku.customerCategory);
+  const catInfo = getCategoryInfo(sku.customerCategory);
+
+  // Build gram options for BULK_G scroll
+  const gramOptions: number[] = [];
+  if (sku.saleMode === 'BULK_G') {
+    for (let g = bulkMinGrams; g <= Math.max(bulkMaxGrams, bulkMinGrams); g += bulkStepGrams) {
+      gramOptions.push(g);
+    }
+    // If too many options, show every other step
+    // (thin out if more than 15)
+  }
+  const displayedGramOptions = gramOptions.length > 15
+    ? gramOptions.filter((_, i) => i % 2 === 0)
+    : gramOptions;
+
+  const lengthOptions = [40, 45, 50, 55, 60, 65, 70, 75, 80];
 
   return (
-    <div className="min-h-screen bg-soft-cream">
-      <div className="container mx-auto px-4 max-w-6xl py-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
+    <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
+      <div className="max-w-7xl mx-auto px-4 md:px-12 py-8">
+
+        {/* ── Breadcrumb ── */}
+        <nav className="mb-10">
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-burgundy hover:text-maroon transition font-medium"
+            className="inline-flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-light transition-colors"
+            style={{ color: 'var(--text-soft)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
             </svg>
             Zpět
           </button>
         </nav>
 
-        {/* Main two-column layout */}
-        <div className="grid lg:grid-cols-2 gap-10">
+        {/* ── Main two-column layout ── */}
+        <div className="grid lg:grid-cols-[1fr_480px] gap-12 md:gap-16">
 
-          {/* ===== LEFT COLUMN: Image Gallery ===== */}
+          {/* ═════════════════════════════════════════
+              LEFT COLUMN: Image Gallery
+          ═════════════════════════════════════════ */}
           <div className="space-y-4">
+
             {/* Main image */}
-            <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-white border border-warm-beige shadow-sm">
+            <div
+              className="relative w-full aspect-[3/4] rounded-sm overflow-hidden border"
+              style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
+            >
               {currentImage ? (
                 <img
                   src={currentImage}
@@ -279,21 +324,38 @@ export default function SkuDetailPage() {
                       : 'linear-gradient(135deg, #f5f0eb, #e8ddd4, #d4c5b9)',
                   }}
                 >
-                  <svg className="w-16 h-16 text-white/60 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <svg
+                    className="w-12 h-12 mb-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    style={{ color: 'rgba(255,255,255,0.5)' }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-white/50 text-sm font-medium">Foto není k dispozici</span>
+                  <span
+                    className="text-[11px] tracking-[0.1em] uppercase font-light"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                  >
+                    Foto není k dispozici
+                  </span>
                 </div>
               )}
 
               {/* Stock badge overlay */}
               {sku.inStock && !sku.soldOut && (
-                <div className="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                <div
+                  className="absolute top-4 left-4 text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-sm font-normal"
+                  style={{ background: 'rgba(34,120,60,0.9)', color: '#fff' }}
+                >
                   Skladem
                 </div>
               )}
               {sku.soldOut && (
-                <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                <div
+                  className="absolute top-4 left-4 text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-sm font-normal"
+                  style={{ background: 'rgba(100,100,100,0.85)', color: '#fff' }}
+                >
                   Vyprodáno
                 </div>
               )}
@@ -301,16 +363,17 @@ export default function SkuDetailPage() {
 
             {/* Thumbnails */}
             {allImages.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto pb-2">
+              <div className="flex gap-2 overflow-x-auto pb-1">
                 {allImages.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                    className="relative w-16 h-20 flex-shrink-0 rounded-sm overflow-hidden transition-all"
+                    style={
                       currentImage === img
-                        ? 'border-burgundy shadow-md ring-2 ring-burgundy/20'
-                        : 'border-warm-beige hover:border-burgundy/50'
-                    }`}
+                        ? { outline: '2px solid var(--burgundy)', outlineOffset: '2px' }
+                        : { border: '1px solid var(--beige-mid)' }
+                    }
                   >
                     <img
                       src={img}
@@ -323,34 +386,60 @@ export default function SkuDetailPage() {
             )}
           </div>
 
-          {/* ===== RIGHT COLUMN: Product Info + Configuration ===== */}
+          {/* ═════════════════════════════════════════
+              RIGHT COLUMN: Product Info + Config
+          ═════════════════════════════════════════ */}
           <div className="space-y-6">
 
-            {/* Product info card */}
+            {/* ── Product info ── */}
             <div>
               {/* Category badge */}
-              <div className="mb-3">
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${badge.bg} ${badge.text} ${badge.border}`}>
-                  {badge.label}
+              <div className="mb-4">
+                <span
+                  className="inline-block text-[10px] tracking-[0.18em] uppercase font-normal px-3 py-1.5 rounded-sm"
+                  style={{ background: catInfo.bg, color: catInfo.color }}
+                >
+                  {catInfo.label}
                 </span>
               </div>
 
               {/* Title */}
-              <h1 className="font-playfair text-3xl lg:text-4xl font-bold text-burgundy mb-2">
-                {sku.name || 'Bez nazvu'}
+              <h1
+                className="font-cormorant font-light leading-[1.1] mb-2"
+                style={{ fontSize: 'clamp(32px,4vw,44px)', color: 'var(--text-dark)' }}
+              >
+                {sku.name || 'Bez názvu'}
               </h1>
-              <p className="text-sm text-text-soft mb-6">SKU: {sku.sku}</p>
 
-              {/* Key details */}
-              <div className="bg-white rounded-xl border border-warm-beige p-5 space-y-4">
+              {/* SKU number */}
+              <p
+                className="text-[10px] tracking-[0.15em] uppercase mb-6"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                SKU: {sku.sku}
+              </p>
+
+              {/* Key details card */}
+              <div
+                className="rounded-sm border"
+                style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
+              >
                 {sku.shadeName && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-text-soft text-sm">Odstín</span>
-                    <span className="flex items-center gap-2 font-medium text-text-dark">
+                  <div className="flex justify-between items-center py-3 px-5 border-b" style={{ borderColor: 'var(--beige)' }}>
+                    <span
+                      className="text-[11px] tracking-[0.1em] uppercase"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      Odstín
+                    </span>
+                    <span
+                      className="text-[14px] font-normal flex items-center gap-2"
+                      style={{ color: 'var(--text-dark)' }}
+                    >
                       {sku.shadeHex && (
                         <span
-                          className="inline-block w-5 h-5 rounded-full border border-warm-beige shadow-inner"
-                          style={{ backgroundColor: sku.shadeHex }}
+                          className="inline-block w-4 h-4 rounded-full border"
+                          style={{ backgroundColor: sku.shadeHex, borderColor: 'var(--beige-mid)' }}
                         />
                       )}
                       {sku.shadeName}{sku.shade ? ` · #${sku.shade}` : ''}
@@ -358,28 +447,55 @@ export default function SkuDetailPage() {
                   </div>
                 )}
                 {sku.lengthCm && (
-                  <div className="flex items-center justify-between border-t border-warm-beige pt-4">
-                    <span className="text-text-soft text-sm">Délka</span>
-                    <span className="font-medium text-text-dark">{sku.lengthCm} cm</span>
+                  <div className="flex justify-between items-center py-3 px-5 border-b" style={{ borderColor: 'var(--beige)' }}>
+                    <span
+                      className="text-[11px] tracking-[0.1em] uppercase"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      Délka
+                    </span>
+                    <span className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>
+                      {sku.lengthCm} cm
+                    </span>
                   </div>
                 )}
                 {sku.structure && (
-                  <div className="flex items-center justify-between border-t border-warm-beige pt-4">
-                    <span className="text-text-soft text-sm">Struktura</span>
-                    <span className="font-medium text-text-dark capitalize">{sku.structure}</span>
+                  <div className="flex justify-between items-center py-3 px-5 border-b" style={{ borderColor: 'var(--beige)' }}>
+                    <span
+                      className="text-[11px] tracking-[0.1em] uppercase"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      Struktura
+                    </span>
+                    <span className="text-[14px] font-normal capitalize" style={{ color: 'var(--text-dark)' }}>
+                      {sku.structure}
+                    </span>
                   </div>
                 )}
-                <div className="flex items-center justify-between border-t border-warm-beige pt-4">
-                  <span className="text-text-soft text-sm">Cena za gram</span>
-                  <span className="text-lg font-bold text-burgundy">{formatPrice(sku.pricePerGramCzk)}/g</span>
+                <div className="flex justify-between items-center py-3 px-5">
+                  <span
+                    className="text-[11px] tracking-[0.1em] uppercase"
+                    style={{ color: 'var(--text-soft)' }}
+                  >
+                    Cena za gram
+                  </span>
+                  <span
+                    className="font-cormorant font-light text-[22px]"
+                    style={{ color: 'var(--burgundy)' }}
+                  >
+                    {formatPrice(sku.pricePerGramCzk)}/g
+                  </span>
                 </div>
               </div>
 
               {/* Stock status */}
               {sku.inStock && !sku.soldOut && (
-                <div className="mt-4 flex items-center gap-2">
-                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-green-500" />
-                  <span className="text-sm text-green-700 font-medium">
+                <div className="mt-3 flex items-center gap-2">
+                  <span
+                    className="inline-block w-1.5 h-1.5 rounded-full"
+                    style={{ background: '#22783c' }}
+                  />
+                  <span className="text-[12px] font-light" style={{ color: '#22783c' }}>
                     {sku.saleMode === 'PIECE_BY_WEIGHT'
                       ? `Skladem (${sku.weightTotalG}g)`
                       : `Skladem (${sku.availableGrams}g)`}
@@ -388,173 +504,382 @@ export default function SkuDetailPage() {
               )}
             </div>
 
-            {/* Configuration section */}
-            <div className="bg-white rounded-xl border border-warm-beige p-6">
-              <h2 className="font-playfair text-xl font-bold text-burgundy mb-5">Konfigurace</h2>
-
-              {/* Ending Selection */}
+            {/* ── Configuration card ── */}
+            <div
+              className="rounded-sm border p-6"
+              style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
+            >
+              {/* Section label + heading */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-text-mid mb-3">
+                <div
+                  className="text-[10px] tracking-[0.2em] uppercase mb-2 font-normal"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  Konfigurace
+                </div>
+                <h2
+                  className="font-cormorant font-light text-[24px] leading-none"
+                  style={{ color: 'var(--text-dark)' }}
+                >
+                  Přizpůsobte si produkt
+                </h2>
+              </div>
+
+              {/* ── Ending selection ── */}
+              <div className="mb-7">
+                <div
+                  className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal"
+                  style={{ color: 'var(--text-soft)' }}
+                >
                   Zakončení
-                </label>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
                   {ENDING_OPTIONS.map((option) => (
                     <button
                       key={option.id}
                       onClick={() => setSelectedEnding(option.id)}
-                      className={`p-3 rounded-xl text-left transition-all border-2 ${
+                      className="p-3 rounded-sm text-left transition-all"
+                      style={
                         selectedEnding === option.id
-                          ? 'bg-burgundy text-white border-burgundy shadow-md'
-                          : 'bg-white text-text-mid border-warm-beige hover:border-burgundy/50'
-                      }`}
+                          ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                          : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
+                      }
+                      onMouseEnter={e => {
+                        if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--burgundy)';
+                      }}
+                      onMouseLeave={e => {
+                        if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--beige-mid)';
+                      }}
                     >
-                      <span className="block text-sm font-semibold">{option.label}</span>
-                      <span className={`block text-xs mt-0.5 ${selectedEnding === option.id ? 'text-white/70' : 'text-text-soft'}`}>{option.price}</span>
+                      <span
+                        className="block text-[11px] tracking-[0.08em] uppercase font-normal"
+                      >
+                        {option.label}
+                      </span>
+                      <span
+                        className="block text-[10px] mt-0.5 font-light"
+                        style={{ opacity: selectedEnding === option.id ? 0.7 : 0.75 }}
+                      >
+                        {option.price}
+                      </span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* BULK_G sliders */}
+              {/* ── BULK_G selectors ── */}
               {sku.saleMode === 'BULK_G' && (
-                <div className="mb-6 space-y-6">
+                <div className="mb-7 space-y-6">
+
+                  {/* Length selector */}
                   <div>
-                    <label className="block text-sm font-semibold text-text-mid mb-3">
-                      Délka: <span className="text-burgundy">{bulkLengthValue} cm</span>
-                    </label>
-                    <input
-                      type="range"
-                      min={BULK_MIN_LENGTH}
-                      max={BULK_MAX_LENGTH}
-                      step={5}
-                      value={bulkLengthValue}
-                      onChange={(e) => setSelectedLength(Number(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy"
-                    />
-                    <div className="flex justify-between text-xs text-text-soft mt-1">
-                      <span>{BULK_MIN_LENGTH} cm</span>
-                      <span>{BULK_MAX_LENGTH} cm</span>
+                    <div
+                      className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal flex items-center justify-between"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      <span>Délka</span>
+                      <span
+                        className="text-[12px] tracking-[0.05em] normal-case font-light"
+                        style={{ color: 'var(--burgundy)' }}
+                      >
+                        {bulkLengthValue} cm
+                      </span>
+                    </div>
+                    <div className="overflow-x-auto pb-2 -mx-1">
+                      <div className="flex gap-2 px-1 w-max">
+                        {lengthOptions.map((len) => (
+                          <button
+                            key={len}
+                            onClick={() => setSelectedLength(len)}
+                            className="text-[11px] tracking-[0.08em] px-4 py-2.5 rounded-sm font-light transition-all flex-shrink-0"
+                            style={
+                              bulkLengthValue === len
+                                ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                                : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
+                            }
+                            onMouseEnter={e => {
+                              if (bulkLengthValue !== len) e.currentTarget.style.borderColor = 'var(--burgundy)';
+                            }}
+                            onMouseLeave={e => {
+                              if (bulkLengthValue !== len) e.currentTarget.style.borderColor = 'var(--beige-mid)';
+                            }}
+                          >
+                            {len} cm
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
+
+                  {/* Grams selector */}
                   <div>
-                    <label className="block text-sm font-semibold text-text-mid mb-3">
-                      Gramaz: <span className="text-burgundy">{bulkGramsValue} g</span>
-                    </label>
-                    <input
-                      type="range"
-                      min={bulkMinGrams}
-                      max={Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)}
-                      step={bulkStepGrams}
-                      value={bulkGramsValue}
-                      onChange={(e) => setSelectedGrams(Number(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-burgundy disabled:opacity-50"
-                      disabled={!bulkMaxGrams}
-                    />
-                    <div className="flex justify-between text-xs text-text-soft mt-1">
-                      <span>{bulkMinGrams} g</span>
-                      <span>{Math.max(bulkMaxGrams, bulkMinGrams || bulkStepGrams)} g</span>
+                    <div
+                      className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal flex items-center justify-between"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      <span>Gramáž</span>
+                      <span
+                        className="text-[12px] tracking-[0.05em] normal-case font-light"
+                        style={{ color: 'var(--burgundy)' }}
+                      >
+                        {bulkGramsValue} g
+                      </span>
                     </div>
-                    <p className="text-xs text-text-soft mt-2">
-                      Min. objednavka {bulkMinGrams} g, krok {bulkStepGrams} g
+                    {displayedGramOptions.length > 0 ? (
+                      <div className="overflow-x-auto pb-2 -mx-1">
+                        <div className="flex gap-2 px-1 w-max">
+                          {displayedGramOptions.map((g) => (
+                            <button
+                              key={g}
+                              onClick={() => setSelectedGrams(g)}
+                              className="text-[11px] tracking-[0.08em] px-4 py-2.5 rounded-sm font-light transition-all flex-shrink-0"
+                              style={
+                                bulkGramsValue === g
+                                  ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                                  : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
+                              }
+                              onMouseEnter={e => {
+                                if (bulkGramsValue !== g) e.currentTarget.style.borderColor = 'var(--burgundy)';
+                              }}
+                              onMouseLeave={e => {
+                                if (bulkGramsValue !== g) e.currentTarget.style.borderColor = 'var(--beige-mid)';
+                              }}
+                            >
+                              {g} g
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p
+                        className="text-[12px] font-light"
+                        style={{ color: 'var(--text-soft)' }}
+                      >
+                        Dostupnost: {bulkMinGrams}–{Math.max(bulkMaxGrams, bulkMinGrams)} g (krok {bulkStepGrams} g)
+                      </p>
+                    )}
+                    <p
+                      className="text-[10px] tracking-[0.05em] font-light mt-2"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      Min. objednávka {bulkMinGrams} g · krok {bulkStepGrams} g
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* Calculate Button */}
+              {/* ── Calculate button ── */}
               <button
                 onClick={calculateQuote}
                 disabled={
                   quoteLoading ||
                   (sku.saleMode === 'BULK_G' && (!selectedGrams || selectedGrams < (sku.minOrderG || 0)))
                 }
-                className="w-full bg-burgundy text-white py-3.5 rounded-xl font-semibold hover:bg-maroon transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 rounded-sm text-[12px] tracking-[0.14em] uppercase font-normal transition-all hover:-translate-y-px disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
-                {quoteLoading ? 'Počítám...' : 'Spočítat cenu'}
+                {quoteLoading ? 'Počítám…' : 'Spočítat cenu'}
               </button>
             </div>
 
-            {/* Price Quote */}
+            {/* ── Price quote card ── */}
             {quote && (
-              <div className="bg-white rounded-xl border-2 border-burgundy p-6 space-y-4">
-                <h3 className="font-playfair text-lg font-bold text-burgundy">Cenový rozpis</h3>
+              <div
+                className="rounded-sm p-6 space-y-5"
+                style={{ background: 'var(--white)', border: '2px solid var(--burgundy)' }}
+              >
+                {/* Heading */}
+                <div>
+                  <div
+                    className="text-[10px] tracking-[0.2em] uppercase mb-1.5 font-normal"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    Cenový rozpis
+                  </div>
+                  <h3
+                    className="font-cormorant font-light text-[22px] leading-none"
+                    style={{ color: 'var(--text-dark)' }}
+                  >
+                    Kalkulace ceny
+                  </h3>
+                </div>
 
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-text-mid">Vlasy ({quote.grams}g x {formatPrice(quote.pricePerGram)}/g)</span>
-                    <span className="font-medium">{formatPrice(quote.lineTotal)}</span>
+                {/* Line items */}
+                <div className="space-y-0">
+                  <div
+                    className="flex justify-between items-center py-3 border-b"
+                    style={{ borderColor: 'var(--beige)' }}
+                  >
+                    <span
+                      className="text-[11px] tracking-[0.05em] font-light"
+                      style={{ color: 'var(--text-soft)' }}
+                    >
+                      Vlasy — {quote.grams}g × {formatPrice(quote.pricePerGram)}/g
+                    </span>
+                    <span className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>
+                      {formatPrice(quote.lineTotal)}
+                    </span>
                   </div>
 
                   {quote.assemblyFeeTotal > 0 && (
-                    <div className="flex justify-between items-center text-amber-700">
-                      <span>Zakončení ({quote.assemblyFeeType})</span>
-                      <span className="font-medium">{formatPrice(quote.assemblyFeeTotal)}</span>
+                    <div
+                      className="flex justify-between items-center py-3 border-b"
+                      style={{ borderColor: 'var(--beige)' }}
+                    >
+                      <span
+                        className="text-[11px] tracking-[0.05em] font-light"
+                        style={{ color: 'var(--text-soft)' }}
+                      >
+                        Zakončení — {quote.assemblyFeeType}
+                      </span>
+                      <span className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>
+                        {formatPrice(quote.assemblyFeeTotal)}
+                      </span>
                     </div>
                   )}
 
-                  <div className="pt-3 border-t-2 border-burgundy/20 flex justify-between items-end">
-                    <span className="font-semibold text-text-dark">Celkem za 1 ks</span>
-                    <span className="text-2xl font-bold text-burgundy">{formatPrice(quote.lineGrandTotal)}</span>
+                  <div className="flex justify-between items-end pt-4">
+                    <span
+                      className="text-[11px] tracking-[0.08em] uppercase font-normal"
+                      style={{ color: 'var(--text-mid)' }}
+                    >
+                      Celkem za 1 ks
+                    </span>
+                    <span
+                      className="font-cormorant font-light text-[32px] leading-none"
+                      style={{ color: 'var(--burgundy)' }}
+                    >
+                      {formatPrice(quote.lineGrandTotal)}
+                    </span>
                   </div>
                 </div>
 
-                {/* Quantity Selector */}
-                <div className="pt-4 border-t border-warm-beige">
-                  <label className="text-sm font-medium text-text-mid block mb-3">Pocet kusu</label>
+                {/* Quantity selector */}
+                <div className="pt-4 border-t" style={{ borderColor: 'var(--beige)' }}>
+                  <div
+                    className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal"
+                    style={{ color: 'var(--text-soft)' }}
+                  >
+                    Počet kusů
+                  </div>
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-10 h-10 flex items-center justify-center border-2 border-burgundy rounded-lg text-burgundy hover:bg-burgundy/5 transition font-bold"
+                      className="w-9 h-9 rounded-sm flex items-center justify-center text-[16px] font-light transition-all"
+                      style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.borderColor = 'var(--burgundy)';
+                        e.currentTarget.style.color = 'var(--burgundy)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.borderColor = 'var(--beige-mid)';
+                        e.currentTarget.style.color = 'var(--text-mid)';
+                      }}
                     >
-                      -
+                      −
                     </button>
-                    <span className="text-xl font-bold min-w-[3rem] text-center">{quantity}</span>
+                    <span
+                      className="font-cormorant font-light text-[24px] min-w-[2.5rem] text-center"
+                      style={{ color: 'var(--text-dark)' }}
+                    >
+                      {quantity}
+                    </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-10 h-10 flex items-center justify-center border-2 border-burgundy rounded-lg text-burgundy hover:bg-burgundy/5 transition font-bold"
+                      className="w-9 h-9 rounded-sm flex items-center justify-center text-[16px] font-light transition-all"
+                      style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.borderColor = 'var(--burgundy)';
+                        e.currentTarget.style.color = 'var(--burgundy)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.borderColor = 'var(--beige-mid)';
+                        e.currentTarget.style.color = 'var(--text-mid)';
+                      }}
                     >
                       +
                     </button>
                   </div>
 
                   {quantity > 1 && (
-                    <div className="mt-3 text-right">
-                      <p className="text-xs text-text-soft">Celkem za {quantity} ks</p>
-                      <p className="text-3xl font-bold text-burgundy">
+                    <div className="mt-4 flex justify-between items-end">
+                      <span
+                        className="text-[10px] tracking-[0.1em] uppercase font-light"
+                        style={{ color: 'var(--text-soft)' }}
+                      >
+                        Celkem za {quantity} ks
+                      </span>
+                      <span
+                        className="font-cormorant font-light text-[28px] leading-none"
+                        style={{ color: 'var(--burgundy)' }}
+                      >
                         {formatPrice(quote.lineGrandTotal * quantity)}
-                      </p>
+                      </span>
                     </div>
                   )}
                 </div>
 
-                {/* Add to Cart Button */}
+                {/* Add to cart button */}
                 <button
                   onClick={handleAddToCart}
-                  className="w-full mt-2 bg-burgundy text-white py-4 rounded-xl font-bold text-lg hover:bg-maroon transition shadow-lg hover:shadow-xl"
+                  className="w-full py-4 rounded-sm text-[12px] tracking-[0.14em] uppercase font-normal transition-all hover:-translate-y-px mt-1"
+                  style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                 >
-                  Přidat do košíku {quantity > 1 ? `(${quantity} ks)` : ''}
+                  Přidat do košíku{quantity > 1 ? ` (${quantity} ks)` : ''}
                 </button>
               </div>
             )}
 
-            {/* How it works */}
-            <div className="bg-burgundy/5 rounded-xl p-5 text-sm text-text-mid">
-              <p className="font-semibold text-burgundy mb-2">Jak to funguje</p>
-              <ol className="list-decimal list-inside space-y-1.5 text-xs leading-relaxed">
-                <li>Vyber typ zakončení</li>
-                {sku.saleMode === 'BULK_G' && <li>Nastav požadovanou délku a počet gramů</li>}
-                <li>Klikni &quot;Spočítat cenu&quot; pro přesný cenový rozpis</li>
-                <li>Vyber počet kusů a přidej do košíku</li>
-                <li>Jdi do košíku a dokonči nákup</li>
-              </ol>
+            {/* ── How it works ── */}
+            <div
+              className="rounded-sm p-6"
+              style={{ background: 'var(--beige)', border: '1px solid var(--beige-mid)' }}
+            >
+              <div
+                className="text-[10px] tracking-[0.2em] uppercase mb-2 font-normal"
+                style={{ color: 'var(--accent)' }}
+              >
+                Průvodce nákupem
+              </div>
+              <h4
+                className="font-cormorant font-light text-[20px] mb-4 leading-none"
+                style={{ color: 'var(--text-dark)' }}
+              >
+                Jak to funguje
+              </h4>
+              <ul className="space-y-2.5">
+                {[
+                  'Vyber typ zakončení',
+                  ...(sku.saleMode === 'BULK_G' ? ['Nastav požadovanou délku a počet gramů'] : []),
+                  'Klikni „Spočítat cenu" pro přesný cenový rozpis',
+                  'Vyber počet kusů a přidej do košíku',
+                  'Jdi do košíku a dokonči nákup',
+                ].map((step, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span
+                      className="font-cormorant text-[16px] font-light flex-shrink-0 mt-px"
+                      style={{ color: 'var(--burgundy)' }}
+                    >
+                      ✦
+                    </span>
+                    <span
+                      className="text-[13px] font-light leading-[1.5]"
+                      style={{ color: 'var(--text-mid)' }}
+                    >
+                      {step}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
 
-        {/* Reviews Section */}
-        <div className="max-w-6xl mx-auto mt-16">
+        {/* ── Reviews section ── */}
+        <div className="mt-20">
           <ProductReviews skuId={skuId} />
         </div>
+
       </div>
     </div>
   );
