@@ -117,6 +117,9 @@ function formatPrice(czk: number): string {
   }).format(czk);
 }
 
+// Odstín #2 není v nabídce
+const EXCLUDED_SHADES = ['2'];
+
 function getShadeRange(category: Category, productType: ProductType): string[] {
   // Nebarvené (1-4) nemá výběr odstínu
   if (productType === 'nebarvene') return [];
@@ -124,9 +127,9 @@ function getShadeRange(category: Category, productType: ProductType): string[] {
   if (productType === 'nebarvene_svetle') return Array.from({ length: 6 }, (_, i) => String(i + 5)); // 5-10
 
   if (category === 'baby_shades') return Array.from({ length: 5 }, (_, i) => String(i + 6)); // 6-10
-  if (category === 'platinum_edition') return Array.from({ length: 10 }, (_, i) => String(i + 1)); // 1-10
+  if (category === 'platinum_edition') return Array.from({ length: 10 }, (_, i) => String(i + 1)).filter(s => !EXCLUDED_SHADES.includes(s));
   // standard, luxe — barvené 1-10
-  return Array.from({ length: 10 }, (_, i) => String(i + 1));
+  return Array.from({ length: 10 }, (_, i) => String(i + 1)).filter(s => !EXCLUDED_SHADES.includes(s));
 }
 
 function getEndingPricePerGram(ending: Ending): number {

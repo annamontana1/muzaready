@@ -67,7 +67,7 @@ export default function PlatinumEditionTierPage() {
     fetchProducts();
   }, [fetchProducts]);
 
-  const availableShades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const availableShades = [1, 3, 4, 5, 6, 7, 8, 9, 10]; // #2 není v nabídce
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {

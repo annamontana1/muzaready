@@ -32,11 +32,15 @@ export function getShadeInfo(shadeCode: number): ShadeInfo | null {
   };
 }
 
+// Odstín #2 není v nabídce (žádná fotka ani produkt)
+const EXCLUDED_SHADES = [2];
+
 /**
- * Vrátí všechny dostupné odstíny
+ * Vrátí všechny dostupné odstíny (bez vyloučených)
  */
 export function getAllShades(): ShadeInfo[] {
   return Array.from({ length: 10 }, (_, i) => i + 1)
+    .filter((code) => !EXCLUDED_SHADES.includes(code))
     .map((code) => getShadeInfo(code))
     .filter((info): info is ShadeInfo => info !== null);
 }
