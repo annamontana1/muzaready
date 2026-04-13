@@ -296,8 +296,8 @@ export async function getCatalogProducts(
             ribbon_color: shadeHex,
           }],
           images: {
-            main: sku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
-            hover: sku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+            main: sku.imageUrl || '',
+            hover: sku.imageUrl || '',
             gallery: Array.isArray(sku.images) ? sku.images : [],
           },
           base_price_per_100g_45cm: sku.pricePerGramCzk * 100, // Cena za 100g
@@ -380,8 +380,8 @@ export async function getCatalogProducts(
           };
         }),
         images: {
-          main: displaySku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
-          hover: displaySku.imageUrl || `/images/shades/${String(shadeCode).padStart(2, '0')}-${shadeName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+          main: displaySku.imageUrl || '',
+          hover: displaySku.imageUrl || '',
           gallery: [],
         },
         base_price_per_100g_45cm: displaySku.pricePerGramCzk * 100,

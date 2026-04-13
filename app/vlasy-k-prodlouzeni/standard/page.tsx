@@ -68,7 +68,15 @@ export default function StandardTierPage() {
     fetchProducts();
   }, [fetchProducts]);
 
-  const availableShades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // Only show shades that actually have products in this tier
+  const availableShades = useMemo(() => {
+    const shadeSet = new Set<number>();
+    products.forEach(p => {
+      const shade = p.variants[0]?.shade;
+      if (shade) shadeSet.add(shade);
+    });
+    return Array.from(shadeSet).sort((a, b) => a - b);
+  }, [products]);
 
   // Apply client-side filters (shade, structure)
   const filteredProducts = useMemo(() => {
