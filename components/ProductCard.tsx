@@ -69,6 +69,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   const [showTierModal, setShowTierModal] = useState(false);
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageError, setImageError] = useState(false);
   const { addToCart } = useCart();
   const { user } = useAuth();
   const displayVariant = variant || product.variants[0];
@@ -185,17 +186,14 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
             allImages.push(...product.images.gallery.filter((img: string) => img && (img.startsWith('http') || img.startsWith('/'))));
           }
 
-          if (allImages.length > 0) {
+          if (allImages.length > 0 && !imageError) {
             return (
               <>
                 <img
                   src={allImages[currentImageIndex] || allImages[0]}
                   alt={listingTitle}
                   className="w-full h-full object-cover transition-opacity duration-300"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                  }}
+                  onError={() => setImageError(true)}
                 />
                 {/* Navigation arrows - show only if multiple images */}
                 {allImages.length > 1 && (
