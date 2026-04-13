@@ -229,14 +229,14 @@ export default function LuxeTierPage() {
               >
                 Struktura {filters.structures.length > 0 && `· ${filters.structures.length} vybráno`}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2 overflow-x-auto pb-1">
                 {['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'].map((name) => {
                   const isSelected = filters.structures.includes(name);
                   return (
                     <button
                       key={name}
                       onClick={() => toggleStructure(name)}
-                      className="text-[11px] tracking-[0.08em] uppercase px-4 py-2.5 rounded-sm font-light transition-all capitalize"
+                      className="text-[10px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-sm font-light transition-all flex-shrink-0 whitespace-nowrap"
                       style={
                         isSelected
                           ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
