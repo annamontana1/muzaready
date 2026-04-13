@@ -270,9 +270,7 @@ export default function SkuDetailPage() {
     // If too many options, show every other step
     // (thin out if more than 15)
   }
-  const displayedGramOptions = gramOptions.length > 15
-    ? gramOptions.filter((_, i) => i % 2 === 0)
-    : gramOptions;
+  const displayedGramOptions = gramOptions;
 
   const lengthOptions = [40, 45, 50, 55, 60, 65, 70, 75, 80];
 
