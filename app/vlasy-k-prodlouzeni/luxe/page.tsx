@@ -352,7 +352,7 @@ export default function LuxeTierPage() {
               >
                 Struktura {filters.structures.length > 0 && `· ${filters.structures.length} vybráno`}
               </div>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="flex flex-wrap gap-3">
                 {[
                   { name: 'rovné', image: '/images/structures/rovne.png' },
                   { name: 'mírně vlnité', image: '/images/structures/mirne-vlnite.png' },
@@ -365,15 +365,14 @@ export default function LuxeTierPage() {
                       key={name}
                       onClick={() => toggleStructure(name)}
                       aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                      className="relative rounded-sm transition-all overflow-hidden"
-                      style={{
-                        aspectRatio: '1',
-                        ...(isSelected
+                      className="relative w-20 h-20 rounded-sm transition-all overflow-hidden flex-shrink-0"
+                      style={
+                        isSelected
                           ? { outline: '2px solid var(--burgundy)', outlineOffset: '2px', boxShadow: '0 2px 8px rgba(74,21,32,0.15)' }
-                          : { outline: '1px solid var(--beige-mid)' })
-                      }}
+                          : { outline: '1px solid var(--beige-mid)' }
+                      }
                     >
-                      <Image src={image} alt={name} fill className="object-cover" sizes="25vw" />
+                      <Image src={image} alt={name} fill className="object-cover" sizes="80px" />
                     </button>
                   );
                 })}
