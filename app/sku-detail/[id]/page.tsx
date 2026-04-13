@@ -307,7 +307,7 @@ export default function SkuDetailPage() {
 
             {/* Main image */}
             <div
-              className="relative w-full rounded-sm overflow-hidden border aspect-[4/5] md:aspect-[3/4]"
+              className="relative w-full rounded-sm overflow-hidden border h-72 md:h-auto md:aspect-[3/4]"
               style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
             >
               {currentImage ? (
@@ -529,42 +529,34 @@ export default function SkuDetailPage() {
               {/* ── Ending selection ── */}
               <div className="mb-7">
                 <div
-                  className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal"
+                  className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal flex items-center justify-between"
                   style={{ color: 'var(--text-soft)' }}
                 >
-                  Zakončení
+                  <span>Zakončení</span>
+                  <span className="text-[12px] tracking-[0.05em] normal-case font-light" style={{ color: 'var(--burgundy)' }}>
+                    {ENDING_OPTIONS.find(o => o.id === selectedEnding)?.label}
+                  </span>
                 </div>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-                  {ENDING_OPTIONS.map((option) => (
-                    <button
-                      key={option.id}
-                      onClick={() => setSelectedEnding(option.id)}
-                      className="p-3 rounded-sm text-left transition-all"
-                      style={
-                        selectedEnding === option.id
-                          ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
-                          : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
-                      }
-                      onMouseEnter={e => {
-                        if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--burgundy)';
-                      }}
-                      onMouseLeave={e => {
-                        if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--beige-mid)';
-                      }}
-                    >
-                      <span
-                        className="block text-[11px] tracking-[0.08em] uppercase font-normal"
+                <div className="overflow-x-auto pb-2">
+                  <div className="flex gap-2 w-max">
+                    {ENDING_OPTIONS.map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => setSelectedEnding(option.id)}
+                        className="flex-shrink-0 px-4 py-2.5 rounded-sm transition-all text-left"
+                        style={
+                          selectedEnding === option.id
+                            ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                            : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
+                        }
+                        onMouseEnter={e => { if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--burgundy)'; }}
+                        onMouseLeave={e => { if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--beige-mid)'; }}
                       >
-                        {option.label}
-                      </span>
-                      <span
-                        className="block text-[10px] mt-0.5 font-light"
-                        style={{ opacity: selectedEnding === option.id ? 0.7 : 0.75 }}
-                      >
-                        {option.price}
-                      </span>
-                    </button>
-                  ))}
+                        <span className="block text-[11px] tracking-[0.08em] uppercase font-normal whitespace-nowrap">{option.label}</span>
+                        <span className="block text-[10px] mt-0.5 font-light whitespace-nowrap" style={{ opacity: 0.7 }}>{option.price}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
