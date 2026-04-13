@@ -143,7 +143,6 @@ export async function getCatalogProducts(
 ): Promise<Product[]> {
   const where: any = {
     isListed: true,
-    inStock: true,
   };
 
   // Filtrování podle tieru (customerCategory) - PRIMARY filter
@@ -263,7 +262,7 @@ export async function getCatalogProducts(
     // Pro Standard/LUXE: jedna karta pro všechny délky
     if (isPlatinum) {
       for (const sku of skuGroup) {
-        if (!sku.lengthCm || sku.soldOut || !sku.inStock) continue;
+        if (!sku.lengthCm) continue;
 
         const weightGrams = sku.weightGrams ?? sku.weightTotalG ?? 0;
         const slug = formatPlatinumSlug(sku.lengthCm, shadeCode, weightGrams) || createSlug(category, tier, shadeCode, structure, sku.lengthCm);
@@ -326,12 +325,13 @@ export async function getCatalogProducts(
       const lengthStock = new Map<number, number>();
 
       for (const sku of skuGroup) {
-        if (sku.lengthCm && sku.availableGrams && sku.availableGrams >= (sku.minOrderG || 0)) {
+        if (sku.lengthCm) {
           availableLengths.push(sku.lengthCm);
-          lengthStock.set(sku.lengthCm, sku.availableGrams);
+          lengthStock.set(sku.lengthCm, sku.availableGrams ?? 0);
         }
       }
 
+      // Pokud nemáme délku vůbec, přeskočíme
       if (availableLengths.length === 0) continue;
 
       // Použijeme první dostupnou délku pro zobrazení
@@ -374,7 +374,7 @@ export async function getCatalogProducts(
             structure: structure as any,
             ending: 'keratin' as any,
             price_czk: lengthSku.pricePerGramCzk * 100, // Cena za 100g
-            in_stock: stock >= (lengthSku.minOrderG || 0),
+            in_stock: lengthSku.inStock && !lengthSku.soldOut && stock >= (lengthSku.minOrderG || 0),
             stock_quantity: stock,
             ribbon_color: shadeHex,
           };
@@ -385,7 +385,7 @@ export async function getCatalogProducts(
           gallery: [],
         },
         base_price_per_100g_45cm: displaySku.pricePerGramCzk * 100,
-        in_stock: availableLengths.length > 0,
+        in_stock: skuGroup.some(s => s.inStock && !s.soldOut && (s.availableGrams ?? 0) >= (s.minOrderG ?? 0)),
         stock_quantity: Array.from(lengthStock.values()).reduce((sum, val) => sum + val, 0),
         meta_title: `${shadeName} #${shadeCode} - ${tier} | Mùza Hair`,
         meta_description: `${tier} panenské vlasy, odstín ${shadeName}, ${structure}`,
