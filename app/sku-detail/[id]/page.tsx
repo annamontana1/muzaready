@@ -246,15 +246,15 @@ export default function SkuDetailPage() {
       <div className="container mx-auto px-4 max-w-6xl py-8">
         {/* Breadcrumb */}
         <nav className="mb-8">
-          <Link
-            href="/katalog"
+          <button
+            onClick={() => router.back()}
             className="inline-flex items-center gap-2 text-burgundy hover:text-maroon transition font-medium"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Zpět na katalog
-          </Link>
+            Zpět
+          </button>
         </nav>
 
         {/* Main two-column layout */}
