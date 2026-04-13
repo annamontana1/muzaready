@@ -344,7 +344,7 @@ export default function SkuDetailPage() {
 
             {/* Main image */}
             <div
-              className="relative w-full rounded-sm overflow-hidden border h-72 md:h-auto md:aspect-[3/4] group"
+              className="relative w-full rounded-sm overflow-hidden border h-[100vw] max-h-[85vh] md:h-auto md:max-h-none md:aspect-[3/4] group"
               style={{ background: 'var(--white)', borderColor: 'var(--beige)', cursor: currentImage ? 'zoom-in' : 'default' }}
               onClick={() => currentImage && openLightbox()}
             >
