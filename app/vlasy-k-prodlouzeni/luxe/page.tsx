@@ -119,7 +119,7 @@ export default function LuxeTierPage() {
       <section className="grid grid-cols-1 lg:grid-cols-2 relative overflow-hidden" style={{ minHeight: '52vh' }}>
         {/* Left: text */}
         <div
-          className="flex flex-col justify-center px-8 py-16 lg:px-20"
+          className="flex flex-col justify-center px-4 py-12 md:px-8 lg:px-20"
           style={{ background: 'var(--ivory)' }}
         >
           {/* Breadcrumbs */}
@@ -210,7 +210,7 @@ export default function LuxeTierPage() {
       </section>
 
       {/* ─── FEATURES BAR ─── */}
-      <div className="border-b py-6 px-6 md:px-12" style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}>
+      <div className="border-b py-6 px-3 md:px-12" style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}>
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-around items-center gap-5">
           {[
             { num: '✦', strong: 'Hustší konce', sub: 'Prémiový výběr každého pramene' },
@@ -233,7 +233,7 @@ export default function LuxeTierPage() {
       </div>
 
       {/* ─── PRODUKTY + FILTRY ─── */}
-      <section id="produkty" className="py-16 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
+      <section id="produkty" className="py-16 px-3 md:px-12" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-7xl mx-auto">
 
           {/* Section label */}
@@ -266,7 +266,7 @@ export default function LuxeTierPage() {
 
           {/* ─── FILTER PANEL ─── */}
           <div
-            className="mb-10 p-8 rounded-sm border"
+            className="mb-10 p-4 md:p-8 rounded-sm border"
             style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
           >
             <div className="flex items-center justify-between mb-8">
@@ -352,7 +352,7 @@ export default function LuxeTierPage() {
               >
                 Struktura {filters.structures.length > 0 && `· ${filters.structures.length} vybráno`}
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-4 gap-2">
                 {[
                   { name: 'rovné', image: '/images/structures/rovne.png' },
                   { name: 'mírně vlnité', image: '/images/structures/mirne-vlnite.png' },
@@ -365,14 +365,15 @@ export default function LuxeTierPage() {
                       key={name}
                       onClick={() => toggleStructure(name)}
                       aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                      className="relative w-16 h-16 rounded-sm transition-all overflow-hidden"
-                      style={
-                        isSelected
+                      className="relative rounded-sm transition-all overflow-hidden"
+                      style={{
+                        aspectRatio: '1',
+                        ...(isSelected
                           ? { outline: '2px solid var(--burgundy)', outlineOffset: '2px', boxShadow: '0 2px 8px rgba(74,21,32,0.15)' }
-                          : { outline: '1px solid var(--beige-mid)' }
-                      }
+                          : { outline: '1px solid var(--beige-mid)' })
+                      }}
                     >
-                      <Image src={image} alt={name} fill className="object-cover" sizes="64px" />
+                      <Image src={image} alt={name} fill className="object-cover" sizes="25vw" />
                     </button>
                   );
                 })}
@@ -387,12 +388,12 @@ export default function LuxeTierPage() {
               >
                 Délka {filters.lengths.length > 0 && `· ${filters.lengths.sort((a, b) => a - b).map(l => `${l} cm`).join(', ')}`}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-5 md:flex md:flex-wrap gap-2">
                 {[40, 45, 50, 55, 60, 65, 70, 75, 80].map((length) => (
                   <button
                     key={length}
                     onClick={() => toggleLength(length)}
-                    className="text-[11px] tracking-[0.08em] px-4 py-2 rounded-sm font-light transition-all"
+                    className="text-[11px] tracking-[0.08em] py-2.5 rounded-sm font-light transition-all text-center"
                     style={
                       filters.lengths.includes(length)
                         ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -546,14 +547,14 @@ export default function LuxeTierPage() {
       </section>
 
       {/* ─── SIMILAR TIERS ─── */}
-      <div className="px-6 md:px-12 py-16" style={{ background: 'var(--white)' }}>
+      <div className="px-3 md:px-12 py-16" style={{ background: 'var(--white)' }}>
         <div className="max-w-7xl mx-auto">
           <SimilarFromOtherTiers currentTier="Luxe" activeShades={filters.shades} />
         </div>
       </div>
 
       {/* ─── CTA BANNER ─── */}
-      <section className="py-20 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
+      <section className="py-20 px-3 md:px-12" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-7xl mx-auto text-center relative">
           <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
