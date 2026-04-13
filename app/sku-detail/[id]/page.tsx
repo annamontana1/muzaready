@@ -277,7 +277,7 @@ export default function SkuDetailPage() {
   const lengthOptions = [40, 45, 50, 55, 60, 65, 70, 75, 80];
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
+    <div className="min-h-screen overflow-x-clip" style={{ background: 'var(--ivory)' }}>
       <div className="max-w-7xl mx-auto px-4 md:px-12 py-4 md:py-8">
 
         {/* ── Breadcrumb ── */}
