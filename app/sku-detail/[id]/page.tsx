@@ -353,7 +353,7 @@ export default function SkuDetailPage() {
                           style={{ backgroundColor: sku.shadeHex }}
                         />
                       )}
-                      {sku.shadeName}
+                      {sku.shadeName}{sku.shade ? ` · #${sku.shade}` : ''}
                     </span>
                   </div>
                 )}

@@ -28,9 +28,9 @@ function getListingTitle(displayVariant: ProductVariant, productTier?: string): 
     return `${displayVariant.length_cm} cm · Platinum · odstín #${shadeCode} · ${displayVariant.weight_g} g`;
   }
   
-  // Standard/LUXE: {lineLabel} – {shadeName}
+  // Standard/LUXE: {lineLabel} – {shadeName} · #číslo
   const tierLabel = productTier === 'LUXE' ? 'LUXE' : 'Standard';
-  return `${tierLabel} – ${shadeName}`;
+  return `${tierLabel} – ${shadeName} · #${shadeCode}`;
 }
 
 /**
