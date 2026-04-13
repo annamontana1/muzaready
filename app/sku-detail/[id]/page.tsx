@@ -298,12 +298,12 @@ export default function SkuDetailPage() {
 
         {/* ── Mobile: image + quick info side by side ── */}
         {/* ── Desktop: two-column full layout ── */}
-        <div className="grid lg:grid-cols-[1fr_480px] gap-8 md:gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-[1fr_480px] gap-8 md:gap-12 lg:gap-16 min-w-0">
 
           {/* ═════════════════════════════════════════
               LEFT COLUMN: Image Gallery
           ═════════════════════════════════════════ */}
-          <div className="space-y-3">
+          <div className="space-y-3 min-w-0">
 
             {/* Main image */}
             <div
@@ -390,7 +390,7 @@ export default function SkuDetailPage() {
           {/* ═════════════════════════════════════════
               RIGHT COLUMN: Product Info + Config
           ═════════════════════════════════════════ */}
-          <div className="space-y-6">
+          <div className="space-y-6 min-w-0">
 
             {/* ── Product info ── */}
             <div>
@@ -507,7 +507,7 @@ export default function SkuDetailPage() {
 
             {/* ── Configuration card ── */}
             <div
-              className="rounded-sm border p-6"
+              className="rounded-sm border p-6 min-w-0"
               style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
             >
               {/* Section label + heading */}
@@ -537,7 +537,7 @@ export default function SkuDetailPage() {
                     {ENDING_OPTIONS.find(o => o.id === selectedEnding)?.label}
                   </span>
                 </div>
-                <div className="overflow-x-auto pb-2">
+                <div className="overflow-x-auto pb-2 max-w-full">
                   <div className="flex gap-2 w-max">
                     {ENDING_OPTIONS.map((option) => (
                       <button
