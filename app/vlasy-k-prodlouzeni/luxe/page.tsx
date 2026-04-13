@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { Product, HAIR_COLORS } from '@/types/product';
@@ -230,27 +229,23 @@ export default function LuxeTierPage() {
               >
                 Struktura {filters.structures.length > 0 && `· ${filters.structures.length} vybráno`}
               </div>
-              <div className="flex flex-wrap gap-3">
-                {[
-                  { name: 'rovné', image: '/images/structures/rovne.png' },
-                  { name: 'mírně vlnité', image: '/images/structures/mirne-vlnite.png' },
-                  { name: 'vlnité', image: '/images/structures/vlnite.png' },
-                  { name: 'kudrnaté', image: '/images/structures/kudrnate.png' }
-                ].map(({ name, image }) => {
+              <div className="flex flex-wrap gap-2">
+                {['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'].map((name) => {
                   const isSelected = filters.structures.includes(name);
                   return (
                     <button
                       key={name}
                       onClick={() => toggleStructure(name)}
-                      aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                      className="relative w-20 h-20 rounded-sm transition-all overflow-hidden flex-shrink-0"
+                      className="text-[11px] tracking-[0.08em] uppercase px-4 py-2.5 rounded-sm font-light transition-all capitalize"
                       style={
                         isSelected
-                          ? { outline: '2px solid var(--burgundy)', outlineOffset: '2px', boxShadow: '0 2px 8px rgba(74,21,32,0.15)' }
-                          : { outline: '1px solid var(--beige-mid)' }
+                          ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                          : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
                       }
+                      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--burgundy)'; }}
+                      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--beige-mid)'; }}
                     >
-                      <Image src={image} alt={name} fill className="object-cover" sizes="80px" />
+                      {name}
                     </button>
                   );
                 })}
