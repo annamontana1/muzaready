@@ -113,156 +113,34 @@ export default function LuxeTierPage() {
   const hasActiveFilters = filters.colorType || filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0;
 
   return (
-    <div style={{ background: 'var(--white)' }}>
+    <div style={{ background: 'var(--ivory)' }}>
+      <div className="max-w-7xl mx-auto px-3 md:px-12 pt-8 pb-4">
 
-      {/* ─── HERO ─── */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 relative overflow-hidden" style={{ minHeight: '52vh' }}>
-        {/* Left: text */}
-        <div
-          className="flex flex-col justify-center px-4 py-12 md:px-8 lg:px-20"
-          style={{ background: 'var(--ivory)' }}
-        >
-          {/* Breadcrumbs */}
-          <nav className="mb-8 text-[11px] tracking-[0.12em] uppercase" style={{ color: 'var(--text-soft)' }}>
-            <ol className="flex items-center gap-2">
-              <li><Link href="/" className="hover:text-burgundy transition-colors">Domů</Link></li>
-              <li style={{ color: 'var(--beige-mid)' }}>›</li>
-              <li><Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy transition-colors">Vlasy k prodloužení</Link></li>
-              <li style={{ color: 'var(--beige-mid)' }}>›</li>
-              <li style={{ color: 'var(--burgundy)' }}>LUXE</li>
-            </ol>
-          </nav>
-
-          <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            Prémiová kolekce
+        {/* ─── NADPIS ─── */}
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <p className="text-[10px] tracking-[0.2em] uppercase mb-1 font-normal" style={{ color: 'var(--accent)' }}>
+              Prémiová kolekce
+            </p>
+            <h1 className="font-cormorant font-light leading-none" style={{ fontSize: 'clamp(24px,3vw,36px)', color: 'var(--text-dark)' }}>
+              Vlasy k prodloužení <em className="italic" style={{ color: 'var(--burgundy)' }}>LUXE</em>
+            </h1>
           </div>
-
-          <h1
-            className="font-cormorant font-light leading-[1.1] mb-6 tracking-[-0.01em]"
-            style={{ fontSize: 'clamp(40px,4.5vw,60px)', color: 'var(--text-dark)' }}
+          <Link
+            href="/vlasy-k-prodlouzeni"
+            className="text-[11px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-1.5 transition-colors"
+            style={{ color: 'var(--text-soft)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
           >
-            Vlasy k prodloužení<br />
-            <em className="italic" style={{ color: 'var(--burgundy)' }}>LUXE</em>
-          </h1>
-
-          <p className="text-[15px] leading-[1.8] max-w-[400px] mb-10 font-light" style={{ color: 'var(--text-soft)' }}>
-            Prémiová kvalita s hustšími konci a vyšší hustotou. Luxusní vzhled a delší životnost díky pečlivému výběru vlasů.
-          </p>
-
-          <div className="flex gap-4 items-center flex-wrap">
-            <a
-              href="#produkty"
-              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
-              style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
-            >
-              Zobrazit produkty
-            </a>
-            <Link
-              href="/vlasy-k-prodlouzeni/standard"
-              className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors"
-              style={{ color: 'var(--text-mid)' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-mid)')}
-            >
-              Standard kolekce →
-            </Link>
-          </div>
-        </div>
-
-        {/* Right: gradient image area */}
-        <div
-          className="relative min-h-[320px] lg:min-h-0 flex flex-col justify-end"
-          style={{ background: 'linear-gradient(160deg, #C9B494 0%, #A8896A 55%, #7A5A4A 100%)' }}
-        >
-          <span
-            className="font-cormorant text-[13px] tracking-[0.15em] uppercase absolute"
-            style={{ color: 'rgba(74,21,32,0.35)', writingMode: 'vertical-rl', transform: 'rotate(180deg)', right: '32px', top: '50%' }}
-          >
-            Luxe kolekce
-          </span>
-          {/* Feature badge */}
-          <div className="relative z-10 p-10">
-            <div
-              className="rounded-sm p-5 flex items-center gap-4 max-w-[280px]"
-              style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)' }}
-            >
-              <div
-                className="w-9 h-9 rounded-sm flex items-center justify-center flex-shrink-0 font-cormorant text-base"
-                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-              >
-                ✦
-              </div>
-              <div className="text-[12px] leading-[1.5]" style={{ color: 'var(--text-mid)' }}>
-                <strong className="block text-[14px] font-medium mb-0.5" style={{ color: 'var(--text-dark)' }}>
-                  Hustší konce
-                </strong>
-                Pečlivý výběr vlasů, delší životnost
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── FEATURES BAR ─── */}
-      <div className="border-b py-6 px-3 md:px-12" style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}>
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-around items-center gap-5">
-          {[
-            { num: '✦', strong: 'Hustší konce', sub: 'Prémiový výběr každého pramene' },
-            { num: '✦', strong: 'Delší životnost', sub: 'Odolnější vůči teplu i barvení' },
-            { num: '✦', strong: '100% panenské', sub: 'Bez chemického předšetření' },
-            { num: '✦', strong: '9 odstínů', sub: 'Přirozené i barvené tóny' },
-          ].map((item, i) => (
-            <div key={i} className="flex items-center gap-3">
-              {i > 0 && <div className="hidden sm:block w-px h-8" style={{ background: 'var(--beige-mid)' }} />}
-              <span className="font-cormorant text-[22px] font-light" style={{ color: 'var(--burgundy)' }}>
-                {item.num}
-              </span>
-              <div className="text-[12px] leading-[1.4] font-light" style={{ color: 'var(--text-soft)' }}>
-                <strong className="block text-[13px] font-normal" style={{ color: 'var(--text-mid)' }}>{item.strong}</strong>
-                {item.sub}
-              </div>
-            </div>
-          ))}
+            ← Všechny kolekce
+          </Link>
         </div>
       </div>
 
       {/* ─── PRODUKTY + FILTRY ─── */}
-      <section id="produkty" className="py-16 px-3 md:px-12" style={{ background: 'var(--ivory)' }}>
+      <section id="produkty" className="pb-16 px-3 md:px-12" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-7xl mx-auto">
-
-          {/* Section label */}
-          <div className="mb-10">
-            <div
-              className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal"
-              style={{ color: 'var(--accent)' }}
-            >
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Kolekce LUXE
-            </div>
-            <div className="flex justify-between items-end">
-              <h2
-                className="font-cormorant font-light leading-[1.2] tracking-[-0.01em]"
-                style={{ fontSize: 'clamp(28px,2.5vw,40px)', color: 'var(--text-dark)' }}
-              >
-                Prémiové vlasy<br />k <em className="italic" style={{ color: 'var(--burgundy)' }}>prodloužení</em>
-              </h2>
-              <Link
-                href="/vlasy-k-prodlouzeni"
-                className="text-[12px] tracking-[0.1em] uppercase font-light items-center gap-2 transition-colors hidden md:flex"
-                style={{ color: 'var(--text-mid)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-mid)')}
-              >
-                Všechny kolekce →
-              </Link>
-            </div>
-          </div>
 
           {/* ─── FILTER PANEL ─── */}
           <div
@@ -546,68 +424,11 @@ export default function LuxeTierPage() {
       </section>
 
       {/* ─── SIMILAR TIERS ─── */}
-      <div className="px-3 md:px-12 py-16" style={{ background: 'var(--white)' }}>
+      <div className="px-3 md:px-12 py-12" style={{ background: 'var(--white)' }}>
         <div className="max-w-7xl mx-auto">
           <SimilarFromOtherTiers currentTier="Luxe" activeShades={filters.shades} />
         </div>
       </div>
-
-      {/* ─── CTA BANNER ─── */}
-      <section className="py-20 px-3 md:px-12" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-7xl mx-auto text-center relative">
-          <div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
-            aria-hidden="true"
-          >
-            <span
-              className="font-cormorant font-light"
-              style={{ fontSize: 'clamp(100px,14vw,200px)', color: 'rgba(74,21,32,0.04)', lineHeight: 1, letterSpacing: '-0.02em' }}
-            >
-              LUXE
-            </span>
-          </div>
-          <div className="relative z-10">
-            <div
-              className="text-[11px] tracking-[0.2em] uppercase mb-5 font-normal flex items-center justify-center gap-3"
-              style={{ color: 'var(--accent)' }}
-            >
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Potřebujete poradit?
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-            </div>
-            <h2
-              className="font-cormorant font-light leading-[1.2] mb-5 tracking-[-0.01em]"
-              style={{ fontSize: 'clamp(32px,3vw,48px)', color: 'var(--text-dark)' }}
-            >
-              Navštivte náš<br />
-              <em className="italic" style={{ color: 'var(--burgundy)' }}>Showroom v Praze</em>
-            </h2>
-            <p className="text-[14px] leading-[1.8] max-w-[420px] mx-auto mb-10 font-light" style={{ color: 'var(--text-soft)' }}>
-              Osobní konzultace, výběr odstínu na místě a profesionální poradenství. Revoluční 8, Praha.
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <Link
-                href="/kontakt"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
-                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
-              >
-                Rezervovat konzultaci
-              </Link>
-              <Link
-                href="/vlasy-k-prodlouzeni/standard"
-                className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors"
-                style={{ color: 'var(--text-mid)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-mid)')}
-              >
-                Prohlédnout Standard →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
     </div>
   );
