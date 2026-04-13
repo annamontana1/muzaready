@@ -277,8 +277,8 @@ export default function SkuDetailPage() {
   const lengthOptions = [40, 45, 50, 55, 60, 65, 70, 75, 80];
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-      <div className="max-w-7xl mx-auto px-3 md:px-12 py-4 md:py-8">
+    <div className="min-h-screen overflow-x-hidden" style={{ background: 'var(--ivory)' }}>
+      <div className="max-w-7xl mx-auto px-4 md:px-12 py-4 md:py-8">
 
         {/* ── Breadcrumb ── */}
         <nav className="mb-10">
@@ -307,7 +307,7 @@ export default function SkuDetailPage() {
 
             {/* Main image */}
             <div
-              className="relative w-full rounded-sm overflow-hidden border h-[56vw] md:h-auto md:aspect-[3/4]"
+              className="relative w-full rounded-sm overflow-hidden border aspect-[4/5] md:aspect-[3/4]"
               style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
             >
               {currentImage ? (
@@ -586,8 +586,8 @@ export default function SkuDetailPage() {
                         {bulkLengthValue} cm
                       </span>
                     </div>
-                    <div className="overflow-x-auto pb-2 -mx-1">
-                      <div className="flex gap-2 px-1 w-max">
+                    <div className="overflow-x-auto pb-2">
+                      <div className="flex gap-2 w-max">
                         {lengthOptions.map((len) => (
                           <button
                             key={len}
@@ -627,8 +627,8 @@ export default function SkuDetailPage() {
                       </span>
                     </div>
                     {displayedGramOptions.length > 0 ? (
-                      <div className="overflow-x-auto pb-2 -mx-1">
-                        <div className="flex gap-2 px-1 w-max">
+                      <div className="overflow-x-auto pb-2">
+                        <div className="flex gap-2 w-max">
                           {displayedGramOptions.map((g) => (
                             <button
                               key={g}
