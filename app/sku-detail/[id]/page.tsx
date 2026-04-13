@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
@@ -72,6 +72,45 @@ export default function SkuDetailPage() {
 
   // Image gallery state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxZoom, setLightboxZoom] = useState(1);
+  const [lightboxPos, setLightboxPos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
+
+  const openLightbox = () => { setLightboxOpen(true); setLightboxZoom(1); setLightboxPos({ x: 0, y: 0 }); };
+  const closeLightbox = () => { setLightboxOpen(false); setLightboxZoom(1); setLightboxPos({ x: 0, y: 0 }); };
+
+  const handleLightboxWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    setLightboxZoom(z => Math.min(5, Math.max(1, z - e.deltaY * 0.005)));
+  }, []);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (lightboxZoom <= 1) return;
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX, y: e.clientY, px: lightboxPos.x, py: lightboxPos.y };
+  };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !dragStart.current) return;
+    setLightboxPos({ x: dragStart.current.px + e.clientX - dragStart.current.x, y: dragStart.current.py + e.clientY - dragStart.current.y });
+  };
+  const handleMouseUp = () => { setIsDragging(false); dragStart.current = null; };
+
+  // Touch pinch-to-zoom
+  const lastDist = useRef<number | null>(null);
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      if (lastDist.current !== null) {
+        setLightboxZoom(z => Math.min(5, Math.max(1, z * (d / lastDist.current!))));
+      }
+      lastDist.current = d;
+    }
+  }, []);
+  const handleTouchEnd = () => { lastDist.current = null; };
 
   // Configuration state
   const [selectedEnding, setSelectedEnding] = useState('NONE');
@@ -305,15 +344,25 @@ export default function SkuDetailPage() {
 
             {/* Main image */}
             <div
-              className="relative w-full rounded-sm overflow-hidden border h-72 md:h-auto md:aspect-[3/4]"
-              style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
+              className="relative w-full rounded-sm overflow-hidden border h-72 md:h-auto md:aspect-[3/4] group"
+              style={{ background: 'var(--white)', borderColor: 'var(--beige)', cursor: currentImage ? 'zoom-in' : 'default' }}
+              onClick={() => currentImage && openLightbox()}
             >
               {currentImage ? (
-                <img
-                  src={currentImage}
-                  alt={sku.name || 'Produkt'}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+                <>
+                  <img
+                    src={currentImage}
+                    alt={sku.name || 'Produkt'}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                    style={{ background: 'rgba(0,0,0,0.15)' }}>
+                    <svg className="w-8 h-8 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0zm0 0l2 2" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 8v6M8 11h6" />
+                    </svg>
+                  </div>
+                </>
               ) : (
                 <div
                   className="w-full h-full flex flex-col items-center justify-center"
@@ -872,6 +921,110 @@ export default function SkuDetailPage() {
         </div>
 
       </div>
+
+      {/* ── LIGHTBOX ── */}
+      {lightboxOpen && currentImage && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.92)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          {/* Close */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-sm transition-all"
+            style={{ background: 'rgba(255,255,255,0.1)', color: '#fff' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.2)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+            aria-label="Zavřít"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Zoom controls */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+            <button
+              onClick={() => setLightboxZoom(z => Math.max(1, z - 0.5))}
+              className="w-9 h-9 flex items-center justify-center rounded-sm text-white text-lg transition-all"
+              style={{ background: 'rgba(255,255,255,0.12)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
+            >−</button>
+            <span className="text-white text-[12px] tracking-[0.1em] font-light min-w-[3rem] text-center">
+              {Math.round(lightboxZoom * 100)}%
+            </span>
+            <button
+              onClick={() => setLightboxZoom(z => Math.min(5, z + 0.5))}
+              className="w-9 h-9 flex items-center justify-center rounded-sm text-white text-lg transition-all"
+              style={{ background: 'rgba(255,255,255,0.12)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
+            >+</button>
+            <button
+              onClick={() => { setLightboxZoom(1); setLightboxPos({ x: 0, y: 0 }); }}
+              className="ml-2 px-3 h-9 flex items-center justify-center rounded-sm text-[11px] tracking-[0.1em] uppercase font-light transition-all"
+              style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
+            >Reset</button>
+          </div>
+
+          {/* Hint */}
+          {lightboxZoom === 1 && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] tracking-[0.1em] font-light pointer-events-none" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Scrolluj nebo pinch pro přiblížení
+            </div>
+          )}
+
+          {/* Image */}
+          <div
+            className="w-full h-full flex items-center justify-center overflow-hidden"
+            onWheel={handleLightboxWheel}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ cursor: lightboxZoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in' }}
+          >
+            <img
+              src={currentImage}
+              alt={sku.name || 'Produkt'}
+              draggable={false}
+              style={{
+                transform: `scale(${lightboxZoom}) translate(${lightboxPos.x / lightboxZoom}px, ${lightboxPos.y / lightboxZoom}px)`,
+                transition: isDragging ? 'none' : 'transform 0.15s ease',
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                objectFit: 'contain',
+                userSelect: 'none',
+              }}
+            />
+          </div>
+
+          {/* Thumbnail strip if multiple images */}
+          {allImages.length > 1 && (
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              {allImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => { setSelectedImage(img); setLightboxZoom(1); setLightboxPos({ x: 0, y: 0 }); }}
+                  className="w-12 h-14 flex-shrink-0 rounded-sm overflow-hidden transition-all"
+                  style={currentImage === img
+                    ? { outline: '2px solid var(--ivory)', outlineOffset: '2px' }
+                    : { opacity: 0.5 }
+                  }
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
