@@ -77,7 +77,11 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   const isB2B = user?.isWholesale ?? false;
   const discountedPrice = priceCalculator.applyB2BDiscount(displayPrice, isB2B);
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
-  const listingTitle = product.name?.trim().length ? product.name : getListingTitle(displayVariant, product.tier);
+  const baseName = product.name?.trim().length ? product.name : getListingTitle(displayVariant, product.tier);
+  // Pro Standard/LUXE vždy přidáme číslo odstínu, Platinum ho má v názvu automaticky
+  const listingTitle = (!isPlatinum && displayVariant?.shade)
+    ? `${baseName} · #${displayVariant.shade}`
+    : baseName;
   const tierInfo = getTierExplanation(product.tier);
 
   const handleTierClick = (e: React.MouseEvent | React.KeyboardEvent) => {
