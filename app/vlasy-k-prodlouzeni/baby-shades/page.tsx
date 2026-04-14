@@ -2,39 +2,15 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import ProductCard from '@/components/ProductCard';
 import ShadeGallery from '@/components/ShadeGallery';
 import { Product, HAIR_COLORS } from '@/types/product';
-import { motion } from 'framer-motion';
 import SimilarFromOtherTiers from '@/components/SimilarFromOtherTiers';
 
 type FilterState = {
   shades: number[];
   structures: string[];
   lengths: number[];
-};
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.3 }
-  }
 };
 
 const PRODUCTS_PER_PAGE = 12;
@@ -50,14 +26,14 @@ export default function BabyShadesTierPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/catalog?tier=Baby+Shades')
+    setLoading(true);
+    fetch('/api/catalog?tier=BABY_SHADES')
       .then(res => res.json())
       .then(data => { setProducts(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
-  // Baby Shades: shades 6-10
-  const availableShades = [6, 7, 8, 9, 10];
+  const availableShades = [1, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
@@ -75,7 +51,7 @@ export default function BabyShadesTierPage() {
       }
       return true;
     });
-  }, [products, filters]);
+  }, [products, filters.shades, filters.structures, filters.lengths]);
 
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const paginatedProducts = useMemo(() => {
@@ -119,250 +95,281 @@ export default function BabyShadesTierPage() {
     setCurrentPage(1);
   };
 
+  const hasActiveFilters = filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0;
+
   return (
-    <div className="py-12">
-      <div className="container mx-auto px-4">
-        {/* Breadcrumbs */}
-        <nav className="text-sm mb-6" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2 text-text-mid">
-            <li><Link href="/" className="hover:text-burgundy">Domu</Link></li>
-            <li><span className="mx-2">&rsaquo;</span></li>
-            <li><Link href="/vlasy-k-prodlouzeni" className="hover:text-burgundy">Vlasy k prodloužení</Link></li>
-            <li><span className="mx-2">&rsaquo;</span></li>
-            <li className="text-burgundy font-medium">Baby Shades</li>
-          </ol>
-        </nav>
+    <div style={{ background: 'var(--ivory)' }}>
+      <div className="max-w-7xl mx-auto px-3 md:px-12 pt-8 pb-4">
 
-        {/* Header */}
-        <motion.div
-          className="mb-8"
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-        >
-          <motion.h1
-            className="text-3xl md:text-4xl font-playfair text-burgundy mb-3"
-            variants={fadeInUp}
-            transition={{ duration: 0.6 }}
+        {/* ─── NADPIS ─── */}
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <p className="text-[10px] tracking-[0.2em] uppercase mb-1 font-normal" style={{ color: 'var(--accent)' }}>
+              Světlé odstíny
+            </p>
+            <h1 className="font-cormorant font-light leading-none" style={{ fontSize: 'clamp(24px,3vw,36px)', color: 'var(--text-dark)' }}>
+              Vlasy k prodloužení <em className="italic" style={{ color: 'var(--burgundy)' }}>Baby Shades</em>
+            </h1>
+          </div>
+          <Link
+            href="/vlasy-k-prodlouzeni"
+            className="text-[11px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-1.5 transition-colors"
+            style={{ color: 'var(--text-soft)' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
           >
-            Baby Shades
-          </motion.h1>
-          <motion.p
-            className="text-sm md:text-base text-text-mid max-w-4xl leading-relaxed"
-            variants={fadeInUp}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            ← Všechny kolekce
+          </Link>
+        </div>
+      </div>
+
+      {/* ─── PRODUKTY + FILTRY ─── */}
+      <section id="produkty" className="pb-16 px-3 md:px-12" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-7xl mx-auto">
+
+          {/* ─── FILTER PANEL ─── */}
+          <div
+            className="mb-10 p-4 md:p-8 rounded-sm border"
+            style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
           >
-            Jemné dětské nebarvené vlasy v přirozených odstínech.
-          </motion.p>
-          <motion.div variants={fadeInUp} transition={{ duration: 0.6, delay: 0.2 }}>
-            <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 text-[11px] tracking-[0.15em] uppercase font-light" style={{ background: 'var(--beige)', color: 'var(--text-mid)' }}>
-              <span className="block w-4 h-px" style={{ background: 'var(--accent)' }} />
-              Vždy nebarvené — přírodní odstíny
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Filter Bar */}
-        <div className="mb-8 p-6 bg-ivory rounded-xl border border-warm-beige">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-burgundy">Filtrovat produkty</h3>
-            <button
-              onClick={resetFilters}
-              className="text-sm text-burgundy hover:text-maroon transition underline"
-            >
-              Vymazat filtry
-            </button>
-          </div>
-
-          {/* Shades gallery - only 7-10 */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-burgundy mb-3">
-              Odstín {filters.shades.length > 0 && `(${filters.shades.sort((a, b) => a - b).map(s => HAIR_COLORS[s]?.name).join(', ')})`}
-            </label>
-            <ShadeGallery
-              availableShades={availableShades}
-              selectedShades={filters.shades}
-              onToggleShade={toggleShade}
-            />
-          </div>
-
-          {/* Structure filter */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-burgundy mb-3">
-              Struktura {filters.structures.length > 0 && `(${filters.structures.length} vybráno)`}
-            </label>
-            <div className="flex flex-wrap gap-2 max-w-xl">
-              {[
-                { name: 'rovné', image: '/images/structures/rovne.png' },
-                { name: 'mírně vlnité', image: '/images/structures/mirne-vlnite.png' },
-                { name: 'vlnité', image: '/images/structures/vlnite.png' },
-                { name: 'kudrnaté', image: '/images/structures/kudrnate.png' }
-              ].map(({ name, image }) => {
-                const isSelected = filters.structures.includes(name);
-                return (
-                  <button
-                    key={name}
-                    onClick={() => toggleStructure(name)}
-                    aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                    className={`relative w-16 h-16 rounded-lg transition overflow-hidden ${
-                      isSelected
-                        ? 'ring-2 ring-burgundy ring-offset-2 shadow-md'
-                        : 'ring-1 ring-warm-beige hover:ring-burgundy hover:shadow-sm'
-                    }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={name}
-                      fill
-                      className="object-cover"
-                      sizes="64px"
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Length filter */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-burgundy mb-3">
-              Délka {filters.lengths.length > 0 && `(${filters.lengths.sort((a, b) => a - b).map(l => `${l}cm`).join(', ')})`}
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {[40, 45, 50, 55, 60, 65, 70, 75, 80].map((length) => (
-                <button
-                  key={length}
-                  onClick={() => toggleLength(length)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                    filters.lengths.includes(length)
-                      ? 'bg-burgundy text-white'
-                      : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
-                  }`}
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <div
+                  className="text-[10px] tracking-[0.2em] uppercase mb-1 font-normal"
+                  style={{ color: 'var(--accent)' }}
                 >
-                  {length} cm
+                  Filtrování
+                </div>
+                <h3
+                  className="font-cormorant font-light text-[22px] leading-none"
+                  style={{ color: 'var(--text-dark)' }}
+                >
+                  Vybrat kolekci
+                </h3>
+              </div>
+              {hasActiveFilters && (
+                <button
+                  onClick={resetFilters}
+                  className="text-[11px] tracking-[0.12em] uppercase font-light transition-colors flex items-center gap-2"
+                  style={{ color: 'var(--text-soft)' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
+                >
+                  × Vymazat filtry
                 </button>
-              ))}
+              )}
             </div>
-          </div>
 
-          {/* Active filters */}
-          {(filters.shades.length > 0 || filters.structures.length > 0 || filters.lengths.length > 0) && (
-            <div className="pt-4 border-t border-warm-beige">
-              <p className="text-sm text-text-mid mb-2">Aktivní filtry:</p>
-              <div className="flex flex-wrap gap-2">
-                {filters.shades.sort((a, b) => a - b).map((shade) => (
-                  <span key={shade} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {HAIR_COLORS[shade]?.name}
-                  </span>
-                ))}
-                {filters.structures.map((structure) => (
-                  <span key={structure} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
-                    {structure.charAt(0).toUpperCase() + structure.slice(1)}
-                  </span>
-                ))}
-                {filters.lengths.sort((a, b) => a - b).map((length) => (
-                  <span key={`len-${length}`} className="px-3 py-1 bg-burgundy text-white rounded-full text-xs font-medium">
+            {/* Odstíny */}
+            <div className="mb-8">
+              <div
+                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                Odstín {filters.shades.length > 0 && `· ${filters.shades.sort((a, b) => a - b).map(s => HAIR_COLORS[s]?.name).join(', ')}`}
+              </div>
+              <ShadeGallery
+                availableShades={availableShades}
+                selectedShades={filters.shades}
+                onToggleShade={toggleShade}
+              />
+            </div>
+
+            {/* Struktura */}
+            <div className="mb-8">
+              <div
+                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                Struktura {filters.structures.length > 0 && `· ${filters.structures.length} vybráno`}
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {['rovné', 'mírně vlnité', 'vlnité', 'kudrnaté'].map((name) => {
+                  const isSelected = filters.structures.includes(name);
+                  return (
+                    <button
+                      key={name}
+                      onClick={() => toggleStructure(name)}
+                      className="text-[10px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-sm font-light transition-all flex-shrink-0 whitespace-nowrap"
+                      style={
+                        isSelected
+                          ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                          : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
+                      }
+                      onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--burgundy)'; }}
+                      onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'var(--beige-mid)'; }}
+                    >
+                      {name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Délka */}
+            <div>
+              <div
+                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                style={{ color: 'var(--text-soft)' }}
+              >
+                Délka {filters.lengths.length > 0 && `· ${filters.lengths.sort((a, b) => a - b).map(l => `${l} cm`).join(', ')}`}
+              </div>
+              <div className="grid grid-cols-5 md:flex md:flex-wrap gap-2">
+                {[40, 45, 50, 55, 60, 65, 70, 75, 80].map((length) => (
+                  <button
+                    key={length}
+                    onClick={() => toggleLength(length)}
+                    className="text-[11px] tracking-[0.08em] py-2.5 rounded-sm font-light transition-all text-center"
+                    style={
+                      filters.lengths.includes(length)
+                        ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                        : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
+                    }
+                    onMouseEnter={e => { if (!filters.lengths.includes(length)) e.currentTarget.style.borderColor = 'var(--burgundy)'; }}
+                    onMouseLeave={e => { if (!filters.lengths.includes(length)) e.currentTarget.style.borderColor = 'var(--beige-mid)'; }}
+                  >
                     {length} cm
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>
-          )}
-        </div>
 
-        {/* Loading state */}
-        {loading ? (
-          <div className="text-center py-16">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-burgundy border-r-transparent" />
-            <p className="mt-4 text-text-mid">Načítání produktu...</p>
-          </div>
-        ) : (
-        <>
-        <div className="mb-6">
-          <p className="text-text-mid">
-            Zobrazeno <strong>{paginatedProducts.length}</strong> z <strong>{filteredProducts.length}</strong> produktu
-            {totalPages > 1 && ` (stránka ${currentPage} z ${totalPages})`}
-          </p>
-        </div>
-
-        {filteredProducts.length > 0 ? (
-          <>
-            <motion.div
-              className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              variants={staggerContainer}
-            >
-              {paginatedProducts.map((product) => (
-                <motion.div key={product.id} variants={scaleIn}>
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {totalPages > 1 && (
-              <div className="mt-12 flex justify-center items-center gap-3">
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  aria-label="Předchozí stránka"
-                  className="w-10 h-10 rounded-full flex items-center justify-center border border-burgundy text-burgundy disabled:opacity-40 disabled:cursor-not-allowed hover:bg-burgundy/10 transition"
-                >
-                  &larr;
-                </button>
-
-                <div className="flex gap-2 items-center">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      aria-label={`Stránka ${page}`}
-                      aria-current={currentPage === page ? 'page' : undefined}
-                      className={`w-9 h-9 md:w-10 md:h-10 rounded-full font-medium transition ${
-                        currentPage === page
-                          ? 'bg-[#4A2B29] text-white'
-                          : 'border border-burgundy text-burgundy hover:bg-burgundy/10'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
-                  aria-label="Další stránka"
-                  className="w-10 h-10 rounded-full flex items-center justify-center border border-burgundy text-burgundy disabled:opacity-40 disabled:cursor-not-allowed hover:bg-burgundy/10 transition"
-                >
-                  &rarr;
-                </button>
+            {/* Aktivní filtry */}
+            {hasActiveFilters && (
+              <div className="mt-6 pt-6 flex flex-wrap gap-2" style={{ borderTop: '1px solid var(--beige)' }}>
+                {filters.shades.sort((a, b) => a - b).map((shade) => (
+                  <span
+                    key={shade}
+                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+                  >
+                    {HAIR_COLORS[shade]?.name}
+                    <button onClick={() => toggleShade(shade)} className="hover:opacity-70">×</button>
+                  </span>
+                ))}
+                {filters.structures.map((s) => (
+                  <span
+                    key={s}
+                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+                  >
+                    {s}
+                    <button onClick={() => toggleStructure(s)} className="hover:opacity-70">×</button>
+                  </span>
+                ))}
+                {filters.lengths.sort((a, b) => a - b).map((l) => (
+                  <span
+                    key={l}
+                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+                  >
+                    {l} cm
+                    <button onClick={() => toggleLength(l)} className="hover:opacity-70">×</button>
+                  </span>
+                ))}
               </div>
             )}
-          </>
-        ) : (
-          <div className="text-center py-16 px-4">
-            <h3 className="text-2xl font-playfair text-burgundy mb-2">
-              Žádné produkty nenalezeny
-            </h3>
-            <p className="text-text-mid mb-6">
-              Zkuste změnit filtry nebo je vymažte a prohlédněte si celou nabídku.
-            </p>
-            <button
-              onClick={resetFilters}
-              className="btn-primary"
-            >
-              Vymazat všechny filtry
-            </button>
           </div>
-        )}
-        </>
-        )}
 
-        {/* Similar products from other tiers */}
-        <SimilarFromOtherTiers currentTier="Baby Shades" activeShades={filters.shades} />
+          {/* ─── PRODUKTY ─── */}
+          {loading ? (
+            <div className="text-center py-20">
+              <div
+                className="inline-block h-7 w-7 rounded-full border-2 animate-spin"
+                style={{ borderColor: 'var(--burgundy)', borderRightColor: 'transparent' }}
+              />
+              <p className="mt-4 text-[13px] font-light tracking-[0.1em]" style={{ color: 'var(--text-soft)' }}>
+                Načítání…
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Count */}
+              <div className="mb-6 flex items-center justify-between">
+                <p className="text-[12px] font-light tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
+                  {filteredProducts.length} {filteredProducts.length === 1 ? 'produkt' : filteredProducts.length < 5 ? 'produkty' : 'produktů'}
+                  {totalPages > 1 && ` · stránka ${currentPage} z ${totalPages}`}
+                </p>
+              </div>
+
+              {filteredProducts.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                    {paginatedProducts.map((product) => (
+                      <div key={product.id}>
+                        <ProductCard product={product} />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="mt-12 flex justify-center items-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[13px] transition-all disabled:opacity-30"
+                        style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
+                      >
+                        ←
+                      </button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className="w-9 h-9 rounded-sm text-[12px] tracking-[0.05em] font-light transition-all"
+                          style={
+                            currentPage === page
+                              ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
+                              : { border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }
+                          }
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={currentPage === totalPages}
+                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[13px] transition-all disabled:opacity-30"
+                        style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
+                      >
+                        →
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-20">
+                  <p
+                    className="font-cormorant font-light text-[28px] mb-3"
+                    style={{ color: 'var(--text-dark)' }}
+                  >
+                    Žádné produkty nenalezeny
+                  </p>
+                  <p className="text-[14px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+                    Zkuste změnit nebo vymazat filtry.
+                  </p>
+                  <button
+                    onClick={resetFilters}
+                    className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm transition-all hover:-translate-y-px"
+                    style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+                  >
+                    Vymazat filtry
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ─── SIMILAR TIERS ─── */}
+      <div className="px-3 md:px-12 py-12" style={{ background: 'var(--white)' }}>
+        <div className="max-w-7xl mx-auto">
+          <SimilarFromOtherTiers currentTier="Baby Shades" activeShades={filters.shades} />
+        </div>
       </div>
+
     </div>
   );
 }
