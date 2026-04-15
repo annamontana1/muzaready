@@ -21,6 +21,7 @@ interface Sku {
   images: string[];
   inStock: boolean;
   isListed: boolean;
+  description: string | null;
 }
 
 const CATEGORY_OPTIONS = [
@@ -396,8 +397,11 @@ export default function SkladPage() {
                   onClick={() => router.push(`/admin/sklad/${sku.id}/edit`)}
                   className="hover:bg-[#722F37]/5 cursor-pointer transition-colors"
                 >
-                  <td className="px-4 py-3 font-medium text-stone-800">
-                    {sku.shadeName || sku.shade || '-'}
+                  <td className="px-4 py-3">
+                    <span className="font-medium text-stone-800 block">{sku.shadeName || sku.shade || '-'}</span>
+                    {sku.description && (
+                      <span className="text-xs text-stone-400 block mt-0.5 line-clamp-1">{sku.description}</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-stone-600">
                     {structureLabel(sku.structure)}
