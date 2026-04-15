@@ -75,6 +75,11 @@ export default function SkuEditPage() {
   const [isListed, setIsListed] = useState<boolean>(false);
   const [savingIsListed, setSavingIsListed] = useState(false);
 
+  // price edit
+  const [editingPrice, setEditingPrice] = useState(false);
+  const [priceInput, setPriceInput] = useState('');
+  const [savingPrice, setSavingPrice] = useState(false);
+
   // Image management
   const [editingPhotos, setEditingPhotos] = useState(false);
 
@@ -91,6 +96,7 @@ export default function SkuEditPage() {
       setSku(data);
       setIsDyed(data.isDyed ?? false);
       setIsListed(data.isListed ?? false);
+      setPriceInput(data.pricePerGramCzk ? String(data.pricePerGramCzk) : '');
       setMovements(data.movements || []);
     } catch (err: any) {
       console.error(err);
@@ -167,6 +173,27 @@ export default function SkuEditPage() {
       fetchSku();
     } catch (err: any) {
       alert('Chyba: ' + err.message);
+    }
+  };
+
+  const handleSavePrice = async () => {
+    const price = parseFloat(priceInput);
+    if (!price || price <= 0) { alert('Zadej cenu větší než 0'); return; }
+    setSavingPrice(true);
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ pricePerGramCzk: price }),
+      });
+      if (!res.ok) throw new Error('Chyba při ukládání');
+      setSku(prev => prev ? { ...prev, pricePerGramCzk: price } : prev);
+      setEditingPrice(false);
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setSavingPrice(false);
     }
   };
 
@@ -330,10 +357,36 @@ export default function SkuEditPage() {
             </span>
           </div>
           <div>
-            <span className="block text-xs text-stone-400 uppercase tracking-wider">Cena/g</span>
-            <span className="text-sm font-medium text-stone-700">
-              {sku.pricePerGramCzk ? `${sku.pricePerGramCzk} Kc` : '-'}
-            </span>
+            <span className="block text-xs text-stone-400 uppercase tracking-wider mb-1">Cena / gram (Kč)</span>
+            {editingPrice ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  value={priceInput}
+                  onChange={e => setPriceInput(e.target.value)}
+                  className="w-24 px-2 py-1 border border-[#722F37] rounded text-sm focus:outline-none"
+                  autoFocus
+                  onKeyDown={e => { if (e.key === 'Enter') handleSavePrice(); if (e.key === 'Escape') setEditingPrice(false); }}
+                />
+                <button
+                  onClick={handleSavePrice}
+                  disabled={savingPrice}
+                  className="px-2 py-1 bg-[#722F37] text-white text-xs rounded hover:bg-[#5a1f26] disabled:opacity-50"
+                >
+                  {savingPrice ? '...' : 'Uložit'}
+                </button>
+                <button onClick={() => setEditingPrice(false)} className="text-xs text-stone-400 hover:text-stone-600">Zrušit</button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className={`text-sm font-medium ${!sku.pricePerGramCzk || sku.pricePerGramCzk === 0 ? 'text-red-500 font-bold' : 'text-stone-700'}`}>
+                  {sku.pricePerGramCzk ? `${sku.pricePerGramCzk} Kč/g = ${Math.round(sku.pricePerGramCzk * 100)} Kč/100g` : '⚠️ Není nastavena!'}
+                </span>
+                <button onClick={() => setEditingPrice(true)} className="text-xs text-[#722F37] hover:underline">Upravit</button>
+              </div>
+            )}
           </div>
         </div>
 
