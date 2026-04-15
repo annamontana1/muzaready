@@ -70,7 +70,6 @@ export default function NaskladnitPage() {
   const [type, setType] = useState('');
   const [structure, setStructure] = useState('');
   const [shade, setShade] = useState('');
-  const [saleMode, setSaleMode] = useState('');
   const [grams, setGrams] = useState('');
   const [pricePerGram, setPricePerGram] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -86,7 +85,7 @@ export default function NaskladnitPage() {
   };
 
   const isValid =
-    category && type && structure && shade && saleMode && grams && Number(grams) > 0
+    category && type && structure && shade && grams && Number(grams) > 0
     && pricePerGram && Number(pricePerGram) > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,10 +103,7 @@ export default function NaskladnitPage() {
           ? 'Platinum edition'
           : 'Standard';
 
-      const productType =
-        category === 'PLATINUM_EDITION' || saleMode === 'PIECE_BY_WEIGHT'
-          ? 'vlasyy'
-          : 'vlasyx';
+      const productType = 'vlasyx'; // always BULK_G for all categories
 
       const priceNum = Number(pricePerGram);
       const body: any = {
@@ -122,22 +118,14 @@ export default function NaskladnitPage() {
         usePriceMatrix: false, // always manual — ceník se doplní v sklad editoru
       };
 
-      if (productType === 'vlasyx') {
-        // BULK_G mode: "Na gramy"
-        body.selectedLengths = [45]; // base 45cm
-        body.defaultLength = 45;
-        body.stockByLength = { 45: Number(grams) };
-        body.minOrderG = 50;
-        body.stepG = 10;
-        body.defaultGrams = 100;
-        body.pricePerGramCzk = priceNum;
-      } else {
-        // PIECE_BY_WEIGHT mode: "Cely culik"
-        body.lengthCm = 45;
-        body.weightGrams = Number(grams);
-        body.pricePerGramCzk = priceNum; // cena/gram, API vypočítá totalPriceCzk = pricePerGram * weight
-        body.inStock = true;
-      }
+      // BULK_G mode: "Na gramy"
+      body.selectedLengths = [45]; // base 45cm
+      body.defaultLength = 45;
+      body.stockByLength = { 45: Number(grams) };
+      body.minOrderG = 50;
+      body.stepG = 10;
+      body.defaultGrams = 100;
+      body.pricePerGramCzk = priceNum;
 
       const res = await fetch('/api/admin/skus/create-from-wizard', {
         method: 'POST',
@@ -209,19 +197,6 @@ export default function NaskladnitPage() {
           ) : (
             <p className="text-sm text-stone-400">Nejdriv vyber kategorii a typ.</p>
           )}
-        </div>
-
-        {/* Zpusob prodeje */}
-        <div>
-          <label className="block text-sm font-semibold text-stone-700 mb-2">Zpusob prodeje</label>
-          <ButtonGroup
-            options={[
-              { value: 'BULK_G', label: 'Na gramy (zakaznik voli mnozstvi)' },
-              { value: 'PIECE_BY_WEIGHT', label: 'Cely culik (1 kus)' },
-            ]}
-            value={saleMode}
-            onChange={setSaleMode}
-          />
         </div>
 
         {/* Gramaz */}

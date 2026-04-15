@@ -377,6 +377,7 @@ export default function SkladPage() {
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Prodej</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Fotky</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Katalog</th>
+                <th className="px-3 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider w-20"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-50">
@@ -469,6 +470,15 @@ export default function SkladPage() {
                       <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
                         sku.isListed ? 'translate-x-6' : 'translate-x-1'
                       }`} />
+                    </button>
+                  </td>
+                  <td className="px-3 py-3 text-center" onClick={e => e.stopPropagation()}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); router.push(`/admin/sklad/${sku.id}/edit`); }}
+                      className="px-2.5 py-1 text-xs bg-stone-100 hover:bg-[#722F37] hover:text-white text-stone-600 rounded transition-colors font-medium"
+                      title="Upravit SKU"
+                    >
+                      ✏️ Upravit
                     </button>
                   </td>
                 </tr>

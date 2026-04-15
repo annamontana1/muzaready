@@ -79,7 +79,7 @@ export default function PlatinumTab() {
     shadeAuto: true,
     structure: 'rovné',
     lengthCm: 60 as number | '',
-    weightGrams: 150 as number | '',
+    initialGrams: 150 as number | '',
     ceskeVlasy: false,
     priceMode: 'matrix' as 'matrix' | 'manual',
     manualPriceCzk: '',
@@ -146,7 +146,7 @@ export default function PlatinumTab() {
   }, [selectedShadeInfo, formData.shadeAuto]);
 
   const priceEntry = useMemo(() => {
-    if (!formData.lengthCm || !formData.weightGrams) return null;
+    if (!formData.lengthCm || !formData.initialGrams) return null;
     const shadeRange = getShadeRange(formData.category, formData.shade);
     return priceMatrix.find(
       (entry) =>
@@ -156,22 +156,22 @@ export default function PlatinumTab() {
         entry.shadeRangeStart === shadeRange.start &&
         entry.shadeRangeEnd === shadeRange.end
     ) || null;
-  }, [priceMatrix, formData.category, formData.shade, formData.lengthCm, formData.weightGrams]);
+  }, [priceMatrix, formData.category, formData.shade, formData.lengthCm, formData.initialGrams]);
 
   const pricePerGramCzk = useMemo(() => {
     if (formData.priceMode === 'manual') {
-      if (!formData.manualPriceCzk || !formData.weightGrams) return null;
+      if (!formData.manualPriceCzk || !formData.initialGrams) return null;
       const total = Number(formData.manualPriceCzk);
       if (!Number.isFinite(total) || total <= 0) return null;
-      return total / Number(formData.weightGrams);
+      return total / Number(formData.initialGrams);
     }
     return priceEntry?.pricePerGramCzk ?? null;
-  }, [formData.priceMode, formData.manualPriceCzk, formData.weightGrams, priceEntry]);
+  }, [formData.priceMode, formData.manualPriceCzk, formData.initialGrams, priceEntry]);
 
   const totalPriceCzk = useMemo(() => {
-    if (!pricePerGramCzk || !formData.weightGrams) return null;
-    return Number((pricePerGramCzk * Number(formData.weightGrams)).toFixed(2));
-  }, [pricePerGramCzk, formData.weightGrams]);
+    if (!pricePerGramCzk || !formData.initialGrams) return null;
+    return Number((pricePerGramCzk * Number(formData.initialGrams)).toFixed(2));
+  }, [pricePerGramCzk, formData.initialGrams]);
 
   const displayedPrice = useMemo(() => {
     if (!totalPriceCzk) return '--';
@@ -187,8 +187,8 @@ export default function PlatinumTab() {
     return `${formatCurrency(totalPriceCzk, 'CZK')} (${pricePerGramCzk ? `${pricePerGramCzk.toFixed(2)} Kč/g` : '--'})`;
   }, [totalPriceCzk, currency, rate, pricePerGramCzk]);
 
-  const generatedName = formatPlatinumName(formData.lengthCm, formData.shade, formData.weightGrams);
-  const generatedSlug = formatPlatinumSlug(formData.lengthCm, formData.shade, formData.weightGrams);
+  const generatedName = formatPlatinumName(formData.lengthCm, formData.shade, formData.initialGrams);
+  const generatedSlug = formatPlatinumSlug(formData.lengthCm, formData.shade, formData.initialGrams);
 
   const handleFieldChange = (
     field: keyof typeof formData,
@@ -229,7 +229,7 @@ export default function PlatinumTab() {
 
   const canSubmit =
     !!formData.lengthCm &&
-    !!formData.weightGrams &&
+    !!formData.initialGrams &&
     !!pricePerGramCzk &&
     !!totalPriceCzk &&
     !isManualPriceInvalid;
@@ -246,25 +246,25 @@ export default function PlatinumTab() {
 
     try {
       const payload = {
-        productType: 'vlasyy',
+        productType: 'vlasyx',
         category: CATEGORY_OPTIONS.find((opt) => opt.value === formData.category)?.apiValue || 'nebarvene_panenske',
         tier: 'Platinum edition',
         name: generatedName,
         imageUrl: formData.imageUrl || null,
         isListed: formData.isListed,
+        listingPriority: formData.listingPriority,
         shade: String(formData.shade),
         shadeName: formData.shadeName,
         shadeHex: formData.shadeHex,
         structure: formData.structure,
-        lengthCm: Number(formData.lengthCm),
-        weightGrams: Number(formData.weightGrams),
-        priceCzk: totalPriceCzk,
-        pricePerGramCzk: pricePerGramCzk,
+        selectedLengths: [Number(formData.lengthCm)],
+        defaultLength: Number(formData.lengthCm),
+        stockByLength: { [Number(formData.lengthCm)]: Number(formData.initialGrams) },
+        minOrderG: 50,
+        stepG: 10,
+        defaultGrams: 100,
         usePriceMatrix: formData.priceMode === 'matrix',
-        ceskeVlasy: formData.ceskeVlasy,
-        inStock: formData.inStock,
-        listingPriority: formData.listingPriority,
-        slug: generatedSlug,
+        pricePerGramCzk: formData.priceMode === 'manual' ? Number(pricePerGramCzk) : undefined,
       };
 
       const response = await fetch('/api/admin/skus/create-from-wizard', {
@@ -287,7 +287,7 @@ export default function PlatinumTab() {
           skuId: result.skuId,
           skuCode: result.skuCode,
           movementId: result.movementId,
-          weight: result.weight || Number(formData.weightGrams),
+          weight: result.weight || Number(formData.initialGrams),
         });
       }
     } catch (err: any) {
@@ -304,7 +304,7 @@ export default function PlatinumTab() {
     // Reset form for next product
     setFormData(prev => ({
       ...prev,
-      weightGrams: 150,
+      initialGrams: 150,
       inStock: true,
     }));
   };
@@ -394,7 +394,7 @@ export default function PlatinumTab() {
       )}
 
       <div className="bg-white rounded-lg shadow p-6 space-y-6">
-        <h2 className="text-xl font-semibold text-gray-900">VlasyY (Platinum · kus)</h2>
+        <h2 className="text-xl font-semibold text-gray-900">VlasyX (Platinum · na gramy)</h2>
 
         {/* Preview */}
         <div className="space-y-4">
@@ -507,13 +507,13 @@ export default function PlatinumTab() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Gramáž (g)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Počáteční zásoba (g)</label>
             <input
               type="number"
               min={50}
               step={5}
-              value={formData.weightGrams}
-              onChange={(e) => handleFieldChange('weightGrams', Number(e.target.value))}
+              value={formData.initialGrams}
+              onChange={(e) => handleFieldChange('initialGrams', Number(e.target.value))}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy"
             />
           </div>
