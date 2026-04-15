@@ -30,6 +30,8 @@ interface SkuDetail {
   images: string[];
   inStock: boolean;
   isDyed: boolean;
+  isListed: boolean;
+  listingPriority: number | null;
   movements: Movement[];
 }
 
@@ -69,6 +71,10 @@ export default function SkuEditPage() {
   const [isDyed, setIsDyed] = useState<boolean>(false);
   const [savingIsDyed, setSavingIsDyed] = useState(false);
 
+  // isListed toggle
+  const [isListed, setIsListed] = useState<boolean>(false);
+  const [savingIsListed, setSavingIsListed] = useState(false);
+
   // Image management
   const [editingPhotos, setEditingPhotos] = useState(false);
 
@@ -84,6 +90,7 @@ export default function SkuEditPage() {
       const data = await res.json();
       setSku(data);
       setIsDyed(data.isDyed ?? false);
+      setIsListed(data.isListed ?? false);
       setMovements(data.movements || []);
     } catch (err: any) {
       console.error(err);
@@ -160,6 +167,25 @@ export default function SkuEditPage() {
       fetchSku();
     } catch (err: any) {
       alert('Chyba: ' + err.message);
+    }
+  };
+
+  const handleToggleIsListed = async () => {
+    setSavingIsListed(true);
+    const newValue = !isListed;
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ isListed: newValue, listingPriority: newValue ? 5 : null }),
+      });
+      if (!res.ok) throw new Error('Chyba pri ukladani');
+      setIsListed(newValue);
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setSavingIsListed(false);
     }
   };
 
@@ -308,6 +334,36 @@ export default function SkuEditPage() {
             <span className="text-sm font-medium text-stone-700">
               {sku.pricePerGramCzk ? `${sku.pricePerGramCzk} Kc` : '-'}
             </span>
+          </div>
+        </div>
+
+        {/* isListed — Viditelnost v katalogu */}
+        <div className="mt-6 pt-6 border-t border-stone-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-sm font-semibold text-stone-700">Viditelnost v katalogu</span>
+              <p className="text-xs text-stone-400 mt-0.5">
+                {isListed
+                  ? 'Produkt je viditelný na e-shopu pro zákazníky.'
+                  : 'Produkt je skrytý — zákazníci ho nevidí.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className={`text-sm font-medium ${isListed ? 'text-green-600' : 'text-stone-400'}`}>
+                {isListed ? '✅ Publikováno' : '❌ Skryto'}
+              </span>
+              <button
+                onClick={handleToggleIsListed}
+                disabled={savingIsListed}
+                className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                  isListed ? 'bg-green-500' : 'bg-stone-300'
+                } ${savingIsListed ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              >
+                <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
+                  isListed ? 'translate-x-8' : 'translate-x-1'
+                }`} />
+              </button>
+            </div>
           </div>
         </div>
 

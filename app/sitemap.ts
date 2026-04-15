@@ -15,6 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/vlasy-k-prodlouzeni/standard`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/vlasy-k-prodlouzeni/luxe`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/vlasy-k-prodlouzeni/platinum-edition`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/vlasy-k-prodlouzeni/baby-shades`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
 
     // Metody zakončení
     { url: `${baseUrl}/metody-zakonceni`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
@@ -33,6 +34,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/kontakt`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/ceny-aplikaci`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/prodlouzeni-vlasu-praha`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/cenik-prodlouzeni-vlasu-praha`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${baseUrl}/dodavatel-vlasu-pro-salony`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/vlasy`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/cenik`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/velkoobchod`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },

@@ -10,7 +10,99 @@ const StarIcon = () => (
 );
 
 export default function Home() {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Kolik stojí prodloužení vlasů v Praze?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Keratin od 4 000 Kč, mikrokeratin od 5 000 Kč (za 100 g vlasů). Nanotapes 55–65 Kč/spoj. Weft posun 3 800 Kč. Cena vlasů se účtuje zvlášť. Kompletní ceník na stránce Ceny aplikace na muzahair.cz/ceny-aplikaci.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Musím přijet do Prahy, nebo si mohu vlasy objednat online?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Vlasy si objednáte online — Múza Hair doručí kamkoliv v ČR do 2 pracovních dní. Aplikaci pak provede vaše kadeřnice, nebo přijeďte do showroomu Revoluční 8, Praha 1.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jaký je rozdíl mezi nanotapes a keratinem?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Nanotapes jsou vlasové pásky — sendvičový spoj bez tepla, korekce po 1,5–2 měsících. Keratin jsou pramínky přilepené keratinovou kapsulí, korekce po 2,5–3 měsících. Nanotapes jsou rychlejší na aplikaci, keratin drží déle.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jak dlouho vydrží prodloužené vlasy?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Keratin vydrží 2,5–3 měsíce, nanotapes 1,5–2 měsíce, weft 2–3 měsíce do korekce. Životnost závisí na péči — vhodný šampon bez sulfátů, česání od konečků a ochrana před teplem výrazně prodlužují životnost.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jsou vlasy pravé?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Ano — Múza Hair prodává 100 % pravé lidské vlasy. Vlastní barvírna v Praze, vlastní výroba od roku 2016. Nabízíme nebarvené panenské vlasy i profesionálně barvené blond odstíny.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jaký je rozdíl mezi kolekcemi Standard, LUXE a Platinum Edition?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Standard jsou kvalitní pravé vlasy pro každodenní nošení. LUXE jsou prémiové slovanské vlasy s větší hustotou a delší životností. Platinum Edition jsou výjimečné panenské nebarvené vlasy nejvyšší kvality — ideální pro zákaznice vyžadující absolutně nejlepší výsledek.',
+        },
+      },
+    ],
+  };
+
+  const localBusinessSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'HairSalon',
+    name: 'Múza Hair',
+    description: 'Český výrobce pravých vlasů k prodloužení od roku 2016. Vlastní barvírna v Praze, showroom Praha 1.',
+    url: 'https://muzahair.cz',
+    telephone: '+420728722880',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Revoluční 8',
+      addressLocality: 'Praha 1',
+      postalCode: '110 00',
+      addressCountry: 'CZ',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 50.0892,
+      longitude: 14.4252,
+    },
+    openingHoursSpecification: [
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '10:00', closes: '18:00' },
+    ],
+    priceRange: 'Kč Kč',
+    sameAs: [
+      'https://www.instagram.com/muzahair.cz',
+    ],
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
     <div style={{ background: 'var(--white)' }}>
 
       {/* ─── HERO ─── */}
@@ -626,5 +718,6 @@ export default function Home() {
       </section>
 
     </div>
+    </>
   );
 }

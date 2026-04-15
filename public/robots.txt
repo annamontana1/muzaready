@@ -21,6 +21,44 @@ Disallow: /oblibene
 Allow: /vlasy-k-prodlouzeni/
 Allow: /pricesky-a-paruky/
 Allow: /produkt/
+Allow: /prodlouzeni-vlasu-praha/
+Allow: /velkoobchod/
+Allow: /blog/
+
+# === AI CRAWLERS — explicitně povoleni pro AEO ===
+# ChatGPT / OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic Claude
+User-agent: ClaudeBot
+Allow: /
+
+# Google AI (Gemini, AI Overviews)
+User-agent: GoogleOther
+Allow: /
+
+# Microsoft Copilot / Bing
+User-agent: bingbot
+Allow: /
+
+# Common Crawl (used by many AI models for training)
+User-agent: CCBot
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+# llms.txt — AI Engine Optimization manifest
+Allow: /llms.txt
 
 # Sitemap location
 Sitemap: https://www.muzahair.cz/sitemap.xml

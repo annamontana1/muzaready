@@ -12,6 +12,37 @@ export const metadata: Metadata = {
   },
 };
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Kolik stojí vlasové tresy (weft) Praha?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Posun vlasových tresů v Praze stojí od 3 800 Kč. Cena tresů se účtuje zvlášť — ručně šité tresy na zakázku vyrábí Múza Hair do 14 dní.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Jak dlouho vydrží vlasové tresy?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Vlasové tresy (weft/hollywoodská metoda) vydrží 2–3 měsíce do korekce. Jsou přišívány na copánky — žádné lepidlo, žádné teplo. Velmi šetrná metoda k vlastním vlasům.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Jaký je rozdíl mezi weftem a keratinem?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Weft jsou ručně šité tresy přišívané na copánky — bez lepidla, maximální objem. Keratin jsou jednotlivé pramínky přilepené keratinovou kapsulí. Weft je šetrnější k vlastním vlasům a dává větší hustotu.',
+      },
+    },
+  ],
+};
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -73,6 +104,10 @@ export default function VlasoveTresyPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* Hero sekce */}

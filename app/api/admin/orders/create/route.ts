@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin-auth';
+import { buildSkuDisplayName } from '@/lib/stock';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -147,7 +148,7 @@ export async function POST(request: NextRequest) {
         grams: item.grams || 0,
         pricePerGram: sku.pricePerGramCzk || 0,
         lineTotal,
-        nameSnapshot: sku.name || sku.sku,
+        nameSnapshot: buildSkuDisplayName(sku),
         ending: item.ending || 'NONE',
         assemblyFeeType: item.assemblyFeeType || 'FLAT',
         assemblyFeeCzk: item.assemblyFeeCzk || 0,

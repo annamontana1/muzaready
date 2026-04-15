@@ -192,6 +192,81 @@ const nextConfig = {
         destination: '/vlasy-k-prodlouzeni/luxe',
         permanent: true,
       },
+
+      // === SEO keyword redirecty — thin URL → katalog ===
+      // Panenské vlasy → Platinum Edition (nejkvalitnější = panenské)
+      {
+        source: '/panenske-vlasy-praha',
+        destination: '/vlasy-k-prodlouzeni/platinum-edition',
+        permanent: true,
+      },
+      {
+        source: '/panenske-vlasy-na-prodlouzeni',
+        destination: '/vlasy-k-prodlouzeni/platinum-edition',
+        permanent: true,
+      },
+      // Slovanské vlasy → LUXE
+      {
+        source: '/slovanske-vlasy-na-prodlouzeni',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
+      {
+        source: '/slovanske-vlasy-praha',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
+      // Luxusní vlasy → LUXE katalog
+      {
+        source: '/luxusni-vlasy-na-prodlouzeni',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
+      // Koupit vlasy Praha → hlavní katalog
+      {
+        source: '/koupit-vlasy-na-prodlouzeni-praha',
+        destination: '/vlasy-k-prodlouzeni',
+        permanent: true,
+      },
+      {
+        source: '/koupit-vlasy-praha',
+        destination: '/vlasy-k-prodlouzeni',
+        permanent: true,
+      },
+      // Evropské vlasy → LUXE
+      {
+        source: '/evropske-vlasy-na-prodlouzeni',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: true,
+      },
+      // Ceník prodloužení vlasů Praha — aliasy
+      {
+        source: '/cenik-prodlouzeni',
+        destination: '/cenik-prodlouzeni-vlasu-praha',
+        permanent: true,
+      },
+      {
+        source: '/ceny-prodlouzeni-vlasu-praha',
+        destination: '/cenik-prodlouzeni-vlasu-praha',
+        permanent: true,
+      },
+
+      // B2B alternativní URL → hlavní B2B stránka
+      {
+        source: '/velkoobchod-vlasy-Praha',
+        destination: '/dodavatel-vlasu-pro-salony',
+        permanent: true,
+      },
+      {
+        source: '/vlasy-velkoobchod-praha',
+        destination: '/dodavatel-vlasu-pro-salony',
+        permanent: true,
+      },
+      {
+        source: '/b2b',
+        destination: '/dodavatel-vlasu-pro-salony',
+        permanent: false,
+      },
     ];
   },
 };

@@ -162,9 +162,15 @@ export default function Header() {
               </div>
 
               {/* Velkoobchod */}
-              <Link href="/velkoobchod" className={navLinkClass} style={{ color: 'var(--text-mid)' }}>
-                Velkoobchod
-              </Link>
+              <div className="relative group">
+                <Link href="/dodavatel-vlasu-pro-salony" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                  Velkoobchod {chevronDown}
+                </Link>
+                <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
+                  {dropdownItem('/dodavatel-vlasu-pro-salony', 'Dodavatel pro salony')}
+                  {dropdownItem('/velkoobchod', 'Velkoobchodní registrace')}
+                </div>
+              </div>
 
               {/* Showroom CTA */}
               <Link
@@ -433,12 +439,20 @@ export default function Header() {
                 ))}
 
                 <Link
+                  href="/dodavatel-vlasu-pro-salony"
+                  className="block py-3 text-[13px] font-light border-b border-beige/50"
+                  style={{ color: 'var(--text-mid)' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Pro salony
+                </Link>
+                <Link
                   href="/velkoobchod"
                   className="block py-3 text-[13px] font-light border-b border-beige/50"
                   style={{ color: 'var(--text-mid)' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Velkoobchod
+                  Velkoobchod — registrace
                 </Link>
                 <Link
                   href="/showroom"

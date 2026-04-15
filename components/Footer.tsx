@@ -118,7 +118,8 @@ export default function Footer() {
             {[
               { href: '/o-nas', label: 'Náš příběh' },
               { href: '/recenze', label: 'Recenze' },
-              { href: '/velkoobchod', label: 'Velkoobchod' },
+              { href: '/dodavatel-vlasu-pro-salony', label: 'Pro salony & kadeřníky' },
+              { href: '/velkoobchod', label: 'Velkoobchod — registrace' },
               { href: '/vykup-vlasu-pro-nemocne', label: 'Výkup vlasů' },
               { href: '/kontakt', label: 'Kontakt' },
             ].map(({ href, label }) => (
@@ -178,6 +179,7 @@ export default function Footer() {
               { href: '/vlasy-k-prodlouzeni/standard', label: 'Standard vlasy' },
               { href: '/vlasy-k-prodlouzeni/luxe', label: 'Luxe vlasy' },
               { href: '/vlasy-k-prodlouzeni/platinum-edition', label: 'Platinum Edition' },
+              { href: '/vlasy-k-prodlouzeni/baby-shades', label: 'Baby Shades — světlé vlasy' },
               { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Vlasy na keratin' },
               { href: '/metody-zakonceni/vlasove-pasky-tape-in', label: 'Vlasové pásky Tape-In' },
               { href: '/ceny-aplikaci', label: 'Ceny aplikace' },

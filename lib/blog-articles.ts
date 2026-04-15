@@ -707,6 +707,620 @@ Chcete vědět více o cenách nebo metodách? Prohlédněte si naše [ceny apli
     imageUrl: '/blog/jak-dlouho-vydrzi-prodlouzeni.jpg',
     readTime: 5,
   },
+  {
+    slug: 'vlasy-na-prodlouzeni-podle-barvy-2025',
+    title: 'Vlasy na prodloužení podle barvy 2025 — černé, hnědé, blond, platinové, zrzavé',
+    excerpt: 'Průvodce výběrem vlasů na prodloužení podle barvy. Černé, tmavě hnědé, hnědé, světlé hnědé, blond, světlá blond, platinové, zrzavé a červené vlasy — jak vybrat správný odstín a kde je koupit v Praze.',
+    content: `
+# Vlasy na prodloužení podle barvy — kompletní průvodce 2025
+
+**TL;DR:** Múza Hair Praha nabízí vlasy na prodloužení ve všech přirozených odstínech — od černé přes hnědé až po platinovou blond. Vlasy jsou 100% panenské slovanského původu. Showroom Revoluční 8, Praha 1. Konzultace zdarma.
+
+Výběr správné barvy vlasů na prodloužení je klíčový pro přirozený výsledek. Příliš světlé nebo tmavé prodloužení bude vidět okamžitě. V tomto průvodci vám ukážeme, co očekávat od každého odstínu, a poradíme jak vybrat ten správný.
+
+---
+
+## Černé vlasy na prodloužení
+
+Černé vlasy (odstín č. 1) jsou nejhustší a nejtvrdší ze všech přirozených barev. Jsou ideální pro ženy s přirozeně velmi tmavými vlasy — Asiatky, ženy středomořského nebo slovanského původu s tmavou barvou.
+
+### Co vědět o černých vlasech na prodloužení:
+- **Přirozená barva:** Nelze dobarvit na světlejší odstín bez poškození
+- **Lesk:** Přirozený vysoký lesk — velmi efektní výsledek
+- **Vhodné pro:** Ženy s vlasy odstínu 1–2 (přirozená černá)
+- **Pozor:** Průmyslově černo-černé vlasy vypadají nepřirozeně — vybírejte přirozené tóny
+
+✅ Dostupné v kolekcích: Standard, LUXE, Platinum Edition
+
+---
+
+## Tmavě hnědé vlasy na prodloužení
+
+Tmavě hnědé vlasy (odstíny č. 2–3) jsou nejprodávanější kategorií u brunetek. Zahrnují **velmi tmavou hnědou (espresso)** a **tmavou hnědou (čokoládová, kakaová)**. Tyto odstíny jsou velmi přirozené a snadno splývají s vlastními vlasy.
+
+### Kdy volit tmavě hnědé:
+- Vlastní vlasy jsou přirozeně tmavé hnědé
+- Chcete přidat objem bez výrazné barevné změny
+- Hledáte nejuniverzálnější tmavý odstín
+
+✅ Dostupné v kolekcích: Standard, LUXE, Platinum Edition
+
+---
+
+## Hnědé vlasy na prodloužení
+
+Hnědé vlasy (odstín č. 4) jsou klasická **kaštanová/ořechová hnědá** — teplejší tón než tmavě hnědá. Tento odstín je oblíbený pro svou přirozenost a flexibilitu — funguje jako základ pro balayage i jako samostatná barva.
+
+### Hnědé vlasy se hodí pokud:
+- Vlastní vlasy jsou přirozeně hnědé nebo mírně zbarvené
+- Chcete teplý, přirozený tón
+- Plánujete balayage nebo ombré kombinaci
+
+✅ Dostupné v kolekcích: Standard, LUXE, Platinum Edition
+
+---
+
+## Světlé hnědé vlasy — karamelové a světle hnědé
+
+Světlé hnědé vlasy (odstín č. 5) jsou přechodový odstín mezi hnědou a blond. Zahrnují **karamelové, medové hnědé a světle hnědé** tóny. Tento odstín je velmi oblíbený pro svou přirozenou záři a flexibilitu.
+
+### Proč je světlá hnědá tak populární:
+- Teplý karamelový tón slušní většině pleti
+- Snadno se kombinuje s balayage a highlights
+- Přirozené ztmavení u kořenů vypadá záměrně
+
+✅ Dostupné v kolekcích: Standard, LUXE, Platinum Edition
+
+---
+
+## Blond vlasy na prodloužení — tmavá blond a klasická blond
+
+### Tmavá blond (odstín č. 6)
+Tmavá blond neboli **špinavá blond** je přechodový tón mezi světle hnědou a blond. Velmi populární přirozený odstín — vypadá jako zesvětlené přirozené vlasy.
+
+### Klasická blond (odstín č. 7)
+Klasická blond — **přírodní blond, zlatá blond, medová blond** — je nejprodávanější blond odstín. Teplý, přirozený tón který vypadá jako od přírody.
+
+✅ Dostupné v kolekcích: Standard, LUXE, Platinum Edition, Baby Shades
+
+---
+
+## Světlá blond na prodloužení
+
+Světlá blond (odstín č. 8) je **vanilková, skandinávská blond** — světlejší než klasická blond, ale ne ještě platinová. Oblíbená pro ombre efekty a přirozené zesvětlení.
+
+### Světlá blond je ideální pro:
+- Přirozené zesvětlení pomocí prodloužení
+- Ombre a balayage kombinace
+- Ženy se přirozeně světlými vlasy
+
+✅ Dostupné v kolekcích: Standard, LUXE, Platinum Edition, Baby Shades
+
+---
+
+## Platinové vlasy na prodloužení — platinová a velmi světlá blond
+
+### Velmi světlá blond (odstín č. 9)
+Písková blond, champagne blond — velmi světlý tón s teplými zlatavými podtóny. Jeden z nejoblíbenějších prémiových odstínů.
+
+### Platinová blond (odstín č. 10)
+Platinové vlasy jsou **nejsvětlejší přirozený odstín** — nordic blond, ultra světlá, platinová. Tento odstín je exkluzivní — vyžaduje vlasy nejvyšší kvality a je dostupný zejména v kolekci Baby Shades a LUXE.
+
+### Co vědět o platinových vlasech:
+- Vyžadují panenské vlasy bez chemického zpracování
+- Jsou řidší na trhu — vyšší cena
+- Při nesprávné péči mohou žloutnout — používejte fialový šampon
+- Dostupné zejména v Baby Shades kolekci Múza Hair
+
+✅ Dostupné v kolekcích: Baby Shades, LUXE
+
+---
+
+## Zrzavé a červené vlasy na prodloužení
+
+Zrzavé a červené vlasy jsou speciální kategorií. Přirozená zrzavá nebo červená barva je velmi vzácná — většina červených vlasů na trhu je **barvená** (hennatem nebo syntetickými barvivy).
+
+### Co vědět o zrzavých/červených vlasech:
+- Přirozeně zrzavé vlasy jsou výjimečně vzácné
+- Barvené červené vlasy vyžadují speciální péči — barva rychle vyprchává
+- Fading (blednutí) je rychlejší než u jiných barev
+- Doporučujeme konzultaci před výběrem
+
+✅ Na dotaz — kontaktujte showroom Praha
+
+---
+
+## Jak vybrat správný odstín vlasů na prodloužení?
+
+### 3 pravidla:
+**1. Matchujte konce vlastních vlasů, ne kořeny**
+Prodloužení navazuje na délky a konce vlasů — ne na kořeny. Proto matchujte barvu svých konců, ne kořenů.
+
+**2. Jděte o půl tónu světleji**
+Prodloužení ve stejném tónu jako vlastní vlasy může působit tmavěji. Půl tónu světleji zajistí přirozené splývání.
+
+**3. Konzultace v showroomu Praha**
+Nejspolehlivější je fyzické porovnání vlasů v přírodním světle. V showroomu Múza Hair Praha vám pomůžeme vybrat přesný odstín zdarma.
+
+---
+
+## FAQ — vlasy na prodloužení podle barvy
+
+### Lze prodloužení nabarvit na jinou barvu?
+Panenské vlasy lze nabarvit stejně jako vlastní vlasy. Barvení vlasů světlejším tónem vyžaduje odbarvení, které zkracuje životnost prodloužení. Doporučujeme vždy konzultovat s odborníkem.
+
+### Jak dlouho vydrží barva v prodloužených vlasech?
+Barva v prodloužených vlasech vydrží podobně jako ve vlastních — závisí na péči. Barvené vlasy vyžadují barevné šampony a kondicionéry bez sulfátů.
+
+### Jsou dostupné ombré nebo balayage vlasy na prodloužení?
+Múza Hair nabízí vlastní barvírnu v Praze — lze domluvit custom barvení na přání zákaznice.
+
+### Kde koupit vlasy na prodloužení v Praze?
+Múza Hair showroom, Revoluční 8, Praha 1. Konzultace a výběr barvy zdarma osobně.
+    `,
+    author: 'Múza Hair Team',
+    publishedAt: '2025-04-14',
+    updatedAt: '2025-04-14',
+    category: 'Průvodce',
+    tags: ['barva vlasů', 'černé vlasy', 'hnědé vlasy', 'blond vlasy', 'platinové vlasy', 'zrzavé vlasy', 'světlá blond', 'karamelové vlasy', 'tmavě hnědé'],
+    imageUrl: '/blog/vlasy-podle-barvy.jpg',
+    readTime: 8,
+  },
+  {
+    slug: 'recke-jemne-vlasy-na-prodlouzeni',
+    title: 'Řecké vlasy a jemné vlasy na prodloužení — co to jsou a jak je vybrat?',
+    excerpt: 'Co jsou řecké vlasy na prodloužení? A jak vybrat vlasy pro ženy s jemnými a řídkými vlasy? Průvodce pro specifické typy vlasů — Praha konzultace zdarma.',
+    content: `
+# Řecké vlasy a jemné vlasy na prodloužení
+
+**TL;DR:** Řecké vlasy jsou označení pro středomořský typ vlasů — přirozeně tmavé, husté, mírně vlnité. Jemné vlasy (tenká struktura) vyžadují speciální přístup k prodloužení — šetrné metody jako mikrokeratin nebo tape-in. Múza Hair Praha, konzultace zdarma, Revoluční 8, Praha 1.
+
+---
+
+## Co jsou řecké vlasy?
+
+Termín "řecké vlasy" označuje vlasy **středomořského nebo východoevropského původu** — přirozeně tmavé (černé, tmavě hnědé), husté, s přirozenou silnou strukturou a mírným přirozeným vlnením.
+
+V kontextu vlasů na prodloužení "řecké vlasy" nejsou samostatnou kategorií produktu — jde spíše o **popis textury a původu**. Vlasy tohoto typu pocházejí typicky z:
+- Řecka, Kypru, Turecka
+- Balkánských zemí (Srbsko, Makedonie)
+- Jižní Itálie
+
+### Vlastnosti řeckých vlasů:
+- Přirozeně tmavé (odstíny 1–4)
+- Silnější struktura vlasového vlákna
+- Přirozené vlnění (od rovných po mírně vlnité)
+- Vysoká hustota na cm²
+- Přirozeně odolné a dlouhověké
+
+### Kde koupit řecké vlasy v Praze?
+Múza Hair Praha pracuje s vlasy **slovanského a východoevropského původu** — vlasy z Ukrajiny, Polska a Rumunska mají velmi podobné vlastnosti jako středomořské vlasy. Jsou přirozeně tmavé, silné a zdravé.
+
+✅ V showroomu Praha vám pomůžeme vybrat přesnou texturu a barvu pro váš typ vlasů.
+
+---
+
+## Co jsou jemné vlasy (fine hair) a proč vyžadují speciální přístup?
+
+Jemné vlasy jsou vlasy s **tenčím průřezem vlasového vlákna**. Nezaměňujte s řídkými vlasy — žena může mít hodně vlasů, ale každý jednotlivý vlas je tenký.
+
+### Proč je prodloužení jemných vlasů náročnější?
+Jemné vlasy mají **méně pevnosti** pro uchycení prodloužení. Těžké prodloužení může způsobit:
+- Lámání vlastních vlasů v místě spojení
+- Vypadávání nebo řídnutí v oblastech spojení
+- Viditelné spoje u kořenů
+
+---
+
+## Které metody jsou vhodné pro jemné vlasy?
+
+### ✅ Mikrokeratin — nejlepší volba
+Mikrokeratin používá výrazně tenčí prameny než standart keratin (230 pramenů vs 130 na 100g). Malý spoj méně zatěžuje vlastní vlasy. **Nejšetrnější keratinová metoda pro jemné vlasy.**
+
+### ✅ Tape In (vlasové pásky) — výborná alternativa
+Pásky distribuují váhu prodloužení na širší plochu — nezatěžují jeden bod jako keratin. Bez tepla a chemie. Korekce každých 6–8 týdnů.
+
+### ⚠️ Standart keratin — s opatrností
+Velký keratinový spoj může být příliš těžký pro velmi jemné vlasy. Doporučujeme konzultaci před aplikací.
+
+### ❌ Weft/Hollywood — nedoporučujeme pro velmi jemné vlasy
+Tresy jsou těžké a přišívají se přes celou šíři hlavy — pro velmi jemné vlasy jsou příliš zátěžové.
+
+---
+
+## Kolik gramů vlasů potřebuji na prodloužení jemných vlasů?
+
+Pro jemné vlasy doporučujeme **méně gramů, ale delší vlasy**. Příliš mnoho hmotnosti prodloužení poškodí vlastní vlasy.
+
+| Typ vlasů | Doporučená gramáž |
+|---|---|
+| Velmi jemné (fine) | 50–80 g |
+| Jemné až střední | 80–120 g |
+| Střední až silné | 100–150 g |
+
+---
+
+## FAQ — řecké a jemné vlasy na prodloužení
+
+### Jsou slovanské vlasy podobné řeckým vlasům?
+Slovanské vlasy (z Ukrajiny, Polska, Rumunska) jsou přirozeně silné a zdravé — jsou srovnatelné s mediteránními vlasy v kvalitě, ale přirozeně dostupné ve světlejších odstínech.
+
+### Mám jemné vlasy — mohu si nechat udělat prodloužení?
+Ano, ale je nutná konzultace. Doporučujeme mikrokeratin nebo tape-in metodu a menší gramáž prodloužení.
+
+### Jak poznám, zda mám jemné nebo řídké vlasy?
+Jemné vlasy = tenký průřez každého vlasu. Řídké vlasy = méně vlasů na hlavě. Lze mít oboje, nebo jen jedno. Na konzultaci vám naše stylistka typ vlasů posoudí zdarma.
+
+### Kde v Praze prodlouží vlasy pro jemné vlasy?
+Múza Hair Praha, showroom Revoluční 8, Praha 1. Specializujeme se na individuální konzultace — pro každý typ vlasů doporučíme optimální metodu a gramáž.
+    `,
+    author: 'Múza Hair Team',
+    publishedAt: '2025-04-14',
+    updatedAt: '2025-04-14',
+    category: 'Průvodce',
+    tags: ['řecké vlasy', 'jemné vlasy', 'fine hair', 'slovanské vlasy', 'středomořské vlasy', 'mikrokeratin', 'tape-in jemné vlasy'],
+    imageUrl: '/blog/recke-jemne-vlasy.jpg',
+    readTime: 6,
+  },
+  {
+    slug: 'kde-prodlouzit-vlasy-praha-2025',
+    title: 'Kde prodloužit vlasy v Praze 2025? Průvodce místy, cenami a metodami',
+    excerpt: 'Hledáte, kde v Praze prodloužit vlasy? Porovnáváme metody (keratin, tape-in, weft), ceny a poradíme, na co si dát pozor při výběru salonu. Aktualizováno 2025.',
+    content: `
+# Kde prodloužit vlasy v Praze 2025?
+
+**TL;DR:** Prodloužení vlasů v Praze stojí od 4 000 Kč za aplikaci + cena vlasů od 6 900 Kč/100 g. Klíčové je vybrat salon s vlastními vlasy — ne jen aplikaci cizích. Múza Hair (Revoluční 8, Praha 1) je český výrobce pravých vlasů s vlastní barvírnou od roku 2016. Nabízí keratin, nanotapes i weft.
+
+---
+
+## Co řeší většina žen, když hledají prodloužení vlasů v Praze
+
+Při hledání prodloužení vlasů v Praze narážíte na tři zásadní otázky:
+
+1. **Kde sehnat kvalitní vlasy** — ne všechny salony prodávají vlastní vlasy, mnohé jen aplikují dovezené z neznámého zdroje
+2. **Kolik to celkem bude stát** — cena aplikace je jen část, vlasy se platí zvlášť
+3. **Jaká metoda je pro mě vhodná** — keratin, tape-in nebo weft závisí na vašich vlastních vlasech a životním stylu
+
+---
+
+## Metody prodloužení vlasů Praha — přehled a ceny 2025
+
+### Keratin / Mikrokeratin
+
+Nejrozšířenější metoda v Praze. Keratinové pramínky se přilepují ke kořenům vlastních vlasů pomocí keratinové kapsle.
+
+| Parametr | Hodnota |
+|----------|---------|
+| Cena aplikace | od 4 000 Kč (100 g) |
+| Počet pramenů | 130–230 ks / 100 g |
+| Korekce | po 2,5–3 měsících |
+| Vhodné pro | silnější vlastní vlasy |
+
+**Mikrokeratin** (mini kapsle) je vhodný pro jemnější a řidší vlastní vlasy — diskrétnější a lehčí.
+
+### Nanotapes / Tape-In (pásky)
+
+Sendvičová metoda bez lepidla a tepla. Vlasové pásky 2,8 cm nebo 4 cm se přiloží k vlastním vlasům.
+
+| Parametr | Hodnota |
+|----------|---------|
+| Cena aplikace | 55–65 Kč / spoj |
+| Aplikace | 1,5–2 hodiny |
+| Korekce | po 1,5–2 měsících |
+| Vhodné pro | jemné i silné vlasy |
+
+**Výhoda nanotapes:** Při každé korekci lze vlasy znovu použít — ekonomičtější na delší dobu.
+
+### Weft — Vlasové tresy (hollywoodská metoda)
+
+Ručně šité vlasové tresy se přišívají na copánky. Žádné lepidlo, žádné teplo.
+
+| Parametr | Hodnota |
+|----------|---------|
+| Cena posunu | od 3 800 Kč |
+| Korekce | po 2–3 měsících |
+| Tresy na zakázku | výroba 14 dní |
+| Vhodné pro | ženy s dostatkem vlastních vlasů |
+
+**Weft** dává největší objem a je nejšetrnější k vlastním vlasům.
+
+---
+
+## Na co si dát pozor při výběru salonu v Praze
+
+### 1. Odkud jsou vlasy?
+
+Mnohé salony v Praze aplikují vlasy neznámého původu — dovezené hromadně z Asie bez certifikace původu. **Ptejte se vždy na původ vlasů.**
+
+Prémiové vlasy pocházejí z Evropy (Slovensko, Polsko, Rumunsko, Ukrajina) nebo z Indie (temple hair). Slovanské vlasy jsou přirozeně silné a melaninem bohatší — vypadají přirozeněji na evropském typu pleti.
+
+### 2. Má salon vlastní barvírnu?
+
+Barvené blond vlasy jsou cenově nejatraktivnější segment — ale barvení je zásadní pro kvalitu. **Salon s vlastní barvírnou** kontroluje celý proces. Vlasy bez žlutých tónů, bez suchosti, s přirozeným leskem.
+
+### 3. Jakou záruku salon poskytuje?
+
+Kvalitní prodejce vlasů ručí za kvalitu — například výměnou produktu při prokázaném výrobním defektu.
+
+---
+
+## Proč si vlasy pořídit od výrobce, ne jen od salonu?
+
+Koupí vlasů přímo od výrobce (jako je Múza Hair) máte jistotu:
+
+- **Znáte původ vlasů** — slovanské, panenské nebo barvené vlastní barvírnou
+- **Platíte méně** — žádný zprostředkovatel
+- **Vlasy si necháte aplikovat kdekoliv** — u vaší kadeřnice, nebo v showroomu Múza Hair v Praze
+
+**Múza Hair Praha** (Revoluční 8, Praha 1) je český výrobce vlasů k prodloužení od roku 2016. Vlasy doručíme i poštou kamkoliv v ČR — vaše kadeřnice je pak aplikuje.
+
+---
+
+## Ceny prodloužení vlasů Praha 2025 — přehledová tabulka
+
+| Co platíte | Cena |
+|-----------|------|
+| Vlasy Standard 100 g | od 6 900 Kč |
+| Vlasy LUXE 100 g | od 8 900 Kč |
+| Vlasy Platinum Edition 100 g | od 10 900 Kč |
+| Aplikace keratin (100 g) | od 4 000 Kč |
+| Aplikace mikrokeratin (100 g) | od 5 000 Kč |
+| Tape-in / spoj | 55–65 Kč |
+| Weft posun | od 3 800 Kč |
+
+*Ceny jsou orientační a závisí na salonu, délce vlasů a regionu.*
+
+---
+
+## Kde v Praze prodloužit vlasy — doporučení podle potřeby
+
+**Chcete prémiové slovanské vlasy s vlastní barvírnou:**
+→ Múza Hair, Revoluční 8, Praha 1 — showroom, online obchod, doručení ČR
+
+**Chcete jen aplikaci a vlasy si pořídíte sami:**
+→ Objednejte vlasy online (muzahair.cz), vaše kadeřnice je aplikuje
+
+**Máte jemné vlasy:**
+→ Zvolte mikrokeratin nebo nanotapes — konzultace zdarma v showroomu Múza Hair
+
+**Chcete největší objem bez lepidel:**
+→ Weft / hollywoodská metoda — tresy na zakázku, výroba 14 dní
+
+---
+
+## FAQ — kde prodloužit vlasy Praha
+
+### Kolik stojí prodloužení vlasů v Praze celkem?
+Celková cena se skládá z ceny vlasů a ceny aplikace. Vlasy 100 g od 6 900 Kč, aplikace keratin od 4 000 Kč. Celkem tedy od cca 10 900 Kč za základní prodloužení. Prémiové vlasy LUXE + aplikace = od 12 900 Kč.
+
+### Musím za prodloužením do Prahy přijet osobně?
+Vlasy si objednáte online na muzahair.cz s doručením do 48 hodin. Aplikaci provede vaše kadeřnice, nebo přijeďte do showroomu Múza Hair, Revoluční 8, Praha 1.
+
+### Jak dlouho trvá aplikace prodloužení vlasů?
+Keratin 100 g trvá 2–3 hodiny, nanotapes 1,5–2 hodiny, weft 2–3 hodiny. Záleží na zkušenosti kadeřnice a počtu pramenů.
+
+### Jak zjistím, která metoda je pro mě vhodná?
+Závisí hlavně na vašich vlastních vlasech. Jemné a řidší vlasy → mikrokeratin nebo nanotapes. Silné zdravé vlasy → keratin nebo weft. Konzultaci zdarma nabízí showroom Múza Hair.
+
+### Jsou prodloužené vlasy znát?
+Při správné aplikaci a gramáži ne. Klíčová je správná barva — proto vlastní barvírna Múza Hair míchá odstíny na míru, ne z hotového vzorníku.
+    `,
+    author: 'Múza Hair Team',
+    publishedAt: '2025-04-15',
+    updatedAt: '2025-04-15',
+    category: 'Průvodce',
+    tags: [
+      'kde prodloužit vlasy Praha',
+      'prodloužení vlasů Praha 2025',
+      'keratin Praha cena',
+      'nanotapes Praha',
+      'tape-in Praha',
+      'weft Praha',
+      'salony prodloužení vlasů Praha',
+      'cena prodloužení vlasů Praha',
+    ],
+    imageUrl: '/blog/kde-prodlouzit-vlasy-praha.jpg',
+    readTime: 8,
+  },
+  {
+    slug: 'panenske-vs-remy-vlasy-rozdil',
+    title: 'Panenské vs. remy vlasy — jaký je rozdíl? Průvodce pro inteligentní nákup',
+    excerpt: 'Termíny "panenské vlasy" a "remy vlasy" se na internetu pletou. Vysvětlujeme, co každý pojem znamená, kde je rozdíl v ceně a kvalitě a co skutečně dostanete.',
+    content: `
+# Panenské vlasy vs. remy vlasy — jaký je skutečný rozdíl?
+
+**TL;DR:** Panenské vlasy jsou chemicky neošetřené — nikdy nebarvené, nekroucené, nerovnané. Remy vlasy jsou vlasy se zachovanou přirozenou strukturou kutikuly (vlásek uložen ve správném směru), ale mohou být barvené nebo jinak ošetřené. Všechny panenské vlasy jsou remy, ale ne všechny remy vlasy jsou panenské.
+
+---
+
+## Co jsou remy vlasy?
+
+Remy (nebo Remi) označuje způsob zpracování vlasů — konkrétně to, že všechny vlasy v záponu jsou orientovány stejným směrem (kořen k vrcholu, ne promíchaně). To zabraňuje zamotávání, třepení a ztrátě lesku.
+
+**Klíčové vlastnosti remy vlasů:**
+- Kutikuly zachovány a orientovány jedním směrem
+- Přirozený lesk a hladkost
+- Nižší náchylnost k zamotávání
+- Mohou být barvené, chemicky rovnané nebo trvale vlněné
+
+## Co jsou panenské vlasy?
+
+Panenské vlasy jsou vlasy, které nebyly **nikdy chemicky ošetřeny** — žádné barvení, žádné zesvětlování, žádná chemická trvalá, žádné tepelné narovnávání chemií.
+
+**Klíčové vlastnosti panenských vlasů:**
+- Přirozená barva a textura vlasů dárkyně
+- Zachovaná přirozená struktura vlákna
+- Maximální pevnost a elasticita
+- Nejdéle vydrží při použití
+- Lze je barvit, zesvětlovat a tvarovat — lépe absorbují barvu
+
+## Proč na tom záleží?
+
+| Vlastnost | Remy vlasy | Panenské vlasy |
+|-----------|------------|----------------|
+| Barveny | Mohou být | Nikdy |
+| Životnost | 6–12 měsíců | 12–18+ měsíců |
+| Lze zesvětlit | Obtížněji | Ano, snáze |
+| Přirozený lesk | Dobrý | Maximální |
+| Cena | Střední | Vyšší |
+
+## Jak poznat panenské vlasy?
+
+Panenské vlasy se poznají obtížně pouhým pohledem. Spolehlivé znaky:
+1. **Různé přirozené odstíny** v jednom záponu (příroda není uniformní)
+2. **Přirozená textura** — ne dokonale rovné ani dokonale vlnité
+3. **Mírný přirozený zápach** — ne chemický
+4. **Certifikát původu** od výrobce
+
+## Múza Hair — kde najdete panenské vlasy v Praze?
+
+Kolekce **Platinum Edition** od Múza Hair jsou 100% panenské nebarvené vlasy slovanského původu. Sbírány a zpracovávány s maximální péčí o zachování přirozené struktury.
+
+Kolekce **LUXE** jsou prémiové slovanské vlasy — mohou zahrnovat jak panenské nebarvené, tak profesionálně barvené v naší vlastní barvírně v Praze.
+
+Kolekce **Standard** jsou kvalitní remy vlasy vhodné pro zákaznice, které hledají skvělý poměr cena/výkon.
+
+---
+
+## FAQ — panenské a remy vlasy
+
+### Jsou panenské vlasy vždy lepší než remy?
+Pro ty, kdo chtějí vlasy zesvětlit nebo barvit na nestandardní odstín — ano. Pro ty, kdo hledají konkrétní blond odstín, může být kvalitně obarvená remy kolekce ideální volbou.
+
+### Kde koupit panenské vlasy v Praze?
+Múza Hair, showroom Revoluční 8, Praha 1. Online obchod s doručením do ČR: muzahair.cz/vlasy-k-prodlouzeni/platinum-edition
+
+### Jsou slovanské vlasy panenské?
+Závisí na konkrétním výrobci. Slovanský původ označuje geografii — vlasy ze Slovenska, Polska, Rumunska, Ukrajiny. Zda jsou panenské závisí na zpracování. Múza Hair nabízí slovanské panenské vlasy v kolekci Platinum Edition.
+    `,
+    author: 'Múza Hair Team',
+    publishedAt: '2025-04-15',
+    updatedAt: '2025-04-15',
+    category: 'Průvodce',
+    tags: [
+      'panenské vlasy',
+      'remy vlasy',
+      'rozdíl panenské remy',
+      'virgin hair',
+      'remi vlasy',
+      'slovanské panenské vlasy',
+      'jak poznat pravé vlasy',
+    ],
+    imageUrl: '/blog/panenske-vs-remy-vlasy.jpg',
+    readTime: 6,
+  },
+  {
+    slug: 'dodavatel-vlasu-pro-kaderniky',
+    title: 'Dodavatel vlasů pro kadeřníky — jak vybrat a na co si dát pozor',
+    excerpt: 'Hledáte spolehlivého dodavatele vlasů pro váš salon? Vysvětlujeme, co odlišuje dobrého velkoobchodního dodavatele, jaké jsou podmínky B2B a proč na původu vlasů záleží.',
+    content: `
+# Dodavatel vlasů pro kadeřníky — průvodce B2B nákupem
+
+**TL;DR:** Dobrý dodavatel vlasů pro kadeřnické salony nabízí konzistentní kvalitu, stálé odstíny, rychlé dodání a individuální podmínky. Múza Hair je český výrobce vlasů s vlastní barvírnou — dodává do salonů po celé ČR.
+
+---
+
+## Proč záleží na výběru dodavatele vlasů pro salon?
+
+Kadeřnice, která prodlužuje vlasy, je závislá na kvalitě produktu. Nekvalitní vlasy se zamotávají, matní, třepí se — a zákaznice se vrátí s reklamací za kadeřnicí, ne za dodavatelem. Výběr správného dodavatele chrání vaši reputaci.
+
+Klíčová kritéria výběru:
+
+1. **Konzistentní kvalita šarže od šarže** — každá objednávka musí vypadat stejně
+2. **Stálý vzorník odstínů** — zákaznice po korekci potřebuje stejný odstín jako při první aplikaci
+3. **Rychlé dodání** — zakázky na poslední chvíli jsou realita salonu
+4. **Znalost produktu** — dodavatel by měl poradit s gramáží, délkou, metodou pro konkrétní typ vlasů zákaznice
+
+---
+
+## Na co se ptát potenciálního dodavatele vlasů
+
+### Původ vlasů
+- Ze které země vlasy pocházejí?
+- Jsou remy (kutikula v jednom směru)?
+- Jsou panenské (chemicky neošetřené)?
+
+Slovanské vlasy (Polsko, Slovensko, Rumunsko, Ukrajina) jsou tradičně nejkvalitnější pro evropský trh — silná kutikula, přirozené barevné spektrum, snáze barvitelné.
+
+### Barvení a ošetření
+- Má dodavatel vlastní barvírnu, nebo jen nakupuje hotové vlasy?
+- Jak jsou barveny blond odstíny — peroxid jaké síly?
+- Jsou vlasy po barvení ošetřeny (keratin, argan) nebo přirozeně?
+
+Salon s vlastní barvírnou má přímou kontrolu nad procesem. **Múza Hair** provozuje vlastní barvírnu v Praze od roku 2016 — míchá odstíny dle vzorníku, kontroluje výsledek před expedicí.
+
+### Skladová dostupnost
+- Jaké délky jsou skladem?
+- Jak dlouho trvá expedice standardní objednávky?
+- Je možné si zarezervovat určitý odstín pro stálé zákaznice?
+
+### Zákaznická podpora
+- Je k dispozici poradenství pro výběr gramáže a metody?
+- Jak se řeší reklamace?
+
+---
+
+## Jak probíhá B2B spolupráce s Múza Hair
+
+Múza Hair nabízí B2B program pro kadeřnické salony, beauty studia a prodejny vlasů. Podmínky:
+
+| Parametr | Detail |
+|----------|--------|
+| Min. objednávka | 10 000 Kč |
+| Slevy | dle ročního odběru, individuálně |
+| Expedice | 1–3 pracovní dny |
+| Vzorník | zasíláme zdarma na vyžádání |
+| Fakturace | na IČ, splatnost dle dohody |
+
+Registrace a více informací: [muzahair.cz/velkoobchod](/velkoobchod)
+
+---
+
+## Nejčastější chyby při výběru dodavatele vlasů
+
+### 1. Kupovat nejlevnější vlasy
+Vlasy z neznámého zdroje za výrazně nižší cenu bývají kyselé (acid treated), přebarvené na maximální výkon, s krátkou životností. Zákaznice bude nespokojená a kadeřnice dostane reklamaci.
+
+### 2. Nezdůraznit zákaznici péči
+Sebevýkonnější vlasy se zničí špatnou péčí. Dodavatel, který vám dá i instruktážní materiály pro zákaznice, je cennější partner.
+
+### 3. Objednávat po kusech místo šaržemi
+Pokud si objednáte vždy jen tolik, kolik aktuálně potřebujete, může se stát, že nová šarže bude mírně odlišná. Lepší je mít skladem rezervu oblíbených odstínů.
+
+### 4. Ignorovat metody zakončení
+Různé metody vyžadují různé typy vlasů. Keratin → standardní zápon. Tape-in → speciálně připravené pásky. Weft → tkaná tressa. Dodavatel by měl nabízet všechny typy.
+
+---
+
+## FAQ — dodavatel vlasů pro salony
+
+### Jak získat B2B ceny od Múza Hair?
+Zaregistrujte se na [muzahair.cz/velkoobchod](/velkoobchod) nebo kontaktujte nás na info@muzahair.cz. Po ověření IČ vám nastavíme B2B přístup s velkoobchodními cenami.
+
+### Mohu jako kadeřnice koupit vzorník odstínů?
+Ano — vzorník zasíláme zdarma na vyžádání registrovaným B2B partnerům. Obsahuje všechny aktuální odstíny v miniaturách.
+
+### Jaké záruky poskytujete na kvalitu vlasů?
+Garantujeme konzistenci kvality v rámci šarže. Při prokazatelném výrobním defektu vlasy vyměníme. Záruční podmínky jsou součástí B2B smlouvy.
+
+### Je možné objednat vlasy na zakázku?
+Ano — vlasové tresy (weft) vyrábíme na zakázku s dobou výroby 14 dní. U keratinových záponů a pásek pracujeme ze skladu s dostupností ihned.
+    `,
+    author: 'Múza Hair Team',
+    publishedAt: '2025-04-15',
+    updatedAt: '2025-04-15',
+    category: 'B2B',
+    tags: [
+      'dodavatel vlasů pro kadeřníky',
+      'velkoobchod vlasy',
+      'vlasy pro salony',
+      'B2B vlasy Praha',
+      'vlasy velkoobchod ČR',
+      'kadeřnický dodavatel vlasů',
+    ],
+    imageUrl: '/blog/dodavatel-vlasu-kaderniky.jpg',
+    readTime: 7,
+  },
 ];
 
 export function getArticleBySlug(slug: string): BlogArticle | undefined {

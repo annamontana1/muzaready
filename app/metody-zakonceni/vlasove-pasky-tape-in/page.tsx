@@ -127,11 +127,46 @@ export default function TapeInPage() {
     })),
   };
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Kolik stojí tape-in (nanotapes) prodloužení vlasů Praha?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Aplikace nanotapes (tape-in) v Praze stojí 55–65 Kč za spoj. Průměrná aplikace 60–80 spojů = 3 300–5 200 Kč. Cena vlasových pásek se účtuje zvlášť.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jak dlouho vydrží nanotapes prodloužení?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Nanotapes vydrží 1,5–2 měsíce do korekce. Výhoda je, že pásky lze znovu použít — ekonomičtější při pravidelných korekcích.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jsou nanotapes vhodné pro jemné vlasy?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Ano — nanotapes/tape-in jsou sendvičová metoda bez tepla a lepidla, vhodná i pro jemnější vlastní vlasy. Doporučujeme konzultaci pro výběr správné gramáže.',
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* Hero sekce */}

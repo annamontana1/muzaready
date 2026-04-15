@@ -6,8 +6,48 @@ export const metadata: Metadata = {
   description: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3-6 měsíců. Profesionální aplikace s trvanlivým výsledkem.',
 };
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Kolik stojí keratin prodloužení vlasů Praha?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Aplikace keratinového prodloužení v Praze stojí od 4 000 Kč za 100 g vlasů, mikrokeratin od 5 000 Kč. Cena vlasů se účtuje zvlášť — Standard od 6 900 Kč, LUXE od 8 900 Kč za 100 g.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Jak dlouho vydrží keratinové prodloužení vlasů?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Keratinové prodloužení vydrží 2,5–3 měsíce do korekce. Životnost závisí na péči — používejte šampon bez sulfátů a kondicionér pouze na délky.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Jaký je rozdíl mezi keratinem a mikrokeratinem?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Standardní keratin má větší kapsle — 130–180 pramenů na 100 g. Mikrokeratin má menší, diskrétnější kapsle — 180–230 pramenů na 100 g. Mikrokeratin je vhodný pro jemnější a řidší vlastní vlasy.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Mohu si keratin vlasy objednat online a nechat je aplikovat u své kadeřnice?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Ano — Múza Hair doručí keratin vlasy kamkoliv v ČR do 2 pracovních dní. Vaše kadeřnice je pak aplikuje. Nebo přijeďte do showroomu Revoluční 8, Praha 1.',
+      },
+    },
+  ],
+};
+
 export default function KeratinPage() {
   return (
+    <>
     <div className="py-12 bg-soft-cream min-h-screen">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Breadcrumb */}
@@ -133,5 +173,10 @@ export default function KeratinPage() {
 
       </div>
     </div>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+    />
+    </>
   );
 }

@@ -18,6 +18,7 @@ interface Sku {
   imageUrl: string | null;
   images: string[];
   inStock: boolean;
+  isListed: boolean;
 }
 
 const CATEGORY_OPTIONS = [
@@ -75,6 +76,8 @@ export default function SkladPage() {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [structureFilter, setStructureFilter] = useState('');
+  const [listedFilter, setListedFilter] = useState<'all' | 'listed' | 'unlisted'>('all');
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSkus();
@@ -94,9 +97,30 @@ export default function SkladPage() {
     }
   };
 
+  const handleToggleListed = async (e: React.MouseEvent, sku: Sku) => {
+    e.stopPropagation();
+    setTogglingId(sku.id);
+    try {
+      const res = await fetch(`/api/admin/skus/${sku.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ isListed: !sku.isListed, listingPriority: !sku.isListed ? 5 : null }),
+      });
+      if (!res.ok) throw new Error('Chyba');
+      setSkus(prev => prev.map(s => s.id === sku.id ? { ...s, isListed: !sku.isListed } : s));
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
   const filtered = skus.filter((sku) => {
     if (categoryFilter && sku.customerCategory !== categoryFilter) return false;
     if (structureFilter && sku.structure?.toLowerCase() !== structureFilter) return false;
+    if (listedFilter === 'listed' && !sku.isListed) return false;
+    if (listedFilter === 'unlisted' && sku.isListed) return false;
     if (search) {
       const q = search.toLowerCase();
       const matchName = sku.shadeName?.toLowerCase().includes(q);
@@ -148,7 +172,7 @@ export default function SkladPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-sm p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           <div>
             <label className="block text-xs font-medium text-stone-500 mb-1">Hledat odstin</label>
             <input
@@ -195,9 +219,21 @@ export default function SkladPage() {
               ))}
             </select>
           </div>
+          <div>
+            <label className="block text-xs font-medium text-stone-500 mb-1">Katalog</label>
+            <select
+              value={listedFilter}
+              onChange={(e) => setListedFilter(e.target.value as 'all' | 'listed' | 'unlisted')}
+              className="w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
+            >
+              <option value="all">Vsechny</option>
+              <option value="listed">✅ Publikovano</option>
+              <option value="unlisted">❌ Skryto</option>
+            </select>
+          </div>
           <div className="flex items-end">
             <button
-              onClick={() => { setSearch(''); setCategoryFilter(''); setTypeFilter(''); setStructureFilter(''); }}
+              onClick={() => { setSearch(''); setCategoryFilter(''); setTypeFilter(''); setStructureFilter(''); setListedFilter('all'); }}
               className="px-3 py-2 text-sm text-stone-500 hover:text-stone-700 hover:bg-stone-100 rounded-lg transition"
             >
               Resetovat filtry
@@ -220,6 +256,7 @@ export default function SkladPage() {
                 <th className="px-4 py-3 text-right text-xs font-semibold text-stone-500 uppercase tracking-wider">Cena/g</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Prodej</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Fotky</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Katalog</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-50">
@@ -265,6 +302,20 @@ export default function SkladPage() {
                   </td>
                   <td className="px-4 py-3 text-center text-stone-500">
                     {photoCount(sku) || '-'}
+                  </td>
+                  <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={(e) => handleToggleListed(e, sku)}
+                      disabled={togglingId === sku.id}
+                      title={sku.isListed ? 'Skrýt z katalogu' : 'Publikovat v katalogu'}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                        sku.isListed ? 'bg-green-500' : 'bg-stone-300'
+                      } ${togglingId === sku.id ? 'opacity-50' : ''}`}
+                    >
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                        sku.isListed ? 'translate-x-6' : 'translate-x-1'
+                      }`} />
+                    </button>
                   </td>
                 </tr>
               ))}

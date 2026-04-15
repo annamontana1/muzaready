@@ -1,5 +1,36 @@
 import prisma from '@/lib/prisma';
 
+// Shade name map (mirrors HAIR_COLORS in types/product.ts)
+const SHADE_NAMES: Record<number, string> = {
+  1: 'Černá', 2: 'Velmi tmavá hnědá', 3: 'Tmavá hnědá', 4: 'Hnědá',
+  5: 'Světlá hnědá', 6: 'Tmavá blond', 7: 'Blond', 8: 'Světlá blond',
+  9: 'Velmi světlá blond', 10: 'Platinová blond',
+};
+const TIER_LABELS: Record<string, string> = {
+  LUXE: 'LUXE', STANDARD: 'Standard', PLATINUM_EDITION: 'Platinum Edition',
+  BABY_SHADES: 'Baby Shades',
+};
+
+/**
+ * Returns a clean display name for a SKU.
+ * Guards against null, empty string, and the literal string "undefined"
+ * that can end up in the DB when JS coerces undefined → string.
+ */
+export function buildSkuDisplayName(sku: {
+  name: string | null;
+  sku: string;
+  customerCategory?: string | null;
+  shade?: string | null;
+}): string {
+  if (sku.name && sku.name !== 'undefined' && sku.name.trim() !== '') {
+    return sku.name;
+  }
+  const shadeNum = parseInt(sku.shade || '', 10);
+  const tierLabel = TIER_LABELS[sku.customerCategory || ''] || 'Standard';
+  const shadeName = Number.isFinite(shadeNum) ? (SHADE_NAMES[shadeNum] || `#${shadeNum}`) : '';
+  return shadeName ? `${tierLabel} – ${shadeName}` : (sku.sku || 'Vlasy k prodloužení');
+}
+
 interface PriceMatrixEntry {
   id: string;
   category: string;
@@ -155,7 +186,7 @@ export async function quoteCartLines(
       assemblyFeeCzk: assemblyFee.assemblyFeeCzk,
       assemblyFeeTotal: assemblyFee.assemblyFeeTotal,
       lineGrandTotal: lineTotal + assemblyFee.assemblyFeeTotal,
-      snapshotName: sku.name ?? sku.sku,
+      snapshotName: buildSkuDisplayName(sku),
     };
   });
 

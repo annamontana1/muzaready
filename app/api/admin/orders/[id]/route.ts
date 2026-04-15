@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin, verifyAdminSession } from '@/lib/admin-auth';
+import { buildSkuDisplayName } from '@/lib/stock';
 
 /**
  * DELETE /api/admin/orders/[id]
@@ -654,7 +655,9 @@ export async function PUT(
                   customerIco: invoice.customerIco,
                   customerDic: invoice.customerDic,
                   items: updatedOrder.items.map((item) => ({
-                    name: item.nameSnapshot || 'Neznámý produkt',
+                    name: (item.nameSnapshot && item.nameSnapshot !== 'undefined')
+                      ? item.nameSnapshot
+                      : buildSkuDisplayName({ name: item.sku?.name ?? null, sku: item.sku?.sku ?? item.skuId, customerCategory: (item.sku as any)?.customerCategory ?? null, shade: (item.sku as any)?.shade ?? null }),
                     quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
                     unitPrice: item.pricePerGram,
                     total: item.lineTotal + (item.assemblyFeeTotal || 0),
