@@ -51,6 +51,7 @@ interface SkuWithStock {
   availableGrams: number | null;
   minOrderG: number | null;
   stepG: number | null;
+  images: any[];
   inStock: boolean;
   soldOut: boolean;
   isListed: boolean;
@@ -147,13 +148,18 @@ export async function getCatalogProducts(
 
   // Filtrování podle tieru (customerCategory) - PRIMARY filter
   if (tier) {
-    const tierMap: Record<ProductTier, string> = {
+    // tierMap přijímá jak display name ('Platinum edition') tak DB enum ('PLATINUM_EDITION')
+    const tierMap: Record<string, string> = {
       'Standard': 'STANDARD',
+      'STANDARD': 'STANDARD',
       'LUXE': 'LUXE',
       'Platinum edition': 'PLATINUM_EDITION',
+      'PLATINUM_EDITION': 'PLATINUM_EDITION',
       'Baby Shades': 'BABY_SHADES',
+      'BABY_SHADES': 'BABY_SHADES',
     };
-    where.customerCategory = tierMap[tier];
+    const mapped = tierMap[tier];
+    if (mapped) where.customerCategory = mapped;
   }
 
   // Filtrování podle kategorie (shade range) - SECONDARY filter
@@ -265,18 +271,29 @@ export async function getCatalogProducts(
         if (!sku.lengthCm) continue;
 
         const weightGrams = sku.weightGrams ?? sku.weightTotalG ?? 0;
-        const slug = formatPlatinumSlug(sku.lengthCm, shadeCode, weightGrams) || createSlug(category, tier, shadeCode, structure, sku.lengthCm);
+        const isBulkG = sku.saleMode === 'BULK_G';
+        const slug = formatPlatinumSlug(sku.lengthCm, shadeCode, weightGrams > 0 ? weightGrams : undefined) || createSlug(category, tier, shadeCode, structure, sku.lengthCm);
         const tierNormalized: 'standard' | 'luxe' | 'platinum' = 'platinum';
         const softnessScale: 1 | 2 | 3 = 3;
-        // Platinum název: {lengthCm} cm · Platinum · odstín #{shadeNumber} · {weightG} g
-        const platinumName = formatPlatinumName(sku.lengthCm, shadeCode, weightGrams);
+        // Pro BULK_G: název bez gramáže, pro PIECE: s gramáží
+        const platinumName = isBulkG
+          ? `Platinum – ${shadeName} · #${shadeCode}`
+          : (formatPlatinumName(sku.lengthCm, shadeCode, weightGrams) || `${shadeName} #${shadeCode}`);
+        // Pro BULK_G: in_stock = availableGrams > 0, pro PIECE: inStock flag
+        const inStock = isBulkG
+          ? (sku.availableGrams ?? 0) > 0
+          : (sku.inStock && !sku.soldOut);
+        // Cena za 100g (zobrazuje se na kartě)
+        const pricePer100g = sku.pricePerGramCzk * 100;
+        // Cena za variant: pro PIECE = pricePerGram * weight, pro BULK_G = cena za 100g
+        const variantPrice = (isBulkG || weightGrams === 0) ? pricePer100g : sku.pricePerGramCzk * weightGrams;
         const product: Product = {
           id: sku.id,
           sku: sku.sku,
           slug,
           category,
           tier,
-          name: platinumName || `${shadeName} #${shadeCode}`,
+          name: platinumName,
           description: `${tier} panenské vlasy, odstín ${shadeName}, ${structure}, ${sku.lengthCm} cm`,
           measurement_note: 'Měříme tak, jak jsou (nenatažené)',
           variants: [{
@@ -286,12 +303,12 @@ export async function getCatalogProducts(
             shade_name: shadeName,
             shade_hex: shadeHex,
             length_cm: sku.lengthCm,
-            weight_g: weightGrams,
+            weight_g: isBulkG ? (sku.availableGrams ?? 100) : weightGrams,
             structure: structure as any,
-            ending: 'keratin' as any, // Default, lze změnit na PDP
-            price_czk: sku.pricePerGramCzk * weightGrams,
-            in_stock: sku.inStock && !sku.soldOut,
-            stock_quantity: 1, // Platinum = 1 kus
+            ending: 'keratin' as any,
+            price_czk: variantPrice,
+            in_stock: inStock,
+            stock_quantity: isBulkG ? (sku.availableGrams ?? 0) : 1,
             ribbon_color: shadeHex,
           }],
           images: {
@@ -299,9 +316,9 @@ export async function getCatalogProducts(
             hover: sku.imageUrl || '',
             gallery: Array.isArray(sku.images) ? sku.images : [],
           },
-          base_price_per_100g_45cm: sku.pricePerGramCzk * 100, // Cena za 100g
-          in_stock: sku.inStock && !sku.soldOut,
-          stock_quantity: 1,
+          base_price_per_100g_45cm: pricePer100g,
+          in_stock: inStock,
+          stock_quantity: isBulkG ? (sku.availableGrams ?? 0) : 1,
           meta_title: `${shadeName} #${shadeCode} - ${tier} | Mùza Hair`,
           meta_description: `${tier} panenské vlasy, odstín ${shadeName}, ${structure}, ${sku.lengthCm} cm`,
           features: [`${tier} kvalita`, '100% panenské vlasy', structure],

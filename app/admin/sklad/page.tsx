@@ -158,15 +158,24 @@ export default function SkladPage() {
   const handleToggleListed = async (e: React.MouseEvent, sku: Sku) => {
     e.stopPropagation();
     setTogglingId(sku.id);
+    const enabling = !sku.isListed;
     try {
+      const patch: any = {
+        isListed: enabling,
+        listingPriority: enabling ? 5 : null,
+      };
+      // Pro BULK_G: při zapnutí katalogu automaticky nastav inStock=true (pokud jsou skladem gramy)
+      if (enabling && sku.saleMode === 'BULK_G' && (sku.availableGrams ?? 0) > 0) {
+        patch.inStock = true;
+      }
       const res = await fetch(`/api/admin/skus/${sku.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ isListed: !sku.isListed, listingPriority: !sku.isListed ? 5 : null }),
+        body: JSON.stringify(patch),
       });
       if (!res.ok) throw new Error('Chyba');
-      setSkus(prev => prev.map(s => s.id === sku.id ? { ...s, isListed: !sku.isListed } : s));
+      setSkus(prev => prev.map(s => s.id === sku.id ? { ...s, isListed: enabling, inStock: enabling && s.saleMode === 'BULK_G' && (s.availableGrams ?? 0) > 0 ? true : s.inStock } : s));
     } catch (err: any) {
       alert('Chyba: ' + err.message);
     } finally {

@@ -255,11 +255,16 @@ export default function SkuEditPage() {
     setSavingIsListed(true);
     const newValue = !isListed;
     try {
+      const patch: any = { isListed: newValue, listingPriority: newValue ? 5 : null };
+      // Pro BULK_G: při zapnutí katalogu nastav inStock=true (pokud jsou gramy skladem)
+      if (newValue && saleMode === 'BULK_G' && (sku?.availableGrams ?? 0) > 0) {
+        patch.inStock = true;
+      }
       const res = await fetch(`/api/admin/skus/${skuId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ isListed: newValue, listingPriority: newValue ? 5 : null }),
+        body: JSON.stringify(patch),
       });
       if (!res.ok) throw new Error('Chyba pri ukladani');
       setIsListed(newValue);
