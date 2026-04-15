@@ -323,7 +323,11 @@ export async function POST(request: NextRequest) {
           );
         }
         pricePerGram = Number(entry.pricePerGramCzk);
+      } else if (manualPricePerGramCzk && Number(manualPricePerGramCzk) > 0) {
+        // Direct price per gram (from new Naskladnit page or PlatinumTab manual mode)
+        pricePerGram = Number(manualPricePerGramCzk);
       } else if (manualPriceCzk && numericWeight > 0) {
+        // Total price → compute price per gram
         pricePerGram = Number(manualPriceCzk) / numericWeight;
       }
 
@@ -334,9 +338,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const totalPriceCzk = usePriceMatrix
-        ? Number((pricePerGram * numericWeight).toFixed(2))
-        : Number(manualPriceCzk);
+      const totalPriceCzk = Number((pricePerGram * numericWeight).toFixed(2));
 
       if (!totalPriceCzk || totalPriceCzk <= 0) {
         return NextResponse.json(

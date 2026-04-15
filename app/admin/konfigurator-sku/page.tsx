@@ -72,6 +72,7 @@ export default function NaskladnitPage() {
   const [shade, setShade] = useState('');
   const [saleMode, setSaleMode] = useState('');
   const [grams, setGrams] = useState('');
+  const [pricePerGram, setPricePerGram] = useState('');
   const [images, setImages] = useState<string[]>([]);
 
   const shadeOptions = getShadeOptions(category, type);
@@ -85,7 +86,8 @@ export default function NaskladnitPage() {
   };
 
   const isValid =
-    category && type && structure && shade && saleMode && grams && Number(grams) > 0;
+    category && type && structure && shade && saleMode && grams && Number(grams) > 0
+    && pricePerGram && Number(pricePerGram) > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,6 +109,7 @@ export default function NaskladnitPage() {
           ? 'vlasyy'
           : 'vlasyx';
 
+      const priceNum = Number(pricePerGram);
       const body: any = {
         productType,
         category: categoryKey,
@@ -116,21 +119,23 @@ export default function NaskladnitPage() {
         imageUrl: images[0] || null,
         images: images,
         isListed: false,
-        usePriceMatrix: true,
+        usePriceMatrix: false, // always manual — ceník se doplní v sklad editoru
       };
 
       if (productType === 'vlasyx') {
         // BULK_G mode: "Na gramy"
-        body.selectedLengths = [40]; // default length, user picks in configurator
-        body.defaultLength = 40;
-        body.stockByLength = { 40: Number(grams) };
+        body.selectedLengths = [45]; // base 45cm
+        body.defaultLength = 45;
+        body.stockByLength = { 45: Number(grams) };
         body.minOrderG = 50;
         body.stepG = 10;
         body.defaultGrams = 100;
+        body.pricePerGramCzk = priceNum;
       } else {
         // PIECE_BY_WEIGHT mode: "Cely culik"
-        body.lengthCm = 40;
+        body.lengthCm = 45;
         body.weightGrams = Number(grams);
+        body.pricePerGramCzk = priceNum; // cena/gram, API vypočítá totalPriceCzk = pricePerGram * weight
         body.inStock = true;
       }
 
@@ -237,6 +242,31 @@ export default function NaskladnitPage() {
           </div>
         </div>
 
+        {/* Cena za gram */}
+        <div>
+          <label className="block text-sm font-semibold text-stone-700 mb-2">
+            Cena za gram (Kč/g) <span className="text-red-500">*</span>
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="0.01"
+              step="0.01"
+              value={pricePerGram}
+              onChange={(e) => setPricePerGram(e.target.value)}
+              placeholder="napr. 89.9"
+              className="w-40 px-4 py-2.5 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
+            />
+            <span className="text-sm text-stone-500">Kč/g</span>
+            {pricePerGram && Number(pricePerGram) > 0 && (
+              <span className="text-sm text-green-700 font-medium">
+                = {Math.round(Number(pricePerGram) * 100)} Kč / 100g
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-stone-400 mt-1">Cena bude uložena ke SKU. V ceníku lze upřesnit ceny pro různé délky.</p>
+        </div>
+
         {/* Fotky */}
         <div>
           <label className="block text-sm font-semibold text-stone-700 mb-2">Fotky</label>
@@ -268,10 +298,13 @@ export default function NaskladnitPage() {
         {/* Info texts */}
         <div className="bg-stone-50 rounded-lg p-4 space-y-1">
           <p className="text-sm text-stone-500">
-            &rarr; Cena se automaticky vezme z matice cen
+            &rarr; Délka bude uložena jako 45 cm (zákazník v konfigurátoru vybírá 45–80 cm)
           </p>
           <p className="text-sm text-stone-500">
-            &rarr; Delku a zakonceni voli zakaznik v konfiguratoru
+            &rarr; Zakončení volí zákazník v konfigurátoru
+          </p>
+          <p className="text-sm text-stone-500">
+            &rarr; Po naskladnění zapni produkt v Sklad → editaci SKU (Viditelnost v katalogu)
           </p>
         </div>
 

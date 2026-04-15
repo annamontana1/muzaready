@@ -26,6 +26,8 @@ interface SkuDetail {
   pricePerGramCzk: number | null;
   availableGrams: number | null;
   weightTotalG: number | null;
+  minOrderG: number | null;
+  stepG: number | null;
   imageUrl: string | null;
   images: string[];
   inStock: boolean;
@@ -80,6 +82,13 @@ export default function SkuEditPage() {
   const [priceInput, setPriceInput] = useState('');
   const [savingPrice, setSavingPrice] = useState(false);
 
+  // saleMode + BULK_G params
+  const [saleMode, setSaleModeState] = useState<'BULK_G' | 'PIECE_BY_WEIGHT'>('BULK_G');
+  const [savingSaleMode, setSavingSaleMode] = useState(false);
+  const [minOrderGInput, setMinOrderGInput] = useState('');
+  const [stepGInput, setStepGInput] = useState('');
+  const [savingBulkParams, setSavingBulkParams] = useState(false);
+
   // Image management
   const [editingPhotos, setEditingPhotos] = useState(false);
 
@@ -97,6 +106,9 @@ export default function SkuEditPage() {
       setIsDyed(data.isDyed ?? false);
       setIsListed(data.isListed ?? false);
       setPriceInput(data.pricePerGramCzk ? String(data.pricePerGramCzk) : '');
+      setSaleModeState(data.saleMode === 'PIECE_BY_WEIGHT' ? 'PIECE_BY_WEIGHT' : 'BULK_G');
+      setMinOrderGInput(data.minOrderG ? String(data.minOrderG) : '50');
+      setStepGInput(data.stepG ? String(data.stepG) : '10');
       setMovements(data.movements || []);
     } catch (err: any) {
       console.error(err);
@@ -194,6 +206,48 @@ export default function SkuEditPage() {
       alert('Chyba: ' + err.message);
     } finally {
       setSavingPrice(false);
+    }
+  };
+
+  const handleChangeSaleMode = async (newMode: 'BULK_G' | 'PIECE_BY_WEIGHT') => {
+    if (newMode === saleMode) return;
+    setSavingSaleMode(true);
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ saleMode: newMode }),
+      });
+      if (!res.ok) throw new Error('Chyba při ukládání');
+      setSaleModeState(newMode);
+      setSku(prev => prev ? { ...prev, saleMode: newMode } : prev);
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setSavingSaleMode(false);
+    }
+  };
+
+  const handleSaveBulkParams = async () => {
+    const min = parseInt(minOrderGInput);
+    const step = parseInt(stepGInput);
+    if (!min || min <= 0 || !step || step <= 0) { alert('Zadej platné hodnoty > 0'); return; }
+    setSavingBulkParams(true);
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ minOrderG: min, stepG: step }),
+      });
+      if (!res.ok) throw new Error('Chyba při ukládání');
+      setSku(prev => prev ? { ...prev, minOrderG: min, stepG: step } : prev);
+      alert('Uloženo');
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setSavingBulkParams(false);
     }
   };
 
@@ -350,12 +404,70 @@ export default function SkuEditPage() {
               </p>
             </div>
           )}
-          <div>
-            <span className="block text-xs text-stone-400 uppercase tracking-wider">Zpusob prodeje</span>
-            <span className="text-sm font-medium text-stone-700">
-              {sku.saleMode === 'BULK_G' ? 'Na gramy' : 'Cely culik'}
-            </span>
+          <div className="col-span-2 sm:col-span-3 pt-3 border-t border-stone-100">
+            <span className="block text-xs text-stone-400 uppercase tracking-wider mb-2">Způsob prodeje</span>
+            <div className="flex gap-2">
+              {(['BULK_G', 'PIECE_BY_WEIGHT'] as const).map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => handleChangeSaleMode(mode)}
+                  disabled={savingSaleMode}
+                  className={`px-3 py-1.5 rounded text-sm font-medium transition border ${
+                    saleMode === mode
+                      ? 'bg-[#722F37] text-white border-[#722F37]'
+                      : 'bg-white text-stone-700 border-stone-300 hover:border-[#722F37]'
+                  } ${savingSaleMode ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {mode === 'BULK_G' ? '📦 Na gramy (BULK_G)' : '🔹 Celý culík (PIECE_BY_WEIGHT)'}
+                </button>
+              ))}
+              {savingSaleMode && <span className="text-xs text-stone-400 self-center">Ukládám...</span>}
+            </div>
+            <p className="text-xs text-stone-400 mt-1">
+              {saleMode === 'BULK_G'
+                ? 'Zákazník si v konfigurátoru vybere gramáž a délku. Cena = cena/gram × gramáž.'
+                : 'Celý culík pevné gramáže. Zákazník si nevybírá gramáž.'}
+            </p>
           </div>
+          {saleMode === 'BULK_G' && (
+            <div className="col-span-2 sm:col-span-3">
+              <span className="block text-xs text-stone-400 uppercase tracking-wider mb-2">Min. objednávka a krok (BULK_G)</span>
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-1">
+                  <label className="text-xs text-stone-500">Min gramáž:</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={minOrderGInput}
+                    onChange={e => setMinOrderGInput(e.target.value)}
+                    className="w-20 px-2 py-1 border border-stone-300 rounded text-sm focus:outline-none focus:border-[#722F37]"
+                  />
+                  <span className="text-xs text-stone-400">g</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <label className="text-xs text-stone-500">Krok:</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={stepGInput}
+                    onChange={e => setStepGInput(e.target.value)}
+                    className="w-20 px-2 py-1 border border-stone-300 rounded text-sm focus:outline-none focus:border-[#722F37]"
+                  />
+                  <span className="text-xs text-stone-400">g</span>
+                </div>
+                <button
+                  onClick={handleSaveBulkParams}
+                  disabled={savingBulkParams}
+                  className="px-3 py-1.5 bg-[#722F37] text-white text-xs rounded hover:bg-[#5a1f26] disabled:opacity-50"
+                >
+                  {savingBulkParams ? 'Ukládám...' : 'Uložit'}
+                </button>
+              </div>
+              <p className="text-xs text-stone-400 mt-1">
+                Aktuálně: min {sku.minOrderG ?? '–'}g, krok {sku.stepG ?? '–'}g
+              </p>
+            </div>
+          )}
           <div>
             <span className="block text-xs text-stone-400 uppercase tracking-wider mb-1">Cena / gram (Kč)</span>
             {editingPrice ? (

@@ -140,11 +140,11 @@ export default function SkuDetailPage() {
         setSelectedImage(found.images[0]);
       }
       if (found.lengthCm) {
-        setSelectedLength(Math.round(Math.min(Math.max(found.lengthCm, 40), 80) / 5) * 5);
+        setSelectedLength(found.lengthCm); // start at the SKU's actual base length
       }
       const initialGrams = found.saleMode === 'BULK_G'
-        ? found.minOrderG ?? found.availableGrams ?? 0
-        : found.weightTotalG ?? found.availableGrams ?? 0;
+        ? (found.minOrderG ?? 50)
+        : (found.weightTotalG ?? found.availableGrams ?? 0);
       if (initialGrams) {
         setSelectedGrams(initialGrams);
       }
@@ -288,11 +288,12 @@ export default function SkuDetailPage() {
   const hasImages = allImages.length > 0;
   const currentImage = selectedImage || (hasImages ? allImages[0] : null);
 
-  const BULK_MIN_LENGTH = 40;
+  // Min length = SKU base length (e.g. 45cm), max = 80cm, step = 5cm
+  const BULK_MIN_LENGTH = sku.lengthCm ?? 45;
   const BULK_MAX_LENGTH = 80;
-  const bulkMinGrams = sku.saleMode === 'BULK_G' ? (sku.minOrderG ?? 0) : 0;
+  const bulkMinGrams = sku.saleMode === 'BULK_G' ? (sku.minOrderG ?? 50) : 0;
   const bulkMaxGrams = sku.saleMode === 'BULK_G' ? (sku.availableGrams ?? Math.max(bulkMinGrams, 0)) : 0;
-  const bulkStepGrams = sku.saleMode === 'BULK_G' ? (sku.stepG ?? 5) : 1;
+  const bulkStepGrams = sku.saleMode === 'BULK_G' ? (sku.stepG ?? 10) : 1;
   const bulkLengthValue = Math.min(Math.max(selectedLength, BULK_MIN_LENGTH), BULK_MAX_LENGTH);
   const bulkGramsValue = sku.saleMode === 'BULK_G'
     ? Math.min(Math.max(selectedGrams || bulkMinGrams, bulkMinGrams), Math.max(bulkMaxGrams, bulkMinGrams))
@@ -306,12 +307,14 @@ export default function SkuDetailPage() {
     for (let g = bulkMinGrams; g <= Math.max(bulkMaxGrams, bulkMinGrams); g += bulkStepGrams) {
       gramOptions.push(g);
     }
-    // If too many options, show every other step
-    // (thin out if more than 15)
   }
   const displayedGramOptions = gramOptions;
 
-  const lengthOptions = [40, 45, 50, 55, 60, 65, 70, 75, 80];
+  // Length options: from SKU base length (e.g. 45) up to 80cm in 5cm steps
+  const lengthOptions: number[] = [];
+  for (let l = BULK_MIN_LENGTH; l <= BULK_MAX_LENGTH; l += 5) {
+    lengthOptions.push(l);
+  }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
@@ -702,7 +705,7 @@ export default function SkuDetailPage() {
                       className="text-[10px] tracking-[0.05em] font-light mt-2"
                       style={{ color: 'var(--text-soft)' }}
                     >
-                      Min. objednávka {bulkMinGrams} g · krok {bulkStepGrams} g
+                      Min. objednávka {bulkMinGrams} g · krok {bulkStepGrams} g{!sku.minOrderG && ' (výchozí nastavení)'}
                     </p>
                   </div>
                 </div>
@@ -713,7 +716,7 @@ export default function SkuDetailPage() {
                 onClick={calculateQuote}
                 disabled={
                   quoteLoading ||
-                  (sku.saleMode === 'BULK_G' && (!selectedGrams || selectedGrams < (sku.minOrderG || 0)))
+                  (sku.saleMode === 'BULK_G' && (!selectedGrams || selectedGrams < (sku.minOrderG || 50)))
                 }
                 className="w-full py-4 rounded-sm text-[12px] tracking-[0.14em] uppercase font-normal transition-all hover:-translate-y-px disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}

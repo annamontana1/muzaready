@@ -63,6 +63,7 @@ export async function PATCH(
       lengthCm,
       structure,
       customerCategory,
+      saleMode,
       pricePerGramCzk,
       pricePerGramEur,
       weightTotalG,
@@ -80,6 +81,7 @@ export async function PATCH(
     const updateData: any = {};
 
     if (name !== undefined) updateData.name = name;
+    if (saleMode !== undefined) updateData.saleMode = saleMode;
     if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
     if (images !== undefined) updateData.images = images;
     if (shade !== undefined) updateData.shade = shade;

@@ -15,6 +15,8 @@ interface Sku {
   pricePerGramCzk: number;
   availableGrams: number | null;
   weightTotalG: number | null;
+  minOrderG: number | null;
+  stepG: number | null;
   imageUrl: string | null;
   images: string[];
   inStock: boolean;
@@ -448,6 +450,9 @@ export default function SkladPage() {
                     }`}>
                       {sku.saleMode === 'BULK_G' ? 'Na gramy' : 'Cely culik'}
                     </span>
+                    {sku.saleMode === 'BULK_G' && (!sku.minOrderG || !sku.stepG) && (
+                      <span className="ml-1 text-orange-500 text-xs" title="Min/krok není nastaven — používají se výchozí hodnoty (50g/10g)">⚙️</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-center text-stone-500">
                     {photoCount(sku) || '-'}

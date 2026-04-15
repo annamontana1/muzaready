@@ -51,8 +51,10 @@ export const ASSEMBLY_FEE_CONFIG: Record<string, { type: 'FLAT' | 'PER_GRAM'; pr
 };
 
 export function validateBulkChoice(grams: number, min?: number | null, step?: number | null): boolean {
-  if (!min || grams < min) return false;
-  if (!step || grams % step !== 0) return false;
+  const effectiveMin = min || 50;   // default: minimum 50g
+  const effectiveStep = step || 10; // default: 10g steps
+  if (grams < effectiveMin) return false;
+  if (grams % effectiveStep !== 0) return false;
   return true;
 }
 
@@ -104,7 +106,7 @@ async function getPriceMatrixLookup(): Promise<Map<string, number>> {
 }
 
 export async function quoteCartLines(
-  lines: Array<{ skuId: string; wantedGrams?: number; ending?: string }>
+  lines: Array<{ skuId: string; wantedGrams?: number; ending?: string; selectedLength?: number }>
 ) {
   const skuIds = lines.map((l) => l.skuId);
   const skus = await prisma.sku.findMany({
@@ -134,7 +136,9 @@ export async function quoteCartLines(
     };
     const tier = tierMap[sku.customerCategory || 'STANDARD'] || 'standard';
 
-    const matrixKey = `${category}_${tier}_${sku.lengthCm}`;
+    // Use selectedLength from the line if provided (configurator choice), else fall back to SKU's own length
+    const lookupLength = line.selectedLength ?? sku.lengthCm;
+    const matrixKey = `${category}_${tier}_${lookupLength}`;
     const matrixPrice = priceMatrixMap.get(matrixKey);
     if (matrixPrice !== undefined) {
       pricePerGram = matrixPrice;
@@ -154,8 +158,10 @@ export async function quoteCartLines(
         throw new Error(`"${sku.name}" nejsou skladem`);
       }
       if (!validateBulkChoice(wanted, sku.minOrderG, sku.stepG)) {
+        const effectiveMin = sku.minOrderG || 50;
+        const effectiveStep = sku.stepG || 10;
         throw new Error(
-          `Zvol množství ≥ ${sku.minOrderG}g a po ${sku.stepG}g kroku`
+          `Zvol množství ≥ ${effectiveMin}g a po ${effectiveStep}g kroku`
         );
       }
       if (wanted > sku.availableGrams) {
