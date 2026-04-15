@@ -126,6 +126,8 @@ export async function POST(request: NextRequest) {
       priceCzk: manualPriceCzk,
       inStock,
       ceskeVlasy,
+      isDyed,
+      description,
     } = body;
 
     const shadeNumber = Number(shade);
@@ -264,6 +266,8 @@ export async function POST(request: NextRequest) {
             availableGrams: stockForLength || null,
             inStock: stockForLength > 0,
             customerCategory: customerCategory as any,
+            isDyed: isDyed !== undefined ? Boolean(isDyed) : undefined,
+            description: description || null,
             isListed: Boolean(isListed),
             listingPriority: isListed ? (listingPriority ?? 5) : null,
           },
@@ -399,6 +403,8 @@ export async function POST(request: NextRequest) {
           weightTotalG: numericWeight,
           weightGrams: numericWeight,
           inStock: Boolean(inStock),
+          isDyed: isDyed !== undefined ? Boolean(isDyed) : undefined,
+          description: description || null,
           isListed: Boolean(isListed),
           listingPriority: isListed ? (listingPriority ?? 5) : null,
         },
