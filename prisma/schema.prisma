@@ -185,6 +185,7 @@ model Sku {
   sku              String            @unique
   shortCode        String?           @unique // Krátký kód pro IG (M0001, M0002...)
   name             String?
+  description      String?           // Krátký popis produktu
   imageUrl         String?           // Hlavní obrázek produktu
   images           String[]          @default([]) // Galerie dalších obrázků
   productId        String?
