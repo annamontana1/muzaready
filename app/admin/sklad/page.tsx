@@ -78,6 +78,14 @@ export default function SkladPage() {
   const [structureFilter, setStructureFilter] = useState('');
   const [listedFilter, setListedFilter] = useState<'all' | 'listed' | 'unlisted'>('all');
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  // inline price edit
+  const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
+  const [priceInputValue, setPriceInputValue] = useState('');
+  const [savingPriceId, setSavingPriceId] = useState<string | null>(null);
+  // bulk price modal
+  const [bulkPriceOpen, setBulkPriceOpen] = useState(false);
+  const [bulkPrice, setBulkPrice] = useState('');
+  const [bulkSaving, setBulkSaving] = useState(false);
 
   useEffect(() => {
     fetchSkus();
@@ -94,6 +102,54 @@ export default function SkladPage() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveInlinePrice = async (skuId: string) => {
+    const price = parseFloat(priceInputValue);
+    if (!price || price <= 0) return;
+    setSavingPriceId(skuId);
+    try {
+      const res = await fetch(`/api/admin/skus/${skuId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ pricePerGramCzk: price }),
+      });
+      if (!res.ok) throw new Error('Chyba');
+      setSkus(prev => prev.map(s => s.id === skuId ? { ...s, pricePerGramCzk: price } : s));
+      setEditingPriceId(null);
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setSavingPriceId(null);
+    }
+  };
+
+  const handleBulkPrice = async () => {
+    const price = parseFloat(bulkPrice);
+    if (!price || price <= 0) { alert('Zadej cenu větší než 0'); return; }
+    setBulkSaving(true);
+    try {
+      // Update all currently filtered SKUs that have 0/null price
+      const targets = filtered.filter(s => !s.pricePerGramCzk || s.pricePerGramCzk === 0);
+      await Promise.all(targets.map(s =>
+        fetch(`/api/admin/skus/${s.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ pricePerGramCzk: price }),
+        })
+      ));
+      setSkus(prev => prev.map(s =>
+        targets.some(t => t.id === s.id) ? { ...s, pricePerGramCzk: price } : s
+      ));
+      setBulkPriceOpen(false);
+      setBulkPrice('');
+    } catch (err: any) {
+      alert('Chyba: ' + err.message);
+    } finally {
+      setBulkSaving(false);
     }
   };
 
@@ -160,15 +216,77 @@ export default function SkladPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold text-stone-800">Sklad</h1>
-        <Link
-          href="/admin/konfigurator-sku"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium shadow-sm"
-        >
-          + Naskladnit
-        </Link>
+        <div className="flex items-center gap-2">
+          {filtered.some(s => !s.pricePerGramCzk || s.pricePerGramCzk === 0) && (
+            <button
+              onClick={() => setBulkPriceOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-xl hover:bg-amber-600 transition font-medium shadow-sm text-sm"
+            >
+              ⚠️ Nastavit ceny ({filtered.filter(s => !s.pricePerGramCzk || s.pricePerGramCzk === 0).length} bez ceny)
+            </button>
+          )}
+          <Link
+            href="/admin/konfigurator-sku"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium shadow-sm"
+          >
+            + Naskladnit
+          </Link>
+        </div>
       </div>
+
+      {/* Bulk price modal */}
+      {bulkPriceOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+            <h2 className="text-lg font-bold text-stone-800 mb-1">Hromadné nastavení ceny</h2>
+            <p className="text-sm text-stone-500 mb-4">
+              Nastaví cenu všem <strong>{filtered.filter(s => !s.pricePerGramCzk || s.pricePerGramCzk === 0).length} SKU</strong> v aktuálním filtru, které nemají cenu.
+            </p>
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-stone-500 mb-1">Cena za gram (Kč/g)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                placeholder="např. 89 (= 8 900 Kč / 100g)"
+                value={bulkPrice}
+                onChange={e => setBulkPrice(e.target.value)}
+                className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/30 focus:border-[#722F37]"
+                autoFocus
+              />
+              {bulkPrice && parseFloat(bulkPrice) > 0 && (
+                <p className="text-xs text-stone-400 mt-1">
+                  = {Math.round(parseFloat(bulkPrice) * 100).toLocaleString('cs-CZ')} Kč / 100g
+                </p>
+              )}
+            </div>
+            <div className="bg-stone-50 rounded-lg p-3 mb-4 text-xs text-stone-500">
+              <strong>Orientační ceny:</strong><br/>
+              Standard: 69 Kč/g (= 6 900 Kč/100g)<br/>
+              LUXE: 89 Kč/g (= 8 900 Kč/100g)<br/>
+              Platinum: 109 Kč/g (= 10 900 Kč/100g)<br/>
+              Baby Shades: 79 Kč/g (= 7 900 Kč/100g)
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleBulkPrice}
+                disabled={bulkSaving || !bulkPrice || parseFloat(bulkPrice) <= 0}
+                className="flex-1 py-2.5 bg-[#722F37] text-white rounded-lg font-medium hover:bg-[#5a1f26] disabled:opacity-50 transition"
+              >
+                {bulkSaving ? 'Ukládám...' : 'Uložit ceny'}
+              </button>
+              <button
+                onClick={() => setBulkPriceOpen(false)}
+                className="px-4 py-2.5 border border-stone-200 rounded-lg text-stone-600 hover:bg-stone-50 transition"
+              >
+                Zrušit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-sm p-4">
@@ -253,7 +371,7 @@ export default function SkladPage() {
                 <th className="px-4 py-3 text-left text-xs font-semibold text-stone-500 uppercase tracking-wider">Kategorie</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-stone-500 uppercase tracking-wider">Typ</th>
                 <th className="px-4 py-3 text-right text-xs font-semibold text-stone-500 uppercase tracking-wider">Sklad (g)</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-stone-500 uppercase tracking-wider">Cena/g</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-stone-500 uppercase tracking-wider">Cena / 100g</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Prodej</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Fotky</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-stone-500 uppercase tracking-wider">Katalog</th>
@@ -288,8 +406,39 @@ export default function SkladPage() {
                   <td className="px-4 py-3 text-right font-mono text-stone-700">
                     {stockDisplay(sku)}
                   </td>
-                  <td className="px-4 py-3 text-right text-stone-600">
-                    {sku.pricePerGramCzk ? `${sku.pricePerGramCzk} Kc` : '-'}
+                  <td className="px-4 py-3 text-right" onClick={e => e.stopPropagation()}>
+                    {editingPriceId === sku.id ? (
+                      <div className="flex items-center justify-end gap-1">
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={priceInputValue}
+                          onChange={e => setPriceInputValue(e.target.value)}
+                          className="w-16 px-1.5 py-1 border border-[#722F37] rounded text-xs text-right focus:outline-none"
+                          autoFocus
+                          onKeyDown={e => {
+                            if (e.key === 'Enter') handleSaveInlinePrice(sku.id);
+                            if (e.key === 'Escape') setEditingPriceId(null);
+                          }}
+                        />
+                        <button
+                          onClick={() => handleSaveInlinePrice(sku.id)}
+                          disabled={savingPriceId === sku.id}
+                          className="px-1.5 py-1 bg-[#722F37] text-white text-xs rounded hover:bg-[#5a1f26]"
+                        >✓</button>
+                        <button onClick={() => setEditingPriceId(null)} className="text-stone-400 text-xs">✕</button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => { setEditingPriceId(sku.id); setPriceInputValue(sku.pricePerGramCzk ? String(sku.pricePerGramCzk) : ''); }}
+                        className={`text-sm font-mono hover:underline ${!sku.pricePerGramCzk || sku.pricePerGramCzk === 0 ? 'text-red-500 font-bold' : 'text-stone-700'}`}
+                        title="Klikni pro úpravu ceny"
+                      >
+                        {sku.pricePerGramCzk && sku.pricePerGramCzk > 0
+                          ? `${Math.round(sku.pricePerGramCzk * 100).toLocaleString('cs-CZ')} Kč`
+                          : '⚠️ 0 Kč'}
+                      </button>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${
