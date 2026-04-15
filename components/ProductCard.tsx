@@ -288,31 +288,29 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
             {/* Řádek 4: Cena */}
             <div className="pt-2">
-              {isPlatinum ? (
-                <p className="text-sm font-semibold text-burgundy">
-                  Individuální cena
-                </p>
-              ) : (
-                <>
-                  {isB2B ? (
-                    <div className="space-y-1">
-                      <p className="text-xs line-through text-text-soft">
-                        {priceCalculator.formatPrice(displayPrice)}
-                      </p>
-                      <p className="text-base font-semibold text-burgundy">
-                        {priceCalculator.formatPrice(discountedPrice)}
-                      </p>
-                      <p className="text-xs text-green-600 font-medium">
-                        -10% B2B sleva
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-base font-semibold text-burgundy">
-                      {priceCalculator.formatPrice(displayPrice)}
+              {(() => {
+                // Pro Platinum: použij cenu z varianty (správná pro BULK_G i PIECE_BY_WEIGHT)
+                // Pro Standard/LUXE: base_price_per_100g_45cm
+                const shownPrice = isPlatinum && displayVariant?.price_czk
+                  ? displayVariant.price_czk
+                  : displayPrice;
+                const shownDiscounted = priceCalculator.applyB2BDiscount(shownPrice, isB2B);
+                return isB2B ? (
+                  <div className="space-y-1">
+                    <p className="text-xs line-through text-text-soft">
+                      {priceCalculator.formatPrice(shownPrice)}
                     </p>
-                  )}
-                </>
-              )}
+                    <p className="text-base font-semibold text-burgundy">
+                      {priceCalculator.formatPrice(shownDiscounted)}
+                    </p>
+                    <p className="text-xs text-green-600 font-medium">-10% B2B sleva</p>
+                  </div>
+                ) : (
+                  <p className="text-base font-semibold text-burgundy">
+                    {priceCalculator.formatPrice(shownPrice)}
+                  </p>
+                );
+              })()}
             </div>
 
           </div>
