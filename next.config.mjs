@@ -193,50 +193,30 @@ const nextConfig = {
         permanent: true,
       },
 
-      // === SEO keyword redirecty — thin URL → katalog ===
-      // Panenské vlasy → Platinum Edition (nejkvalitnější = panenské)
+      // === SEO landing pages — mají vlastní stránky, nepřesměrovávat ===
+      // /slovanske-vlasy-na-prodlouzeni → vlastní stránka
+      // /luxusni-vlasy-na-prodlouzeni → vlastní stránka
+      // /koupit-vlasy-na-prodlouzeni-praha → vlastní stránka
+      // /evropske-vlasy-na-prodlouzeni → vlastní stránka
+      // /panenenske-vlasy-praha → vlastní stránka
+      // /ceske-vlasy-na-prodlouzeni → vlastní stránka
+      // /vlasy-k-prodlouzeni-praha → vlastní stránka
+      // /cenik-vlasu-na-prodlouzeni → vlastní stránka
+
+      // Stará varianta bez "ne" → přesměrovat na novou SEO stránku
       {
         source: '/panenske-vlasy-praha',
-        destination: '/vlasy-k-prodlouzeni/platinum-edition',
+        destination: '/panenenske-vlasy-praha',
         permanent: true,
       },
       {
         source: '/panenske-vlasy-na-prodlouzeni',
-        destination: '/vlasy-k-prodlouzeni/platinum-edition',
-        permanent: true,
-      },
-      // Slovanské vlasy → LUXE
-      {
-        source: '/slovanske-vlasy-na-prodlouzeni',
-        destination: '/vlasy-k-prodlouzeni/luxe',
-        permanent: true,
-      },
-      {
-        source: '/slovanske-vlasy-praha',
-        destination: '/vlasy-k-prodlouzeni/luxe',
-        permanent: true,
-      },
-      // Luxusní vlasy → LUXE katalog
-      {
-        source: '/luxusni-vlasy-na-prodlouzeni',
-        destination: '/vlasy-k-prodlouzeni/luxe',
-        permanent: true,
-      },
-      // Koupit vlasy Praha → hlavní katalog
-      {
-        source: '/koupit-vlasy-na-prodlouzeni-praha',
-        destination: '/vlasy-k-prodlouzeni',
+        destination: '/panenenske-vlasy-praha',
         permanent: true,
       },
       {
         source: '/koupit-vlasy-praha',
-        destination: '/vlasy-k-prodlouzeni',
-        permanent: true,
-      },
-      // Evropské vlasy → LUXE
-      {
-        source: '/evropske-vlasy-na-prodlouzeni',
-        destination: '/vlasy-k-prodlouzeni/luxe',
+        destination: '/koupit-vlasy-na-prodlouzeni-praha',
         permanent: true,
       },
       // Ceník prodloužení vlasů Praha — aliasy
