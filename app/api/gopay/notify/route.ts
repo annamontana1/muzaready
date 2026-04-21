@@ -7,32 +7,27 @@ export const runtime = 'nodejs';
 /**
  * GoPay Webhook (Notification) Endpoint
  *
- * GoPay sends HTTP POST with payment ID when payment status changes.
+ * GoPay sends GET or POST with payment ID when payment status changes.
  * We verify by calling GoPay status API — never trust the webhook payload alone.
  *
- * GoPay sends: application/x-www-form-urlencoded body with `id` parameter
+ * GET:  /api/gopay/notify?id=<paymentId>&parent_id=<parentId>
+ * POST: application/x-www-form-urlencoded body with `id` parameter
+ *
+ * GoPay REQUIRES HTTP 200 response — on any internal error we still return 200
+ * and log the error so GoPay doesn't keep retrying with a broken request.
  */
-export async function POST(request: NextRequest) {
+
+async function handleNotification(gopayPaymentId: string | null): Promise<NextResponse> {
+  if (!gopayPaymentId) {
+    console.error('GoPay webhook: missing payment id');
+    // Return 200 so GoPay stops retrying — this is a misconfigured notification URL
+    return NextResponse.json({ success: true, message: 'No payment id' }, { status: 200 });
+  }
+
+  console.log(`GoPay webhook received for payment ${gopayPaymentId}`);
+
   try {
-    // GoPay sends payment ID as form-urlencoded or query parameter
-    const body = await request.text();
-    const params = new URLSearchParams(body);
-    let gopayPaymentId = params.get('id');
-
-    // GoPay may also send as query parameter
-    if (!gopayPaymentId) {
-      gopayPaymentId = request.nextUrl.searchParams.get('id');
-    }
-
-    if (!gopayPaymentId) {
-      console.error('GoPay webhook: missing payment id');
-      return NextResponse.json({ error: 'Missing payment id' }, { status: 400 });
-    }
-
-    console.log(`GoPay webhook received for payment ${gopayPaymentId}`);
-
     // Verify payment status by calling GoPay API directly
-    // This is the secure way — never trust webhook payload for payment state
     const accessToken = await getGoPayAccessToken('payment-all');
     const baseUrl = getGoPayBaseUrl();
 
@@ -46,24 +41,19 @@ export async function POST(request: NextRequest) {
     if (!statusResponse.ok) {
       const errorText = await statusResponse.text();
       console.error(`GoPay status API error (${statusResponse.status}): ${errorText}`);
-      return NextResponse.json(
-        { error: 'Failed to verify payment status' },
-        { status: 502 }
-      );
+      // Return 200 anyway so GoPay doesn't flood with retries
+      return NextResponse.json({ success: true, message: 'Notification received' }, { status: 200 });
     }
 
     const paymentData = await statusResponse.json();
-    const { state, order_number: orderId, amount } = paymentData;
+    const { state, order_number: orderId } = paymentData;
 
     console.log(`GoPay payment ${gopayPaymentId}: state=${state}, order=${orderId}`);
 
-    // Only process PAID state
+    // Only process PAID state — for all other states just acknowledge
     if (state !== 'PAID') {
       console.log(`GoPay payment ${gopayPaymentId} state=${state} (not PAID, skipping)`);
-      return NextResponse.json({
-        success: true,
-        message: `Notification received, state=${state}`,
-      });
+      return NextResponse.json({ success: true, message: `Notification received, state=${state}` });
     }
 
     // Process payment confirmation in a transaction
@@ -75,11 +65,7 @@ export async function POST(request: NextRequest) {
             { id: orderId },
           ],
         },
-        include: {
-          items: {
-            include: { sku: true },
-          },
-        },
+        include: { items: { include: { sku: true } } },
       });
 
       if (!order) {
@@ -92,23 +78,19 @@ export async function POST(request: NextRequest) {
         return order;
       }
 
-      // Update order status
       const updatedOrder = await tx.order.update({
         where: { id: order.id },
         data: {
-          orderStatus: order.orderStatus === 'pending' || order.orderStatus === 'draft'
-            ? 'processing'
-            : order.orderStatus,
+          orderStatus:
+            order.orderStatus === 'pending' || order.orderStatus === 'draft'
+              ? 'processing'
+              : order.orderStatus,
           paymentStatus: 'paid',
           paidAt: new Date(),
           gopayPaymentId: String(gopayPaymentId),
           updatedAt: new Date(),
         },
-        include: {
-          items: {
-            include: { sku: true },
-          },
-        },
+        include: { items: { include: { sku: true } } },
       });
 
       // Update stock movements from "Rezervace" to "Prodáno"
@@ -120,9 +102,10 @@ export async function POST(request: NextRequest) {
             note: { contains: 'Rezervace' },
           },
           data: {
-            note: item.sku.saleMode === 'PIECE_BY_WEIGHT'
-              ? `Prodáno (objednávka ${order.id.substring(0, 8)})`
-              : `Prodáno ${item.grams}g (objednávka ${order.id.substring(0, 8)})`,
+            note:
+              item.sku.saleMode === 'PIECE_BY_WEIGHT'
+                ? `Prodáno (objednávka ${order.id.substring(0, 8)})`
+                : `Prodáno ${item.grams}g (objednávka ${order.id.substring(0, 8)})`,
           },
         });
       }
@@ -132,7 +115,9 @@ export async function POST(request: NextRequest) {
 
     console.log(`Order ${result.id} payment confirmed`);
 
-    // Track conversion in Meta Ads (non-critical)
+    // ── Non-critical side effects (failures don't affect HTTP 200 response) ──
+
+    // Meta Ads conversion tracking
     try {
       const { trackServerSidePurchase } = await import('@/lib/marketing/meta-conversions');
       await trackServerSidePurchase({
@@ -149,35 +134,31 @@ export async function POST(request: NextRequest) {
         numItems: result.items.length,
         productIds: result.items.map((item: any) => item.skuId),
       });
-    } catch (metaError) {
-      console.error('Meta conversion tracking failed (non-critical):', metaError);
+    } catch (e) {
+      console.error('Meta conversion tracking failed (non-critical):', e);
     }
 
-    // Send payment confirmation email (non-critical)
+    // Payment confirmation email
     try {
       const { sendPaymentConfirmationEmail } = await import('@/lib/email');
       await sendPaymentConfirmationEmail(result.email, result.id, result.total);
-    } catch (emailError) {
-      console.error('Payment confirmation email failed (non-critical):', emailError);
+    } catch (e) {
+      console.error('Payment confirmation email failed (non-critical):', e);
     }
 
-    // Generate invoice (non-critical)
+    // Invoice generation (PDF + Fakturoid)
     try {
       const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');
       const { sendInvoiceEmail } = await import('@/lib/email');
 
-      const existingInvoice = await prisma.invoice.findUnique({
-        where: { orderId: result.id },
-      });
+      const existingInvoice = await prisma.invoice.findUnique({ where: { orderId: result.id } });
 
       if (!existingInvoice) {
         const lastInvoice = await prisma.invoice.findFirst({
           orderBy: { invoiceNumber: 'desc' },
           select: { invoiceNumber: true },
         });
-
         const invoiceNumber = generateInvoiceNumber(lastInvoice?.invoiceNumber);
-
         const vatRate = 21.0;
         const subtotal = result.total / (1 + vatRate / 100);
         const vatAmount = result.total - subtotal;
@@ -221,7 +202,7 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        const invoiceData = {
+        const pdfBase64 = generateInvoicePDF({
           invoiceNumber: invoice.invoiceNumber,
           issueDate: invoice.issueDate,
           dueDate: invoice.dueDate,
@@ -259,14 +240,9 @@ export async function POST(request: NextRequest) {
           bankAccount: invoice.bankAccount,
           iban: invoice.iban,
           swift: invoice.swift,
-        };
-
-        const pdfBase64 = generateInvoicePDF(invoiceData);
-
-        await prisma.invoice.update({
-          where: { id: invoice.id },
-          data: { pdfGenerated: true },
         });
+
+        await prisma.invoice.update({ where: { id: invoice.id }, data: { pdfGenerated: true } });
 
         sendInvoiceEmail(result.email, invoiceNumber, pdfBase64).catch((err) => {
           console.error('Invoice email failed:', err);
@@ -274,17 +250,18 @@ export async function POST(request: NextRequest) {
 
         console.log(`Invoice ${invoiceNumber} generated for order ${result.id}`);
       }
-    } catch (invoiceError) {
-      console.error('Invoice generation failed (non-critical):', invoiceError);
+    } catch (e) {
+      console.error('Invoice generation failed (non-critical):', e);
     }
 
-    // Create invoice in Fakturoid (non-critical)
+    // Fakturoid
     try {
       const { createInvoiceFromOrder, isFakturoidConfigured } = await import('@/lib/fakturoid');
       if (isFakturoidConfigured()) {
         const fakturoidResult = await createInvoiceFromOrder({
           orderId: result.id.substring(0, 12),
-          customerName: result.companyName || `${result.firstName || ''} ${result.lastName || ''}`.trim(),
+          customerName:
+            result.companyName || `${result.firstName || ''} ${result.lastName || ''}`.trim(),
           customerEmail: result.email,
           customerPhone: result.phone || undefined,
           customerStreet: result.billingStreet || result.streetAddress || undefined,
@@ -310,16 +287,15 @@ export async function POST(request: NextRequest) {
           console.error('Fakturoid invoice failed:', fakturoidResult.error);
         }
       }
-    } catch (fakturoidError) {
-      console.error('Fakturoid integration failed (non-critical):', fakturoidError);
+    } catch (e) {
+      console.error('Fakturoid integration failed (non-critical):', e);
     }
 
-    // Auto-create Zásilkovna shipment if applicable
+    // Auto-create Zásilkovna shipment
     const packetaPointId = (result as any).packetaPointId;
     if (packetaPointId && (result as any).deliveryMethod === 'zasilkovna') {
       try {
         const { createPacket } = await import('@/lib/zasilkovna');
-
         const shipmentResult = await createPacket(
           result.id.substring(0, 12),
           {
@@ -333,7 +309,6 @@ export async function POST(request: NextRequest) {
           0.5,
           0
         );
-
         if (shipmentResult.success && shipmentResult.barcode) {
           await prisma.order.update({
             where: { id: result.id },
@@ -344,23 +319,16 @@ export async function POST(request: NextRequest) {
               shippedAt: new Date(),
             },
           });
-
           try {
             const { sendShippingNotificationEmail } = await import('@/lib/email');
-            await sendShippingNotificationEmail(
-              result.email,
-              result.id,
-              shipmentResult.barcode,
-              'zasilkovna'
-            );
-          } catch (shippingEmailError) {
-            console.error('Shipping notification email failed:', shippingEmailError);
+            await sendShippingNotificationEmail(result.email, result.id, shipmentResult.barcode, 'zasilkovna');
+          } catch (e) {
+            console.error('Shipping notification email failed:', e);
           }
-
           console.log(`Zásilkovna shipment auto-created: ${shipmentResult.barcode}`);
         }
-      } catch (zasilkovnaError) {
-        console.error('Zásilkovna auto-shipment failed (non-critical):', zasilkovnaError);
+      } catch (e) {
+        console.error('Zásilkovna auto-shipment failed (non-critical):', e);
       }
     }
 
@@ -373,9 +341,22 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('GoPay webhook error:', error);
-    return NextResponse.json(
-      { error: 'Failed to process payment notification' },
-      { status: 500 }
-    );
+    // Return 200 so GoPay doesn't keep retrying — internal error is logged
+    return NextResponse.json({ success: true, message: 'Notification received' }, { status: 200 });
   }
+}
+
+/** GoPay sends GET: /api/gopay/notify?id=<paymentId>&parent_id=<parentId> */
+export async function GET(request: NextRequest) {
+  const gopayPaymentId = request.nextUrl.searchParams.get('id');
+  return handleNotification(gopayPaymentId);
+}
+
+/** GoPay may also send POST with application/x-www-form-urlencoded body */
+export async function POST(request: NextRequest) {
+  const body = await request.text();
+  const params = new URLSearchParams(body);
+  const gopayPaymentId =
+    params.get('id') || request.nextUrl.searchParams.get('id');
+  return handleNotification(gopayPaymentId);
 }
