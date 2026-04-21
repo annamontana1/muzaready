@@ -113,9 +113,13 @@ export async function POST(request: NextRequest) {
     const subtotalAmount = quotedLines.reduce((sum, item) => sum + item.lineGrandTotal, 0);
 
     // Calculate shipping cost (frontend should send this, but we calculate as fallback)
-    const shippingCost = shippingInfo?.deliveryMethod === 'zasilkovna'
-      ? 65
-      : (subtotalAmount >= 3000 ? 0 : 150);
+    const deliveryMethod = shippingInfo?.deliveryMethod || 'standard';
+    const shippingCost =
+      deliveryMethod === 'zasilkovna' ? 65 :
+      deliveryMethod === 'dpd' ? 99 :
+      deliveryMethod === 'ppl' ? 99 :
+      deliveryMethod === 'showroom' ? 0 :
+      150; // standard / fallback
 
     // ========================================================================
     // ATOMIC STOCK RESERVATION - prevents overselling

@@ -43,7 +43,7 @@ export const ShippingInfoSchema = z.object({
   city: z.string().max(100).optional(), // Optional for Zásilkovna
   zipCode: z.string().regex(/^[0-9\s]{5,10}$/, 'Invalid ZIP code format').optional(), // Optional for Zásilkovna
   country: z.string().length(2, 'Country code must be 2 characters (e.g., CZ)'),
-  deliveryMethod: z.enum(['standard', 'zasilkovna', 'express', 'pickup']).optional(),
+  deliveryMethod: z.enum(['standard', 'zasilkovna', 'express', 'pickup', 'dpd', 'ppl', 'showroom']).optional(),
 });
 
 // Packeta pickup point schema
