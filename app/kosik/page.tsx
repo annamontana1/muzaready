@@ -21,6 +21,31 @@ export default function CartPage() {
     }).format(price);
   };
 
+  const getEndingLabel = (ending: string) => {
+    const key = `cart.endings.${ending}`;
+    const translated = t(key);
+    // If translation key not found, return a clean fallback
+    if (translated === key || translated.includes('.')) {
+      const fallbacks: Record<string, string> = {
+        NONE: 'Bez zakončení',
+        none: 'Bez zakončení',
+        KERATIN: 'Keratin',
+        keratin: 'Keratin',
+        MICRO_KERATIN: 'Mikrokeratin',
+        microkeratin: 'Mikrokeratin',
+        NANO_TAPES: 'Nano tapes',
+        nano_tapes: 'Nano tapes',
+        TAPES: 'Pásky / Tape-in',
+        WEFT: 'Vlasové tresy',
+        vlasove_tresy: 'Vlasové tresy',
+        PASKY_KERATINU: 'Pásky keratinu',
+        STANDARD_KERATIN: 'Keratin standard',
+      };
+      return fallbacks[ending] || ending;
+    }
+    return translated;
+  };
+
   const handleClearCart = () => {
     if (confirm(t('cart.clearCartConfirm'))) {
       setIsClearing(true);
@@ -30,167 +55,166 @@ export default function CartPage() {
   };
 
   const subtotal = getTotalPrice();
-  const total = subtotal;
 
-  // Empty cart state
+  // ── Empty cart ──────────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-warm-beige py-12">
-        <div className="container mx-auto px-4 max-w-6xl">
-          {/* Breadcrumbs */}
-          <nav className="text-sm mb-8">
-            <ol className="flex items-center gap-2">
-              <li>
-                <Link href="/" className="text-burgundy hover:text-maroon transition">
-                  {t('nav.home')}
-                </Link>
-              </li>
-              <li className="text-text-soft">/</li>
-              <li className="text-text-mid">{t('cart.title')}</li>
-            </ol>
+      <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
+        <div className="max-w-3xl mx-auto px-6 py-16">
+          {/* Breadcrumb */}
+          <nav className="text-[11px] tracking-[0.15em] uppercase font-light mb-12" style={{ color: 'var(--text-soft)' }}>
+            <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
+            <span className="mx-2">—</span>
+            <span style={{ color: 'var(--text-mid)' }}>Košík</span>
           </nav>
 
-          {/* Empty state */}
-          <div className="bg-white rounded-xl shadow-soft p-12 text-center">
-            <div className="max-w-md mx-auto">
-              <svg
-                className="w-24 h-24 mx-auto mb-6 text-text-soft"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
-              <h1 className="text-2xl font-semibold text-burgundy mb-3">
-                {t('cart.empty')}
-              </h1>
-              <p className="text-text-mid mb-8">
-                {t('cart.emptyDescription')}
-              </p>
-              <Link
-                href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                className="inline-block bg-burgundy text-white px-8 py-3 rounded-lg font-medium hover:bg-maroon transition shadow-medium"
-              >
-                {t('cart.startShopping')}
-              </Link>
+          <div className="text-center py-20">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              KOŠÍK
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             </div>
+            <h1 className="font-cormorant text-[clamp(32px,4vw,48px)] font-light leading-[1.1] mb-4" style={{ color: 'var(--text-dark)' }}>
+              Váš košík je prázdný
+            </h1>
+            <p className="text-sm font-light mb-10" style={{ color: 'var(--text-soft)' }}>
+              Prozkoumejte naši kolekci prémiových vlasů
+            </p>
+            <Link
+              href="/vlasy-k-prodlouzeni"
+              className="inline-block px-10 py-3.5 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90"
+              style={{ background: 'var(--burgundy)' }}
+            >
+              Prozkoumat kolekci
+            </Link>
           </div>
         </div>
       </div>
     );
   }
 
+  // ── Cart with items ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-warm-beige py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
-        {/* Breadcrumbs */}
-        <nav className="text-sm mb-8">
-          <ol className="flex items-center gap-2">
-            <li>
-              <Link href="/" className="text-burgundy hover:text-maroon transition">
-                {t('nav.home')}
-              </Link>
-            </li>
-            <li className="text-text-soft">/</li>
-            <li className="text-text-mid">{t('cart.title')}</li>
-          </ol>
+    <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
+      <div className="max-w-6xl mx-auto px-6 py-16">
+
+        {/* Breadcrumb */}
+        <nav className="text-[11px] tracking-[0.15em] uppercase font-light mb-12" style={{ color: 'var(--text-soft)' }}>
+          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
+          <span className="mx-2">—</span>
+          <span style={{ color: 'var(--text-mid)' }}>Košík</span>
         </nav>
 
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-burgundy">
-            {t('cart.shoppingCart')}
-            <span className="text-lg font-normal text-text-mid ml-3">
-              ({items.length} {items.length === 1 ? t('cart.item', { count: items.length }) : items.length < 5 ? t('cart.itemsPlural', { count: items.length }) : t('cart.items', { count: items.length })})
-            </span>
-          </h1>
-          {items.length > 0 && (
-            <button
-              onClick={handleClearCart}
-              disabled={isClearing}
-              className="text-sm text-text-soft hover:text-burgundy transition disabled:opacity-50"
-            >
-              {t('cart.clearCart')}
-            </button>
-          )}
+        {/* Page header */}
+        <div className="flex items-end justify-between mb-10 pb-6 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
+          <div>
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              OBJEDNÁVKA
+            </div>
+            <h1 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light leading-[1.1]" style={{ color: 'var(--text-dark)' }}>
+              Košík
+              <span className="text-lg font-light ml-3" style={{ color: 'var(--text-soft)' }}>
+                ({items.length} {items.length === 1 ? 'položka' : items.length < 5 ? 'položky' : 'položek'})
+              </span>
+            </h1>
+          </div>
+          <button
+            onClick={handleClearCart}
+            disabled={isClearing}
+            className="text-[11px] tracking-[0.1em] uppercase transition-all hover:underline disabled:opacity-40"
+            style={{ color: 'var(--text-soft)' }}
+          >
+            Vyprázdnit košík
+          </button>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => (
+        <div className="grid lg:grid-cols-3 gap-10">
+
+          {/* ── Cart items ── */}
+          <div className="lg:col-span-2 space-y-0">
+            {items.map((item, index) => (
               <div
                 key={item.skuId}
-                className="bg-white rounded-xl shadow-soft p-6 hover:shadow-medium transition"
+                className="py-8"
+                style={{
+                  borderBottom: index < items.length - 1 ? `1px solid var(--warm-beige)` : 'none'
+                }}
               >
                 <div className="flex gap-6">
-                  {/* SKU Info */}
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-burgundy hover:text-maroon transition mb-2">
-                      {item.skuName}{item.shade ? <span className="text-text-soft font-normal"> · #{item.shade}</span> : null}
-                    </h3>
+                  <div className="flex-1 min-w-0">
 
-                    {/* Product Details */}
-                    <div className="space-y-1 text-sm text-text-mid mb-4">
-                      <div>
-                        <span className="font-medium">{t('cart.category')}:</span>{' '}
-                        {item.shade && (item.shade === 'barvene_blond' || item.shade.includes('BLONDE') || item.shade.includes('barvene'))
-                          ? t('cart.categoryDyed')
-                          : t('cart.categoryUndyed')}
+                    {/* Product name */}
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      <div className="min-w-0">
+                        <h3 className="font-cormorant text-xl font-light leading-tight" style={{ color: 'var(--text-dark)' }}>
+                          {item.skuName}
+                          {item.shade && (
+                            <span className="text-sm ml-2" style={{ color: 'var(--text-soft)' }}>
+                              · #{item.shade}
+                            </span>
+                          )}
+                        </h3>
                       </div>
-                      <div>
-                        <span className="font-medium">{t('cart.ending')}:</span> {t(`cart.endings.${item.ending}`) || item.ending}
+                      <div className="text-right flex-shrink-0">
+                        <div className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>
+                          {formatPrice(item.lineGrandTotal)}
+                        </div>
+                        {item.saleMode === 'BULK_G' && (
+                          <div className="text-[11px] mt-0.5" style={{ color: 'var(--text-soft)' }}>
+                            {formatPrice(item.pricePerGram)}/g
+                          </div>
+                        )}
                       </div>
+                    </div>
 
-                      {/* Show grams for BULK items or quantity for PIECE items */}
+                    {/* Product details */}
+                    <div className="space-y-1.5 mb-6">
+                      <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                        <span style={{ color: 'var(--text-soft)' }}>Zakončení:</span>
+                        <span>{getEndingLabel(item.ending)}</span>
+                      </div>
                       {item.saleMode === 'BULK_G' ? (
-                        <div>
-                          <span className="font-medium">{t('cart.gramsLabel')}:</span> {t('cart.gramsAt', { grams: item.grams, price: formatPrice(item.pricePerGram) })}
+                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                          <span style={{ color: 'var(--text-soft)' }}>Gramáž:</span>
+                          <span>{item.grams}g @ {formatPrice(item.pricePerGram)}/g</span>
                         </div>
                       ) : (
-                        <div>
-                          <span className="font-medium">{t('cart.quantityLabel')}:</span> {t('cart.quantityAt', { quantity: item.quantity, price: formatPrice(item.lineTotal / item.quantity) })}
+                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                          <span style={{ color: 'var(--text-soft)' }}>Počet:</span>
+                          <span>{item.quantity} ks @ {formatPrice(item.lineTotal / item.quantity)}</span>
                         </div>
                       )}
-
-                      {/* Assembly Fee Info */}
                       {item.assemblyFeeTotal > 0 && (
-                        <div>
-                          <span className="font-medium">{t('cart.serviceCharge')}:</span>{' '}
-                          {item.assemblyFeeType === 'PER_GRAM'
-                            ? `${formatPrice(item.assemblyFeeCzk)}/g = ${formatPrice(item.assemblyFeeTotal)}`
-                            : formatPrice(item.assemblyFeeTotal)}
+                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                          <span style={{ color: 'var(--text-soft)' }}>Servisní poplatek:</span>
+                          <span>{formatPrice(item.assemblyFeeTotal)}</span>
                         </div>
                       )}
                     </div>
 
-                    {/* Quantity & Price Controls */}
-                    <div className="flex items-center justify-between">
-                      {/* Quantity/Grams Selector */}
+                    {/* Controls row */}
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                      {/* Gram / quantity selector */}
                       {item.saleMode === 'BULK_G' ? (
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-text-mid">{t('cart.gramsLabel')}:</span>
-                          <div className="flex items-center border border-warm-beige rounded-lg">
+                          <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž</span>
+                          <div className="flex items-center border" style={{ borderColor: 'var(--warm-beige)' }}>
                             <button
-                              onClick={() =>
-                                item.grams > 50 && updateGrams(item.skuId, item.grams - 50)
-                              }
+                              onClick={() => item.grams > 50 && updateGrams(item.skuId, item.grams - 50)}
                               disabled={item.grams <= 50}
-                              className="px-3 py-1 text-burgundy hover:bg-ivory transition disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory disabled:opacity-30 disabled:cursor-not-allowed"
+                              style={{ color: 'var(--text-dark)' }}
                             >
                               −50g
                             </button>
-                            <span className="px-4 py-1 min-w-[4rem] text-center font-medium">
+                            <span className="px-4 py-2 min-w-[4.5rem] text-center text-sm font-medium border-x" style={{ borderColor: 'var(--warm-beige)', color: 'var(--text-dark)' }}>
                               {item.grams}g
                             </span>
                             <button
                               onClick={() => updateGrams(item.skuId, item.grams + 50)}
-                              className="px-3 py-1 text-burgundy hover:bg-ivory transition"
+                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory"
+                              style={{ color: 'var(--text-dark)' }}
                             >
                               +50g
                             </button>
@@ -198,23 +222,23 @@ export default function CartPage() {
                         </div>
                       ) : (
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-text-mid">{t('cart.quantityLabel')}:</span>
-                          <div className="flex items-center border border-warm-beige rounded-lg">
+                          <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Počet</span>
+                          <div className="flex items-center border" style={{ borderColor: 'var(--warm-beige)' }}>
                             <button
-                              onClick={() =>
-                                item.quantity > 1 && updateQuantity(item.skuId, item.quantity - 1)
-                              }
+                              onClick={() => item.quantity > 1 && updateQuantity(item.skuId, item.quantity - 1)}
                               disabled={item.quantity <= 1}
-                              className="px-3 py-1 text-burgundy hover:bg-ivory transition disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory disabled:opacity-30 disabled:cursor-not-allowed"
+                              style={{ color: 'var(--text-dark)' }}
                             >
                               −
                             </button>
-                            <span className="px-4 py-1 min-w-[3rem] text-center font-medium">
+                            <span className="px-4 py-2 min-w-[3rem] text-center text-sm font-medium border-x" style={{ borderColor: 'var(--warm-beige)', color: 'var(--text-dark)' }}>
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.skuId, item.quantity + 1)}
-                              className="px-3 py-1 text-burgundy hover:bg-ivory transition"
+                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory"
+                              style={{ color: 'var(--text-dark)' }}
                             >
                               +
                             </button>
@@ -222,121 +246,90 @@ export default function CartPage() {
                         </div>
                       )}
 
-                      {/* Price */}
-                      <div className="text-right">
-                        <div className="text-sm text-text-soft">
-                          {item.saleMode === 'BULK_G'
-                            ? `${formatPrice(item.pricePerGram)}/g`
-                            : `${formatPrice(item.lineTotal / item.quantity)}/ks`}
-                        </div>
-                        <div className="text-xl font-bold text-burgundy">
-                          {formatPrice(item.lineGrandTotal)}
-                        </div>
-                      </div>
+                      {/* Remove */}
+                      <button
+                        onClick={() => {
+                          if (confirm(t('cart.removeConfirm'))) removeFromCart(item.skuId);
+                        }}
+                        className="text-[11px] tracking-[0.1em] uppercase transition-all hover:underline flex items-center gap-1.5"
+                        style={{ color: 'var(--text-soft)' }}
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Odebrat
+                      </button>
                     </div>
-                  </div>
-                </div>
 
-                {/* Remove Button */}
-                <div className="mt-4 pt-4 border-t border-warm-beige">
-                  <button
-                    onClick={() => {
-                      if (confirm(t('cart.removeConfirm'))) {
-                        removeFromCart(item.skuId);
-                      }
-                    }}
-                    className="text-sm text-text-soft hover:text-red-600 transition flex items-center gap-1"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                    {t('cart.removeFromCart')}
-                  </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Cart Summary */}
+          {/* ── Order summary ── */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-soft p-6 sticky top-24">
-              <h2 className="text-xl font-semibold text-burgundy mb-6">{t('cart.orderSummary')}</h2>
+            <div className="sticky top-24 p-8" style={{ background: 'var(--white, #fff)', border: '1px solid var(--warm-beige)' }}>
+              <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+                <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
+                SOUHRN
+              </div>
 
               <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-text-mid">
-                  <span>{t('cart.subtotal')}:</span>
-                  <span className="font-medium">{formatPrice(subtotal)}</span>
+                <div className="flex justify-between items-center text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                  <span>Mezisoučet</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
-                <div className="flex justify-between text-text-mid">
-                  <span>{t('cart.shipping')}:</span>
-                  <span className="font-medium text-text-soft">dle dopravce</span>
-                </div>
-
-
-                <div className="pt-3 border-t border-warm-beige">
-                  <div className="flex justify-between text-lg font-bold text-burgundy">
-                    <span>{t('cart.total')}:</span>
-                    <span>{formatPrice(total)}</span>
-                  </div>
+                <div className="flex justify-between items-center text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                  <span>Doprava</span>
+                  <span style={{ color: 'var(--text-soft)' }}>dle dopravce</span>
                 </div>
               </div>
 
-              {/* CTA Buttons */}
+              <div className="pt-5 mb-8 border-t" style={{ borderColor: 'var(--warm-beige)' }}>
+                <div className="flex justify-between items-center">
+                  <span className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>Celkem</span>
+                  <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>{formatPrice(subtotal)}</span>
+                </div>
+                <p className="text-[11px] mt-1.5" style={{ color: 'var(--text-soft)' }}>Doprava bude vypočítána v pokladně</p>
+              </div>
+
+              {/* CTA */}
               <div className="space-y-3">
                 <Link
                   href="/pokladna"
-                  className="block w-full bg-burgundy text-white text-center px-6 py-3 rounded-lg font-semibold hover:bg-maroon transition shadow-medium"
+                  className="block w-full text-center py-4 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90"
+                  style={{ background: 'var(--burgundy)' }}
                 >
-                  {t('cart.checkout')}
+                  Pokračovat k pokladně
                 </Link>
                 <Link
-                  href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-                  className="block w-full border-2 border-burgundy text-burgundy text-center px-6 py-3 rounded-lg font-semibold hover:bg-burgundy hover:text-white transition"
+                  href="/vlasy-k-prodlouzeni"
+                  className="block w-full text-center py-3.5 text-[11px] tracking-[0.15em] uppercase font-medium transition-all hover:opacity-70 border"
+                  style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
                 >
-                  {t('cart.continueShopping')}
+                  Pokračovat v nákupu
                 </Link>
               </div>
 
-              {/* Trust Badges */}
-              <div className="mt-6 pt-6 border-t border-warm-beige space-y-2 text-sm text-text-mid">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{t('cart.securePayment')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{t('cart.deliveryTime')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{t('cart.premiumHair')}</span>
-                </div>
+              {/* Trust signals */}
+              <div className="mt-8 pt-6 border-t space-y-2.5" style={{ borderColor: 'var(--warm-beige)' }}>
+                {[
+                  'Bezpečná platba',
+                  'Dodání do 48 h',
+                  'Prémiová kvalita vlasů',
+                ].map((label) => (
+                  <div key={label} className="flex items-center gap-2.5 text-[11px] font-light" style={{ color: 'var(--text-soft)' }}>
+                    <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {label}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

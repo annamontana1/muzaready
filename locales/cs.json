@@ -374,10 +374,19 @@
       "remove": "Odebrat kupón"
     },
     "endings": {
+      "NONE": "Bez zakončení",
+      "none": "Bez zakončení",
       "keratin": "Keratin",
+      "KERATIN": "Keratin",
       "microkeratin": "Mikrokeratin",
+      "MICRO_KERATIN": "Mikrokeratin",
       "nano_tapes": "Nano tapes",
-      "vlasove_tresy": "Vlasové tresy"
+      "NANO_TAPES": "Nano tapes",
+      "TAPES": "Pásky / Tape-in",
+      "vlasove_tresy": "Vlasové tresy",
+      "WEFT": "Vlasové tresy / Weft",
+      "PASKY_KERATINU": "Pásky keratinu",
+      "STANDARD_KERATIN": "Keratin standard"
     }
   },
   "checkout": {

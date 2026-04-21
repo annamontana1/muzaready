@@ -374,10 +374,19 @@
       "remove": "Remove coupon"
     },
     "endings": {
+      "NONE": "No bonding",
+      "none": "No bonding",
       "keratin": "Keratin",
+      "KERATIN": "Keratin",
       "microkeratin": "Micro-keratin",
+      "MICRO_KERATIN": "Micro-keratin",
       "nano_tapes": "Nano Tapes",
-      "vlasove_tresy": "Hair Wefts"
+      "NANO_TAPES": "Nano Tapes",
+      "TAPES": "Tape-in",
+      "vlasove_tresy": "Hair Wefts",
+      "WEFT": "Hair Wefts",
+      "PASKY_KERATINU": "Keratin Strips",
+      "STANDARD_KERATIN": "Standard Keratin"
     }
   },
   "checkout": {
