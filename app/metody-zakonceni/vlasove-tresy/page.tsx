@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-const faqSchema = {
+const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
@@ -40,13 +40,6 @@ const faqSchema = {
         text: 'Weft jsou ručně šité tresy přišívané na copánky — bez lepidla, maximální objem. Keratin jsou jednotlivé pramínky přilepené keratinovou kapsulí. Weft je šetrnější k vlastním vlasům a dává větší hustotu.',
       },
     },
-  ],
-};
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
     {
       '@type': 'Question',
       name: 'Co jsou vlasové tresy?',
@@ -104,10 +97,6 @@ export default function VlasoveTresyPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       {/* Hero sekce */}
