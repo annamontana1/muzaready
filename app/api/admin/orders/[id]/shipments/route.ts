@@ -116,6 +116,7 @@ export async function POST(
     }
 
     let finalTrackingNumber = trackingNumber;
+    let labelUrl: string | undefined;
 
     // ── Auto-create Zásilkovna packet if carrier is zasilkovna and no tracking number provided ──
     if (carrier === 'zasilkovna' && !trackingNumber) {
@@ -153,6 +154,44 @@ export async function POST(
       finalTrackingNumber = result.barcode!;
     }
 
+    // ── Auto-create DPD / PPL packet via Balikobot if no tracking number provided ──
+    if ((carrier === 'dpd' || carrier === 'ppl') && !trackingNumber) {
+      const { addPackage, getTrackingUrl } = await import('@/lib/balikobot');
+      const shipper = carrier as 'dpd' | 'ppl';
+
+      // Format phone
+      let phone = (order.phone || '').replace(/\s/g, '');
+      if (phone && !phone.startsWith('+')) {
+        phone = phone.startsWith('420') ? `+${phone}` : `+420${phone}`;
+      }
+
+      const result = await addPackage(shipper, {
+        eid: String((order as any).orderNumber || order.id),
+        rec_name: `${order.firstName} ${order.lastName}`.trim(),
+        rec_street: order.streetAddress,
+        rec_city: order.city,
+        rec_zip: order.zipCode,
+        rec_country: order.country || 'CZ',
+        rec_email: order.email,
+        rec_phone: phone || undefined,
+        weight: 0.5,
+        price: Math.round(order.total),
+        cod_price: 0,
+        note: notes || undefined,
+      });
+
+      if (!result.success) {
+        return NextResponse.json(
+          { error: `Balikobot (${carrier.toUpperCase()}): ${result.error}` },
+          { status: 502 }
+        );
+      }
+
+      finalTrackingNumber = result.carrierId!;
+      labelUrl = result.labelUrl;
+      console.log(`✅ Balikobot ${carrier.toUpperCase()} package created: ${finalTrackingNumber}, label: ${labelUrl}`);
+    }
+
     if (!finalTrackingNumber) {
       return NextResponse.json(
         { error: 'Sledovací číslo je povinné' },
@@ -164,6 +203,7 @@ export async function POST(
     const shipmentData = {
       carrier,
       trackingNumber: finalTrackingNumber,
+      labelUrl: labelUrl || null,
       shippedAt: new Date(),
       items: items || order.items.map((item) => item.id),
       notes,

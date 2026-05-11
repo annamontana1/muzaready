@@ -57,12 +57,14 @@ export default function CreateShipmentModal({ isOpen, order, onClose, onSuccess 
   const [error, setError]                   = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting]     = useState(false);
   const [createdBarcode, setCreatedBarcode] = useState<string | null>(null);
+  const [createdLabelUrl, setCreatedLabelUrl] = useState<string | null>(null);
   const { showToast } = useToast();
 
   const isZasilkovna = carrier === 'zasilkovna';
+  const isDpdOrPpl = carrier === 'dpd' || carrier === 'ppl';
   const hasPickupPoint = !!order.packetaPointId;
-  // Auto mode: Zásilkovna + má výdejní místo + žádné manuální tracking číslo
-  const autoMode = isZasilkovna && hasPickupPoint && !trackingNumber;
+  // Auto mode: Zásilkovna s výdejním místem, nebo DPD/PPL (vždy auto přes Balikobot)
+  const autoMode = (isZasilkovna && hasPickupPoint && !trackingNumber) || (isDpdOrPpl && !trackingNumber);
 
   useEffect(() => {
     if (isOpen) {
@@ -102,6 +104,7 @@ export default function CreateShipmentModal({ isOpen, order, onClose, onSuccess 
       showToast('Zásilka vytvořena ✓', 'success');
       if (data.shipment?.trackingNumber) {
         setCreatedBarcode(data.shipment.trackingNumber);
+        setCreatedLabelUrl(data.shipment.labelUrl || null);
       }
       onSuccess();
       // Don't close immediately if we have a barcode to show
@@ -133,17 +136,42 @@ export default function CreateShipmentModal({ isOpen, order, onClose, onSuccess 
       {/* Success state — show barcode + print button */}
       {createdBarcode && (
         <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-sm font-semibold text-green-800 mb-1">✅ Zásilka vytvořena v Zásilkovně</p>
+          <p className="text-sm font-semibold text-green-800 mb-1">
+            ✅ Zásilka vytvořena {carrier === 'zasilkovna' ? 'v Zásilkovně' : `(${carrier.toUpperCase()})`}
+          </p>
           <p className="text-sm text-green-700 font-mono mb-3">{createdBarcode}</p>
-          <div className="flex gap-2">
-            <button
-              onClick={handlePrintLabel}
-              className="px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-medium hover:bg-green-800 transition"
-            >
-              🖨️ Tisknout štítek
-            </button>
+          <div className="flex flex-wrap gap-2">
+            {/* Zásilkovna — print via our API */}
+            {carrier === 'zasilkovna' && (
+              <button
+                onClick={handlePrintLabel}
+                className="px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-medium hover:bg-green-800 transition"
+              >
+                🖨️ Tisknout štítek
+              </button>
+            )}
+            {/* DPD / PPL — direct PDF from Balikobot */}
+            {createdLabelUrl && (
+              <a
+                href={createdLabelUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-medium hover:bg-green-800 transition"
+              >
+                🖨️ Tisknout štítek
+              </a>
+            )}
+            {/* Tracking URL */}
             <a
-              href={`https://tracking.packeta.com/cs/?id=${createdBarcode}`}
+              href={
+                carrier === 'zasilkovna'
+                  ? `https://tracking.packeta.com/cs/?id=${createdBarcode}`
+                  : carrier === 'dpd'
+                  ? `https://tracking.dpd.cz/parcelstatus?query=${createdBarcode}&lang=cs_CZ`
+                  : carrier === 'ppl'
+                  ? `https://www.ppl.cz/vyhledat-zasilku?shipmentId=${createdBarcode}`
+                  : '#'
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 bg-white border border-green-300 text-green-700 rounded-lg text-sm font-medium hover:bg-green-50 transition"
@@ -187,6 +215,14 @@ export default function CreateShipmentModal({ isOpen, order, onClose, onSuccess 
                   <p className="text-yellow-700">Zadejte tracking číslo ručně, nebo pošlete přes jiného dopravce.</p>
                 </>
               )}
+            </div>
+          )}
+
+          {/* DPD / PPL info box — auto via Balikobot */}
+          {isDpdOrPpl && (
+            <div className="p-4 rounded-lg text-sm bg-blue-50 border border-blue-200">
+              <p className="font-semibold text-blue-800 mb-1">📦 Automatické vytvoření přes Balikobot</p>
+              <p className="text-blue-700">Zásilka bude vytvořena v systému {carrier.toUpperCase()} — štítek ke stažení hned po vytvoření.</p>
             </div>
           )}
 
