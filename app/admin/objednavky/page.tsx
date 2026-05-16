@@ -177,7 +177,7 @@ export default function AdminOrdersPage() {
     paymentStatus: filters.paymentStatus,
     deliveryStatus: filters.deliveryStatus,
     channel: filters.channel,
-    email: filters.email,
+    name: filters.name,
     sort: sortField ? (sortDirection === 'desc' ? `-${sortField}` : sortField) : undefined,
     month: filterMonth || undefined,
     day: filterDay || undefined,
@@ -207,7 +207,7 @@ export default function AdminOrdersPage() {
         paymentStatus: filters.paymentStatus,
         deliveryStatus: filters.deliveryStatus,
         channel: filters.channel,
-        email: filters.email,
+        name: filters.name,
         sort: sortField ? (sortDirection === 'desc' ? `-${sortField}` : sortField) : undefined,
       }),
       (old: any) => {
@@ -249,7 +249,7 @@ export default function AdminOrdersPage() {
 
   // Keyboard shortcut: Cmd/Ctrl + K focuses email search
   useSearchShortcut(() => {
-    const emailInput = document.querySelector('input[name="email"]') as HTMLInputElement;
+    const emailInput = document.querySelector('input[name="name"]') as HTMLInputElement;
     if (emailInput) {
       emailInput.focus();
       emailInput.select();

@@ -7,7 +7,7 @@ export interface FilterState {
   paymentStatus?: string;
   deliveryStatus?: string;
   channel?: string;
-  email?: string;
+  name?: string;
 }
 
 interface FiltersProps {
@@ -115,17 +115,18 @@ export default function Filters({ onFilter }: FiltersProps) {
           </select>
         </div>
 
-        {/* Email Search */}
+        {/* Name Search */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            Jméno zákazníka
           </label>
           <input
-            id="email"
+            id="name"
             type="text"
-            value={filters.email || ''}
-            onChange={(e) => handleFilterChange('email', e.target.value)}
-            placeholder="Hledat email..."
+            name="name"
+            value={filters.name || ''}
+            onChange={(e) => handleFilterChange('name', e.target.value)}
+            placeholder="Hledat jméno..."
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm"
           />
         </div>

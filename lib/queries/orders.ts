@@ -30,6 +30,7 @@ export interface OrderListParams {
   deliveryStatus?: string;
   channel?: string;
   email?: string;
+  name?: string;
   sort?: string;
   month?: string; // "2026-03"
   day?: string;   // "15"

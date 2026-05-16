@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
     const deliveryStatus = searchParams.get('deliveryStatus');
     const channel = searchParams.get('channel');
     const emailSearch = searchParams.get('email');
+    const nameSearch = searchParams.get('name');
     const filterMonth = searchParams.get('month'); // format: "2026-03"
     const filterDay = searchParams.get('day'); // format: "15"
 
@@ -86,6 +87,14 @@ export async function GET(request: NextRequest) {
         contains: emailSearch,
         mode: 'insensitive',
       };
+    }
+
+    // Name search — matches firstName OR lastName (case-insensitive partial match)
+    if (nameSearch) {
+      where.OR = [
+        { firstName: { contains: nameSearch, mode: 'insensitive' } },
+        { lastName: { contains: nameSearch, mode: 'insensitive' } },
+      ];
     }
 
     // Fetch orders in parallel with total count
