@@ -25,12 +25,11 @@ export async function verifyAdminSession(request: NextRequest): Promise<{
       return { valid: false, error: 'Invalid session data' };
     }
 
-    // Check if admin user exists and is active — via Supabase REST API (HTTPS, IPv4+IPv6)
-    const { data: admin, error } = await getSupabaseAdminClient()
-      .from('admin_users')
-      .select('id, email, name, role, status')
-      .eq('email', sessionData.email)
-      .single();
+    // Check if admin user exists and is active — via RPC (SECURITY DEFINER, bypasses anon role restrictions)
+    const { data: rows, error } = await getSupabaseAdminClient()
+      .rpc('get_admin_by_email', { p_email: sessionData.email });
+
+    const admin = rows?.[0] ?? null;
 
     if (error || !admin || admin.status !== 'active') {
       return { valid: false, error: 'Admin user not found or inactive' };

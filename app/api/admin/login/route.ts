@@ -34,12 +34,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find admin user — via Supabase REST API (HTTPS, works regardless of IPv4/pooler)
-    const { data: admin, error: dbError } = await getSupabaseAdminClient()
-      .from('admin_users')
-      .select('id, email, name, role, status, password')
-      .eq('email', email)
-      .single();
+    // Find admin user — via RPC (SECURITY DEFINER, bypasses anon role restrictions)
+    const { data: rows, error: dbError } = await getSupabaseAdminClient()
+      .rpc('get_admin_by_email', { p_email: email });
+
+    const admin = rows?.[0] ?? null;
 
     if (dbError || !admin) {
       console.error('Admin lookup failed:', dbError?.message, dbError?.code, 'admin:', !!admin);
