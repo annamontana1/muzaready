@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
+import { verifyPassword } from '@/lib/admin-auth';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -44,9 +45,9 @@ export async function POST(request: NextRequest) {
     });
 
     const result = await edgeRes.json();
-    console.log('Edge function result:', { valid: result.valid, error: result.error });
+    console.log('Edge function result:', { found: result.found, error: result.error, status: edgeRes.status });
 
-    if (!result.valid) {
+    if (!result.found || !result.admin) {
       return NextResponse.json(
         { error: 'Nesprávný email nebo heslo' },
         { status: 401 }
@@ -54,6 +55,24 @@ export async function POST(request: NextRequest) {
     }
 
     const admin = result.admin;
+
+    // Check if admin is active
+    if (admin.status !== 'active') {
+      return NextResponse.json(
+        { error: 'Váš účet není aktivní. Kontaktujte administrátora.' },
+        { status: 403 }
+      );
+    }
+
+    // Verify password with bcryptjs (runs in Node.js, bcryptjs is installed)
+    const passwordValid = await verifyPassword(password, admin.password);
+    console.log('Password valid:', passwordValid);
+    if (!passwordValid) {
+      return NextResponse.json(
+        { error: 'Nesprávný email nebo heslo' },
+        { status: 401 }
+      );
+    }
 
     // Create cryptographically secure session token
     const token = randomBytes(32).toString('hex');
