@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (dbError || !admin) {
+      console.error('Admin lookup failed:', dbError?.message, dbError?.code, 'admin:', !!admin);
       return NextResponse.json(
         { error: 'Nesprávný email nebo heslo' },
         { status: 401 }
