@@ -1,6 +1,5 @@
 {
   "framework": "nextjs",
-  "public": false,
   "git": {
     "deploymentEnabled": {
       "main": true
