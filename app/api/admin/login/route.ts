@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
-import { getSupabaseAdminClient } from '@/lib/supabase';
-import { verifyPassword } from '@/lib/admin-auth';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -21,11 +19,6 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = body;
 
-    // Debug logging (only in development or with debug flag)
-    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_LOGIN === 'true') {
-      console.log('Login attempt:', { email, passwordLength: password?.length });
-    }
-
     // Validate input
     if (!email || !password) {
       return NextResponse.json(
@@ -34,45 +27,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find admin user — via RPC (SECURITY DEFINER, bypasses anon role restrictions)
-    const { data: rows, error: dbError } = await getSupabaseAdminClient()
-      .rpc('get_admin_by_email', { p_email: email });
+    // Call Supabase Edge Function — runs with service_role key, bypasses PostgREST permissions
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl) {
+      console.error('Missing SUPABASE_URL env var');
+      return NextResponse.json({ error: 'Chyba konfigurace serveru' }, { status: 500 });
+    }
 
-    const admin = rows?.[0] ?? null;
+    const edgeFnUrl = `${supabaseUrl}/functions/v1/admin-login`;
+    console.log('Calling edge function:', edgeFnUrl);
 
-    if (dbError || !admin) {
-      console.error('Admin lookup failed:', dbError?.message, dbError?.code, 'admin:', !!admin);
+    const edgeRes = await fetch(edgeFnUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const result = await edgeRes.json();
+    console.log('Edge function result:', { valid: result.valid, error: result.error });
+
+    if (!result.valid) {
       return NextResponse.json(
         { error: 'Nesprávný email nebo heslo' },
         { status: 401 }
       );
     }
 
-    // Check if admin is active
-    if (admin.status !== 'active') {
-      return NextResponse.json(
-        { error: 'Váš účet není aktivní. Kontaktujte administrátora.' },
-        { status: 403 }
-      );
-    }
-
-    // Verify password
-    const passwordValid = await verifyPassword(password, admin.password);
-    
-    // Debug logging
-    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_LOGIN === 'true') {
-      console.log('Password verification:', { 
-        valid: passwordValid,
-        hashPreview: admin.password.substring(0, 30),
-      });
-    }
-    
-    if (!passwordValid) {
-      return NextResponse.json(
-        { error: 'Nesprávný email nebo heslo' },
-        { status: 401 }
-      );
-    }
+    const admin = result.admin;
 
     // Create cryptographically secure session token
     const token = randomBytes(32).toString('hex');
@@ -86,8 +67,8 @@ export async function POST(request: NextRequest) {
 
     // Set cookie with session
     const response = NextResponse.json(
-      { 
-        success: true, 
+      {
+        success: true,
         message: 'Přihlášení bylo úspěšné',
         admin: {
           name: admin.name,
@@ -98,36 +79,22 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-    // Set httpOnly cookie for security (prevents XSS attacks)
-    // Note: secure flag should be true in production (HTTPS required)
     const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
     const cookieValue = JSON.stringify(sessionData);
-    
-    // Debug logging
-    if (process.env.NODE_ENV === 'development' || process.env.DEBUG_LOGIN === 'true') {
-      console.log('Setting cookie:', {
-        isProduction,
-        secure: isProduction,
-        sameSite: 'lax',
-        path: '/',
-        cookieLength: cookieValue.length,
-      });
-    }
-    
+
     // Get the root domain for cookie (works for both www and non-www)
     const host = request.headers.get('host') || '';
     const rootDomain = host.includes('muzahair.cz') ? '.muzahair.cz' : undefined;
 
     response.cookies.set('admin-session', cookieValue, {
-      httpOnly: true, // Prevents JavaScript access (XSS protection)
-      secure: isProduction, // HTTPS only in production
+      httpOnly: true,
+      secure: isProduction,
       sameSite: 'lax',
       maxAge: 24 * 60 * 60, // 24 hours
       path: '/',
-      domain: rootDomain, // Works for both www.muzahair.cz and muzahair.cz
+      domain: rootDomain,
     });
-    
-    // Also set a response header to confirm cookie was set
+
     response.headers.set('X-Login-Success', 'true');
 
     return response;

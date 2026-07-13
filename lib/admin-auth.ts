@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdminClient } from './supabase';
 import bcrypt from 'bcryptjs';
 
 /**
  * Helper function to verify admin session from cookie
- * Uses Supabase REST API (HTTPS) instead of Prisma to avoid IPv4/pooler issues
+ * Uses Supabase Edge Function (service_role) to bypass PostgREST permission issues
  */
 export async function verifyAdminSession(request: NextRequest): Promise<{
   valid: boolean;
@@ -20,30 +19,29 @@ export async function verifyAdminSession(request: NextRequest): Promise<{
 
     const sessionData = JSON.parse(adminSession.value);
 
-    // Verify session has required fields
     if (!sessionData.email || !sessionData.token) {
       return { valid: false, error: 'Invalid session data' };
     }
 
-    // Check if admin user exists and is active — via RPC (SECURITY DEFINER, bypasses anon role restrictions)
-    const { data: rows, error } = await getSupabaseAdminClient()
-      .rpc('get_admin_by_email', { p_email: sessionData.email });
+    // Call edge function — uses service_role key, bypasses PostgREST restrictions
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl) {
+      return { valid: false, error: 'Missing SUPABASE_URL' };
+    }
 
-    const admin = rows?.[0] ?? null;
+    const edgeRes = await fetch(`${supabaseUrl}/functions/v1/admin-verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: sessionData.email }),
+    });
 
-    if (error || !admin || admin.status !== 'active') {
+    const result = await edgeRes.json();
+
+    if (!result.valid) {
       return { valid: false, error: 'Admin user not found or inactive' };
     }
 
-    return {
-      valid: true,
-      admin: {
-        id: admin.id,
-        email: admin.email,
-        name: admin.name,
-        role: admin.role,
-      },
-    };
+    return { valid: true, admin: result.admin };
   } catch (error) {
     console.error('Session verification error:', error);
     return { valid: false, error: 'Session verification failed' };
@@ -52,7 +50,6 @@ export async function verifyAdminSession(request: NextRequest): Promise<{
 
 /**
  * Middleware helper to protect admin API routes
- * Returns NextResponse with 401 if not authenticated, null if authenticated
  */
 export async function requireAdmin(
   request: NextRequest
