@@ -28,6 +28,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Debug: log which key is being used
+    const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const anonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    console.log('Auth debug:', {
+      email,
+      hasSvcKey: !!svcKey,
+      svcKeyPrefix: svcKey?.substring(0, 20),
+      hasAnonKey: !!anonKey,
+    });
+
     // Uses SUPABASE_SERVICE_ROLE_KEY (now set in Vercel) — bypasses PostgREST restrictions
     const { data: admin, error: dbError } = await getSupabaseAdminClient()
       .from('admin_users')
