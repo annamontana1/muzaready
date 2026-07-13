@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from './prisma';
+import { getSupabaseAdminClient } from './supabase';
 import bcrypt from 'bcryptjs';
 
 /**
  * Helper function to verify admin session from cookie
+ * Uses Supabase REST API (HTTPS) instead of Prisma to avoid IPv4/pooler issues
  */
 export async function verifyAdminSession(request: NextRequest): Promise<{
   valid: boolean;
@@ -12,24 +13,26 @@ export async function verifyAdminSession(request: NextRequest): Promise<{
 }> {
   try {
     const adminSession = request.cookies.get('admin-session');
-    
+
     if (!adminSession) {
       return { valid: false, error: 'No session found' };
     }
 
     const sessionData = JSON.parse(adminSession.value);
-    
+
     // Verify session has required fields
     if (!sessionData.email || !sessionData.token) {
       return { valid: false, error: 'Invalid session data' };
     }
 
-    // Check if admin user exists and is active
-    const admin = await prisma.adminUser.findUnique({
-      where: { email: sessionData.email },
-    });
+    // Check if admin user exists and is active — via Supabase REST API (HTTPS, IPv4+IPv6)
+    const { data: admin, error } = await getSupabaseAdminClient()
+      .from('admin_users')
+      .select('id, email, name, role, status')
+      .eq('email', sessionData.email)
+      .single();
 
-    if (!admin || admin.status !== 'active') {
+    if (error || !admin || admin.status !== 'active') {
       return { valid: false, error: 'Admin user not found or inactive' };
     }
 
@@ -83,4 +86,3 @@ export async function verifyPassword(
 ): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
-

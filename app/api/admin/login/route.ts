@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
-import prisma from '@/lib/prisma';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { verifyPassword } from '@/lib/admin-auth';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -34,12 +34,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find admin user
-    const admin = await prisma.adminUser.findUnique({
-      where: { email },
-    });
+    // Find admin user — via Supabase REST API (HTTPS, works regardless of IPv4/pooler)
+    const { data: admin, error: dbError } = await getSupabaseAdminClient()
+      .from('admin_users')
+      .select('id, email, name, role, status, password')
+      .eq('email', email)
+      .single();
 
-    if (!admin) {
+    if (dbError || !admin) {
       return NextResponse.json(
         { error: 'Nesprávný email nebo heslo' },
         { status: 401 }
