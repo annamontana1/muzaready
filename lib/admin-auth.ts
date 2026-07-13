@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdminClient } from './supabase';
 import bcrypt from 'bcryptjs';
 
-/**
- * Helper function to verify admin session from cookie
- * Uses Supabase Edge Function (service_role) to bypass PostgREST permission issues
- */
 export async function verifyAdminSession(request: NextRequest): Promise<{
   valid: boolean;
   admin?: { id: string; email: string; name: string; role: string };
@@ -12,73 +9,43 @@ export async function verifyAdminSession(request: NextRequest): Promise<{
 }> {
   try {
     const adminSession = request.cookies.get('admin-session');
-
-    if (!adminSession) {
-      return { valid: false, error: 'No session found' };
-    }
+    if (!adminSession) return { valid: false, error: 'No session found' };
 
     const sessionData = JSON.parse(adminSession.value);
-
     if (!sessionData.email || !sessionData.token) {
       return { valid: false, error: 'Invalid session data' };
     }
 
-    // Call edge function — uses service_role key, bypasses PostgREST restrictions
-    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-    if (!supabaseUrl) {
-      return { valid: false, error: 'Missing SUPABASE_URL' };
-    }
+    // Uses SUPABASE_SERVICE_ROLE_KEY — bypasses PostgREST restrictions
+    const { data: admin, error } = await getSupabaseAdminClient()
+      .from('admin_users')
+      .select('id, email, name, role, status')
+      .eq('email', sessionData.email)
+      .single();
 
-    const edgeRes = await fetch(`${supabaseUrl}/functions/v1/admin-verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: sessionData.email }),
-    });
-
-    const result = await edgeRes.json();
-
-    if (!result.valid) {
+    if (error || !admin || admin.status !== 'active') {
       return { valid: false, error: 'Admin user not found or inactive' };
     }
 
-    return { valid: true, admin: result.admin };
+    return { valid: true, admin: { id: admin.id, email: admin.email, name: admin.name, role: admin.role } };
   } catch (error) {
     console.error('Session verification error:', error);
     return { valid: false, error: 'Session verification failed' };
   }
 }
 
-/**
- * Middleware helper to protect admin API routes
- */
-export async function requireAdmin(
-  request: NextRequest
-): Promise<NextResponse | null> {
+export async function requireAdmin(request: NextRequest): Promise<NextResponse | null> {
   const session = await verifyAdminSession(request);
-
   if (!session.valid) {
-    return NextResponse.json(
-      { error: 'Unauthorized - Admin session required' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Unauthorized - Admin session required' }, { status: 401 });
   }
-
   return null;
 }
 
-/**
- * Hash password for storage
- */
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
 }
 
-/**
- * Verify password against hash
- */
-export async function verifyPassword(
-  password: string,
-  hash: string
-): Promise<boolean> {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
