@@ -1,40 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// GET /api/admin/b2b/stats?month=2026-03
 export async function GET(req: NextRequest) {
   const admin = await requireAdmin(req);
   if (admin instanceof NextResponse) return admin;
 
   try {
     const { searchParams } = new URL(req.url);
-    const month = searchParams.get('month'); // "2026-03"
+    const month = searchParams.get('month');
 
-    let dateFilter: { gte: Date; lt: Date } | undefined;
+    const supabase = getSupabaseAdminClient();
+
+    let paymentsQuery = supabase.from('b2b_payments').select('amount');
+    let salesQuery = supabase.from('b2b_sales').select('totalAmount');
+
     if (month) {
       const [year, m] = month.split('-').map(Number);
-      const start = new Date(year, m - 1, 1);
-      const end = new Date(year, m, 1);
-      dateFilter = { gte: start, lt: end };
+      const start = new Date(year, m - 1, 1).toISOString();
+      const end = new Date(year, m, 1).toISOString();
+      paymentsQuery = paymentsQuery.gte('date', start).lt('date', end);
+      salesQuery = salesQuery.gte('createdAt', start).lt('createdAt', end);
     }
 
-    const [payments, sales] = await Promise.all([
-      prisma.b2bPayment.aggregate({
-        _sum: { amount: true },
-        where: dateFilter ? { date: dateFilter } : {},
-      }),
-      prisma.b2bSale.aggregate({
-        _sum: { totalAmount: true },
-        where: dateFilter ? { createdAt: dateFilter } : {},
-      }),
+    const [paymentsResult, salesResult] = await Promise.all([
+      paymentsQuery,
+      salesQuery,
     ]);
 
-    const totalPayments = payments._sum.amount || 0;
-    const totalSales = sales._sum.totalAmount || 0;
+    const totalPayments = (paymentsResult.data || []).reduce(
+      (sum, p) => sum + (Number(p.amount) || 0), 0
+    );
+    const totalSales = (salesResult.data || []).reduce(
+      (sum, s) => sum + (Number(s.totalAmount) || 0), 0
+    );
 
     return NextResponse.json({
       totalPayments,
