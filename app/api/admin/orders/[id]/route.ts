@@ -1,67 +1,78 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { randomUUID } from 'crypto';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { requireAdmin, verifyAdminSession } from '@/lib/admin-auth';
 import { buildSkuDisplayName } from '@/lib/stock';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+async function logOrderChange(
+  orderId: string,
+  field: string,
+  oldValue: any,
+  newValue: any,
+  changeType: string,
+  changedBy: string,
+  note?: string
+) {
+  try {
+    await getSupabaseAdminClient().from('order_history').insert({
+      id: randomUUID(),
+      orderId,
+      changedBy,
+      field,
+      oldValue: oldValue !== null && oldValue !== undefined ? String(oldValue) : null,
+      newValue: newValue !== null && newValue !== undefined ? String(newValue) : null,
+      changeType,
+      note,
+      createdAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error('Failed to log order change:', err);
+  }
+}
+
 /**
  * DELETE /api/admin/orders/[id]
- * Permanently delete an order and all related data.
- * Restricted to admin users with role 'owner' only.
+ * Permanently delete an order. Restricted to owner role.
  */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Only OWNER role may delete orders
   const session = await verifyAdminSession(request);
   if (!session.valid || !session.admin) {
-    return NextResponse.json(
-      { error: 'Unauthorized - Admin session required' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Unauthorized - Admin session required' }, { status: 401 });
   }
   if (session.admin.role !== 'owner') {
-    return NextResponse.json(
-      { error: 'Forbidden - Only the owner can delete orders' },
-      { status: 403 }
-    );
+    return NextResponse.json({ error: 'Forbidden - Only the owner can delete orders' }, { status: 403 });
   }
 
   const { id } = params;
-  if (!id) {
-    return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
-  }
+  if (!id) return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
 
   try {
-    // Verify the order exists
-    const order = await prisma.order.findUnique({ where: { id }, select: { id: true } });
-    if (!order) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
-    }
+    const supabase = getSupabaseAdminClient();
 
-    // Delete invoice first (no cascade from Order → Invoice)
-    await prisma.invoice.deleteMany({ where: { orderId: id } });
+    const { data: order } = await supabase.from('orders').select('id').eq('id', id).maybeSingle();
+    if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
 
-    // OrderItem, OrderHistory and reviews (SetNull) cascade automatically,
-    // but deleteMany is safe to call even when no rows exist.
-    // Delete the order — cascades handle items and history.
-    await prisma.order.delete({ where: { id } });
+    // Delete in dependency order (invoices have no cascade from orders)
+    await supabase.from('invoices').delete().eq('orderId', id);
+    await supabase.from('order_history').delete().eq('orderId', id);
+    await supabase.from('order_items').delete().eq('orderId', id);
+    await supabase.from('orders').delete().eq('id', id);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting order:', error);
     return NextResponse.json(
-      {
-        error: 'Failed to delete order',
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: 'Failed to delete order', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
 }
-
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
 
 /**
  * PATCH /api/admin/orders/[id]
@@ -78,115 +89,84 @@ export async function PATCH(
   if (session.admin.role !== 'owner') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
+
   const { naklad } = await req.json();
-  const order = await prisma.order.update({
-    where: { id: params.id },
-    data: { naklad: naklad !== undefined ? parseFloat(naklad) : null },
-  });
+  const supabase = getSupabaseAdminClient();
+
+  const { data: order, error } = await supabase
+    .from('orders')
+    .update({ naklad: naklad !== undefined ? parseFloat(naklad) : null, updatedAt: new Date().toISOString() })
+    .eq('id', params.id)
+    .select('naklad')
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: 'Failed to update naklad', details: error.message }, { status: 500 });
+  }
+
   return NextResponse.json({ success: true, naklad: order.naklad });
 }
 
 /**
  * GET /api/admin/orders/[id]
- * Fetch single order with full details and items
- *
- * Response:
- * {
- *   id, email, firstName, lastName, phone, address fields...
- *   orderStatus, paymentStatus, deliveryStatus, channel, tags, riskScore,
- *   notesInternal, notesCustomer, total, subtotal, shippingCost, discountAmount,
- *   paymentMethod, deliveryMethod,
- *   items: [{ id, nameSnapshot, grams, pricePerGram, lineTotal, saleMode, skuId, sku: { id, sku, name, shadeName, lengthCm } }],
- *   createdAt, updatedAt, lastStatusChangeAt
- * }
+ * Fetch single order with full details and items.
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Check admin authentication
   const authError = await requireAdmin(request);
   if (authError) return authError;
 
   try {
     const { id } = params;
+    if (!id) return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
 
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Order ID is required' },
-        { status: 400 }
-      );
+    const supabase = getSupabaseAdminClient();
+
+    const { data: order, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        order_items(
+          id, orderId, skuId, saleMode, grams, pricePerGram, lineTotal,
+          nameSnapshot, ending, assemblyFeeCzk, assemblyFeeTotal, createdAt,
+          skus(id, sku, name, shade, shadeName, lengthCm, saleMode, customerCategory)
+        ),
+        invoices(id, invoiceNumber, status, createdAt, pdfGenerated)
+      `)
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching order:', error.message);
+      return NextResponse.json({ error: 'Failed to fetch order', details: error.message }, { status: 500 });
     }
-
-    // Try to include invoice, but handle case where table doesn't exist yet
-    let includeInvoice = true;
-    try {
-      await prisma.$queryRaw`SELECT 1 FROM "invoices" LIMIT 1`;
-    } catch (e) {
-      includeInvoice = false;
-      console.log('Invoice table does not exist yet, skipping invoice include');
-    }
-
-    const order = await prisma.order.findUnique({
-      where: { id },
-      include: {
-        items: {
-          include: {
-            sku: {
-              select: {
-                id: true,
-                sku: true,
-                name: true,
-                shade: true,
-                shadeName: true,
-                lengthCm: true,
-              },
-            },
-          },
-        },
-        ...(includeInvoice && {
-          invoice: {
-            select: {
-              id: true,
-              invoiceNumber: true,
-              status: true,
-              createdAt: true,
-              pdfGenerated: true,
-            },
-          },
-        }),
-      },
-    });
 
     if (!order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Transform order to include all admin-facing fields
     const transformedOrder = {
       ...order,
-      orderStatus: (order as any).orderStatus || 'draft',
-      paymentStatus: (order as any).paymentStatus || 'unpaid',
-      deliveryStatus: (order as any).deliveryStatus || 'pending',
-      channel: (order as any).channel || 'web',
-      tags: (order as any).tags ? JSON.parse((order as any).tags) : [],
-      riskScore: (order as any).riskScore || 0,
-      notesInternal: (order as any).notesInternal,
-      notesCustomer: (order as any).notesCustomer,
-      lastStatusChangeAt: (order as any).lastStatusChangeAt,
+      orderStatus: order.orderStatus || 'draft',
+      paymentStatus: order.paymentStatus || 'unpaid',
+      deliveryStatus: order.deliveryStatus || 'pending',
+      channel: order.channel || 'web',
+      tags: order.tags ? (typeof order.tags === 'string' ? JSON.parse(order.tags) : order.tags) : [],
+      riskScore: order.riskScore || 0,
+      items: (order.order_items || []).map((item: any) => ({
+        ...item,
+        sku: item.skus || null,
+      })),
+      invoice: (order.invoices && order.invoices.length > 0) ? order.invoices[0] : null,
     };
 
     return NextResponse.json(transformedOrder, { status: 200 });
   } catch (error) {
     console.error('Error fetching order:', error);
     return NextResponse.json(
-      {
-        error: 'Failed to fetch order',
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: 'Failed to fetch order', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
@@ -194,30 +174,15 @@ export async function GET(
 
 /**
  * PUT /api/admin/orders/[id]
- * Update order status and metadata
- *
- * Request Body:
- * {
- *   orderStatus?: "draft" | "pending" | "paid" | "processing" | "shipped" | "completed" | "cancelled"
- *   paymentStatus?: "unpaid" | "partial" | "paid" | "refunded"
- *   deliveryStatus?: "pending" | "shipped" | "delivered" | "returned"
- *   tags?: string[]
- *   notesInternal?: string
- *   notesCustomer?: string
- *   riskScore?: number (0-100)
- * }
+ * Update order status and metadata with stock management and email notifications.
  */
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Check admin authentication and get admin info
   const session = await verifyAdminSession(request);
   if (!session.valid || !session.admin) {
-    return NextResponse.json(
-      { error: 'Unauthorized - Admin session required' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Unauthorized - Admin session required' }, { status: 401 });
   }
 
   const adminEmail = session.admin.email;
@@ -226,14 +191,8 @@ export async function PUT(
     const { id } = params;
     const body = await request.json();
 
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Order ID is required' },
-        { status: 400 }
-      );
-    }
+    if (!id) return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
 
-    // Validate statuses if provided
     const validOrderStatuses = ['draft', 'pending', 'paid', 'processing', 'shipped', 'completed', 'cancelled'];
     const validPaymentStatuses = ['unpaid', 'partial', 'paid', 'refunded'];
     const validDeliveryStatuses = ['pending', 'shipped', 'delivered', 'returned'];
@@ -244,14 +203,12 @@ export async function PUT(
         { status: 400 }
       );
     }
-
     if (body.paymentStatus && !validPaymentStatuses.includes(body.paymentStatus)) {
       return NextResponse.json(
         { error: `Invalid paymentStatus. Must be one of: ${validPaymentStatuses.join(', ')}` },
         { status: 400 }
       );
     }
-
     if (body.deliveryStatus && !validDeliveryStatuses.includes(body.deliveryStatus)) {
       return NextResponse.json(
         { error: `Invalid deliveryStatus. Must be one of: ${validDeliveryStatuses.join(', ')}` },
@@ -259,32 +216,39 @@ export async function PUT(
       );
     }
 
-    // Get current order state FIRST before building update data
-    const currentOrder = await prisma.order.findUnique({
-      where: { id },
-      include: {
-        items: {
-          include: {
-            sku: true,
-          },
-        },
-      },
-    });
+    const supabase = getSupabaseAdminClient();
 
-    if (!currentOrder) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
+    // Fetch current order with items
+    const { data: currentOrder, error: fetchError } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        order_items(
+          id, skuId, saleMode, grams, pricePerGram, lineTotal,
+          nameSnapshot, assemblyFeeTotal,
+          skus(id, sku, saleMode, availableGrams, inStock, inStockSince, customerCategory)
+        )
+      `)
+      .eq('id', id)
+      .maybeSingle();
+
+    if (fetchError || !currentOrder) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
     // Build update data
-    const updateData: any = {};
+    const updateData: any = { updatedAt: new Date().toISOString() };
 
     if (body.orderStatus !== undefined) updateData.orderStatus = body.orderStatus;
     if (body.paymentStatus !== undefined) updateData.paymentStatus = body.paymentStatus;
     if (body.deliveryStatus !== undefined) updateData.deliveryStatus = body.deliveryStatus;
     if (body.email !== undefined) updateData.email = body.email;
+    if (body.paymentMethod !== undefined) updateData.paymentMethod = body.paymentMethod;
+    if (body.deliveryMethod !== undefined) updateData.deliveryMethod = body.deliveryMethod;
+    if (body.tags !== undefined) updateData.tags = JSON.stringify(body.tags);
+    if (body.notesInternal !== undefined) updateData.notesInternal = body.notesInternal;
+    if (body.notesCustomer !== undefined) updateData.notesCustomer = body.notesCustomer;
+    if (body.riskScore !== undefined) updateData.riskScore = body.riskScore;
 
     // Automatic workflow: Set orderStatus to 'processing' when payment is marked as 'paid'
     if (body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid') {
@@ -297,622 +261,325 @@ export async function PUT(
     if (body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered') {
       updateData.orderStatus = 'completed';
     }
-    if (body.paymentMethod !== undefined) updateData.paymentMethod = body.paymentMethod;
-    if (body.deliveryMethod !== undefined) updateData.deliveryMethod = body.deliveryMethod;
-    if (body.tags !== undefined) updateData.tags = JSON.stringify(body.tags);
-    if (body.notesInternal !== undefined) updateData.notesInternal = body.notesInternal;
-    if (body.notesCustomer !== undefined) updateData.notesCustomer = body.notesCustomer;
-    if (body.riskScore !== undefined) updateData.riskScore = body.riskScore;
 
-    // Always update lastStatusChangeAt if any status changed
     if (body.orderStatus || body.paymentStatus || body.deliveryStatus) {
-      updateData.lastStatusChangeAt = new Date();
+      updateData.lastStatusChangeAt = new Date().toISOString();
     }
 
-    // Check if paymentStatus is changing to 'paid' - stock movements get updated from "Rezervace" to "Prodáno"
-    // NOTE: Stock was already deducted at order creation, so we just update the movement note
+    // Stock change flags
     const isChangingToPaid = body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid';
-
-    // Check if paymentStatus is changing to 'refunded' - return stock
     const isChangingToRefunded = body.paymentStatus === 'refunded' && currentOrder.paymentStatus !== 'refunded';
-
-    // Check if orderStatus is changing to 'cancelled' - ALWAYS return stock
-    // Stock is deducted at order creation, so we need to return it on ANY cancellation
     const isChangingToCancelled = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled';
-
-    // Check if deliveryStatus is changing to 'returned' - return stock (physical return by customer)
     const isChangingToReturned = body.deliveryStatus === 'returned' && currentOrder.deliveryStatus !== 'returned';
 
-    // Helper function to log changes to OrderHistory
-    const logOrderChange = async (
-      tx: any,
-      orderId: string,
-      field: string,
-      oldValue: any,
-      newValue: any,
-      changeType: string,
-      note?: string
-    ) => {
+    // Log status changes
+    if (body.orderStatus !== undefined && body.orderStatus !== currentOrder.orderStatus) {
+      await logOrderChange(id, 'orderStatus', currentOrder.orderStatus, body.orderStatus, 'status_change', adminEmail,
+        `Status změněn z ${currentOrder.orderStatus} na ${body.orderStatus}`);
+    }
+    if (body.paymentStatus !== undefined && body.paymentStatus !== currentOrder.paymentStatus) {
+      await logOrderChange(id, 'paymentStatus', currentOrder.paymentStatus, body.paymentStatus, 'status_change', adminEmail,
+        `Platba změněna z ${currentOrder.paymentStatus} na ${body.paymentStatus}`);
+    }
+    if (body.deliveryStatus !== undefined && body.deliveryStatus !== currentOrder.deliveryStatus) {
+      await logOrderChange(id, 'deliveryStatus', currentOrder.deliveryStatus, body.deliveryStatus, 'status_change', adminEmail,
+        `Doručení změněno z ${currentOrder.deliveryStatus} na ${body.deliveryStatus}`);
+    }
+    if (body.email !== undefined && body.email !== currentOrder.email) {
+      await logOrderChange(id, 'email', currentOrder.email, body.email, 'field_update', adminEmail, `Email zákazníka změněn`);
+    }
+    if (body.notesInternal !== undefined && body.notesInternal !== currentOrder.notesInternal) {
+      await logOrderChange(id, 'notesInternal', currentOrder.notesInternal, body.notesInternal, 'note_added', adminEmail,
+        `Interní poznámka ${currentOrder.notesInternal ? 'aktualizována' : 'přidána'}`);
+    }
+    if (body.notesCustomer !== undefined && body.notesCustomer !== currentOrder.notesCustomer) {
+      await logOrderChange(id, 'notesCustomer', currentOrder.notesCustomer, body.notesCustomer, 'note_added', adminEmail,
+        `Poznámka pro zákazníka ${currentOrder.notesCustomer ? 'aktualizována' : 'přidána'}`);
+    }
+
+    // --- Update order ---
+    const { data: updatedOrder, error: updateError } = await supabase
+      .from('orders')
+      .update(updateData)
+      .eq('id', id)
+      .select(`
+        *,
+        order_items(
+          id, skuId, saleMode, grams, pricePerGram, lineTotal,
+          nameSnapshot, assemblyFeeTotal,
+          skus(id, sku, name, shadeName, lengthCm, saleMode, availableGrams, inStock, inStockSince, customerCategory)
+        )
+      `)
+      .single();
+
+    if (updateError || !updatedOrder) {
+      console.error('Order update error:', updateError?.message);
+      return NextResponse.json({ error: 'Failed to update order', details: updateError?.message }, { status: 500 });
+    }
+
+    const orderItems = updatedOrder.order_items || [];
+
+    // --- Stock: update movement notes when marking as paid ---
+    if (isChangingToPaid) {
+      for (const item of orderItems) {
+        const sku = item.skus;
+        if (!sku) continue;
+        await supabase
+          .from('stock_movements')
+          .update({
+            note: sku.saleMode === 'PIECE_BY_WEIGHT'
+              ? `Prodáno (objednávka ${id.substring(0, 8)}) - ruční označení`
+              : `Prodáno ${item.grams}g (objednávka ${id.substring(0, 8)}) - ruční označení`,
+          })
+          .eq('refOrderId', id)
+          .eq('skuId', item.skuId)
+          .ilike('note', '%Rezervace%');
+      }
+
+      await logOrderChange(id, 'stock', 'available', 'deducted', 'stock_deduction', adminEmail,
+        `Zásoby odečteny při označení jako zaplaceno`);
+    }
+
+    // --- Stock: return stock on refund, cancel, or return ---
+    if (isChangingToRefunded || isChangingToCancelled || isChangingToReturned) {
+      const returnReason = isChangingToRefunded ? 'Refund' : isChangingToReturned ? 'Vrácení zákazníkem' : 'Zrušení';
+
+      for (const item of orderItems) {
+        const sku = item.skus;
+        if (!sku) continue;
+
+        if (sku.saleMode === 'PIECE_BY_WEIGHT') {
+          await supabase.from('skus').update({ soldOut: false, inStock: true, inStockSince: new Date().toISOString() }).eq('id', item.skuId);
+          await supabase.from('stock_movements').insert({
+            id: randomUUID(),
+            skuId: item.skuId,
+            type: 'IN',
+            grams: item.grams,
+            note: `${returnReason} (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
+            refOrderId: id,
+            createdAt: new Date().toISOString(),
+          });
+        } else if (sku.saleMode === 'BULK_G') {
+          const newAvailableGrams = (sku.availableGrams || 0) + item.grams;
+          await supabase.from('skus').update({
+            availableGrams: newAvailableGrams,
+            inStock: true,
+            inStockSince: newAvailableGrams > 0 ? new Date().toISOString() : sku.inStockSince,
+          }).eq('id', item.skuId);
+          await supabase.from('stock_movements').insert({
+            id: randomUUID(),
+            skuId: item.skuId,
+            type: 'IN',
+            grams: item.grams,
+            note: `${returnReason} ${item.grams}g (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
+            refOrderId: id,
+            createdAt: new Date().toISOString(),
+          });
+        }
+      }
+
+      const logNote = isChangingToRefunded ? 'Zásoby vráceny při refundu'
+        : isChangingToReturned ? 'Zásoby vráceny při fyzickém vrácení'
+        : 'Zásoby vráceny při zrušení objednávky';
+      await logOrderChange(id, 'stock', 'deducted', 'returned', 'stock_return', adminEmail, logNote);
+    }
+
+    // --- Invoice generation when marked as paid ---
+    if (isChangingToPaid) {
       try {
-        await tx.orderHistory.create({
-          data: {
-            orderId,
-            changedBy: adminEmail,
-            field,
-            oldValue: oldValue !== null && oldValue !== undefined ? String(oldValue) : null,
-            newValue: newValue !== null && newValue !== undefined ? String(newValue) : null,
-            changeType,
-            note,
-          },
-        });
-      } catch (error) {
-        // If OrderHistory table doesn't exist yet, just log error but don't fail
-        console.error('Failed to log order change:', error);
+        const { sendPaymentConfirmationEmail } = await import('@/lib/email');
+        await sendPaymentConfirmationEmail(updatedOrder.email, id, updatedOrder.total);
+      } catch (emailError) {
+        console.error('Failed to send payment confirmation email:', emailError);
       }
-    };
 
-    // Use transaction if we need to deduct or return stock
-    const order = isChangingToPaid || isChangingToRefunded || isChangingToCancelled || isChangingToReturned
-      ? await prisma.$transaction(async (tx) => {
-          // Log all changes before update
-          if (body.orderStatus !== undefined && body.orderStatus !== currentOrder.orderStatus) {
-            await logOrderChange(
-              tx,
-              id,
-              'orderStatus',
-              currentOrder.orderStatus,
-              body.orderStatus,
-              'status_change',
-              `Status změněn z ${currentOrder.orderStatus} na ${body.orderStatus}`
-            );
+      try {
+        const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');
+        const { sendInvoiceEmail } = await import('@/lib/email');
+
+        const { data: existingInvoice } = await supabase
+          .from('invoices')
+          .select('id')
+          .eq('orderId', id)
+          .maybeSingle();
+
+        if (!existingInvoice) {
+          const { data: lastInvoiceRow } = await supabase
+            .from('invoices')
+            .select('invoiceNumber')
+            .order('invoiceNumber', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          const invoiceNumber = generateInvoiceNumber(lastInvoiceRow?.invoiceNumber);
+          const vatRate = 21.0;
+          const subtotal = updatedOrder.total / (1 + vatRate / 100);
+          const vatAmount = updatedOrder.total - subtotal;
+          const invoiceId = randomUUID();
+          const now = new Date().toISOString();
+
+          const { data: invoice, error: invoiceError } = await supabase.from('invoices').insert({
+            id: invoiceId,
+            invoiceNumber,
+            orderId: id,
+            supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Mùza Hair s.r.o.',
+            supplierStreet: process.env.INVOICE_SUPPLIER_STREET,
+            supplierCity: process.env.INVOICE_SUPPLIER_CITY,
+            supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP,
+            supplierCountry: 'CZ',
+            supplierIco: process.env.INVOICE_SUPPLIER_ICO,
+            supplierDic: process.env.INVOICE_SUPPLIER_DIC,
+            supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'info@muzahair.cz',
+            supplierPhone: process.env.INVOICE_SUPPLIER_PHONE || '+420 728 722 880',
+            customerName: updatedOrder.companyName || `${updatedOrder.firstName} ${updatedOrder.lastName}`,
+            customerEmail: updatedOrder.email,
+            customerPhone: updatedOrder.phone,
+            customerStreet: updatedOrder.billingStreet || updatedOrder.streetAddress,
+            customerCity: updatedOrder.billingCity || updatedOrder.city,
+            customerZipCode: updatedOrder.billingZipCode || updatedOrder.zipCode,
+            customerCountry: updatedOrder.billingCountry || updatedOrder.country,
+            customerIco: updatedOrder.ico,
+            customerDic: updatedOrder.dic,
+            subtotal,
+            vatRate,
+            vatAmount,
+            total: updatedOrder.total,
+            paymentMethod: updatedOrder.paymentMethod || 'manual',
+            variableSymbol: invoiceNumber,
+            bankAccount: process.env.INVOICE_BANK_ACCOUNT,
+            iban: process.env.INVOICE_IBAN,
+            swift: process.env.INVOICE_SWIFT,
+            issueDate: now,
+            dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+            taxDate: now,
+            paidDate: now,
+            status: 'paid',
+            pdfGenerated: false,
+            createdAt: now,
+            updatedAt: now,
+          }).select().single();
+
+          if (!invoiceError && invoice) {
+            const invoiceData = {
+              invoiceNumber: invoice.invoiceNumber,
+              issueDate: new Date(invoice.issueDate),
+              dueDate: new Date(invoice.dueDate),
+              taxDate: new Date(invoice.taxDate),
+              orderId: invoice.orderId,
+              supplierName: invoice.supplierName,
+              supplierStreet: invoice.supplierStreet,
+              supplierCity: invoice.supplierCity,
+              supplierZipCode: invoice.supplierZipCode,
+              supplierCountry: invoice.supplierCountry,
+              supplierIco: invoice.supplierIco,
+              supplierDic: invoice.supplierDic,
+              supplierEmail: invoice.supplierEmail,
+              supplierPhone: invoice.supplierPhone,
+              customerName: invoice.customerName,
+              customerEmail: invoice.customerEmail,
+              customerPhone: invoice.customerPhone,
+              customerStreet: invoice.customerStreet,
+              customerCity: invoice.customerCity,
+              customerZipCode: invoice.customerZipCode,
+              customerCountry: invoice.customerCountry,
+              customerIco: invoice.customerIco,
+              customerDic: invoice.customerDic,
+              items: orderItems.map((item: any) => ({
+                name: (item.nameSnapshot && item.nameSnapshot !== 'undefined')
+                  ? item.nameSnapshot
+                  : buildSkuDisplayName({ name: item.skus?.name ?? null, sku: item.skus?.sku ?? item.skuId, customerCategory: item.skus?.customerCategory ?? null, shade: item.skus?.shade ?? null }),
+                quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
+                unitPrice: item.pricePerGram,
+                total: item.lineTotal + (item.assemblyFeeTotal || 0),
+              })),
+              subtotal: invoice.subtotal,
+              vatRate: invoice.vatRate,
+              vatAmount: invoice.vatAmount,
+              total: invoice.total,
+              paymentMethod: invoice.paymentMethod,
+              variableSymbol: invoice.variableSymbol,
+              bankAccount: invoice.bankAccount,
+              iban: invoice.iban,
+              swift: invoice.swift,
+            };
+
+            const pdfBase64 = generateInvoicePDF(invoiceData);
+            await supabase.from('invoices').update({ pdfGenerated: true }).eq('id', invoice.id);
+            sendInvoiceEmail(updatedOrder.email, invoiceNumber, pdfBase64).catch((err) => {
+              console.error('Failed to send invoice email:', err);
+            });
+            console.log(`Invoice ${invoiceNumber} generated for order ${id}`);
           }
-          if (body.paymentStatus !== undefined && body.paymentStatus !== currentOrder.paymentStatus) {
-            await logOrderChange(
-              tx,
-              id,
-              'paymentStatus',
-              currentOrder.paymentStatus,
-              body.paymentStatus,
-              'status_change',
-              `Platba změněna z ${currentOrder.paymentStatus} na ${body.paymentStatus}`
-            );
-          }
-          if (body.deliveryStatus !== undefined && body.deliveryStatus !== currentOrder.deliveryStatus) {
-            await logOrderChange(
-              tx,
-              id,
-              'deliveryStatus',
-              currentOrder.deliveryStatus,
-              body.deliveryStatus,
-              'status_change',
-              `Doručení změněno z ${currentOrder.deliveryStatus} na ${body.deliveryStatus}`
-            );
-          }
-          if (body.email !== undefined && body.email !== currentOrder.email) {
-            await logOrderChange(
-              tx,
-              id,
-              'email',
-              currentOrder.email,
-              body.email,
-              'field_update',
-              `Email zákazníka změněn`
-            );
-          }
-          if (body.notesInternal !== undefined && body.notesInternal !== currentOrder.notesInternal) {
-            await logOrderChange(
-              tx,
-              id,
-              'notesInternal',
-              currentOrder.notesInternal,
-              body.notesInternal,
-              'note_added',
-              `Interní poznámka ${currentOrder.notesInternal ? 'aktualizována' : 'přidána'}`
-            );
-          }
-          if (body.notesCustomer !== undefined && body.notesCustomer !== currentOrder.notesCustomer) {
-            await logOrderChange(
-              tx,
-              id,
-              'notesCustomer',
-              currentOrder.notesCustomer,
-              body.notesCustomer,
-              'note_added',
-              `Poznámka pro zákazníka ${currentOrder.notesCustomer ? 'aktualizována' : 'přidána'}`
-            );
-          }
-
-          // Log stock changes
-          if (isChangingToPaid) {
-            await logOrderChange(
-              tx,
-              id,
-              'stock',
-              'available',
-              'deducted',
-              'stock_deduction',
-              `Zásoby odečteny při označení jako zaplaceno`
-            );
-          }
-          if (isChangingToRefunded) {
-            await logOrderChange(
-              tx,
-              id,
-              'stock',
-              'deducted',
-              'returned',
-              'stock_return',
-              `Zásoby vráceny při refundu`
-            );
-          }
-          if (isChangingToCancelled) {
-            await logOrderChange(
-              tx,
-              id,
-              'stock',
-              'deducted',
-              'returned',
-              'stock_return',
-              `Zásoby vráceny při zrušení objednávky`
-            );
-          }
-
-          // Update order status
-          const updatedOrder = await tx.order.update({
-            where: { id },
-            data: updateData,
-            include: {
-              items: {
-                include: {
-                  sku: true,
-                },
-              },
-            },
-          });
-
-          // Update stock movement notes when marking as paid
-          // NOTE: Stock was already deducted at order creation, so we just update the note
-          if (isChangingToPaid) {
-            for (const item of updatedOrder.items) {
-              await tx.stockMovement.updateMany({
-                where: {
-                  refOrderId: id,
-                  skuId: item.skuId,
-                  note: { contains: 'Rezervace' },
-                },
-                data: {
-                  note: item.sku.saleMode === 'PIECE_BY_WEIGHT'
-                    ? `Prodáno (objednávka ${id.substring(0, 8)}) - ruční označení`
-                    : `Prodáno ${item.grams}g (objednávka ${id.substring(0, 8)}) - ruční označení`,
-                },
-              });
-            }
-          }
-
-          // Return stock when refunding, cancelling, or physically returning order
-          // NOTE: Stock is deducted at order creation, so we ALWAYS return on cancel/refund/return
-          if (isChangingToRefunded || isChangingToCancelled || isChangingToReturned) {
-            // Determine reason for stock return
-            const returnReason = isChangingToRefunded
-              ? 'Refund'
-              : isChangingToReturned
-                ? 'Vrácení zákazníkem'
-                : 'Zrušení';
-
-            for (const item of updatedOrder.items) {
-              if (item.sku.saleMode === 'PIECE_BY_WEIGHT') {
-                // Return piece to stock
-                await tx.sku.update({
-                  where: { id: item.skuId },
-                  data: {
-                    soldOut: false,
-                    inStock: true,
-                    inStockSince: new Date(),
-                  },
-                });
-
-                // Record stock movement
-                await tx.stockMovement.create({
-                  data: {
-                    skuId: item.skuId,
-                    type: 'IN',
-                    grams: item.grams,
-                    note: `${returnReason} (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
-                    refOrderId: id,
-                  },
-                });
-              } else if (item.sku.saleMode === 'BULK_G') {
-                // Return grams to available stock
-                const newAvailableGrams = (item.sku.availableGrams || 0) + item.grams;
-
-                // Update SKU availability
-                await tx.sku.update({
-                  where: { id: item.skuId },
-                  data: {
-                    availableGrams: newAvailableGrams,
-                    inStock: true,
-                    inStockSince: newAvailableGrams > 0 ? new Date() : item.sku.inStockSince,
-                  },
-                });
-
-                // Record stock movement
-                await tx.stockMovement.create({
-                  data: {
-                    skuId: item.skuId,
-                    type: 'IN',
-                    grams: item.grams,
-                    note: `${returnReason} ${item.grams}g (objednávka ${id.substring(0, 8)}) - vráceno na sklad`,
-                    refOrderId: id,
-                  },
-                });
-              }
-            }
-          }
-
-          // Send payment confirmation email if marked as paid
-          if (isChangingToPaid) {
-            try {
-              const { sendPaymentConfirmationEmail } = await import('@/lib/email');
-              await sendPaymentConfirmationEmail(updatedOrder.email, id, updatedOrder.total);
-            } catch (emailError) {
-              console.error('Failed to send payment confirmation email:', emailError);
-              // Don't fail the update if email fails
-            }
-
-            // Generate invoice automatically after successful payment
-            try {
-              const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');
-              const { sendInvoiceEmail } = await import('@/lib/email');
-
-              // Check if invoice already exists
-              const existingInvoice = await prisma.invoice.findUnique({
-                where: { orderId: id },
-              });
-
-              if (!existingInvoice) {
-                // Get last invoice number
-                const lastInvoice = await prisma.invoice.findFirst({
-                  orderBy: { invoiceNumber: 'desc' },
-                  select: { invoiceNumber: true },
-                });
-
-                const invoiceNumber = generateInvoiceNumber(lastInvoice?.invoiceNumber);
-
-                // Calculate VAT
-                const vatRate = 21.0;
-                const subtotal = updatedOrder.total / (1 + vatRate / 100);
-                const vatAmount = updatedOrder.total - subtotal;
-
-                // Create invoice
-                const invoice = await prisma.invoice.create({
-                  data: {
-                    invoiceNumber,
-                    orderId: id,
-
-                    supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Mùza Hair s.r.o.',
-                    supplierStreet: process.env.INVOICE_SUPPLIER_STREET,
-                    supplierCity: process.env.INVOICE_SUPPLIER_CITY,
-                    supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP,
-                    supplierCountry: 'CZ',
-                    supplierIco: process.env.INVOICE_SUPPLIER_ICO,
-                    supplierDic: process.env.INVOICE_SUPPLIER_DIC,
-                    supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'info@muzahair.cz',
-                    supplierPhone: process.env.INVOICE_SUPPLIER_PHONE || '+420 728 722 880',
-
-                    customerName: (updatedOrder as any).companyName || `${updatedOrder.firstName} ${updatedOrder.lastName}`,
-                    customerEmail: updatedOrder.email,
-                    customerPhone: updatedOrder.phone,
-                    customerStreet: (updatedOrder as any).billingStreet || updatedOrder.streetAddress,
-                    customerCity: (updatedOrder as any).billingCity || updatedOrder.city,
-                    customerZipCode: (updatedOrder as any).billingZipCode || updatedOrder.zipCode,
-                    customerCountry: (updatedOrder as any).billingCountry || updatedOrder.country,
-                    customerIco: (updatedOrder as any).ico,
-                    customerDic: (updatedOrder as any).dic,
-
-                    subtotal,
-                    vatRate,
-                    vatAmount,
-                    total: updatedOrder.total,
-
-                    paymentMethod: (updatedOrder as any).paymentMethod || 'manual',
-                    variableSymbol: invoiceNumber,
-                    bankAccount: process.env.INVOICE_BANK_ACCOUNT,
-                    iban: process.env.INVOICE_IBAN,
-                    swift: process.env.INVOICE_SWIFT,
-
-                    issueDate: new Date(),
-                    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-                    taxDate: new Date(),
-                    paidDate: new Date(),
-
-                    status: 'paid',
-                  },
-                });
-
-                // Generate PDF
-                const invoiceData = {
-                  invoiceNumber: invoice.invoiceNumber,
-                  issueDate: invoice.issueDate,
-                  dueDate: invoice.dueDate,
-                  taxDate: invoice.taxDate,
-                  orderId: invoice.orderId,
-                  supplierName: invoice.supplierName,
-                  supplierStreet: invoice.supplierStreet,
-                  supplierCity: invoice.supplierCity,
-                  supplierZipCode: invoice.supplierZipCode,
-                  supplierCountry: invoice.supplierCountry,
-                  supplierIco: invoice.supplierIco,
-                  supplierDic: invoice.supplierDic,
-                  supplierEmail: invoice.supplierEmail,
-                  supplierPhone: invoice.supplierPhone,
-                  customerName: invoice.customerName,
-                  customerEmail: invoice.customerEmail,
-                  customerPhone: invoice.customerPhone,
-                  customerStreet: invoice.customerStreet,
-                  customerCity: invoice.customerCity,
-                  customerZipCode: invoice.customerZipCode,
-                  customerCountry: invoice.customerCountry,
-                  customerIco: invoice.customerIco,
-                  customerDic: invoice.customerDic,
-                  items: updatedOrder.items.map((item) => ({
-                    name: (item.nameSnapshot && item.nameSnapshot !== 'undefined')
-                      ? item.nameSnapshot
-                      : buildSkuDisplayName({ name: item.sku?.name ?? null, sku: item.sku?.sku ?? item.skuId, customerCategory: (item.sku as any)?.customerCategory ?? null, shade: (item.sku as any)?.shade ?? null }),
-                    quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
-                    unitPrice: item.pricePerGram,
-                    total: item.lineTotal + (item.assemblyFeeTotal || 0),
-                  })),
-                  subtotal: invoice.subtotal,
-                  vatRate: invoice.vatRate,
-                  vatAmount: invoice.vatAmount,
-                  total: invoice.total,
-                  paymentMethod: invoice.paymentMethod,
-                  variableSymbol: invoice.variableSymbol,
-                  bankAccount: invoice.bankAccount,
-                  iban: invoice.iban,
-                  swift: invoice.swift,
-                };
-
-                const pdfBase64 = generateInvoicePDF(invoiceData);
-
-                // Update invoice with PDF status
-                await prisma.invoice.update({
-                  where: { id: invoice.id },
-                  data: { pdfGenerated: true },
-                });
-
-                // Send invoice email (async, don't wait)
-                sendInvoiceEmail(updatedOrder.email, invoiceNumber, pdfBase64).catch((err) => {
-                  console.error('Failed to send invoice email:', err);
-                });
-
-                console.log(`📄 Invoice ${invoiceNumber} generated and sent for order ${id}`);
-              } else {
-                console.log(`📄 Invoice already exists for order ${id}`);
-              }
-            } catch (invoiceError) {
-              console.error('Failed to generate invoice (non-critical):', invoiceError);
-              // Don't fail the update if invoice generation fails
-            }
-          }
-
-          // Send delivery confirmation email if marked as delivered
-          const isChangingToDelivered = body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered';
-          const isChangingToCompleted = body.orderStatus === 'completed' && currentOrder.orderStatus !== 'completed';
-          if (isChangingToDelivered || isChangingToCompleted) {
-            try {
-              const { sendDeliveryConfirmationEmail } = await import('@/lib/email');
-              await sendDeliveryConfirmationEmail(updatedOrder.email, id);
-            } catch (emailError) {
-              console.error('Failed to send delivery confirmation email:', emailError);
-              // Don't fail the update if email fails
-            }
-          }
-
-          // Send cancellation/return email if order is cancelled, refunded, or returned
-          if (isChangingToCancelled || isChangingToRefunded || isChangingToReturned) {
-            try {
-              const { sendOrderCancellationEmail } = await import('@/lib/email');
-              const reason = isChangingToRefunded
-                ? 'Vrácení platby'
-                : isChangingToReturned
-                  ? 'Přijetí vráceného zboží'
-                  : 'Zrušení objednávky';
-              await sendOrderCancellationEmail(updatedOrder.email, id, reason);
-            } catch (emailError) {
-              console.error('Failed to send cancellation email:', emailError);
-            }
-
-            // Cancel Fakturoid invoice if exists
-            if (currentOrder.fakturoidInvoiceId) {
-              try {
-                const { cancelInvoice } = await import('@/lib/fakturoid');
-                const result = await cancelInvoice(Number(currentOrder.fakturoidInvoiceId));
-                if (!result.success) {
-                  console.warn('Fakturoid cancel warning:', result.message);
-                }
-              } catch (fakturoidError) {
-                console.error('Fakturoid cancel error (non-blocking):', fakturoidError);
-              }
-            }
-          }
-
-          return updatedOrder;
-        })
-      : await (async () => {
-          // Log changes before update (non-transaction case)
-          const historyPromises = [];
-          
-          if (body.orderStatus !== undefined && body.orderStatus !== currentOrder.orderStatus) {
-            historyPromises.push(
-              logOrderChange(
-                prisma,
-                id,
-                'orderStatus',
-                currentOrder.orderStatus,
-                body.orderStatus,
-                'status_change',
-                `Status změněn z ${currentOrder.orderStatus} na ${body.orderStatus}`
-              )
-            );
-          }
-          if (body.paymentStatus !== undefined && body.paymentStatus !== currentOrder.paymentStatus) {
-            historyPromises.push(
-              logOrderChange(
-                prisma,
-                id,
-                'paymentStatus',
-                currentOrder.paymentStatus,
-                body.paymentStatus,
-                'status_change',
-                `Platba změněna z ${currentOrder.paymentStatus} na ${body.paymentStatus}`
-              )
-            );
-          }
-          if (body.deliveryStatus !== undefined && body.deliveryStatus !== currentOrder.deliveryStatus) {
-            historyPromises.push(
-              logOrderChange(
-                prisma,
-                id,
-                'deliveryStatus',
-                currentOrder.deliveryStatus,
-                body.deliveryStatus,
-                'status_change',
-                `Doručení změněno z ${currentOrder.deliveryStatus} na ${body.deliveryStatus}`
-              )
-            );
-          }
-          if (body.email !== undefined && body.email !== currentOrder.email) {
-            historyPromises.push(
-              logOrderChange(
-                prisma,
-                id,
-                'email',
-                currentOrder.email,
-                body.email,
-                'field_update',
-                `Email zákazníka změněn`
-              )
-            );
-          }
-          if (body.notesInternal !== undefined && body.notesInternal !== currentOrder.notesInternal) {
-            historyPromises.push(
-              logOrderChange(
-                prisma,
-                id,
-                'notesInternal',
-                currentOrder.notesInternal,
-                body.notesInternal,
-                'note_added',
-                `Interní poznámka ${currentOrder.notesInternal ? 'aktualizována' : 'přidána'}`
-              )
-            );
-          }
-          if (body.notesCustomer !== undefined && body.notesCustomer !== currentOrder.notesCustomer) {
-            historyPromises.push(
-              logOrderChange(
-                prisma,
-                id,
-                'notesCustomer',
-                currentOrder.notesCustomer,
-                body.notesCustomer,
-                'note_added',
-                `Poznámka pro zákazníka ${currentOrder.notesCustomer ? 'aktualizována' : 'přidána'}`
-              )
-            );
-          }
-
-          // Log all changes in parallel (don't fail if history table doesn't exist)
-          await Promise.allSettled(historyPromises);
-
-          // Update order
-          return await prisma.order.update({
-            where: { id },
-            data: updateData,
-            include: {
-              items: {
-                include: {
-                  sku: {
-                    select: {
-                      id: true,
-                      sku: true,
-                      name: true,
-                      shadeName: true,
-                      lengthCm: true,
-                    },
-                  },
-                },
-              },
-            },
-          });
-        })();
-
-    // Handle email notifications outside transaction for non-stock-changing updates
-    if (!isChangingToPaid && !isChangingToRefunded && !isChangingToCancelled) {
-      // Check for shipping status change - send shipping notification email
-      const isChangingToShipped = body.deliveryStatus === 'shipped' && currentOrder.deliveryStatus !== 'shipped';
-      if (isChangingToShipped) {
-        try {
-          const { sendShippingNotificationEmail } = await import('@/lib/email');
-          await sendShippingNotificationEmail(
-            order.email,
-            id,
-            (order as any).trackingNumber || undefined,
-            (order as any).carrier || undefined
-          );
-        } catch (emailError) {
-          console.error('Failed to send shipping notification email:', emailError);
         }
+      } catch (invoiceError) {
+        console.error('Failed to generate invoice (non-critical):', invoiceError);
+      }
+    }
+
+    // --- Delivery/completion emails ---
+    const isChangingToDelivered = body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered';
+    const isChangingToCompleted = body.orderStatus === 'completed' && currentOrder.orderStatus !== 'completed';
+    if (isChangingToDelivered || isChangingToCompleted) {
+      try {
+        const { sendDeliveryConfirmationEmail } = await import('@/lib/email');
+        await sendDeliveryConfirmationEmail(updatedOrder.email, id);
+      } catch (emailError) {
+        console.error('Failed to send delivery confirmation email:', emailError);
+      }
+    }
+
+    // --- Shipping notification email ---
+    const isChangingToShipped = body.deliveryStatus === 'shipped' && currentOrder.deliveryStatus !== 'shipped';
+    if (isChangingToShipped) {
+      try {
+        const { sendShippingNotificationEmail } = await import('@/lib/email');
+        await sendShippingNotificationEmail(
+          updatedOrder.email, id,
+          updatedOrder.trackingNumber || undefined,
+          updatedOrder.carrier || undefined
+        );
+      } catch (emailError) {
+        console.error('Failed to send shipping notification email:', emailError);
+      }
+    }
+
+    // --- Cancellation/refund/return emails and Fakturoid cancel ---
+    if (isChangingToCancelled || isChangingToRefunded || isChangingToReturned) {
+      try {
+        const { sendOrderCancellationEmail } = await import('@/lib/email');
+        const reason = isChangingToRefunded ? 'Vrácení platby' : isChangingToReturned ? 'Přijetí vráceného zboží' : 'Zrušení objednávky';
+        await sendOrderCancellationEmail(updatedOrder.email, id, reason);
+      } catch (emailError) {
+        console.error('Failed to send cancellation email:', emailError);
       }
 
-      // Check for delivery status change
-      const isChangingToDelivered = body.deliveryStatus === 'delivered' && currentOrder.deliveryStatus !== 'delivered';
-      const isChangingToCompleted = body.orderStatus === 'completed' && currentOrder.orderStatus !== 'completed';
-      if (isChangingToDelivered || isChangingToCompleted) {
+      if (currentOrder.fakturoidInvoiceId) {
         try {
-          const { sendDeliveryConfirmationEmail } = await import('@/lib/email');
-          await sendDeliveryConfirmationEmail(order.email, id);
-        } catch (emailError) {
-          console.error('Failed to send delivery confirmation email:', emailError);
-        }
-      }
-
-      // Check for cancellation
-      const isChangingToCancelledOutside = body.orderStatus === 'cancelled' && currentOrder.orderStatus !== 'cancelled';
-      const isChangingToRefundedOutside = body.paymentStatus === 'refunded' && currentOrder.paymentStatus !== 'refunded';
-      if (isChangingToCancelledOutside || isChangingToRefundedOutside) {
-        try {
-          const { sendOrderCancellationEmail } = await import('@/lib/email');
-          const reason = isChangingToRefundedOutside ? 'Vrácení platby' : 'Zrušení objednávky';
-          await sendOrderCancellationEmail(order.email, id, reason);
-        } catch (emailError) {
-          console.error('Failed to send cancellation email:', emailError);
+          const { cancelInvoice } = await import('@/lib/fakturoid');
+          const result = await cancelInvoice(Number(currentOrder.fakturoidInvoiceId));
+          if (!result.success) console.warn('Fakturoid cancel warning:', result.message);
+        } catch (fakturoidError) {
+          console.error('Fakturoid cancel error (non-blocking):', fakturoidError);
         }
       }
     }
 
-    // Transform order to include all admin-facing fields
     const transformedOrder = {
-      ...order,
-      orderStatus: (order as any).orderStatus || 'draft',
-      paymentStatus: (order as any).paymentStatus || 'unpaid',
-      deliveryStatus: (order as any).deliveryStatus || 'pending',
-      channel: (order as any).channel || 'web',
-      tags: (order as any).tags ? JSON.parse((order as any).tags) : [],
-      riskScore: (order as any).riskScore || 0,
-      notesInternal: (order as any).notesInternal,
-      notesCustomer: (order as any).notesCustomer,
-      lastStatusChangeAt: (order as any).lastStatusChangeAt,
+      ...updatedOrder,
+      orderStatus: updatedOrder.orderStatus || 'draft',
+      paymentStatus: updatedOrder.paymentStatus || 'unpaid',
+      deliveryStatus: updatedOrder.deliveryStatus || 'pending',
+      channel: updatedOrder.channel || 'web',
+      tags: updatedOrder.tags ? (typeof updatedOrder.tags === 'string' ? JSON.parse(updatedOrder.tags) : updatedOrder.tags) : [],
+      riskScore: updatedOrder.riskScore || 0,
+      items: orderItems.map((item: any) => ({ ...item, sku: item.skus || null })),
     };
 
     return NextResponse.json(transformedOrder, { status: 200 });
   } catch (error) {
     console.error('Error updating order:', error);
     return NextResponse.json(
-      {
-        error: 'Failed to update order',
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: 'Failed to update order', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
