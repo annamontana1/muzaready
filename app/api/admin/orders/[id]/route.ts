@@ -124,17 +124,10 @@ export async function GET(
 
     const supabase = getSupabaseAdminClient();
 
+    // Fetch order and invoices
     const { data: order, error } = await supabase
       .from('orders')
-      .select(`
-        *,
-        order_items(
-          id, orderId, skuId, saleMode, grams, pricePerGram, lineTotal,
-          nameSnapshot, ending, assemblyFeeCzk, assemblyFeeTotal, createdAt,
-          skus(id, sku, name, shade, shadeName, lengthCm, saleMode, customerCategory)
-        ),
-        invoices(id, invoiceNumber, status, createdAt, pdfGenerated)
-      `)
+      .select('*, invoices(id, invoiceNumber, status, createdAt, pdfGenerated)')
       .eq('id', id)
       .maybeSingle();
 
@@ -147,7 +140,15 @@ export async function GET(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    console.log('[orders/[id] GET] order_items:', JSON.stringify((order as any).order_items));
+    // Fetch order items separately with their SKUs
+    const { data: orderItems, error: itemsError } = await supabase
+      .from('order_items')
+      .select('id, orderId, skuId, saleMode, grams, pricePerGram, lineTotal, nameSnapshot, ending, assemblyFeeCzk, assemblyFeeTotal, createdAt, skus(id, sku, name, shade, shadeName, lengthCm, saleMode, customerCategory)')
+      .eq('orderId', id);
+
+    if (itemsError) {
+      console.error('Error fetching order items:', itemsError.message);
+    }
 
     const transformedOrder = {
       ...order,
@@ -157,7 +158,7 @@ export async function GET(
       channel: order.channel || 'web',
       tags: order.tags ? (typeof order.tags === 'string' ? JSON.parse(order.tags) : order.tags) : [],
       riskScore: order.riskScore || 0,
-      items: (order.order_items || []).map((item: any) => ({
+      items: (orderItems || []).map((item: any) => ({
         ...item,
         sku: item.skus || null,
       })),
