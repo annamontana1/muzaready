@@ -118,12 +118,13 @@ function EditableRow({ item, orderId, onSaved, onDeleted }: EditableRowProps) {
       <tr className="border-b border-gray-100 hover:bg-gray-50 group">
         <td className="px-4 py-3 text-sm text-gray-900">
           <div>{productName}{shadeLabel}</div>
+          {item.sku?.lengthCm && <div className="text-xs text-stone-500">Délka: {item.sku.lengthCm} cm</div>}
           {skuLabel && <div className="text-xs text-stone-400">{skuLabel}</div>}
           {item.ending && item.ending !== 'NONE' && (
             <div className="text-xs text-stone-500">Zakončení: {item.ending}</div>
           )}
         </td>
-        <td className="px-4 py-3 text-sm text-gray-600">{item.grams} g</td>
+        <td className="px-4 py-3 text-sm text-gray-600 font-medium">{item.grams} g</td>
         <td className="px-4 py-3 text-sm text-gray-900">{item.pricePerGram.toLocaleString('cs-CZ')} Kč/g</td>
         <td className="px-4 py-3 text-sm text-gray-900 font-medium text-right">
           {item.lineTotal.toLocaleString('cs-CZ')} Kč
@@ -312,12 +313,13 @@ export default function ItemsSection({ order, onRefresh }: ItemsSectionProps) {
                 <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm text-gray-900">
                     <div>{item.nameSnapshot || item.sku?.name || 'Neznámý produkt'}{item.sku?.shade ? ` · #${item.sku.shade}` : ''}</div>
+                    {item.sku?.lengthCm && <div className="text-xs text-stone-500">Délka: {item.sku.lengthCm} cm</div>}
                     {item.sku && <div className="text-xs text-stone-400">{item.sku.sku}</div>}
                     {item.ending && item.ending !== 'NONE' && (
                       <div className="text-xs text-stone-500">Zakončení: {item.ending}</div>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{item.grams} g</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 font-medium">{item.grams} g</td>
                   <td className="px-4 py-3 text-sm text-gray-900">{item.pricePerGram.toLocaleString('cs-CZ')} Kč/g</td>
                   <td className="px-4 py-3 text-sm text-gray-900 font-medium text-right">
                     {item.lineTotal.toLocaleString('cs-CZ')} Kč

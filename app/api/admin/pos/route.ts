@@ -118,6 +118,7 @@ export async function POST(request: NextRequest) {
     const email = customer?.email || 'prodejna@muzahair.cz';
 
     const supabase = getSupabaseAdminClient();
+    const now = new Date().toISOString();
 
     // --- Find or create matching SKUs ---
     const structureMap: Record<string, string> = {
@@ -145,6 +146,7 @@ export async function POST(request: NextRequest) {
         .eq('shade', String(item.shadeCode))
         .eq('structure', structureValue)
         .eq('customerCategory', custCat)
+        .eq('lengthCm', item.lengthCm)
         .maybeSingle();
 
       if (existingSku) {
@@ -163,9 +165,18 @@ export async function POST(request: NextRequest) {
           lengthCm: item.lengthCm,
           availableGrams: 0,
           pricePerGramCzk: item.pricePerGram,
+          inStock: false,
+          soldOut: true,
+          isListed: false,
+          createdAt: now,
+          updatedAt: now,
         });
         if (skuError) {
           console.error('SKU create error:', skuError.message);
+          return NextResponse.json(
+            { error: 'Chyba při vytváření SKU: ' + skuError.message },
+            { status: 500 }
+          );
         }
         itemSkuIds.push(newSkuId);
       }
@@ -173,7 +184,6 @@ export async function POST(request: NextRequest) {
 
     // --- Create order ---
     const orderId = randomUUID();
-    const now = new Date().toISOString();
     const isPaid = paymentMethod !== 'prevod';
 
     const { error: orderError } = await supabase.from('orders').insert({
