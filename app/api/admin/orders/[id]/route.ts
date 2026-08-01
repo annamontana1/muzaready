@@ -147,6 +147,8 @@ export async function GET(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
+    console.log('[orders/[id] GET] order_items:', JSON.stringify((order as any).order_items));
+
     const transformedOrder = {
       ...order,
       orderStatus: order.orderStatus || 'draft',
