@@ -272,6 +272,7 @@ export default function UnifiedNewSalePage() {
   const [productShade, setProductShade] = useState<string>('1');
   const [productLength, setProductLength] = useState<number>(50);
   const [productEnding, setProductEnding] = useState<Ending>('bez');
+  const [endingManualPricePerGram, setEndingManualPricePerGram] = useState<number>(0);
   const [productGrams, setProductGrams] = useState<number>(100);
 
   // Price check result
@@ -333,7 +334,7 @@ export default function UnifiedNewSalePage() {
       }
 
       const ppg = data.pricePerGramCzk;
-      const epg = getEndingPricePerGram(productEnding);
+      const epg = endingManualPricePerGram;
       setPriceCheck({
         pricePerGram: ppg,
         endingPrice: epg * productGrams,
@@ -344,7 +345,7 @@ export default function UnifiedNewSalePage() {
     } finally {
       setPriceLoading(false);
     }
-  }, [productCategory, productType, productLength, productEnding, productGrams]);
+  }, [productCategory, productType, productLength, productGrams, endingManualPricePerGram]);
 
   // ─── Reset shade when category/type changes ──────────────────
 
@@ -355,6 +356,7 @@ export default function UnifiedNewSalePage() {
     setPriceCheck(null);
     setPriceError(null);
     setManualPricePerGram(0);
+    setEndingManualPricePerGram(0);
   }
 
   function handleTypeChange(typ: ProductType) {
@@ -364,35 +366,34 @@ export default function UnifiedNewSalePage() {
     setPriceCheck(null);
     setPriceError(null);
     setManualPricePerGram(0);
+    setEndingManualPricePerGram(0);
   }
 
-  function applyManualPrice(ppg?: number, grams?: number, ending?: Ending) {
+  function applyManualPrice(ppg?: number, grams?: number, epg?: number) {
     const price = ppg ?? manualPricePerGram;
     const g = grams ?? productGrams;
-    const e = ending ?? productEnding;
+    const endingEpg = epg ?? endingManualPricePerGram;
     if (price <= 0) return;
-    const epg = getEndingPricePerGram(e);
     setPriceCheck({
       pricePerGram: price,
-      endingPrice: epg * g,
-      subtotal: Math.round((price + epg) * g),
+      endingPrice: endingEpg * g,
+      subtotal: Math.round((price + endingEpg) * g),
     });
     setPriceError(null);
   }
 
-  // Přepočítá cenu při změně gramáže/zakončení (zachová manuální cenu)
-  function recalcIfPriceKnown(newGrams?: number, newEnding?: Ending) {
+  // Přepočítá cenu při změně gramáže nebo ceny zakončení (zachová cenu vlasů)
+  function recalcIfPriceKnown(newGrams?: number, newEndingEpg?: number) {
     const g = newGrams ?? productGrams;
-    const e = newEnding ?? productEnding;
+    const epg = newEndingEpg ?? endingManualPricePerGram;
     if (priceCheck) {
-      const epg = getEndingPricePerGram(e);
       setPriceCheck({
         pricePerGram: priceCheck.pricePerGram,
         endingPrice: epg * g,
         subtotal: Math.round((priceCheck.pricePerGram + epg) * g),
       });
     } else if (manualPricePerGram > 0) {
-      applyManualPrice(manualPricePerGram, g, e);
+      applyManualPrice(manualPricePerGram, g, epg);
     }
   }
 
@@ -423,12 +424,14 @@ export default function UnifiedNewSalePage() {
       config,
       label: buildProductLabel(config),
       pricePerGram: priceCheck.pricePerGram,
-      endingPricePerGram: getEndingPricePerGram(productEnding),
+      endingPricePerGram: endingManualPricePerGram,
       subtotal: priceCheck.subtotal,
     };
 
     setCart((prev) => [...prev, newItem]);
     setPriceCheck(null);
+    setEndingManualPricePerGram(0);
+    setProductEnding('bez');
     showToast('Položka přidána do košíku', 'success');
   }
 
@@ -947,15 +950,22 @@ export default function UnifiedNewSalePage() {
 
         </div>
 
-        {/* Zakončení — visual pills */}
+        {/* Zakončení — visual pills + ruční cena */}
         <div className="mb-4">
           <label className={labelClass}>Zakončení</label>
-          <div className="flex flex-wrap gap-2 mt-1">
+          <div className="flex flex-wrap gap-2 mt-1 mb-3">
             {ENDING_OPTIONS.map((o) => (
               <button
                 key={o.value}
                 type="button"
-                onClick={() => { setProductEnding(o.value); recalcIfPriceKnown(undefined, o.value); }}
+                onClick={() => {
+                  setProductEnding(o.value);
+                  const newEpg = o.value === 'bez' ? 0 : endingManualPricePerGram;
+                  if (o.value === 'bez') {
+                    setEndingManualPricePerGram(0);
+                    recalcIfPriceKnown(undefined, 0);
+                  }
+                }}
                 className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
                   productEnding === o.value
                     ? 'border-[#722F37] bg-[#722F37]/5 text-[#722F37]'
@@ -963,14 +973,30 @@ export default function UnifiedNewSalePage() {
                 }`}
               >
                 {o.label.split(' (')[0]}
-                {o.pricePerGram > 0 && (
-                  <span className={`ml-1 text-xs ${productEnding === o.value ? 'text-[#722F37]/70' : 'text-stone-400'}`}>
-                    +{o.pricePerGram} Kč/g
-                  </span>
-                )}
               </button>
             ))}
           </div>
+
+          {/* Ruční cena zakončení — jen když není "bez" */}
+          {productEnding !== 'bez' && (
+            <div className="flex items-center gap-3">
+              <label className="text-sm text-stone-600 shrink-0">Cena zakončení:</label>
+              <input
+                type="number"
+                min={0}
+                step={0.5}
+                className="w-28 border border-stone-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/30 focus:border-[#722F37]"
+                value={endingManualPricePerGram || ''}
+                onChange={(e) => {
+                  const epg = Number(e.target.value) || 0;
+                  setEndingManualPricePerGram(epg);
+                  recalcIfPriceKnown(undefined, epg);
+                }}
+                placeholder="0"
+              />
+              <span className="text-sm text-stone-500">Kč/g</span>
+            </div>
+          )}
         </div>
 
         {/* Gramáž */}
