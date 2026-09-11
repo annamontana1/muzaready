@@ -29,7 +29,11 @@ interface PosBody {
     phone?: string;
     companyName?: string;
     ico?: string;
+    dic?: string;
     contactPerson?: string;
+    street?: string;
+    city?: string;
+    zipCode?: string;
   };
   items: PosItem[];
   discountPercent: number;
@@ -194,9 +198,9 @@ export async function POST(request: NextRequest) {
       phone: customer?.phone || null,
       companyName: customer?.companyName || null,
       ico: customer?.ico || null,
-      streetAddress: '',
-      city: 'Praha',
-      zipCode: '11000',
+      streetAddress: customer?.street || '',
+      city: customer?.city || 'Praha',
+      zipCode: customer?.zipCode || '11000',
       country: 'CZ',
       deliveryMethod: shipping?.carrier || 'osobni',
       orderStatus: isPaid ? 'paid' : 'pending',
@@ -305,12 +309,20 @@ export async function POST(request: NextRequest) {
           });
         }
 
+        // Use the actual customer email only — not the store fallback.
+        // Using the store email would find an existing contact and apply its name instead of the typed one.
+        const invoiceEmail = customer?.email || undefined;
+
         invoiceResult = await createInvoiceFromOrder({
           orderId,
           customerName: customer?.companyName || `${firstName} ${lastName}`.trim(),
-          customerEmail: email,
+          customerEmail: invoiceEmail,
           customerPhone: customer?.phone,
           customerIco: customer?.ico,
+          customerDic: customer?.dic,
+          customerStreet: customer?.street,
+          customerCity: customer?.city,
+          customerZip: customer?.zipCode,
           items: invoiceLines,
           shippingPrice: 0,
           paymentMethod: paymentMethodMap[paymentMethod] || 'cash',

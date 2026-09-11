@@ -474,6 +474,10 @@ export default function UnifiedNewSalePage() {
                 lastName: customer.lastName,
                 email: customer.email,
                 phone: customer.phone,
+                ico: customer.ico || undefined,
+                street: customer.street || undefined,
+                city: customer.city || undefined,
+                zipCode: customer.zipCode || undefined,
               }
             : {
                 companyName: customer.companyName,
@@ -669,36 +673,89 @@ export default function UnifiedNewSalePage() {
 
         {/* New customer fields */}
         {customerType === 'new' && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className={labelClass}>Jméno</label>
-              <input
-                className={inputClass}
-                value={customer.firstName}
-                onChange={(e) => setCustomer((p) => ({ ...p, firstName: e.target.value }))}
-                placeholder="Jméno a příjmení"
-              />
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className={labelClass}>Celé jméno <span className="text-red-500">*</span></label>
+                <input
+                  className={inputClass}
+                  value={customer.firstName}
+                  onChange={(e) => setCustomer((p) => ({ ...p, firstName: e.target.value }))}
+                  placeholder="Jméno a příjmení"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>E-mail</label>
+                <input
+                  type="email"
+                  className={inputClass}
+                  value={customer.email}
+                  onChange={(e) => setCustomer((p) => ({ ...p, email: e.target.value }))}
+                  placeholder="email@example.cz"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Telefon</label>
+                <input
+                  type="tel"
+                  className={inputClass}
+                  value={customer.phone}
+                  onChange={(e) => setCustomer((p) => ({ ...p, phone: e.target.value }))}
+                  placeholder="+420..."
+                />
+              </div>
+              <div>
+                <label className={labelClass}>IČO <span className="text-stone-400 font-normal">(OSVČ – volitelné)</span></label>
+                <input
+                  className={inputClass}
+                  value={customer.ico}
+                  onChange={(e) => setCustomer((p) => ({ ...p, ico: e.target.value.replace(/\D/g, '').slice(0, 8) }))}
+                  placeholder="12345678"
+                  maxLength={8}
+                  inputMode="numeric"
+                />
+              </div>
             </div>
-            <div>
-              <label className={labelClass}>E-mail</label>
-              <input
-                type="email"
-                className={inputClass}
-                value={customer.email}
-                onChange={(e) => setCustomer((p) => ({ ...p, email: e.target.value }))}
-                placeholder="email@example.cz"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Telefon</label>
-              <input
-                type="tel"
-                className={inputClass}
-                value={customer.phone}
-                onChange={(e) => setCustomer((p) => ({ ...p, phone: e.target.value }))}
-                placeholder="+420..."
-              />
-            </div>
+
+            {/* Address — shown for postal shipping (Instagram) or Fakturoid invoice */}
+            {(channel === 'instagram' || invoiceType === 'fakturoid') && (
+              <div className="border-t border-stone-100 pt-4">
+                <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-3">
+                  {channel === 'instagram' ? 'Doručovací adresa (zásilka)' : 'Adresa pro fakturu'}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="sm:col-span-3">
+                    <label className={labelClass}>Ulice a číslo popisné</label>
+                    <input
+                      className={inputClass}
+                      value={customer.street}
+                      onChange={(e) => setCustomer((p) => ({ ...p, street: e.target.value }))}
+                      placeholder="Např. Šrámkova 430/12"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Město</label>
+                    <input
+                      className={inputClass}
+                      value={customer.city}
+                      onChange={(e) => setCustomer((p) => ({ ...p, city: e.target.value }))}
+                      placeholder="Praha"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>PSČ</label>
+                    <input
+                      className={inputClass}
+                      value={customer.zipCode}
+                      onChange={(e) => setCustomer((p) => ({ ...p, zipCode: e.target.value }))}
+                      placeholder="11000"
+                      inputMode="numeric"
+                      maxLength={5}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -888,18 +945,31 @@ export default function UnifiedNewSalePage() {
             </select>
           </div>
 
-          {/* Zakončení */}
-          <div>
-            <label className={labelClass}>Zakončení</label>
-            <select
-              className={selectClass}
-              value={productEnding}
-              onChange={(e) => { const v = e.target.value as Ending; setProductEnding(v); recalcIfPriceKnown(undefined, v); }}
-            >
-              {ENDING_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+        </div>
+
+        {/* Zakončení — visual pills */}
+        <div className="mb-4">
+          <label className={labelClass}>Zakončení</label>
+          <div className="flex flex-wrap gap-2 mt-1">
+            {ENDING_OPTIONS.map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                onClick={() => { setProductEnding(o.value); recalcIfPriceKnown(undefined, o.value); }}
+                className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
+                  productEnding === o.value
+                    ? 'border-[#722F37] bg-[#722F37]/5 text-[#722F37]'
+                    : 'border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50'
+                }`}
+              >
+                {o.label.split(' (')[0]}
+                {o.pricePerGram > 0 && (
+                  <span className={`ml-1 text-xs ${productEnding === o.value ? 'text-[#722F37]/70' : 'text-stone-400'}`}>
+                    +{o.pricePerGram} Kč/g
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
