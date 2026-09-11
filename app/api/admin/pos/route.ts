@@ -198,6 +198,7 @@ export async function POST(request: NextRequest) {
       phone: customer?.phone || null,
       companyName: customer?.companyName || null,
       ico: customer?.ico || null,
+      dic: customer?.dic || null,
       streetAddress: customer?.street || '',
       city: customer?.city || 'Praha',
       zipCode: customer?.zipCode || '11000',
