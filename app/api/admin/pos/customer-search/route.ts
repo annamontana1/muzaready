@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { getSupabaseAdminClient } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/**
- * GET /api/admin/pos/customer-search?q=...
- *
- * Rychlé vyhledávání zákazníků pro POS formulář.
- * Prohledává Users (registrovaní) i Orders (host zákazníci).
- * Vrací max. 8 výsledků.
- */
+const STORE_EMAIL = 'prodejna@muzahair.cz';
+
 export async function GET(request: NextRequest) {
   const authError = await requireAdmin(request);
   if (authError) return authError;
@@ -22,91 +17,60 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 1. Registrovaní uživatelé
-    const users = await prisma.user.findMany({
-      where: {
-        OR: [
-          { email: { contains: q, mode: 'insensitive' } },
-          { firstName: { contains: q, mode: 'insensitive' } },
-          { lastName: { contains: q, mode: 'insensitive' } },
-          { phone: { contains: q, mode: 'insensitive' } },
-          { companyName: { contains: q, mode: 'insensitive' } },
-        ],
-      },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        phone: true,
-        companyName: true,
-        taxId: true,
-        isWholesale: true,
-      },
-      take: 6,
-    });
+    const supabase = getSupabaseAdminClient();
 
-    const registeredEmails = new Set(users.map((u) => u.email.toLowerCase()));
+    // Search orders — match name, email, phone, company, ICO
+    // Use ilike for case-insensitive partial match
+    const { data: orders } = await supabase
+      .from('orders')
+      .select('email, firstName, lastName, phone, companyName, ico, dic, streetAddress, city, zipCode, createdAt')
+      .neq('email', STORE_EMAIL)
+      .or(
+        `email.ilike.%${q}%,firstName.ilike.%${q}%,lastName.ilike.%${q}%,phone.ilike.%${q}%,companyName.ilike.%${q}%,ico.ilike.%${q}%`
+      )
+      .order('createdAt', { ascending: false })
+      .limit(40);
 
-    // 2. Host zákazníci z objednávek (email/jméno/firma/IČO)
-    const guestOrders = await prisma.order.findMany({
-      where: {
-        NOT: { email: { in: Array.from(registeredEmails) } },
-        OR: [
-          { email: { contains: q, mode: 'insensitive' } },
-          { firstName: { contains: q, mode: 'insensitive' } },
-          { lastName: { contains: q, mode: 'insensitive' } },
-          { phone: { contains: q, mode: 'insensitive' } },
-          { companyName: { contains: q, mode: 'insensitive' } },
-          { ico: { contains: q, mode: 'insensitive' } },
-        ],
-      },
-      select: {
-        email: true,
-        firstName: true,
-        lastName: true,
-        phone: true,
-        companyName: true,
-        ico: true,
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
-    });
-
-    // Deduplikace hostů podle emailu
-    const guestMap = new Map<string, typeof guestOrders[0]>();
-    for (const o of guestOrders) {
-      if (!guestMap.has(o.email.toLowerCase())) {
-        guestMap.set(o.email.toLowerCase(), o);
-      }
+    if (!orders || orders.length === 0) {
+      return NextResponse.json({ customers: [] });
     }
-    const uniqueGuests = Array.from(guestMap.values()).slice(0, 6);
 
-    // 3. Sloučení
-    const result = [
-      ...users.map((u) => ({
-        source: 'registered' as const,
-        email: u.email,
-        firstName: u.firstName,
-        lastName: u.lastName,
-        phone: u.phone || '',
-        companyName: u.companyName || '',
-        ico: u.taxId || '',
-        isB2B: u.isWholesale || !!u.companyName,
-      })),
-      ...uniqueGuests
-        .filter((g) => !registeredEmails.has(g.email.toLowerCase()))
-        .map((g) => ({
-          source: 'order' as const,
-          email: g.email,
-          firstName: g.firstName,
-          lastName: g.lastName,
-          phone: g.phone || '',
-          companyName: g.companyName || '',
-          ico: g.ico || '',
-          isB2B: !!g.companyName || !!g.ico,
-        })),
-    ].slice(0, 8);
+    // Deduplicate: prefer the most recent record per email.
+    // If no email (or store email), fall back to phone dedup.
+    const seenEmails = new Set<string>();
+    const seenPhones = new Set<string>();
+    const unique: typeof orders = [];
+
+    for (const o of orders) {
+      const emailKey = o.email?.toLowerCase();
+      const phoneKey = o.phone?.replace(/\s/g, '');
+
+      if (emailKey && emailKey !== STORE_EMAIL) {
+        if (seenEmails.has(emailKey)) continue;
+        seenEmails.add(emailKey);
+      } else if (phoneKey) {
+        if (seenPhones.has(phoneKey)) continue;
+        seenPhones.add(phoneKey);
+      }
+
+      unique.push(o);
+      if (unique.length >= 8) break;
+    }
+
+    const result = unique.map((o) => ({
+      source: 'order' as const,
+      email: o.email === STORE_EMAIL ? '' : o.email,
+      firstName: o.firstName,
+      lastName: o.lastName,
+      phone: o.phone || '',
+      companyName: o.companyName || '',
+      ico: o.ico || '',
+      dic: o.dic || '',
+      street: o.streetAddress || '',
+      city: o.city || '',
+      zipCode: o.zipCode || '',
+      isB2B: !!(o.companyName || o.ico),
+    }));
 
     return NextResponse.json({ customers: result });
   } catch (error: any) {

@@ -62,6 +62,10 @@ interface CustomerSuggestion {
   phone: string;
   companyName: string;
   ico: string;
+  dic?: string;
+  street?: string;
+  city?: string;
+  zipCode?: string;
   isB2B: boolean;
 }
 
@@ -253,11 +257,11 @@ export default function UnifiedNewSalePage() {
       phone: s.phone,
       companyName: s.companyName,
       ico: s.ico,
-      dic: '',
+      dic: s.dic || '',
       contactPerson: s.companyName ? s.firstName + ' ' + s.lastName : '',
-      street: '',
-      city: '',
-      zipCode: '',
+      street: s.street || '',
+      city: s.city || '',
+      zipCode: s.zipCode || '',
     });
     if (s.isB2B) setCustomerType('b2b');
     else setCustomerType('new');
