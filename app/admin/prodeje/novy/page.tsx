@@ -10,7 +10,8 @@ type Channel = 'prodejna' | 'instagram' | 'eshop';
 type CustomerType = 'anonymous' | 'new' | 'b2b';
 type PaymentMethod = 'hotovost' | 'karta' | 'prevod' | 'gopay';
 
-type Category = 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades';
+type Category = 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades' | 'keratin';
+type KeratinColor = 'cerny' | 'hnedy' | 'tmave_hnedy' | 'pruhledny';
 type ProductType = 'barvene' | 'nebarvene' | 'nebarvene_svetle';
 type Structure = 'rovne' | 'vlnite' | 'mirne_vlnite' | 'kudrnate';
 type Ending = 'bez' | 'keratin' | 'mikrokeratin' | 'pasky_keratinu' | 'weft' | 'tapes';
@@ -27,6 +28,7 @@ interface ProductConfig {
 
 interface CartItem {
   id: string;
+  kind?: 'vlasy' | 'keratin';
   config: ProductConfig;
   label: string;
   pricePerGram: number;
@@ -102,6 +104,13 @@ const ENDING_OPTIONS: { value: Ending; label: string; pricePerGram: number }[] =
 
 const LENGTH_OPTIONS = Array.from({ length: 14 }, (_, i) => 30 + i * 5); // 30-95
 
+const KERATIN_COLORS: { value: KeratinColor; label: string }[] = [
+  { value: 'cerny', label: 'Černý' },
+  { value: 'hnedy', label: 'Hnědý' },
+  { value: 'tmave_hnedy', label: 'Tmavě hnědý' },
+  { value: 'pruhledny', label: 'Průhledný' },
+];
+
 const SHIPPING_OPTIONS: { carrier: string; label: string; price: number }[] = [
   { carrier: 'zasilkovna', label: 'Zásilkovna', price: 89 },
   { carrier: 'dpd', label: 'DPD', price: 68 },
@@ -142,12 +151,15 @@ function getEndingPricePerGram(ending: Ending): number {
 }
 
 function buildProductLabel(config: ProductConfig): string {
+  if (config.category === 'keratin') {
+    const colorLabel = KERATIN_COLORS.find((c) => c.value === config.shadeCode)?.label ?? config.shadeCode;
+    return `Italský keratin – ${colorLabel}`;
+  }
   const cat = CATEGORY_OPTIONS.find((c) => c.value === config.category)?.label ?? '';
   const typ = TYPE_OPTIONS.find((t) => t.value === config.productType)?.label ?? '';
   const str = STRUCTURE_OPTIONS.find((s) => s.value === config.structure)?.label ?? '';
   const end = ENDING_OPTIONS.find((e) => e.value === config.ending)?.label?.split(' (')[0] ?? '';
   const shade = config.productType === 'nebarvene' ? '' : ` #${config.shadeCode}`;
-  // nebarvene_svetle zobrazíme jako "Nebarvené př." v labelu
   return `${cat} ${typ} ${str}${shade} ${config.lengthCm}cm${config.ending !== 'bez' ? ' / ' + end : ''}`;
 }
 
@@ -279,6 +291,11 @@ export default function UnifiedNewSalePage() {
   const [endingManualPricePerGram, setEndingManualPricePerGram] = useState<number>(0);
   const [productGrams, setProductGrams] = useState<number>(100);
 
+  // Italský keratin
+  const [productKind, setProductKind] = useState<'vlasy' | 'keratin'>('vlasy');
+  const [keratinColor, setKeratinColor] = useState<KeratinColor>('cerny');
+  const [keratinPricePerGram, setKeratinPricePerGram] = useState<number>(0);
+
   // Price check result
   const [priceCheck, setPriceCheck] = useState<{ pricePerGram: number; endingPrice: number; subtotal: number } | null>(null);
   const [priceLoading, setPriceLoading] = useState(false);
@@ -404,6 +421,40 @@ export default function UnifiedNewSalePage() {
   // ─── Add to Cart ─────────────────────────────────────────────
 
   function addToCart() {
+    // Keratin — simplified flow, always manual price
+    if (productKind === 'keratin') {
+      if (keratinPricePerGram <= 0) {
+        showToast('Zadejte cenu za gram', 'error');
+        return;
+      }
+      if (productGrams < 1) {
+        showToast('Zadejte gramáž minimálně 1g', 'error');
+        return;
+      }
+      const config: ProductConfig = {
+        category: 'keratin',
+        productType: 'barvene',
+        structure: 'rovne',
+        shadeCode: keratinColor,
+        lengthCm: 0,
+        ending: 'bez',
+        grams: productGrams,
+      };
+      const newItem: CartItem = {
+        id: crypto.randomUUID(),
+        kind: 'keratin',
+        config,
+        label: buildProductLabel(config),
+        pricePerGram: keratinPricePerGram,
+        endingPricePerGram: 0,
+        subtotal: Math.round(keratinPricePerGram * productGrams),
+      };
+      setCart((prev) => [...prev, newItem]);
+      setKeratinPricePerGram(0);
+      showToast('Položka přidána do košíku', 'success');
+      return;
+    }
+
     if (!priceCheck) {
       showToast('Nejprve zkontrolujte cenu', 'error');
       return;
@@ -879,6 +930,94 @@ export default function UnifiedNewSalePage() {
       <div className={sectionClass}>
         <h2 className="text-lg font-semibold text-stone-800 mb-4">Produkty</h2>
 
+        {/* Druh produktu */}
+        <div className="flex gap-3 mb-5">
+          {([
+            { value: 'vlasy' as const, label: 'Vlasy' },
+            { value: 'keratin' as const, label: 'Italský keratin' },
+          ]).map((k) => (
+            <button
+              key={k.value}
+              type="button"
+              onClick={() => { setProductKind(k.value); setPriceCheck(null); setPriceError(null); }}
+              className={`px-4 py-2 rounded-lg border-2 font-medium text-sm transition-all ${
+                productKind === k.value
+                  ? 'border-[#722F37] bg-[#722F37]/5 text-[#722F37]'
+                  : 'border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50'
+              }`}
+            >
+              {k.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Italský keratin form ─────────────────────────────── */}
+        {productKind === 'keratin' && (
+          <div className="space-y-4">
+            <div>
+              <label className={labelClass}>Barva</label>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {KERATIN_COLORS.map((c) => (
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => setKeratinColor(c.value)}
+                    className={`px-4 py-2 rounded-lg border-2 font-medium text-sm transition-all ${
+                      keratinColor === c.value
+                        ? 'border-[#722F37] bg-[#722F37]/5 text-[#722F37]'
+                        : 'border-stone-200 text-stone-600 hover:border-stone-300 hover:bg-stone-50'
+                    }`}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-end gap-4">
+              <div className="w-40">
+                <label className={labelClass}>Gramáž (g)</label>
+                <input
+                  type="number"
+                  min={1}
+                  step={1}
+                  className={inputClass}
+                  value={productGrams}
+                  onChange={(e) => setProductGrams(Math.max(1, Number(e.target.value)))}
+                />
+              </div>
+              <div className="w-44">
+                <label className={labelClass}>Cena (Kč/g)</label>
+                <input
+                  type="number"
+                  min={0}
+                  step={0.5}
+                  className={inputClass}
+                  value={keratinPricePerGram || ''}
+                  onChange={(e) => setKeratinPricePerGram(Number(e.target.value) || 0)}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            {keratinPricePerGram > 0 && productGrams >= 1 && (
+              <div className="bg-stone-50 border border-stone-200 rounded-lg px-4 py-3 text-sm flex justify-between">
+                <span className="text-stone-700 font-semibold">Mezisoučet:</span>
+                <span className="font-bold text-[#722F37]">{formatPrice(Math.round(keratinPricePerGram * productGrams))}</span>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={addToCart}
+              disabled={keratinPricePerGram <= 0}
+              className={btnPrimary}
+            >
+              + Přidat položku
+            </button>
+          </div>
+        )}
+
+        {/* ── Vlasy form ───────────────────────────────────────── */}
+        {productKind === 'vlasy' && (
+        <>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
           {/* Kategorie */}
           <div>
@@ -1098,6 +1237,8 @@ export default function UnifiedNewSalePage() {
         >
           + Přidat položku
         </button>
+        </>
+        )}
       </div>
 
       {/* ── 4. KOŠÍK ────────────────────────────────────────────── */}

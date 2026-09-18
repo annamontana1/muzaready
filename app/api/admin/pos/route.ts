@@ -8,11 +8,11 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 interface PosItem {
-  category: string;    // 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades'
-  shadeCode: string;
-  structure: string;
-  lengthCm: number;
-  ending: string;
+  category: string;    // 'standard' | 'luxe' | 'platinum_edition' | 'baby_shades' | 'keratin'
+  shadeCode?: string;
+  structure?: string;
+  lengthCm?: number;
+  ending?: string;
   grams: number;
   pricePerGram: number;
   endingPricePerGram: number;
@@ -86,7 +86,16 @@ export async function POST(request: NextRequest) {
         baby_shades: 'Baby Shades',
       };
 
-      const name = `${tierNames[item.category] || item.category} – #${item.shadeCode} ${item.structure} ${item.lengthCm}cm`;
+      const keratinColorNames: Record<string, string> = {
+        cerny: 'Černý',
+        hnedy: 'Hnědý',
+        tmave_hnedy: 'Tmavě hnědý',
+        pruhledny: 'Průhledný',
+      };
+
+      const name = item.category === 'keratin'
+        ? `Italský keratin – ${keratinColorNames[item.productType] || keratinColorNames[item.shadeCode ?? ''] || item.shadeCode}`
+        : `${tierNames[item.category] || item.category} – #${item.shadeCode} ${item.structure} ${item.lengthCm}cm`;
 
       subtotal += lineTotal;
       processedItems.push({
@@ -97,7 +106,7 @@ export async function POST(request: NextRequest) {
         lineTotal,
         endingTotal: Math.round(endingCost),
         ending: item.ending || 'Bez zakončení',
-        lengthCm: item.lengthCm,
+        lengthCm: item.lengthCm ?? 0,
       });
     }
 
@@ -139,10 +148,52 @@ export async function POST(request: NextRequest) {
       baby_shades: 'BABY_SHADES',
     };
 
+    const keratinColorNames: Record<string, string> = {
+      cerny: 'Černý',
+      hnedy: 'Hnědý',
+      tmave_hnedy: 'Tmavě hnědý',
+      pruhledny: 'Průhledný',
+    };
+
     const itemSkuIds: string[] = [];
     for (const item of items) {
+      // Keratin items get a dedicated SKU per colour — no length/structure
+      if (item.category === 'keratin') {
+        const colorKey = item.productType || item.shadeCode || 'cerny';
+        const { data: existingKeratin } = await supabase
+          .from('skus')
+          .select('id')
+          .ilike('sku', `KERATIN-${colorKey}-%`)
+          .maybeSingle();
+
+        if (existingKeratin) {
+          itemSkuIds.push(existingKeratin.id);
+        } else {
+          const newSkuId = randomUUID();
+          await supabase.from('skus').insert({
+            id: newSkuId,
+            sku: `KERATIN-${colorKey}-${Date.now()}`,
+            shade: colorKey,
+            shadeName: `Italský keratin – ${keratinColorNames[colorKey] || colorKey}`,
+            structure: 'STRAIGHT',
+            customerCategory: 'STANDARD',
+            saleMode: 'BULK_G',
+            lengthCm: 0,
+            availableGrams: 0,
+            pricePerGramCzk: item.pricePerGram,
+            inStock: false,
+            soldOut: true,
+            isListed: false,
+            createdAt: now,
+            updatedAt: now,
+          });
+          itemSkuIds.push(newSkuId);
+        }
+        continue;
+      }
+
       const custCat = customerCategoryMap[item.category] || 'STANDARD';
-      const structureValue = structureMap[item.structure] || item.structure;
+      const structureValue = structureMap[item.structure ?? 'rovne'] || item.structure;
 
       const { data: existingSku } = await supabase
         .from('skus')
@@ -150,7 +201,7 @@ export async function POST(request: NextRequest) {
         .eq('shade', String(item.shadeCode))
         .eq('structure', structureValue)
         .eq('customerCategory', custCat)
-        .eq('lengthCm', item.lengthCm)
+        .eq('lengthCm', item.lengthCm ?? 0)
         .maybeSingle();
 
       if (existingSku) {
@@ -161,12 +212,12 @@ export async function POST(request: NextRequest) {
         const { error: skuError } = await supabase.from('skus').insert({
           id: newSkuId,
           sku: skuCode,
-          shade: String(item.shadeCode),
+          shade: String(item.shadeCode ?? ''),
           shadeName: `Odstín #${item.shadeCode}`,
           structure: structureValue,
           customerCategory: custCat,
           saleMode: 'BULK_G',
-          lengthCm: item.lengthCm,
+          lengthCm: item.lengthCm ?? 0,
           availableGrams: 0,
           pricePerGramCzk: item.pricePerGram,
           inStock: false,
