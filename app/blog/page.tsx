@@ -1,20 +1,43 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-articles';
+import { BreadcrumbSchema, ItemListSchema, SpeakableSchema } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Blog a Magazín | Mùza Hair Praha - Tipy a průvodce vlasovými prodlouženími',
-  description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality. Experti z Mùza Hair sdílejí know-how.',
+  title: 'Blog & Magazín o prodloužení vlasů | Mùza Hair Praha',
+  description: 'Odborné průvodce, tipy a rady o prodlužování vlasů od českých expertů. Péče, výběr kvality, metody aplikace. Mùza Hair Praha – 8 let zkušeností.',
   openGraph: {
-    title: 'Blog a Magazín | Mùza Hair Praha',
-    description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality.',
+    title: 'Blog & Magazín | Mùza Hair Praha',
+    description: 'Odborné průvodce a tipy o prodlužování vlasů od českých expertů.',
     type: 'website',
-    url: 'https://muza-hair-shop.vercel.app/blog',
+    url: 'https://muzahair.cz/blog',
+  },
+  alternates: {
+    canonical: 'https://muzahair.cz/blog',
   },
 };
 
 export default function BlogPage() {
   return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Domů', url: 'https://muzahair.cz' },
+        { name: 'Blog', url: 'https://muzahair.cz/blog' },
+      ]} />
+      <ItemListSchema
+        name="Blog – Mùza Hair | Průvodce prodloužením vlasů"
+        description="Odborné články a průvodce o prodlužování vlasů od českých expertů."
+        url="/blog"
+        items={blogArticles.map((a) => ({
+          name: a.title,
+          url: `/blog/${a.slug}`,
+          description: a.excerpt,
+        }))}
+      />
+      <SpeakableSchema
+        url="/blog"
+        cssSelector={['h1', '.blog-description']}
+      />
     <div className="py-12 bg-ivory min-h-screen">
       <div className="container mx-auto px-4">
         {/* Header */}
@@ -22,7 +45,7 @@ export default function BlogPage() {
           <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
             Blog & Magazín
           </h1>
-          <p className="text-gray-700 max-w-2xl mx-auto">
+          <p className="blog-description text-gray-700 max-w-2xl mx-auto">
             Tipy, průvodce a expertní rady o prodlužování vlasů, péči a výběru správné kvality.
             Vše od profesionálů z Mùza Hair.
           </p>
@@ -96,5 +119,6 @@ export default function BlogPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

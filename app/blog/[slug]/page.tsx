@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { blogArticles, getArticleBySlug } from '@/lib/blog-articles';
-import { BreadcrumbSchema } from '@/components/StructuredData';
+import { BreadcrumbSchema, FAQSchema, SpeakableSchema } from '@/components/StructuredData';
 
 interface BlogArticlePageProps {
   params: {
@@ -28,16 +28,27 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       title: article.title,
       description: article.excerpt,
       type: 'article',
-      url: `https://muza-hair-shop.vercel.app/blog/${params.slug}`,
+      url: `https://muzahair.cz/blog/${params.slug}`,
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       authors: [article.author],
       tags: article.tags,
+      images: [
+        {
+          url: article.imageUrl.startsWith('http') ? article.imageUrl : `https://muzahair.cz${article.imageUrl}`,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt,
+    },
+    alternates: {
+      canonical: `https://muzahair.cz/blog/${params.slug}`,
     },
   };
 }
@@ -56,39 +67,52 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
     notFound();
   }
 
-  // Article JSON-LD schema
+  const BASE_URL = 'https://muzahair.cz';
+
+  // Article JSON-LD schema – AEO: typ BlogPosting signalizuje AI vyhledávačům,
+  // že jde o odborný obsah s autoritou (E-E-A-T).
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: article.title,
     description: article.excerpt,
-    image: `https://muza-hair-shop.vercel.app${article.imageUrl}`,
+    image: article.imageUrl.startsWith('http') ? article.imageUrl : `${BASE_URL}${article.imageUrl}`,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
     author: {
       '@type': 'Organization',
       name: article.author,
+      url: BASE_URL,
     },
     publisher: {
       '@type': 'Organization',
       name: 'Mùza Hair',
+      url: BASE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://muza-hair-shop.vercel.app/logo.png',
+        url: `${BASE_URL}/logo/muza-hair-logo.png`,
+        width: 300,
+        height: 100,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://muza-hair-shop.vercel.app/blog/${params.slug}`,
+      '@id': `${BASE_URL}/blog/${params.slug}`,
     },
     keywords: article.tags.join(', '),
+    articleSection: article.category,
+    inLanguage: 'cs-CZ',
+    ...(article.estimatedWordCount && { wordCount: article.estimatedWordCount }),
+    about: {
+      '@type': 'Thing',
+      name: 'Prodloužení vlasů',
+    },
   };
 
-  // Breadcrumb data
   const breadcrumbItems = [
-    { name: 'Domů', url: 'https://muza-hair-shop.vercel.app' },
-    { name: 'Blog', url: 'https://muza-hair-shop.vercel.app/blog' },
-    { name: article.title, url: `https://muza-hair-shop.vercel.app/blog/${params.slug}` },
+    { name: 'Domů', url: `${BASE_URL}` },
+    { name: 'Blog', url: `${BASE_URL}/blog` },
+    { name: article.title, url: `${BASE_URL}/blog/${params.slug}` },
   ];
 
   return (
@@ -99,6 +123,13 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <BreadcrumbSchema items={breadcrumbItems} />
+      {article.faqItems && article.faqItems.length > 0 && (
+        <FAQSchema items={article.faqItems} />
+      )}
+      <SpeakableSchema
+        url={`/blog/${params.slug}`}
+        cssSelector={['h1', '.article-excerpt', '.article-summary']}
+      />
 
       <article className="py-12 bg-white">
         <div className="container mx-auto px-4 max-w-4xl">
@@ -135,8 +166,8 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
               {article.title}
             </h1>
 
-            {/* Excerpt */}
-            <p className="text-xl text-gray-700 mb-6">{article.excerpt}</p>
+            {/* Excerpt – speakable: AI asistenti čtou tuto část jako shrnutí */}
+            <p className="article-excerpt text-xl text-gray-700 mb-6">{article.excerpt}</p>
 
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 pb-6 border-b border-gray-200">

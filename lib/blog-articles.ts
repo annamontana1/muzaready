@@ -3,6 +3,11 @@
  * SEO-optimized content for hair extensions blog
  */
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export interface BlogArticle {
   slug: string;
   title: string;
@@ -15,6 +20,9 @@ export interface BlogArticle {
   tags: string[];
   imageUrl: string;
   readTime: number; // minutes
+  faqItems?: FAQItem[];       // AEO: FAQ schema pro AI vyhledávače
+  estimatedWordCount?: number; // AEO: signál E-E-A-T pro délku obsahu
+  summary?: string;            // AEO: shrnutí pro speakable / AI snippety
 }
 
 export const blogArticles: BlogArticle[] = [
@@ -376,6 +384,190 @@ Všechny tři kategorie máme skladem ve všech odstínech a délkách!
     tags: ['kvalita', 'standard', 'luxe', 'platinum', 'porovnání'],
     imageUrl: '/blog/kvalita-porovnani.jpg',
     readTime: 6,
+  },
+  {
+    slug: 'keratin-nebo-pasky-pruvodik-metodami-prodlouzeni-vlasu',
+    title: 'Keratin nebo pásky? Kompletní průvodce metodami prodloužení vlasů 2025',
+    excerpt: 'Nevíte, co vybrat – keratin, pásky nebo tresy? Srovnáváme všechny metody prodloužení vlasů: cenu, životnost, údržbu i vhodnost pro různé typy vlasů.',
+    summary: 'Keratin je levnější a rychlejší (od 1 000 Kč/100g, výroba 1–3 dny), vhodný pro každodenní nošení. Pásky (nanotapes) jsou jemnější k vlasům a přirozenější na pohled (od 3 990 Kč/100g, 10–14 dní). Hand Weft tresy jsou nejpřirozenější varianta vhodná zejména pro husté vlasy. Výběr závisí hlavně na vašem kadeřníkovi a stylu nošení.',
+    estimatedWordCount: 1800,
+    content: `
+# Keratin nebo pásky? Průvodce metodami prodloužení vlasů
+
+Při výběru prodloužení vlasů narážíte zákaznice nejčastěji na otázku: **keratin, nebo pásky?** Obě metody mají své výhody – záleží na vašich vlasech, životním stylu a kadeřníkovi. Tady je přehled všeho, co potřebujete vědět.
+
+## Přehled metod jedním pohledem
+
+| Metoda | Cena výroby | Doba výroby | Životnost | Vhodné pro |
+|--------|-------------|-------------|-----------|------------|
+| **Keratin Standard** | 1 000 Kč/100g | 1–3 dny | 3–6 měs. | Všechny typy vlasů |
+| **Keratin Micro** | 1 000 Kč/100g | 1–3 dny | 3–6 měs. | Jemné vlasy |
+| **Nanotapes 2,8 cm** | 3 990 Kč/100g | 10–14 dní | 6–9 měs. | Rovné a mírně vlnité vlasy |
+| **Nanotapes 4 cm** | 3 990 Kč/100g | 10–14 dní | 6–9 měs. | Husté a vlnité vlasy |
+| **Hand Weft tresy** | 5 990 Kč/100g | 10–14 dní | 6–12 měs. | Husté vlasy, sew-in technika |
+
+---
+
+## Keratin – nejrozšířenější metoda
+
+### Co to je?
+Keratin prodloužení spojuje vlasy pomocí malých keratinových sponek. Každý culík se zapracuje ke kořínkům vašich vlastních vlasů pomocí speciálních kleští nebo ultrazvuku.
+
+### Výhody keratinového prodloužení
+✅ **Nejnižší cena výroby** – od 1 000 Kč za 100g
+✅ **Rychlá výroba** – hotovo za 1–3 pracovní dny
+✅ **Neviditelné spoje** – malé kulové nebo ploché spony
+✅ **Přirozený pohyb** – vlasy se hýbou volně
+✅ **Snadno přebarvitelné** – vlasy reagují jako vlastní
+
+### Nevýhody
+❌ Kadeřník potřebuje speciální nářadí (kleště, ultrazvuk)
+❌ Spony mohou být cítit při dotyku
+❌ Kratší životnost než pásky
+❌ Při nesprávné aplikaci může poškodit vlastní vlasy
+
+### Pro koho je keratin ideální?
+Keratin je nejuniverzálnější volba – hodí se pro **všechny typy vlasů** a všechny tloušťky culíků. Obzvláště oblíbený je u žen, které chtějí **každodenní nošení za rozumnou cenu**.
+
+---
+
+## Pásky (Nanotapes) – moderní prémiová metoda
+
+### Co to je?
+Nanotapes jsou tenké pásky s oboustrannou lepicí vrstvou. Culíky se „zalaminují" mezi dva proužky vašich vlastních vlasů – bez tepla, bez chemie.
+
+### Výhody pásek
+✅ **Nejjemnější k vlasům** – žádné teplo ani lepidlo
+✅ **Naprosto ploché spoje** – neviditelné i při sepnutých vlasech
+✅ **Snadno přelepitelné** – kadeřník pásky rozpustí a přilepí nové
+✅ **Přirozený výsledek** – splývají s vlastními vlasy nejpřirozeněji
+✅ **Bez speciálního nářadí** – kadeřník potřebuje jen odlepovač
+
+### Nevýhody
+❌ Vyšší cena výroby (3 990 Kč/100g)
+❌ Delší výrobní čas (10–14 dní)
+❌ Nevhodné pro velmi jemné nebo řídké vlasy (pásky mohou být vidět)
+❌ Spoje se mohou uvolnit od tepelného styling u kořínků
+
+### Pro koho jsou pásky ideální?
+Nanotapes jsou nejlepší volba pro ženy s **rovnými nebo mírně vlnitými vlasy střední hustoty**. Jsou ideální pro ty, kteří chtějí **co nejpřirozenější výsledek** a nevadí jim vyšší cena výroby.
+
+---
+
+## Hand Weft – ručně tkané tresy
+
+### Co to je?
+Hand Weft (ručně tkané tresy) jsou dlouhé pásy vlasů, které kadeřník ušije nebo přilepí různými technikami – sew-in, clip-in nebo lepení.
+
+### Výhody
+✅ **Nejpřirozenější výsledek** – velká plocha, rovnoměrné rozmístění
+✅ **Žádné spoje u kořínků** – ideální pro husté vlasy
+✅ **Nejdelší životnost** – 6–12 měsíců při správné péči
+✅ **Méně poškozující** – žádné lokální teplo nebo lepidlo
+
+### Nevýhody
+❌ Nejdražší výroba (5 990 Kč/100g)
+❌ Nejdelší výrobní čas (10–14 dní)
+❌ Závisí na dovednosti kadeřníka (sew-in technika)
+❌ Nevhodné pro velmi řídké nebo jemné vlasy
+
+### Pro koho jsou tresy ideální?
+Hand Weft tresy jsou nejlepší pro ženy s **hustými vlasy**, které hledají **největší objem** a jsou ochotny zaplatit za prémiový výsledek.
+
+---
+
+## Jak vybrat správně?
+
+### Vyberte keratin, pokud:
+- Chcete nejnižší cenu výroby
+- Potřebujete vlasy rychle (do 3 dní)
+- Máte jemné nebo středně husté vlasy
+- Váš kadeřník pracuje s keratinovým nářadím
+
+### Vyberte pásky (nanotapes), pokud:
+- Chcete nejpřirozenější výsledek
+- Máte rovné nebo mírně vlnité vlasy
+- Nespěcháte (výroba 10–14 dní)
+- Chcete vlasy, které splývají i při drdolu
+
+### Vyberte tresy, pokud:
+- Máte husté vlasy a chcete maximální objem
+- Chcete nejdelší životnost
+- Máte kadeřníka se sew-in technikou
+
+---
+
+## Co ovlivňuje výsledek nejvíc?
+
+Metoda je důležitá, ale **kvalita vlasů a dovednost kadeřníka** mají ještě větší vliv na výsledek. I ten nejlepší nanotape s vlasy nízké kvality bude vypadat průměrně. Naopak kvalitní panenské vlasy od Mùza Hair s keratinovými spoji aplikovanými zkušeným kadeřníkem dají dokonalý výsledek.
+
+---
+
+## Cena celkem – příklad
+
+Ukázkový výpočet pro **100g LUXE vlasů, délka 60 cm**:
+
+| Složka | Keratin | Nanotapes |
+|--------|---------|-----------|
+| Vlasy LUXE | 8 900 Kč | 8 900 Kč |
+| Výroba | 1 000 Kč | 3 990 Kč |
+| **Celkem** | **9 900 Kč** | **12 890 Kč** |
+
+*Cena aplikace u kadeřníka se liší – doporučujte ji konzultovat přímo.*
+
+---
+
+## Shrnutí
+
+**Keratin** = levnější, rychlejší, univerzální. Ideální pro první prodloužení.
+**Pásky (nanotapes)** = přirozenější, jemnější, dražší. Ideální pro pravidelné nošení.
+**Hand Weft** = nejpřirozenější, nejdražší, pro husté vlasy.
+
+[Vybrat vlasy k prodloužení →](/vlasy-k-prodlouzeni)
+
+*Potřebujete poradit s výběrem? [Napište nám](/kontakt) – rádi pomůžeme!*
+    `,
+    author: 'Mùza Hair Team',
+    publishedAt: '2026-10-24',
+    updatedAt: '2026-10-24',
+    category: 'Průvodce',
+    tags: [
+      'keratin vlasy',
+      'pásky vlasy',
+      'nanotapes',
+      'hand weft',
+      'metody prodloužení vlasů',
+      'jak vybrat prodloužení vlasů',
+      'tresy vlasů',
+    ],
+    imageUrl: '/blog/keratin-vs-pasky.jpg',
+    readTime: 8,
+    faqItems: [
+      {
+        question: 'Co je lepší – keratin nebo pásky na prodloužení vlasů?',
+        answer: 'Záleží na prioritách. Keratin je levnější (výroba od 1 000 Kč/100g) a rychlejší (1–3 dny), vhodný pro všechny typy vlasů. Pásky (nanotapes) jsou přirozenější na pohled a jemnější k vlasům (výroba od 3 990 Kč/100g, 10–14 dní), ideální pro rovné a středně husté vlasy.',
+      },
+      {
+        question: 'Jak dlouho vydrží keratin prodloužení vlasů?',
+        answer: 'Keratin prodloužení vydrží 3–6 měsíců při správné péči. Životnost závisí na kvalitě vlasů (Standard 3–6 měs., LUXE 12–18 měs.), péči a frekvenci nošení. Doporučujeme šampony bez sulfátů a pravidelné promazávání.',
+      },
+      {
+        question: 'Jak dlouho vydrží páskové (nanotapes) prodloužení vlasů?',
+        answer: 'Páskové prodloužení (nanotapes) vydrží 6–9 měsíců, přičemž pásky je možné po 6–8 týdnech přelepit u kadeřníka. Samotné vlasy přitom vydrží déle – záleží na jejich třídě (Standard, LUXE, Platinum).',
+      },
+      {
+        question: 'Kolik stojí keratin prodloužení vlasů?',
+        answer: 'Cena keratinového prodloužení u Mùza Hair se skládá z ceny vlasů (od 6 900 Kč/100g) a výroby keratin zakončení (1 000 Kč/100g). Celková cena pro 100g LUXE vlasů s keratinovými spoji je 9 900 Kč. Cena aplikace u kadeřníka se liší.',
+      },
+      {
+        question: 'Poškodí prodloužení vlasů moje vlastní vlasy?',
+        answer: 'Správně aplikované prodloužení vlastní vlasy nepoškozuje. Klíčové je zvolit zkušeného kadeřníka a kvalitní vlasy. Jemnější k vlasům jsou pásky (nanotapes) a hand weft tresy – žádné teplo ani tvrdé lepidlo. Keratin aplikovaný špatně může způsobit lámání vlasů u kořínků.',
+      },
+      {
+        question: 'Mohu s prodlouženými vlasy plavat nebo sportovat?',
+        answer: 'Ano, ale s opatrností. Chlor a slaná voda spoje rychleji oslabují – doporučujeme plné zamočení vlasů čistou vodou před koupáním a použití ochranného oleje. Při sportu zapletěte vlasy do copánku, abyste zamezili zbytečnému zamotávání.',
+      },
+    ],
   },
 ];
 
