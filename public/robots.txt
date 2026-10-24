@@ -1,4 +1,4 @@
-# Mùza Hair - Robots.txt
+# Múza Hair - Robots.txt
 # https://www.muzahair.cz
 
 User-agent: *
