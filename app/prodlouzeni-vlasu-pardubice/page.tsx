@@ -1,0 +1,328 @@
+import { Metadata } from 'next';
+import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Prodloužení vlasů Pardubice | Pravé vlasy, keratin, nanotapes | Múza Hair',
+  description: 'Prodloužení vlasů pro klientky z Pardubic — showroom Praha 1, Revoluční 8. Vlastní barvírna, slovanské vlasy Standard/Luxe/Platinum. Keratin od 4 000 Kč. Objednání online.',
+  alternates: { canonical: 'https://muzahair.cz/prodlouzeni-vlasu-pardubice' },
+  keywords: [
+    'prodloužení vlasů Pardubice',
+    'prodloužení vlasů Pardubic Praha',
+    'kde prodlužovat vlasy Pardubice',
+    'vlasy k prodloužení Pardubice',
+    'prodloužení vlasů keratinem Pardubice',
+    'nanotapes Pardubice',
+    'weft prodloužení Pardubice',
+    'pravé vlasy Pardubice',
+  ],
+  openGraph: {
+    title: 'Prodloužení vlasů Pardubice | Pravé vlasy | Múza Hair',
+    description: 'Showroom Praha 1, Revoluční 8. Cesta z Pardubic 1,5 hodiny vlakem. Keratin od 4 000 Kč, nanotapes 55 Kč/spoj, weft od 3 800 Kč.',
+    url: 'https://muzahair.cz/prodlouzeni-vlasu-pardubice',
+    siteName: 'Múza Hair',
+    locale: 'cs_CZ',
+    type: 'website',
+  },
+};
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Prodloužení vlasů Pardubice', item: 'https://muzahair.cz/prodlouzeni-vlasu-pardubice' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: "Má smysl jet na prodloužení vlasů z Pardubice do Prahy?",
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Mnoho klientek z Pardubic se vydá do showroomu Múza Hair kvůli výběru vlasů přímo z naší vlastní produkce — slovanské a panenské vlasy v délkách 35–95 cm, barvené v pražské barvírně na míru. Pokud hledáte konkrétní odstín nebo texturu, osobní konzultace v Praze je nesrovnatelná.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: "Jak daleko je cesta z Pardubice do Prahy?",
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Z Pardubic do showroomu Múza Hair Praha 1 je to přibližně 120 km. Vlakem 1,5 hodiny, autem 1,5 hodiny po D11. Showroom je přímo u metra B (Náměstí Republiky), výstup z vlaku na Masarykově nádraží.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: "Mohu si vlasy objednat online z Pardubic?",
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Ano — vlasy Standard, Luxe i Platinum posíláme do do Pardubic do 48 hodin. Objednáte přes e-shop nebo přes Instagram @muzahair.cz. Pokud si nejste jistá výběrem délky nebo gramáže, napište nám — poradíme na dálku.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: "Kolik stojí prodloužení vlasů a jaké jsou metody?",
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Nabízíme keratin (mikrokeratin), nanotapes (tape-in) a weft. Cena vlasů: Standard od 3 900 Kč, Luxe od 6 900 Kč, Platinum od 10 900 Kč. Aplikace se účtuje zvlášť u vaší techničky. Na konzultaci v Praze pomůžeme vybrat správnou metodu, délku a gramáž.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: "Jak se objednám do showroomu?",
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Volejte +420 728 722 880 nebo pište na Instagram @muzahair.cz. Jsme otevřeni Po–Ne 10–20, výhradně na objednání. Pro klientky zdaleka doporučujeme přijet na celodenní termín — konzultaci, výběr vlasů a případnou aplikaci lze spojit do jedné návštěvy.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: "Jak barvíte vlasy a proč je to výhoda?",
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Máme vlastní barvírnu přímo v pražském showroomu, kde pět specialistů zpracovává každý culík individuálně. To znamená, že dokážeme nabarvit vlasy na přesný odstín podle vzorníku — bez sériové výroby. Výsledek je přirozený a životnost barvy je výrazně vyšší než u hromadně barvených pásků.",
+        },
+      }
+    ],
+  },
+];
+
+export default function ProdlouzeniVlasuPardubicePage() {
+  return (
+    <>
+      {jsonLd.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+
+      <div style={{ background: 'var(--ivory)' }} className="min-h-screen">
+
+        {/* Hero */}
+        <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+          <div className="max-w-4xl">
+            <nav className="text-sm mb-8 flex gap-2" style={{ color: 'var(--text-soft)' }}>
+              <Link href="/" className="hover:opacity-70 transition">Domů</Link>
+              <span>/</span>
+              <span style={{ color: 'var(--burgundy)' }}>Prodloužení vlasů Pardubice</span>
+            </nav>
+
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              SHOWROOM PRAHA 1
+            </div>
+
+            <h1 className="font-cormorant text-[clamp(32px,4.5vw,56px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
+              Prodloužení vlasů<br />pro klientky z Pardubic
+            </h1>
+
+            <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-10">
+              <p className="text-[15px] leading-[1.8] font-light max-w-2xl" style={{ color: 'var(--text-dark)' }}>
+                Múza Hair — showroom s vlastní barvírnou přímo v Praze. Cesta z Pardubic trvá 1,5 hodiny vlakem nebo 1,5 hodiny po D11 autem.
+                Vlasy Standard, Luxe a Platinum posíláme také online do do Pardubic do 48 hodin.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/kontakt"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+              >
+                Objednat se
+              </Link>
+              <Link
+                href="/vlasy-k-prodlouzeni"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"
+                style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
+              >
+                E-shop vlasy
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Info bar */}
+        <section className="px-8 lg:px-20 py-6" style={{ background: 'var(--burgundy)' }}>
+          <div className="max-w-4xl flex flex-wrap gap-8" style={{ color: 'var(--ivory)' }}>
+            <div>
+              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Showroom</p>
+              <p className="text-[14px] font-light">Revoluční 8, Praha 1</p>
+            </div>
+            <div>
+              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Otevřeno</p>
+              <p className="text-[14px] font-light">Po–Ne 10–20, na objednání</p>
+            </div>
+            <div>
+              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Z Pardubice</p>
+              <p className="text-[14px] font-light">1,5 hodiny vlakem · 1,5 hodiny po D11 autem</p>
+            </div>
+            <div>
+              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Telefon</p>
+              <p className="text-[14px] font-light">+420 728 722 880</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Metody + ceny */}
+        <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+          <div className="max-w-4xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              METODY A CENY
+            </div>
+            <h2 className="font-cormorant text-[clamp(26px,3vw,40px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
+              Tři metody prodloužení vlasů
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { name: 'Keratin', price: 'od 4 000 Kč', desc: 'Mikrokeratin — nejpřirozenější výsledek, trvá 4–6 měsíců. Vhodný pro všechny typy vlasů.' },
+                { name: 'Nanotapes', price: '55–65 Kč / spoj', desc: 'Tape-in sendvičová metoda bez tepla. Pásky lze opakovaně přelepovat, životnost 6–10 týdnů.' },
+                { name: 'Weft', price: 'od 3 800 Kč / posun', desc: 'Tress přišitý ke kůži — maximální objem. Posun každé 4–6 měsíce.' },
+              ].map((m) => (
+                <div key={m.name} className="p-6 rounded-sm" style={{ background: 'var(--ivory)' }}>
+                  <h3 className="font-cormorant text-[22px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
+                  <p className="text-[13px] mb-3" style={{ color: 'var(--burgundy)' }}>{m.price}</p>
+                  <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Kolekce vlasů */}
+        <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+          <div className="max-w-4xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              KOLEKCE VLASŮ
+            </div>
+            <h2 className="font-cormorant text-[clamp(26px,3vw,40px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
+              Tři úrovně kvality
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {[
+                { name: 'Standard', origin: 'Indie, Kambodža', price: 'od 3 900 Kč', desc: 'Pevná struktura, skvělý poměr cena/výkon. Ideální pro hustší vlasy.' },
+                { name: 'Luxe', origin: 'Ukrajina, Polsko', price: 'od 6 900 Kč', desc: 'Jemnější, nadýchaný objem, husté konce. Zlatá střední cesta.' },
+                { name: 'Platinum', origin: 'ČR, SR — výkup', price: 'od 10 900 Kč', desc: 'Nejluxusnější panenské vlasy. Pro jemné vlasy s nejvyšší životností.' },
+              ].map((k) => (
+                <div key={k.name} className="p-6 rounded-sm border" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <h3 className="font-cormorant text-[22px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>{k.name}</h3>
+                  <p className="text-[11px] tracking-wider uppercase mb-2 font-light" style={{ color: 'var(--accent)' }}>{k.origin}</p>
+                  <p className="text-[13px] mb-3" style={{ color: 'var(--burgundy)' }}>{k.price}</p>
+                  <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{k.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <Link href="/vlasy-k-prodlouzeni" className="text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+              Prohlédnout e-shop →
+            </Link>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
+          <div className="max-w-4xl">
+            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
+              ČASTÉ OTÁZKY
+            </div>
+            <h2 className="font-cormorant text-[clamp(26px,3vw,40px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
+              Otázky klientek z Pardubic
+            </h2>
+
+            <div>
+          <div key={0} style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+            <h3 className="text-[16px] leading-snug mb-2 font-light" style={{ color: 'var(--text-dark)' }}>
+              Má smysl jet na prodloužení vlasů z Pardubice do Prahy?
+            </h3>
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+              Mnoho klientek z Pardubic se vydá do showroomu Múza Hair kvůli výběru vlasů přímo z naší vlastní produkce — slovanské a panenské vlasy v délkách 35–95 cm, barvené v pražské barvírně na míru. Pokud hledáte konkrétní odstín nebo texturu, osobní konzultace v Praze je nesrovnatelná.
+            </p>
+          </div>
+          <div key={1} style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+            <h3 className="text-[16px] leading-snug mb-2 font-light" style={{ color: 'var(--text-dark)' }}>
+              Jak daleko je cesta z Pardubice do Prahy?
+            </h3>
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+              Z Pardubic do showroomu Múza Hair Praha 1 je to přibližně 120 km. Vlakem 1,5 hodiny, autem 1,5 hodiny po D11. Showroom je přímo u metra B (Náměstí Republiky), výstup z vlaku na Masarykově nádraží.
+            </p>
+          </div>
+          <div key={2} style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+            <h3 className="text-[16px] leading-snug mb-2 font-light" style={{ color: 'var(--text-dark)' }}>
+              Mohu si vlasy objednat online z Pardubic?
+            </h3>
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+              Ano — vlasy Standard, Luxe i Platinum posíláme do do Pardubic do 48 hodin. Objednáte přes e-shop nebo přes Instagram @muzahair.cz. Pokud si nejste jistá výběrem délky nebo gramáže, napište nám — poradíme na dálku.
+            </p>
+          </div>
+          <div key={3} style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+            <h3 className="text-[16px] leading-snug mb-2 font-light" style={{ color: 'var(--text-dark)' }}>
+              Kolik stojí prodloužení vlasů a jaké jsou metody?
+            </h3>
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+              Nabízíme keratin (mikrokeratin), nanotapes (tape-in) a weft. Cena vlasů: Standard od 3 900 Kč, Luxe od 6 900 Kč, Platinum od 10 900 Kč. Aplikace se účtuje zvlášť u vaší techničky. Na konzultaci v Praze pomůžeme vybrat správnou metodu, délku a gramáž.
+            </p>
+          </div>
+          <div key={4} style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+            <h3 className="text-[16px] leading-snug mb-2 font-light" style={{ color: 'var(--text-dark)' }}>
+              Jak se objednám do showroomu?
+            </h3>
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+              Volejte +420 728 722 880 nebo pište na Instagram @muzahair.cz. Jsme otevřeni Po–Ne 10–20, výhradně na objednání. Pro klientky zdaleka doporučujeme přijet na celodenní termín — konzultaci, výběr vlasů a případnou aplikaci lze spojit do jedné návštěvy.
+            </p>
+          </div>
+          <div key={5} style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+            <h3 className="text-[16px] leading-snug mb-2 font-light" style={{ color: 'var(--text-dark)' }}>
+              Jak barvíte vlasy a proč je to výhoda?
+            </h3>
+            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+              Máme vlastní barvírnu přímo v pražském showroomu, kde pět specialistů zpracovává každý culík individuálně. To znamená, že dokážeme nabarvit vlasy na přesný odstín podle vzorníku — bez sériové výroby. Výsledek je přirozený a životnost barvy je výrazně vyšší než u hromadně barvených pásků.
+            </p>
+          </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
+          <div className="max-w-2xl">
+            <h2 className="font-cormorant text-[clamp(28px,3.5vw,44px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+              Zájem o prodloužení vlasů?
+            </h2>
+            <p className="text-[15px] leading-[1.8] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+              Zavolejte nebo napište — domluvíme termín v pražském showroomu nebo poradíme s online objednávkou vlasů.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="tel:+420728722880"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+              >
+                +420 728 722 880
+              </a>
+              <a
+                href="https://www.instagram.com/muzahair.cz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"
+                style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
+              >
+                Instagram
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </>
+  );
+}
