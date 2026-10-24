@@ -3,7 +3,7 @@ import { mockProducts } from '@/lib/mock-products';
 import { blogArticles } from '@/lib/blog-articles';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://muza-hair-shop.vercel.app';
+  const baseUrl = 'https://muzahair.cz';
 
   // Static pages
   const staticPages = [

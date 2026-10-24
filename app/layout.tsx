@@ -6,9 +6,9 @@ import { OrganizationSchema, WebSiteSchema } from "@/components/StructuredData";
 import { CartProvider } from "@/contexts/CartContext";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://muza-hair-shop.vercel.app'),
-  title: "💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení | Vlastní Barvírna 🇨🇿",
-  description: "Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. Nebarvené panenské, barvené blond, keratin, pásky, tresy. LUXE & Platinum kvalita. Dodání do 48h.",
+  metadataBase: new URL('https://muzahair.cz'),
+  title: "Mùza Hair Praha | Pravé vlasy k prodloužení | Vlastní barvírna ČR",
+  description: "Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze, ruční výroba. Nebarvené panenské vlasy, barvené blond, keratin, pásky, tresy. LUXE & Platinum kvalita. 4,9★ · 500+ zákaznic.",
   keywords: [
     "vlasy k prodloužení",
     "panenské vlasy",
@@ -45,10 +45,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'cs_CZ',
-    url: 'https://muza-hair-shop.vercel.app',
+    url: 'https://muzahair.cz',
     siteName: 'Mùza Hair',
-    title: '💎 Mùza Hair Praha | Panenské Vlasy & Prodloužení',
-    description: 'Český výrobce pravých vlasů od 2016 💫 Vlastní barvírna v Praze. LUXE & Platinum kvalita. Dodání do 48h.',
+    title: 'Mùza Hair Praha | Pravé vlasy k prodloužení',
+    description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze, ruční výroba v ČR. LUXE & Platinum kvalita. 4,9★ · 500+ zákaznic.',
     images: [
       {
         url: '/og-image.jpg',

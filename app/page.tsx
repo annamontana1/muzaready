@@ -4,18 +4,20 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  // Schema.org structured data for SEO
+  // Schema.org – HairSalon (AEO: pro AI vyhledávače)
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'HairSalon',
-    name: 'Mùza Hair Shop',
-    description: 'Český výrobce pravých a panenských vlasů. Vlastní barvírna, ruční výroba v Praze.',
+    '@type': ['HairSalon', 'Store', 'LocalBusiness'],
+    '@id': 'https://muzahair.cz/#organization',
+    name: 'Mùza Hair',
+    alternateName: 'Muza Hair Praha',
+    description: 'Český výrobce pravých vlasů k prodloužení od roku 2016. Vlastní barvírna v Praze, ruční výroba v ČR. 100 % panenské vlasy – Standard, LUXE, Platinum.',
     url: 'https://muzahair.cz',
-    telephone: '+420-XXX-XXX-XXX',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Praha',
       addressLocality: 'Praha',
+      postalCode: '110 00',
       addressCountry: 'CZ',
     },
     geo: {
@@ -23,12 +25,24 @@ export default function Home() {
       latitude: '50.0755',
       longitude: '14.4378',
     },
-    priceRange: '6900 Kč - 10900 Kč',
-    image: '/og-image.jpg',
-    sameAs: [
-      'https://www.facebook.com/muzahair',
-      'https://www.instagram.com/muzahair',
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '09:00',
+        closes: '19:00',
+      },
     ],
+    priceRange: '6 900 Kč – 10 900 Kč',
+    image: 'https://muzahair.cz/og-image.jpg',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '500',
+      bestRating: '5',
+    },
+    sameAs: ['https://www.instagram.com/muzahair.cz'],
+    foundingDate: '2016',
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Vlasy k prodloužení',
@@ -38,7 +52,7 @@ export default function Home() {
           itemOffered: {
             '@type': 'Product',
             name: 'Nebarvené panenské vlasy',
-            description: '100% přírodní panenské vlasy bez chemického ošetření',
+            description: '100% přírodní panenské vlasy bez chemického ošetření. Třídy Standard (od 6 900 Kč), LUXE (od 8 900 Kč), Platinum (od 10 900 Kč).',
           },
         },
         {
@@ -46,10 +60,85 @@ export default function Home() {
           itemOffered: {
             '@type': 'Product',
             name: 'Barvené blond vlasy',
-            description: 'Profesionálně odbarvené vlasy odstíny 5-10',
+            description: 'Profesionálně odbarvené vlasy v odstínech 5–10. Vlastní barvírna v Praze.',
+          },
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Product',
+            name: 'Příčesky a paruky',
+            description: 'Příčesky na temeno, toupee, paruky na míru z pravých vlasů.',
           },
         },
       ],
+    },
+  };
+
+  // FAQ schema – AEO: AI vyhledávače vytáhnou odpovědi přímo
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Co jsou panenské vlasy?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Panenské vlasy jsou 100% přírodní lidské vlasy, které nebyly nikdy chemicky ošetřeny – nebarveny, netrvaleny ani jinak upravovány. Zachovávají si přirozený kůžičkový povrch (kutikulu), díky čemuž jsou nejkvalitnější volbou pro prodloužení vlasů. Mùza Hair nabízí panenské vlasy v kategoriích Standard, LUXE a Platinum.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jak dlouho vydrží vlasy k prodloužení?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Životnost vlasů k prodloužení závisí na jejich kvalitě: Standard vydrží 3–6 měsíců, LUXE 12–18 měsíců, Platinum edition 18–24 měsíců. Při správné péči (šetrné šampony, pravidelné promazávání, ochrana před teplem) se životnost prodlužuje.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Kde se vlasy Mùza Hair vyrábějí?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Vlasy Mùza Hair se vyrábějí ručně v České republice, v Praze. Mùza Hair provozuje vlastní barvírnu, kde vlasy profesionálně barví. Jedná se tedy o český výrobek – ne import z Asie. Vlasy Platinum pocházejí z Ukrajiny, Polska a Rumunska a jsou doplněny certifikátem původu.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jaká je cena vlasů k prodloužení?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Cena vlasů k prodloužení u Mùza Hair začíná na 6 900 Kč za Standard třídu, LUXE od 8 900 Kč a Platinum edition od 10 900 Kč (vždy za 100g, délka 45–90 cm). Cena zakázkové výroby (keratin, pásky, tresy) se účtuje zvlášť od 1 000 Kč/100g.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Dělá Mùza Hair charitativní projekty?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Ano. Každý 10. culík vlasů, který Mùza Hair vykoupí, věnuje zdarma na výrobu paruky pro dítě s onkologickým onemocněním. Jde o vlastní charitativní iniciativu, která probíhá od roku 2016.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Jak se liší Standard, LUXE a Platinum vlasy?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Standard vlasy jsou vhodné pro kratší nošení (3–6 měsíců), ideální jako první prodloužení. LUXE vydrží 12–18 měsíců a jde o prémiovou volbu pro každodenní nošení. Platinum edition jsou nejkvalitnější vlasy z Ukrajiny, Polska a Rumunska s certifikátem původu, životnost 18–24 měsíců. Všechny kategorie jsou 100% přírodní panenské vlasy.',
+        },
+      },
+    ],
+  };
+
+  // Speakable schema – AEO: pro hlasové asistenty a AI snippety
+  const speakableLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url: 'https://muzahair.cz',
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '.hero-description', '.faq-answer'],
     },
   };
 
@@ -86,6 +175,14 @@ export default function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableLd) }}
       />
 
       {/* Hero Section */}
