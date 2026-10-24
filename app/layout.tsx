@@ -9,7 +9,7 @@ import DevelopmentModal from "@/components/DevelopmentModal";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.muzahair.cz'),
-  title: "Múza Hair Praha | Pravé vlasy k prodloužení | Keratin, Nanotapes, Weft | Vlastní barvírna",
+  title: "Pravé vlasy k prodloužení Praha | Múza Hair",
   description: "Múza Hair Praha — český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy weft. Standard, Luxe, Platinum. Showroom Revoluční 8, Praha 1.",
   keywords: [
     "vlasy k prodloužení",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     locale: 'cs_CZ',
     url: 'https://www.muzahair.cz',
     siteName: 'Múza Hair',
-    title: 'Múza Hair Praha | Pravé vlasy k prodloužení | Keratin, Nanotapes, Weft',
+    title: 'Pravé vlasy k prodloužení Praha | Múza Hair',
     description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy. Showroom Revoluční 8, Praha 1.',
     images: [
       {

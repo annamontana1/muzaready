@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Ceník prodlužování vlasů Praha 2025 | Keratin, Nanotapes, Weft | Múza Hair',
-  description: 'Ceny aplikace prodloužení vlasů Praha: keratin od 4 000 Kč, mikrokeratin od 5 000 Kč, nanotapes 55 Kč/spoj, weft (hollywoodské prodloužení) posun 3 800 Kč. Showroom Revoluční 8, Praha 1.',
+  title: 'Ceník prodloužení vlasů Praha 2025 | Múza Hair',
+  description: 'Keratin od 4 000 Kč, mikrokeratin od 5 000 Kč, nanotapes 55 Kč/spoj, weft 3 800 Kč. Aplikace prodloužení vlasů Praha 1, showroom Revoluční 8.',
   alternates: { canonical: 'https://muzahair.cz/ceny-aplikaci' },
   keywords: [
     'prodloužení vlasů Praha cena',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     'vlasové tresy Praha cena',
   ],
   openGraph: {
-    title: 'Ceník prodlužování vlasů Praha 2025 | Keratin, Nanotapes, Weft | Múza Hair',
+    title: 'Ceník prodloužení vlasů Praha 2025 | Múza Hair',
     description: 'Keratin od 4 000 Kč · Nanotapes (tape-in) 55 Kč/spoj · Weft (hollywoodské prodloužení) posun 3 800 Kč. Showroom Praha 1, Revoluční 8.',
     url: 'https://muzahair.cz/ceny-aplikaci',
     siteName: 'Múza Hair',

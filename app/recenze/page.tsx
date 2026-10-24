@@ -2,8 +2,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Recenze zákazníků - Mùza Hair Praha',
-  description: 'Přečtěte si recenze našich spokojených zákazníků. Reálné zkušenosti s prodlouženými vlasy od Mùza Hair.',
+  title: 'Recenze zákaznic | Prodloužení vlasů Praha | Múza Hair',
+  description: 'Reálné recenze zákaznic Múza Hair Praha. Zkušenosti s keratinem, nanotapes a weft produženími. 500+ spokojených zákaznic, hodnocení 4,9/5.',
+  alternates: { canonical: 'https://muzahair.cz/recenze' },
 };
 
 const reviews = [

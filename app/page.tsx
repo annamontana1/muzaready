@@ -85,9 +85,9 @@ export default function Home() {
       longitude: 14.4252,
     },
     openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '10:00', closes: '18:00' },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '10:00', closes: '20:00' },
     ],
-    priceRange: 'Kč Kč',
+    priceRange: '4 000 Kč – 11 000 Kč',
     sameAs: [
       'https://www.instagram.com/muzahair.cz',
     ],

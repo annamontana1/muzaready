@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Panenské Vlasy Praha | Neošetřené Virgin Hair na Prodloužení | Múza Hair',
-  description: 'Panenské vlasy na prodloužení Praha — chemicky neošetřené, od jednoho dárce, se zachovanou kutikulou. LUXE a Platinum edition. Showroom Praha, dodání do 48 h. Od 6 900 Kč.',
+  title: 'Panenské vlasy Praha | Virgin hair na prodloužení | Múza Hair',
+  description: 'Panenské vlasy Praha — chemicky neošetřené, od jednoho dárce, se zachovanou kutikulou. LUXE a Platinum edition. Showroom Praha, od 6 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/panenenske-vlasy-praha' },
   keywords: [
     'panenské vlasy Praha',
     'panenské vlasy na prodloužení',

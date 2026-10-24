@@ -78,7 +78,7 @@ const jsonLd = [
         name: 'Kde se prodlužují vlasy v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair — showroom na Revoluční 8, Praha 1. Prodloužení vlasů keratinem, mikrokeratiinem, nanotapes (tape-in) i weft (hollywoodské prodloužení). Vlastní barvírna, pravé středoevropské vlasy. Objednání na +420 728 722 880 nebo Instagram @muzahair.cz.',
+          text: 'Múza Hair — showroom na Revoluční 8, Praha 1. Prodloužení vlasů keratinem, mikrokeratinem, nanotapes (tape-in) i weft (hollywoodské prodloužení). Vlastní barvírna, pravé středoevropské vlasy. Objednání na +420 728 722 880 nebo Instagram @muzahair.cz.',
         },
       },
       {

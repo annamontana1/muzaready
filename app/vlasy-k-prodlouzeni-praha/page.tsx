@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Vlasy k Prodloužení Praha | Prémiový Showroom & E-shop | Múza Hair',
-  description: 'Vlasy k prodloužení Praha — jediný prémiový showroom v Praze. Keratin, tape-in, weft/tresy. Osobní konzultace, dodání 48 h po celé ČR. Ceny od 3 900 Kč.',
+  title: 'Vlasy k prodloužení Praha | Showroom & e-shop | Múza Hair',
+  description: 'Vlasy k prodloužení Praha — prémiový showroom, keratin, tape-in, weft/tresy. Osobní konzultace, dodání 48 h po celé ČR. Ceny od 3 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni-praha' },
   keywords: [
     'vlasy k prodloužení Praha',
     'prodlužování vlasů Praha',

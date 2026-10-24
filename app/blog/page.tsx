@@ -3,13 +3,14 @@ import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-articles';
 
 export const metadata: Metadata = {
-  title: 'Blog a Magazín | Mùza Hair Praha - Tipy a průvodce vlasovými prodlouženími',
+  title: 'Blog o prodloužení vlasů | Tipy a průvodce | Múza Hair',
   description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality. Experti z Mùza Hair sdílejí know-how.',
+  alternates: { canonical: 'https://muzahair.cz/blog' },
   openGraph: {
-    title: 'Blog a Magazín | Mùza Hair Praha',
+    title: 'Blog o prodloužení vlasů | Múza Hair Praha',
     description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality.',
     type: 'website',
-    url: 'https://www.muzahair.cz/blog',
+    url: 'https://muzahair.cz/blog',
   },
 };
 
