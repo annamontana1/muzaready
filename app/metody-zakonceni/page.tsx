@@ -4,6 +4,14 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Metody zakončení vlasů | Keratin, Tape-in, Vlasové tresy | Múza Hair',
   description: 'Přehled metod zakončení a aplikace vlasů k prodloužení. Keratin, Mikrokeratin, Tape-in nano tapes a ručně šité vlasové tresy.',
+  alternates: { canonical: 'https://muzahair.cz/metody-zakonceni' },
+  openGraph: {
+    title: 'Metody zakončení vlasů | Keratin, Tape-in, Weft | Múza Hair',
+    description: 'Přehled metod zakončení vlasů — keratin, mikrokeratin, nanotapes a vlasové tresy weft. Poradíme s výběrem.',
+    url: 'https://muzahair.cz/metody-zakonceni',
+    locale: 'cs_CZ',
+    type: 'website',
+  },
 };
 
 export default function MetodyZakonceniPage() {

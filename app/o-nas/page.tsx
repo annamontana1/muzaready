@@ -5,11 +5,14 @@ export const metadata: Metadata = {
   title: 'Múza Hair Praha – pravé vlasy k prodloužení | O nás',
   description:
     'Jsme český výrobce prémiových pravých vlasů k prodloužení. Zakladatelka Anna stojí za panenskou kvalitou vlasů z vlastního pražského ateliéru.',
+  alternates: { canonical: 'https://muzahair.cz/o-nas' },
   openGraph: {
     title: 'Múza Hair Praha – pravé vlasy k prodloužení | O nás',
     description:
       'Jsme český výrobce prémiových pravých vlasů k prodloužení. Zakladatelka Anna stojí za panenskou kvalitou vlasů z vlastního pražského ateliéru.',
     url: 'https://muzahair.cz/o-nas',
+    locale: 'cs_CZ',
+    type: 'website',
   },
 };
 
