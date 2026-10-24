@@ -66,6 +66,7 @@ export const metadata: Metadata = {
     description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna Praha. Keratin, nanotapes, weft.',
     images: ['/og-image.jpg'],
   },
+  alternates: { canonical: 'https://www.muzahair.cz' },
   verification: {
     google: 'google-site-verification-token',
   },
