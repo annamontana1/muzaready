@@ -1,17 +1,18 @@
 import { Metadata } from 'next';
 
-// ISR - revalidate every hour
-export const revalidate = 3600;
-
 export const metadata: Metadata = {
-  title: 'Nebarvené panenské vlasy | Mùza Hair Praha',
-  description: '100 % nebarvené panenské vlasy z našeho výkupu. Přirozené odstíny, dlouhá životnost, vhodné pro profesionální barvení a odbarvování.',
+  title: 'Nebarvené panenské vlasy k prodloužení | Múza Hair Praha',
+  description: 'Nebarvené panenské vlasy — chemicky neupravené, se zachovanou kutikulou. Standard, LUXE, Platinum. Slovanský původ, vlastní barvírna Praha. Od 3 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske' },
+  openGraph: {
+    title: 'Nebarvené panenské vlasy k prodloužení | Múza Hair Praha',
+    description: 'Nebarvené panenské vlasy — chemicky neupravené, se zachovanou kutikulou. Standard, LUXE, Platinum. Slovanský původ, vlastní barvírna Praha. Od 3 900 Kč.',
+    url: 'https://muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske',
+    locale: 'cs_CZ',
+    type: 'website',
+  },
 };
 
-export default function NebarvenePanskeLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
