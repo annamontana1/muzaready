@@ -46,6 +46,14 @@ const faqs = [
     q: 'Nabízíte aplikaci vlasových pásek v Praze?',
     a: 'Vlasové pásky tape-in přímo neaplikujeme — jsme výrobce a dodavatel vlasů. V našem pražském showroomu vám však pomůžeme vybrat správnou kolekci, délku, gramáž a strukturu. Doporučíme vám také osvědčené extension technicians v Praze, kteří s našimi pásky pracují. Konzultace v showroomu je zdarma a nezávazná.',
   },
+  {
+    q: 'Kolik stojí tape-in (nanotapes) prodloužení vlasů Praha?',
+    a: 'Aplikace nanotapes (tape-in) v Praze stojí 55–65 Kč za spoj. Průměrná aplikace 60–80 spojů = 3 300–5 200 Kč. Cena vlasových pásek se účtuje zvlášť.',
+  },
+  {
+    q: 'Jsou nanotapes vhodné pro jemné vlasy?',
+    a: 'Ano — nanotapes/tape-in jsou sendvičová metoda bez tepla a lepidla, vhodná i pro jemnější vlastní vlasy. Doporučujeme konzultaci pro výběr správné gramáže.',
+  },
 ];
 
 const GRAMAZE = [
@@ -120,37 +128,11 @@ export default function TapeInPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      ...faqs.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-      {
-        '@type': 'Question',
-        name: 'Kolik stojí tape-in (nanotapes) prodloužení vlasů Praha?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Aplikace nanotapes (tape-in) v Praze stojí 55–65 Kč za spoj. Průměrná aplikace 60–80 spojů = 3 300–5 200 Kč. Cena vlasových pásek se účtuje zvlášť.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Jak dlouho vydrží nanotapes prodloužení?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Nanotapes vydrží 1,5–2 měsíce do korekce. Výhoda je, že pásky lze znovu použít — ekonomičtější při pravidelných korekcích.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Jsou nanotapes vhodné pro jemné vlasy?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Ano — nanotapes/tape-in jsou sendvičová metoda bez tepla a lepidla, vhodná i pro jemnější vlastní vlasy. Doporučujeme konzultaci pro výběr správné gramáže.',
-        },
-      },
-    ],
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
   };
 
   return (
