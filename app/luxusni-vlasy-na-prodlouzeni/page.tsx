@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Luxusní Vlasy na Prodloužení | Prémiové Panenské Vlasy | Múza Hair Praha',
+  title: 'Luxusní vlasy na prodloužení | LUXE & Platinum | Múza Hair',
   description: 'Luxusní vlasy na prodloužení — certifikované panenské a slovanské vlasy z Evropy. LUXE a Platinum edition. Showroom Praha, dodání do 48 h. Od 6 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni' },
   keywords: [
     'luxusní vlasy na prodloužení',
     'prémiové vlasy na prodloužení Praha',

@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'České Vlasy na Prodloužení | Výrobce Praha od 2016 | Múza Hair',
+  title: 'České vlasy na prodloužení | Výrobce Praha | Múza Hair',
   description: 'Múza Hair — český výrobce vlasů na prodloužení od roku 2016. Vlastní barvírna v Praze, panenské a slovanské vlasy, keratin i pásky. Showroom Praha, dodání do 48 h.',
+  alternates: { canonical: 'https://muzahair.cz/ceske-vlasy-na-prodlouzeni' },
   keywords: [
     'české vlasy na prodloužení',
     'český výrobce vlasů',

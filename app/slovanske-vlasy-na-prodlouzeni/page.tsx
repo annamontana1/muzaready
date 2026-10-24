@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Slovanské Vlasy na Prodloužení Praha | Ukrajinské & Polské Vlasy | Múza Hair',
+  title: 'Slovanské vlasy na prodloužení Praha | Múza Hair',
   description: 'Slovanské vlasy na prodloužení — certifikovaný původ z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín. Showroom Praha, dodání do 48 h. Platinum edition od 10 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni' },
   keywords: [
     'slovanské vlasy na prodloužení',
     'slovanské vlasy Praha',

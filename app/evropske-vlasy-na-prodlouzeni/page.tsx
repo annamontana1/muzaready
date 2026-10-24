@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Evropské Vlasy na Prodloužení Praha | Remy & Panenské | Múza Hair',
+  title: 'Evropské vlasy na prodloužení Praha | Remy | Múza Hair',
   description: 'Pravé evropské vlasy na prodloužení Praha — remy, panenské i slovanské. Nejlepší volba pro české a evropské ženy. Showroom Praha, dodání 48 h po ČR. Od 3 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni' },
   keywords: [
     'evropské vlasy na prodloužení Praha',
     'evropské vlasy prodej',
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     'slovanské evropské vlasy',
   ],
   openGraph: {
-    title: 'Evropské Vlasy na Prodloužení Praha | Remy & Panenské | Múza Hair',
+    title: 'Evropské vlasy na prodloužení Praha | Remy | Múza Hair',
     description: 'Prémiové evropské vlasy na prodloužení — remy, panenské a slovanské. Praha showroom + dodání po celé ČR.',
     url: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',

@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Ceník Vlasů na Prodloužení Praha 2026 | Panenské vlasy od 3 900 Kč | Múza Hair',
+  title: 'Ceník vlasů na prodloužení Praha 2026 | Múza Hair',
   description: 'Ceník pravých vlasů na prodloužení Praha 2026. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Ceny závisí na délce (35–75 cm) a gramáži. Múza Hair — výrobce vlasů Praha od 2016.',
+  alternates: { canonical: 'https://muzahair.cz/cenik-vlasu-na-prodlouzeni' },
   keywords: [
     'cena vlasů na prodloužení Praha',
     'kolik stojí pravé vlasy na prodloužení',

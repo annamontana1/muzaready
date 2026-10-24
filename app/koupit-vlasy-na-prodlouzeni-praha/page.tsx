@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Koupit Vlasy na Prodloužení Praha | Prémiový Showroom | Múza Hair',
+  title: 'Koupit vlasy na prodloužení Praha | Showroom | Múza Hair',
   description: 'Kde koupit pravé vlasy na prodloužení v Praze? Múza Hair — showroom Praha, panenské a slovanské vlasy, keratin i pásky. Osobně nebo online. Ceny od 3 900 Kč.',
+  alternates: { canonical: 'https://muzahair.cz/koupit-vlasy-na-prodlouzeni-praha' },
   keywords: [
     'kde koupit vlasy na prodloužení Praha',
     'koupit pravé vlasy Praha',
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     'vlasy na prodloužení Praha e-shop',
   ],
   openGraph: {
-    title: 'Koupit Vlasy na Prodloužení Praha | Múza Hair Showroom',
+    title: 'Koupit vlasy na prodloužení Praha | Múza Hair showroom',
     description: 'Prémiový showroom s pravými vlasy na prodloužení v Praze. Panenské, slovanské a evropské vlasy. Keratin, pásky, tresy.',
     url: 'https://muzahair.cz/koupit-vlasy-na-prodlouzeni-praha',
     locale: 'cs_CZ',
