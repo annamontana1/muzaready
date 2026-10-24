@@ -30,11 +30,6 @@ export const FINISHING_ADDONS: FinishingAddon[] = [
     price_add: 800,
   },
   {
-    code: 'tape',
-    label: 'Tape-in (nano tapes)',
-    price_add: 400,
-  },
-  {
     code: 'weft',
     label: 'Vlasové tresy (sewing weft)',
     price_add: 600,

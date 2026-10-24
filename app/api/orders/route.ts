@@ -1,75 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { CreateOrderSchema } from '@/lib/validation/orders';
 export const runtime = 'nodejs';
 
-/**
- * Verify user session and return email if valid
- * This prevents unauthorized access to other users' orders
- */
-async function getAuthenticatedEmail(requestEmail: string): Promise<string | null> {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get('session')?.value;
-
-  if (!sessionToken) {
-    return null;
-  }
-
-  // TODO: Implement proper session validation when user auth is added
-  // For now, we trust the email parameter if a session exists
-  // In production, this should verify the session matches the requested email
-  return requestEmail;
-}
-
-export async function GET(request: NextRequest) {
-  try {
-    // Vyžadujeme email parameter pro vyhledání objednávek
-    const searchParams = request.nextUrl.searchParams;
-    const email = searchParams.get('email');
-
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email parameter is required' },
-        { status: 400 }
-      );
-    }
-
-    // Verify user is authenticated and authorized to view these orders
-    const authenticatedEmail = await getAuthenticatedEmail(email);
-    if (!authenticatedEmail) {
-      return NextResponse.json(
-        { error: 'Unauthorized - please log in to view your orders' },
-        { status: 401 }
-      );
-    }
-
-    // Vrátíme pouze objednávky pro daný email
-    const orders = await prisma.order.findMany({
-      where: {
-        email: authenticatedEmail, // Use authenticated email, not request param
-      },
-      include: {
-        items: {
-          include: {
-            sku: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    return NextResponse.json(orders, { status: 200 });
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch orders' },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  // Customer order history not yet implemented — no user auth system exists.
+  // Use POST /api/orders/lookup with email + orderId for individual lookups.
+  return NextResponse.json({ error: 'Not implemented' }, { status: 501 });
 }
 
 export async function POST(request: NextRequest) {

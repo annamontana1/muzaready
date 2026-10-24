@@ -5,54 +5,11 @@ export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/orders/lookup?email=xxx
- * Get all orders for an email address
- * Used for customer account dashboard
+ * Disabled — customer account dashboard not yet implemented.
+ * Use POST with orderId + email for order lookups.
  */
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get('email');
-
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email je povinný' },
-        { status: 400 }
-      );
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Neplatná e-mailová adresa' },
-        { status: 400 }
-      );
-    }
-
-    // Get all orders for this email
-    const orders = await prisma.order.findMany({
-      where: { email: email.toLowerCase() },
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        orderStatus: true,
-        paymentStatus: true,
-        deliveryStatus: true,
-        trackingNumber: true,
-        carrier: true,
-        total: true,
-        createdAt: true,
-      },
-    });
-
-    return NextResponse.json({ orders }, { status: 200 });
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    return NextResponse.json(
-      { error: 'Chyba při načítání objednávek' },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  return NextResponse.json({ error: 'Not implemented' }, { status: 501 });
 }
 
 /**

@@ -47,7 +47,7 @@ function ConfirmationContent() {
 
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/orders/${orderId}`);
+        const response = await fetch(`/api/orders/${orderId}/public`);
         if (!response.ok) {
           setError('Chyba při načítání objednávky');
           setLoading(false);
