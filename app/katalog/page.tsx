@@ -37,8 +37,12 @@ export default function CatalogPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<'ALL' | 'BULK' | 'PIECE'>('ALL');
   const [sortBy, setSortBy] = useState<'recommended' | 'price-asc' | 'price-desc'>('recommended');
+  // ?odstin=7 — odkaz ze vzorníku odstínů na hlavní stránce
+  const [shadeFilter, setShadeFilter] = useState<number | null>(null);
 
   useEffect(() => {
+    const odstin = Number(new URLSearchParams(window.location.search).get('odstin'));
+    if (odstin) setShadeFilter(odstin);
     fetchCatalog();
   }, []);
 
@@ -83,6 +87,7 @@ export default function CatalogPage() {
   // Filter items
   const filteredItems = items.filter((item) => {
     if (selectedType !== 'ALL' && item.type !== selectedType) return false;
+    if (shadeFilter && Number(item.shade) !== shadeFilter) return false;
     return true;
   });
 
@@ -156,7 +161,16 @@ export default function CatalogPage() {
           </select>
         </div>
 
-        <div className="text-sm text-text-mid mb-6">Zobrazeno {sortedItems.length} produktů</div>
+        <div className="text-sm text-text-mid mb-6 flex items-center gap-3 flex-wrap">
+          Zobrazeno {sortedItems.length} produktů
+          {shadeFilter && (
+            <button type="button" onClick={() => { setShadeFilter(null); window.history.replaceState(null, '', '/katalog'); }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muza-ink text-muza-onink text-xs">
+              Odstín {shadeFilter}
+              <span aria-hidden="true">✕</span><span className="sr-only">Zrušit filtr odstínu</span>
+            </button>
+          )}
+        </div>
 
         {/* Grid */}
         {sortedItems.length === 0 ? (

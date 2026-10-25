@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-articles';
+import AtelierHero from '@/components/home/AtelierHero';
+import ShadeLadder from '@/components/home/ShadeLadder';
 
 const StarIcon = () => (
   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--burgundy)' }}>
@@ -105,78 +107,8 @@ export default function Home() {
       />
     <div style={{ background: 'var(--white)' }}>
 
-      {/* ─── HERO ─── */}
-      <section className="min-h-[88vh] grid grid-cols-1 lg:grid-cols-2 relative overflow-hidden">
-        {/* Left: text */}
-        <div
-          className="flex flex-col justify-center px-8 py-20 lg:px-20"
-          style={{ background: 'var(--ivory)' }}
-        >
-
-          <h1
-            className="font-cormorant text-[clamp(44px,5vw,64px)] font-light leading-[1.12] mb-7 tracking-[-0.01em]"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Pravé vlasy<br />
-            k prodloužení<br />
-            <em className="italic" style={{ color: 'var(--burgundy)' }}>Praha</em>
-          </h1>
-
-          <p className="text-[15px] leading-[1.8] max-w-[380px] mb-11 font-light" style={{ color: 'var(--text-soft)' }}>
-            Český výrobce od roku 2016. Panenské a pravé vlasy nejvyšší kvality, vlastní barvírna v Praze, ruční výroba. Standard · LUXE · Platinum edition.
-          </p>
-
-          <div className="flex gap-4 items-center flex-wrap">
-            <Link
-              href="/vlasy-k-prodlouzeni"
-              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
-              style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
-            >
-              Prozkoumat kolekci
-            </Link>
-            <Link
-              href="/katalog"
-              className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy"
-              style={{ color: 'var(--text-mid)' }}
-            >
-              Zobrazit katalog →
-            </Link>
-          </div>
-        </div>
-
-        {/* Right: image placeholder */}
-        <div
-          className="relative min-h-[400px] lg:min-h-0 flex flex-col justify-end"
-          style={{ background: 'var(--beige)' }}
-        >
-          <div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ background: 'linear-gradient(160deg, #D4C4B0 0%, #BFA99A 60%, #9B7A70 100%)' }}
-          >
-            <span
-              className="font-cormorant text-[13px] tracking-[0.15em] uppercase absolute"
-              style={{ color: 'rgba(74,21,32,0.4)', writingMode: 'vertical-rl', transform: 'rotate(180deg)', right: '32px', top: '50%' }}
-            >
-              Fotografie produktu
-            </span>
-          </div>
-          <div className="relative z-10 p-10">
-            <div
-              className="rounded-sm p-5 flex items-center gap-4 max-w-[260px]"
-              style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)' }}
-            >
-              <div className="text-[12px] leading-[1.5]" style={{ color: 'var(--text-mid)' }}>
-                <strong className="block text-[14px] font-medium mb-0.5" style={{ color: 'var(--text-dark)' }}>
-                  Vlastní barvírna
-                </strong>
-                Profesionální odbarvování přímo v Praze
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ─── HERO: ateliér na míru ─── */}
+      <AtelierHero />
 
       {/* ─── TRUST BAR ─── */}
       <div className="bg-white border-b py-7 px-6 md:px-12" style={{ borderColor: 'var(--beige)' }}>
@@ -200,6 +132,9 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      {/* ─── VZORNÍK ODSTÍNŮ ─── */}
+      <ShadeLadder />
 
       {/* ─── PRODUCTS ─── */}
       <section className="py-24 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
