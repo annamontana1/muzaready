@@ -87,7 +87,9 @@ export async function GET(request: NextRequest) {
     try {
       const skus = await prisma.sku.findMany({
         where: {
-          isListed: true, // Only show listed SKUs
+          // Only show listed SKUs; Vercel preview deployments also show unlisted ones
+          // (culíky waiting for approval), production never does
+          ...(process.env.VERCEL_ENV === 'preview' || process.env.SHOW_UNLISTED_SKUS === '1' ? {} : { isListed: true }),
           inStock: true, // Only show items in stock
           soldOut: false, // Exclude sold out items
         },
