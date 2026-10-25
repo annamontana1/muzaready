@@ -58,10 +58,10 @@ const config: Config = {
         info: '#6B7A8F',
       },
       fontFamily: {
-        playfair: ['Cormorant Garamond', 'serif'], // alias → sjednoceno s cormorant
-        cormorant: ['Cormorant Garamond', 'serif'],
-        jost: ['Jost', 'sans-serif'],
-        inter: ['Jost', 'sans-serif'], // alias for backward compat
+        playfair: ['var(--font-cormorant)', 'Cormorant Garamond', 'Georgia', 'serif'], // alias → sjednoceno s cormorant
+        cormorant: ['var(--font-cormorant)', 'Cormorant Garamond', 'Georgia', 'serif'],
+        jost: ['var(--font-jost)', 'Jost', 'system-ui', 'sans-serif'],
+        inter: ['var(--font-jost)', 'Jost', 'system-ui', 'sans-serif'], // alias for backward compat
       },
       fontSize: {
         'h1': ['3rem', { lineHeight: '1.2' }],

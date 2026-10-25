@@ -39,7 +39,7 @@
   }
 
   body {
-    font-family: 'Jost', sans-serif;
+    font-family: var(--font-jost), 'Jost', system-ui, sans-serif;
     font-weight: 300;
     background: var(--ivory);
     color: var(--text-dark);
@@ -47,7 +47,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
   }
 }
 
@@ -141,8 +141,6 @@
   @apply bg-burgundy/50;
 }
 
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
 
 /* Omezený pohyb: místo posunů a zvětšování jen prolnutí, stavové změny zůstávají vidět */
 @keyframes reduced-fade-in {

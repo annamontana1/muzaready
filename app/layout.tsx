@@ -1,10 +1,27 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond, Jost } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
 import MetaPixel from "@/components/MetaPixel";
 import DevelopmentModal from "@/components/DevelopmentModal";
+
+// Písma značky – self-hosted přes next/font (dřívější @import v CSS prohlížeč ignoroval)
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const jost = Jost({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-jost",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.muzahair.cz'),
@@ -79,7 +96,7 @@ export default function RootLayout({
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
-    <html lang="cs">
+    <html lang="cs" className={`${cormorant.variable} ${jost.variable}`}>
       <body className="antialiased">
         {/* Google Analytics 4 - loaded via consent from CookieConsent component */}
         {GA_MEASUREMENT_ID && (
