@@ -36,7 +36,7 @@ export default function AtelierStrip() {
           aria-label="Fotky z ateliéru"
         >
           {[...PHOTOS, ...PHOTOS].map((p, i) => (
-            <li key={i} aria-hidden={i >= PHOTOS.length ? true : undefined} className="shrink-0 w-[72vw] sm:w-[380px] lg:w-[460px]">
+            <li key={i} aria-hidden={i >= PHOTOS.length ? true : undefined} className="shrink-0 w-[84vw] sm:w-[460px] lg:w-[600px]">
               <div className="aspect-[3/2] overflow-hidden rounded-[18px] bg-muza-soft">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.src} alt={i >= PHOTOS.length ? '' : p.alt} loading="lazy" decoding="async" width={1200} height={800}

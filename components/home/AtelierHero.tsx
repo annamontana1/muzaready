@@ -10,6 +10,14 @@ const COLLECTIONS = [
   { name: 'Platinum edition', note: 'Ručně tříděno, výkup ČR a SR', price: 'od 10 900 Kč', href: '/vlasy-k-prodlouzeni/platinum-edition' },
 ];
 
+// Délka jednoho záběru; celý cyklus = počet záběrů × tato hodnota (viz keyframes crossfade)
+const SLIDE_SECONDS = 7;
+const SLIDES = [
+  { id: '10', alt: 'Výroba paruky: háčkování vlasů do krajky na hlavě figuríny', pos: 'object-[50%_40%]' },
+  { id: '07', alt: 'Ateliér Múza Hair v Praze: tým u pracovních stolů šije tresy a tresuje vlasy', pos: 'object-[50%_55%]' },
+  { id: '12', alt: 'Tým ateliéru Múza Hair', pos: 'object-[50%_45%]' },
+];
+
 export default function AtelierHero() {
   const [active, setActive] = useState(1);
   const c = COLLECTIONS[active];
@@ -18,16 +26,23 @@ export default function AtelierHero() {
     <section className="bg-muza-ivory lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:min-h-[calc(100vh-108px)]">
       {/* Fotka */}
       <div className="px-4 pt-5 lg:p-10 lg:pr-0 flex">
-        <div className="w-full rounded-t-[999px] rounded-b-[20px] border border-muza-ink p-[5px] max-w-[560px] mx-auto lg:max-w-none">
-          <div className="relative h-[44vh] min-h-[300px] lg:h-full rounded-t-[999px] rounded-b-[14px] overflow-hidden bg-muza-mocha">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/hero/hero-portret-652.webp"
-              srcSet="/images/hero/hero-portret-652.webp 652w, /images/hero/hero-portret-1080.webp 1080w"
-              sizes="(min-width: 1024px) 52vw, 100vw"
-              width={652} height={971}
-              alt="Žena s dlouhými lesklými tmavě hnědými vlasy ve vrstveném střihu"
-              className="absolute inset-0 w-full h-full object-cover object-[50%_20%]" fetchPriority="high" />
+        {/* Tři 4K záběry z ateliéru se pomalu prolínají; jen opacity, žádný posun */}
+        <div className="w-full rounded-[24px] border border-muza-ink p-[5px] self-center">
+          <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[min(76vh,820px)] rounded-[19px] overflow-hidden bg-muza-mocha">
+            {SLIDES.map((s, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={s.id}
+                src={`/images/hero/slide-${s.id}-1280.webp`}
+                srcSet={`/images/hero/slide-${s.id}-768.webp 768w, /images/hero/slide-${s.id}-1280.webp 1280w, /images/hero/slide-${s.id}-1920.webp 1920w`}
+                sizes="(min-width: 1024px) 52vw, 100vw"
+                width={1920} height={1288}
+                alt={s.alt}
+                fetchPriority={i === 0 ? 'high' : undefined}
+                loading={i === 0 ? undefined : 'lazy'}
+                // Záporné zpoždění: každý další záběr už „běží“ v neviditelné části cyklu, takže se nad první nepřekreslí
+                style={{ animationDelay: `${(i - SLIDES.length) * SLIDE_SECONDS}s` }}
+                className={`absolute inset-0 w-full h-full object-cover ${s.pos} animate-crossfade motion-reduce:animate-none ${i === 0 ? '' : 'opacity-0 motion-reduce:hidden'}`} />
+            ))}
           </div>
         </div>
       </div>
