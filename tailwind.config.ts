@@ -111,8 +111,14 @@ const config: Config = {
       animation: {
         'slide-up': 'slide-up 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
         'modal-in': 'modal-in 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
+        // Pás fotek z ateliéru: stálý pohyb zprava doleva, proto linear
+        marquee: 'marquee 60s linear infinite',
       },
       keyframes: {
+        marquee: {
+          '0%': { transform: 'translate3d(0, 0, 0)' },
+          '100%': { transform: 'translate3d(-50%, 0, 0)' },
+        },
         'slide-up': {
           '0%': { transform: 'translateY(100%)' },
           '100%': { transform: 'translateY(0)' },
