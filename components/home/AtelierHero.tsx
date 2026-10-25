@@ -1,12 +1,10 @@
-'use client';
-
 import Link from 'next/link';
-import { useState } from 'react';
 
-// Úvod: hned pod hlavičkou plyne souvislý pás černobílých fotek z ateliéru, pod ním výběr kolekce
-const COLLECTIONS = [
-  { name: 'Středoevropské vlasy', note: 'Barvené v naší pražské barvírně, odstíny 1–10', price: 'od 6 900 Kč', href: '/vlasy-k-prodlouzeni/barvene-vlasy' },
-  { name: 'Panenské vlasy', note: 'Virgin, nikdy nebarvené, ručně tříděné z výkupu v ČR a SR', price: 'od 10 900 Kč', href: '/vlasy-k-prodlouzeni/nebarvene-panenske' },
+// Úvod: hned pod hlavičkou plyne souvislý pás černobílých fotek z ateliéru, pod ním výběr druhu vlasů
+// Středoevropské = barvené blond (odstíny 8–10), panenské = nebarvené (odstíny 1–7); filtr řeší katalog
+const KINDS = [
+  { name: 'Středoevropské vlasy', href: '/katalog?druh=stredoevropske' },
+  { name: 'Panenské vlasy', href: '/katalog?druh=panenske' },
 ];
 
 // Fotky jdou bez mezer těsně za sebou; pás je zdvojený, aby se smyčka (posun o −50 %) nikdy nepřetrhla
@@ -23,9 +21,6 @@ const PHOTOS = [
 ];
 
 export default function AtelierHero() {
-  const [active, setActive] = useState(0);
-  const c = COLLECTIONS[active];
-
   return (
     <section className="bg-muza-ivory">
       {/* Pás fotek: pohyb jen přes transform, lineárně; při omezeném pohybu stojí a dá se posouvat prstem */}
@@ -61,29 +56,15 @@ export default function AtelierHero() {
 
         <div className="mt-8 lg:mt-2 max-w-[480px]">
           <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Vyberte vlasy</div>
-          <div role="radiogroup" aria-label="Druh vlasů" className="grid grid-cols-2 gap-2">
-            {COLLECTIONS.map((col, i) => {
-              const on = i === active;
-              return (
-                <button key={col.name} type="button" role="radio" aria-checked={on} onClick={() => setActive(i)}
-                  className={`min-h-[52px] px-2 rounded-2xl text-sm leading-tight transition-colors duration-150 ${on ? 'bg-muza-ink text-muza-onink' : 'bg-muza-mocha text-text-dark hover:bg-[#D3C6B9]'}`}>
-                  {col.name}
-                </button>
-              );
-            })}
+          {/* Dva druhy vlasů; každý vede rovnou do katalogu s nastaveným filtrem */}
+          <div className="grid grid-cols-2 gap-2">
+            {KINDS.map((k, i) => (
+              <Link key={k.name} href={k.href}
+                className={`min-h-[56px] px-3 rounded-2xl text-[15px] leading-tight flex items-center justify-center text-center transition-colors duration-150 ${i === 0 ? 'bg-muza-ink text-muza-onink hover:opacity-90' : 'bg-muza-mocha text-text-dark hover:bg-[#D3C6B9]'}`}>
+                {k.name}
+              </Link>
+            ))}
           </div>
-
-          <div className="mt-5 flex items-end justify-between gap-4 border-t border-muza-ink pt-5">
-            <div aria-live="polite">
-              <div className="font-cormorant text-[30px] leading-none text-muza-ink">{c.price}</div>
-              <div className="mt-1.5 text-[13px] text-text-mid">{c.note}</div>
-            </div>
-          </div>
-          <Link href={c.href}
-            className="mt-6 h-14 flex items-center justify-center gap-2.5 rounded-full bg-muza-ink text-muza-onink text-[15px] hover:opacity-90 transition-opacity">
-            Vybrat délku a odstín
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-          </Link>
         </div>
       </div>
     </section>

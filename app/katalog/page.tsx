@@ -39,10 +39,17 @@ export default function CatalogPage() {
   const [sortBy, setSortBy] = useState<'recommended' | 'price-asc' | 'price-desc'>('recommended');
   // ?odstin=7 — odkaz ze vzorníku odstínů na hlavní stránce
   const [shadeFilter, setShadeFilter] = useState<number | null>(null);
+  // ?druh=stredoevropske (barvené blond, odstíny 8–10) | panenske (nebarvené, odstíny 1–7)
+  const [kind, setKind] = useState<'stredoevropske' | 'panenske' | null>(null);
 
   useEffect(() => {
-    const odstin = Number(new URLSearchParams(window.location.search).get('odstin'));
+    const params = new URLSearchParams(window.location.search);
+    const odstin = Number(params.get('odstin'));
     if (odstin) setShadeFilter(odstin);
+    const druh = params.get('druh');
+    if (druh === 'stredoevropske' || druh === 'panenske') setKind(druh);
+    const typ = params.get('typ');
+    if (typ === 'BULK' || typ === 'PIECE') setSelectedType(typ);
     fetchCatalog();
   }, []);
 
@@ -88,6 +95,12 @@ export default function CatalogPage() {
   const filteredItems = items.filter((item) => {
     if (selectedType !== 'ALL' && item.type !== selectedType) return false;
     if (shadeFilter && Number(item.shade) !== shadeFilter) return false;
+    if (kind) {
+      const s = Number(item.shade);
+      if (!s) return false;
+      if (kind === 'stredoevropske' && s < 8) return false;
+      if (kind === 'panenske' && s > 7) return false;
+    }
     return true;
   });
 
@@ -159,6 +172,29 @@ export default function CatalogPage() {
             <option value="price-asc">Cena: od nejnižší</option>
             <option value="price-desc">Cena: od nejvyšší</option>
           </select>
+        </div>
+
+        {/* Druh vlasů: stejné dvě volby jako na hlavní stránce */}
+        <div className="mb-6 flex gap-2 flex-wrap">
+          {([
+            { v: null, label: 'Vše' },
+            { v: 'stredoevropske', label: 'Středoevropské vlasy' },
+            { v: 'panenske', label: 'Panenské vlasy' },
+          ] as const).map((o) => {
+            const on = kind === o.v;
+            return (
+              <button key={o.label} type="button" aria-pressed={on}
+                onClick={() => {
+                  setKind(o.v);
+                  const p = new URLSearchParams(window.location.search);
+                  if (o.v) p.set('druh', o.v); else p.delete('druh');
+                  window.history.replaceState(null, '', p.toString() ? `/katalog?${p}` : '/katalog');
+                }}
+                className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
+                {o.label}
+              </button>
+            );
+          })}
         </div>
 
         <div className="text-sm text-text-mid mb-6 flex items-center gap-3 flex-wrap">

@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-articles';
 import AtelierHero from '@/components/home/AtelierHero';
 import ShadeLadder from '@/components/home/ShadeLadder';
+import FeaturedPieces from '@/components/home/FeaturedPieces';
+import AtelierBand from '@/components/home/AtelierBand';
 
 const StarIcon = () => (
   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--burgundy)' }}>
@@ -110,6 +112,15 @@ export default function Home() {
       {/* ─── HERO: ateliér na míru ─── */}
       <AtelierHero />
 
+      {/* ─── VZORNÍK ODSTÍNŮ ─── */}
+      <ShadeLadder />
+
+      {/* ─── CULÍKY SKLADEM ─── */}
+      <FeaturedPieces />
+
+      {/* ─── ATELIÉR ─── */}
+      <AtelierBand />
+
       {/* ─── TRUST BAR ─── */}
       <div className="bg-white border-b py-7 px-6 md:px-12" style={{ borderColor: 'var(--beige)' }}>
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-around items-center gap-6">
@@ -132,9 +143,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      {/* ─── VZORNÍK ODSTÍNŮ ─── */}
-      <ShadeLadder />
 
       {/* ─── PRODUCTS ─── */}
       <section className="py-24 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
