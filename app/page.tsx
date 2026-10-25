@@ -112,13 +112,6 @@ export default function Home() {
           className="flex flex-col justify-center px-8 py-20 lg:px-20"
           style={{ background: 'var(--ivory)' }}
         >
-          <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-7 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            Český výrobce od roku 2016
-          </div>
 
           <h1
             className="font-cormorant text-[clamp(44px,5vw,64px)] font-light leading-[1.12] mb-7 tracking-[-0.01em]"
@@ -130,7 +123,7 @@ export default function Home() {
           </h1>
 
           <p className="text-[15px] leading-[1.8] max-w-[380px] mb-11 font-light" style={{ color: 'var(--text-soft)' }}>
-            Panenské a pravé vlasy nejvyšší kvality. Vlastní barvírna v Praze, ruční výroba. Standard · LUXE · Platinum edition.
+            Český výrobce od roku 2016. Panenské a pravé vlasy nejvyšší kvality, vlastní barvírna v Praze, ruční výroba. Standard · LUXE · Platinum edition.
           </p>
 
           <div className="flex gap-4 items-center flex-wrap">
@@ -174,12 +167,6 @@ export default function Home() {
               className="rounded-sm p-5 flex items-center gap-4 max-w-[260px]"
               style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)' }}
             >
-              <div
-                className="w-9 h-9 rounded-sm flex items-center justify-center flex-shrink-0 font-cormorant text-base"
-                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-              >
-                ✦
-              </div>
               <div className="text-[12px] leading-[1.5]" style={{ color: 'var(--text-mid)' }}>
                 <strong className="block text-[14px] font-medium mb-0.5" style={{ color: 'var(--text-dark)' }}>
                   Vlastní barvírna
@@ -219,10 +206,6 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-14">
             <div>
-              <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'var(--accent)' }}>
-                <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-                Kolekce
-              </div>
               <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
                 Naše vlasy<br />k <em className="italic" style={{ color: 'var(--burgundy)' }}>prodloužení</em>
               </h2>
@@ -340,10 +323,6 @@ export default function Home() {
 
           {/* Content */}
           <div>
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'var(--accent)' }}>
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Kvalita
-            </div>
             <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em] mb-4" style={{ color: 'var(--text-dark)' }}>
               Vyberte si svoji<br /><em className="italic" style={{ color: 'var(--burgundy)' }}>edici</em>
             </h2>
@@ -382,12 +361,8 @@ export default function Home() {
       <section className="py-24 px-6 md:px-12" style={{ background: 'var(--burgundy)' }}>
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'rgba(248,244,239,0.5)' }}>
-              <span className="block w-6 h-px" style={{ background: 'rgba(248,244,239,0.4)' }} />
-              Proč Mùza Hair
-            </div>
             <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--ivory)' }}>
-              Naše konkurenční<br />výhody
+              Proč Múza Hair
             </h2>
           </div>
 
@@ -405,13 +380,10 @@ export default function Home() {
                 onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
               >
-                <div className="font-cormorant text-[48px] font-light leading-none mb-5" style={{ color: 'rgba(248,244,239,0.15)' }}>
-                  {item.num}
-                </div>
                 <div className="font-cormorant text-[20px] font-normal mb-2.5" style={{ color: 'var(--ivory)' }}>
                   {item.name}
                 </div>
-                <div className="text-[13px] leading-[1.7] font-light" style={{ color: 'rgba(248,244,239,0.65)' }}>
+                <div className="text-[13px] leading-[1.7] font-light" style={{ color: 'rgba(248,244,239,0.82)' }}>
                   {item.desc}
                 </div>
               </div>
@@ -424,11 +396,6 @@ export default function Home() {
       <section className="py-24 px-6 md:px-12 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Metody prodloužení vlasů
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-            </div>
             <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
               Keratin · Nanotapes · <em className="italic" style={{ color: 'var(--burgundy)' }}>Weft</em>
             </h2>
@@ -439,16 +406,14 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: 'var(--beige)' }}>
             {[
               {
-                icon: '💎',
                 name: 'Keratin / Mikrokeratin',
-                desc: 'Keratinové pramínky přilepené k vlastním vlasům. Standart i mikrokeratin — diskrétní, přirozený výsledek.',
+                desc: 'Keratinové pramínky přilepené k vlastním vlasům. Standard i mikrokeratin — diskrétní, přirozený výsledek.',
                 price: 'Nasazení od 4 000 Kč',
                 detail: '130–230 pramenů / 100 g · Korekce po 2,5–3 měs.',
                 href: '/metody-zakonceni/vlasy-na-keratin',
                 cenikHref: '/ceny-aplikaci#keratin',
               },
               {
-                icon: '🩹',
                 name: 'Nanotapes / Tape-In',
                 desc: 'Vlasové pásky 2,8 cm nebo 4 cm — sendvičový spoj bez tepla a chemie. Rychlá korekce.',
                 price: '55–65 Kč / spoj',
@@ -457,7 +422,6 @@ export default function Home() {
                 cenikHref: '/ceny-aplikaci#nanotapes',
               },
               {
-                icon: '🧵',
                 name: 'Weft — Hollywoodské',
                 desc: 'Ručně šité vlasové tresy přišívané na copánky. Bez lepidla, bez tepla. Maximální objem.',
                 price: 'Posun 3 800 Kč',
@@ -467,7 +431,6 @@ export default function Home() {
               },
             ].map((m) => (
               <div key={m.name} className="bg-white p-10 flex flex-col">
-                <div className="text-3xl mb-5">{m.icon}</div>
                 <h3 className="font-cormorant text-[22px] font-normal mb-2" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
                 <p className="text-[13px] leading-[1.7] font-light mb-4 flex-1" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
                 <div className="text-[13px] font-normal mb-1" style={{ color: 'var(--burgundy)' }}>{m.price}</div>
@@ -495,10 +458,6 @@ export default function Home() {
       <section className="py-20 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Jak to funguje
-            </div>
             <h2 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light" style={{ color: 'var(--text-dark)' }}>
               Vlasy online, aplikace u vás nebo v <em className="italic" style={{ color: 'var(--burgundy)' }}>Praze</em>
             </h2>
@@ -510,7 +469,7 @@ export default function Home() {
               { step: '3', title: 'Aplikace u vás nebo v Praze', desc: 'Vlasy aplikuje vaše kadeřnice, nebo přijeďte do showroomu Revoluční 8, Praha 1.' },
             ].map((s) => (
               <div key={s.step} className="flex gap-5">
-                <span className="font-cormorant text-[48px] font-light leading-none flex-shrink-0" style={{ color: 'rgba(74,21,32,0.12)' }}>{s.step}</span>
+                <span className="font-cormorant text-[48px] font-light leading-none flex-shrink-0" style={{ color: 'var(--accent)' }}>{s.step}</span>
                 <div className="pt-2">
                   <p className="font-normal text-[15px] mb-1.5" style={{ color: 'var(--text-dark)' }}>{s.title}</p>
                   <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{s.desc}</p>
@@ -525,40 +484,32 @@ export default function Home() {
       <section className="py-24 px-6 md:px-12" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'var(--accent)' }}>
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Sortiment
-            </div>
             <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
               Příčesky, paruky<br />& <em className="italic" style={{ color: 'var(--burgundy)' }}>doplňky</em>
             </h2>
           </div>
 
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {[
-              { icon: '💁‍♀️', name: 'Clip-in vlasy', href: '/pricesky-a-paruky/clip-in-vlasy' },
-              { icon: '👱‍♀️', name: 'Ofiny clip-in', href: '/pricesky-a-paruky/ofiny-z-pravych-vlasu' },
-              { icon: '💇‍♂️', name: 'Toupee / tupé', href: '/pricesky-a-paruky/toupee' },
-              { icon: '🧵', name: 'Vlasové tresy', href: '/pricesky-a-paruky/vlasove-tresy' },
-              { icon: '✨', name: 'Pravé paruky', href: '/pricesky-a-paruky/prave-paruky' },
-              { icon: '🎀', name: 'Clip-in culík', href: '/pricesky-a-paruky/clip-in-culik' },
-            ].map(({ icon, name, href }) => (
+              { name: 'Clip-in vlasy', href: '/pricesky-a-paruky/clip-in-vlasy' },
+              { name: 'Ofiny clip-in', href: '/pricesky-a-paruky/ofiny-z-pravych-vlasu' },
+              { name: 'Toupee / tupé', href: '/pricesky-a-paruky/toupee' },
+              { name: 'Vlasové tresy', href: '/pricesky-a-paruky/vlasove-tresy' },
+              { name: 'Pravé paruky', href: '/pricesky-a-paruky/prave-paruky' },
+              { name: 'Clip-in culík', href: '/pricesky-a-paruky/clip-in-culik' },
+            ].map(({ name, href }) => (
               <Link
                 key={href}
                 href={href}
-                className="group flex flex-col items-center gap-3 py-5 px-3 rounded-sm cursor-pointer transition-colors"
-                onMouseEnter={e => (e.currentTarget.style.background = 'var(--white)')}
-                onMouseLeave={e => (e.currentTarget.style.background = '')}
+                className="group flex items-center justify-between gap-3 min-h-[56px] px-5 py-4 border bg-white transition-colors hover:border-burgundy"
+                style={{ borderColor: 'var(--beige-mid)' }}
               >
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-[22px] border transition-colors"
-                  style={{ background: 'var(--white)', borderColor: 'var(--beige-mid)' }}
-                >
-                  {icon}
-                </div>
-                <span className="text-[12px] tracking-[0.05em] font-normal text-center" style={{ color: 'var(--text-mid)' }}>
+                <span className="font-cormorant text-[20px] leading-tight" style={{ color: 'var(--text-dark)' }}>
                   {name}
                 </span>
+                <svg aria-hidden="true" className="w-4 h-4 flex-shrink-0 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" style={{ color: 'var(--burgundy)' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
               </Link>
             ))}
           </div>
@@ -569,10 +520,6 @@ export default function Home() {
       <section className="py-24 px-6 md:px-12 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'var(--accent)' }}>
-              <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-              Reference
-            </div>
             <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
               Co říkají naše<br /><em className="italic" style={{ color: 'var(--burgundy)' }}>zákaznice</em>
             </h2>
@@ -612,10 +559,6 @@ export default function Home() {
             <div className="max-w-7xl mx-auto">
               <div className="flex justify-between items-end mb-14">
                 <div>
-                  <div className="text-[11px] tracking-[0.2em] uppercase mb-4 flex items-center gap-3 font-normal" style={{ color: 'var(--accent)' }}>
-                    <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-                    Blog
-                  </div>
                   <h2 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--text-dark)' }}>
                     Průvodce prodloužením <em className="italic" style={{ color: 'var(--burgundy)' }}>vlasů</em>
                   </h2>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import type { SkuCartItem } from '@/types/cart';
+import Spinner from './ui/Spinner';
 
 interface BulkAddToCartModalProps {
   isOpen: boolean;
@@ -232,7 +233,7 @@ export default function BulkAddToCartModal({
           >
             {isAdding ? (
               <>
-                <span className="animate-spin">⟳</span>
+                <Spinner />
                 Přidávám...
               </>
             ) : (

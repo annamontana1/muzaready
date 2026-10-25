@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import Spinner from './ui/Spinner';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -63,7 +64,7 @@ export default function Button({
     >
       {isLoading ? (
         <>
-          <span className="animate-spin">⟳</span>
+          <Spinner />
           {children}
         </>
       ) : (

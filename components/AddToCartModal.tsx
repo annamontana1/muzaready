@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import type { SkuCartItem } from '@/types/cart';
+import Spinner from './ui/Spinner';
 
 interface AddToCartModalProps {
   isOpen: boolean;
@@ -153,7 +154,7 @@ export default function AddToCartModal({
           >
             {isAdding ? (
               <>
-                <span className="animate-spin">⟳</span>
+                <Spinner />
                 Přidávám...
               </>
             ) : (
