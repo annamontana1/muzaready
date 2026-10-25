@@ -203,7 +203,7 @@ export default function OrderHeader({ order, onStatusChange }: OrderHeaderProps)
           </p>
           <p className="text-xs text-stone-400 mt-0.5">
             {new Date(order.createdAt).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' })}
-            {' · '}{order.channel === 'instagram' ? 'Instagram' : order.channel === 'store' ? 'Showroom' : 'Eshop'}
+            {' · '}{order.channel === 'instagram' ? 'Instagram' : order.channel === 'store' ? 'Showroom' : order.channel === 'whatsapp' ? 'Eshop · WhatsApp' : 'Eshop'}
           </p>
         </div>
 

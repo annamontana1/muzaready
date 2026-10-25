@@ -112,6 +112,7 @@ export default function Filters({ onFilter }: FiltersProps) {
             <option value="web">E-shop</option>
             <option value="store">Prodejna</option>
             <option value="instagram">Instagram</option>
+            <option value="whatsapp">WhatsApp</option>
           </select>
         </div>
 

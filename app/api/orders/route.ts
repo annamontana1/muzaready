@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, cartLines, shippingInfo, packetaPoint, couponCode } = validation.data;
+    const { email, cartLines, shippingInfo, packetaPoint, couponCode, paymentMethod, note } = validation.data;
+    const viaWhatsApp = paymentMethod === 'whatsapp';
 
     // Import the quote function at runtime to avoid circular dependencies
     const { quoteCartLines } = await import('@/lib/stock');
@@ -155,8 +156,11 @@ export async function POST(request: NextRequest) {
             packetaPointName: packetaPoint?.name || null,
             packetaPointData: packetaPoint ? JSON.stringify(packetaPoint) : null,
 
-            orderStatus: 'pending', // Waiting for GoPay payment confirmation
+            orderStatus: 'pending', // GoPay: čeká na platbu; WhatsApp: čeká na potvrzení ve zprávě
             paymentStatus: 'unpaid',
+            paymentMethod: viaWhatsApp ? 'whatsapp' : 'gopay',
+            channel: viaWhatsApp ? 'whatsapp' : 'web',
+            notesCustomer: note?.trim() || null,
             deliveryStatus: 'pending',
             subtotal: subtotalAmount,
             shippingCost: shippingCost,
@@ -274,10 +278,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         orderId: order.id,
+        orderNumber: order.orderNumber,
         email: order.email,
         total: order.total,
         orderStatus: order.orderStatus,
-        message: 'Objednávka vytvořena. Čeká na platbu přes GoPay.',
+        message: viaWhatsApp ? 'Objednávka uložena. Domluva přes WhatsApp.' : 'Objednávka vytvořena. Čeká na platbu přes GoPay.',
         items: order.items,
       },
       { status: 201 }

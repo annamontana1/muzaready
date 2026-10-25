@@ -37,7 +37,7 @@ export const CartItemSchema = z.object({
 // Shipping info schema
 export const ShippingInfoSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(100),
-  lastName: z.string().min(1, 'Last name is required').max(100),
+  lastName: z.string().max(100).default(''),
   phone: z.string().regex(/^\+?[0-9\s\-()]+$/, 'Invalid phone number format').optional(),
   streetAddress: z.string().max(200).optional(), // Optional for Zásilkovna
   city: z.string().max(100).optional(), // Optional for Zásilkovna
@@ -70,6 +70,8 @@ export const CreateOrderSchema = z.object({
   shippingInfo: ShippingInfoSchema,
   packetaPoint: PacketaPointSchema.optional(), // Optional Zásilkovna pickup point
   couponCode: z.string().optional(), // Optional coupon code
+  paymentMethod: z.enum(['gopay', 'whatsapp']).default('gopay'), // whatsapp = objednávka bez platby, domluva přes WhatsApp
+  note: z.string().max(1000).optional(), // poznámka zákaznice k objednávce
 });
 
 // Update order status schema

@@ -98,6 +98,12 @@ export default function CustomerSection({ order }: CustomerSectionProps) {
               <p className="text-sm text-gray-600 mb-1">Telefon</p>
               <p className="text-base font-medium text-gray-900">{order.phone || '–'}</p>
             </div>
+            {order.notesCustomer && (
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Poznámka zákaznice</p>
+                <p className="text-base text-gray-900 whitespace-pre-line">{order.notesCustomer}</p>
+              </div>
+            )}
           </div>
         </div>
 

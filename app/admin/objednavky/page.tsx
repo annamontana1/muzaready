@@ -635,6 +635,7 @@ export default function AdminOrdersPage() {
           <option value="prodejna">Prodejna</option>
           <option value="instagram">Instagram</option>
           <option value="web">E-shop</option>
+          <option value="whatsapp">WhatsApp</option>
         </select>
         {(filterMonth || filterDay || filterChannelLocal) && (
           <button
@@ -766,6 +767,10 @@ export default function AdminOrdersPage() {
                       : <span className="text-gray-400 italic">Bez jména</span>}
                   </div>
                   <div className="text-xs text-gray-400 font-mono">#{String(order.orderNumber)}</div>
+                  {order.phone && <div className="text-xs text-gray-500">{order.phone}</div>}
+                  {order.channel === 'whatsapp' && (
+                    <span className="mt-1 inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700">WhatsApp</span>
+                  )}
                 </td>
                 <td className="px-4 py-4">
                   <PoznamkaCell

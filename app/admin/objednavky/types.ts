@@ -19,6 +19,7 @@ export interface Order {
   email: string;
   firstName: string | null;
   lastName: string | null;
+  phone: string | null;
   total: number;
   subtotal: number;
   shippingCost: number;

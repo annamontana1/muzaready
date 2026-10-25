@@ -29,6 +29,18 @@ const config: Config = {
           900: '#160508',
           950: '#0A0204',
         },
+        // Schválená paleta redesignu (logo, krémová, mocha, písková)
+        muza: {
+          ink: '#330D0D',
+          cream: '#F7F3EE',
+          ivory: '#F0EAE3',
+          mocha: '#DCD1C6',
+          sand: '#EADCC8',
+          line: '#E3D9CE',
+          field: '#D9CEC2',
+          soft: '#6E5A55',
+          onink: '#F6EEE6',
+        },
         maroon: '#6B2535',
         terracotta: '#9B3A4A',
 

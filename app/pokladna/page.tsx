@@ -4,7 +4,7 @@ import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Script from 'next/script';
-import { useTranslation, useLanguage } from '@/contexts/LanguageContext';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 declare global {
   interface Window {
@@ -35,26 +35,67 @@ interface PacketaOptions {
   language?: string;
 }
 
-const inputClass = `
-  w-full px-4 py-3 text-base sm:text-sm font-light
-  border focus:outline-none focus:ring-2 focus:ring-burgundy/30 transition-shadow
-  bg-white
-`;
-const inputStyle = {
-  borderColor: 'var(--warm-beige)',
-  color: 'var(--text-dark)',
+// Dokud není připojená GoPay, objednávka se uloží a dokončí zprávou ve WhatsAppu.
+// Po připojení stačí ve Vercelu nastavit NEXT_PUBLIC_PAYMENT_MODE=gopay.
+const PAYMENT_MODE: 'gopay' | 'whatsapp' =
+  process.env.NEXT_PUBLIC_PAYMENT_MODE === 'gopay' ? 'gopay' : 'whatsapp';
+const WHATSAPP_NUMBER = '420728722880';
+
+const DELIVERY_OPTIONS = [
+  { value: 'zasilkovna', label: 'Zásilkovna', desc: 'Výdejní místo, ČR a SK', price: 65 },
+  { value: 'dpd', label: 'Kurýr DPD', desc: 'Na adresu, 1–2 pracovní dny', price: 99 },
+  { value: 'ppl', label: 'Kurýr PPL', desc: 'Na adresu, 1–2 pracovní dny', price: 99 },
+  { value: 'standard', label: 'Česká pošta', desc: 'Na adresu, 2–4 pracovní dny', price: 150 },
+  { value: 'showroom', label: 'Osobní odběr', desc: 'Showroom Revoluční 8, Praha 1', price: 0 },
+] as const;
+
+const ENDING_LABELS: Record<string, string> = {
+  NONE: 'bez zakončení',
+  KERATIN: 'keratin',
+  STANDARD_KERATIN: 'keratin',
+  MICRO_KERATIN: 'mikrokeratin',
+  PASKY_KERATINU: 'keratinové pásky',
+  TAPES: 'tapes',
+  WEFT: 'weft',
 };
-const inputFocusStyle = '';
+
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', minimumFractionDigits: 0 }).format(price);
+
+const labelClass = 'block text-xs text-muza-soft';
+const fieldClass =
+  'w-full h-11 bg-transparent border-0 border-b border-muza-field px-0 text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink transition-colors disabled:opacity-50';
+const sectionTitle = 'font-jost text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink';
+
+function Radio({ on }: { on: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="flex-none w-5 h-5 rounded-full box-border transition-[border] duration-150"
+      style={{ border: on ? '6px solid #330D0D' : '1px solid #A39389' }}
+    />
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+      <path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8z" />
+    </svg>
+  );
+}
 
 export default function PokladnaPage() {
-  const { items, getTotalPrice } = useCart();
+  const { items, getTotalPrice, clearCart } = useCart();
   const { t } = useTranslation();
-  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [packetaLoaded, setPacketaLoaded] = useState(false);
   const [packetaFailed, setPacketaFailed] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [couponOpen, setCouponOpen] = useState(false);
+  const [sent, setSent] = useState<{ orderNumber: number; waLink: string } | null>(null);
 
   useEffect(() => {
     if (packetaLoaded) return;
@@ -70,15 +111,15 @@ export default function PokladnaPage() {
   }, [packetaLoaded]);
 
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
-    firstName: '',
-    lastName: '',
     phone: '',
     streetAddress: '',
     city: '',
     zipCode: '',
     country: 'CZ',
     deliveryMethod: 'zasilkovna',
+    note: '',
   });
 
   const [couponCode, setCouponCode] = useState('');
@@ -88,25 +129,12 @@ export default function PokladnaPage() {
   const [couponApplied, setCouponApplied] = useState(false);
   const [selectedPickupPoint, setSelectedPickupPoint] = useState<PacketaPoint | null>(null);
 
-  const total = getTotalPrice();
-
-  const getShippingCost = () => {
-    if (formData.deliveryMethod === 'zasilkovna') return 65;
-    if (formData.deliveryMethod === 'dpd') return 99;
-    if (formData.deliveryMethod === 'ppl') return 99;
-    if (formData.deliveryMethod === 'showroom') return 0;
-    return 150;
-  };
-
+  const subtotal = getTotalPrice();
+  const delivery = DELIVERY_OPTIONS.find((o) => o.value === formData.deliveryMethod) ?? DELIVERY_OPTIONS[0];
+  const shipping = delivery.price;
   const needsAddress = ['standard', 'dpd', 'ppl'].includes(formData.deliveryMethod);
-  const shipping = getShippingCost();
-
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat(language === 'cs' ? 'cs-CZ' : 'en-US', {
-      style: 'currency',
-      currency: 'CZK',
-      minimumFractionDigits: 0,
-    }).format(price);
+  const grandTotal = subtotal - couponDiscount + shipping;
+  const viaWhatsApp = PAYMENT_MODE === 'whatsapp';
 
   const openPacketaWidget = () => {
     if (!window.Packeta) { alert(t('checkout.shippingMethod.packetaLoading')); return; }
@@ -118,7 +146,7 @@ export default function PokladnaPage() {
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -130,7 +158,7 @@ export default function PokladnaPage() {
       const res = await fetch('/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: couponCode.trim(), orderAmount: total, userEmail: formData.email || undefined }),
+        body: JSON.stringify({ code: couponCode.trim(), orderAmount: subtotal, userEmail: formData.email || undefined }),
       });
       const data = await res.json();
       if (!res.ok || !data.valid) { setCouponError(data.error || 'Neplatný kupón'); setCouponDiscount(0); setCouponApplied(false); }
@@ -141,80 +169,134 @@ export default function PokladnaPage() {
 
   const handleRemoveCoupon = () => { setCouponCode(''); setCouponDiscount(0); setCouponApplied(false); setCouponError(''); };
 
+  const describeItem = (item: (typeof items)[number]) =>
+    [item.skuName || 'Vlasy', item.saleMode === 'BULK_G' ? `${item.grams} g` : null, ENDING_LABELS[item.ending] || null]
+      .filter(Boolean)
+      .join(' · ');
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); setError(''); setSuccess(''); setLoading(true);
+    e.preventDefault(); setError(''); setLoading(true);
+    const fail = (msg: string) => { setError(msg); setLoading(false); };
     try {
-      if (!formData.email || !formData.firstName) { setError(t('checkout.requiredFields')); setLoading(false); return; }
-      if (formData.deliveryMethod === 'zasilkovna' && !selectedPickupPoint) { setError(t('checkout.shippingMethod.pickupPointRequired')); setLoading(false); return; }
-      if (needsAddress && (!formData.streetAddress || !formData.city)) { setError(t('checkout.addressRequired')); setLoading(false); return; }
+      const name = formData.name.trim().replace(/\s+/g, ' ');
+      if (!name || !formData.email) return fail('Vyplňte prosím jméno a e-mail.');
+      if (viaWhatsApp && !formData.phone.trim()) return fail('Vyplňte prosím telefon, ozveme se vám na WhatsApp.');
+      if (formData.deliveryMethod === 'zasilkovna' && !selectedPickupPoint) return fail(t('checkout.shippingMethod.pickupPointRequired'));
+      if (needsAddress && (!formData.streetAddress || !formData.city || !formData.zipCode)) return fail(t('checkout.addressRequired'));
 
-      const orderCreationData = {
-        email: formData.email,
-        cartLines: items.map((item) => ({
-          skuId: item.skuId,
-          wantedGrams: item.saleMode === 'BULK_G' ? item.grams : undefined,
-          ending: item.ending,
-        })),
-        shippingInfo: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phone: formData.phone,
-          streetAddress: formData.deliveryMethod === 'zasilkovna' ? (selectedPickupPoint?.street || '') : formData.deliveryMethod === 'showroom' ? 'Revoluční 8' : formData.streetAddress,
-          city: formData.deliveryMethod === 'zasilkovna' ? (selectedPickupPoint?.city || '') : formData.deliveryMethod === 'showroom' ? 'Praha 1' : formData.city,
-          zipCode: formData.deliveryMethod === 'zasilkovna' ? (selectedPickupPoint?.zip || '') : formData.deliveryMethod === 'showroom' ? '110 00' : formData.zipCode,
-          country: formData.country,
-          deliveryMethod: formData.deliveryMethod,
-        },
-        packetaPoint: formData.deliveryMethod === 'zasilkovna' && selectedPickupPoint ? {
-          id: selectedPickupPoint.id, name: selectedPickupPoint.name, street: selectedPickupPoint.street,
-          city: selectedPickupPoint.city, zip: selectedPickupPoint.zip, country: selectedPickupPoint.country,
-        } : undefined,
-        couponCode: couponApplied && couponCode ? couponCode.trim() : undefined,
-      };
+      const [firstName, ...rest] = name.split(' ');
+      const lastName = rest.join(' ');
+      const isPoint = formData.deliveryMethod === 'zasilkovna';
+      const isShowroom = formData.deliveryMethod === 'showroom';
 
-      const orderResponse = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderCreationData) });
-      if (!orderResponse.ok) { const err = await orderResponse.json(); setError(err.error || t('checkout.errors.orderCreation')); setLoading(false); return; }
+      const orderResponse = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          cartLines: items.map((item) => ({
+            skuId: item.skuId,
+            wantedGrams: item.saleMode === 'BULK_G' ? item.grams : undefined,
+            ending: item.ending,
+          })),
+          shippingInfo: {
+            firstName,
+            lastName,
+            phone: formData.phone.trim() || undefined,
+            streetAddress: isPoint ? (selectedPickupPoint?.street || '') : isShowroom ? 'Revoluční 8' : formData.streetAddress,
+            city: isPoint ? (selectedPickupPoint?.city || '') : isShowroom ? 'Praha 1' : formData.city,
+            zipCode: isPoint ? (selectedPickupPoint?.zip || '') : isShowroom ? '110 00' : formData.zipCode,
+            country: formData.country,
+            deliveryMethod: formData.deliveryMethod,
+          },
+          packetaPoint: isPoint && selectedPickupPoint ? {
+            id: selectedPickupPoint.id, name: selectedPickupPoint.name, street: selectedPickupPoint.street,
+            city: selectedPickupPoint.city, zip: selectedPickupPoint.zip, country: selectedPickupPoint.country,
+          } : undefined,
+          couponCode: couponApplied && couponCode ? couponCode.trim() : undefined,
+          paymentMethod: PAYMENT_MODE,
+          note: formData.note.trim() || undefined,
+        }),
+      });
+      if (!orderResponse.ok) {
+        const err = await orderResponse.json().catch(() => ({}));
+        return fail(err.error || t('checkout.errors.orderCreation'));
+      }
+      const { orderId, orderNumber, total: orderTotal } = await orderResponse.json();
 
-      const { orderId, total: orderTotal } = await orderResponse.json();
-      setSuccess(t('checkout.payment.orderCreated'));
+      if (viaWhatsApp) {
+        const deliveryText = isPoint && selectedPickupPoint
+          ? `Zásilkovna – ${selectedPickupPoint.name}`
+          : isShowroom ? 'Osobní odběr, Revoluční 8' : `${delivery.label} – ${formData.streetAddress}, ${formData.zipCode} ${formData.city}`;
+        const message = [
+          `Dobrý den, posílám objednávku č. ${orderNumber}:`,
+          ...items.map((item) => `• ${describeItem(item)} – ${formatPrice(item.lineGrandTotal)}`),
+          `Doručení: ${deliveryText} (${shipping === 0 ? 'zdarma' : formatPrice(shipping)})`,
+          `Celkem: ${formatPrice(orderTotal)}`,
+          `${name}, ${formData.phone.trim()}`,
+          formData.note.trim() ? `Poznámka: ${formData.note.trim()}` : null,
+        ].filter(Boolean).join('\n');
+        const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        // Objednávka je uložená v adminu – košík vyprázdníme a otevřeme WhatsApp
+        clearCart();
+        setSent({ orderNumber, waLink });
+        setLoading(false);
+        window.location.href = waLink;
+        return;
+      }
 
       const paymentResponse = await fetch('/api/gopay/create-payment', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, amount: orderTotal, email: formData.email, firstName: formData.firstName, lastName: formData.lastName, phone: formData.phone }),
+        body: JSON.stringify({ orderId, amount: orderTotal, email: formData.email, firstName, lastName, phone: formData.phone }),
       });
-      if (!paymentResponse.ok) { const err = await paymentResponse.json(); setError(err.error || t('checkout.errors.paymentCreation')); setLoading(false); return; }
-
+      if (!paymentResponse.ok) {
+        const err = await paymentResponse.json().catch(() => ({}));
+        return fail(err.error || t('checkout.errors.paymentCreation'));
+      }
       const { paymentUrl } = await paymentResponse.json();
-      if (!paymentUrl) { setError(t('checkout.errors.paymentUrl')); setLoading(false); return; }
-
+      if (!paymentUrl) return fail(t('checkout.errors.paymentUrl'));
       // Košík mažeme až na potvrzovací stránce po zaplacení – zrušená platba ho nesmaže
       window.location.href = paymentUrl;
     } catch (err) {
       console.error(err);
-      setError(t('checkout.errors.generic'));
-      setLoading(false);
+      fail(t('checkout.errors.generic'));
     }
   };
 
-  // ── Empty cart ──────────────────────────────────────────────────────────
+  // ── Odesláno přes WhatsApp ──────────────────────────────────────────────
+  if (sent) {
+    return (
+      <div className="min-h-screen bg-muza-cream">
+        <div className="max-w-md mx-auto px-5 py-16 text-center">
+          <div className="mx-auto w-14 h-14 rounded-full border border-muza-ink text-muza-ink flex items-center justify-center">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+          </div>
+          <h1 className="mt-5 font-cormorant text-4xl font-light text-muza-ink">Děkujeme</h1>
+          <p className="mt-3 text-sm leading-relaxed text-text-mid">
+            Objednávku č. {sent.orderNumber} máme uloženou. Dokončete prosím odeslání zprávy ve WhatsAppu, potvrdíme vám odstín
+            a dostupnost a pošleme platební údaje.
+          </p>
+          <a href={sent.waLink}
+            className="mt-8 flex items-center justify-center gap-2.5 h-14 rounded-full bg-muza-ink text-muza-onink text-[15px] hover:opacity-90 transition-opacity">
+            <WhatsAppIcon />Otevřít WhatsApp
+          </a>
+          <Link href="/" className="mt-3 flex items-center justify-center h-12 rounded-full border border-muza-ink text-muza-ink text-sm">
+            Zpět do obchodu
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Prázdný košík ───────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-3xl mx-auto px-6 py-16 text-center">
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            POKLADNA
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          </div>
-          <h1 className="font-cormorant text-[clamp(32px,4vw,48px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
-            V košíku nic není
-          </h1>
-          <p className="text-sm font-light mb-10" style={{ color: 'var(--text-soft)' }}>
-            Přidejte produkty do košíku a vraťte se sem
-          </p>
+      <div className="min-h-screen bg-muza-cream">
+        <div className="max-w-md mx-auto px-5 py-20 text-center">
+          <h1 className="font-cormorant text-4xl font-light text-muza-ink mb-3">V košíku nic není</h1>
+          <p className="text-sm font-light text-muza-soft mb-10">Vyberte si culík a vraťte se sem.</p>
           <Link href="/vlasy-k-prodlouzeni"
-            className="inline-block px-10 py-3.5 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90"
-            style={{ background: 'var(--burgundy)' }}>
+            className="inline-flex items-center justify-center h-14 px-10 rounded-full bg-muza-ink text-muza-onink text-[15px] hover:opacity-90 transition-opacity">
             Pokračovat v nákupu
           </Link>
         </div>
@@ -222,329 +304,258 @@ export default function PokladnaPage() {
     );
   }
 
-  const deliveryOptions = [
-    { value: 'zasilkovna', label: 'Zásilkovna — výdejní místo', price: '65 Kč', desc: 'Výdejní místa po celé ČR a SK' },
-    { value: 'dpd', label: 'DPD — kurýr na adresu', price: '99 Kč', desc: '1–2 pracovní dny' },
-    { value: 'ppl', label: 'PPL — kurýr na adresu', price: '99 Kč', desc: '1–2 pracovní dny' },
-    { value: 'standard', label: 'Česká pošta', price: '150 Kč', desc: '2–4 pracovní dny' },
-    { value: 'showroom', label: 'Osobní odběr — Showroom Praha', price: 'Zdarma', desc: 'Revoluční 8, Praha 1 · Po domluvě' },
-  ];
+  const submitLabel = loading ? 'Odesílám…' : viaWhatsApp ? 'Objednat přes WhatsApp' : `Zaplatit ${formatPrice(grandTotal)}`;
+
+  const totals = (
+    <div className="pt-4 border-t border-muza-ink">
+      <div className="flex justify-between py-0.5 text-sm"><span className="text-muza-soft">Mezisoučet</span><span>{formatPrice(subtotal)}</span></div>
+      {couponApplied && couponDiscount > 0 && (
+        <div className="flex justify-between py-0.5 text-sm"><span className="text-muza-soft">Sleva ({couponCode})</span><span>−{formatPrice(couponDiscount)}</span></div>
+      )}
+      <div className="flex justify-between py-0.5 text-sm"><span className="text-muza-soft">Doprava</span><span>{shipping === 0 ? 'zdarma' : formatPrice(shipping)}</span></div>
+      <div className="flex justify-between items-baseline pt-2.5">
+        <span className="font-cormorant text-2xl font-light">Celkem</span>
+        <span className="font-cormorant text-3xl font-light text-muza-ink">{formatPrice(grandTotal)}</span>
+      </div>
+    </div>
+  );
 
   return (
     <>
       <Script src="https://widget.packeta.com/v6/www/js/library.js" strategy="afterInteractive" onLoad={() => setPacketaLoaded(true)} />
 
-      <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-6xl mx-auto px-6 py-16">
-
-          {/* Breadcrumb */}
-          <nav className="text-[11px] tracking-[0.15em] uppercase font-light mb-12" style={{ color: 'var(--text-soft)' }}>
-            <Link href="/" style={{ color: 'var(--text-soft)' }} className="hover:underline">Domů</Link>
-            <span className="mx-2">—</span>
-            <Link href="/kosik" style={{ color: 'var(--text-soft)' }} className="hover:underline">Košík</Link>
-            <span className="mx-2">—</span>
-            <span style={{ color: 'var(--text-mid)' }}>Pokladna</span>
-          </nav>
-
-          {/* Header */}
-          <div className="mb-10 pb-6 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              DOKONČENÍ OBJEDNÁVKY
+      <div className="min-h-screen bg-muza-cream text-text-dark font-light">
+        {/* Souhrn košíku – na mobilu sbalený nahoře */}
+        <div className="lg:hidden border-b border-muza-line bg-[#EFE8DF]">
+          <button type="button" aria-expanded={summaryOpen} onClick={() => setSummaryOpen((v) => !v)}
+            className="w-full flex items-center gap-3 px-5 py-3.5 text-left">
+            <span className="flex-1 min-w-0">
+              <span className="block text-sm">{items.length === 1 ? describeItem(items[0]) : `${items.length} položky v košíku`}</span>
+              <span className="block text-xs text-muza-soft mt-0.5">{summaryOpen ? 'Skrýt souhrn' : 'Zobrazit souhrn'}</span>
+            </span>
+            <span className="flex items-center gap-1.5 font-cormorant text-xl">
+              {formatPrice(grandTotal)}
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#330D0D" strokeWidth="1.5"
+                className={`transition-transform duration-200 ${summaryOpen ? 'rotate-180' : ''}`}><path d="M6 9l6 6 6-6" /></svg>
+            </span>
+          </button>
+          {summaryOpen && (
+            <div className="px-5 pb-4 space-y-1.5 text-[13px]">
+              {items.map((item) => (
+                <div key={item.skuId} className="flex justify-between gap-3">
+                  <span className="text-muza-soft">{describeItem(item)}</span><span>{formatPrice(item.lineGrandTotal)}</span>
+                </div>
+              ))}
+              <div className="flex justify-between"><span className="text-muza-soft">Doprava</span><span>{shipping === 0 ? 'zdarma' : formatPrice(shipping)}</span></div>
+              <Link href="/kosik" className="inline-block pt-1 text-muza-ink underline underline-offset-2">Upravit košík</Link>
             </div>
-            <h1 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light" style={{ color: 'var(--text-dark)' }}>
-              Pokladna
-            </h1>
-          </div>
+          )}
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+        <div className="max-w-5xl mx-auto px-5 lg:px-8 pt-7 pb-36 lg:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16 lg:items-start">
+          <form id="checkout" onSubmit={handleSubmit} noValidate className="min-w-0">
+            <h1 className="font-cormorant text-[36px] lg:text-[44px] leading-none font-light text-muza-ink">Dokončení objednávky</h1>
+            <p className="mt-2 text-[13px] text-muza-soft">
+              Zabere to minutu. {viaWhatsApp ? 'Objednávku dokončíte zprávou ve WhatsAppu.' : 'Platba proběhne bezpečně přes GoPay.'}
+            </p>
 
-            {/* ── Form ── */}
-            <div className="lg:col-span-2 min-w-0">
-              <form onSubmit={handleSubmit} className="space-y-10">
+            {error && (
+              <div role="alert" className="mt-6 px-4 py-3 text-sm border border-error/30 bg-error/5 text-error rounded-xl">{error}</div>
+            )}
 
-                {/* Error / success */}
-                {error && (
-                  <div role="alert" className="px-5 py-4 text-sm border border-error/30 bg-error/5 text-error">
-                    {error}
-                  </div>
-                )}
-                {success && (
-                  <div role="status" className="px-5 py-4 text-sm border border-success/30 bg-success/5 text-success">
-                    {success}
-                  </div>
-                )}
+            {/* Kontakt */}
+            <section aria-labelledby="h-kontakt" className="mt-8">
+              <h2 id="h-kontakt" className={sectionTitle}>Kontakt</h2>
+              <label className="block pt-3">
+                <span className={labelClass}>Jméno a příjmení</span>
+                <input type="text" name="name" autoComplete="name" required value={formData.name} onChange={handleInputChange} disabled={loading}
+                  placeholder="Jana Nováková" className={fieldClass} />
+              </label>
+              <label className="block pt-4">
+                <span className={labelClass}>Telefon</span>
+                <input type="tel" name="phone" autoComplete="tel" required={viaWhatsApp} value={formData.phone} onChange={handleInputChange} disabled={loading}
+                  placeholder="+420" className={fieldClass} />
+              </label>
+              <label className="block pt-4">
+                <span className={labelClass}>E-mail</span>
+                <input type="email" name="email" autoComplete="email" required value={formData.email} onChange={handleInputChange} disabled={loading}
+                  placeholder="vas@email.cz" className={fieldClass} />
+              </label>
+            </section>
 
-                {/* Section: Kontakt */}
-                <section>
-                  <h2 className="font-cormorant text-2xl font-light mb-6" style={{ color: 'var(--text-dark)' }}>
-                    Kontaktní údaje
-                  </h2>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>
-                        E-mail *
-                      </label>
-                      <input type="email" name="email" autoComplete="email" value={formData.email} onChange={handleInputChange} required disabled={loading}
-                        placeholder={language === 'cs' ? 'vase@email.cz' : 'your@email.com'}
-                        className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Jméno *</label>
-                        <input type="text" name="firstName" autoComplete="given-name" value={formData.firstName} onChange={handleInputChange} required disabled={loading}
-                          placeholder="Jana" className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                      </div>
-                      <div>
-                        <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Příjmení *</label>
-                        <input type="text" name="lastName" autoComplete="family-name" value={formData.lastName} onChange={handleInputChange} required disabled={loading}
-                          placeholder="Nováková" className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Telefon</label>
-                      <input type="tel" name="phone" autoComplete="tel" value={formData.phone} onChange={handleInputChange} disabled={loading}
-                        placeholder="+420 123 456 789" className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                    </div>
-                  </div>
-                </section>
-
-                {/* Section: Doprava */}
-                <section>
-                  <h2 className="font-cormorant text-2xl font-light mb-6" style={{ color: 'var(--text-dark)' }}>
-                    Způsob dopravy
-                  </h2>
-                  <div className="space-y-2">
-                    {deliveryOptions.map((opt) => (
-                      <label
-                        key={opt.value}
-                        className="flex items-start gap-4 p-4 cursor-pointer transition-colors"
-                        style={{
-                          border: `1px solid ${formData.deliveryMethod === opt.value ? 'var(--burgundy)' : 'var(--warm-beige)'}`,
-                          background: formData.deliveryMethod === opt.value ? 'var(--white, #fff)' : 'transparent',
-                        }}
-                      >
-                        <input type="radio" name="deliveryMethod" value={opt.value}
-                          checked={formData.deliveryMethod === opt.value}
-                          onChange={handleInputChange} disabled={loading}
-                          className="mt-1 flex-shrink-0 accent-burgundy" />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between items-center gap-4">
-                            <span className="text-sm font-medium" style={{ color: 'var(--text-dark)' }}>{opt.label}</span>
-                            <span className="text-sm flex-shrink-0" style={{ color: opt.price === 'Zdarma' ? 'var(--success, #4A7C59)' : 'var(--text-dark)' }}>{opt.price}</span>
-                          </div>
-                          <p className="text-xs mt-0.5 font-light" style={{ color: 'var(--text-soft)' }}>{opt.desc}</p>
-
-                          {/* Zásilkovna picker */}
-                          {opt.value === 'zasilkovna' && formData.deliveryMethod === 'zasilkovna' && (
-                            <div className="mt-3">
-                              {selectedPickupPoint ? (
-                                <div className="p-3 text-sm" style={{ background: 'var(--ivory)', border: '1px solid var(--warm-beige)' }}>
-                                  <p className="font-medium mb-0.5" style={{ color: 'var(--text-dark)' }}>{selectedPickupPoint.name}</p>
-                                  <p className="text-xs font-light" style={{ color: 'var(--text-soft)' }}>
-                                    {selectedPickupPoint.street}, {selectedPickupPoint.city}, {selectedPickupPoint.zip}
-                                  </p>
-                                  <button type="button" onClick={openPacketaWidget}
-                                    className="mt-2 text-[11px] tracking-[0.08em] uppercase hover:underline"
-                                    style={{ color: 'var(--accent)' }}>
-                                    Změnit výdejní místo
-                                  </button>
-                                </div>
-                              ) : (
-                                <button type="button" onClick={openPacketaWidget} disabled={!packetaLoaded}
-                                  className="mt-1 px-5 py-2.5 text-[11px] tracking-[0.1em] uppercase font-medium text-white transition-all hover:opacity-90 disabled:opacity-40"
-                                  style={{ background: 'var(--burgundy)' }}>
-                                  {packetaLoaded ? 'Vybrat výdejní místo' : 'Načítám…'}
-                                </button>
-                              )}
-                              {!packetaLoaded && packetaFailed && !selectedPickupPoint && (
-                                <p role="alert" className="mt-2 text-xs" style={{ color: 'var(--text-mid)' }}>
-                                  Výběr výdejních míst se nenačetl. Obnovte stránku, nebo zvolte jiný způsob dopravy.
-                                </p>
-                              )}
-                            </div>
-                          )}
-
-                          {/* Showroom info */}
-                          {opt.value === 'showroom' && formData.deliveryMethod === 'showroom' && (
-                            <div className="mt-3 p-3 text-xs font-light" style={{ background: 'var(--ivory)', border: '1px solid var(--warm-beige)', color: 'var(--text-mid)' }}>
-                              Revoluční 8, 110 00 Praha 1 · Otevřeno Po–Ne 9:00–19:00
-                            </div>
-                          )}
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </section>
-
-                {/* Section: Doručovací adresa */}
-                {needsAddress && (
-                  <section>
-                    <h2 className="font-cormorant text-2xl font-light mb-6" style={{ color: 'var(--text-dark)' }}>
-                      Doručovací adresa
-                    </h2>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Ulice a číslo popisné *</label>
-                        <input type="text" name="streetAddress" autoComplete="street-address" value={formData.streetAddress} onChange={handleInputChange}
-                          required={needsAddress} disabled={loading} placeholder="Václavské náměstí 1"
-                          className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Město *</label>
-                          <input type="text" name="city" autoComplete="address-level2" value={formData.city} onChange={handleInputChange}
-                            required={needsAddress} disabled={loading} placeholder="Praha"
-                            className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                        </div>
-                        <div>
-                          <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>PSČ *</label>
-                          <input type="text" name="zipCode" autoComplete="postal-code" inputMode="numeric" value={formData.zipCode} onChange={handleInputChange}
-                            required={needsAddress} disabled={loading} placeholder="110 00"
-                            className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Země</label>
-                        <select name="country" autoComplete="country" value={formData.country} onChange={handleInputChange} disabled={loading}
-                          className={`${inputClass} ${inputFocusStyle}`} style={inputStyle}>
-                          <option value="CZ">Česká republika</option>
-                          <option value="SK">Slovensko</option>
-                          <option value="PL">Polsko</option>
-                          <option value="DE">Německo</option>
-                          <option value="AT">Rakousko</option>
-                        </select>
-                      </div>
-                    </div>
-                  </section>
-                )}
-
-                {/* Submit */}
-                <div className="pt-2">
-                  {/* Na mobilu je souhrn až pod formulářem – celkovou cenu ukážeme přímo u tlačítka */}
-                  <div className="lg:hidden flex justify-between items-baseline mb-4 pb-4 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
-                    <span className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>Celkem k úhradě</span>
-                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>
-                      {formatPrice(total - couponDiscount + shipping)}
-                    </span>
-                  </div>
-                  <button type="submit" disabled={loading}
-                    className="w-full py-4 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
-                    style={{ background: 'var(--burgundy)' }}>
-                    {loading ? 'Zpracovávám…' : 'Dokončit objednávku a zaplatit →'}
-                  </button>
-                  <p className="text-[11px] text-center mt-3 font-light" style={{ color: 'var(--text-soft)' }}>
-                    * Povinná pole · Platba přes GoPay
-                  </p>
-                  <p className="text-xs text-center mt-2 font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>
-                    Odesláním objednávky souhlasíte s{' '}
-                    <Link href="/obchodni-podminky" className="underline underline-offset-2">obchodními podmínkami</Link>
-                    {' '}a berete na vědomí{' '}
-                    <Link href="/ochrana-osobnich-udaju" className="underline underline-offset-2">zpracování osobních údajů</Link>.
-                    {' '}<Link href="/informace/platba-a-vraceni" className="underline underline-offset-2">Platba a vrácení</Link>
-                  </p>
-                </div>
-
-              </form>
-            </div>
-
-            {/* ── Order summary ── */}
-            <div className="lg:col-span-1 min-w-0">
-              <div className="sticky top-24 p-8" style={{ background: 'var(--white, #fff)', border: '1px solid var(--warm-beige)' }}>
-
-                <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-                  <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-                  SOUHRN
-                </div>
-
-                {/* Items */}
-                <div className="space-y-4 pb-6 mb-6 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
-                  {items.map((item) => (
-                    <div key={item.skuId} className="flex justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-sm font-light truncate" style={{ color: 'var(--text-dark)' }}>
-                          {item.skuName}
-                          {item.shade && <span style={{ color: 'var(--text-mid)' }}> · odstín {item.shade}</span>}
-                        </p>
-                        <p className="text-xs font-light mt-0.5" style={{ color: 'var(--text-soft)' }}>
-                          {item.saleMode === 'BULK_G' ? `${item.grams}g @ ${formatPrice(item.pricePerGram)}/g` : `${item.quantity}× ks`}
-                        </p>
-                        {item.assemblyFeeTotal > 0 && (
-                          <p className="text-xs font-light" style={{ color: 'var(--text-soft)' }}>
-                            Servisní poplatek: {formatPrice(item.assemblyFeeTotal)}
-                          </p>
-                        )}
-                      </div>
-                      <p className="text-sm font-light flex-shrink-0" style={{ color: 'var(--text-dark)' }}>
-                        {formatPrice(item.lineGrandTotal)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Coupon */}
-                <div className="pb-6 mb-6 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
-                  <p className="text-[11px] tracking-[0.08em] uppercase mb-3 font-light" style={{ color: 'var(--text-soft)' }}>Slevový kupón</p>
-                  {!couponApplied ? (
-                    <div className="flex gap-2">
-                      <input type="text" value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                        placeholder="KÓD KUPÓNU" disabled={couponLoading}
-                        className="flex-1 min-w-0 px-3 py-2.5 text-base sm:text-xs uppercase border bg-white focus:outline-none focus:ring-2 focus:ring-burgundy/30"
-                        style={{ borderColor: 'var(--warm-beige)', color: 'var(--text-dark)' }} />
-                      <button type="button" onClick={handleApplyCoupon} disabled={couponLoading || !couponCode.trim()}
-                        className="px-4 py-2.5 text-[10px] tracking-[0.1em] uppercase font-medium text-white transition-all hover:opacity-90 disabled:opacity-40"
-                        style={{ background: 'var(--burgundy)' }}>
-                        {couponLoading ? '…' : 'Použít'}
+            {/* Doručení */}
+            <section aria-labelledby="h-doruceni" className="mt-9">
+              <h2 id="h-doruceni" className={`${sectionTitle} mb-1.5`}>Doručení</h2>
+              <div role="radiogroup" aria-labelledby="h-doruceni">
+                {DELIVERY_OPTIONS.map((opt) => {
+                  const on = formData.deliveryMethod === opt.value;
+                  return (
+                    <div key={opt.value} className="border-b border-muza-line">
+                      <button type="button" role="radio" aria-checked={on} disabled={loading}
+                        onClick={() => setFormData((prev) => ({ ...prev, deliveryMethod: opt.value }))}
+                        className="w-full flex items-center gap-3.5 min-h-[60px] py-2.5 text-left">
+                        <Radio on={on} />
+                        <span className="flex-1 min-w-0">
+                          <span className={`block text-[15px] ${on ? 'font-normal' : ''}`}>{opt.label}</span>
+                          <span className="block text-xs text-muza-soft mt-px">{opt.desc}</span>
+                        </span>
+                        <span className="text-sm whitespace-nowrap">{opt.price === 0 ? 'zdarma' : formatPrice(opt.price)}</span>
                       </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-between px-4 py-3 text-sm"
-                      style={{ background: 'var(--ivory)', border: '1px solid var(--warm-beige)' }}>
-                      <span style={{ color: 'var(--text-dark)' }}>{couponCode} <span style={{ color: 'var(--success, #4A7C59)' }}>−{formatPrice(couponDiscount)}</span></span>
-                      <button type="button" onClick={handleRemoveCoupon} className="text-xs hover:underline" style={{ color: 'var(--text-soft)' }}>Odebrat</button>
-                    </div>
-                  )}
-                  {couponError && <p className="text-xs mt-2" style={{ color: 'var(--error, #8B3A3A)' }}>{couponError}</p>}
-                </div>
 
-                {/* Totals */}
-                <div className="space-y-2.5 mb-6">
-                  <div className="flex justify-between text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                    <span>Mezisoučet</span>
-                    <span>{formatPrice(total)}</span>
-                  </div>
-                  {couponApplied && couponDiscount > 0 && (
-                    <div className="flex justify-between text-sm font-light">
-                      <span style={{ color: 'var(--text-mid)' }}>Sleva ({couponCode})</span>
-                      <span style={{ color: 'var(--success, #4A7C59)' }}>−{formatPrice(couponDiscount)}</span>
+                      {on && opt.value === 'zasilkovna' && (
+                        <div className="ml-[34px] mb-4">
+                          {selectedPickupPoint ? (
+                            <div className="text-sm">
+                              <p>{selectedPickupPoint.name}</p>
+                              <p className="text-xs text-muza-soft">{selectedPickupPoint.street}, {selectedPickupPoint.zip} {selectedPickupPoint.city}</p>
+                              <button type="button" onClick={openPacketaWidget} className="mt-1.5 text-sm text-muza-ink underline underline-offset-[3px]">
+                                Změnit výdejní místo
+                              </button>
+                            </div>
+                          ) : (
+                            <button type="button" onClick={openPacketaWidget} disabled={!packetaLoaded}
+                              className="text-sm text-muza-ink underline underline-offset-[3px] disabled:opacity-50 disabled:no-underline">
+                              {packetaLoaded ? 'Vybrat výdejní místo' : 'Načítám výdejní místa…'}
+                            </button>
+                          )}
+                          {!packetaLoaded && packetaFailed && !selectedPickupPoint && (
+                            <p role="alert" className="mt-2 text-xs text-text-mid">
+                              Výběr výdejních míst se nenačetl. Obnovte stránku, nebo zvolte jiný způsob dopravy.
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {on && needsAddress && (
+                        <div className="ml-[34px] mb-4 grid grid-cols-[1fr_96px] gap-x-3.5">
+                          <label className="col-span-2">
+                            <span className={labelClass}>Ulice a číslo</span>
+                            <input type="text" name="streetAddress" autoComplete="street-address" required value={formData.streetAddress}
+                              onChange={handleInputChange} disabled={loading} className={fieldClass} />
+                          </label>
+                          <label className="pt-2.5">
+                            <span className={labelClass}>Město</span>
+                            <input type="text" name="city" autoComplete="address-level2" required value={formData.city}
+                              onChange={handleInputChange} disabled={loading} className={fieldClass} />
+                          </label>
+                          <label className="pt-2.5">
+                            <span className={labelClass}>PSČ</span>
+                            <input type="text" name="zipCode" autoComplete="postal-code" inputMode="numeric" required value={formData.zipCode}
+                              onChange={handleInputChange} disabled={loading} className={fieldClass} />
+                          </label>
+                          <label className="col-span-2 pt-2.5">
+                            <span className={labelClass}>Země</span>
+                            <select name="country" autoComplete="country" value={formData.country} onChange={handleInputChange} disabled={loading} className={fieldClass}>
+                              <option value="CZ">Česká republika</option>
+                              <option value="SK">Slovensko</option>
+                              <option value="PL">Polsko</option>
+                              <option value="DE">Německo</option>
+                              <option value="AT">Rakousko</option>
+                            </select>
+                          </label>
+                        </div>
+                      )}
+
+                      {on && opt.value === 'showroom' && (
+                        <p className="ml-[34px] mb-4 text-xs text-muza-soft">Čas vyzvednutí domluvíme telefonem.</p>
+                      )}
                     </div>
-                  )}
-                  <div className="flex justify-between text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                    <span>Doprava</span>
-                    <span style={{ color: shipping === 0 ? 'var(--success, #4A7C59)' : 'var(--text-dark)' }}>
-                      {shipping === 0 ? 'Zdarma' : formatPrice(shipping)}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-5 border-t" style={{ borderColor: 'var(--warm-beige)' }}>
-                  <div className="flex justify-between items-baseline">
-                    <span className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>Celkem</span>
-                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>
-                      {formatPrice(total - couponDiscount + shipping)}
-                    </span>
-                  </div>
-                </div>
-
-                <Link href="/kosik"
-                  className="mt-6 block text-center text-[11px] tracking-[0.08em] uppercase hover:underline"
-                  style={{ color: 'var(--text-soft)' }}>
-                  ← Zpět do košíku
-                </Link>
+                  );
+                })}
               </div>
-            </div>
+            </section>
 
-          </div>
+            {/* Platba */}
+            <section aria-labelledby="h-platba" className="mt-9">
+              <h2 id="h-platba" className={`${sectionTitle} mb-2.5`}>Platba</h2>
+              {viaWhatsApp ? (
+                <p className="text-sm leading-relaxed">
+                  Teď nic neplatíte. Po odeslání vám ve WhatsAppu potvrdíme odstín a dostupnost a pošleme platební údaje.
+                </p>
+              ) : (
+                <p className="text-sm leading-relaxed">Kartou, Apple Pay / Google Pay nebo bankovním převodem. Platbu zpracuje GoPay.</p>
+              )}
+            </section>
+
+            {/* Poznámka a slevový kód */}
+            <section className="mt-8 space-y-4">
+              {noteOpen ? (
+                <label className="block">
+                  <span className={`${sectionTitle} block mb-2`}>Poznámka</span>
+                  <textarea name="note" rows={3} maxLength={1000} value={formData.note} onChange={handleInputChange} disabled={loading}
+                    placeholder="Přání k odstínu, termín aplikace…"
+                    className="w-full px-3.5 py-3 rounded-xl border border-muza-field bg-white text-base font-light leading-normal placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink resize-y" />
+                </label>
+              ) : (
+                <button type="button" onClick={() => setNoteOpen(true)} className="flex items-center gap-2 text-sm text-muza-ink">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+                  Přidat poznámku k objednávce
+                </button>
+              )}
+
+              {couponApplied ? (
+                <div className="flex items-center justify-between text-sm">
+                  <span>Kód {couponCode} <span className="text-success">−{formatPrice(couponDiscount)}</span></span>
+                  <button type="button" onClick={handleRemoveCoupon} className="text-xs text-muza-soft underline underline-offset-2">Odebrat</button>
+                </div>
+              ) : couponOpen ? (
+                <div>
+                  <div className="flex gap-3 items-end">
+                    <label className="flex-1 min-w-0">
+                      <span className={labelClass}>Slevový kód</span>
+                      <input type="text" value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())} disabled={couponLoading}
+                        className={`${fieldClass} uppercase`} />
+                    </label>
+                    <button type="button" onClick={handleApplyCoupon} disabled={couponLoading || !couponCode.trim()}
+                      className="h-11 px-5 rounded-full border border-muza-ink text-sm text-muza-ink disabled:opacity-40">
+                      {couponLoading ? '…' : 'Použít'}
+                    </button>
+                  </div>
+                  {couponError && <p className="text-xs mt-2 text-error">{couponError}</p>}
+                </div>
+              ) : (
+                <button type="button" onClick={() => setCouponOpen(true)} className="flex items-center gap-2 text-sm text-muza-ink">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+                  Mám slevový kód
+                </button>
+              )}
+            </section>
+
+            <div className="mt-9 lg:hidden">{totals}</div>
+
+            <p className="mt-5 text-xs leading-relaxed text-muza-soft">
+              Odesláním objednávky souhlasíte s{' '}
+              <Link href="/obchodni-podminky" className="text-muza-ink underline underline-offset-2">obchodními podmínkami</Link>
+              {' '}a{' '}
+              <Link href="/ochrana-osobnich-udaju" className="text-muza-ink underline underline-offset-2">zpracováním osobních údajů</Link>.
+            </p>
+          </form>
+
+          {/* Souhrn – desktop */}
+          <aside aria-label="Souhrn objednávky" className="hidden lg:block sticky top-28">
+            <div className="space-y-4 pb-5">
+              {items.map((item) => (
+                <div key={item.skuId} className="flex justify-between gap-4 text-sm">
+                  <span className="min-w-0">{describeItem(item)}</span>
+                  <span className="flex-none">{formatPrice(item.lineGrandTotal)}</span>
+                </div>
+              ))}
+            </div>
+            {totals}
+            <button type="submit" form="checkout" disabled={loading}
+              className="mt-7 w-full h-14 flex items-center justify-center gap-2.5 rounded-full bg-muza-ink text-muza-onink text-[15px] tracking-[0.02em] hover:opacity-90 transition-opacity disabled:opacity-50">
+              {viaWhatsApp && <WhatsAppIcon />}{submitLabel}
+            </button>
+            <Link href="/kosik" className="mt-4 block text-center text-sm text-muza-soft underline underline-offset-2">Zpět do košíku</Link>
+          </aside>
+        </div>
+
+        {/* Tlačítko – mobil, stále po ruce */}
+        <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-muza-cream from-75% to-transparent">
+          <button type="submit" form="checkout" disabled={loading}
+            className="w-full h-14 flex items-center justify-center gap-2.5 rounded-full bg-muza-ink text-muza-onink text-[15px] tracking-[0.02em] active:opacity-90 transition-opacity disabled:opacity-50">
+            {viaWhatsApp && <WhatsAppIcon />}{submitLabel}
+          </button>
         </div>
       </div>
     </>
