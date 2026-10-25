@@ -200,14 +200,14 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                   <>
                     <button
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length); }}
-                      className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
+                      className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity shadow-sm"
                       aria-label="Předchozí foto"
                     >
                       <span className="text-xs font-bold text-text-mid">&larr;</span>
                     </button>
                     <button
                       onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev + 1) % allImages.length); }}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity shadow-sm"
                       aria-label="Další foto"
                     >
                       <span className="text-xs font-bold text-text-mid">&rarr;</span>
@@ -323,7 +323,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           {displayVariant?.in_stock && (
             <Link
               href={`/sku-detail/${product.id}`}
-              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95 block text-center"
+              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-[transform,background-color,box-shadow] hover:shadow-md active:scale-[0.97] block text-center"
             >
               Nakonfigurovat
             </Link>
@@ -347,7 +347,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                 e.stopPropagation();
                 window.location.href = '/kontakt';
               }}
-              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md"
+              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-[transform,background-color,box-shadow] hover:shadow-md active:scale-[0.97]"
             >
               Kontaktovat
             </button>

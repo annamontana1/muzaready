@@ -29,7 +29,7 @@ export default function Card({
   className = '',
   ...props
 }: CardProps) {
-  const hoverStyles = hoverable ? 'hover:shadow-lg hover:border-burgundy/50 transition-all' : '';
+  const hoverStyles = hoverable ? 'hover:shadow-lg hover:border-burgundy/50 transition-[box-shadow,border-color]' : '';
 
   return (
     <div

@@ -1,6 +1,10 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // Hover styly jen na zařízeních s myší – na dotyku se jinak „zaseknou“ po ťuknutí
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -82,9 +86,19 @@ const config: Config = {
         'heavy': '0 8px 24px rgba(74, 21, 32, 0.16)',
         'card-hover': '0 12px 32px rgba(74, 21, 32, 0.20)',
       },
+      // Silnější křivky než vestavěné CSS easingy
+      transitionTimingFunction: {
+        DEFAULT: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        out: 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'in-out': 'cubic-bezier(0.77, 0, 0.175, 1)',
+        drawer: 'cubic-bezier(0.32, 0.72, 0, 1)',
+      },
+      transitionDuration: {
+        DEFAULT: '200ms',
+      },
       animation: {
-        'slide-up': 'slide-up 0.3s ease-out',
-        'modal-in': 'modal-in 0.3s ease-out',
+        'slide-up': 'slide-up 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
+        'modal-in': 'modal-in 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
       },
       keyframes: {
         'slide-up': {

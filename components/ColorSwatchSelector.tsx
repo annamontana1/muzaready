@@ -45,7 +45,7 @@ export default function ColorSwatchSelector({
               key={shade}
               onClick={() => onSelect(shade)}
               className={`
-                w-12 h-12 rounded-full border-2 transition-all relative
+                w-12 h-12 rounded-full border-2 transition-[transform,border-color,box-shadow] duration-150 active:scale-95 relative
                 ${
                   isSelected
                     ? 'border-burgundy scale-110 shadow-md ring-2 ring-burgundy/30'

@@ -91,7 +91,7 @@ export default function ShadeGallery({
                 <div className="flex flex-col items-center gap-1 md:gap-2">
                   {/* Miniatura fotky */}
                   <div
-                    className={`relative w-[75px] h-[100px] md:w-[90px] md:h-[120px] rounded-lg overflow-hidden transition-all ${
+                    className={`relative w-[75px] h-[100px] md:w-[90px] md:h-[120px] rounded-lg overflow-hidden transition-[box-shadow] ${
                       isSelected
                         ? 'ring-2 ring-[#4A1E1A] ring-offset-2 shadow-lg'
                         : 'hover:ring-2 hover:ring-[#4A1E1A] hover:shadow-md'

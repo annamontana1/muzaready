@@ -14,15 +14,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-burgundy text-white hover:bg-maroon focus:ring-burgundy disabled:bg-gray-400 active:scale-95',
+    'bg-burgundy text-white hover:bg-maroon focus:ring-burgundy disabled:bg-gray-400 active:scale-[0.97]',
   secondary:
-    'bg-soft-cream text-text-dark hover:bg-gray-200 focus:ring-gray-500 disabled:bg-soft-cream active:scale-95',
+    'bg-soft-cream text-text-dark hover:bg-gray-200 focus:ring-gray-500 disabled:bg-soft-cream active:scale-[0.97]',
   outline:
-    'border-2 border-burgundy text-burgundy hover:bg-burgundy hover:text-white focus:ring-burgundy disabled:border-warm-beige disabled:text-text-soft',
+    'border-2 border-burgundy text-burgundy hover:bg-burgundy hover:text-white focus:ring-burgundy disabled:border-warm-beige disabled:text-text-soft active:scale-[0.97]',
   ghost:
-    'text-burgundy hover:bg-burgundy/10 focus:ring-burgundy disabled:text-text-soft',
+    'text-burgundy hover:bg-burgundy/10 focus:ring-burgundy disabled:text-text-soft active:scale-[0.97]',
   danger:
-    'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-gray-400 active:scale-95',
+    'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-gray-400 active:scale-[0.97]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -42,7 +42,7 @@ export default function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center gap-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 transition-[transform,background-color,color,border-color,box-shadow,opacity] duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2';
   const widthStyles = fullWidth ? 'w-full' : '';
   const disabledStyles = 'disabled:cursor-not-allowed disabled:opacity-50';
   const loadingStyles = isLoading ? 'opacity-75 pointer-events-none' : '';
