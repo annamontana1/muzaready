@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import TopContactBar from './TopContactBar';
 import SearchOverlay from './SearchOverlay';
 import Badge from './Badge';
@@ -51,7 +51,17 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen, mounted]);
 
-  const navLinkClass = "text-[12px] tracking-[0.1em] uppercase font-light transition-colors duration-200 hover:text-burgundy";
+  // Mobilní menu: fokus do panelu, Esc zavírá
+  const closeMenuButtonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    closeMenuButtonRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [mobileMenuOpen]);
+
+  const navLinkClass = "whitespace-nowrap text-[12px] tracking-[0.1em] uppercase font-light transition-colors duration-200 hover:text-burgundy";
   const dropdownClass = "hidden group-hover:block group-focus-within:block absolute left-0 w-56 bg-white shadow-medium border border-beige z-50 rounded-sm";
 
   const dropdownItem = (href: string, label: string) => (
@@ -77,16 +87,16 @@ export default function Header() {
           WebkitBackdropFilter: 'blur(12px)',
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 xl:px-12">
 
           {/* Desktop Header */}
-          <div className="hidden lg:flex items-center justify-between h-[68px] gap-8">
+          <div className="hidden xl:flex items-center justify-between h-[68px] gap-6">
 
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" aria-label="Domů">
               <Image
                 src="/images/logo/muza-logo.png"
-                alt="Mùza Hair Shop"
+                alt="Múza Hair"
                 width={120}
                 height={40}
                 priority
@@ -95,7 +105,7 @@ export default function Header() {
             </Link>
 
             {/* Navigation */}
-            <nav className="flex items-center gap-9" style={{ color: 'var(--text-mid)' }}>
+            <nav className="flex items-center gap-5 xl:gap-7" style={{ color: 'var(--text-mid)' }}>
 
               {/* Vlasy k prodloužení */}
               <Link href="/vlasy-k-prodlouzeni" className={navLinkClass} style={{ color: 'var(--text-mid)' }}>
@@ -104,7 +114,7 @@ export default function Header() {
 
               {/* Příčesky & paruky */}
               <div className="relative group">
-                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
                   Příčesky & paruky {chevronDown}
                 </button>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -118,7 +128,7 @@ export default function Header() {
 
               {/* Příslušenství */}
               <div className="relative group">
-                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
                   Příslušenství {chevronDown}
                 </button>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -147,7 +157,7 @@ export default function Header() {
 
               {/* Informace */}
               <div className="relative group">
-                <button className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
                   Informace {chevronDown}
                 </button>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -175,7 +185,7 @@ export default function Header() {
               {/* Showroom CTA */}
               <Link
                 href="/showroom"
-                className="text-[11px] tracking-[0.14em] uppercase font-normal px-5 py-[9px] rounded-sm transition-colors duration-200"
+                className="hidden 2xl:inline-block whitespace-nowrap text-[11px] tracking-[0.14em] uppercase font-normal px-5 py-[9px] rounded-sm transition-colors duration-200"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                 onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
@@ -185,22 +195,10 @@ export default function Header() {
             </nav>
 
             {/* Icons */}
-            <div className="flex items-center gap-5">
-              <div className="flex items-center gap-2 text-xs">
-                <LanguageSwitcher />
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
-                  className="border border-beige rounded px-2 py-1 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-burgundy"
-                  style={{ color: 'var(--text-mid)' }}
-                >
-                  <option value="CZK">Kč</option>
-                  <option value="EUR">€</option>
-                </select>
-              </div>
+            <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 onClick={() => setSearchOverlayOpen(true)}
-                className="w-5 h-5 transition-colors hover:text-burgundy"
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy [&>svg]:w-5 [&>svg]:h-5"
                 style={{ color: 'var(--text-mid)' }}
                 aria-label="Hledat"
               >
@@ -210,7 +208,7 @@ export default function Header() {
               </button>
               <Link
                 href="/ucet"
-                className="w-5 h-5 transition-colors hover:text-burgundy"
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy [&>svg]:w-5 [&>svg]:h-5"
                 style={{ color: 'var(--text-mid)' }}
                 aria-label="Můj účet"
               >
@@ -220,7 +218,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/oblibene"
-                className="w-5 h-5 transition-colors hover:text-burgundy relative"
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy relative [&>svg]:w-5 [&>svg]:h-5"
                 style={{ color: 'var(--text-mid)' }}
                 aria-label="Oblíbené"
               >
@@ -231,7 +229,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/kosik"
-                className="w-5 h-5 transition-colors hover:text-burgundy relative"
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy relative [&>svg]:w-5 [&>svg]:h-5"
                 style={{ color: 'var(--text-mid)' }}
                 aria-label="Košík"
               >
@@ -244,12 +242,14 @@ export default function Header() {
           </div>
 
           {/* Mobile Header */}
-          <div className="lg:hidden flex items-center justify-between h-16">
+          <div className="xl:hidden flex items-center justify-between h-16">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 -ml-2 transition-colors hover:text-burgundy"
+              className="w-11 h-11 -ml-3 flex items-center justify-center transition-colors hover:text-burgundy"
               style={{ color: 'var(--text-mid)' }}
               aria-label="Menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
@@ -259,7 +259,7 @@ export default function Header() {
             <Link href="/" className="flex items-center" aria-label="Domů">
               <Image
                 src="/images/logo/muza-logo.png"
-                alt="Mùza Hair Shop"
+                alt="Múza Hair"
                 width={100}
                 height={33}
                 priority
@@ -267,10 +267,10 @@ export default function Header() {
               />
             </Link>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center -mr-3">
               <button
                 onClick={() => setSearchOverlayOpen(true)}
-                className="w-5 h-5 transition-colors"
+                className="w-11 h-11 flex items-center justify-center transition-colors [&>svg]:w-5 [&>svg]:h-5"
                 style={{ color: 'var(--text-mid)' }}
                 aria-label="Hledat"
               >
@@ -278,13 +278,13 @@ export default function Header() {
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
               </button>
-              <Link href="/oblibene" className="w-5 h-5 relative" style={{ color: 'var(--text-mid)' }} aria-label="Oblíbené">
+              <Link href="/oblibene" className="w-11 h-11 flex items-center justify-center relative [&>svg]:w-5 [&>svg]:h-5" style={{ color: 'var(--text-mid)' }} aria-label="Oblíbené">
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
                 <Badge count={favoriteCount} variant="small" />
               </Link>
-              <Link href="/kosik" className="w-5 h-5 relative" style={{ color: 'var(--text-mid)' }} aria-label="Košík">
+              <Link href="/kosik" className="w-11 h-11 flex items-center justify-center relative [&>svg]:w-5 [&>svg]:h-5" style={{ color: 'var(--text-mid)' }} aria-label="Košík">
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
@@ -299,13 +299,14 @@ export default function Header() {
       {mobileMenuOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/40 z-[60] lg:hidden"
+            className="fixed inset-0 bg-black/40 z-[60] xl:hidden"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
           <div
-            className="fixed left-0 top-0 w-[85%] max-w-sm bg-white z-[70] lg:hidden shadow-2xl"
+            className="fixed left-0 top-0 w-[85%] max-w-sm bg-white z-[70] xl:hidden shadow-2xl"
             style={{ height: '100dvh' }}
+            id="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Mobilní navigace"
@@ -317,15 +318,16 @@ export default function Header() {
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
                   <Image
                     src="/images/logo/muza-logo.png"
-                    alt="Mùza Hair Shop"
+                    alt="Múza Hair"
                     width={100}
                     height={33}
                     className="h-8 w-auto"
                   />
                 </Link>
                 <button
+                  ref={closeMenuButtonRef}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 hover:bg-ivory rounded transition"
+                  className="w-11 h-11 -mr-2 flex items-center justify-center hover:bg-ivory rounded transition"
                   style={{ color: 'var(--text-soft)' }}
                   aria-label="Zavřít"
                 >
@@ -394,7 +396,7 @@ export default function Header() {
                   },
                 ].map(({ label, href: sectionHref, open, toggle, items }) => (
                   <div key={label} className="border-b border-beige/50">
-                    <div className="flex items-center justify-between py-3">
+                    <div className="flex items-center justify-between min-h-[44px]">
                       {sectionHref ? (
                         <Link
                           href={sectionHref}
@@ -407,10 +409,13 @@ export default function Header() {
                       ) : (
                         <span className="text-[13px] font-light flex-1" style={{ color: 'var(--text-mid)' }}>{label}</span>
                       )}
+                      {items.length > 0 && (
                       <button
                         onClick={toggle}
-                        className="p-1"
+                        className="w-11 h-11 -mr-3 flex items-center justify-center"
                         style={{ color: 'var(--text-mid)' }}
+                        aria-expanded={open}
+                        aria-label={`${label}: ${open ? 'sbalit' : 'rozbalit'}`}
                       >
                         <svg
                           className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`}
@@ -419,6 +424,7 @@ export default function Header() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
+                      )}
                     </div>
                     {open && (
                       <div className="pb-3 pl-4 space-y-2">

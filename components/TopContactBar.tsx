@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import LanguageSwitcher from './LanguageSwitcher';
+import { usePreferences } from '@/lib/preferences-context';
 
 interface SiteSettings {
   phone: string | null;
@@ -24,6 +26,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
 
 export default function TopContactBar() {
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+  const { currency, setCurrency } = usePreferences();
 
   useEffect(() => {
     fetch('/api/settings')
@@ -40,7 +43,7 @@ export default function TopContactBar() {
   return (
     <div
       style={{ background: 'var(--burgundy)', color: 'rgba(248,244,239,0.9)' }}
-      className="text-center text-[12px] tracking-[0.12em] py-[10px] px-5 font-light"
+      className="relative text-center text-[12px] tracking-[0.12em] py-[10px] px-5 font-light"
     >
       <div className="hidden md:flex items-center justify-center gap-6">
         <a
@@ -55,6 +58,19 @@ export default function TopContactBar() {
         <a href="/showroom" className="hover:opacity-80 transition">
           Showroom: {addressStreet}, {addressCity}
         </a>
+      </div>
+      {/* Jazyk a měna – v hlavičce by se nevešly vedle košíku */}
+      <div className="hidden xl:flex items-center gap-3 absolute right-6 top-1/2 -translate-y-1/2">
+        <LanguageSwitcher compact className="bg-transparent border-0 text-[12px] tracking-[0.08em] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ivory/70 rounded-sm [&>option]:text-text-dark" />
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
+          aria-label="Měna"
+          className="bg-transparent border-0 text-[12px] tracking-[0.08em] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ivory/70 rounded-sm [&>option]:text-text-dark"
+        >
+          <option value="CZK">Kč</option>
+          <option value="EUR">€</option>
+        </select>
       </div>
       <div className="md:hidden">
         <a href="/showroom" className="hover:opacity-80 transition">

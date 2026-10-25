@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useCart } from '@/hooks/useCart';
 
 interface OrderItem {
   id: string;
@@ -37,6 +38,16 @@ function ConfirmationContent() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { clearCart } = useCart();
+  const cartCleared = useRef(false);
+
+  // Košík vyprázdníme až když je objednávka opravdu zaplacená
+  useEffect(() => {
+    if (order?.paymentStatus === 'paid' && !cartCleared.current) {
+      cartCleared.current = true;
+      clearCart();
+    }
+  }, [order?.paymentStatus, clearCart]);
 
   useEffect(() => {
     if (!orderId) {
@@ -45,8 +56,12 @@ function ConfirmationContent() {
       return;
     }
 
+    let attempts = 0;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
     const fetchOrder = async () => {
       try {
+        attempts += 1;
         const response = await fetch(`/api/orders/${orderId}/public`);
         if (!response.ok) {
           setError('Chyba při načítání objednávky');
@@ -57,6 +72,10 @@ function ConfirmationContent() {
         const data = await response.json();
         setOrder(data);
         setLoading(false);
+        // Potvrzení od GoPay může dorazit o chvíli později než zákaznice
+        if (data.paymentStatus !== 'paid' && attempts < 4) {
+          retryTimer = setTimeout(fetchOrder, 2500);
+        }
       } catch (err) {
         setError('Chyba při načítání objednávky');
         console.error(err);
@@ -65,6 +84,7 @@ function ConfirmationContent() {
     };
 
     fetchOrder();
+    return () => clearTimeout(retryTimer);
   }, [orderId]);
 
   if (loading) {
@@ -116,9 +136,15 @@ function ConfirmationContent() {
               ? 'Vaše platba byla úspěšně zpracována. Děkujeme za nákup!'
               : 'Vaše objednávka byla přijata a čeká na zpracování platby.'}
           </p>
-          <p className="text-sm text-text-soft">
-            Potvrzení byl odeslán na e-mail: <strong>{order.email}</strong>
+          <p className="text-sm text-text-mid">
+            Potvrzení jsme odeslali na e-mail: <strong>{order.email}</strong>
           </p>
+          {order.paymentStatus !== 'paid' && (
+            <p className="text-sm text-text-mid mt-4">
+              Platba neproběhla? Zboží zůstalo v košíku.{' '}
+              <Link href="/kosik" className="underline underline-offset-2 text-burgundy">Vrátit se do košíku</Link>
+            </p>
+          )}
         </div>
 
         {/* Order Details */}

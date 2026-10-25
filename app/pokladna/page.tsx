@@ -36,24 +36,25 @@ interface PacketaOptions {
 }
 
 const inputClass = `
-  w-full px-4 py-3 text-sm font-light
-  border focus:outline-none transition-colors
+  w-full px-4 py-3 text-base sm:text-sm font-light
+  border focus:outline-none focus:ring-2 focus:ring-burgundy/30 transition-shadow
   bg-white
 `;
 const inputStyle = {
   borderColor: 'var(--warm-beige)',
   color: 'var(--text-dark)',
 };
-const inputFocusStyle = `focus:ring-0`;
+const inputFocusStyle = '';
 
 export default function PokladnaPage() {
-  const { items, getTotalPrice, clearCart } = useCart();
+  const { items, getTotalPrice } = useCart();
   const { t } = useTranslation();
   const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [packetaLoaded, setPacketaLoaded] = useState(false);
+  const [packetaFailed, setPacketaFailed] = useState(false);
 
   useEffect(() => {
     if (packetaLoaded) return;
@@ -63,7 +64,9 @@ export default function PokladnaPage() {
         clearInterval(interval);
       }
     }, 300);
-    return () => clearInterval(interval);
+    // Widget se občas nenačte (blokátor, výpadek) – po 10 s nabídneme jinou cestu
+    const timeout = setTimeout(() => setPacketaFailed(true), 10000);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
   }, [packetaLoaded]);
 
   const [formData, setFormData] = useState({
@@ -184,10 +187,11 @@ export default function PokladnaPage() {
       const { paymentUrl } = await paymentResponse.json();
       if (!paymentUrl) { setError(t('checkout.errors.paymentUrl')); setLoading(false); return; }
 
-      clearCart();
+      // Košík mažeme až na potvrzovací stránce po zaplacení – zrušená platba ho nesmaže
       window.location.href = paymentUrl;
     } catch (err) {
-      setError(`${t('checkout.errors.generic')}: ${err instanceof Error ? err.message : t('errors.generic')}`);
+      console.error(err);
+      setError(t('checkout.errors.generic'));
       setLoading(false);
     }
   };
@@ -253,20 +257,20 @@ export default function PokladnaPage() {
             </h1>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
 
             {/* ── Form ── */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 min-w-0">
               <form onSubmit={handleSubmit} className="space-y-10">
 
                 {/* Error / success */}
                 {error && (
-                  <div className="px-5 py-4 text-sm" style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B' }}>
+                  <div role="alert" className="px-5 py-4 text-sm border border-error/30 bg-error/5 text-error">
                     {error}
                   </div>
                 )}
                 {success && (
-                  <div className="px-5 py-4 text-sm" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', color: '#166534' }}>
+                  <div role="status" className="px-5 py-4 text-sm border border-success/30 bg-success/5 text-success">
                     {success}
                   </div>
                 )}
@@ -281,25 +285,25 @@ export default function PokladnaPage() {
                       <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>
                         E-mail *
                       </label>
-                      <input type="email" name="email" value={formData.email} onChange={handleInputChange} required disabled={loading}
+                      <input type="email" name="email" autoComplete="email" value={formData.email} onChange={handleInputChange} required disabled={loading}
                         placeholder={language === 'cs' ? 'vase@email.cz' : 'your@email.com'}
                         className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Jméno *</label>
-                        <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} required disabled={loading}
+                        <input type="text" name="firstName" autoComplete="given-name" value={formData.firstName} onChange={handleInputChange} required disabled={loading}
                           placeholder="Jana" className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                       </div>
                       <div>
                         <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Příjmení *</label>
-                        <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} required disabled={loading}
+                        <input type="text" name="lastName" autoComplete="family-name" value={formData.lastName} onChange={handleInputChange} required disabled={loading}
                           placeholder="Nováková" className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                       </div>
                     </div>
                     <div>
                       <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Telefon</label>
-                      <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} disabled={loading}
+                      <input type="tel" name="phone" autoComplete="tel" value={formData.phone} onChange={handleInputChange} disabled={loading}
                         placeholder="+420 123 456 789" className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                     </div>
                   </div>
@@ -353,13 +357,18 @@ export default function PokladnaPage() {
                                   {packetaLoaded ? 'Vybrat výdejní místo' : 'Načítám…'}
                                 </button>
                               )}
+                              {!packetaLoaded && packetaFailed && !selectedPickupPoint && (
+                                <p role="alert" className="mt-2 text-xs" style={{ color: 'var(--text-mid)' }}>
+                                  Výběr výdejních míst se nenačetl. Obnovte stránku, nebo zvolte jiný způsob dopravy.
+                                </p>
+                              )}
                             </div>
                           )}
 
                           {/* Showroom info */}
                           {opt.value === 'showroom' && formData.deliveryMethod === 'showroom' && (
                             <div className="mt-3 p-3 text-xs font-light" style={{ background: 'var(--ivory)', border: '1px solid var(--warm-beige)', color: 'var(--text-mid)' }}>
-                              📍 Revoluční 8, 110 00 Praha 1 · Otevřeno Po–Ne 9:00–19:00
+                              Revoluční 8, 110 00 Praha 1 · Otevřeno Po–Ne 9:00–19:00
                             </div>
                           )}
                         </div>
@@ -377,27 +386,27 @@ export default function PokladnaPage() {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Ulice a číslo popisné *</label>
-                        <input type="text" name="streetAddress" value={formData.streetAddress} onChange={handleInputChange}
+                        <input type="text" name="streetAddress" autoComplete="street-address" value={formData.streetAddress} onChange={handleInputChange}
                           required={needsAddress} disabled={loading} placeholder="Václavské náměstí 1"
                           className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Město *</label>
-                          <input type="text" name="city" value={formData.city} onChange={handleInputChange}
+                          <input type="text" name="city" autoComplete="address-level2" value={formData.city} onChange={handleInputChange}
                             required={needsAddress} disabled={loading} placeholder="Praha"
                             className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                         </div>
                         <div>
                           <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>PSČ *</label>
-                          <input type="text" name="zipCode" value={formData.zipCode} onChange={handleInputChange}
+                          <input type="text" name="zipCode" autoComplete="postal-code" inputMode="numeric" value={formData.zipCode} onChange={handleInputChange}
                             required={needsAddress} disabled={loading} placeholder="110 00"
                             className={`${inputClass} ${inputFocusStyle}`} style={inputStyle} />
                         </div>
                       </div>
                       <div>
                         <label className="block text-[11px] tracking-[0.1em] uppercase mb-2 font-light" style={{ color: 'var(--text-soft)' }}>Země</label>
-                        <select name="country" value={formData.country} onChange={handleInputChange} disabled={loading}
+                        <select name="country" autoComplete="country" value={formData.country} onChange={handleInputChange} disabled={loading}
                           className={`${inputClass} ${inputFocusStyle}`} style={inputStyle}>
                           <option value="CZ">Česká republika</option>
                           <option value="SK">Slovensko</option>
@@ -412,6 +421,13 @@ export default function PokladnaPage() {
 
                 {/* Submit */}
                 <div className="pt-2">
+                  {/* Na mobilu je souhrn až pod formulářem – celkovou cenu ukážeme přímo u tlačítka */}
+                  <div className="lg:hidden flex justify-between items-baseline mb-4 pb-4 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
+                    <span className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>Celkem k úhradě</span>
+                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>
+                      {formatPrice(total - couponDiscount + shipping)}
+                    </span>
+                  </div>
                   <button type="submit" disabled={loading}
                     className="w-full py-4 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
                     style={{ background: 'var(--burgundy)' }}>
@@ -420,13 +436,20 @@ export default function PokladnaPage() {
                   <p className="text-[11px] text-center mt-3 font-light" style={{ color: 'var(--text-soft)' }}>
                     * Povinná pole · Platba přes GoPay
                   </p>
+                  <p className="text-xs text-center mt-2 font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>
+                    Odesláním objednávky souhlasíte s{' '}
+                    <Link href="/obchodni-podminky" className="underline underline-offset-2">obchodními podmínkami</Link>
+                    {' '}a berete na vědomí{' '}
+                    <Link href="/ochrana-osobnich-udaju" className="underline underline-offset-2">zpracování osobních údajů</Link>.
+                    {' '}<Link href="/informace/platba-a-vraceni" className="underline underline-offset-2">Platba a vrácení</Link>
+                  </p>
                 </div>
 
               </form>
             </div>
 
             {/* ── Order summary ── */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 min-w-0">
               <div className="sticky top-24 p-8" style={{ background: 'var(--white, #fff)', border: '1px solid var(--warm-beige)' }}>
 
                 <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
@@ -441,7 +464,7 @@ export default function PokladnaPage() {
                       <div className="min-w-0">
                         <p className="text-sm font-light truncate" style={{ color: 'var(--text-dark)' }}>
                           {item.skuName}
-                          {item.shade && <span style={{ color: 'var(--text-soft)' }}> · #{item.shade}</span>}
+                          {item.shade && <span style={{ color: 'var(--text-mid)' }}> · odstín {item.shade}</span>}
                         </p>
                         <p className="text-xs font-light mt-0.5" style={{ color: 'var(--text-soft)' }}>
                           {item.saleMode === 'BULK_G' ? `${item.grams}g @ ${formatPrice(item.pricePerGram)}/g` : `${item.quantity}× ks`}
@@ -466,9 +489,9 @@ export default function PokladnaPage() {
                     <div className="flex gap-2">
                       <input type="text" value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                         placeholder="KÓD KUPÓNU" disabled={couponLoading}
-                        className="flex-1 px-3 py-2.5 text-xs uppercase border bg-white focus:outline-none"
+                        className="flex-1 min-w-0 px-3 py-2.5 text-base sm:text-xs uppercase border bg-white focus:outline-none focus:ring-2 focus:ring-burgundy/30"
                         style={{ borderColor: 'var(--warm-beige)', color: 'var(--text-dark)' }} />
-                      <button onClick={handleApplyCoupon} disabled={couponLoading || !couponCode.trim()}
+                      <button type="button" onClick={handleApplyCoupon} disabled={couponLoading || !couponCode.trim()}
                         className="px-4 py-2.5 text-[10px] tracking-[0.1em] uppercase font-medium text-white transition-all hover:opacity-90 disabled:opacity-40"
                         style={{ background: 'var(--burgundy)' }}>
                         {couponLoading ? '…' : 'Použít'}
@@ -478,7 +501,7 @@ export default function PokladnaPage() {
                     <div className="flex items-center justify-between px-4 py-3 text-sm"
                       style={{ background: 'var(--ivory)', border: '1px solid var(--warm-beige)' }}>
                       <span style={{ color: 'var(--text-dark)' }}>{couponCode} <span style={{ color: 'var(--success, #4A7C59)' }}>−{formatPrice(couponDiscount)}</span></span>
-                      <button onClick={handleRemoveCoupon} className="text-xs hover:underline" style={{ color: 'var(--text-soft)' }}>Odebrat</button>
+                      <button type="button" onClick={handleRemoveCoupon} className="text-xs hover:underline" style={{ color: 'var(--text-soft)' }}>Odebrat</button>
                     </div>
                   )}
                   {couponError && <p className="text-xs mt-2" style={{ color: 'var(--error, #8B3A3A)' }}>{couponError}</p>}
