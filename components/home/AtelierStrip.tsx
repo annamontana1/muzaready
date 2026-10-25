@@ -3,6 +3,7 @@ import Link from 'next/link';
 // Pás fotek z ateliéru, který plyne zprava doleva.
 // Pohyb jen přes transform (kompozitní vrstva), pás je zdvojený, aby se smyčka nikdy nepřetrhla.
 const PHOTOS = [
+  { src: '/images/atelier/atelier-07.webp', alt: 'Celý ateliér Múza Hair: tým u pracovních stolů, šicí stroje a police s vlasy' },
   { src: '/images/atelier/atelier-08.webp', alt: 'Šití vlasové tresy na průmyslovém stroji' },
   { src: '/images/atelier/atelier-15.webp', alt: 'Balení objednávky: vlasy v hedvábném papíru v krabici' },
   { src: '/images/atelier/atelier-10.webp', alt: 'Háčkování vlasů do krajky při výrobě paruky' },

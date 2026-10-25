@@ -18,17 +18,16 @@ export default function AtelierHero() {
     <section className="bg-muza-ivory lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:min-h-[calc(100vh-108px)]">
       {/* Fotka */}
       <div className="px-4 pt-5 lg:p-10 lg:pr-0 flex">
-        {/* Černobílá fotka ateliéru je na šířku, proto měkce zaoblený rám místo oblouku */}
-        <div className="w-full rounded-[24px] border border-muza-ink p-[5px] self-center">
-          <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[min(72vh,760px)] rounded-[19px] overflow-hidden bg-muza-mocha">
+        <div className="w-full rounded-t-[999px] rounded-b-[20px] border border-muza-ink p-[5px] max-w-[560px] mx-auto lg:max-w-none">
+          <div className="relative h-[44vh] min-h-[300px] lg:h-full rounded-t-[999px] rounded-b-[14px] overflow-hidden bg-muza-mocha">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/atelier/atelier-hero-1280.webp"
-              srcSet="/images/atelier/atelier-hero-768.webp 768w, /images/atelier/atelier-hero-1280.webp 1280w, /images/atelier/atelier-hero-1920.webp 1920w"
+              src="/images/hero/hero-portret-652.webp"
+              srcSet="/images/hero/hero-portret-652.webp 652w, /images/hero/hero-portret-1080.webp 1080w"
               sizes="(min-width: 1024px) 52vw, 100vw"
-              width={1920} height={1288}
-              alt="Ateliér Múza Hair v Praze: tým u pracovních stolů šije tresy, tresuje vlasy a vyrábí paruky"
-              className="absolute inset-0 w-full h-full object-cover object-[50%_55%]" fetchPriority="high" />
+              width={652} height={971}
+              alt="Žena s dlouhými lesklými tmavě hnědými vlasy ve vrstveném střihu"
+              className="absolute inset-0 w-full h-full object-cover object-[50%_20%]" fetchPriority="high" />
           </div>
         </div>
       </div>
