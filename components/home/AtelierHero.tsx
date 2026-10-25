@@ -6,7 +6,7 @@ import { useState } from 'react';
 // Úvod ve stylu „Ateliér na míru“: fotka v rámečku a malý výběr kolekce
 const COLLECTIONS = [
   { name: 'Standard', note: 'Skvělá každodenní volba', price: 'od 6 900 Kč', href: '/vlasy-k-prodlouzeni/standard' },
-  { name: 'LUXE', note: 'Prémiová hustota a lesk', price: 'od 8 900 Kč', href: '/vlasy-k-prodlouzeni/luxe' },
+  { name: 'LUXE', note: 'Od jedné dárkyně, jednotná struktura', price: 'od 8 900 Kč', href: '/vlasy-k-prodlouzeni/luxe' },
   { name: 'Platinum edition', note: 'Ručně tříděno, výkup ČR a SR', price: 'od 10 900 Kč', href: '/vlasy-k-prodlouzeni/platinum-edition' },
 ];
 
@@ -21,8 +21,13 @@ export default function AtelierHero() {
         <div className="w-full rounded-t-[999px] rounded-b-[20px] border border-muza-ink p-[5px] max-w-[560px] mx-auto lg:max-w-none">
           <div className="relative h-[44vh] min-h-[300px] lg:h-full rounded-t-[999px] rounded-b-[14px] overflow-hidden bg-muza-mocha">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/shades/03-tmava-hneda.jpg" alt="Dlouhé tmavě hnědé pravé vlasy"
-              className="absolute inset-0 w-full h-full object-cover object-top" fetchPriority="high" />
+            <img
+              src="/images/hero/hero-tmave-hnede-1080.webp"
+              srcSet="/images/hero/hero-tmave-hnede-640.webp 640w, /images/hero/hero-tmave-hnede-1080.webp 1080w, /images/hero/hero-tmave-hnede-1600.webp 1600w"
+              sizes="(min-width: 1024px) 52vw, 100vw"
+              width={1600} height={2143}
+              alt="Žena s dlouhými rovnými tmavě hnědými pravými vlasy u okna ve světlém pokoji"
+              className="absolute inset-0 w-full h-full object-cover object-[45%_35%]" fetchPriority="high" />
           </div>
         </div>
       </div>
