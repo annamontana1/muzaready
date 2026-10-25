@@ -83,7 +83,7 @@ export default function CookiesPage() {
                 <ul className="list-disc pl-6 space-y-1">
                   <li><strong>language</strong> – preferovaný jazyk (CZ/EN), trvání: 1 rok</li>
                   <li><strong>currency</strong> – preferovaná měna (CZK/EUR), trvání: 1 rok</li>
-                  <li><strong>cookie-consent</strong> – uložení vašeho souhlasu s cookies, trvání: 1 rok</li>
+                  <li><strong>muzaready_cookie_consent</strong> – uložení vašeho souhlasu s cookies, trvání: 1 rok</li>
                 </ul>
               </div>
             </div>

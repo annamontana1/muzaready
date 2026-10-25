@@ -121,20 +121,14 @@ export default function CookieConsent() {
 
   return (
     <>
-      {/* Subtle backdrop */}
-      <div
-        className="fixed inset-0 bg-burgundy/20 backdrop-blur-[2px] z-[9998] transition-opacity duration-500"
-        onClick={() => {}}
-      />
-
       {/* Cookie Banner */}
-      <div className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6 animate-slide-up">
+      <div role="region" aria-label="Souhlas s cookies" className="fixed bottom-0 left-0 right-0 z-[90] p-3 md:p-6 animate-slide-up">
         <div className="max-w-2xl mx-auto">
           <div className="bg-soft-cream border border-warm-beige rounded-2xl shadow-heavy overflow-hidden">
 
             {!showSettings ? (
               /* SIMPLE VIEW */
-              <div className="p-6 md:p-8">
+              <div className="p-5 md:p-8">
                 <div className="flex items-start gap-4">
                   {/* Cookie icon */}
                   <div className="hidden sm:flex w-12 h-12 rounded-full bg-ivory items-center justify-center flex-shrink-0">
@@ -144,10 +138,10 @@ export default function CookieConsent() {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-playfair text-xl text-burgundy mb-2">
+                    <h3 className="font-cormorant text-xl text-burgundy mb-2">
                       Vaše soukromí
                     </h3>
-                    <p className="text-sm text-burgundy/70 leading-relaxed mb-5">
+                    <p className="text-sm text-text-mid leading-relaxed mb-5">
                       Používáme cookies pro zlepšení vašeho zážitku z nakupování a analýzu návštěvnosti.
                       Můžete si vybrat, které cookies povolíte.
                     </p>
@@ -168,7 +162,7 @@ export default function CookieConsent() {
                       </button>
                       <button
                         onClick={() => setShowSettings(true)}
-                        className="px-6 py-2.5 text-burgundy/70 text-sm font-medium rounded-xl hover:text-burgundy hover:bg-ivory transition-colors"
+                        className="px-6 py-2.5 text-text-mid text-sm font-medium rounded-xl hover:text-burgundy hover:bg-ivory transition-colors"
                       >
                         Nastavení
                       </button>
@@ -180,7 +174,7 @@ export default function CookieConsent() {
                 <div className="mt-5 pt-4 border-t border-warm-beige/50">
                   <Link
                     href="/informace/ochrana-osobnich-udaju"
-                    className="text-xs text-burgundy/50 hover:text-burgundy transition-colors"
+                    className="text-xs text-text-mid underline underline-offset-2 hover:text-burgundy transition-colors"
                   >
                     Zásady ochrany osobních údajů →
                   </Link>
@@ -188,15 +182,15 @@ export default function CookieConsent() {
               </div>
             ) : (
               /* SETTINGS VIEW */
-              <div className="p-6 md:p-8">
+              <div className="p-5 md:p-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-playfair text-xl text-burgundy">
+                  <h3 className="font-cormorant text-xl text-burgundy">
                     Nastavení cookies
                   </h3>
                   <button
                     onClick={() => setShowSettings(false)}
-                    className="w-8 h-8 rounded-full bg-ivory hover:bg-warm-beige flex items-center justify-center transition-colors"
+                    className="w-11 h-11 rounded-full bg-ivory hover:bg-warm-beige flex items-center justify-center transition-colors"
                     aria-label="Zpět"
                   >
                     <svg className="w-4 h-4 text-burgundy" fill="none" viewBox="0 0 24 24" stroke="currentColor">

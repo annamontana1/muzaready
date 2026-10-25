@@ -3,7 +3,6 @@ import Script from "next/script";
 import "./globals.css";
 import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
-import CookieBanner from "@/components/CookieBanner";
 import MetaPixel from "@/components/MetaPixel";
 import DevelopmentModal from "@/components/DevelopmentModal";
 
@@ -188,7 +187,6 @@ export default function RootLayout({
           <MainLayout>
             {children}
           </MainLayout>
-          <CookieBanner />
           <MetaPixel />
           <DevelopmentModal />
         </Providers>

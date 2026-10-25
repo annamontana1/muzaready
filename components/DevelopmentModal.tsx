@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const STORAGE_KEY = 'muza-dev-modal-seen';
 
 export default function DevelopmentModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     // Check if user has seen the modal before
@@ -22,19 +23,36 @@ export default function DevelopmentModal() {
     setIsOpen(false);
   };
 
+  // Fokus na tlačítko a zavření klávesou Esc
+  useEffect(() => {
+    if (!isOpen) return;
+    buttonRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        localStorage.setItem(STORAGE_KEY, 'true');
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-burgundy-dark/50" onClick={handleClose} aria-hidden="true" />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-modal-in">
-        {/* Header with gradient */}
-        <div className="bg-gradient-to-r from-burgundy via-maroon to-burgundy p-6 text-white text-center">
-          <div className="text-5xl mb-3">🚧</div>
-          <h2 className="text-2xl sm:text-3xl font-playfair font-bold">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dev-modal-title"
+        className="relative bg-white rounded-2xl shadow-heavy max-w-lg w-full overflow-hidden animate-modal-in"
+      >
+        <div className="bg-burgundy px-6 pt-8 pb-6 text-ivory text-center">
+          <h2 id="dev-modal-title" className="text-3xl sm:text-4xl font-cormorant font-light">
             Web je ve vývoji
           </h2>
         </div>
@@ -62,8 +80,9 @@ export default function DevelopmentModal() {
           </div>
 
           <button
+            ref={buttonRef}
             onClick={handleClose}
-            className="w-full sm:w-auto px-8 py-3 bg-burgundy hover:bg-maroon text-white font-semibold rounded-lg transition-colors duration-200"
+            className="w-full sm:w-auto min-h-[44px] px-8 py-3 bg-burgundy hover:bg-maroon text-white font-medium rounded-lg transition-[transform,background-color] duration-150 active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy focus-visible:ring-offset-2"
           >
             Rozumím, pokračovat na web
           </button>
