@@ -5,9 +5,8 @@ import { useState } from 'react';
 
 // Úvod: hned pod hlavičkou plyne souvislý pás černobílých fotek z ateliéru, pod ním výběr kolekce
 const COLLECTIONS = [
-  { name: 'Standard', note: 'Skvělá každodenní volba', price: 'od 6 900 Kč', href: '/vlasy-k-prodlouzeni/standard' },
-  { name: 'LUXE', note: 'Od jedné dárkyně, jednotná struktura', price: 'od 8 900 Kč', href: '/vlasy-k-prodlouzeni/luxe' },
-  { name: 'Platinum edition', note: 'Ručně tříděno, výkup ČR a SR', price: 'od 10 900 Kč', href: '/vlasy-k-prodlouzeni/platinum-edition' },
+  { name: 'Středoevropské vlasy', note: 'Barvené v naší pražské barvírně, odstíny 1–10', price: 'od 6 900 Kč', href: '/vlasy-k-prodlouzeni/barvene-vlasy' },
+  { name: 'Panenské vlasy', note: 'Virgin, nikdy nebarvené, ručně tříděné z výkupu v ČR a SR', price: 'od 10 900 Kč', href: '/vlasy-k-prodlouzeni/nebarvene-panenske' },
 ];
 
 // Fotky jdou bez mezer těsně za sebou; pás je zdvojený, aby se smyčka (posun o −50 %) nikdy nepřetrhla
@@ -24,7 +23,7 @@ const PHOTOS = [
 ];
 
 export default function AtelierHero() {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
   const c = COLLECTIONS[active];
 
   return (
@@ -61,8 +60,8 @@ export default function AtelierHero() {
         </div>
 
         <div className="mt-8 lg:mt-2 max-w-[480px]">
-          <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Kolekce</div>
-          <div role="radiogroup" aria-label="Kolekce" className="grid grid-cols-3 gap-2">
+          <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Vyberte vlasy</div>
+          <div role="radiogroup" aria-label="Druh vlasů" className="grid grid-cols-2 gap-2">
             {COLLECTIONS.map((col, i) => {
               const on = i === active;
               return (
