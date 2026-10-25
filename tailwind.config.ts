@@ -112,7 +112,7 @@ const config: Config = {
         'slide-up': 'slide-up 0.4s cubic-bezier(0.32, 0.72, 0, 1)',
         'modal-in': 'modal-in 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
         // Pás fotek z ateliéru: stálý pohyb zprava doleva, proto linear
-        marquee: 'marquee 90s linear infinite',
+        marquee: 'marquee 120s linear infinite',
         // Prolínání 3 záběrů v hero: cyklus 21 s, každý záběr začíná o 7 s později
         crossfade: 'crossfade 21s ease-in-out infinite',
       },
