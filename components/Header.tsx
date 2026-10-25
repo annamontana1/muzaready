@@ -81,10 +81,8 @@ export default function Header() {
       <header
         className="sticky top-0 z-50 border-b"
         style={{
-          background: 'rgba(255,255,255,0.97)',
-          borderColor: 'var(--beige)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          background: '#330D0D',
+          borderColor: '#330D0D',
         }}
       >
         <div className="max-w-7xl mx-auto px-5 md:px-8 xl:px-12">
@@ -95,7 +93,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0" aria-label="Domů">
               <Image
-                src="/images/logo/muza-logo.png"
+                src="/images/logo/muza-logo-white.png"
                 alt="Mùza Hair"
                 width={120}
                 height={40}
@@ -105,16 +103,16 @@ export default function Header() {
             </Link>
 
             {/* Navigation */}
-            <nav className="flex items-center gap-5 xl:gap-7" style={{ color: 'var(--text-mid)' }}>
+            <nav className="flex items-center gap-5 xl:gap-7" style={{ color: '#F6EEE6' }}>
 
               {/* Vlasy k prodloužení */}
-              <Link href="/vlasy-k-prodlouzeni" className={navLinkClass} style={{ color: 'var(--text-mid)' }}>
+              <Link href="/vlasy-k-prodlouzeni" className={navLinkClass} style={{ color: '#F6EEE6' }}>
                 Vlasy k prodloužení
               </Link>
 
               {/* Příčesky & paruky */}
               <div className="relative group">
-                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: '#F6EEE6' }}>
                   Příčesky & paruky {chevronDown}
                 </button>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -128,7 +126,7 @@ export default function Header() {
 
               {/* Příslušenství */}
               <div className="relative group">
-                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: '#F6EEE6' }}>
                   Příslušenství {chevronDown}
                 </button>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -143,7 +141,7 @@ export default function Header() {
 
               {/* Metody zakončení */}
               <div className="relative group">
-                <Link href="/metody-zakonceni" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <Link href="/metody-zakonceni" className={`${navLinkClass} flex items-center gap-1`} style={{ color: '#F6EEE6' }}>
                   Metody {chevronDown}
                 </Link>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -157,7 +155,7 @@ export default function Header() {
 
               {/* Informace */}
               <div className="relative group">
-                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <button type="button" aria-haspopup="true" className={`${navLinkClass} flex items-center gap-1`} style={{ color: '#F6EEE6' }}>
                   Informace {chevronDown}
                 </button>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -173,7 +171,7 @@ export default function Header() {
 
               {/* Velkoobchod */}
               <div className="relative group">
-                <Link href="/dodavatel-vlasu-pro-salony" className={`${navLinkClass} flex items-center gap-1`} style={{ color: 'var(--text-mid)' }}>
+                <Link href="/dodavatel-vlasu-pro-salony" className={`${navLinkClass} flex items-center gap-1`} style={{ color: '#F6EEE6' }}>
                   Velkoobchod {chevronDown}
                 </Link>
                 <div className={dropdownClass} style={{ top: '100%', paddingTop: '4px' }}>
@@ -186,9 +184,7 @@ export default function Header() {
               <Link
                 href="/showroom"
                 className="hidden 2xl:inline-block whitespace-nowrap text-[11px] tracking-[0.14em] uppercase font-normal px-5 py-[9px] rounded-sm transition-colors duration-200"
-                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
+                style={{ background: '#F6EEE6', color: '#330D0D' }}
               >
                 Showroom
               </Link>
@@ -198,8 +194,8 @@ export default function Header() {
             <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 onClick={() => setSearchOverlayOpen(true)}
-                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy [&>svg]:w-5 [&>svg]:h-5"
-                style={{ color: 'var(--text-mid)' }}
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-muza-sand [&>svg]:w-5 [&>svg]:h-5"
+                style={{ color: '#F6EEE6' }}
                 aria-label="Hledat"
               >
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
@@ -208,8 +204,8 @@ export default function Header() {
               </button>
               <Link
                 href="/ucet"
-                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy [&>svg]:w-5 [&>svg]:h-5"
-                style={{ color: 'var(--text-mid)' }}
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-muza-sand [&>svg]:w-5 [&>svg]:h-5"
+                style={{ color: '#F6EEE6' }}
                 aria-label="Můj účet"
               >
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
@@ -218,8 +214,8 @@ export default function Header() {
               </Link>
               <Link
                 href="/oblibene"
-                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy relative [&>svg]:w-5 [&>svg]:h-5"
-                style={{ color: 'var(--text-mid)' }}
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-muza-sand relative [&>svg]:w-5 [&>svg]:h-5"
+                style={{ color: '#F6EEE6' }}
                 aria-label="Oblíbené"
               >
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
@@ -229,8 +225,8 @@ export default function Header() {
               </Link>
               <Link
                 href="/kosik"
-                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-burgundy relative [&>svg]:w-5 [&>svg]:h-5"
-                style={{ color: 'var(--text-mid)' }}
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-muza-sand relative [&>svg]:w-5 [&>svg]:h-5"
+                style={{ color: '#F6EEE6' }}
                 aria-label="Košík"
               >
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
@@ -245,8 +241,8 @@ export default function Header() {
           <div className="xl:hidden flex items-center justify-between h-16">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-11 h-11 -ml-3 flex items-center justify-center transition-colors hover:text-burgundy"
-              style={{ color: 'var(--text-mid)' }}
+              className="w-11 h-11 -ml-3 flex items-center justify-center transition-colors hover:text-muza-sand"
+              style={{ color: '#F6EEE6' }}
               aria-label="Menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
@@ -258,7 +254,7 @@ export default function Header() {
 
             <Link href="/" className="flex items-center" aria-label="Domů">
               <Image
-                src="/images/logo/muza-logo.png"
+                src="/images/logo/muza-logo-white.png"
                 alt="Mùza Hair"
                 width={100}
                 height={33}
@@ -271,20 +267,20 @@ export default function Header() {
               <button
                 onClick={() => setSearchOverlayOpen(true)}
                 className="w-11 h-11 flex items-center justify-center transition-colors [&>svg]:w-5 [&>svg]:h-5"
-                style={{ color: 'var(--text-mid)' }}
+                style={{ color: '#F6EEE6' }}
                 aria-label="Hledat"
               >
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
               </button>
-              <Link href="/oblibene" className="w-11 h-11 flex items-center justify-center relative [&>svg]:w-5 [&>svg]:h-5" style={{ color: 'var(--text-mid)' }} aria-label="Oblíbené">
+              <Link href="/oblibene" className="w-11 h-11 flex items-center justify-center relative [&>svg]:w-5 [&>svg]:h-5" style={{ color: '#F6EEE6' }} aria-label="Oblíbené">
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
                 <Badge count={favoriteCount} variant="small" />
               </Link>
-              <Link href="/kosik" className="w-11 h-11 flex items-center justify-center relative [&>svg]:w-5 [&>svg]:h-5" style={{ color: 'var(--text-mid)' }} aria-label="Košík">
+              <Link href="/kosik" className="w-11 h-11 flex items-center justify-center relative [&>svg]:w-5 [&>svg]:h-5" style={{ color: '#F6EEE6' }} aria-label="Košík">
                 <svg fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                   <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>

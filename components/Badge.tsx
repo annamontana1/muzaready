@@ -18,8 +18,8 @@ export default function Badge({ count, variant = 'default' }: BadgeProps) {
       className={`
         ${sizeClasses}
         px-1
-        bg-burgundy
-        text-white
+        bg-white
+        text-muza-ink
         rounded-full
         flex
         items-center

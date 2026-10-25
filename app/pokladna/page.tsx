@@ -198,6 +198,7 @@ export default function PokladnaPage() {
             skuId: item.skuId,
             wantedGrams: item.saleMode === 'BULK_G' ? item.grams : undefined,
             ending: item.ending,
+            selectedLength: item.selectedLength,
           })),
           shippingInfo: {
             firstName,

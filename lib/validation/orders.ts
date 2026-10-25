@@ -61,6 +61,7 @@ export const CartLineSchema = z.object({
   skuId: z.string().min(1, 'SKU ID is required'),
   wantedGrams: z.number().positive('Grams must be positive').optional(),
   ending: z.string().optional(),
+  selectedLength: z.number().int().positive().optional(), // délka zvolená v konfigurátoru (cm)
 });
 
 // Create order request schema

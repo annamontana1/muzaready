@@ -42,7 +42,7 @@ export default function TopContactBar() {
 
   return (
     <div
-      style={{ background: 'var(--burgundy)', color: 'rgba(248,244,239,0.9)' }}
+      style={{ background: '#330D0D', color: 'rgba(248,244,239,0.9)', borderBottom: '1px solid rgba(246,238,230,0.12)' }}
       className="relative text-center text-[12px] tracking-[0.12em] py-[10px] px-5 font-light"
     >
       <div className="hidden md:flex items-center justify-center gap-6">

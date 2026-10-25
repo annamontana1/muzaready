@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
+import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 
 interface Sku {
@@ -38,13 +39,16 @@ interface QuoteItem {
   lineGrandTotal: number;
 }
 
+// Ceny zakončení musí odpovídat ASSEMBLY_FEE_CONFIG v lib/stock.ts
 const ENDING_OPTIONS = [
-  { id: 'NONE', label: 'Bez zakončení', price: '0 Kč' },
-  { id: 'MICRO_KERATIN', label: 'Mikrokeratin', price: '10 Kč/g' },
-  { id: 'STANDARD_KERATIN', label: 'Standart keratin', price: '10 Kč/g' },
-  { id: 'PASKY_KERATINU', label: 'Pásky keratinu', price: '10 Kč/g' },
-  { id: 'WEFT', label: 'Weft', price: '50 Kč/g' },
+  { id: 'NONE', label: 'Bez zakončení', price: 'cop' },
+  { id: 'STANDARD_KERATIN', label: 'Keratin', price: '+15 Kč/g' },
+  { id: 'MICRO_KERATIN', label: 'Mikrokeratin', price: '+15 Kč/g' },
+  { id: 'PASKY_KERATINU', label: 'Keratinové pásky', price: '+15 Kč/g' },
+  { id: 'WEFT', label: 'Weft', price: '+60 Kč/g' },
 ];
+
+const WHATSAPP_NUMBER = '420728722880';
 
 function getCategoryInfo(category: Sku['customerCategory']) {
   switch (category) {
@@ -117,7 +121,9 @@ export default function SkuDetailPage() {
   const [selectedGrams, setSelectedGrams] = useState<number>(0);
   const [quote, setQuote] = useState<QuoteItem | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [lengthOpen, setLengthOpen] = useState(false);
+  const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchSku();
@@ -138,11 +144,15 @@ export default function SkuDetailPage() {
       } else if (found.images && found.images.length > 0) {
         setSelectedImage(found.images[0]);
       }
+      // Výchozí konfigurace: 50 cm, 100 g, bez zakončení (pokud to SKU dovolí)
       if (found.lengthCm) {
-        setSelectedLength(found.lengthCm); // start at the SKU's actual base length
+        setSelectedLength(found.saleMode === 'BULK_G' && found.lengthCm <= 50 ? 50 : found.lengthCm);
       }
+      const bulkMin = found.minOrderG ?? 50;
+      const bulkStep = found.stepG ?? 10;
+      const bulkDefault = Math.max(bulkMin, Math.min(100, found.availableGrams ?? 100));
       const initialGrams = found.saleMode === 'BULK_G'
-        ? (found.minOrderG ?? 50)
+        ? bulkMin + Math.floor((bulkDefault - bulkMin) / bulkStep) * bulkStep
         : (found.weightTotalG ?? found.availableGrams ?? 0);
       if (initialGrams) {
         setSelectedGrams(initialGrams);
@@ -154,10 +164,12 @@ export default function SkuDetailPage() {
     }
   };
 
+  // Cena se přepočítá sama při každé změně konfigurace
   const calculateQuote = async () => {
     if (!sku) return;
 
     setQuoteLoading(true);
+    setQuoteError(null);
     try {
       const lines = [
         {
@@ -182,19 +194,25 @@ export default function SkuDetailPage() {
       const data = await res.json();
       setQuote(data.items[0]);
     } catch (err: any) {
-      alert(`Chyba: ${err.message}`);
+      setQuote(null);
+      setQuoteError(err.message);
     } finally {
       setQuoteLoading(false);
     }
   };
 
-  const handleAddToCart = () => {
-    if (!quote || !sku) {
-      alert('Nejdřív klikni "Spočítat cenu"');
-      return;
-    }
+  useEffect(() => {
+    if (!sku || sku.soldOut || !sku.inStock) return;
+    if (sku.saleMode === 'BULK_G' && !selectedGrams) return;
+    const t = setTimeout(calculateQuote, 250);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sku, selectedEnding, selectedLength, selectedGrams]);
 
-    for (let i = 0; i < quantity; i++) {
+  const handleAddToCart = () => {
+    if (!quote || !sku) return;
+
+    {
       addToCart({
         skuId: sku.id,
         skuName: sku.name || sku.sku,
@@ -210,6 +228,7 @@ export default function SkuDetailPage() {
         assemblyFeeTotal: quote.assemblyFeeTotal,
         lineGrandTotal: quote.lineGrandTotal,
         quantity: 1,
+        selectedLength: sku.saleMode === 'BULK_G' ? selectedLength : undefined,
       });
     }
     router.push('/kosik');
@@ -300,14 +319,6 @@ export default function SkuDetailPage() {
 
   const catInfo = getCategoryInfo(sku.customerCategory);
 
-  // Build gram options for BULK_G scroll
-  const gramOptions: number[] = [];
-  if (sku.saleMode === 'BULK_G') {
-    for (let g = bulkMinGrams; g <= Math.max(bulkMaxGrams, bulkMinGrams); g += bulkStepGrams) {
-      gramOptions.push(g);
-    }
-  }
-  const displayedGramOptions = gramOptions;
 
   // Length options: from SKU base length (e.g. 45) up to 80cm in 5cm steps
   const lengthOptions: number[] = [];
@@ -315,614 +326,218 @@ export default function SkuDetailPage() {
     lengthOptions.push(l);
   }
 
+  const isBulk = sku.saleMode === 'BULK_G';
+  const available = sku.inStock && !sku.soldOut;
+  const activeIndex = Math.max(0, currentImage ? allImages.indexOf(currentImage) : 0);
+  const lengthCm = isBulk ? bulkLengthValue : sku.lengthCm;
+  const endingLabel = ENDING_OPTIONS.find((o) => o.id === selectedEnding)?.label ?? '';
+  const totalText = quote ? formatPrice(quote.lineGrandTotal) : quoteLoading ? '…' : '—';
+  const summaryLine = [lengthCm ? `${lengthCm} cm` : null, `${isBulk ? bulkGramsValue : sku.weightTotalG ?? ''} g`, endingLabel.toLowerCase()]
+    .filter(Boolean)
+    .join(' · ');
+  const waMessage = `Dobrý den, mám zájem o ${sku.name || sku.sku}${sku.shadeName ? ` (${sku.shadeName})` : ''}: ${summaryLine}. Můžete mi ho připravit?`;
+  const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+
+  const onGalleryScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const i = Math.round(el.scrollLeft / el.clientWidth);
+    if (allImages[i] && allImages[i] !== currentImage) setSelectedImage(allImages[i]);
+  };
+  const showImage = (i: number) => {
+    setSelectedImage(allImages[i]);
+    galleryRef.current?.scrollTo({ left: i * galleryRef.current.clientWidth, behavior: 'smooth' });
+  };
+
+  const chip = (on: boolean) =>
+    `rounded-2xl transition-colors duration-150 ${on ? 'bg-muza-ink text-muza-onink' : 'bg-muza-mocha text-text-dark hover:bg-[#D3C6B9]'}`;
+
+  const cta = available ? (
+    <button type="button" onClick={handleAddToCart} disabled={!quote || quoteLoading}
+      className="h-[52px] px-6 rounded-full bg-muza-ink text-muza-onink text-sm font-medium whitespace-nowrap transition-opacity hover:opacity-90 disabled:opacity-50">
+      Přidat do košíku
+    </button>
+  ) : (
+    <a href={waLink} target="_blank" rel="noopener"
+      className="h-[52px] px-6 rounded-full bg-muza-ink text-muza-onink text-sm font-medium whitespace-nowrap flex items-center justify-center gap-2 hover:opacity-90">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8z" /></svg>
+      Objednat přes WhatsApp
+    </a>
+  );
+
   return (
-    <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-4 md:py-8">
+    <div className="min-h-screen bg-muza-ivory text-text-dark font-light pb-28 lg:pb-0">
+      <div className="max-w-6xl mx-auto lg:px-12 lg:py-10">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_440px] lg:gap-16 min-w-0">
 
-        {/* ── Breadcrumb ── */}
-        <nav className="mb-10">
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase font-light transition-colors"
-            style={{ color: 'var(--text-soft)' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-            </svg>
-            Zpět
-          </button>
-        </nav>
-
-        {/* ── Mobile: image + quick info side by side ── */}
-        {/* ── Desktop: two-column full layout ── */}
-        <div className="grid lg:grid-cols-[1fr_480px] gap-8 md:gap-12 lg:gap-16 min-w-0">
-
-          {/* ═════════════════════════════════════════
-              LEFT COLUMN: Image Gallery
-          ═════════════════════════════════════════ */}
-          <div className="space-y-3 min-w-0">
-
-            {/* Main image */}
-            <div
-              className="relative w-full rounded-sm overflow-hidden border h-[100vw] max-h-[85vh] md:h-auto md:max-h-none md:aspect-[3/4] group"
-              style={{ background: 'var(--white)', borderColor: 'var(--beige)', cursor: currentImage ? 'zoom-in' : 'default' }}
-              onClick={() => currentImage && openLightbox()}
-            >
-              {currentImage ? (
-                <>
-                  <img
-                    src={currentImage}
-                    alt={sku.name || 'Produkt'}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
-                    style={{ background: 'rgba(0,0,0,0.15)' }}>
-                    <svg className="w-8 h-8 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0zm0 0l2 2" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 8v6M8 11h6" />
-                    </svg>
-                  </div>
-                </>
+          {/* ── Galerie: tenký burgundy rámeček, fotky se dají posouvat prstem ── */}
+          <div className="px-4 pt-4 lg:px-0 lg:pt-0 min-w-0">
+            <div className="rounded-t-[186px] rounded-b-[20px] border border-muza-ink p-[5px] max-w-[520px] mx-auto">
+              {hasImages ? (
+                <div ref={galleryRef} onScroll={onGalleryScroll}
+                  className="flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-t-[180px] rounded-b-[14px] aspect-[4/5] bg-[#FCF8F4]">
+                  {allImages.map((img, idx) => (
+                    <button key={img} type="button" onClick={() => { setSelectedImage(img); openLightbox(); }}
+                      aria-label={`Zvětšit fotku ${idx + 1} z ${allImages.length}`}
+                      className="relative flex-none w-full h-full snap-center cursor-zoom-in">
+                      <img src={img} alt={idx === 0 ? (sku.name || 'Produkt') : ''} className="absolute inset-0 w-full h-full object-cover"
+                        loading={idx === 0 ? 'eager' : 'lazy'} />
+                    </button>
+                  ))}
+                </div>
               ) : (
-                <div
-                  className="w-full h-full flex flex-col items-center justify-center"
-                  style={{
-                    background: sku.shadeHex
-                      ? `linear-gradient(135deg, ${sku.shadeHex}33, ${sku.shadeHex}66, ${sku.shadeHex}99)`
-                      : 'linear-gradient(135deg, #f5f0eb, #e8ddd4, #d4c5b9)',
-                  }}
-                >
-                  <svg
-                    className="w-12 h-12 mb-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span
-                    className="text-[11px] tracking-[0.1em] uppercase font-light"
-                    style={{ color: 'rgba(255,255,255,0.45)' }}
-                  >
-                    Foto není k dispozici
-                  </span>
-                </div>
-              )}
-
-              {/* Stock badge overlay */}
-              {sku.inStock && !sku.soldOut && (
-                <div
-                  className="absolute top-4 left-4 text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-sm font-normal"
-                  style={{ background: 'rgba(34,120,60,0.9)', color: '#fff' }}
-                >
-                  Skladem
-                </div>
-              )}
-              {sku.soldOut && (
-                <div
-                  className="absolute top-4 left-4 text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-sm font-normal"
-                  style={{ background: 'rgba(100,100,100,0.85)', color: '#fff' }}
-                >
-                  Vyprodáno
+                <div className="rounded-t-[180px] rounded-b-[14px] aspect-[4/5] flex items-center justify-center text-[11px] tracking-[0.1em] uppercase text-white/60"
+                  style={{ background: sku.shadeHex ? `linear-gradient(135deg, ${sku.shadeHex}55, ${sku.shadeHex}aa)` : 'linear-gradient(135deg, #f5f0eb, #d4c5b9)' }}>
+                  Foto připravujeme
                 </div>
               )}
             </div>
-
-            {/* Thumbnails */}
             {allImages.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="mt-3.5 flex justify-center gap-2">
                 {allImages.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImage(img)}
-                    className="relative w-16 h-20 flex-shrink-0 rounded-sm overflow-hidden transition-all"
-                    style={
-                      currentImage === img
-                        ? { outline: '2px solid var(--burgundy)', outlineOffset: '2px' }
-                        : { border: '1px solid var(--beige-mid)' }
-                    }
-                  >
-                    <img
-                      src={img}
-                      alt={`${sku.name || 'Produkt'} - foto ${idx + 1}`}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
+                  <button key={img} type="button" onClick={() => showImage(idx)} aria-label={`Fotka ${idx + 1}`}
+                    aria-current={idx === activeIndex ? 'true' : undefined}
+                    className="h-6 flex items-center">
+                    <span className="block h-1.5 rounded-full transition-[width,background-color] duration-200"
+                      style={{ width: idx === activeIndex ? 24 : 6, background: idx === activeIndex ? '#330D0D' : 'rgba(51,13,13,0.28)' }} />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* ═════════════════════════════════════════
-              RIGHT COLUMN: Product Info + Config
-          ═════════════════════════════════════════ */}
-          <div className="space-y-6 min-w-0">
-
-            {/* ── Product info ── */}
-            <div>
-              {/* Category badge */}
-              <div className="mb-4">
-                <span
-                  className="inline-block text-[10px] tracking-[0.18em] uppercase font-normal px-3 py-1.5 rounded-sm"
-                  style={{ background: catInfo.bg, color: catInfo.color }}
-                >
-                  {catInfo.label}
-                </span>
-              </div>
-
-              {/* Title */}
-              <h1
-                className="font-cormorant font-light leading-[1.1] mb-2"
-                style={{ fontSize: 'clamp(26px,4vw,44px)', color: 'var(--text-dark)' }}
-              >
-                {sku.name || 'Bez názvu'}
-              </h1>
-
-              {/* SKU number */}
-              <p
-                className="text-[10px] tracking-[0.15em] uppercase mb-6"
-                style={{ color: 'var(--text-soft)' }}
-              >
-                SKU: {sku.sku}
+          {/* ── Informace a konfigurace ── */}
+          <div className="px-4 lg:px-0 min-w-0">
+            <div className="mt-5 lg:mt-0">
+              <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink">{catInfo.label}</span>
+              <h1 className="mt-1.5 font-cormorant font-light text-[40px] lg:text-[48px] leading-[1.02] text-muza-ink">{sku.name || 'Bez názvu'}</h1>
+              {sku.shadeName && (
+                <p className="mt-2 flex items-center gap-2 text-sm text-text-mid">
+                  {sku.shadeHex && <span className="inline-block w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: sku.shadeHex }} />}
+                  {sku.shadeName}{sku.structure ? ` · ${sku.structure}` : ''}
+                </p>
+              )}
+              <p className={`mt-3 flex items-center gap-2 text-sm ${available ? 'text-[#2F5E3D]' : 'text-text-mid'}`}>
+                <span className={`w-2 h-2 rounded-full ${available ? 'bg-[#2F5E3D]' : 'bg-warning'}`} />
+                {available ? 'Skladem, odešleme hned' : 'Momentálně není skladem, připravíme na objednávku'}
               </p>
-
-              {/* Key details card */}
-              <div
-                className="rounded-sm border"
-                style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
-              >
-                {sku.shadeName && (
-                  <div className="flex justify-between items-center py-3 px-5 border-b" style={{ borderColor: 'var(--beige)' }}>
-                    <span
-                      className="text-[11px] tracking-[0.1em] uppercase"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      Odstín
-                    </span>
-                    <span
-                      className="text-[14px] font-normal flex items-center gap-2"
-                      style={{ color: 'var(--text-dark)' }}
-                    >
-                      {sku.shadeHex && (
-                        <span
-                          className="inline-block w-4 h-4 rounded-full border"
-                          style={{ backgroundColor: sku.shadeHex, borderColor: 'var(--beige-mid)' }}
-                        />
-                      )}
-                      {sku.shadeName}{sku.shade ? ` · #${sku.shade}` : ''}
-                    </span>
-                  </div>
-                )}
-                {sku.lengthCm && (
-                  <div className="flex justify-between items-center py-3 px-5 border-b" style={{ borderColor: 'var(--beige)' }}>
-                    <span
-                      className="text-[11px] tracking-[0.1em] uppercase"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      Délka
-                    </span>
-                    <span className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>
-                      {sku.lengthCm} cm
-                    </span>
-                  </div>
-                )}
-                {sku.structure && (
-                  <div className="flex justify-between items-center py-3 px-5 border-b" style={{ borderColor: 'var(--beige)' }}>
-                    <span
-                      className="text-[11px] tracking-[0.1em] uppercase"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      Struktura
-                    </span>
-                    <span className="text-[14px] font-normal capitalize" style={{ color: 'var(--text-dark)' }}>
-                      {sku.structure}
-                    </span>
-                  </div>
-                )}
-                <div className="flex justify-between items-center py-3 px-5">
-                  <span
-                    className="text-[11px] tracking-[0.1em] uppercase"
-                    style={{ color: 'var(--text-soft)' }}
-                  >
-                    Cena za gram
-                  </span>
-                  <span
-                    className="font-cormorant font-light text-[22px]"
-                    style={{ color: 'var(--burgundy)' }}
-                  >
-                    {formatPrice(sku.pricePerGramCzk)}/g
-                  </span>
-                </div>
-              </div>
-
-              {/* Stock status */}
-              {sku.inStock && !sku.soldOut && (
-                <div className="mt-3 flex items-center gap-2">
-                  <span
-                    className="inline-block w-1.5 h-1.5 rounded-full"
-                    style={{ background: '#22783c' }}
-                  />
-                  <span className="text-[12px] font-light" style={{ color: '#22783c' }}>
-                    {sku.saleMode === 'PIECE_BY_WEIGHT'
-                      ? `Skladem (${sku.weightTotalG}g)`
-                      : `Skladem (${sku.availableGrams}g)`}
-                  </span>
-                </div>
-              )}
             </div>
 
-            {/* ── Configuration card ── */}
-            <div
-              className="rounded-sm border p-6 min-w-0"
-              style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
-            >
-              {/* Section label + heading */}
-              <div className="mb-6">
-                <div
-                  className="text-[10px] tracking-[0.2em] uppercase mb-2 font-normal"
-                  style={{ color: 'var(--accent)' }}
-                >
-                  Konfigurace
-                </div>
-                <h2
-                  className="font-cormorant font-light text-[24px] leading-none"
-                  style={{ color: 'var(--text-dark)' }}
-                >
-                  Přizpůsobte si produkt
-                </h2>
-              </div>
-
-              {/* ── Ending selection ── */}
-              <div className="mb-7">
-                <div
-                  className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal flex items-center justify-between"
-                  style={{ color: 'var(--text-soft)' }}
-                >
-                  <span>Zakončení</span>
-                  <span className="text-[12px] tracking-[0.05em] normal-case font-light" style={{ color: 'var(--burgundy)' }}>
-                    {ENDING_OPTIONS.find(o => o.id === selectedEnding)?.label}
+            <div className="mt-7 flex flex-col gap-6">
+              {/* Délka */}
+              {isBulk ? (
+                <button type="button" onClick={() => setLengthOpen(true)}
+                  className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
+                  <span>
+                    <span className="block font-cormorant text-[22px] leading-tight">Délka</span>
+                    <span className="block text-[15px] text-text-mid mt-0.5">{bulkLengthValue} cm · {hairZone(bulkLengthValue)}</span>
                   </span>
-                </div>
-                <div className="overflow-x-auto pb-2 max-w-full">
-                  <div className="flex gap-2 w-max">
-                    {ENDING_OPTIONS.map((option) => (
-                      <button
-                        key={option.id}
-                        onClick={() => setSelectedEnding(option.id)}
-                        className="flex-shrink-0 px-4 py-2.5 rounded-sm transition-all text-left"
-                        style={
-                          selectedEnding === option.id
-                            ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
-                            : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
-                        }
-                        onMouseEnter={e => { if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--burgundy)'; }}
-                        onMouseLeave={e => { if (selectedEnding !== option.id) e.currentTarget.style.borderColor = 'var(--beige-mid)'; }}
-                      >
-                        <span className="block text-[11px] tracking-[0.08em] uppercase font-normal whitespace-nowrap">{option.label}</span>
-                        <span className="block text-[10px] mt-0.5 font-light whitespace-nowrap" style={{ opacity: 0.7 }}>{option.price}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* ── BULK_G selectors ── */}
-              {sku.saleMode === 'BULK_G' && (
-                <div className="mb-7 space-y-6">
-
-                  {/* Length selector */}
-                  <div>
-                    <div
-                      className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal flex items-center justify-between"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      <span>Délka</span>
-                      <span
-                        className="text-[12px] tracking-[0.05em] normal-case font-light"
-                        style={{ color: 'var(--burgundy)' }}
-                      >
-                        {bulkLengthValue} cm
-                      </span>
-                    </div>
-                    <div className="overflow-x-auto pb-2">
-                      <div className="flex gap-2 w-max">
-                        {lengthOptions.map((len) => (
-                          <button
-                            key={len}
-                            onClick={() => setSelectedLength(len)}
-                            className="text-[11px] tracking-[0.08em] px-4 py-2.5 rounded-sm font-light transition-all flex-shrink-0"
-                            style={
-                              bulkLengthValue === len
-                                ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
-                                : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
-                            }
-                            onMouseEnter={e => {
-                              if (bulkLengthValue !== len) e.currentTarget.style.borderColor = 'var(--burgundy)';
-                            }}
-                            onMouseLeave={e => {
-                              if (bulkLengthValue !== len) e.currentTarget.style.borderColor = 'var(--beige-mid)';
-                            }}
-                          >
-                            {len} cm
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Grams selector */}
-                  <div>
-                    <div
-                      className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal flex items-center justify-between"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      <span>Gramáž</span>
-                      <span
-                        className="text-[12px] tracking-[0.05em] normal-case font-light"
-                        style={{ color: 'var(--burgundy)' }}
-                      >
-                        {bulkGramsValue} g
-                      </span>
-                    </div>
-                    {displayedGramOptions.length > 0 ? (
-                      <div className="overflow-x-auto pb-2">
-                        <div className="flex gap-2 w-max">
-                          {displayedGramOptions.map((g) => (
-                            <button
-                              key={g}
-                              onClick={() => setSelectedGrams(g)}
-                              className="text-[11px] tracking-[0.08em] px-4 py-2.5 rounded-sm font-light transition-all flex-shrink-0"
-                              style={
-                                bulkGramsValue === g
-                                  ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
-                                  : { background: 'transparent', color: 'var(--text-mid)', border: '1px solid var(--beige-mid)' }
-                              }
-                              onMouseEnter={e => {
-                                if (bulkGramsValue !== g) e.currentTarget.style.borderColor = 'var(--burgundy)';
-                              }}
-                              onMouseLeave={e => {
-                                if (bulkGramsValue !== g) e.currentTarget.style.borderColor = 'var(--beige-mid)';
-                              }}
-                            >
-                              {g} g
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <p
-                        className="text-[12px] font-light"
-                        style={{ color: 'var(--text-soft)' }}
-                      >
-                        Dostupnost: {bulkMinGrams}–{Math.max(bulkMaxGrams, bulkMinGrams)} g (krok {bulkStepGrams} g)
-                      </p>
-                    )}
-                    <p
-                      className="text-[10px] tracking-[0.05em] font-light mt-2"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      Min. objednávka {bulkMinGrams} g · krok {bulkStepGrams} g{!sku.minOrderG && ' (výchozí nastavení)'}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* ── Calculate button ── */}
-              <button
-                onClick={calculateQuote}
-                disabled={
-                  quoteLoading ||
-                  (sku.saleMode === 'BULK_G' && (!selectedGrams || selectedGrams < (sku.minOrderG || 50)))
-                }
-                className="w-full py-4 rounded-sm text-[12px] tracking-[0.14em] uppercase font-normal transition-all hover:-translate-y-px disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-              >
-                {quoteLoading ? 'Počítám…' : 'Spočítat cenu'}
-              </button>
-            </div>
-
-            {/* ── Price quote card ── */}
-            {quote && (
-              <div
-                className="rounded-sm p-6 space-y-5"
-                style={{ background: 'var(--white)', border: '2px solid var(--burgundy)' }}
-              >
-                {/* Heading */}
-                <div>
-                  <div
-                    className="text-[10px] tracking-[0.2em] uppercase mb-1.5 font-normal"
-                    style={{ color: 'var(--accent)' }}
-                  >
-                    Cenový rozpis
-                  </div>
-                  <h3
-                    className="font-cormorant font-light text-[22px] leading-none"
-                    style={{ color: 'var(--text-dark)' }}
-                  >
-                    Kalkulace ceny
-                  </h3>
-                </div>
-
-                {/* Line items */}
-                <div className="space-y-0">
-                  <div
-                    className="flex justify-between items-center py-3 border-b"
-                    style={{ borderColor: 'var(--beige)' }}
-                  >
-                    <span
-                      className="text-[11px] tracking-[0.05em] font-light"
-                      style={{ color: 'var(--text-soft)' }}
-                    >
-                      Vlasy — {quote.grams}g × {formatPrice(quote.pricePerGram)}/g
-                    </span>
-                    <span className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>
-                      {formatPrice(quote.lineTotal)}
-                    </span>
-                  </div>
-
-                  {quote.assemblyFeeTotal > 0 && (
-                    <div
-                      className="flex justify-between items-center py-3 border-b"
-                      style={{ borderColor: 'var(--beige)' }}
-                    >
-                      <span
-                        className="text-[11px] tracking-[0.05em] font-light"
-                        style={{ color: 'var(--text-soft)' }}
-                      >
-                        Zakončení — {quote.assemblyFeeType}
-                      </span>
-                      <span className="text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>
-                        {formatPrice(quote.assemblyFeeTotal)}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between items-end pt-4">
-                    <span
-                      className="text-[11px] tracking-[0.08em] uppercase font-normal"
-                      style={{ color: 'var(--text-mid)' }}
-                    >
-                      Celkem za 1 ks
-                    </span>
-                    <span
-                      className="font-cormorant font-light text-[32px] leading-none"
-                      style={{ color: 'var(--burgundy)' }}
-                    >
-                      {formatPrice(quote.lineGrandTotal)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Quantity selector */}
-                <div className="pt-4 border-t" style={{ borderColor: 'var(--beige)' }}>
-                  <div
-                    className="text-[10px] tracking-[0.18em] uppercase mb-3 font-normal"
-                    style={{ color: 'var(--text-soft)' }}
-                  >
-                    Počet kusů
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-9 h-9 rounded-sm flex items-center justify-center text-[16px] font-light transition-all"
-                      style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.borderColor = 'var(--burgundy)';
-                        e.currentTarget.style.color = 'var(--burgundy)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.borderColor = 'var(--beige-mid)';
-                        e.currentTarget.style.color = 'var(--text-mid)';
-                      }}
-                    >
-                      −
-                    </button>
-                    <span
-                      className="font-cormorant font-light text-[24px] min-w-[2.5rem] text-center"
-                      style={{ color: 'var(--text-dark)' }}
-                    >
-                      {quantity}
-                    </span>
-                    <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="w-9 h-9 rounded-sm flex items-center justify-center text-[16px] font-light transition-all"
-                      style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.borderColor = 'var(--burgundy)';
-                        e.currentTarget.style.color = 'var(--burgundy)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.borderColor = 'var(--beige-mid)';
-                        e.currentTarget.style.color = 'var(--text-mid)';
-                      }}
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  {quantity > 1 && (
-                    <div className="mt-4 flex justify-between items-end">
-                      <span
-                        className="text-[10px] tracking-[0.1em] uppercase font-light"
-                        style={{ color: 'var(--text-soft)' }}
-                      >
-                        Celkem za {quantity} ks
-                      </span>
-                      <span
-                        className="font-cormorant font-light text-[28px] leading-none"
-                        style={{ color: 'var(--burgundy)' }}
-                      >
-                        {formatPrice(quote.lineGrandTotal * quantity)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Add to cart button */}
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full py-4 rounded-sm text-[12px] tracking-[0.14em] uppercase font-normal transition-all hover:-translate-y-px mt-1"
-                  style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-                >
-                  Přidat do košíku{quantity > 1 ? ` (${quantity} ks)` : ''}
+                  <span className="flex items-center gap-1.5 text-[13px] text-muza-ink">
+                    Upravit
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
+                  </span>
                 </button>
-              </div>
-            )}
+              ) : (
+                <div className="px-4 py-3 rounded-2xl bg-muza-mocha">
+                  <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
+                  <span className="block text-[15px] text-text-mid mt-0.5">
+                    {[sku.lengthCm ? `${sku.lengthCm} cm` : null, sku.weightTotalG ? `${sku.weightTotalG} g` : null].filter(Boolean).join(' · ')} · jediný kus
+                  </span>
+                </div>
+              )}
 
-            {/* ── How it works ── */}
-            <div
-              className="rounded-sm p-6"
-              style={{ background: 'var(--beige)', border: '1px solid var(--beige-mid)' }}
-            >
-              <div
-                className="text-[10px] tracking-[0.2em] uppercase mb-2 font-normal"
-                style={{ color: 'var(--accent)' }}
-              >
-                Průvodce nákupem
+              {/* Zakončení */}
+              <fieldset>
+                <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">Zakončení</legend>
+                <div className="grid grid-cols-2 gap-2">
+                  {ENDING_OPTIONS.map((o) => {
+                    const on = selectedEnding === o.id;
+                    return (
+                      <button key={o.id} type="button" aria-pressed={on} onClick={() => setSelectedEnding(o.id)}
+                        className={`min-h-[60px] px-2 py-2.5 text-center ${chip(on)}`}>
+                        <span className="block text-sm">{o.label}</span>
+                        <span className="block text-xs mt-0.5 opacity-80">{o.price}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+
+              {/* Gramáž */}
+              {isBulk && (
+                <fieldset>
+                  <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
+                    Gramáž <span className="font-jost text-[13px] text-text-mid">· {bulkMinGrams}–{Math.max(bulkMaxGrams, bulkMinGrams)} g</span>
+                  </legend>
+                  <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
+                    <button type="button" aria-label={`Ubrat ${bulkStepGrams} gramů`} disabled={bulkGramsValue <= bulkMinGrams}
+                      onClick={() => setSelectedGrams(Math.max(bulkMinGrams, bulkGramsValue - bulkStepGrams))}
+                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">−</button>
+                    <span className="font-cormorant text-[26px]" aria-live="polite">{bulkGramsValue} g</span>
+                    <button type="button" aria-label={`Přidat ${bulkStepGrams} gramů`} disabled={bulkGramsValue >= bulkMaxGrams}
+                      onClick={() => setSelectedGrams(Math.min(Math.max(bulkMaxGrams, bulkMinGrams), bulkGramsValue + bulkStepGrams))}
+                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">+</button>
+                  </div>
+                  <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
+                </fieldset>
+              )}
+
+              {/* Souhrn ceny */}
+              <div className="rounded-2xl bg-muza-ink text-muza-onink p-[18px] flex flex-col gap-2 text-sm" aria-live="polite">
+                {quote ? (
+                  <>
+                    <div className="flex justify-between gap-3">
+                      <span className="text-[#D8C3BA]">Vlasy · {quote.grams} g × {formatPrice(quote.pricePerGram)}</span>
+                      <span>{formatPrice(quote.lineTotal)}</span>
+                    </div>
+                    {quote.assemblyFeeTotal > 0 && (
+                      <div className="flex justify-between gap-3">
+                        <span className="text-[#D8C3BA]">{endingLabel} · {quote.grams} g × {formatPrice(quote.assemblyFeeCzk)}</span>
+                        <span>{formatPrice(quote.assemblyFeeTotal)}</span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-[#D8C3BA]">
+                    {!available ? 'Cenu vám potvrdíme ve WhatsAppu.' : quoteError ? quoteError : 'Počítám cenu…'}
+                  </div>
+                )}
+                <div className="flex justify-between items-baseline pt-2.5 mt-0.5 border-t border-[rgba(234,220,200,0.3)]">
+                  <span className="font-cormorant text-[22px]">Celkem</span>
+                  <span className="font-cormorant text-[28px] text-muza-sand">{totalText}</span>
+                </div>
               </div>
-              <h4
-                className="font-cormorant font-light text-[20px] mb-4 leading-none"
-                style={{ color: 'var(--text-dark)' }}
-              >
-                Jak to funguje
-              </h4>
-              <ul className="space-y-2.5">
-                {[
-                  'Vyber typ zakončení',
-                  ...(sku.saleMode === 'BULK_G' ? ['Nastav požadovanou délku a počet gramů'] : []),
-                  'Klikni „Spočítat cenu" pro přesný cenový rozpis',
-                  'Vyber počet kusů a přidej do košíku',
-                  'Jdi do košíku a dokonči nákup',
-                ].map((step, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span
-                      className="font-cormorant text-[16px] font-light flex-shrink-0 mt-px"
-                      style={{ color: 'var(--burgundy)' }}
-                    >
-                      ✦
-                    </span>
-                    <span
-                      className="text-[13px] font-light leading-[1.5]"
-                      style={{ color: 'var(--text-mid)' }}
-                    >
-                      {step}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+
+              {!available && (
+                <p className="text-sm leading-relaxed text-text-mid">
+                  Tento odstín vám rádi připravíme. Napište nám přes WhatsApp, ozveme se co nejdřív.
+                </p>
+              )}
+
+              {/* Desktop tlačítko */}
+              <div className="hidden lg:flex flex-col">{cta}</div>
             </div>
           </div>
         </div>
 
-        {/* ── Reviews section ── */}
-        <div className="mt-20">
+        {/* ── Recenze ── */}
+        <div className="mt-16 px-4 lg:px-0">
           <ProductReviews skuId={skuId} />
         </div>
-
       </div>
+
+      {/* ── Mobil: spodní lišta s cenou ── */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-text-mid truncate">{summaryLine}</div>
+          <div className="font-cormorant text-[22px] whitespace-nowrap">{totalText}</div>
+        </div>
+        {cta}
+      </div>
+
+      {isBulk && (
+        <LengthSheet open={lengthOpen} lengths={lengthOptions} value={bulkLengthValue}
+          onChange={setSelectedLength} onClose={() => setLengthOpen(false)} />
+      )}
 
       {/* ── LIGHTBOX ── */}
       {lightboxOpen && currentImage && (

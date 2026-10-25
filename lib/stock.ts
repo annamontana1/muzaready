@@ -43,10 +43,10 @@ interface PriceMatrixEntry {
 // Format: { type: 'FLAT' | 'PER_GRAM', pricePerGram: int (for PER_GRAM) or price: int (for FLAT) }
 export const ASSEMBLY_FEE_CONFIG: Record<string, { type: 'FLAT' | 'PER_GRAM'; price?: number; pricePerGram?: number }> = {
   NONE: { type: 'FLAT', price: 0 },
-  MICRO_KERATIN: { type: 'PER_GRAM', pricePerGram: 10 },    // Mikrokeratin — 1 000 Kč/100g
-  STANDARD_KERATIN: { type: 'PER_GRAM', pricePerGram: 10 }, // Standart keratin — 1 000 Kč/100g
-  PASKY_KERATINU: { type: 'PER_GRAM', pricePerGram: 10 },   // Pásky keratinu — 1 000 Kč/100g
-  WEFT: { type: 'PER_GRAM', pricePerGram: 50 },             // Weft — 5 000 Kč/100g
+  MICRO_KERATIN: { type: 'PER_GRAM', pricePerGram: 15 },    // Mikrokeratin — 1 500 Kč/100g
+  STANDARD_KERATIN: { type: 'PER_GRAM', pricePerGram: 15 }, // Keratin — 1 500 Kč/100g
+  PASKY_KERATINU: { type: 'PER_GRAM', pricePerGram: 15 },   // Keratinové pásky — 1 500 Kč/100g
+  WEFT: { type: 'PER_GRAM', pricePerGram: 60 },             // Weft — 6 000 Kč/100g
   TAPES: { type: 'PER_GRAM', pricePerGram: 40 },            // Tapes — 4 000 Kč/100g
 };
 
@@ -192,7 +192,10 @@ export async function quoteCartLines(
       assemblyFeeCzk: assemblyFee.assemblyFeeCzk,
       assemblyFeeTotal: assemblyFee.assemblyFeeTotal,
       lineGrandTotal: lineTotal + assemblyFee.assemblyFeeTotal,
-      snapshotName: buildSkuDisplayName(sku),
+      // Délka zvolená v konfigurátoru se musí v objednávce objevit, i když SKU má jinou základní délku
+      snapshotName: line.selectedLength && line.selectedLength !== sku.lengthCm
+        ? `${buildSkuDisplayName(sku)} · délka ${line.selectedLength} cm`
+        : buildSkuDisplayName(sku),
     };
   });
 
