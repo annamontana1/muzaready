@@ -18,6 +18,7 @@ interface CatalogItem {
   slug?: string; // BULK
   name: string;
   tier: string;
+  imageUrl?: string;
   shade?: number;
   shadeName?: string;
   structure?: string;
@@ -223,6 +224,7 @@ export default function CatalogPage() {
                 slug={item.slug}
                 name={item.name}
                 tier={item.tier}
+                imageUrl={item.imageUrl}
                 shade={item.shade}
                 shadeName={item.shadeName}
                 structure={item.structure}

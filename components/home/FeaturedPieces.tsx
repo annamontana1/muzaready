@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 type Piece = {
   id: string;
   name: string;
+  imageUrl?: string;
   shade?: number;
   shadeName?: string;
   lengthCm?: number;
@@ -62,7 +63,7 @@ export default function FeaturedPieces() {
                 <Link href={`/sku-detail/${p.id}`} className="block group">
                   <div className="aspect-[3/4] rounded-t-full rounded-b-2xl border border-muza-ink p-1 overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/images/shades/${SHADE_IMG[p.shade ?? 5] ?? '05-svetla-hneda'}.jpg`} alt="" loading="lazy" decoding="async"
+                    <img src={p.imageUrl || `/images/shades/${SHADE_IMG[p.shade ?? 5] ?? '05-svetla-hneda'}.jpg`} alt="" loading="lazy" decoding="async"
                       className="w-full h-full object-cover object-[center_25%] rounded-t-full rounded-b-xl transition-transform duration-500 group-hover:scale-[1.03]" />
                   </div>
                   <div className="mt-2.5 text-[14px] leading-snug text-text-dark">{p.name}</div>

@@ -231,6 +231,12 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
       <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
         {/* Image Section */}
         <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
+          {props.imageUrl ? (
+            // Skutečná fotka culíku; barevný přechod zůstává jen pro kusy bez fotky
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={props.imageUrl} alt={props.name} loading="lazy" decoding="async"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+          ) : (
           <div
             className="w-full h-full flex items-center justify-center relative"
             style={{
@@ -258,6 +264,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
               )}
             </div>
           </div>
+          )}
 
           {/* Struktura label pod fotkou */}
           {props.structure && (

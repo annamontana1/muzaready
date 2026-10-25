@@ -125,6 +125,7 @@ export async function GET(request: NextRequest) {
           slug: pieceSlug,
           name: pieceName,
           tier: tierLabel,
+          imageUrl: sku.imageUrl || undefined,
           shade: shadeCode,
           shadeName: sku.shadeName || undefined,
           structure: sku.structure || undefined,
