@@ -106,7 +106,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-white z-[100] overflow-y-auto lg:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Hledání"
+      className="fixed inset-0 bg-white z-[100] overflow-y-auto [&>*]:max-w-3xl [&>*]:mx-auto"
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
       {/* Header s inputem */}
@@ -191,7 +194,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
           <div>
             <p className="text-sm text-text-soft mb-4">
               {searchResults.totalCount > 0 ? (
-                <>Nalezeno <strong>{searchResults.totalCount}</strong> {searchResults.totalCount === 1 ? 'produkt' : searchResults.totalCount < 5 ? 'produkty' : 'produktů'} pro: <strong>{searchQuery}</strong></>
+                <>Nalezeno <strong>{searchResults.totalCount}</strong> {searchResults.totalCount === 1 ? 'produkt' : searchResults.totalCount >= 2 && searchResults.totalCount <= 4 ? 'produkty' : 'produktů'} pro: <strong>{searchQuery}</strong></>
               ) : (
                 <>Žádné výsledky pro: <strong>{searchQuery}</strong></>
               )}
