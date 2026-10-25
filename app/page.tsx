@@ -348,7 +348,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-[13px] font-normal whitespace-nowrap" style={{ color: 'var(--text-mid)' }}>{tier.price}</span>
-                    <span className="text-[16px] transition-colors group-hover:text-burgundy" style={{ color: 'var(--beige-mid)' }}>→</span>
+                    <svg aria-hidden="true" className="w-4 h-4 transition-[color,transform] group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" style={{ color: 'var(--burgundy)' }}><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </div>
                 </Link>
               ))}
@@ -362,7 +362,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
             <h2 className="font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-[1.2] tracking-[-0.01em]" style={{ color: 'var(--ivory)' }}>
-              Proč Múza Hair
+              Proč Mùza Hair
             </h2>
           </div>
 

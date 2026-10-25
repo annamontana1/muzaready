@@ -15,7 +15,7 @@
     --white:          #FFFFFF;
     --text-dark:      #1C0C0F;
     --text-mid:       #5A3840;
-    --text-soft:      #8C6E73;
+    --text-soft:      #73565C; /* ztmaveno z #8C6E73 kvůli kontrastu (WCAG AA i na béžové) */
     --accent:         #9B3A4A;
 
     /* Tailwind RGB tokens (for bg-opacity etc.) */
@@ -44,6 +44,23 @@
     background: var(--ivory);
     color: var(--text-dark);
     overflow-x: clip;
+  }
+
+  /* Povrchy prohlížeče v barvách značky */
+  ::selection {
+    background: rgb(var(--color-burgundy) / 0.85);
+    color: var(--ivory);
+  }
+
+  html {
+    accent-color: var(--burgundy);
+    caret-color: var(--burgundy);
+    scrollbar-color: rgb(var(--color-burgundy) / 0.3) var(--ivory);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--burgundy);
+    outline-offset: 2px;
   }
 
   h1, h2, h3, h4, h5, h6 {

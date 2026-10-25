@@ -108,12 +108,12 @@ export default function Footer() {
 
         {/* O nás */}
         <div>
-          <h3
+          <h2
             className="text-[11px] tracking-[0.16em] uppercase mb-5 font-normal"
             style={{ color: 'var(--ivory)' }}
           >
             O nás
-          </h3>
+          </h2>
           <ul className="space-y-2.5">
             {[
               { href: '/o-nas', label: 'Náš příběh' },
@@ -138,12 +138,12 @@ export default function Footer() {
 
         {/* Informace */}
         <div>
-          <h3
+          <h2
             className="text-[11px] tracking-[0.16em] uppercase mb-5 font-normal"
             style={{ color: 'var(--ivory)' }}
           >
             Informace
-          </h3>
+          </h2>
           <ul className="space-y-2.5">
             {[
               { href: '/informace/jak-nakupovat', label: 'Jak nakupovat' },
@@ -168,12 +168,12 @@ export default function Footer() {
 
         {/* Produkty */}
         <div>
-          <h3
+          <h2
             className="text-[11px] tracking-[0.16em] uppercase mb-5 font-normal"
             style={{ color: 'var(--ivory)' }}
           >
             Produkty
-          </h3>
+          </h2>
           <ul className="space-y-2.5">
             {[
               { href: '/vlasy-k-prodlouzeni/standard', label: 'Standard vlasy' },
@@ -203,7 +203,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div
         className="max-w-7xl mx-auto pt-7 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px]"
-        style={{ color: 'rgba(248,244,239,0.35)' }}
+        style={{ color: 'rgba(248,244,239,0.62)' }}
       >
         <p>{copyrightText}</p>
         <div className="flex gap-5">

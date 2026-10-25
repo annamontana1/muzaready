@@ -96,7 +96,7 @@ export default function Header() {
             <Link href="/" className="flex items-center flex-shrink-0" aria-label="Domů">
               <Image
                 src="/images/logo/muza-logo.png"
-                alt="Múza Hair"
+                alt="Mùza Hair"
                 width={120}
                 height={40}
                 priority
@@ -259,7 +259,7 @@ export default function Header() {
             <Link href="/" className="flex items-center" aria-label="Domů">
               <Image
                 src="/images/logo/muza-logo.png"
-                alt="Múza Hair"
+                alt="Mùza Hair"
                 width={100}
                 height={33}
                 priority
@@ -318,7 +318,7 @@ export default function Header() {
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center">
                   <Image
                     src="/images/logo/muza-logo.png"
-                    alt="Múza Hair"
+                    alt="Mùza Hair"
                     width={100}
                     height={33}
                     className="h-8 w-auto"

@@ -348,7 +348,7 @@ export default function PlatinumEditionTierPage() {
               {/* Count */}
               <div className="mb-6 flex items-center justify-between">
                 <p className="text-[12px] font-light tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
-                  {filteredProducts.length} {filteredProducts.length === 1 ? 'produkt' : filteredProducts.length < 5 ? 'produkty' : 'produktů'}
+                  {filteredProducts.length} {filteredProducts.length === 1 ? 'produkt' : filteredProducts.length >= 2 && filteredProducts.length <= 4 ? 'produkty' : 'produktů'}
                   {totalPages > 1 && ` · stránka ${currentPage} z ${totalPages}`}
                 </p>
               </div>

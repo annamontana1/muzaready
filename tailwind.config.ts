@@ -44,7 +44,7 @@ const config: Config = {
         // Text
         'text-dark': '#1C0C0F',
         'text-mid': '#5A3840',
-        'text-soft': '#8C6E73',
+        'text-soft': '#73565C',
         accent: '#9B3A4A',
 
         // Akcenty
