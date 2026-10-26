@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
-import LengthSheet, { hairZone, MiniFigure } from '@/components/product/LengthSheet';
+import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 import { GRAM_STEP, PIECE_DEFAULT_GRAMS, PIECE_DEFAULT_LENGTH, PIECE_LENGTHS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
@@ -467,22 +467,19 @@ export default function SkuDetailPage() {
             </div>
 
             <div className="mt-7 flex flex-col gap-6">
-              {/* Délka a gramáž vedle sebe (návrh B3), v kartě Délka malá postava, klepnutím velká silueta */}
+              {/* Délka a gramáž vedle sebe (návrh B3); postava se ukáže až po klepnutí na Změnit */}
               {isBulk || pieceByGrams ? (
                 <div>
                   <div className="grid grid-cols-2 gap-2.5">
                     <button type="button" onClick={() => setLengthOpen(true)} aria-label={`Délka ${lengthVal} cm, ${hairZone(lengthVal)}. Změnit`}
-                      className="rounded-2xl border border-muza-ink p-3.5 flex gap-1.5 text-left hover:bg-white/40 transition-colors">
-                      <span className="flex-1 min-w-0 flex flex-col">
-                        <span className="text-sm font-normal text-[#45302F]">Délka</span>
-                        <span className="mt-2.5 leading-none whitespace-nowrap">
+                      className="rounded-2xl border border-muza-ink p-3.5 flex flex-col text-left hover:bg-white/40 transition-colors">
+                      <span className="text-sm font-normal text-[#45302F]">Délka</span>
+                      <span className="mt-2.5 leading-none whitespace-nowrap">
                           <span className="font-jost font-semibold text-[32px] text-muza-ink tabular-nums">{lengthVal}</span>
                           <span className="text-[15px] text-muza-ink"> cm</span>
-                        </span>
-                        <span className="mt-1 text-xs text-[#45302F]">{hairZone(lengthVal)}</span>
-                        <span className="mt-auto pt-2 text-xs text-muza-ink underline underline-offset-2">změnit</span>
                       </span>
-                      <MiniFigure cm={lengthVal} className="h-[108px] w-auto flex-none self-center" />
+                      <span className="mt-1 text-xs text-[#45302F]">{hairZone(lengthVal)}</span>
+                      <span className="mt-auto pt-2 text-xs text-muza-ink underline underline-offset-2">změnit</span>
                     </button>
                     <div className="rounded-2xl border border-muza-ink p-3.5 flex flex-col">
                       <span className="flex items-baseline justify-between gap-1">

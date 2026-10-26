@@ -19,23 +19,6 @@ export function hairZone(cm: number, height = 170) {
   return 'na hýždě';
 }
 
-// Malá postava do karty Délka: vlasy sahají podle zvolené délky (výška 170 cm)
-export function MiniFigure({ cm, className = '' }: { cm: number; className?: string }) {
-  const crownY = FLOOR - 168.5;
-  return (
-    <svg aria-hidden="true" viewBox="38 18 49 174" className={className}>
-      <g>
-        <ellipse cx="62.5" cy="31" rx="7.6" ry="10" fill="#FFFFFF" stroke="#A07982" strokeWidth="0.7" />
-        <path fill="#FFFFFF" stroke="#A07982" strokeWidth="0.7" strokeLinejoin="round" d="M58.5 40.5 C58.5 45 57.5 47.5 53.5 48.6 C49.5 49.6 46.5 50.6 45.6 53.6 C44.6 60 43.8 70 43.2 80 C42.6 90 41.8 100 41.6 108 C41.9 110.4 43.6 110.4 44 108 C44.6 100 45.4 90 46.2 80 C47 72 47.6 66 48.4 62 C49.2 70 51 78 52.2 84 C51.2 90 46.5 96 46.5 102 C46.5 112 48.5 125 49.5 142 C50 155 50.5 170 51.3 182 C51.3 186 50.5 189 52.5 190 L58.2 190 C58.2 186 58.6 184 58.6 182 C59.1 170 59.6 155 60.1 142 C60.6 128 61.3 118 62.5 114 C63.7 118 64.4 128 64.9 142 C65.4 155 65.9 170 66.4 182 C66.4 184 66.8 186 66.8 190 L72.5 190 C74.5 189 73.7 186 73.7 182 C74.5 170 75 155 75.5 142 C76.5 125 78.5 112 78.5 102 C78.5 96 73.8 90 72.8 84 C74 78 75.8 70 76.6 62 C77.4 66 78 72 78.8 80 C79.6 90 80.4 100 81 108 C81.4 110.4 83.1 110.4 83.4 108 C83.2 100 82.4 90 81.8 80 C81.2 70 80.4 60 79.4 53.6 C78.5 50.6 75.5 49.6 71.5 48.6 C67.5 47.5 66.5 45 66.5 40.5 Z" />
-        <path d="M54.5 108 Q62.5 113.5 70.5 108" fill="none" stroke="#BBAD9F" strokeWidth="0.5" />
-      </g>
-      <g style={{ transformBox: 'view-box', transformOrigin: '0 0', transform: `translate(62.5px, ${crownY}px) scale(1, ${(cm / 100).toFixed(3)})`, transition: `transform 420ms ${EASE}` }}>
-        <path fill="#B98A5A" d="M-8 3 C-4 -2.5 4 -2.5 8 3 C10 9 11 16 12.5 24 C14.5 34 11 42 13.5 52 C15.5 62 11 72 12.5 82 C13.5 90 10.5 96 7.5 100 C4.5 98 2.5 101.5 0 99.5 C-2.5 101.5 -5 98 -7.5 100 C-10.5 96 -13.5 90 -12.5 82 C-11 72 -15.5 62 -13.5 52 C-11 42 -14.5 34 -12.5 24 C-11 16 -10 9 -8 3 Z" />
-      </g>
-    </svg>
-  );
-}
-
 interface LengthSheetProps {
   open: boolean;
   lengths: number[];
