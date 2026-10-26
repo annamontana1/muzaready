@@ -141,7 +141,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
   return (
     <>
-      <div className="product-card group block relative">
+      <div className="product-card group block relative rounded-t-2xl overflow-hidden">
         <Link href={`/sku-detail/${product.id}`} className="block">
           {/* Clickable Tier Badge with Info Icon */}
           <div
@@ -212,16 +212,22 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                     >
                       <span className="text-xs font-bold text-text-mid">&rarr;</span>
                     </button>
-                    {/* Dots indicator */}
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-                      {allImages.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex(idx); }}
-                          className={`w-1.5 h-1.5 rounded-full transition ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`}
-                        />
-                      ))}
-                    </div>
+                    {/* Dots for ≤5 images, counter for more */}
+                    {allImages.length <= 5 ? (
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                        {allImages.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex(idx); }}
+                            className={`w-1.5 h-1.5 rounded-full transition ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'}`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/50 rounded text-white text-xs font-medium pointer-events-none">
+                        {currentImageIndex + 1}/{allImages.length}
+                      </div>
+                    )}
                   </>
                 )}
               </>
