@@ -270,12 +270,18 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         meta={[props.shade && `odstín ${props.shade}`, props.lengthCm && `${props.lengthCm} cm`, props.weightGrams && `${props.weightGrams} g`].filter(Boolean).join(' · ')}
         price={props.priceCzk ? formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency) : undefined}
         soldOut={!props.inStock}
-        action={props.inStock ? (
+        action={!props.inStock ? null : byGrams ? (
+          // Po gramech se nejdřív vybírá délka a gramáž na detailu (návrh 19)
+          <Link href={`/sku-detail/${props.id}`}
+            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] flex items-center justify-center hover:bg-muza-ink hover:text-muza-onink transition-colors">
+            Vybrat délku a gramáž
+          </Link>
+        ) : (
           <button type="button" onClick={handleAddToCart} disabled={!hasPrice}
             className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] hover:bg-muza-ink hover:text-muza-onink transition-colors disabled:opacity-40 disabled:pointer-events-none">
-            {!hasPrice ? 'Cenu doplňujeme' : showAddedMessage ? 'Přidáno' : byGrams ? 'Do košíku (vybrat gramy)' : 'Do košíku'}
+            {!hasPrice ? 'Cenu doplňujeme' : showAddedMessage ? 'Přidáno' : 'Do košíku'}
           </button>
-        ) : null} />
+        )} />
 
     {/* Bulk Add To Cart Modal */}
     {showBulkAddToCartModal && (

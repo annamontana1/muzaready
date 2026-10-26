@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
-import { GRAM_STEP, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, defaultPieceGrams, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
+import { GRAM_STEP, PIECE_DEFAULT_GRAMS, PIECE_DEFAULT_LENGTH, PIECE_LENGTHS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
 interface Sku {
   id: string;
@@ -172,7 +172,10 @@ export default function SkuDetailPage() {
         setSelectedImage(found.images[0]);
       }
       // Výchozí konfigurace: 50 cm, 100 g, bez zakončení (pokud to SKU dovolí)
-      if (found.lengthCm) {
+      if (found.saleMode === 'PIECE_BY_WEIGHT' && soldByGrams(found)) {
+        // kus po gramech: délku vybírá zákaznice (30–90 cm), výchozí délka kusu nebo 50 cm
+        setSelectedLength(found.lengthCm && PIECE_LENGTHS.includes(found.lengthCm) ? found.lengthCm : PIECE_DEFAULT_LENGTH);
+      } else if (found.lengthCm) {
         setSelectedLength(found.saleMode === 'BULK_G' && found.lengthCm <= 50 ? 50 : found.lengthCm);
       }
       const bulkMin = found.minOrderG ?? 50;
@@ -180,7 +183,7 @@ export default function SkuDetailPage() {
       const bulkDefault = Math.max(bulkMin, Math.min(100, found.availableGrams ?? 100));
       const initialGrams = found.saleMode === 'BULK_G'
         ? bulkMin + Math.floor((bulkDefault - bulkMin) / bulkStep) * bulkStep
-        : (soldByGrams(found) ? defaultPieceGrams(pieceGramsLeft(found)) : pieceGramsLeft(found));
+        : (soldByGrams(found) ? PIECE_DEFAULT_GRAMS : pieceGramsLeft(found));
       if (initialGrams) {
         setSelectedGrams(initialGrams);
       }
@@ -256,7 +259,7 @@ export default function SkuDetailPage() {
         assemblyFeeTotal: quote.assemblyFeeTotal,
         lineGrandTotal: quote.lineGrandTotal,
         quantity: 1,
-        selectedLength: sku.saleMode === 'BULK_G' ? selectedLength : undefined,
+        selectedLength: sku.saleMode === 'BULK_G' || soldByGrams(sku) ? selectedLength : undefined,
       });
     }
     router.push('/kosik');
@@ -355,17 +358,17 @@ export default function SkuDetailPage() {
   }
 
   const isBulk = sku.saleMode === 'BULK_G';
-  // Jedinečný culík: po gramech (krok 10 g, nejvýš co zbývá), nebo Baby Shades vždy celý
+  // Kus: po gramech (délka 30–90 cm, 50–300 g po 10 g), nebo Baby Shades vždy celý culík
   const pieceByGrams = !isBulk && soldByGrams(sku);
   const pieceLeft = pieceGramsLeft(sku);
-  const pieceSteps = pieceGramOptions(pieceLeft);
-  const pieceIdx = Math.max(0, pieceSteps.indexOf(selectedGrams || defaultPieceGrams(pieceLeft)));
+  const pieceSteps = pieceGramOptions();
+  const pieceIdx = Math.max(0, pieceSteps.indexOf(selectedGrams || PIECE_DEFAULT_GRAMS));
   const available = sku.inStock && !sku.soldOut;
   const activeIndex = Math.max(0, currentImage ? allImages.indexOf(currentImage) : 0);
-  const lengthCm = isBulk ? bulkLengthValue : sku.lengthCm;
+  const lengthCm = isBulk ? bulkLengthValue : pieceByGrams ? selectedLength : sku.lengthCm;
   const endingLabel = ENDING_OPTIONS.find((o) => o.id === selectedEnding)?.label ?? '';
   const totalText = quote ? formatPrice(quote.lineGrandTotal) : quoteLoading ? '…' : '—';
-  const summaryLine = [lengthCm ? `${lengthCm} cm` : null, `${isBulk ? bulkGramsValue : sku.weightTotalG ?? ''} g`, endingLabel.toLowerCase()]
+  const summaryLine = [lengthCm ? `${lengthCm} cm` : null, `${isBulk ? bulkGramsValue : pieceByGrams ? selectedGrams : sku.weightTotalG ?? ''} g`, endingLabel.toLowerCase()]
     .filter(Boolean)
     .join(' · ');
   const waMessage = `Dobrý den, mám zájem o ${sku.name || sku.sku}${sku.shadeName ? ` (${sku.shadeName})` : ''}: ${summaryLine}. Můžete mi ho připravit?`;
@@ -480,15 +483,28 @@ export default function SkuDetailPage() {
                     <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
                   </span>
                 </button>
+              ) : pieceByGrams ? (
+                // Kus po gramech (návrh 19): délku vybírá zákaznice na siluetě
+                <button type="button" onClick={() => setLengthOpen(true)}
+                  className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
+                  <span>
+                    <span className="block font-cormorant text-[22px] leading-tight">Délka</span>
+                    <span className="block text-[15px] text-text-mid mt-0.5">{selectedLength} cm · {hairZone(selectedLength)}</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[13px] text-muza-ink">
+                    Upravit
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
+                  </span>
+                </button>
               ) : (
                 sku.lengthCm ? (
-                  // Culík má pevnou délku; silueta ukáže, kam sahá
+                  // Baby Shades: celý culík s pevnou délkou; silueta ukáže, kam sahá
                   <button type="button" onClick={() => setLengthOpen(true)}
                     className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
                     <span>
                       <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
                       <span className="block text-[15px] text-text-mid mt-0.5">
-                        {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{pieceLeft ? ` · ${pieceLeft} g` : ''} · {pieceByGrams ? 'prodej po gramech' : 'jediný kus'}
+                        {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{pieceLeft ? ` · ${pieceLeft} g` : ''} · celý culík
                       </span>
                     </span>
                     <span className="flex items-center gap-1.5 text-[13px] text-muza-ink whitespace-nowrap">
@@ -500,7 +516,7 @@ export default function SkuDetailPage() {
                   <div className="px-4 py-3 rounded-2xl bg-muza-mocha">
                     <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
                     <span className="block text-[15px] text-text-mid mt-0.5">
-                      {pieceLeft ? `${pieceLeft} g · ` : ''}{pieceByGrams ? 'prodej po gramech' : 'jediný kus'}
+                      {pieceLeft ? `${pieceLeft} g · ` : ''}celý culík
                     </span>
                   </div>
                 )
@@ -573,7 +589,7 @@ export default function SkuDetailPage() {
               {pieceByGrams && pieceSteps.length > 0 && (
                 <fieldset>
                   <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
-                    Gramáž <span className="font-jost text-[13px] text-text-mid">· {PIECE_MIN_GRAMS}–{Math.min(pieceLeft, PIECE_MAX_GRAMS)} g po {GRAM_STEP} g</span>
+                    Gramáž <span className="font-jost text-[13px] text-text-mid">· {PIECE_MIN_GRAMS}–{PIECE_MAX_GRAMS} g po {GRAM_STEP} g</span>
                   </legend>
                   <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
                     <button type="button" aria-label={`Ubrat ${GRAM_STEP} gramů`} disabled={pieceIdx <= 0}
@@ -584,13 +600,7 @@ export default function SkuDetailPage() {
                       onClick={() => setSelectedGrams(pieceSteps[Math.min(pieceSteps.length - 1, pieceIdx + 1)])}
                       className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">+</button>
                   </div>
-                  <div className="mt-2.5 flex items-center justify-between gap-3">
-                    <p className="text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
-                    {pieceLeft <= PIECE_MAX_GRAMS && pieceSteps[pieceIdx] !== pieceLeft && (
-                      <button type="button" onClick={() => setSelectedGrams(pieceLeft)}
-                        className="flex-none text-[13px] text-muza-ink underline underline-offset-2">Celý culík</button>
-                    )}
-                  </div>
+                  <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
                 </fieldset>
               )}
 
@@ -651,8 +661,12 @@ export default function SkuDetailPage() {
         <LengthSheet open={lengthOpen} lengths={lengthOptions} value={bulkLengthValue}
           onChange={setSelectedLength} onClose={() => setLengthOpen(false)} />
       )}
-      {!isBulk && sku.lengthCm ? (
-        // Culík: jediná délka, silueta jen ukazuje, kam vlasy sahají
+      {pieceByGrams && (
+        <LengthSheet open={lengthOpen} lengths={PIECE_LENGTHS} value={selectedLength}
+          onChange={setSelectedLength} onClose={() => setLengthOpen(false)} />
+      )}
+      {!isBulk && !pieceByGrams && sku.lengthCm ? (
+        // Baby Shades: jediná délka, silueta jen ukazuje, kam vlasy sahají
         <LengthSheet open={lengthOpen} lengths={[sku.lengthCm]} value={sku.lengthCm}
           onChange={() => {}} onClose={() => setLengthOpen(false)} />
       ) : null}

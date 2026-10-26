@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { skuPhotos } from '@/lib/sku-image';
+import { PIECE_LENGTHS, soldByGrams } from '@/lib/sale-rule';
 export const runtime = 'nodejs';
 
 
@@ -58,7 +59,11 @@ export async function GET(
     }
 
     const photos = skuPhotos(sku.imageUrl, sku.images);
-    return NextResponse.json({ ...sku, imageUrl: photos[0] ?? null, images: photos });
+
+    // Kus prodávaný po gramech: zákaznice vybírá délku (30–90 cm) a gramáž
+    const lengthOptions = sku.saleMode === 'PIECE_BY_WEIGHT' && soldByGrams(sku) ? PIECE_LENGTHS : [];
+
+    return NextResponse.json({ ...sku, imageUrl: photos[0] ?? null, images: photos, lengthOptions });
   } catch (error: any) {
     console.error('SKU public fetch error:', error);
     return NextResponse.json(

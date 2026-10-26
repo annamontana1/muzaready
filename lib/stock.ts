@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { GRAM_STEP, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
+import { GRAM_STEP, MATRIX_TIER, PIECE_DEFAULT_GRAMS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, matrixCategory, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
 
 // Shade name map (mirrors HAIR_COLORS in types/product.ts)
 const SHADE_NAMES: Record<number, string> = {
@@ -124,49 +124,36 @@ export async function quoteCartLines(
     // Determine price from matrix or fall back to SKU price
     let pricePerGram = sku.pricePerGramCzk;
 
-    // Jedinečný culík s vlastní cenou za gram má přednost před ceníkem
-    const ownPiecePrice = sku.saleMode === 'PIECE_BY_WEIGHT' && (sku.pricePerGramCzk ?? 0) > 0;
-
     // Try to look up price from matrix
-    // Culík: barvené/nebarvené podle isDyed (středoevropské/panenské); zásoba na gramy podle odstínu (1–4 nebarvené, 5–10 barvené)
-    const shadeNum = parseInt(sku.shade || '1', 10);
-    const category = sku.saleMode === 'PIECE_BY_WEIGHT'
-      ? (sku.isDyed ? 'barvene' : 'nebarvene')
-      : (shadeNum >= 5 ? 'barvene' : 'nebarvene');
-
-    // Map customer category to tier for price matrix lookup
-    const tierMap: Record<string, string> = {
-      'STANDARD': 'standard',
-      'LUXE': 'luxe',
-      'PLATINUM_EDITION': 'platinum',
-      'BABY_SHADES': 'baby_shades',
-    };
-    const tier = tierMap[sku.customerCategory || 'STANDARD'] || 'standard';
+    // Kus: barvené/nebarvené podle isDyed (středoevropské/panenské); zásoba na gramy podle odstínu
+    const category = matrixCategory(sku);
+    const tier = MATRIX_TIER[sku.customerCategory || 'STANDARD'] || 'standard';
 
     // Use selectedLength from the line if provided (configurator choice), else fall back to SKU's own length
     const lookupLength = line.selectedLength ?? sku.lengthCm;
     const matrixKey = `${category}_${tier}_${lookupLength}`;
     const matrixPrice = priceMatrixMap.get(matrixKey);
-    if (matrixPrice !== undefined && !ownPiecePrice) {
+    if (matrixPrice) {
       pricePerGram = matrixPrice;
     }
 
     let grams = 0;
 
     if (sku.saleMode === 'PIECE_BY_WEIGHT') {
-      const left = pieceGramsLeft(sku);
-      if (!left || sku.soldOut) {
+      if (sku.soldOut) {
         throw new Error(`Culík "${sku.name}" již není dostupný`);
       }
-      // Mimo Baby Shades se z kusu kupuje 50–300 g po 10 g; Baby Shades vždy celý culík
       if (soldByGrams(sku)) {
-        const wanted = line.wantedGrams ?? Math.min(left, PIECE_MAX_GRAMS);
-        if (!validPieceGrams(wanted, left)) {
-          throw new Error(`Zvolte ${PIECE_MIN_GRAMS}–${Math.min(left, PIECE_MAX_GRAMS)} g po ${GRAM_STEP} g`);
+        // Po gramech: 50–300 g po 10 g, délka z ceníku; sklad se nekontroluje (lib/sale-rule.ts)
+        const wanted = line.wantedGrams ?? PIECE_DEFAULT_GRAMS;
+        if (!validPieceGrams(wanted)) {
+          throw new Error(`Zvolte ${PIECE_MIN_GRAMS}–${PIECE_MAX_GRAMS} g po ${GRAM_STEP} g`);
         }
         grams = wanted;
       } else {
-        grams = left;
+        // Baby Shades: vždy celý culík
+        grams = pieceGramsLeft(sku);
+        if (!grams) throw new Error(`Culík "${sku.name}" nemá zadanou hmotnost`);
       }
     } else {
       // BULK_G
