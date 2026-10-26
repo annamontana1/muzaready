@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { skuImage, skuImages } from '@/lib/sku-image';
 export const runtime = 'nodejs';
 
 
@@ -55,7 +56,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(sku);
+    return NextResponse.json({ ...sku, imageUrl: skuImage(sku.imageUrl) ?? null, images: skuImages(sku.images) });
   } catch (error: any) {
     console.error('SKU public fetch error:', error);
     return NextResponse.json(

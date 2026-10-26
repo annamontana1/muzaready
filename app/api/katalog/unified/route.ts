@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { skuImage } from '@/lib/sku-image';
 import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { Product } from '@/types/product';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
@@ -128,7 +129,7 @@ export async function GET(request: NextRequest) {
           slug: pieceSlug,
           name: pieceName,
           tier: tierLabel,
-          imageUrl: sku.imageUrl || undefined,
+          imageUrl: skuImage(sku.imageUrl),
           shade: shadeCode,
           shadeName: sku.shadeName || undefined,
           structure: sku.structure || undefined,
