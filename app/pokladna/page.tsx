@@ -554,7 +554,8 @@ export default function PokladnaPage() {
               <div role="radiogroup" aria-labelledby="h-platba" className="border-t border-muza-line">
                 {[
                   { id: 'transfer' as const, label: 'Bankovním převodem', desc: 'QR platba hned po odeslání objednávky', enabled: true },
-                  { id: 'gopay' as const, label: 'Kartou online', desc: CARD_ENABLED ? 'Apple Pay, Google Pay, karta (GoPay)' : 'připravujeme', enabled: CARD_ENABLED },
+                  // karta se ukáže až po zapnutí GoPay
+                  ...(CARD_ENABLED ? [{ id: 'gopay' as const, label: 'Kartou online', desc: 'Apple Pay, Google Pay, karta (GoPay)', enabled: true }] : []),
                 ].map((o) => {
                   const on = payment === o.id;
                   return (
