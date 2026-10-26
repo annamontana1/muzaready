@@ -5,6 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
+import PieceAbout from '@/components/product/PieceAbout';
+import SimilarPieces from '@/components/product/SimilarPieces';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 import { GRAM_STEP, PIECE_DEFAULT_GRAMS, PIECE_DEFAULT_LENGTH, PIECE_LENGTHS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
@@ -549,6 +551,10 @@ export default function SkuDetailPage() {
                 </p>
               )}
 
+              <PieceAbout lengthCm={lengthCm} grams={isBulk ? bulkGramsValue : pieceByGrams ? selectedGrams : sku.weightTotalG}
+                endingId={selectedEnding} endingLabel={endingLabel} isDyed={sku.isDyed} tierLabel={catInfo.label}
+                shade={sku.shade} shadeName={sku.shadeName} structure={sku.structure} />
+
               {/* Desktop: hlavní součet u tlačítka */}
               <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
                 <div className="flex items-baseline justify-between gap-3">
@@ -558,6 +564,7 @@ export default function SkuDetailPage() {
                 {cta}
               </div>
 
+              {!isBulk && <SimilarPieces id={sku.id} shade={sku.shade} isDyed={sku.isDyed} tierLabel={catInfo.label} />}
             </div>
           </div>
         </div>
