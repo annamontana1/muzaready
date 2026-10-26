@@ -31,9 +31,6 @@ interface Sku {
   isDyed?: boolean; // barvené = středoevropské, nebarvené = panenské
 }
 
-// Culík do řady „Podobné odstíny“ (z /api/katalog/unified)
-interface Similar { id: string; name: string; shade?: number; imageUrl?: string; type: string }
-
 interface QuoteItem {
   grams: number;
   pricePerGram: number;
@@ -77,28 +74,8 @@ export default function SkuDetailPage() {
   const { addToCart } = useSkuCart();
 
   const [sku, setSku] = useState<Sku | null>(null);
-  const [similar, setSimilar] = useState<Similar[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Podobné odstíny: jiné culíky se stejným nebo sousedním odstínem (±1), nejbližší první
-  useEffect(() => {
-    if (!sku) return;
-    const shade = Number(sku.shade);
-    if (!shade) { setSimilar([]); return; }
-    let alive = true;
-    fetch('/api/katalog/unified')
-      .then((r) => (r.ok ? r.json() : []))
-      .then((list: Similar[]) => {
-        if (!alive || !Array.isArray(list)) return;
-        setSimilar(list
-          .filter((x) => x.type === 'PIECE' && x.id !== sku.id && x.imageUrl && x.shade && Math.abs(x.shade - shade) <= 1)
-          .sort((a, b) => Math.abs((a.shade ?? 0) - shade) - Math.abs((b.shade ?? 0) - shade))
-          .slice(0, 8));
-      })
-      .catch(() => {});
-    return () => { alive = false; };
-  }, [sku]);
 
   // Image gallery state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -581,28 +558,6 @@ export default function SkuDetailPage() {
                 {cta}
               </div>
 
-              {/* Podobné odstíny až úplně dole: další culíky ve stejném či sousedním odstínu */}
-              {!isBulk && similar.length > 0 && (
-                <section aria-labelledby="h-podobne" className="border-t border-muza-line pt-6">
-                  <h2 id="h-podobne" className="mb-3 font-cormorant text-[24px] leading-tight text-muza-ink">Podobné odstíny</h2>
-                  <ul className="-mx-4 px-4 lg:mx-0 lg:px-0 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    {similar.map((x) => (
-                      <li key={x.id} className="flex-none w-[104px]">
-                        <Link href={`/sku-detail/${x.id}`} className="block group">
-                          <span className="block h-[132px] rounded-t-full rounded-b-[10px] border border-muza-ink p-[3px]">
-                            <span className="block w-full h-full rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={x.imageUrl} alt={x.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                            </span>
-                          </span>
-                          <span className="mt-1.5 block text-sm font-normal text-text-dark">{x.name.split(' · ')[0]}</span>
-                          {x.shade ? <span className="block text-xs text-[#45302F]">odstín {x.shade}</span> : null}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
             </div>
           </div>
         </div>
