@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import PieceCard from '@/components/PieceCard';
 
 // Culíky skladem na hlavní stránce: čtyři kusy z /api/katalog/unified (typ PIECE)
 type Piece = {
@@ -61,23 +62,10 @@ export default function FeaturedPieces() {
           {(items ?? Array.from({ length: 4 }, () => null)).map((p, i) => (
             <li key={p ? p.id : i}>
               {p ? (
-                <Link href={`/sku-detail/${p.id}`} className="block group">
-                  <div className="relative aspect-[3/4] rounded-t-full rounded-b-2xl border border-muza-ink p-1 overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.imageUrl || `/images/shades/${SHADE_IMG[p.shade ?? 5] ?? '05-svetla-hneda'}.jpg`} alt="" loading="lazy" decoding="async"
-                      className="w-full h-full object-cover object-[center_25%] rounded-t-full rounded-b-xl transition-transform duration-500 group-hover:scale-[1.03]" />
-                    {p.imageUrl2 && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.imageUrl2} alt="" aria-hidden="true" loading="lazy" decoding="async"
-                        className="absolute bottom-2.5 right-2.5 w-11 h-14 lg:w-14 lg:h-[72px] object-cover rounded-md border-2 border-white shadow-md" />
-                    )}
-                  </div>
-                  <div className="mt-2.5 text-[14px] leading-snug text-text-dark">{p.name}</div>
-                  <div className="mt-0.5 text-[12px] text-muza-soft">
-                    {[p.shade && `odstín ${p.shade}`, p.lengthCm && `${p.lengthCm} cm`, p.weightGrams && `${p.weightGrams} g`].filter(Boolean).join(' · ')}
-                  </div>
-                  {p.priceCzk ? <div className="mt-1 font-cormorant text-[20px] leading-none text-muza-ink">{fmt(p.priceCzk)}</div> : null}
-                </Link>
+                <PieceCard id={p.id} name={p.name}
+                  photos={[p.imageUrl || `/images/shades/${SHADE_IMG[p.shade ?? 5] ?? '05-svetla-hneda'}.jpg`, ...(p.imageUrl2 ? [p.imageUrl2] : [])]}
+                  meta={[p.shade && `odstín ${p.shade}`, p.lengthCm && `${p.lengthCm} cm`, p.weightGrams && `${p.weightGrams} g`].filter(Boolean).join(' · ')}
+                  price={p.priceCzk ? fmt(p.priceCzk) : undefined} />
               ) : (
                 <div aria-hidden="true" className="aspect-[3/4] rounded-t-full rounded-b-2xl bg-muza-mocha/60 animate-pulse" />
               )}

@@ -6,6 +6,7 @@ import { HAIR_COLORS } from '@/types/product';
 import FavoriteButton from './FavoriteButton';
 import AddToCartModal from './AddToCartModal';
 import BulkAddToCartModal from './BulkAddToCartModal';
+import PieceCard from './PieceCard';
 import { usePreferences } from '@/lib/preferences-context';
 
 /**
@@ -29,7 +30,7 @@ interface CatalogCardProps {
   priceCzk?: number; // PIECE: fixed price
   inStock: boolean;
   imageUrl?: string;
-  imageUrl2?: string; // druhá fotka (zblízka), ukáže se jako miniatura v rohu
+  imageUrl2?: string; // druhá fotka (zblízka), ukáže se jako miniatura pod fotkou
 }
 
 const getTierLabel = (tier: string) => {
@@ -228,131 +229,17 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         onAdded={handleAddedToCart}
       />
 
-      <Link href={`/sku-detail/${props.id}`} className="product-card group h-full block">
-      <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
-        {/* Image Section */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
-          {props.imageUrl ? (
-            // Skutečná fotka culíku; barevný přechod zůstává jen pro kusy bez fotky
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={props.imageUrl} alt={props.name} loading="lazy" decoding="async"
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-          ) : (
-          <div
-            className="w-full h-full flex items-center justify-center relative"
-            style={{
-              background: `linear-gradient(135deg, ${shadeColor.hex} 0%, ${shadeColor.hex}dd 50%, ${shadeColor.hex}bb 100%)`,
-            }}
-          >
-            {/* Texture overlay */}
-            <div
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage:
-                  'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
-              }}
-            />
-            {/* Hair info overlay */}
-            <div className="relative z-10 text-center">
-              <div className="text-white/90 text-sm font-medium mb-1">
-                {props.structure || 'Vlasy'}
-              </div>
-              {props.lengthCm && (
-                <div className="text-white/70 text-xs">{props.lengthCm} cm</div>
-              )}
-              {props.weightGrams && (
-                <div className="text-white/70 text-xs">{props.weightGrams} g</div>
-              )}
-            </div>
-          </div>
-          )}
-
-          {/* Druhá fotka (zblízka) jako miniatura v rohu */}
-          {props.imageUrl && props.imageUrl2 ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={props.imageUrl2} alt="" aria-hidden="true" loading="lazy" decoding="async"
-              className="absolute top-2 right-2 z-10 w-12 h-16 lg:w-14 lg:h-[72px] object-cover rounded-md border-2 border-white shadow-md" />
-          ) : null}
-
-          {/* Struktura label pod fotkou */}
-          {props.structure && (
-            <div className="absolute bottom-2 left-2 right-2 text-center">
-              <span className="px-2 py-1 bg-white/90 text-text-dark text-xs font-medium rounded">
-                Struktura: {props.structure}
-              </span>
-            </div>
-          )}
-
-          {/* Out of stock overlay */}
-          {!props.inStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="text-white text-sm font-semibold">Vyprodáno</span>
-            </div>
-          )}
-
-          {/* Favorite Button */}
-          <div className="absolute top-3 right-3 z-10">
-            <FavoriteButton productId={props.id} size="md" variant="icon" />
-          </div>
-
-          {/* Tier Badge */}
-          <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-text-dark bg-gradient-to-r ${tierColorClass} shadow-light`}>
-            {tierLabel}
-          </div>
-        </div>
-
-        {/* Content Section */}
-        <div className="flex-1 p-4 flex flex-col bg-ivory">
-          {/* Name */}
-          <h3 className="text-sm font-medium text-burgundy line-clamp-2 mb-1">
-            {props.name}
-          </h3>
-
-          {/* Specs */}
-          <div className="text-xs text-text-mid space-y-0.5 flex-1">
-            {props.shadeName && <div>{props.shadeName}</div>}
-            {/* Struktura se zobrazuje pod fotkou, ne zde */}
-            {props.lengthCm && <div>{props.lengthCm} cm</div>}
-            {props.weightGrams && <div>Váha: {props.weightGrams} g</div>}
-          </div>
-
-          {/* Price section */}
-          <div className="pt-2 mt-2 border-t border-warm-beige">
-            {props.priceCzk ? (
-              <>
-                <p className="text-base font-semibold text-burgundy">
-                  {formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency)}
-                </p>
-                <p className="text-xs text-text-soft">
-                  {currency === 'CZK'
-                    ? formatCurrencyValue(props.priceCzk * rate, 'EUR')
-                    : formatCurrencyValue(props.priceCzk, 'CZK')}
-                </p>
-              </>
-            ) : (
-              <p className="text-sm text-text-soft">Cena na dotaz</p>
-            )}
-          </div>
-
-          {/* CTAs */}
-          {props.inStock ? (
-            <button
-              onClick={handleAddToCart}
-              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95"
-            >
-              {showAddedMessage ? '✓ Přidáno!' : '🛒 Do košíku'}
-            </button>
-          ) : (
-            <Link
-              href={`/custom?kind=HAIR&prefill=${encodeURIComponent(JSON.stringify({ shade: props.shade, lengthCm: props.lengthCm, structure: props.structure }))}`}
-              className="mt-3 w-full py-2 px-4 bg-gray-200 text-text-mid text-sm font-medium rounded-lg hover:bg-gray-300 transition-all text-center block"
-            >
-              Zadat poptávku
-            </Link>
-          )}
-        </div>
-      </div>
-    </Link>
+      <PieceCard id={props.id} name={props.name}
+        photos={[props.imageUrl, props.imageUrl2].filter((u): u is string => Boolean(u))}
+        meta={[props.shade && `odstín ${props.shade}`, props.lengthCm && `${props.lengthCm} cm`, props.weightGrams && `${props.weightGrams} g`].filter(Boolean).join(' · ')}
+        price={props.priceCzk ? formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency) : undefined}
+        soldOut={!props.inStock}
+        action={props.inStock && props.priceCzk ? (
+          <button type="button" onClick={handleAddToCart}
+            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] hover:bg-muza-ink hover:text-muza-onink transition-colors">
+            {showAddedMessage ? 'Přidáno' : 'Do košíku'}
+          </button>
+        ) : null} />
 
     {/* Bulk Add To Cart Modal */}
     {showBulkAddToCartModal && (
