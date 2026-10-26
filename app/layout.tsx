@@ -5,7 +5,6 @@ import "./globals.css";
 import MainLayout from "@/components/MainLayout";
 import Providers from "./Providers";
 import MetaPixel from "@/components/MetaPixel";
-import DevelopmentModal from "@/components/DevelopmentModal";
 
 // Písma značky – self-hosted přes next/font (dřívější @import v CSS prohlížeč ignoroval)
 const cormorant = Cormorant_Garamond({
@@ -205,7 +204,6 @@ export default function RootLayout({
             {children}
           </MainLayout>
           <MetaPixel />
-          <DevelopmentModal />
         </Providers>
       </body>
     </html>
