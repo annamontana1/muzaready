@@ -54,7 +54,14 @@ export default function PieceCard({ id, name, photos, meta, price, soldOut, acti
       <Link href={`/sku-detail/${id}`} className="block">
         <div className="mt-2.5 text-[14px] leading-snug text-text-dark">{name}</div>
         {meta ? <div className="mt-0.5 text-[12px] text-muza-soft">{meta}</div> : null}
-        {price ? <div className="mt-1 font-cormorant text-[20px] leading-none text-muza-ink">{price}</div> : null}
+        <div className="mt-1.5 flex items-center justify-between gap-2">
+          {price ? <span className="font-cormorant text-[20px] leading-none text-muza-ink">{price}</span> : <span />}
+          {/* Dostupnost: každý kus v nabídce je skladem, prodaný se ukáže jako vyprodaný */}
+          <span className={`inline-flex items-center gap-1.5 text-[12px] ${soldOut ? 'text-muza-soft' : 'text-[#2F6B45]'}`}>
+            <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full ${soldOut ? 'bg-muza-soft' : 'bg-[#2F6B45]'}`} />
+            {soldOut ? 'Vyprodáno' : 'Skladem'}
+          </span>
+        </div>
       </Link>
       {action}
     </div>
