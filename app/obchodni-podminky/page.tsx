@@ -128,7 +128,7 @@ export default function ObchodniPodminkyPage() {
                   <td className="border border-warm-beige px-3 py-2">2–3 pracovní dny</td>
                 </tr>
                 <tr className="bg-soft-cream">
-                  <td className="border border-warm-beige px-3 py-2">DPD výdejní místo</td>
+                  <td className="border border-warm-beige px-3 py-2">DPD výdejní místo nebo DPD box</td>
                   <td className="border border-warm-beige px-3 py-2">68 Kč</td>
                   <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
                 </tr>

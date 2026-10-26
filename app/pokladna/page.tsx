@@ -46,7 +46,7 @@ const WHATSAPP_NUMBER = '420728722880';
 const DELIVERY_OPTIONS = [
   // Ceny musí odpovídat výpočtu v app/api/orders/route.ts
   { value: 'zasilkovna', label: 'Zásilkovna', desc: 'Výdejní místo nebo Z-BOX, ČR a SK', price: 89 },
-  { value: 'dpd', label: 'DPD výdejní místo', desc: 'DPD Pickup, 1–2 pracovní dny', price: 68 },
+  { value: 'dpd', label: 'DPD výdejní místo nebo box', desc: 'DPD Pickup nebo DPD box, 1–2 pracovní dny', price: 68 },
   { value: 'standard', label: 'Doručení na adresu', desc: 'Kurýrem, 1–2 pracovní dny', price: 129 },
   { value: 'showroom', label: 'Osobní odběr', desc: 'Showroom Revoluční 8, Praha 1', price: 0 },
 ] as const;
@@ -172,12 +172,27 @@ export default function PokladnaPage() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponApplied, setCouponApplied] = useState(false);
   const [selectedPickupPoint, setSelectedPickupPoint] = useState<PacketaPoint | null>(null);
+  // DPD výdejní místo nebo box: oficiální widget DPD (iframe), výběr přijde zprávou postMessage
+  const [dpdPoint, setDpdPoint] = useState<{ id: string; text: string } | null>(null);
+  const [dpdOpen, setDpdOpen] = useState(false);
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== 'https://api.dpd.cz' || !event.data?.dpdWidget) return;
+      const w = event.data.dpdWidget;
+      if (w.message === 'widgetClose') { setDpdOpen(false); return; }
+      const text = String(w.pickupPointResult || '').trim();
+      if (!text) return;
+      setDpdPoint({ id: String(w.id ?? text.split(/[\s,]/)[0]), text });
+      setDpdOpen(false);
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
 
   const subtotal = getTotalPrice();
   const delivery = DELIVERY_OPTIONS.find((o) => o.value === formData.deliveryMethod) ?? DELIVERY_OPTIONS[0];
   const shipping = delivery.price;
-  const needsAddress = ['standard', 'dpd', 'ppl'].includes(formData.deliveryMethod);
-  const dpdPoint = formData.deliveryMethod === 'dpd'; // adresa výdejního místa DPD, které si zákaznice vybrala
+  const needsAddress = ['standard', 'ppl'].includes(formData.deliveryMethod);
   const grandTotal = subtotal - couponDiscount + shipping;
   const byTransfer = payment === 'transfer';
 
@@ -227,12 +242,14 @@ export default function PokladnaPage() {
       if (!name || !formData.email) return fail('Vyplňte prosím jméno a e-mail.');
 
       if (formData.deliveryMethod === 'zasilkovna' && !selectedPickupPoint) return fail(t('checkout.shippingMethod.pickupPointRequired'));
+      if (formData.deliveryMethod === 'dpd' && !dpdPoint) return fail('Vyberte prosím výdejní místo nebo box DPD.');
       if (needsAddress && (!formData.streetAddress || !formData.city || !formData.zipCode)) return fail(t('checkout.addressRequired'));
 
       const [firstName, ...rest] = name.split(' ');
       const lastName = rest.join(' ');
       const isPoint = formData.deliveryMethod === 'zasilkovna';
       const isShowroom = formData.deliveryMethod === 'showroom';
+      const isDpd = formData.deliveryMethod === 'dpd';
 
       const orderResponse = await fetch('/api/orders', {
         method: 'POST',
@@ -249,9 +266,9 @@ export default function PokladnaPage() {
             firstName,
             lastName,
             phone: formData.phone.trim() || undefined,
-            streetAddress: isPoint ? (selectedPickupPoint?.street || '') : isShowroom ? 'Revoluční 8' : formData.streetAddress,
-            city: isPoint ? (selectedPickupPoint?.city || '') : isShowroom ? 'Praha 1' : formData.city,
-            zipCode: isPoint ? (selectedPickupPoint?.zip || '') : isShowroom ? '110 00' : formData.zipCode,
+            streetAddress: isPoint ? (selectedPickupPoint?.street || '') : isShowroom ? 'Revoluční 8' : isDpd ? `DPD Pickup: ${dpdPoint?.text || ''}`.slice(0, 200) : formData.streetAddress,
+            city: isPoint ? (selectedPickupPoint?.city || '') : isShowroom ? 'Praha 1' : isDpd ? undefined : formData.city,
+            zipCode: isPoint ? (selectedPickupPoint?.zip || '') : isShowroom ? '110 00' : isDpd ? undefined : formData.zipCode,
             country: formData.country,
             deliveryMethod: formData.deliveryMethod,
           },
@@ -539,6 +556,15 @@ export default function PokladnaPage() {
                         </div>
                       )}
 
+                      {on && opt.value === 'dpd' && (
+                        <div className="ml-[34px] mb-4 text-sm">
+                          {dpdPoint && <p className="whitespace-pre-line">{dpdPoint.text}</p>}
+                          <button type="button" onClick={() => setDpdOpen(true)} className="mt-1.5 text-sm text-muza-ink underline underline-offset-[3px]">
+                            {dpdPoint ? 'Změnit výdejní místo' : 'Vybrat výdejní místo nebo box'}
+                          </button>
+                        </div>
+                      )}
+
                       {on && opt.value === 'showroom' && (
                         <p className="ml-[34px] mb-4 text-xs text-muza-soft">Čas vyzvednutí domluvíme telefonem.</p>
                       )}
@@ -646,6 +672,17 @@ export default function PokladnaPage() {
             <Link href="/kosik" className="mt-4 block text-center text-sm text-muza-soft underline underline-offset-2">Zpět do košíku</Link>
           </aside>
         </div>
+
+        {/* Mapa výdejních míst a boxů DPD */}
+        {dpdOpen && (
+          <div role="dialog" aria-modal="true" aria-label="Výběr výdejního místa DPD" onClick={(e) => { if (e.target === e.currentTarget) setDpdOpen(false); }}
+            className="fixed inset-0 z-[90] bg-[rgba(42,10,11,0.45)] flex items-end lg:items-center justify-center">
+            <div className="relative w-full lg:max-w-4xl h-[92vh] lg:h-[80vh] bg-white rounded-t-3xl lg:rounded-2xl overflow-hidden">
+              <iframe src="https://api.dpd.cz/widget/latest/index.html?enabledCountries=CZ&enabledCountries=SK" title="Výdejní místa a boxy DPD"
+                allow="geolocation" className="w-full h-full border-0" />
+            </div>
+          </div>
+        )}
 
         {/* Tlačítko – mobil, stále po ruce */}
         <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-muza-cream from-75% to-transparent">

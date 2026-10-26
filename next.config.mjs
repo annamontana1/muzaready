@@ -47,11 +47,11 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            value: 'camera=(), microphone=(), geolocation=(self "https://api.dpd.cz")',
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://gate.gopay.cz https://gw.sandbox.gopay.com https://*.googletagmanager.com https://*.google-analytics.com https://*.smartsupp.com https://*.smartsuppchat.com https://widget.packeta.com https://backup.widget.packeta.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://gate.gopay.cz https://gw.sandbox.gopay.com https://*.google-analytics.com https://*.analytics.google.com https://*.smartsupp.com https://*.smartsuppchat.com wss://*.smartsupp.com wss://*.smartsuppchat.com https://widget.packeta.com https://backup.widget.packeta.com https://*.packeta.com; frame-src https://gate.gopay.cz https://gw.sandbox.gopay.com https://*.smartsupp.com https://widget.packeta.com https://backup.widget.packeta.com;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://gate.gopay.cz https://gw.sandbox.gopay.com https://*.googletagmanager.com https://*.google-analytics.com https://*.smartsupp.com https://*.smartsuppchat.com https://widget.packeta.com https://backup.widget.packeta.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://gate.gopay.cz https://gw.sandbox.gopay.com https://*.google-analytics.com https://*.analytics.google.com https://*.smartsupp.com https://*.smartsuppchat.com wss://*.smartsupp.com wss://*.smartsuppchat.com https://widget.packeta.com https://backup.widget.packeta.com https://*.packeta.com; frame-src https://api.dpd.cz https://gate.gopay.cz https://gw.sandbox.gopay.com https://*.smartsupp.com https://widget.packeta.com https://backup.widget.packeta.com;",
           },
         ],
       },
