@@ -614,30 +614,24 @@ export default function SkuDetailPage() {
                 </fieldset>
               )}
 
-              {/* Souhrn ceny */}
-              <div className="rounded-2xl bg-muza-ink text-muza-onink p-[18px] flex flex-col gap-2 text-sm" aria-live="polite">
+              {/* Rozpis ceny: jen tichý přehled, hlavní součet je dole u tlačítka Do košíku */}
+              <div className="border-t border-muza-line pt-3 flex flex-col gap-1.5 text-[13px] text-text-mid" aria-live="polite">
                 {quote ? (
                   <>
                     <div className="flex justify-between gap-3">
-                      <span className="text-[#D8C3BA]">Vlasy · {quote.grams} g × {formatPrice(quote.pricePerGram)}</span>
-                      <span>{formatPrice(quote.lineTotal)}</span>
+                      <span>Vlasy · {quote.grams} g × {formatPrice(quote.pricePerGram)}</span>
+                      <span className="tabular-nums">{formatPrice(quote.lineTotal)}</span>
                     </div>
                     {quote.assemblyFeeTotal > 0 && (
                       <div className="flex justify-between gap-3">
-                        <span className="text-[#D8C3BA]">{endingLabel} · {quote.grams} g × {formatPrice(quote.assemblyFeeCzk)}</span>
-                        <span>{formatPrice(quote.assemblyFeeTotal)}</span>
+                        <span>{endingLabel} · {quote.grams} g × {formatPrice(quote.assemblyFeeCzk)}</span>
+                        <span className="tabular-nums">{formatPrice(quote.assemblyFeeTotal)}</span>
                       </div>
                     )}
                   </>
                 ) : (
-                  <div className="text-[#D8C3BA]">
-                    {!available ? 'Cenu vám potvrdíme ve WhatsAppu.' : quoteError ? quoteError : 'Počítám cenu…'}
-                  </div>
+                  <div>{!available ? 'Cenu vám potvrdíme ve WhatsAppu.' : quoteError ? quoteError : 'Počítám cenu…'}</div>
                 )}
-                <div className="flex justify-between items-baseline pt-2.5 mt-0.5 border-t border-[rgba(234,220,200,0.3)]">
-                  <span className="font-cormorant text-[22px]">Celkem</span>
-                  <span className="font-cormorant text-[28px] text-muza-sand">{totalText}</span>
-                </div>
               </div>
 
               {!available && (
@@ -646,8 +640,14 @@ export default function SkuDetailPage() {
                 </p>
               )}
 
-              {/* Desktop tlačítko */}
-              <div className="hidden lg:flex flex-col">{cta}</div>
+              {/* Desktop: hlavní součet u tlačítka */}
+              <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-[13px] text-text-mid">{summaryLine}</span>
+                  <span className="font-cormorant font-semibold text-[34px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
+                </div>
+                {cta}
+              </div>
             </div>
           </div>
         </div>
@@ -661,8 +661,8 @@ export default function SkuDetailPage() {
       {/* ── Mobil: spodní lišta s cenou ── */}
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
-          <div className="text-xs text-text-mid truncate">{summaryLine}</div>
-          <div className="font-cormorant text-[22px] whitespace-nowrap">{totalText}</div>
+          <div className="text-[11px] text-text-mid truncate">{summaryLine}</div>
+          <div className="font-cormorant font-semibold text-[30px] leading-none mt-0.5 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
         </div>
         {cta}
       </div>
