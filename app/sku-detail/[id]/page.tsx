@@ -6,6 +6,7 @@ import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
+import { GRAM_STEP, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
 interface Sku {
   id: string;
@@ -179,7 +180,7 @@ export default function SkuDetailPage() {
       const bulkDefault = Math.max(bulkMin, Math.min(100, found.availableGrams ?? 100));
       const initialGrams = found.saleMode === 'BULK_G'
         ? bulkMin + Math.floor((bulkDefault - bulkMin) / bulkStep) * bulkStep
-        : (found.weightTotalG ?? found.availableGrams ?? 0);
+        : pieceGramsLeft(found);
       if (initialGrams) {
         setSelectedGrams(initialGrams);
       }
@@ -200,7 +201,8 @@ export default function SkuDetailPage() {
       const lines = [
         {
           skuId: sku.id,
-          wantedGrams: sku.saleMode === 'BULK_G' ? selectedGrams : undefined,
+          // culík mimo Baby Shades se prodává po gramech (lib/sale-rule.ts)
+          wantedGrams: soldByGrams(sku) ? selectedGrams : undefined,
           ending: selectedEnding,
           selectedLength,
         },
@@ -353,6 +355,12 @@ export default function SkuDetailPage() {
   }
 
   const isBulk = sku.saleMode === 'BULK_G';
+  // Jedinečný culík: po gramech (krok 10 g, nejvýš co zbývá), nebo Baby Shades vždy celý
+  const pieceByGrams = !isBulk && soldByGrams(sku);
+  const pieceLeft = pieceGramsLeft(sku);
+  const pieceSteps = Array.from({ length: Math.floor(pieceLeft / GRAM_STEP) }, (_, i) => (i + 1) * GRAM_STEP);
+  if (pieceLeft % GRAM_STEP) pieceSteps.push(pieceLeft);
+  const pieceIdx = Math.max(0, pieceSteps.indexOf(selectedGrams ?? pieceLeft));
   const available = sku.inStock && !sku.soldOut;
   const activeIndex = Math.max(0, currentImage ? allImages.indexOf(currentImage) : 0);
   const lengthCm = isBulk ? bulkLengthValue : sku.lengthCm;
@@ -481,7 +489,7 @@ export default function SkuDetailPage() {
                     <span>
                       <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
                       <span className="block text-[15px] text-text-mid mt-0.5">
-                        {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{sku.weightTotalG ? ` · ${sku.weightTotalG} g` : ''} · jediný kus
+                        {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{pieceLeft ? ` · ${pieceLeft} g` : ''} · {pieceByGrams ? 'prodej po gramech' : 'jediný kus'}
                       </span>
                     </span>
                     <span className="flex items-center gap-1.5 text-[13px] text-muza-ink whitespace-nowrap">
@@ -493,7 +501,7 @@ export default function SkuDetailPage() {
                   <div className="px-4 py-3 rounded-2xl bg-muza-mocha">
                     <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
                     <span className="block text-[15px] text-text-mid mt-0.5">
-                      {sku.weightTotalG ? `${sku.weightTotalG} g · ` : ''}jediný kus
+                      {pieceLeft ? `${pieceLeft} g · ` : ''}{pieceByGrams ? 'prodej po gramech' : 'jediný kus'}
                     </span>
                   </div>
                 )
@@ -559,6 +567,31 @@ export default function SkuDetailPage() {
                       className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">+</button>
                   </div>
                   <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
+                </fieldset>
+              )}
+
+              {/* Gramáž z culíku (mimo Baby Shades): po 10 g až po celý culík */}
+              {pieceByGrams && pieceSteps.length > 0 && (
+                <fieldset>
+                  <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
+                    Gramáž <span className="font-jost text-[13px] text-text-mid">· po {GRAM_STEP} g, celý culík {pieceLeft} g</span>
+                  </legend>
+                  <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
+                    <button type="button" aria-label={`Ubrat ${GRAM_STEP} gramů`} disabled={pieceIdx <= 0}
+                      onClick={() => setSelectedGrams(pieceSteps[Math.max(0, pieceIdx - 1)])}
+                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">−</button>
+                    <span className="font-cormorant text-[26px]" aria-live="polite">{pieceSteps[pieceIdx]} g</span>
+                    <button type="button" aria-label={`Přidat ${GRAM_STEP} gramů`} disabled={pieceIdx >= pieceSteps.length - 1}
+                      onClick={() => setSelectedGrams(pieceSteps[Math.min(pieceSteps.length - 1, pieceIdx + 1)])}
+                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">+</button>
+                  </div>
+                  <div className="mt-2.5 flex items-center justify-between gap-3">
+                    <p className="text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
+                    {pieceSteps[pieceIdx] !== pieceLeft && (
+                      <button type="button" onClick={() => setSelectedGrams(pieceLeft)}
+                        className="flex-none text-[13px] text-muza-ink underline underline-offset-2">Celý culík</button>
+                    )}
+                  </div>
                 </fieldset>
               )}
 

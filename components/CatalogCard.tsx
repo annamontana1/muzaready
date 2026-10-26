@@ -7,8 +7,10 @@ import FavoriteButton from './FavoriteButton';
 import AddToCartModal from './AddToCartModal';
 import BulkAddToCartModal from './BulkAddToCartModal';
 import PieceCard from './PieceCard';
+import { GRAM_STEP } from '@/lib/sale-rule';
 import { usePreferences } from '@/lib/preferences-context';
 import { useCart } from '@/hooks/useCart';
+import { soldByGrams } from '@/lib/sale-rule';
 
 /**
  * Unified catalog card for both BULK (Product) and PIECE (SKU) items
@@ -105,7 +107,8 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
     else addWholePiece();
   };
 
-  const byGrams = props.type === 'PIECE' && props.saleMode === 'BULK_G';
+  // pravidlo prodeje (lib/sale-rule.ts): Baby Shades celý culík, ostatní po gramech
+  const byGrams = props.type === 'PIECE' && soldByGrams({ saleMode: props.saleMode || 'PIECE_BY_WEIGHT', customerCategory: props.tier === 'Baby Shades' ? 'BABY_SHADES' : null });
   const hasPrice = byGrams ? Boolean(props.pricePerGramCzk) : Boolean(props.priceCzk);
 
   const addWholePiece = () => {
@@ -287,9 +290,10 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         structure={props.structure || ''}
         tier={props.tier}
         {...(byGrams ? {
-          minGrams: props.minOrderG || props.stepG || 10,
+          minGrams: props.saleMode === 'BULK_G' ? (props.minOrderG || props.stepG || GRAM_STEP) : GRAM_STEP,
           maxGrams: props.availableGrams || props.weightGrams || 300,
-          stepGrams: props.stepG || 10,
+          stepGrams: props.saleMode === 'BULK_G' ? (props.stepG || GRAM_STEP) : GRAM_STEP,
+          cartSaleMode: props.saleMode === 'BULK_G' ? 'BULK_G' as const : 'PIECE_BY_WEIGHT' as const,
         } : {})}
         onClose={() => setShowBulkAddToCartModal(false)}
         onAdded={handleAddedToCart}

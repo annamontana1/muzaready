@@ -18,6 +18,8 @@ interface BulkAddToCartModalProps {
   minGrams?: number;
   maxGrams?: number;
   stepGrams?: number;
+  // culík prodávaný po gramech zůstává v košíku jako PIECE_BY_WEIGHT (server ho tak počítá)
+  cartSaleMode?: 'BULK_G' | 'PIECE_BY_WEIGHT';
   onClose: () => void;
   onAdded?: () => void;
 }
@@ -35,6 +37,7 @@ export default function BulkAddToCartModal({
   minGrams = 50,
   maxGrams = 300,
   stepGrams = 10,
+  cartSaleMode = 'BULK_G',
   onClose,
   onAdded,
 }: BulkAddToCartModalProps) {
@@ -74,7 +77,7 @@ export default function BulkAddToCartModal({
         skuName: productName,
         customerCategory,
         shade: shade.toString(),
-        saleMode: 'BULK_G',
+        saleMode: cartSaleMode,
         grams,
         pricePerGram: pricePerGramCzk,
         lineTotal,

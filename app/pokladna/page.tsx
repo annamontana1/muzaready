@@ -196,7 +196,7 @@ export default function PokladnaPage() {
           email: formData.email.trim(),
           cartLines: items.map((item) => ({
             skuId: item.skuId,
-            wantedGrams: item.saleMode === 'BULK_G' ? item.grams : undefined,
+            wantedGrams: item.grams || undefined, // server podle pravidla prodeje (Baby Shades vždy celý culík)
             ending: item.ending,
             selectedLength: item.selectedLength,
           })),

@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { GRAM_STEP, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
 
 // Shade name map (mirrors HAIR_COLORS in types/product.ts)
 const SHADE_NAMES: Record<number, string> = {
@@ -123,16 +124,22 @@ export async function quoteCartLines(
     // Determine price from matrix or fall back to SKU price
     let pricePerGram = sku.pricePerGramCzk;
 
+    // Jedinečný culík s vlastní cenou za gram má přednost před ceníkem
+    const ownPiecePrice = sku.saleMode === 'PIECE_BY_WEIGHT' && (sku.pricePerGramCzk ?? 0) > 0;
+
     // Try to look up price from matrix
-    // Shade is a number string (1-10). Shades 1-4 are nebarvené, 5-10 are barvené
+    // Culík: barvené/nebarvené podle isDyed (středoevropské/panenské); zásoba na gramy podle odstínu (1–4 nebarvené, 5–10 barvené)
     const shadeNum = parseInt(sku.shade || '1', 10);
-    const category = shadeNum >= 5 ? 'barvene' : 'nebarvene';
+    const category = sku.saleMode === 'PIECE_BY_WEIGHT'
+      ? (sku.isDyed ? 'barvene' : 'nebarvene')
+      : (shadeNum >= 5 ? 'barvene' : 'nebarvene');
 
     // Map customer category to tier for price matrix lookup
     const tierMap: Record<string, string> = {
       'STANDARD': 'standard',
       'LUXE': 'luxe',
       'PLATINUM_EDITION': 'platinum',
+      'BABY_SHADES': 'baby_shades',
     };
     const tier = tierMap[sku.customerCategory || 'STANDARD'] || 'standard';
 
@@ -140,17 +147,27 @@ export async function quoteCartLines(
     const lookupLength = line.selectedLength ?? sku.lengthCm;
     const matrixKey = `${category}_${tier}_${lookupLength}`;
     const matrixPrice = priceMatrixMap.get(matrixKey);
-    if (matrixPrice !== undefined) {
+    if (matrixPrice !== undefined && !ownPiecePrice) {
       pricePerGram = matrixPrice;
     }
 
     let grams = 0;
 
     if (sku.saleMode === 'PIECE_BY_WEIGHT') {
-      if (!sku.weightTotalG || sku.soldOut) {
+      const left = pieceGramsLeft(sku);
+      if (!left || sku.soldOut) {
         throw new Error(`Culík "${sku.name}" již není dostupný`);
       }
-      grams = sku.weightTotalG;
+      // Mimo Baby Shades lze z culíku koupit jen část po 10 g; jinak vždy celý (zbytek) culík
+      const wanted = line.wantedGrams;
+      if (soldByGrams(sku) && wanted && wanted !== left) {
+        if (!validPieceGrams(wanted, left)) {
+          throw new Error(`Zvolte ${GRAM_STEP}–${left} g po ${GRAM_STEP} g`);
+        }
+        grams = wanted;
+      } else {
+        grams = left;
+      }
     } else {
       // BULK_G
       const wanted = line.wantedGrams ?? 0;
