@@ -121,7 +121,7 @@ export default function OblibeneePage() {
                   >
                     {/* Product Image */}
                     <Link href={`/produkt/${product.slug}`}>
-                      <div className="aspect-square relative overflow-hidden">
+                      <div className="m-2.5 mb-0 aspect-[4/5] relative overflow-hidden rounded-t-full rounded-b-xl ring-1 ring-muza-ink ring-offset-[3px]">
                         {/* Actual image if available */}
                         {product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/products/')) ? (
                           <img
