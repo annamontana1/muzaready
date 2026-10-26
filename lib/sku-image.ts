@@ -1,5 +1,6 @@
 // Fotky culíků z focení 9. 2. 2026 jsou v Supabase s různě nasvíceným pozadím.
-// Sjednocené verze (pozadí ivory #F0EAE3) leží v /public/images/sku, takže je API
+// Verze s béžovým pozadím (ivory #F0EAE3, vlasy beze změny; tools/photo/bezove_pozadi.py)
+// leží v /public/images/sku, takže je API
 // vrací místo originálů. Ostatní adresy projdou beze změny.
 const SHOOT = /\/product-images\/skus\/Photo_09\.02\.2026_(\d{2}_\d{2}_\d{2})\.jpg$/;
 
