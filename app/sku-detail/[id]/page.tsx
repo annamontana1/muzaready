@@ -474,9 +474,14 @@ export default function SkuDetailPage() {
               {isBulk ? (
                 <button type="button" onClick={() => setLengthOpen(true)}
                   className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
+                  {/* Číslo délky je hlavní (velké a tučné), popisky kolem menší */}
                   <span>
-                    <span className="block font-cormorant text-[22px] leading-tight">Délka</span>
-                    <span className="block text-[15px] text-text-mid mt-0.5">{bulkLengthValue} cm · {hairZone(bulkLengthValue)}</span>
+                    <span className="block text-[11px] font-medium tracking-[0.14em] uppercase text-text-mid">Délka</span>
+                    <span className="block mt-0.5 leading-none">
+                      <span className="font-cormorant font-semibold text-[40px] text-muza-ink tabular-nums">{bulkLengthValue}</span>
+                      <span className="ml-1 font-cormorant font-semibold text-[22px] text-muza-ink">cm</span>
+                    </span>
+                    <span className="block text-[13px] text-text-mid mt-1">{hairZone(bulkLengthValue)}</span>
                   </span>
                   <span className="flex items-center gap-1.5 text-[13px] text-muza-ink">
                     Upravit
@@ -487,9 +492,14 @@ export default function SkuDetailPage() {
                 // Kus po gramech (návrh 19): délku vybírá zákaznice na siluetě
                 <button type="button" onClick={() => setLengthOpen(true)}
                   className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
+                  {/* Číslo délky je hlavní (velké a tučné), popisky kolem menší */}
                   <span>
-                    <span className="block font-cormorant text-[22px] leading-tight">Délka</span>
-                    <span className="block text-[15px] text-text-mid mt-0.5">{selectedLength} cm · {hairZone(selectedLength)}</span>
+                    <span className="block text-[11px] font-medium tracking-[0.14em] uppercase text-text-mid">Délka</span>
+                    <span className="block mt-0.5 leading-none">
+                      <span className="font-cormorant font-semibold text-[40px] text-muza-ink tabular-nums">{selectedLength}</span>
+                      <span className="ml-1 font-cormorant font-semibold text-[22px] text-muza-ink">cm</span>
+                    </span>
+                    <span className="block text-[13px] text-text-mid mt-1">{hairZone(selectedLength)}</span>
                   </span>
                   <span className="flex items-center gap-1.5 text-[13px] text-muza-ink">
                     Upravit
