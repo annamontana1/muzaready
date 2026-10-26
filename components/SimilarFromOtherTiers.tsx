@@ -11,7 +11,6 @@ interface Props {
 }
 
 const ALL_TIERS = [
-  { name: 'Standard', param: 'Standard', href: '/vlasy-k-prodlouzeni/standard' },
   { name: 'Luxe', param: 'Luxe', href: '/vlasy-k-prodlouzeni/luxe' },
   { name: 'Platinum Edition', param: 'Platinum+Edition', href: '/vlasy-k-prodlouzeni/platinum-edition' },
   { name: 'Baby Shades', param: 'Baby+Shades', href: '/vlasy-k-prodlouzeni/baby-shades' },

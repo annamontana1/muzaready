@@ -69,7 +69,14 @@ const nextConfig = {
           { type: 'query', key: 'druh' },
           { type: 'query', key: 'odstin' },
           { type: 'query', key: 'typ' },
+          { type: 'query', key: 'kategorie' },
         ],
+      },
+      // Kategorie Standard se zatím neprodává: její stránka vede na Luxe (dočasně)
+      {
+        source: '/vlasy-k-prodlouzeni/standard',
+        destination: '/vlasy-k-prodlouzeni/luxe',
+        permanent: false,
       },
       // Stará struktura nebarvené/barvené → nová tier-first struktura
       {

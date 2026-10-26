@@ -176,7 +176,6 @@ export default function Footer() {
           </h2>
           <ul className="space-y-2.5">
             {[
-              { href: '/vlasy-k-prodlouzeni/standard', label: 'Standard vlasy' },
               { href: '/vlasy-k-prodlouzeni/luxe', label: 'Luxe vlasy' },
               { href: '/vlasy-k-prodlouzeni/platinum-edition', label: 'Platinum Edition' },
               { href: '/vlasy-k-prodlouzeni/baby-shades', label: 'Baby Shades — světlé vlasy' },

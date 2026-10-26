@@ -105,6 +105,8 @@ export async function GET(request: NextRequest) {
           // (culíky waiting for approval), production never does
           ...(process.env.VERCEL_ENV === 'preview' || process.env.SHOW_UNLISTED_SKUS === '1' ? {} : { isListed: true }),
           sku: { notIn: HIDDEN_SKUS }, // starší kusy s cenou, viz lib/hidden-skus.ts
+          // kategorie Standard se zatím neprodává; kusy bez kategorie (nezařazené culíky) projdou
+          OR: [{ customerCategory: { not: 'STANDARD' } }, { customerCategory: null }],
           inStock: true, // Only show items in stock
           soldOut: false, // Exclude sold out items
         },
@@ -131,7 +133,9 @@ export async function GET(request: NextRequest) {
           ? 'LUXE'
           : sku.customerCategory === 'BABY_SHADES'
           ? 'Baby Shades'
-          : 'Standard';
+          : sku.customerCategory === 'STANDARD'
+          ? 'Standard'
+          : ''; // bez kategorie
         const computedPriceCzk = weight
           ? Number(((sku.pricePerGramCzk || 0) * weight).toFixed(2))
           : Number((sku.pricePerGramCzk || 0).toFixed(2));

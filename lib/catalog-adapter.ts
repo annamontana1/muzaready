@@ -147,6 +147,8 @@ export async function getCatalogProducts(
   const where: any = {
     isListed: true,
     sku: { notIn: HIDDEN_SKUS },
+    // kategorie Standard se zatím neprodává
+    AND: [{ OR: [{ customerCategory: { not: 'STANDARD' } }, { customerCategory: null }] }],
   };
 
   // Filtrování podle tieru (customerCategory) - PRIMARY filter
