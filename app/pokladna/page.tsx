@@ -212,7 +212,7 @@ export default function PokladnaPage() {
   const handleRemoveCoupon = () => { setCouponCode(''); setCouponDiscount(0); setCouponApplied(false); setCouponError(''); };
 
   const describeItem = (item: (typeof items)[number]) =>
-    [item.skuName || 'Vlasy', item.saleMode === 'BULK_G' ? `${item.grams} g` : null, ENDING_LABELS[item.ending] || null]
+    [(item.skuName || 'Vlasy').split(' · ')[0], item.selectedLength ? `${item.selectedLength} cm` : null, item.grams ? `${item.grams} g` : null, ENDING_LABELS[item.ending] || null]
       .filter(Boolean)
       .join(' · ');
 
@@ -364,7 +364,7 @@ export default function PokladnaPage() {
       <div className="flex justify-between py-0.5 text-sm"><span className="text-muza-soft">Doprava</span><span>{shipping === 0 ? 'zdarma' : formatPrice(shipping)}</span></div>
       <div className="flex justify-between items-baseline pt-2.5">
         <span className="font-cormorant text-2xl font-light">Celkem</span>
-        <span className="font-cormorant text-3xl font-light text-muza-ink">{formatPrice(grandTotal)}</span>
+        <span className="font-jost font-semibold text-[26px] text-muza-ink tabular-nums">{formatPrice(grandTotal)}</span>
       </div>
     </div>
   );
@@ -382,7 +382,7 @@ export default function PokladnaPage() {
               <span className="block text-sm">{items.length === 1 ? describeItem(items[0]) : `${items.length} položky v košíku`}</span>
               <span className="block text-xs text-muza-soft mt-0.5">{summaryOpen ? 'Skrýt souhrn' : 'Zobrazit souhrn'}</span>
             </span>
-            <span className="flex items-center gap-1.5 font-cormorant text-xl">
+            <span className="flex items-center gap-1.5 font-jost font-semibold text-lg tabular-nums">
               {formatPrice(grandTotal)}
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#330D0D" strokeWidth="1.5"
                 className={`transition-transform duration-200 ${summaryOpen ? 'rotate-180' : ''}`}><path d="M6 9l6 6 6-6" /></svg>
