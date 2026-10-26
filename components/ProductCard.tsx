@@ -175,7 +175,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           </div>
 
       {/* Product Image Gallery */}
-      <div className="m-2.5 mb-0 aspect-[4/5] overflow-hidden relative group bg-ivory rounded-t-full rounded-b-xl ring-1 ring-muza-ink ring-offset-[3px]">
+      <div className="aspect-square overflow-hidden relative group">
         {(() => {
           // Build all images array: main + gallery
           const allImages: string[] = [];

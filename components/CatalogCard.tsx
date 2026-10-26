@@ -127,14 +127,9 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
 
     return (
       <div className="product-card group h-full">
-        <div className="relative flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
-          {/* Favorite Button */}
-          <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
-            <FavoriteButton productId={props.id} size="md" variant="icon" />
-          </div>
-
+        <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
           {/* Image Section */}
-          <div className="relative m-2.5 mb-0 aspect-[4/5] overflow-hidden bg-ivory rounded-t-full rounded-b-xl ring-1 ring-muza-ink ring-offset-[3px]">
+          <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
             <div
               className="w-full h-full flex items-center justify-center relative"
               style={{
@@ -169,6 +164,10 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </div>
           )}
 
+            {/* Favorite Button */}
+            <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
+              <FavoriteButton productId={props.id} size="md" variant="icon" />
+            </div>
 
             {/* Tier Badge */}
             <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-text-dark bg-gradient-to-r ${tierColorClass} shadow-light`}>
@@ -230,14 +229,9 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
       />
 
       <Link href={`/sku-detail/${props.id}`} className="product-card group h-full block">
-      <div className="relative flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
-          {/* Favorite Button */}
-          <div className="absolute top-3 right-3 z-10">
-            <FavoriteButton productId={props.id} size="md" variant="icon" />
-          </div>
-
+      <div className="flex flex-col h-full bg-white rounded-xl shadow-light hover:shadow-card-hover transition-shadow overflow-hidden border border-warm-beige">
         {/* Image Section */}
-        <div className="relative m-2.5 mb-0 aspect-[4/5] overflow-hidden bg-ivory rounded-t-full rounded-b-xl ring-1 ring-muza-ink ring-offset-[3px]">
+        <div className="relative aspect-[4/5] overflow-hidden bg-ivory">
           {props.imageUrl ? (
             // Skutečná fotka culíku; barevný přechod zůstává jen pro kusy bez fotky
             // eslint-disable-next-line @next/next/no-img-element
@@ -277,7 +271,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
           {props.imageUrl && props.imageUrl2 ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={props.imageUrl2} alt="" aria-hidden="true" loading="lazy" decoding="async"
-              className="absolute bottom-10 right-2 z-10 w-12 h-16 lg:w-14 lg:h-[72px] object-cover rounded-md border-2 border-white shadow-md" />
+              className="absolute top-2 right-2 z-10 w-12 h-16 lg:w-14 lg:h-[72px] object-cover rounded-md border-2 border-white shadow-md" />
           ) : null}
 
           {/* Struktura label pod fotkou */}
@@ -296,6 +290,10 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </div>
           )}
 
+          {/* Favorite Button */}
+          <div className="absolute top-3 right-3 z-10">
+            <FavoriteButton productId={props.id} size="md" variant="icon" />
+          </div>
 
           {/* Tier Badge */}
           <div className={`absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-xs font-semibold text-text-dark bg-gradient-to-r ${tierColorClass} shadow-light`}>

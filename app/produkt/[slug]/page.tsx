@@ -206,7 +206,7 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
             {/* Left column: Image + B2B Banner */}
             <div>
               {/* Product Image */}
-              <div className="aspect-[4/5] max-w-[520px] rounded-t-full rounded-b-[20px] ring-1 ring-muza-ink ring-offset-[5px] overflow-hidden relative mb-6">
+              <div className="aspect-square rounded-xl overflow-hidden relative mb-6">
                 <div
                   className="w-full h-full flex items-center justify-center relative"
                   style={{
