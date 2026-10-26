@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
-import { GRAM_STEP, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
+import { GRAM_STEP, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, defaultPieceGrams, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
 interface Sku {
   id: string;
@@ -180,7 +180,7 @@ export default function SkuDetailPage() {
       const bulkDefault = Math.max(bulkMin, Math.min(100, found.availableGrams ?? 100));
       const initialGrams = found.saleMode === 'BULK_G'
         ? bulkMin + Math.floor((bulkDefault - bulkMin) / bulkStep) * bulkStep
-        : pieceGramsLeft(found);
+        : (soldByGrams(found) ? defaultPieceGrams(pieceGramsLeft(found)) : pieceGramsLeft(found));
       if (initialGrams) {
         setSelectedGrams(initialGrams);
       }
@@ -359,7 +359,7 @@ export default function SkuDetailPage() {
   const pieceByGrams = !isBulk && soldByGrams(sku);
   const pieceLeft = pieceGramsLeft(sku);
   const pieceSteps = pieceGramOptions(pieceLeft);
-  const pieceIdx = Math.max(0, pieceSteps.indexOf(selectedGrams ?? pieceLeft));
+  const pieceIdx = Math.max(0, pieceSteps.indexOf(selectedGrams || defaultPieceGrams(pieceLeft)));
   const available = sku.inStock && !sku.soldOut;
   const activeIndex = Math.max(0, currentImage ? allImages.indexOf(currentImage) : 0);
   const lengthCm = isBulk ? bulkLengthValue : sku.lengthCm;
@@ -573,7 +573,7 @@ export default function SkuDetailPage() {
               {pieceByGrams && pieceSteps.length > 0 && (
                 <fieldset>
                   <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
-                    Gramáž <span className="font-jost text-[13px] text-text-mid">· od {PIECE_MIN_GRAMS} g po {GRAM_STEP} g, celý culík {pieceLeft} g</span>
+                    Gramáž <span className="font-jost text-[13px] text-text-mid">· {PIECE_MIN_GRAMS}–{Math.min(pieceLeft, PIECE_MAX_GRAMS)} g po {GRAM_STEP} g</span>
                   </legend>
                   <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
                     <button type="button" aria-label={`Ubrat ${GRAM_STEP} gramů`} disabled={pieceIdx <= 0}
@@ -586,7 +586,7 @@ export default function SkuDetailPage() {
                   </div>
                   <div className="mt-2.5 flex items-center justify-between gap-3">
                     <p className="text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
-                    {pieceSteps[pieceIdx] !== pieceLeft && (
+                    {pieceLeft <= PIECE_MAX_GRAMS && pieceSteps[pieceIdx] !== pieceLeft && (
                       <button type="button" onClick={() => setSelectedGrams(pieceLeft)}
                         className="flex-none text-[13px] text-muza-ink underline underline-offset-2">Celý culík</button>
                     )}

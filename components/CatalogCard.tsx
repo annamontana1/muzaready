@@ -7,7 +7,7 @@ import FavoriteButton from './FavoriteButton';
 import AddToCartModal from './AddToCartModal';
 import BulkAddToCartModal from './BulkAddToCartModal';
 import PieceCard from './PieceCard';
-import { GRAM_STEP, PIECE_MIN_GRAMS } from '@/lib/sale-rule';
+import { GRAM_STEP, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS } from '@/lib/sale-rule';
 import { usePreferences } from '@/lib/preferences-context';
 import { useCart } from '@/hooks/useCart';
 import { soldByGrams } from '@/lib/sale-rule';
@@ -291,7 +291,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         tier={props.tier}
         {...(byGrams ? {
           minGrams: props.saleMode === 'BULK_G' ? (props.minOrderG || props.stepG || GRAM_STEP) : PIECE_MIN_GRAMS,
-          maxGrams: props.availableGrams || props.weightGrams || 300,
+          maxGrams: props.saleMode === 'BULK_G' ? (props.availableGrams || 300) : Math.min(PIECE_MAX_GRAMS, props.availableGrams || props.weightGrams || PIECE_MAX_GRAMS),
           stepGrams: props.saleMode === 'BULK_G' ? (props.stepG || GRAM_STEP) : GRAM_STEP,
           cartSaleMode: props.saleMode === 'BULK_G' ? 'BULK_G' as const : 'PIECE_BY_WEIGHT' as const,
         } : {})}
