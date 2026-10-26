@@ -46,6 +46,7 @@ export async function GET(
         imageUrl: true,
         images: true,
         shadeHex: true,
+        isDyed: true,
       },
     });
 

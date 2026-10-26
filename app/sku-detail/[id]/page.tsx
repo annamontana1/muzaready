@@ -27,7 +27,11 @@ interface Sku {
   imageUrl: string | null;
   images: string[];
   shadeHex: string | null;
+  isDyed?: boolean; // barvené = středoevropské, nebarvené = panenské
 }
+
+// Culík do řady „Podobné odstíny“ (z /api/katalog/unified)
+interface Similar { id: string; name: string; shade?: number; imageUrl?: string; type: string }
 
 interface QuoteItem {
   grams: number;
@@ -58,8 +62,10 @@ function getCategoryInfo(category: Sku['customerCategory']) {
       return { label: 'Luxe', bg: 'rgba(74,21,32,0.08)', color: 'var(--burgundy)' };
     case 'BABY_SHADES':
       return { label: 'Baby Shades', bg: 'rgba(100,60,130,0.08)', color: '#6b3d8a' };
-    default:
+    case 'STANDARD':
       return { label: 'Standard', bg: 'rgba(30,80,140,0.08)', color: '#1e508c' };
+    default:
+      return { label: '', bg: 'transparent', color: 'inherit' }; // kus bez kategorie
   }
 }
 
@@ -70,8 +76,28 @@ export default function SkuDetailPage() {
   const { addToCart } = useSkuCart();
 
   const [sku, setSku] = useState<Sku | null>(null);
+  const [similar, setSimilar] = useState<Similar[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Podobné odstíny: jiné culíky se stejným nebo sousedním odstínem (±1), nejbližší první
+  useEffect(() => {
+    if (!sku) return;
+    const shade = Number(sku.shade);
+    if (!shade) { setSimilar([]); return; }
+    let alive = true;
+    fetch('/api/katalog/unified')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: Similar[]) => {
+        if (!alive || !Array.isArray(list)) return;
+        setSimilar(list
+          .filter((x) => x.type === 'PIECE' && x.id !== sku.id && x.imageUrl && x.shade && Math.abs(x.shade - shade) <= 1)
+          .sort((a, b) => Math.abs((a.shade ?? 0) - shade) - Math.abs((b.shade ?? 0) - shade))
+          .slice(0, 8));
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [sku]);
 
   // Image gallery state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -410,13 +436,22 @@ export default function SkuDetailPage() {
           {/* ── Informace a konfigurace ── */}
           <div className="px-4 lg:px-0 min-w-0">
             <div className="mt-5 lg:mt-0">
-              <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink">{catInfo.label}</span>
+              {catInfo.label && <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink">{catInfo.label}</span>}
               <h1 className="mt-1.5 font-cormorant font-light text-[40px] lg:text-[48px] leading-[1.02] text-muza-ink">{sku.name || 'Bez názvu'}</h1>
               {sku.shadeName && (
                 <p className="mt-2 flex items-center gap-2 text-sm text-text-mid">
                   {sku.shadeHex && <span className="inline-block w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: sku.shadeHex }} />}
                   {sku.shadeName}{sku.structure ? ` · ${sku.structure}` : ''}
                 </p>
+              )}
+              {/* Štítky: druh, struktura, odstín */}
+              {!isBulk && (
+                <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Vlastnosti culíku">
+                  {[typeof sku.isDyed === 'boolean' ? (sku.isDyed ? 'Středoevropské vlasy' : 'Panenské vlasy') : null,
+                    sku.structure, sku.shade ? `Odstín ${sku.shade}` : null].filter(Boolean).map((t) => (
+                    <li key={t as string} className="px-3 py-1 rounded-full border border-muza-line text-[12px] text-text-dark">{t}</li>
+                  ))}
+                </ul>
               )}
               <p className={`mt-3 flex items-center gap-2 text-sm ${available ? 'text-[#2F5E3D]' : 'text-text-mid'}`}>
                 <span className={`w-2 h-2 rounded-full ${available ? 'bg-[#2F5E3D]' : 'bg-warning'}`} />
@@ -439,12 +474,56 @@ export default function SkuDetailPage() {
                   </span>
                 </button>
               ) : (
-                <div className="px-4 py-3 rounded-2xl bg-muza-mocha">
-                  <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
-                  <span className="block text-[15px] text-text-mid mt-0.5">
-                    {[sku.lengthCm ? `${sku.lengthCm} cm` : null, sku.weightTotalG ? `${sku.weightTotalG} g` : null].filter(Boolean).join(' · ')} · jediný kus
-                  </span>
-                </div>
+                sku.lengthCm ? (
+                  // Culík má pevnou délku; silueta ukáže, kam sahá
+                  <button type="button" onClick={() => setLengthOpen(true)}
+                    className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
+                    <span>
+                      <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
+                      <span className="block text-[15px] text-text-mid mt-0.5">
+                        {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{sku.weightTotalG ? ` · ${sku.weightTotalG} g` : ''} · jediný kus
+                      </span>
+                    </span>
+                    <span className="flex items-center gap-1.5 text-[13px] text-muza-ink whitespace-nowrap">
+                      Kam sahá
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
+                    </span>
+                  </button>
+                ) : (
+                  <div className="px-4 py-3 rounded-2xl bg-muza-mocha">
+                    <span className="block font-cormorant text-[22px] leading-tight">Culík</span>
+                    <span className="block text-[15px] text-text-mid mt-0.5">
+                      {sku.weightTotalG ? `${sku.weightTotalG} g · ` : ''}jediný kus
+                    </span>
+                  </div>
+                )
+              )}
+
+              {/* Podobné odstíny (návrh 19): tento culík a další ve stejném či sousedním odstínu */}
+              {!isBulk && similar.length > 0 && (
+                <section aria-labelledby="h-podobne">
+                  <h2 id="h-podobne" className="mb-2.5 font-cormorant text-[22px] leading-tight">Podobné odstíny</h2>
+                  <ul className="-mx-4 px-4 lg:mx-0 lg:px-0 flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <li className="flex-none w-[76px] text-center">
+                      <span className="block h-[100px] rounded-t-full rounded-b-lg overflow-hidden ring-2 ring-muza-ink ring-offset-2 ring-offset-white bg-muza-mocha">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        {allImages[0] && <img src={allImages[0]} alt="" className="w-full h-full object-cover" />}
+                      </span>
+                      <span className="mt-1.5 block text-[11px] text-muza-ink">Tento culík</span>
+                    </li>
+                    {similar.map((x) => (
+                      <li key={x.id} className="flex-none w-[76px] text-center">
+                        <Link href={`/sku-detail/${x.id}`} className="block group">
+                          <span className="block h-[100px] rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={x.imageUrl} alt={x.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                          </span>
+                          <span className="mt-1.5 block text-[11px] text-text-mid">Odstín {x.shade}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
               )}
 
               {/* Zakončení */}
@@ -540,6 +619,11 @@ export default function SkuDetailPage() {
         <LengthSheet open={lengthOpen} lengths={lengthOptions} value={bulkLengthValue}
           onChange={setSelectedLength} onClose={() => setLengthOpen(false)} />
       )}
+      {!isBulk && sku.lengthCm ? (
+        // Culík: jediná délka, silueta jen ukazuje, kam vlasy sahají
+        <LengthSheet open={lengthOpen} lengths={[sku.lengthCm]} value={sku.lengthCm}
+          onChange={() => {}} onClose={() => setLengthOpen(false)} />
+      ) : null}
 
       {/* ── LIGHTBOX ── */}
       {lightboxOpen && currentImage && (
