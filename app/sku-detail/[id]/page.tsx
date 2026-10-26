@@ -392,13 +392,15 @@ export default function SkuDetailPage() {
               )}
             </div>
             {allImages.length > 1 && (
-              <div className="mt-3.5 flex justify-center gap-2">
+              // miniatury: na mobilu i na webu je vidět, že je tu i fotka zblízka
+              <div className="mt-3 flex justify-center gap-2.5">
                 {allImages.map((img, idx) => (
-                  <button key={img} type="button" onClick={() => showImage(idx)} aria-label={`Fotka ${idx + 1}`}
+                  <button key={img} type="button" onClick={() => showImage(idx)}
+                    aria-label={idx === 0 ? 'Fotka z dálky' : idx === 1 ? 'Fotka zblízka' : `Fotka ${idx + 1}`}
                     aria-current={idx === activeIndex ? 'true' : undefined}
-                    className="h-6 flex items-center">
-                    <span className="block h-1.5 rounded-full transition-[width,background-color] duration-200"
-                      style={{ width: idx === activeIndex ? 24 : 6, background: idx === activeIndex ? '#330D0D' : 'rgba(51,13,13,0.28)' }} />
+                    className={`w-14 h-[72px] lg:w-16 lg:h-20 rounded-lg overflow-hidden border-2 transition-[border-color,opacity] ${idx === activeIndex ? 'border-muza-ink' : 'border-transparent opacity-60 hover:opacity-100'}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
                   </button>
                 ))}
               </div>

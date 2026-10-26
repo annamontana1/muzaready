@@ -8,6 +8,7 @@ type Piece = {
   id: string;
   name: string;
   imageUrl?: string;
+  imageUrl2?: string;
   shade?: number;
   shadeName?: string;
   lengthCm?: number;
@@ -61,10 +62,15 @@ export default function FeaturedPieces() {
             <li key={p ? p.id : i}>
               {p ? (
                 <Link href={`/sku-detail/${p.id}`} className="block group">
-                  <div className="aspect-[3/4] rounded-t-full rounded-b-2xl border border-muza-ink p-1 overflow-hidden">
+                  <div className="relative aspect-[3/4] rounded-t-full rounded-b-2xl border border-muza-ink p-1 overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.imageUrl || `/images/shades/${SHADE_IMG[p.shade ?? 5] ?? '05-svetla-hneda'}.jpg`} alt="" loading="lazy" decoding="async"
                       className="w-full h-full object-cover object-[center_25%] rounded-t-full rounded-b-xl transition-transform duration-500 group-hover:scale-[1.03]" />
+                    {p.imageUrl2 && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.imageUrl2} alt="" aria-hidden="true" loading="lazy" decoding="async"
+                        className="absolute bottom-2.5 right-2.5 w-11 h-14 lg:w-14 lg:h-[72px] object-cover rounded-md border-2 border-white shadow-md" />
+                    )}
                   </div>
                   <div className="mt-2.5 text-[14px] leading-snug text-text-dark">{p.name}</div>
                   <div className="mt-0.5 text-[12px] text-muza-soft">

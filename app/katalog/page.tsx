@@ -19,6 +19,7 @@ interface CatalogItem {
   name: string;
   tier: string;
   imageUrl?: string;
+  imageUrl2?: string;
   shade?: number;
   shadeName?: string;
   structure?: string;
@@ -225,6 +226,7 @@ export default function CatalogPage() {
                 name={item.name}
                 tier={item.tier}
                 imageUrl={item.imageUrl}
+                imageUrl2={item.imageUrl2}
                 shade={item.shade}
                 shadeName={item.shadeName}
                 structure={item.structure}

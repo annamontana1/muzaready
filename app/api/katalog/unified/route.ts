@@ -26,7 +26,8 @@ interface UnifiedItem {
   slug?: string; // BULK only
   name: string;
   tier: string; // "Standard" | "LUXE" | "Platinum edition"
-  imageUrl?: string;
+  imageUrl?: string; // fotka z dálky
+  imageUrl2?: string; // detail zblízka (miniatura na kartě)
   shade?: number; // 1-10
   shadeName?: string;
   structure?: string;
@@ -138,6 +139,7 @@ export async function GET(request: NextRequest) {
           name: pieceName,
           tier: tierLabel,
           imageUrl: photos[0],
+          imageUrl2: photos[1],
           shade: shadeCode,
           shadeName: sku.shadeName || undefined,
           structure: sku.structure || undefined,

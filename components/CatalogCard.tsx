@@ -29,6 +29,7 @@ interface CatalogCardProps {
   priceCzk?: number; // PIECE: fixed price
   inStock: boolean;
   imageUrl?: string;
+  imageUrl2?: string; // druhá fotka (zblízka), ukáže se jako miniatura v rohu
 }
 
 const getTierLabel = (tier: string) => {
@@ -265,6 +266,13 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             </div>
           </div>
           )}
+
+          {/* Druhá fotka (zblízka) jako miniatura v rohu */}
+          {props.imageUrl && props.imageUrl2 ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={props.imageUrl2} alt="" aria-hidden="true" loading="lazy" decoding="async"
+              className="absolute top-2 right-2 z-10 w-12 h-16 lg:w-14 lg:h-[72px] object-cover rounded-md border-2 border-white shadow-md" />
+          ) : null}
 
           {/* Struktura label pod fotkou */}
           {props.structure && (
