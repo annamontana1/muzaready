@@ -23,10 +23,10 @@ export default function ShadeLadder() {
   const s = SHADES[sel];
 
   return (
-    <section aria-labelledby="h-odstiny" className="bg-muza-cream">
-      <div className="max-w-7xl mx-auto px-5 lg:px-12 py-16 lg:py-24 lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:items-center">
+    <section aria-labelledby="h-odstiny" className="bg-muza-ivory">
+      <div className="max-w-7xl mx-auto px-5 lg:px-16 pt-6 pb-8 lg:pt-8 lg:pb-12 lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:items-center">
         <div>
-          <h2 id="h-odstiny" className="font-cormorant font-light text-muza-ink text-[40px] leading-[1.04] lg:text-[56px]">
+          <h2 id="h-odstiny" className="font-cormorant font-light text-muza-ink text-[34px] leading-[1.04] lg:text-[48px]">
             Najděte svůj odstín. <em className="italic">Barvíme ho sami.</em>
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-text-mid max-w-[420px]">
@@ -64,7 +64,13 @@ export default function ShadeLadder() {
         </div>
       </div>
 
-      {/* Odstín na míru */}
+    </section>
+  );
+}
+
+// Pruh „Odstín na míru“; na hlavní stránce stojí až pod culíky k odeslání
+export function CustomShadeBand() {
+  return (
       <div className="bg-muza-ink text-muza-onink">
         <div className="max-w-7xl mx-auto px-5 lg:px-12 py-10 lg:py-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
@@ -80,7 +86,6 @@ export default function ShadeLadder() {
           </a>
         </div>
       </div>
-    </section>
   );
 }
 

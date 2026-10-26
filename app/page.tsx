@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-articles';
 import AtelierHero from '@/components/home/AtelierHero';
-import ShadeLadder from '@/components/home/ShadeLadder';
+import ShadeLadder, { CustomShadeBand } from '@/components/home/ShadeLadder';
+import HairKinds from '@/components/home/HairKinds';
 import FeaturedPieces from '@/components/home/FeaturedPieces';
 import AtelierBand from '@/components/home/AtelierBand';
 
@@ -112,11 +113,17 @@ export default function Home() {
       {/* ─── HERO: ateliér na míru ─── */}
       <AtelierHero />
 
-      {/* ─── CULÍKY SKLADEM (hned pod výběrem druhu vlasů) ─── */}
+      {/* ─── VZORNÍK ODSTÍNŮ (hned pod nadpisem) ─── */}
+      <ShadeLadder />
+
+      {/* ─── STŘEDOEVROPSKÉ / PANENSKÉ ─── */}
+      <HairKinds />
+
+      {/* ─── CULÍKY K ODESLÁNÍ ─── */}
       <FeaturedPieces />
 
-      {/* ─── VZORNÍK ODSTÍNŮ ─── */}
-      <ShadeLadder />
+      {/* ─── ODSTÍN NA MÍRU ─── */}
+      <CustomShadeBand />
 
       {/* ─── ATELIÉR ─── */}
       <AtelierBand />
