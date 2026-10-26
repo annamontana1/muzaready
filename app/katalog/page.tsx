@@ -32,6 +32,7 @@ interface CatalogItem {
   inStock: boolean;
   priority: number;
   saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
+  isDyed?: boolean;
   availableGrams?: number;
   minOrderG?: number;
   stepG?: number;
@@ -73,7 +74,7 @@ export default function CatalogPage() {
   const [sortBy, setSortBy] = useState<'recommended' | 'price-asc' | 'price-desc'>('recommended');
   // ?odstin=7 — odkaz ze vzorníku odstínů na hlavní stránce
   const [shadeFilter, setShadeFilter] = useState<number | null>(null);
-  // ?druh=stredoevropske (barvené blond, odstíny 8–10) | panenske (nebarvené, odstíny 1–7)
+  // ?druh=stredoevropske (barvené) | panenske (nebarvené, virgin)
   const [kind, setKind] = useState<'stredoevropske' | 'panenske' | null>(null);
   // ?kategorie=luxe|platinum|baby; Baby Shades existují jen v odstínech 7–10
   const [cat, setCat] = useState<CatKey | null>(null);
@@ -134,11 +135,12 @@ export default function CatalogPage() {
     if (selectedType !== 'ALL' && item.type !== selectedType) return false;
     if (shadeFilter && Number(item.shade) !== shadeFilter) return false;
     if (cat && item.tier !== CATS.find((c) => c.v === cat)?.tier) return false;
+    // druh určuje u kusu pole isDyed (barvené = středoevropské, nebarvené = panenské);
+    // u položek bez něj se odvodí z odstínu jako dřív
     if (kind) {
-      const s = Number(item.shade);
-      if (!s) return false;
-      if (kind === 'stredoevropske' && s < 8) return false;
-      if (kind === 'panenske' && s > 7) return false;
+      const dyed = typeof item.isDyed === 'boolean' && item.type === 'PIECE' ? item.isDyed : Number(item.shade) >= 8;
+      if (kind === 'stredoevropske' && !dyed) return false;
+      if (kind === 'panenske' && dyed) return false;
     }
     return true;
   });

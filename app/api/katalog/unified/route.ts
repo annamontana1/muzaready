@@ -41,6 +41,8 @@ interface UnifiedItem {
   priority: number;
   // způsob prodeje: celý culík (PIECE_BY_WEIGHT) nebo po gramech (BULK_G)
   saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
+  // druh vlasů: barvené = středoevropské, nebarvené = panenské (virgin)
+  isDyed?: boolean;
   availableGrams?: number;
   minOrderG?: number;
   stepG?: number;
@@ -160,6 +162,7 @@ export async function GET(request: NextRequest) {
           priceEur,
           pricePerGramCzk: sku.pricePerGramCzk || undefined,
           saleMode: sku.saleMode,
+          isDyed: sku.isDyed,
           availableGrams: sku.availableGrams ?? weight,
           minOrderG: sku.minOrderG ?? undefined,
           stepG: sku.stepG ?? undefined,
