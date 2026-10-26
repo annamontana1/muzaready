@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { GRAM_STEP, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
+import { GRAM_STEP, PIECE_MIN_GRAMS, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
 
 // Shade name map (mirrors HAIR_COLORS in types/product.ts)
 const SHADE_NAMES: Record<number, string> = {
@@ -158,11 +158,11 @@ export async function quoteCartLines(
       if (!left || sku.soldOut) {
         throw new Error(`Culík "${sku.name}" již není dostupný`);
       }
-      // Mimo Baby Shades lze z culíku koupit jen část po 10 g; jinak vždy celý (zbytek) culík
+      // Mimo Baby Shades lze z culíku koupit část od 50 g po 10 g; jinak vždy celý (zbytek) culík
       const wanted = line.wantedGrams;
       if (soldByGrams(sku) && wanted && wanted !== left) {
         if (!validPieceGrams(wanted, left)) {
-          throw new Error(`Zvolte ${GRAM_STEP}–${left} g po ${GRAM_STEP} g`);
+          throw new Error(`Zvolte ${PIECE_MIN_GRAMS}–${left} g po ${GRAM_STEP} g`);
         }
         grams = wanted;
       } else {

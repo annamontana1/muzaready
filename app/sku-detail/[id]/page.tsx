@@ -6,7 +6,7 @@ import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
-import { GRAM_STEP, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
+import { GRAM_STEP, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
 interface Sku {
   id: string;
@@ -358,8 +358,7 @@ export default function SkuDetailPage() {
   // Jedinečný culík: po gramech (krok 10 g, nejvýš co zbývá), nebo Baby Shades vždy celý
   const pieceByGrams = !isBulk && soldByGrams(sku);
   const pieceLeft = pieceGramsLeft(sku);
-  const pieceSteps = Array.from({ length: Math.floor(pieceLeft / GRAM_STEP) }, (_, i) => (i + 1) * GRAM_STEP);
-  if (pieceLeft % GRAM_STEP) pieceSteps.push(pieceLeft);
+  const pieceSteps = pieceGramOptions(pieceLeft);
   const pieceIdx = Math.max(0, pieceSteps.indexOf(selectedGrams ?? pieceLeft));
   const available = sku.inStock && !sku.soldOut;
   const activeIndex = Math.max(0, currentImage ? allImages.indexOf(currentImage) : 0);
@@ -574,7 +573,7 @@ export default function SkuDetailPage() {
               {pieceByGrams && pieceSteps.length > 0 && (
                 <fieldset>
                   <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
-                    Gramáž <span className="font-jost text-[13px] text-text-mid">· po {GRAM_STEP} g, celý culík {pieceLeft} g</span>
+                    Gramáž <span className="font-jost text-[13px] text-text-mid">· od {PIECE_MIN_GRAMS} g po {GRAM_STEP} g, celý culík {pieceLeft} g</span>
                   </legend>
                   <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
                     <button type="button" aria-label={`Ubrat ${GRAM_STEP} gramů`} disabled={pieceIdx <= 0}
