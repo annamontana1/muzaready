@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
-import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
+import LengthSheet, { hairZone, MiniFigure } from '@/components/product/LengthSheet';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 import { GRAM_STEP, PIECE_DEFAULT_GRAMS, PIECE_DEFAULT_LENGTH, PIECE_LENGTHS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
 
@@ -374,12 +374,22 @@ export default function SkuDetailPage() {
   const waMessage = `Dobrý den, mám zájem o ${sku.name || sku.sku}${sku.shadeName ? ` (${sku.shadeName})` : ''}: ${summaryLine}. Můžete mi ho připravit?`;
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
 
+  // Název jen číslo culíku („Culík C04“), podrobnosti jsou v tabulce pod ním
+  const title = (sku.name || 'Bez názvu').split(' · ')[0];
+  const druh = typeof sku.isDyed === 'boolean' ? (sku.isDyed ? 'Středoevropské' : 'Panenské') : null;
+  const categoryText = [druh, catInfo.label].filter(Boolean).join(' · ');
+  const lengthVal = isBulk ? bulkLengthValue : selectedLength;
+  const gramsValue = isBulk ? bulkGramsValue : pieceSteps[pieceIdx];
+  const gramStep = isBulk ? bulkStepGrams : GRAM_STEP;
+  const gramRange = isBulk ? `${bulkMinGrams}–${Math.max(bulkMaxGrams, bulkMinGrams)} g` : `${PIECE_MIN_GRAMS}–${PIECE_MAX_GRAMS} g`;
+  const canDec = isBulk ? bulkGramsValue > bulkMinGrams : pieceIdx > 0;
+  const canInc = isBulk ? bulkGramsValue < bulkMaxGrams : pieceIdx < pieceSteps.length - 1;
+  const decGrams = () => setSelectedGrams(isBulk ? Math.max(bulkMinGrams, bulkGramsValue - bulkStepGrams) : pieceSteps[Math.max(0, pieceIdx - 1)]);
+  const incGrams = () => setSelectedGrams(isBulk ? Math.min(Math.max(bulkMaxGrams, bulkMinGrams), bulkGramsValue + bulkStepGrams) : pieceSteps[Math.min(pieceSteps.length - 1, pieceIdx + 1)]);
+
   const showImage = (i: number) => {
     setSelectedImage(allImages[i]);
   };
-
-  const chip = (on: boolean) =>
-    `rounded-2xl transition-colors duration-150 ${on ? 'bg-muza-ink text-muza-onink' : 'bg-muza-mocha text-text-dark hover:bg-[#D3C6B9]'}`;
 
   const cta = available ? (
     <button type="button" onClick={handleAddToCart} disabled={!quote || quoteLoading}
@@ -436,23 +446,20 @@ export default function SkuDetailPage() {
           {/* ── Informace a konfigurace ── */}
           <div className="px-4 lg:px-0 min-w-0">
             <div className="mt-5 lg:mt-0">
-              {catInfo.label && <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink">{catInfo.label}</span>}
-              <h1 className="mt-1.5 font-cormorant font-light text-[40px] lg:text-[48px] leading-[1.02] text-muza-ink">{sku.name || 'Bez názvu'}</h1>
-              {sku.shadeName && (
-                <p className="mt-2 flex items-center gap-2 text-sm text-text-mid">
-                  {sku.shadeHex && <span className="inline-block w-3.5 h-3.5 rounded-full border border-black/10" style={{ backgroundColor: sku.shadeHex }} />}
-                  {sku.shadeName}{sku.structure ? ` · ${sku.structure}` : ''}
-                </p>
-              )}
-              {/* Štítky: druh, struktura, odstín */}
-              {!isBulk && (
-                <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Vlastnosti culíku">
-                  {[typeof sku.isDyed === 'boolean' ? (sku.isDyed ? 'Středoevropské vlasy' : 'Panenské vlasy') : null,
-                    sku.structure, sku.shade ? `Odstín ${sku.shade}` : null].filter(Boolean).map((t) => (
-                    <li key={t as string} className="px-3 py-1 rounded-full border border-muza-line text-[12px] text-text-dark">{t}</li>
-                  ))}
-                </ul>
-              )}
+              <h1 className="font-cormorant font-normal text-[40px] lg:text-[48px] leading-[1.02] text-muza-ink">{title}</h1>
+              {/* Údaje jako tabulka (návrh B): kategorie, odstín, struktura */}
+              <dl className="mt-3.5">
+                {[
+                  categoryText ? { k: 'Kategorie', v: <>{categoryText}</> } : null,
+                  sku.shade || sku.shadeName ? { k: 'Odstín', v: <>{sku.shade ? <b className="font-semibold">{sku.shade}</b> : null}{sku.shade && sku.shadeName ? ' · ' : ''}{sku.shadeName}</> } : null,
+                  sku.structure ? { k: 'Struktura', v: <>{sku.structure}</> } : null,
+                ].filter((r): r is { k: string; v: JSX.Element } => r !== null).map((r) => (
+                  <div key={r.k} className="flex items-center justify-between gap-3 py-3 border-t border-muza-line last:border-b">
+                    <dt className="text-sm font-normal text-[#45302F]">{r.k}</dt>
+                    <dd className="text-[15px] font-normal text-text-dark text-right">{r.v}</dd>
+                  </div>
+                ))}
+              </dl>
               <p className={`mt-3 flex items-center gap-2 text-sm ${available ? 'text-[#2F5E3D]' : 'text-text-mid'}`}>
                 <span className={`w-2 h-2 rounded-full ${available ? 'bg-[#2F5E3D]' : 'bg-warning'}`} />
                 {available ? 'Skladem, odešleme hned' : 'Momentálně není skladem, připravíme na objednávku'}
@@ -460,42 +467,42 @@ export default function SkuDetailPage() {
             </div>
 
             <div className="mt-7 flex flex-col gap-6">
-              {/* Délka */}
-              {isBulk ? (
-                <button type="button" onClick={() => setLengthOpen(true)}
-                  className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
-                  {/* Číslo délky je hlavní (velké a tučné), popisky kolem menší */}
-                  <span>
-                    <span className="block text-[11px] font-medium tracking-[0.14em] uppercase text-text-mid">Délka</span>
-                    <span className="block mt-0.5 leading-none">
-                      <span className="font-cormorant font-semibold text-[40px] text-muza-ink tabular-nums">{bulkLengthValue}</span>
-                      <span className="ml-1 font-cormorant font-semibold text-[22px] text-muza-ink">cm</span>
-                    </span>
-                    <span className="block text-[13px] text-text-mid mt-1">{hairZone(bulkLengthValue)}</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[13px] text-muza-ink">
-                    Upravit
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
-                  </span>
-                </button>
-              ) : pieceByGrams ? (
-                // Kus po gramech (návrh 19): délku vybírá zákaznice na siluetě
-                <button type="button" onClick={() => setLengthOpen(true)}
-                  className="w-full min-h-[64px] px-4 py-3 rounded-2xl bg-muza-mocha flex items-center justify-between text-left hover:bg-[#D3C6B9] transition-colors">
-                  {/* Číslo délky je hlavní (velké a tučné), popisky kolem menší */}
-                  <span>
-                    <span className="block text-[11px] font-medium tracking-[0.14em] uppercase text-text-mid">Délka</span>
-                    <span className="block mt-0.5 leading-none">
-                      <span className="font-cormorant font-semibold text-[40px] text-muza-ink tabular-nums">{selectedLength}</span>
-                      <span className="ml-1 font-cormorant font-semibold text-[22px] text-muza-ink">cm</span>
-                    </span>
-                    <span className="block text-[13px] text-text-mid mt-1">{hairZone(selectedLength)}</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[13px] text-muza-ink">
-                    Upravit
-                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
-                  </span>
-                </button>
+              {/* Délka a gramáž vedle sebe (návrh B3), v kartě Délka malá postava, klepnutím velká silueta */}
+              {isBulk || pieceByGrams ? (
+                <div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <button type="button" onClick={() => setLengthOpen(true)} aria-label={`Délka ${lengthVal} cm, ${hairZone(lengthVal)}. Změnit`}
+                      className="rounded-2xl border border-muza-ink p-3.5 flex gap-1.5 text-left hover:bg-white/40 transition-colors">
+                      <span className="flex-1 min-w-0 flex flex-col">
+                        <span className="text-sm font-normal text-[#45302F]">Délka</span>
+                        <span className="mt-2.5 leading-none whitespace-nowrap">
+                          <span className="font-jost font-semibold text-[32px] text-muza-ink tabular-nums">{lengthVal}</span>
+                          <span className="text-[15px] text-muza-ink"> cm</span>
+                        </span>
+                        <span className="mt-1 text-xs text-[#45302F]">{hairZone(lengthVal)}</span>
+                        <span className="mt-auto pt-2 text-xs text-muza-ink underline underline-offset-2">změnit</span>
+                      </span>
+                      <MiniFigure cm={lengthVal} className="h-[108px] w-auto flex-none self-center" />
+                    </button>
+                    <div className="rounded-2xl border border-muza-ink p-3.5 flex flex-col">
+                      <span className="flex items-baseline justify-between gap-1">
+                        <span className="text-sm font-normal text-[#45302F]">Gramáž</span>
+                        <span className="text-[11px] text-text-mid whitespace-nowrap">{gramRange}</span>
+                      </span>
+                      <span className="mt-2.5 leading-none whitespace-nowrap" aria-live="polite">
+                        <span className="font-jost font-semibold text-[32px] text-muza-ink tabular-nums">{gramsValue}</span>
+                        <span className="text-[15px] text-muza-ink"> g</span>
+                      </span>
+                      <span className="mt-auto pt-3 flex gap-2">
+                        <button type="button" aria-label={`Ubrat ${gramStep} gramů`} disabled={!canDec} onClick={decGrams}
+                          className="w-9 h-9 rounded-full border border-muza-ink text-lg leading-none text-muza-ink disabled:opacity-30">−</button>
+                        <button type="button" aria-label={`Přidat ${gramStep} gramů`} disabled={!canInc} onClick={incGrams}
+                          className="w-9 h-9 rounded-full border border-muza-ink text-lg leading-none text-muza-ink disabled:opacity-30">+</button>
+                      </span>
+                    </div>
+                  </div>
+                  <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
+                </div>
               ) : (
                 sku.lengthCm ? (
                   // Baby Shades: celý culík s pevnou délkou; silueta ukáže, kam sahá
@@ -522,87 +529,25 @@ export default function SkuDetailPage() {
                 )
               )}
 
-              {/* Podobné odstíny (návrh 19): tento culík a další ve stejném či sousedním odstínu */}
-              {!isBulk && similar.length > 0 && (
-                <section aria-labelledby="h-podobne">
-                  <h2 id="h-podobne" className="mb-2.5 font-cormorant text-[22px] leading-tight">Podobné odstíny</h2>
-                  <ul className="-mx-4 px-4 lg:mx-0 lg:px-0 flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    <li className="flex-none w-[76px] text-center">
-                      <span className="block h-[100px] rounded-t-full rounded-b-lg overflow-hidden ring-2 ring-muza-ink ring-offset-2 ring-offset-white bg-muza-mocha">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        {allImages[0] && <img src={allImages[0]} alt="" className="w-full h-full object-cover" />}
-                      </span>
-                      <span className="mt-1.5 block text-[11px] text-muza-ink">Tento culík</span>
-                    </li>
-                    {similar.map((x) => (
-                      <li key={x.id} className="flex-none w-[76px] text-center">
-                        <Link href={`/sku-detail/${x.id}`} className="block group">
-                          <span className="block h-[100px] rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={x.imageUrl} alt={x.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                          </span>
-                          <span className="mt-1.5 block text-[11px] text-text-mid">Odstín {x.shade}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {/* Zakončení */}
+              {/* Zakončení jako seznam s kolečky (návrh B3) */}
               <fieldset>
-                <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">Zakončení</legend>
-                <div className="grid grid-cols-2 gap-2">
+                <legend className="mb-1.5 font-cormorant text-[24px] leading-tight text-muza-ink">Zakončení</legend>
+                <div role="radiogroup" aria-label="Zakončení" className="border-t border-muza-line">
                   {ENDING_OPTIONS.map((o) => {
                     const on = selectedEnding === o.id;
                     return (
-                      <button key={o.id} type="button" aria-pressed={on} onClick={() => setSelectedEnding(o.id)}
-                        className={`min-h-[60px] px-2 py-2.5 text-center ${chip(on)}`}>
-                        <span className="block text-sm">{o.label}</span>
-                        <span className="block text-xs mt-0.5 opacity-80">{o.price}</span>
+                      <button key={o.id} type="button" role="radio" aria-checked={on} onClick={() => setSelectedEnding(o.id)}
+                        className="w-full flex items-center justify-between gap-3 py-3.5 px-0.5 border-b border-muza-line text-left">
+                        <span className="flex items-center gap-3">
+                          <span aria-hidden="true" className={`w-5 h-5 flex-none rounded-full transition-[border-width] duration-150 ${on ? 'border-[6px] border-muza-ink' : 'border-[1.5px] border-[#8C7A74]'}`} />
+                          <span className="text-[15px] font-normal text-text-dark">{o.label}</span>
+                        </span>
+                        <span className="text-[13px] text-[#45302F]">{o.price}</span>
                       </button>
                     );
                   })}
                 </div>
               </fieldset>
-
-              {/* Gramáž */}
-              {isBulk && (
-                <fieldset>
-                  <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
-                    Gramáž <span className="font-jost text-[13px] text-text-mid">· {bulkMinGrams}–{Math.max(bulkMaxGrams, bulkMinGrams)} g</span>
-                  </legend>
-                  <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
-                    <button type="button" aria-label={`Ubrat ${bulkStepGrams} gramů`} disabled={bulkGramsValue <= bulkMinGrams}
-                      onClick={() => setSelectedGrams(Math.max(bulkMinGrams, bulkGramsValue - bulkStepGrams))}
-                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">−</button>
-                    <span className="font-cormorant text-[26px]" aria-live="polite">{bulkGramsValue} g</span>
-                    <button type="button" aria-label={`Přidat ${bulkStepGrams} gramů`} disabled={bulkGramsValue >= bulkMaxGrams}
-                      onClick={() => setSelectedGrams(Math.min(Math.max(bulkMaxGrams, bulkMinGrams), bulkGramsValue + bulkStepGrams))}
-                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">+</button>
-                  </div>
-                  <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
-                </fieldset>
-              )}
-
-              {/* Gramáž z culíku (mimo Baby Shades): po 10 g až po celý culík */}
-              {pieceByGrams && pieceSteps.length > 0 && (
-                <fieldset>
-                  <legend className="mb-2.5 font-cormorant text-[22px] leading-tight">
-                    Gramáž <span className="font-jost text-[13px] text-text-mid">· {PIECE_MIN_GRAMS}–{PIECE_MAX_GRAMS} g po {GRAM_STEP} g</span>
-                  </legend>
-                  <div className="h-14 rounded-full bg-muza-mocha flex items-center justify-between">
-                    <button type="button" aria-label={`Ubrat ${GRAM_STEP} gramů`} disabled={pieceIdx <= 0}
-                      onClick={() => setSelectedGrams(pieceSteps[Math.max(0, pieceIdx - 1)])}
-                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">−</button>
-                    <span className="font-cormorant text-[26px]" aria-live="polite">{pieceSteps[pieceIdx]} g</span>
-                    <button type="button" aria-label={`Přidat ${GRAM_STEP} gramů`} disabled={pieceIdx >= pieceSteps.length - 1}
-                      onClick={() => setSelectedGrams(pieceSteps[Math.min(pieceSteps.length - 1, pieceIdx + 1)])}
-                      className="w-16 h-full text-[22px] text-muza-ink disabled:opacity-30">+</button>
-                  </div>
-                  <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
-                </fieldset>
-              )}
 
               {/* Rozpis ceny: jen tichý přehled, hlavní součet je dole u tlačítka Do košíku */}
               <div className="border-t border-muza-line pt-3 flex flex-col gap-1.5 text-[13px] text-text-mid" aria-live="polite">
@@ -638,6 +583,29 @@ export default function SkuDetailPage() {
                 </div>
                 {cta}
               </div>
+
+              {/* Podobné odstíny až úplně dole: další culíky ve stejném či sousedním odstínu */}
+              {!isBulk && similar.length > 0 && (
+                <section aria-labelledby="h-podobne" className="border-t border-muza-line pt-6">
+                  <h2 id="h-podobne" className="mb-3 font-cormorant text-[24px] leading-tight text-muza-ink">Podobné odstíny</h2>
+                  <ul className="-mx-4 px-4 lg:mx-0 lg:px-0 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    {similar.map((x) => (
+                      <li key={x.id} className="flex-none w-[104px]">
+                        <Link href={`/sku-detail/${x.id}`} className="block group">
+                          <span className="block h-[132px] rounded-t-full rounded-b-[10px] border border-muza-ink p-[3px]">
+                            <span className="block w-full h-full rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={x.imageUrl} alt={x.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                            </span>
+                          </span>
+                          <span className="mt-1.5 block text-sm font-normal text-text-dark">{x.name.split(' · ')[0]}</span>
+                          {x.shade ? <span className="block text-xs text-[#45302F]">odstín {x.shade}</span> : null}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
             </div>
           </div>
         </div>
