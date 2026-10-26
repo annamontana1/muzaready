@@ -2,6 +2,7 @@
 
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { soldByGrams, GRAM_STEP, PIECE_MIN_GRAMS, PIECE_MAX_GRAMS } from '@/lib/sale-rule';
 
@@ -43,6 +44,7 @@ const ddClass = 'text-[15px] font-normal text-text-dark text-right';
 export default function CartPage() {
   const { items, updateGrams, removeFromCart, getTotalPrice } = useCart();
   const [info, setInfo] = useState<Record<string, PieceInfo>>({});
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     const missing = items.map((i) => i.skuId).filter((id) => !info[id]);
@@ -62,6 +64,14 @@ export default function CartPage() {
   }, [items]);
 
   const subtotal = getTotalPrice();
+  const router = useRouter();
+  const [nudge, setNudge] = useState(false);
+  // K pokladně až po souhlasu s obchodními podmínkami; jinak ukážeme, kde potvrdit
+  const goCheckout = () => {
+    if (agreed) { router.push('/pokladna'); return; }
+    setNudge(true);
+    document.getElementById('souhlas')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
   const count = items.length;
 
   if (count === 0) {
@@ -178,11 +188,22 @@ export default function CartPage() {
               <span className="text-[13px] text-[#45302F]">Celkem za zboží</span>
               <span className="font-jost font-semibold text-[28px] text-muza-ink tabular-nums">{formatPrice(subtotal)}</span>
             </div>
-            <Link href="/pokladna"
-              className="mt-4 flex items-center justify-center h-[52px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity">
+            <button type="button" onClick={goCheckout} aria-disabled={!agreed}
+              className={`mt-4 w-full flex items-center justify-center h-[52px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium transition-opacity ${agreed ? 'hover:opacity-90' : 'opacity-40'}`}>
               K pokladně
-            </Link>
+            </button>
           </div>
+          {/* Upozornění na jiné podmínky odstoupení u individuálních výrobků a souhlas s podmínkami */}
+          <Link href="/obchodni-podminky#individualni-vyrobek" className="mt-5 flex items-start gap-2.5 text-[13px] leading-snug text-[#45302F] hover:text-muza-ink">
+            <span aria-hidden="true" className="mt-px flex-none w-[18px] h-[18px] rounded-full border border-muza-ink text-muza-ink text-[11px] font-semibold leading-none flex items-center justify-center">i</span>
+            <span>Pozor, u individuálních výrobků na míru platí <span className="underline underline-offset-2">jiné podmínky pro odstoupení od smlouvy</span>.</span>
+          </Link>
+          <label id="souhlas" className={`mt-4 flex items-start gap-2.5 text-sm cursor-pointer rounded-lg transition-colors ${nudge && !agreed ? 'text-error' : ''}`}>
+            <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 w-[18px] h-[18px] flex-none accent-[#330D0D]" />
+            <span>Souhlasím s <Link href="/obchodni-podminky" className="text-muza-ink underline underline-offset-2">obchodními podmínkami</Link>.</span>
+          </label>
+          {!agreed && <p className="mt-1.5 ml-7 text-[12px] text-muza-soft">Pro pokračování k pokladně potvrďte souhlas.</p>}
           <Link href="/katalog" className="mt-4 inline-block py-1.5 text-sm text-muza-ink underline underline-offset-[3px]">Pokračovat v nákupu</Link>
         </aside>
       </div>
@@ -193,10 +214,10 @@ export default function CartPage() {
           <div className="text-[12px] text-[#45302F]">Celkem za zboží</div>
           <div className="font-jost font-semibold text-[24px] leading-tight text-muza-ink whitespace-nowrap tabular-nums">{formatPrice(subtotal)}</div>
         </div>
-        <Link href="/pokladna"
-          className="h-[52px] px-6 rounded-full bg-muza-ink text-muza-onink text-sm font-medium flex items-center hover:opacity-90">
+        <button type="button" onClick={goCheckout} aria-disabled={!agreed}
+          className={`h-[52px] px-6 rounded-full bg-muza-ink text-muza-onink text-sm font-medium flex items-center transition-opacity ${agreed ? 'hover:opacity-90' : 'opacity-40'}`}>
           K pokladně
-        </Link>
+        </button>
       </div>
     </div>
   );
