@@ -18,15 +18,22 @@ const SHADES = [
 
 const WHATSAPP = 'https://wa.me/420728722880';
 
+// Dva druhy vlasů pod odstíny; každý vede rovnou do katalogu s nastaveným filtrem
+// (středoevropské = barvené blond 8–10, panenské = nebarvené 1–7)
+const KINDS = [
+  { name: 'Středoevropské vlasy', href: '/katalog?druh=stredoevropske', src: '/images/shades/09-velmi-svetla-blond.jpg' },
+  { name: 'Panenské vlasy', href: '/katalog?druh=panenske', src: '/images/shades/04-hneda.jpg' },
+];
+
 export default function ShadeLadder() {
   const [sel, setSel] = useState(5);
   const s = SHADES[sel];
 
   return (
-    <section aria-labelledby="h-odstiny" className="bg-muza-cream">
-      <div className="max-w-7xl mx-auto px-5 lg:px-12 py-16 lg:py-24 lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:items-center">
+    <section aria-labelledby="h-odstiny" className="bg-muza-ivory">
+      <div className="max-w-7xl mx-auto px-5 lg:px-16 pt-6 pb-10 lg:pt-8 lg:pb-14 lg:grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:items-center">
         <div>
-          <h2 id="h-odstiny" className="font-cormorant font-light text-muza-ink text-[40px] leading-[1.04] lg:text-[56px]">
+          <h2 id="h-odstiny" className="font-cormorant font-light text-muza-ink text-[34px] leading-[1.04] lg:text-[48px]">
             Najděte svůj odstín. <em className="italic">Barvíme ho sami.</em>
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-text-mid max-w-[420px]">
@@ -61,6 +68,24 @@ export default function ShadeLadder() {
         {/* Mobil: informace pod žebříkem */}
         <div className="lg:hidden mt-6">
           <ShadeInfo shade={s} />
+        </div>
+      </div>
+
+      {/* Druh vlasů */}
+      <div className="max-w-7xl mx-auto px-5 lg:px-16 pb-14 lg:pb-20">
+        <h2 className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Vyberte druh vlasů</h2>
+        <div className="grid grid-cols-2 gap-2.5 lg:gap-4">
+          {KINDS.map((k) => (
+            <Link key={k.name} href={k.href}
+              className="group relative h-[150px] lg:h-[260px] rounded-2xl overflow-hidden bg-muza-mocha">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={k.src} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
+              <span className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <span className="absolute left-3 right-3 bottom-3 lg:left-6 lg:bottom-5 font-cormorant text-white text-[22px] leading-tight lg:text-[34px]">
+                {k.name}
+              </span>
+            </Link>
+          ))}
         </div>
       </div>
 
