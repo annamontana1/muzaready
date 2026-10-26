@@ -112,11 +112,11 @@ export default function Home() {
       {/* ─── HERO: ateliér na míru ─── */}
       <AtelierHero />
 
+      {/* ─── CULÍKY SKLADEM (hned pod výběrem druhu vlasů) ─── */}
+      <FeaturedPieces />
+
       {/* ─── VZORNÍK ODSTÍNŮ ─── */}
       <ShadeLadder />
-
-      {/* ─── CULÍKY SKLADEM ─── */}
-      <FeaturedPieces />
 
       {/* ─── ATELIÉR ─── */}
       <AtelierBand />
