@@ -16,7 +16,7 @@ export default function WeftInfoBanner() {
         <div className="flex items-start gap-2 text-text-mid">
           <span className="text-burgundy font-bold mt-0.5">—</span>
           <span>Cena se počítá podle gramáže a délky v{' '}
-            <Link href="/vlasy-k-prodlouzeni" className="text-burgundy underline hover:opacity-75">
+            <Link href="/katalog" className="text-burgundy underline hover:opacity-75">
               konfigurátoru v košíku
             </Link>.
           </span>

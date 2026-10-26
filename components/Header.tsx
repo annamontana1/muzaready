@@ -106,7 +106,7 @@ export default function Header() {
             <nav className="flex items-center gap-5 xl:gap-7" style={{ color: '#F6EEE6' }}>
 
               {/* Vlasy k prodloužení */}
-              <Link href="/vlasy-k-prodlouzeni" className={navLinkClass} style={{ color: '#F6EEE6' }}>
+              <Link href="/katalog" className={navLinkClass} style={{ color: '#F6EEE6' }}>
                 Vlasy k prodloužení
               </Link>
 
@@ -338,7 +338,7 @@ export default function Header() {
                 {[
                   {
                     label: 'Vlasy k prodloužení',
-                    href: '/vlasy-k-prodlouzeni',
+                    href: '/katalog',
                     open: false,
                     toggle: () => {},
                     items: [],

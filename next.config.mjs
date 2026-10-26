@@ -59,23 +59,26 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // /katalog → /vlasy-k-prodlouzeni, ale jen bez filtru:
-      // odkazy z hlavní stránky (?druh=, ?odstin=, ?typ=) musí doběhnout do skutečného katalogu
+      // Nový katalog (/katalog) nahrazuje staré stránky kategorií: všechny vedou do něj
+      // (dočasně, ne permanentně, kdyby se staré stránky ještě vracely)
       {
-        source: '/katalog',
-        destination: '/vlasy-k-prodlouzeni',
-        permanent: true,
-        missing: [
-          { type: 'query', key: 'druh' },
-          { type: 'query', key: 'odstin' },
-          { type: 'query', key: 'typ' },
-          { type: 'query', key: 'kategorie' },
-        ],
+        source: '/vlasy-k-prodlouzeni/barvene-vlasy/:path*',
+        destination: '/katalog?druh=stredoevropske',
+        permanent: false,
       },
-      // Kategorie Standard se zatím neprodává: její stránka vede na Luxe (dočasně)
       {
-        source: '/vlasy-k-prodlouzeni/standard',
-        destination: '/vlasy-k-prodlouzeni/luxe',
+        source: '/vlasy-k-prodlouzeni/nebarvene-panenske/:path*',
+        destination: '/katalog?druh=panenske',
+        permanent: false,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni/:tier(standard|luxe|platinum-edition|baby-shades)',
+        destination: '/katalog',
+        permanent: false,
+      },
+      {
+        source: '/vlasy-k-prodlouzeni',
+        destination: '/katalog',
         permanent: false,
       },
       // Stará struktura nebarvené/barvené → nová tier-first struktura
