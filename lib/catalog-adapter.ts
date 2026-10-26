@@ -12,6 +12,7 @@ import { normalizeSlug } from './slug-normalizer';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
 import { generateVlasyXName, generateVlasyXSlug } from '@/lib/vlasyx-format';
 import { skuPhotos } from '@/lib/sku-image';
+import { HIDDEN_SKUS } from '@/lib/hidden-skus';
 
 // Fallback délky pro rychlé "Do košíku" (100g)
 const FALLBACK_LENGTHS = [45, 40, 50, 55, 60, 65, 70, 75, 80];
@@ -145,6 +146,7 @@ export async function getCatalogProducts(
 ): Promise<Product[]> {
   const where: any = {
     isListed: true,
+    sku: { notIn: HIDDEN_SKUS },
   };
 
   // Filtrování podle tieru (customerCategory) - PRIMARY filter

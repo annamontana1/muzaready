@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { skuPhotos } from '@/lib/sku-image';
+import { HIDDEN_SKUS } from '@/lib/hidden-skus';
 import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { Product } from '@/types/product';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
@@ -97,6 +98,7 @@ export async function GET(request: NextRequest) {
           // Only show listed SKUs; Vercel preview deployments also show unlisted ones
           // (culíky waiting for approval), production never does
           ...(process.env.VERCEL_ENV === 'preview' || process.env.SHOW_UNLISTED_SKUS === '1' ? {} : { isListed: true }),
+          sku: { notIn: HIDDEN_SKUS }, // starší kusy s cenou, viz lib/hidden-skus.ts
           inStock: true, // Only show items in stock
           soldOut: false, // Exclude sold out items
         },
