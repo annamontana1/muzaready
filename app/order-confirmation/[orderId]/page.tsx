@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import AccountOffer from '@/components/checkout/AccountOffer';
 
 interface OrderConfirmation {
   id: string;
@@ -19,6 +20,11 @@ export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<OrderConfirmation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Údaje z pokladny pro nabídku účtu (registrace až po objednávce)
+  const [contact, setContact] = useState<{ email: string; firstName: string; lastName: string; phone?: string } | null>(null);
+  useEffect(() => {
+    try { const raw = sessionStorage.getItem('muza-checkout-contact'); if (raw) setContact(JSON.parse(raw)); } catch {}
+  }, []);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -141,6 +147,12 @@ export default function OrderConfirmationPage() {
               <li>Po zaplacení bude objednávka poslána k vyřízení</li>
               <li>Dostanete email se sledovacím číslem</li>
             </ol>
+          </div>
+
+          {/* Nabídka účtu po objednávce */}
+          <div className="mb-8">
+            <AccountOffer email={contact?.email || order.email} firstName={contact?.firstName || ''} lastName={contact?.lastName || ''} phone={contact?.phone} />
+            <p className="mt-4 text-[13px] text-text-mid">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
           </div>
 
           {/* Action Buttons */}

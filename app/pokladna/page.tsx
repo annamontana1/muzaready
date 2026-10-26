@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useTranslation } from '@/contexts/LanguageContext';
+import AccountOffer from '@/components/checkout/AccountOffer';
 
 declare global {
   interface Window {
@@ -65,7 +66,7 @@ const formatPrice = (price: number) =>
 const labelClass = 'block text-xs text-muza-soft';
 const fieldClass =
   'w-full h-11 bg-transparent border-0 border-b border-muza-field px-0 text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink transition-colors disabled:opacity-50';
-const sectionTitle = 'font-jost text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink';
+const sectionTitle = 'font-cormorant text-[24px] leading-tight font-normal text-muza-ink';
 
 function Radio({ on }: { on: boolean }) {
   return (
@@ -121,6 +122,47 @@ export default function PokladnaPage() {
     deliveryMethod: 'zasilkovna',
     note: '',
   });
+
+  // Přihlášení je dobrovolné: přihlášené zákaznici se údaje vyplní samy
+  const [account, setAccount] = useState<{ firstName: string; lastName: string; email: string; phone?: string | null } | null>(null);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [editContact, setEditContact] = useState(false);
+  const [login, setLogin] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const fillFromAccount = (u: { firstName: string; lastName: string; email: string; phone?: string | null; streetAddress?: string | null; city?: string | null; zipCode?: string | null }) => {
+    setAccount(u);
+    setFormData((prev) => ({
+      ...prev,
+      name: [u.firstName, u.lastName].filter((x) => x && x !== '-').join(' '),
+      email: u.email,
+      phone: u.phone || prev.phone,
+      streetAddress: u.streetAddress || prev.streetAddress,
+      city: u.city || prev.city,
+      zipCode: u.zipCode || prev.zipCode,
+    }));
+  };
+
+  useEffect(() => {
+    fetch('/api/auth/session').then((r) => (r.ok ? r.json() : null)).then((d) => { if (d?.user) fillFromAccount(d.user); }).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLogin = async () => {
+    if (!login.email || !login.password) { setLoginError('Vyplňte e-mail a heslo.'); return; }
+    setLoginLoading(true); setLoginError('');
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: login.email.trim(), password: login.password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.user) { setLoginError('E-mail nebo heslo nesedí.'); return; }
+      fillFromAccount(data.user); setLoginOpen(false);
+    } catch { setLoginError('Přihlášení se nepovedlo, zkuste to znovu.'); }
+    finally { setLoginLoading(false); }
+  };
 
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount, setCouponDiscount] = useState(0);
@@ -256,6 +298,7 @@ export default function PokladnaPage() {
       }
       const { paymentUrl } = await paymentResponse.json();
       if (!paymentUrl) return fail(t('checkout.errors.paymentUrl'));
+      try { sessionStorage.setItem('muza-checkout-contact', JSON.stringify({ email: formData.email.trim(), firstName, lastName, phone: formData.phone.trim() })); } catch {}
       // Košík mažeme až na potvrzovací stránce po zaplacení – zrušená platba ho nesmaže
       window.location.href = paymentUrl;
     } catch (err) {
@@ -272,11 +315,16 @@ export default function PokladnaPage() {
           <div className="mx-auto w-14 h-14 rounded-full border border-muza-ink text-muza-ink flex items-center justify-center">
             <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
           </div>
-          <h1 className="mt-5 font-cormorant text-4xl font-light text-muza-ink">Děkujeme</h1>
+          <h1 className="mt-5 font-cormorant text-[40px] leading-none text-muza-ink">Děkujeme</h1>
           <p className="mt-3 text-sm leading-relaxed text-text-mid">
             Objednávku č. {sent.orderNumber} máme uloženou. Dokončete prosím odeslání zprávy ve WhatsAppu, potvrdíme vám odstín
             a dostupnost a pošleme platební údaje.
           </p>
+          {!account && (() => {
+            const [first, ...rest] = formData.name.trim().split(/\s+/);
+            return <AccountOffer email={formData.email.trim()} firstName={first || ''} lastName={rest.join(' ')} phone={formData.phone.trim()} />;
+          })()}
+          <p className="mt-4 text-[13px] text-muza-soft">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
           <a href={sent.waLink}
             className="mt-8 flex items-center justify-center gap-2.5 h-14 rounded-full bg-muza-ink text-muza-onink text-[15px] hover:opacity-90 transition-opacity">
             <WhatsAppIcon />Otevřít WhatsApp
@@ -355,7 +403,7 @@ export default function PokladnaPage() {
 
         <div className="max-w-5xl mx-auto px-5 lg:px-8 pt-7 pb-36 lg:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16 lg:items-start">
           <form id="checkout" onSubmit={handleSubmit} noValidate className="min-w-0">
-            <h1 className="font-cormorant text-[36px] lg:text-[44px] leading-none font-light text-muza-ink">Dokončení objednávky</h1>
+            <h1 className="font-cormorant text-[40px] lg:text-[48px] leading-none text-muza-ink">Pokladna</h1>
             <p className="mt-2 text-[13px] text-muza-soft">
               Zabere to minutu. {viaWhatsApp ? 'Objednávku dokončíte zprávou ve WhatsAppu.' : 'Platba proběhne bezpečně přes GoPay.'}
             </p>
@@ -364,24 +412,69 @@ export default function PokladnaPage() {
               <div role="alert" className="mt-6 px-4 py-3 text-sm border border-error/30 bg-error/5 text-error rounded-xl">{error}</div>
             )}
 
-            {/* Kontakt */}
+            {/* Kontakt: registrace není potřeba, přihlášení jen jako zkratka */}
             <section aria-labelledby="h-kontakt" className="mt-8">
-              <h2 id="h-kontakt" className={sectionTitle}>Kontakt</h2>
-              <label className="block pt-3">
-                <span className={labelClass}>Jméno a příjmení</span>
-                <input type="text" name="name" autoComplete="name" required value={formData.name} onChange={handleInputChange} disabled={loading}
-                  placeholder="Jana Nováková" className={fieldClass} />
-              </label>
-              <label className="block pt-4">
-                <span className={labelClass}>Telefon</span>
-                <input type="tel" name="phone" autoComplete="tel" required={viaWhatsApp} value={formData.phone} onChange={handleInputChange} disabled={loading}
-                  placeholder="+420" className={fieldClass} />
-              </label>
-              <label className="block pt-4">
-                <span className={labelClass}>E-mail</span>
-                <input type="email" name="email" autoComplete="email" required value={formData.email} onChange={handleInputChange} disabled={loading}
-                  placeholder="vas@email.cz" className={fieldClass} />
-              </label>
+              <div className="flex items-baseline justify-between gap-3">
+                <h2 id="h-kontakt" className={sectionTitle}>Kontakt</h2>
+                {!account && (
+                  <button type="button" onClick={() => { setLoginOpen((v) => !v); setLoginError(''); }}
+                    className="py-1.5 text-sm text-muza-ink underline underline-offset-[3px]">
+                    {loginOpen ? 'Objednat bez účtu' : 'Máte účet? Přihlaste se'}
+                  </button>
+                )}
+              </div>
+
+              {loginOpen && !account && (
+                <div className="mt-3 rounded-2xl border border-muza-line bg-[#F7F3EE] p-4">
+                  <p className="text-sm text-[#45302F]">Přihlaste se a údaje se vyplní samy.</p>
+                  <label className="block pt-3">
+                    <span className={labelClass}>E-mail</span>
+                    <input type="email" autoComplete="username" value={login.email} onChange={(e) => setLogin((l) => ({ ...l, email: e.target.value }))} className={fieldClass} />
+                  </label>
+                  <label className="block pt-4">
+                    <span className={labelClass}>Heslo</span>
+                    <input type="password" autoComplete="current-password" value={login.password} onChange={(e) => setLogin((l) => ({ ...l, password: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleLogin(); } }} className={fieldClass} />
+                  </label>
+                  {loginError && <p role="alert" className="mt-2 text-[13px] text-error">{loginError}</p>}
+                  <button type="button" onClick={handleLogin} disabled={loginLoading}
+                    className="mt-4 w-full h-[50px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium disabled:opacity-50">
+                    {loginLoading ? 'Přihlašuji…' : 'Přihlásit'}
+                  </button>
+                  <Link href="/prihlaseni" className="mt-2.5 inline-block text-[13px] text-muza-soft underline underline-offset-2">Zapomenuté heslo</Link>
+                </div>
+              )}
+
+              {account && !editContact ? (
+                <dl className="mt-2">
+                  {[['Jméno', formData.name], ['E-mail', formData.email], ['Telefon', formData.phone || '—']].map(([k, v], i, all) => (
+                    <div key={k} className={`flex items-center justify-between gap-3 py-3 border-t border-muza-line ${i === all.length - 1 ? 'border-b' : ''}`}>
+                      <dt className="text-sm font-normal text-[#45302F]">{k}</dt>
+                      <dd className="text-[15px] font-normal text-right break-all">{v}</dd>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => setEditContact(true)} className="mt-2 py-1 text-sm text-muza-ink underline underline-offset-[3px]">Upravit údaje</button>
+                </dl>
+              ) : (
+                <>
+                  <label className="block pt-3">
+                    <span className={labelClass}>Jméno a příjmení</span>
+                    <input type="text" name="name" autoComplete="name" required value={formData.name} onChange={handleInputChange} disabled={loading}
+                      placeholder="Jana Nováková" className={fieldClass} />
+                  </label>
+                  <label className="block pt-4">
+                    <span className={labelClass}>Telefon</span>
+                    <input type="tel" name="phone" autoComplete="tel" required={viaWhatsApp} value={formData.phone} onChange={handleInputChange} disabled={loading}
+                      placeholder="+420" className={fieldClass} />
+                  </label>
+                  <label className="block pt-4">
+                    <span className={labelClass}>E-mail</span>
+                    <input type="email" name="email" autoComplete="email" required value={formData.email} onChange={handleInputChange} disabled={loading}
+                      placeholder="vas@email.cz" className={fieldClass} />
+                  </label>
+                  {!account && <p className="mt-3 text-[13px] text-muza-soft">Registrace není potřeba, objednáte i bez účtu.</p>}
+                </>
+              )}
             </section>
 
             {/* Doručení */}

@@ -3,367 +3,200 @@
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { soldByGrams } from '@/lib/sale-rule';
-import { useTranslation, useLanguage } from '@/contexts/LanguageContext';
+import { soldByGrams, GRAM_STEP, PIECE_MIN_GRAMS, PIECE_MAX_GRAMS } from '@/lib/sale-rule';
+
+// Košík ve stylu detailu (návrh B3): culík v oblouku a pod ním tabulka
+// délka / gramáž / cena za gram / zakončení / cena. Gramáž jde upravit přímo tady.
+
+const ENDING_LABELS: Record<string, string> = {
+  NONE: 'Bez zakončení',
+  KERATIN: 'Keratin',
+  STANDARD_KERATIN: 'Keratin',
+  MICRO_KERATIN: 'Mikrokeratin',
+  PASKY_KERATINU: 'Keratinové pásky',
+  TAPES: 'Pásky / tape-in',
+  WEFT: 'Weft',
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  PLATINUM_EDITION: 'Platinum Edition',
+  LUXE: 'Luxe',
+  BABY_SHADES: 'Baby Shades',
+  STANDARD: 'Standard',
+};
+
+// Doplňující údaje o kusu z detailu (fotka, druh, název odstínu)
+interface PieceInfo { imageUrl?: string; isDyed?: boolean; shadeName?: string | null }
+
+const formatPrice = (price: number, decimals = false) =>
+  new Intl.NumberFormat('cs-CZ', {
+    style: 'currency',
+    currency: 'CZK',
+    minimumFractionDigits: decimals ? 2 : 0,
+    maximumFractionDigits: decimals ? 2 : 0,
+  }).format(price);
+
+const rowClass = 'flex items-center justify-between gap-3 py-3 border-t border-muza-line';
+const dtClass = 'text-sm font-normal text-[#45302F]';
+const ddClass = 'text-[15px] font-normal text-text-dark text-right';
 
 export default function CartPage() {
-  const { items, updateQuantity, updateGrams, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const { items, updateGrams, removeFromCart, getTotalPrice } = useCart();
+  const [info, setInfo] = useState<Record<string, PieceInfo>>({});
 
-  // Miniatury: položky přidané dřív fotku nemají uloženou, dohledáme ji z detailu kusu
-  const [thumbs, setThumbs] = useState<Record<string, string>>({});
   useEffect(() => {
-    const missing = items.filter((i) => !i.imageUrl && !thumbs[i.skuId]).map((i) => i.skuId);
+    const missing = items.map((i) => i.skuId).filter((id) => !info[id]);
     if (!missing.length) return;
     let alive = true;
     Promise.all(missing.map((id) => fetch(`/api/sku/public/${id}`).then((r) => (r.ok ? r.json() : null)).catch(() => null)))
       .then((list) => {
         if (!alive) return;
-        const next: Record<string, string> = {};
-        list.forEach((sku, i) => { const url = sku?.imageUrl || sku?.images?.[0]; if (url) next[missing[i]] = url; });
-        if (Object.keys(next).length) setThumbs((t) => ({ ...t, ...next }));
+        const next: Record<string, PieceInfo> = {};
+        list.forEach((sku, i) => {
+          next[missing[i]] = { imageUrl: sku?.imageUrl || sku?.images?.[0], isDyed: sku?.isDyed, shadeName: sku?.shadeName };
+        });
+        setInfo((prev) => ({ ...prev, ...next }));
       });
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
-  const [isClearing, setIsClearing] = useState(false);
-  const { t } = useTranslation();
-  const { language } = useLanguage();
-
-  const formatPrice = (price: number) => {
-    const locale = language === 'cs' ? 'cs-CZ' : 'en-US';
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: 'CZK',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
-  const getEndingLabel = (ending: string) => {
-    const key = `cart.endings.${ending}`;
-    const translated = t(key);
-    // If translation key not found, return a clean fallback
-    if (translated === key || translated.includes('.')) {
-      const fallbacks: Record<string, string> = {
-        NONE: 'Bez zakončení',
-        none: 'Bez zakončení',
-        KERATIN: 'Keratin',
-        keratin: 'Keratin',
-        MICRO_KERATIN: 'Mikrokeratin',
-        microkeratin: 'Mikrokeratin',
-        NANO_TAPES: 'Nano tapes',
-        nano_tapes: 'Nano tapes',
-        TAPES: 'Pásky / Tape-in',
-        WEFT: 'Vlasové tresy',
-        vlasove_tresy: 'Vlasové tresy',
-        PASKY_KERATINU: 'Pásky keratinu',
-        STANDARD_KERATIN: 'Keratin standard',
-      };
-      return fallbacks[ending] || ending;
-    }
-    return translated;
-  };
-
-  const handleClearCart = () => {
-    if (confirm(t('cart.clearCartConfirm'))) {
-      setIsClearing(true);
-      clearCart();
-      setTimeout(() => setIsClearing(false), 500);
-    }
-  };
 
   const subtotal = getTotalPrice();
+  const count = items.length;
 
-  // ── Empty cart ──────────────────────────────────────────────────────────
-  if (items.length === 0) {
+  if (count === 0) {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-3xl mx-auto px-6 py-16">
-          {/* Breadcrumb */}
-          <nav className="text-[11px] tracking-[0.15em] uppercase font-light mb-12" style={{ color: 'var(--text-soft)' }}>
-            <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
-            <span className="mx-2">—</span>
-            <span style={{ color: 'var(--text-mid)' }}>Košík</span>
-          </nav>
-
-          <div className="text-center py-20">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center justify-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              KOŠÍK
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            </div>
-            <h1 className="font-cormorant text-[clamp(32px,4vw,48px)] font-light leading-[1.1] mb-4" style={{ color: 'var(--text-dark)' }}>
-              Váš košík je prázdný
-            </h1>
-            <p className="text-sm font-light mb-10" style={{ color: 'var(--text-soft)' }}>
-              Prozkoumejte naši kolekci prémiových vlasů
-            </p>
-            <Link
-              href="/vlasy-k-prodlouzeni"
-              className="inline-block px-10 py-3.5 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90"
-              style={{ background: 'var(--burgundy)' }}
-            >
-              Prozkoumat kolekci
-            </Link>
-          </div>
+      <div className="min-h-screen bg-muza-ivory text-text-dark font-light">
+        <div className="max-w-md mx-auto px-5 py-20 text-center">
+          <h1 className="font-cormorant text-[40px] leading-none text-muza-ink">Košík je prázdný</h1>
+          <p className="mt-3 text-[15px] text-[#45302F]">Vyberte si culík a vraťte se sem.</p>
+          <Link href="/katalog"
+            className="mt-8 inline-flex items-center justify-center h-[52px] px-8 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity">
+            Vybrat culík
+          </Link>
         </div>
       </div>
     );
   }
 
-  // ── Cart with items ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen" style={{ background: 'var(--ivory)' }}>
-      <div className="max-w-6xl mx-auto px-6 py-16">
+    <div className="min-h-screen bg-muza-ivory text-text-dark font-light pb-32 lg:pb-16">
+      <div className="max-w-5xl mx-auto px-4 lg:px-8 pt-6 lg:pt-12 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16 lg:items-start">
+        <div className="min-w-0">
+          <h1 className="font-cormorant text-[40px] lg:text-[48px] leading-none text-muza-ink">Košík</h1>
+          <p className="mt-1 text-sm text-[#45302F]">{count === 1 ? '1 položka' : count < 5 ? `${count} položky` : `${count} položek`}</p>
 
-        {/* Breadcrumb */}
-        <nav className="text-[11px] tracking-[0.15em] uppercase font-light mb-12" style={{ color: 'var(--text-soft)' }}>
-          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
-          <span className="mx-2">—</span>
-          <span style={{ color: 'var(--text-mid)' }}>Košík</span>
-        </nav>
+          <ul className="mt-2">
+            {items.map((item) => {
+              const extra = info[item.skuId] ?? {};
+              const img = item.imageUrl || extra.imageUrl;
+              const title = (item.skuName || 'Vlasy').split(' · ')[0];
+              const druh = typeof extra.isDyed === 'boolean' ? (extra.isDyed ? 'Středoevropské' : 'Panenské') : null;
+              const kind = [druh, item.customerCategory ? CATEGORY_LABELS[item.customerCategory] : null].filter(Boolean).join(' · ');
+              const editable = soldByGrams({ saleMode: item.saleMode, customerCategory: item.customerCategory }) && item.grams > 0;
+              const isPiece = item.saleMode !== 'BULK_G';
+              const canDec = item.grams > PIECE_MIN_GRAMS;
+              const canInc = !isPiece || item.grams < PIECE_MAX_GRAMS;
+              return (
+                <li key={item.skuId} className="pt-5 mt-5 border-t border-muza-line first:border-t-0 first:mt-3">
+                  <div className="flex gap-3.5">
+                    <Link href={`/sku-detail/${item.skuId}`} aria-label={`Zobrazit ${title}`}
+                      className="flex-none w-[76px] h-[100px] rounded-t-full rounded-b-[8px] border border-muza-ink p-[3px]">
+                      <span className="block w-full h-full rounded-t-full rounded-b-[6px] overflow-hidden bg-muza-mocha">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        {img ? <img src={img} alt="" className="w-full h-full object-cover" /> : null}
+                      </span>
+                    </Link>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <Link href={`/sku-detail/${item.skuId}`} className="font-cormorant text-[26px] leading-tight text-muza-ink [font-variant-numeric:lining-nums]">{title}</Link>
+                        <button type="button" onClick={() => removeFromCart(item.skuId)}
+                          className="text-[13px] text-[#45302F] underline underline-offset-2 py-1">Odebrat</button>
+                      </div>
+                      {kind && <p className="text-[13px] text-[#45302F]">{kind}</p>}
+                      {(item.shade || extra.shadeName) && (
+                        <p className="text-[13px] text-[#45302F]">
+                          odstín {item.shade && <b className="font-semibold text-text-dark">{item.shade}</b>}{item.shade && extra.shadeName ? ' · ' : ''}{extra.shadeName}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-        {/* Page header */}
-        <div className="flex items-end justify-between mb-10 pb-6 border-b" style={{ borderColor: 'var(--warm-beige)' }}>
-          <div>
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              OBJEDNÁVKA
-            </div>
-            <h1 className="font-cormorant text-[clamp(28px,3vw,42px)] font-light leading-[1.1]" style={{ color: 'var(--text-dark)' }}>
-              Košík
-              <span className="text-lg font-light ml-3" style={{ color: 'var(--text-soft)' }}>
-                ({items.length} {items.length === 1 ? 'položka' : items.length < 5 ? 'položky' : 'položek'})
-              </span>
-            </h1>
-          </div>
-          <button
-            onClick={handleClearCart}
-            disabled={isClearing}
-            className="text-[11px] tracking-[0.1em] uppercase transition-all hover:underline disabled:opacity-40"
-            style={{ color: 'var(--text-soft)' }}
-          >
-            Vyprázdnit košík
-          </button>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-10">
-
-          {/* ── Cart items ── */}
-          <div className="lg:col-span-2 space-y-0">
-            {items.map((item, index) => (
-              <div
-                key={item.skuId}
-                className="py-8"
-                style={{
-                  borderBottom: index < items.length - 1 ? `1px solid var(--warm-beige)` : 'none'
-                }}
-              >
-                <div className="flex gap-4 sm:gap-6">
-                  {/* Miniatura kusu, ať zákaznice vidí, co přesně kupuje */}
-                  <Link href={`/sku-detail/${item.skuId}`} aria-label={`Zobrazit ${item.skuName || 'produkt'}`}
-                    className="flex-none w-[76px] h-[100px] sm:w-[96px] sm:h-[128px] rounded-t-full rounded-b-xl overflow-hidden bg-muza-mocha">
-                    {item.imageUrl || thumbs[item.skuId] ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.imageUrl || thumbs[item.skuId]} alt="" className="w-full h-full object-cover" />
+                  <dl className="mt-3">
+                    {item.selectedLength ? (
+                      <div className={rowClass}><dt className={dtClass}>Délka</dt><dd className={ddClass}><b className="font-semibold">{item.selectedLength}</b> cm</dd></div>
                     ) : null}
-                  </Link>
-                  <div className="flex-1 min-w-0">
-
-                    {/* Product name */}
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div className="min-w-0">
-                        <h3 className="font-cormorant text-xl font-light leading-tight" style={{ color: 'var(--text-dark)' }}>
-                          {item.skuName}
-                          {item.shade && (
-                            <span className="text-sm ml-2" style={{ color: 'var(--text-soft)' }}>
-                              · #{item.shade}
-                            </span>
+                    {item.grams > 0 && (
+                      <div className={rowClass}>
+                        <dt className={dtClass}>Gramáž</dt>
+                        <dd className="flex items-center gap-2.5">
+                          {editable ? (
+                            <>
+                              <button type="button" aria-label={`Ubrat ${GRAM_STEP} g`} disabled={!canDec}
+                                onClick={() => updateGrams(item.skuId, item.grams - GRAM_STEP)}
+                                className="w-8 h-8 rounded-full border border-muza-ink text-muza-ink leading-none disabled:opacity-30">−</button>
+                              <span className="min-w-[60px] text-center text-[15px]" aria-live="polite"><b className="font-semibold">{item.grams}</b> g</span>
+                              <button type="button" aria-label={`Přidat ${GRAM_STEP} g`} disabled={!canInc}
+                                onClick={() => updateGrams(item.skuId, item.grams + GRAM_STEP)}
+                                className="w-8 h-8 rounded-full border border-muza-ink text-muza-ink leading-none disabled:opacity-30">+</button>
+                            </>
+                          ) : (
+                            <span className="text-[15px]"><b className="font-semibold">{item.grams}</b> g · celý culík</span>
                           )}
-                        </h3>
+                        </dd>
                       </div>
-                      <div className="text-right flex-shrink-0">
-                        <div className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>
-                          {formatPrice(item.lineGrandTotal)}
-                        </div>
-                        {/* Cena za gram dobře čitelná, ne drobným písmem */}
-                        {item.pricePerGram > 0 && (item.saleMode === 'BULK_G' || item.grams > 0) && (
-                          <div className="text-[15px] font-normal mt-1 whitespace-nowrap" style={{ color: 'var(--text-dark)' }}>
-                            {formatPrice(item.pricePerGram)} / g
-                          </div>
-                        )}
-                      </div>
+                    )}
+                    {item.pricePerGram > 0 && item.grams > 0 && (
+                      // Cena za gram dobře čitelná, ne drobným písmem
+                      <div className={rowClass}><dt className={dtClass}>Cena za gram</dt><dd className={ddClass}>{formatPrice(item.pricePerGram, true)} / g</dd></div>
+                    )}
+                    <div className={rowClass}>
+                      <dt className={dtClass}>Zakončení</dt>
+                      <dd className={ddClass}>
+                        {ENDING_LABELS[item.ending] || item.ending}
+                        {item.assemblyFeeTotal > 0 && <span className="block text-[13px] text-[#45302F]">{formatPrice(item.assemblyFeeTotal)}</span>}
+                      </dd>
                     </div>
-
-                    {/* Product details */}
-                    <div className="space-y-1.5 mb-6">
-                      <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                        <span style={{ color: 'var(--text-soft)' }}>Zakončení:</span>
-                        <span>{getEndingLabel(item.ending)}</span>
-                      </div>
-                      {item.selectedLength ? (
-                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                          <span style={{ color: 'var(--text-soft)' }}>Délka:</span>
-                          <span>{item.selectedLength} cm</span>
-                        </div>
-                      ) : null}
-                      {soldByGrams({ saleMode: item.saleMode, customerCategory: item.customerCategory }) ? (
-                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                          <span style={{ color: 'var(--text-soft)' }}>Gramáž:</span>
-                          <span>{item.grams}g @ {formatPrice(item.pricePerGram)}/g</span>
-                        </div>
-                      ) : (
-                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                          <span style={{ color: 'var(--text-soft)' }}>Počet:</span>
-                          <span>{item.quantity} ks @ {formatPrice(item.lineTotal / item.quantity)}</span>
-                        </div>
-                      )}
-                      {item.assemblyFeeTotal > 0 && (
-                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                          <span style={{ color: 'var(--text-soft)' }}>Cena zakončení:</span>
-                          <span>{formatPrice(item.assemblyFeeTotal)}{item.assemblyFeeType === 'PER_GRAM' ? ` (${item.grams} g × ${formatPrice(item.assemblyFeeCzk)})` : ''}</span>
-                        </div>
-                      )}
+                    <div className={`${rowClass} border-b`}>
+                      <dt className={dtClass}>Cena</dt>
+                      <dd className="font-jost font-semibold text-[18px] text-muza-ink tabular-nums">{formatPrice(item.lineGrandTotal)}</dd>
                     </div>
-
-                    {/* Controls row */}
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                      {/* Gram / quantity selector */}
-                      {item.saleMode === 'BULK_G' ? (
-                        <div className="flex items-center gap-3">
-                          <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž</span>
-                          <div className="flex items-center border" style={{ borderColor: 'var(--warm-beige)' }}>
-                            <button
-                              onClick={() => item.grams > 50 && updateGrams(item.skuId, item.grams - 50)}
-                              disabled={item.grams <= 50}
-                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory disabled:opacity-30 disabled:cursor-not-allowed"
-                              style={{ color: 'var(--text-dark)' }}
-                            >
-                              −50g
-                            </button>
-                            <span className="px-4 py-2 min-w-[4.5rem] text-center text-sm font-medium border-x" style={{ borderColor: 'var(--warm-beige)', color: 'var(--text-dark)' }}>
-                              {item.grams}g
-                            </span>
-                            <button
-                              onClick={() => updateGrams(item.skuId, item.grams + 50)}
-                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory"
-                              style={{ color: 'var(--text-dark)' }}
-                            >
-                              +50g
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-3">
-                          <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Počet</span>
-                          <div className="flex items-center border" style={{ borderColor: 'var(--warm-beige)' }}>
-                            <button
-                              onClick={() => item.quantity > 1 && updateQuantity(item.skuId, item.quantity - 1)}
-                              disabled={item.quantity <= 1}
-                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory disabled:opacity-30 disabled:cursor-not-allowed"
-                              style={{ color: 'var(--text-dark)' }}
-                            >
-                              −
-                            </button>
-                            <span className="px-4 py-2 min-w-[3rem] text-center text-sm font-medium border-x" style={{ borderColor: 'var(--warm-beige)', color: 'var(--text-dark)' }}>
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => updateQuantity(item.skuId, item.quantity + 1)}
-                              className="px-4 py-2 text-sm transition-colors hover:bg-ivory"
-                              style={{ color: 'var(--text-dark)' }}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Remove */}
-                      <button
-                        onClick={() => {
-                          if (confirm(t('cart.removeConfirm'))) removeFromCart(item.skuId);
-                        }}
-                        className="text-[11px] tracking-[0.1em] uppercase transition-all hover:underline flex items-center gap-1.5"
-                        style={{ color: 'var(--text-soft)' }}
-                      >
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Odebrat
-                      </button>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* ── Order summary ── */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 p-8" style={{ background: 'var(--white, #fff)', border: '1px solid var(--warm-beige)' }}>
-              <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-                <span className="block w-6 h-px" style={{ background: 'var(--accent)' }} />
-                SOUHRN
-              </div>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between items-center text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                  <span>Mezisoučet</span>
-                  <span>{formatPrice(subtotal)}</span>
-                </div>
-                <div className="flex justify-between items-center text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                  <span>Doprava</span>
-                  <span style={{ color: 'var(--text-soft)' }}>dle dopravce</span>
-                </div>
-              </div>
-
-              <div className="pt-5 mb-8 border-t" style={{ borderColor: 'var(--warm-beige)' }}>
-                <div className="flex justify-between items-center">
-                  <span className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>Celkem</span>
-                  <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>{formatPrice(subtotal)}</span>
-                </div>
-                <p className="text-[11px] mt-1.5" style={{ color: 'var(--text-soft)' }}>Doprava bude vypočítána v pokladně</p>
-              </div>
-
-              {/* CTA */}
-              <div className="space-y-3">
-                <Link
-                  href="/pokladna"
-                  className="block w-full text-center py-4 text-[11px] tracking-[0.15em] uppercase font-medium text-white transition-all hover:opacity-90"
-                  style={{ background: 'var(--burgundy)' }}
-                >
-                  Pokračovat k pokladně
-                </Link>
-                <Link
-                  href="/vlasy-k-prodlouzeni"
-                  className="block w-full text-center py-3.5 text-[11px] tracking-[0.15em] uppercase font-medium transition-all hover:opacity-70 border"
-                  style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
-                >
-                  Pokračovat v nákupu
-                </Link>
-              </div>
-
-              {/* Trust signals */}
-              <div className="mt-8 pt-6 border-t space-y-2.5" style={{ borderColor: 'var(--warm-beige)' }}>
-                {[
-                  'Bezpečná platba',
-                  'Dodání do 48 h',
-                  'Prémiová kvalita vlasů',
-                ].map((label) => (
-                  <div key={label} className="flex items-center gap-2.5 text-[11px] font-light" style={{ color: 'var(--text-soft)' }}>
-                    <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {label}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
+                  </dl>
+                </li>
+              );
+            })}
+          </ul>
         </div>
+
+        <aside aria-label="Souhrn košíku" className="mt-6 lg:mt-14 lg:sticky lg:top-28">
+          <div className="rounded-2xl border border-muza-line bg-muza-cream p-4 flex flex-col gap-2 text-sm">
+            <div className="flex justify-between"><span className="text-[#45302F]">Mezisoučet</span><span className="tabular-nums">{formatPrice(subtotal)}</span></div>
+            <div className="flex justify-between gap-3"><span className="text-[#45302F]">Doprava</span><span className="text-[#45302F] text-right">vyberete v dalším kroku</span></div>
+          </div>
+          <div className="hidden lg:block mt-5">
+            <div className="flex items-baseline justify-between">
+              <span className="text-[13px] text-[#45302F]">Celkem za zboží</span>
+              <span className="font-jost font-semibold text-[28px] text-muza-ink tabular-nums">{formatPrice(subtotal)}</span>
+            </div>
+            <Link href="/pokladna"
+              className="mt-4 flex items-center justify-center h-[52px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity">
+              K pokladně
+            </Link>
+          </div>
+          <Link href="/katalog" className="mt-4 inline-block py-1.5 text-sm text-muza-ink underline underline-offset-[3px]">Pokračovat v nákupu</Link>
+        </aside>
+      </div>
+
+      {/* Mobil: spodní lišta se součtem */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="text-[12px] text-[#45302F]">Celkem za zboží</div>
+          <div className="font-jost font-semibold text-[24px] leading-tight text-muza-ink whitespace-nowrap tabular-nums">{formatPrice(subtotal)}</div>
+        </div>
+        <Link href="/pokladna"
+          className="h-[52px] px-6 rounded-full bg-muza-ink text-muza-onink text-sm font-medium flex items-center hover:opacity-90">
+          K pokladně
+        </Link>
       </div>
     </div>
   );

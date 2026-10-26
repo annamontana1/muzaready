@@ -54,6 +54,13 @@ export function SkuCartProvider({ children }: { children: ReactNode }) {
     setItems((prevItems) => {
       const existingIndex = prevItems.findIndex((item) => item.skuId === newItem.skuId);
 
+      if (existingIndex > -1 && newItem.saleMode !== 'BULK_G') {
+        // Kus (culík) je v košíku jen jednou: nové nastavení (délka, gramáž, zakončení) nahradí to staré
+        const updated = [...prevItems];
+        updated[existingIndex] = { ...newItem, quantity: 1, addedAt: prevItems[existingIndex].addedAt };
+        return updated;
+      }
+
       if (existingIndex > -1) {
         // Item already exists - update quantity and grams
         const updated = [...prevItems];
@@ -114,7 +121,9 @@ export function SkuCartProvider({ children }: { children: ReactNode }) {
 
     setItems((prevItems) =>
       prevItems.map((item) => {
-        if (item.skuId !== skuId || item.saleMode !== 'BULK_G') {
+        // Po gramech jde upravit BULK i culík prodávaný po gramech; Baby Shades je vždy celý culík
+        const byGrams = item.saleMode === 'BULK_G' || item.customerCategory !== 'BABY_SHADES';
+        if (item.skuId !== skuId || !byGrams) {
           return item;
         }
 

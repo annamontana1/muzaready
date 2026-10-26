@@ -6,6 +6,7 @@ import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import PieceAbout from '@/components/product/PieceAbout';
+import AddedSheet from '@/components/product/AddedSheet';
 import SimilarPieces from '@/components/product/SimilarPieces';
 import { useSkuCart } from '@/contexts/SkuCartContext';
 import { GRAM_STEP, PIECE_DEFAULT_GRAMS, PIECE_DEFAULT_LENGTH, PIECE_LENGTHS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, pieceGramOptions, pieceGramsLeft, soldByGrams } from '@/lib/sale-rule';
@@ -73,7 +74,7 @@ export default function SkuDetailPage() {
   const params = useParams();
   const router = useRouter();
   const skuId = params.id as string;
-  const { addToCart } = useSkuCart();
+  const { addToCart, getTotalPrice } = useSkuCart();
 
   const [sku, setSku] = useState<Sku | null>(null);
   const [loading, setLoading] = useState(true);
@@ -129,6 +130,7 @@ export default function SkuDetailPage() {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [lengthOpen, setLengthOpen] = useState(false);
+  const [addedOpen, setAddedOpen] = useState(false);
 
   useEffect(() => {
     fetchSku();
@@ -241,7 +243,8 @@ export default function SkuDetailPage() {
         imageUrl: sku.imageUrl || sku.images?.[0] || undefined,
       });
     }
-    router.push('/kosik');
+    // Místo přechodu do košíku vyjede okno „Přidáno do košíku“ (návrh B3)
+    setAddedOpen(true);
   };
 
   const formatPrice = (price: number, forceDecimals = false) => {
@@ -600,6 +603,15 @@ export default function SkuDetailPage() {
         <LengthSheet open={lengthOpen} lengths={[sku.lengthCm]} value={sku.lengthCm}
           onChange={() => {}} onClose={() => setLengthOpen(false)} />
       ) : null}
+
+      <AddedSheet open={addedOpen} onClose={() => setAddedOpen(false)} onGoCart={() => router.push('/kosik')}
+        imageUrl={allImages[0]} title={title} shade={sku.shade} shadeName={sku.shadeName}
+        rows={[
+          ...(lengthCm ? [{ k: 'Délka', v: <><b className="font-semibold">{lengthCm}</b> cm · {hairZone(lengthCm)}</> }] : []),
+          { k: 'Gramáž', v: <><b className="font-semibold">{quote?.grams ?? ''}</b> g{!isBulk && !pieceByGrams ? ' · celý culík' : ''}</> },
+          { k: 'Zakončení', v: <>{endingLabel}</> },
+        ]}
+        cartTotal={formatPrice(getTotalPrice())} />
 
       {/* ── LIGHTBOX ── */}
       {lightboxOpen && currentImage && (
