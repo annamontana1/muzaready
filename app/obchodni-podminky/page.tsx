@@ -123,13 +123,18 @@ export default function ObchodniPodminkyPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-warm-beige px-3 py-2">Zásilkovna (výdejní místo)</td>
-                  <td className="border border-warm-beige px-3 py-2">79 Kč</td>
+                  <td className="border border-warm-beige px-3 py-2">Zásilkovna (výdejní místo nebo Z-BOX)</td>
+                  <td className="border border-warm-beige px-3 py-2">89 Kč</td>
                   <td className="border border-warm-beige px-3 py-2">2–3 pracovní dny</td>
                 </tr>
                 <tr className="bg-soft-cream">
-                  <td className="border border-warm-beige px-3 py-2">PPL – doručení na adresu</td>
-                  <td className="border border-warm-beige px-3 py-2">119 Kč</td>
+                  <td className="border border-warm-beige px-3 py-2">DPD výdejní místo</td>
+                  <td className="border border-warm-beige px-3 py-2">68 Kč</td>
+                  <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
+                </tr>
+                <tr>
+                  <td className="border border-warm-beige px-3 py-2">Doručení na adresu (kurýr)</td>
+                  <td className="border border-warm-beige px-3 py-2">129 Kč</td>
                   <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
                 </tr>
                 <tr className="bg-soft-cream">

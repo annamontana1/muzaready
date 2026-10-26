@@ -44,10 +44,10 @@ const CARD_ENABLED = process.env.NEXT_PUBLIC_PAYMENT_MODE === 'gopay';
 const WHATSAPP_NUMBER = '420728722880';
 
 const DELIVERY_OPTIONS = [
-  { value: 'zasilkovna', label: 'Zásilkovna', desc: 'Výdejní místo, ČR a SK', price: 65 },
-  { value: 'dpd', label: 'Kurýr DPD', desc: 'Na adresu, 1–2 pracovní dny', price: 99 },
-  { value: 'ppl', label: 'Kurýr PPL', desc: 'Na adresu, 1–2 pracovní dny', price: 99 },
-  { value: 'standard', label: 'Česká pošta', desc: 'Na adresu, 2–4 pracovní dny', price: 150 },
+  // Ceny musí odpovídat výpočtu v app/api/orders/route.ts
+  { value: 'zasilkovna', label: 'Zásilkovna', desc: 'Výdejní místo nebo Z-BOX, ČR a SK', price: 89 },
+  { value: 'dpd', label: 'DPD výdejní místo', desc: 'DPD Pickup, 1–2 pracovní dny', price: 68 },
+  { value: 'standard', label: 'Doručení na adresu', desc: 'Kurýrem, 1–2 pracovní dny', price: 129 },
   { value: 'showroom', label: 'Osobní odběr', desc: 'Showroom Revoluční 8, Praha 1', price: 0 },
 ] as const;
 
@@ -177,6 +177,7 @@ export default function PokladnaPage() {
   const delivery = DELIVERY_OPTIONS.find((o) => o.value === formData.deliveryMethod) ?? DELIVERY_OPTIONS[0];
   const shipping = delivery.price;
   const needsAddress = ['standard', 'dpd', 'ppl'].includes(formData.deliveryMethod);
+  const dpdPoint = formData.deliveryMethod === 'dpd'; // adresa výdejního místa DPD, které si zákaznice vybrala
   const grandTotal = subtotal - couponDiscount + shipping;
   const byTransfer = payment === 'transfer';
 
@@ -511,7 +512,7 @@ export default function PokladnaPage() {
                       {on && needsAddress && (
                         <div className="ml-[34px] mb-4 grid grid-cols-[1fr_96px] gap-x-3.5">
                           <label className="col-span-2">
-                            <span className={labelClass}>Ulice a číslo</span>
+                            <span className={labelClass}>{dpdPoint ? 'Výdejní místo DPD (název nebo ulice)' : 'Ulice a číslo'}</span>
                             <input type="text" name="streetAddress" autoComplete="street-address" required value={formData.streetAddress}
                               onChange={handleInputChange} disabled={loading} className={fieldClass} />
                           </label>

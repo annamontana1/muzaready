@@ -54,11 +54,11 @@ export async function POST(request: NextRequest) {
     // Calculate shipping cost (frontend should send this, but we calculate as fallback)
     const deliveryMethod = shippingInfo?.deliveryMethod || 'standard';
     const shippingCost =
-      deliveryMethod === 'zasilkovna' ? 65 :
-      deliveryMethod === 'dpd' ? 99 :
-      deliveryMethod === 'ppl' ? 99 :
+      deliveryMethod === 'zasilkovna' ? 89 :
+      deliveryMethod === 'dpd' ? 68 : // DPD výdejní místo
+      deliveryMethod === 'ppl' ? 129 :
       deliveryMethod === 'showroom' ? 0 :
-      150; // standard / fallback
+      129; // doručení na adresu (standard) / fallback
 
     // ========================================================================
     // ATOMIC STOCK RESERVATION - prevents overselling
