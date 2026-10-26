@@ -4,6 +4,9 @@ import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { Product } from '@/types/product';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
 export const runtime = 'nodejs';
+// Vždy číst z databáze za běhu; bez toho Next předrenderuje odpověď při buildu
+// (kdy DB nemusí být dostupná) a katalog pak zůstane prázdný
+export const dynamic = 'force-dynamic';
 
 
 /**
