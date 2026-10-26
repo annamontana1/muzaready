@@ -22,3 +22,8 @@ These defaults are optimized for AI coding agents (and humans) working on apps t
   needed. Always curl https://ai-gateway.vercel.sh/v1/models first; never trust model IDs from memory
 - For durable agent loops or untrusted code: use Workflow (pause/resume/state) + Sandbox; use Vercel MCP for secure infra access
 <!-- VERCEL BEST PRACTICES END -->
+
+## Pravidla od majitelky (Múza Hair)
+
+- Po každé změně, která se nahraje na náhled (Vercel preview projektu muzaready-bahy), VŽDY pošli majitelce odkaz na mobil na nejnovější deploy, bez vyzývání. Počkej, až je deploy READY, a pošli konkrétní stránky, kterých se změna týká (např. `/`, `/katalog`). Odkazy se otevírají přihlášením do Vercelu.
+- Komunikace s majitelkou je česky.
