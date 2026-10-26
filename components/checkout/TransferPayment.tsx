@@ -2,21 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
+import { resolveIban, spaydString, variableSymbol } from '@/lib/qr-payment';
 
 // Platba převodem hned po objednávce: číslo účtu, částka, variabilní symbol a QR platba
 // (formát SPAYD, který čtou české mobilní banky). Vlasy se odesílají po připsání platby.
-
-// České číslo účtu (předčíslí-číslo/kód banky) → IBAN
-function czIban(account: string): string | null {
-  const m = account.replace(/\s/g, '').match(/^(?:(\d{1,6})-)?(\d{2,10})\/(\d{4})$/);
-  if (!m) return null;
-  const bban = m[3] + (m[1] || '').padStart(6, '0') + m[2].padStart(10, '0');
-  // kontrolní číslice: BBAN + "CZ00" (C=12, Z=35), mod 97
-  const numeric = bban + '123500';
-  let rest = 0;
-  for (const ch of numeric) rest = (rest * 10 + Number(ch)) % 97;
-  return `CZ${String(98 - rest).padStart(2, '0')}${bban}`;
-}
 
 const formatPrice = (n: number) =>
   new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
@@ -29,13 +18,12 @@ export default function TransferPayment({ orderNumber, amount }: { orderNumber: 
     fetch('/api/payment-info').then((r) => (r.ok ? r.json() : { account: null, iban: null })).then(setInfo).catch(() => setInfo({ account: null, iban: null }));
   }, []);
 
-  const iban = info ? (info.iban?.replace(/\s/g, '') || (info.account ? czIban(info.account) : null)) : null;
-  const vs = String(orderNumber).replace(/\D/g, '').slice(0, 10);
+  const iban = info ? resolveIban(info.account, info.iban) : null;
+  const vs = variableSymbol(orderNumber);
 
   useEffect(() => {
     if (!iban) return;
-    const spayd = `SPD*1.0*ACC:${iban}*AM:${amount.toFixed(2)}*CC:CZK*X-VS:${vs}*MSG:MUZA HAIR OBJEDNAVKA ${vs}`;
-    QRCode.toDataURL(spayd, { margin: 1, width: 360, color: { dark: '#1C0C0F', light: '#FFFFFF' } }).then(setQr).catch(() => setQr(''));
+    QRCode.toDataURL(spaydString(iban, amount, vs), { margin: 1, width: 360, color: { dark: '#1C0C0F', light: '#FFFFFF' } }).then(setQr).catch(() => setQr(''));
   }, [iban, amount, vs]);
 
   if (!info) return null;

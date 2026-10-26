@@ -9,7 +9,9 @@ export const sendOrderConfirmationEmail = async (
   orderId: string,
   items: any[],
   total: number,
-  orderNumber?: number
+  orderNumber?: number,
+  // platba převodem předem: údaje a QR platba přímo v e-mailu
+  transfer?: { account: string | null; iban: string | null }
 ) => {
   const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
@@ -24,11 +26,33 @@ export const sendOrderConfirmationEmail = async (
           `<tr>
             <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.variant}</td>
             <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${item.price.toLocaleString('cs-CZ')} Kč</td>
-            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">${(item.price * item.quantity).toLocaleString('cs-CZ')} Kč</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">${Number(item.price).toLocaleString('cs-CZ')} Kč</td>
           </tr>`
       )
       .join('');
+
+    // QR platba jako vložený obrázek (cid), data: URI by Gmail nezobrazil
+    let transferHtml = '';
+    let qrAttachment: { filename: string; content: Buffer; contentId: string } | null = null;
+    if (transfer) {
+      const { resolveIban, spaydString, variableSymbol } = await import('./qr-payment');
+      const iban = resolveIban(transfer.account, transfer.iban);
+      const vs = variableSymbol(orderNum);
+      if (iban) {
+        const QRCode = (await import('qrcode')).default;
+        qrAttachment = { filename: 'qr-platba.png', content: await QRCode.toBuffer(spaydString(iban, total, vs), { margin: 1, width: 360 }), contentId: 'qr-platba' };
+      }
+      transferHtml = iban || transfer.account ? `
+              <h3>Platba předem převodem</h3>
+              <p>Naskenujte QR kód v mobilní bance, údaje se vyplní samy. Zboží odešleme (nebo připravíme k vyzvednutí) hned po připsání platby.</p>
+              ${qrAttachment ? '<p style="text-align:center;"><img src="cid:qr-platba" alt="QR platba" width="180" height="180" style="border:1px solid #eee;"></p>' : ''}
+              <table>
+                <tr><td style="padding: 6px 8px;">Částka</td><td style="padding: 6px 8px; text-align: right; font-weight: bold;">${total.toLocaleString('cs-CZ')} Kč</td></tr>
+                <tr><td style="padding: 6px 8px;">Číslo účtu</td><td style="padding: 6px 8px; text-align: right;">${transfer.account || iban}</td></tr>
+                ${iban ? `<tr><td style="padding: 6px 8px;">IBAN</td><td style="padding: 6px 8px; text-align: right;">${iban}</td></tr>` : ''}
+                <tr><td style="padding: 6px 8px;">Variabilní symbol</td><td style="padding: 6px 8px; text-align: right; font-weight: bold;">${vs}</td></tr>
+              </table>` : '<p>Platební údaje vám pošleme v samostatném e-mailu.</p>';
+    }
 
     const html = `
       <!DOCTYPE html>
@@ -57,7 +81,7 @@ export const sendOrderConfirmationEmail = async (
               <p>Děkujeme vám za vaši objednávku v obchodě <strong>Múza Hair</strong>.</p>
 
               <div class="order-id">
-                <strong>Číslo objednávky:</strong> ${orderId}
+                <strong>Číslo objednávky:</strong> ${orderNum}
               </div>
 
               <h3>Vámi objednaná zboží:</h3>
@@ -65,21 +89,20 @@ export const sendOrderConfirmationEmail = async (
                 <thead>
                   <tr>
                     <th>Produkt</th>
-                    <th>Počet</th>
+                    <th>Množství</th>
                     <th>Cena</th>
-                    <th>Celkem</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${itemsHtml}
                   <tr class="total-row">
-                    <td colspan="3" style="padding: 10px; text-align: right;">CELKEM:</td>
+                    <td colspan="2" style="padding: 10px; text-align: right;">CELKEM:</td>
                     <td style="padding: 10px; text-align: right;">${total.toLocaleString('cs-CZ')} Kč</td>
                   </tr>
                 </tbody>
               </table>
 
-              <p>Vaše objednávka čeká na zaplacení. Brzy vás přesměrujeme na platební bránu.</p>
+              ${transfer ? transferHtml : '<p>Vaše objednávka čeká na zaplacení. Brzy vás přesměrujeme na platební bránu.</p>'}
 
               <p><strong>Pokud máte jakékoliv dotazy, kontaktujte nás prosím.</strong></p>
 
@@ -118,6 +141,7 @@ export const sendOrderConfirmationEmail = async (
       to: email,
       subject: `Potvrzení objednávky #${orderNum}`,
       html,
+      ...(qrAttachment ? { attachments: [qrAttachment] } : {}),
     });
 
     console.log('Order confirmation email sent:', result);

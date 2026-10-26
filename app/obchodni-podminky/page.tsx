@@ -76,7 +76,7 @@ export default function ObchodniPodminkyPage() {
           <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 3 – Ceny, platba a fakturace</h2>
           <p><strong>3.1</strong> Ceny zboží jsou uvedeny na webovém rozhraní v českých korunách (CZK). Prodávající není plátcem DPH.</p>
           <p><strong>3.2</strong> Ceny jsou platné v okamžiku odeslání objednávky. Prodávající si vyhrazuje právo změnit ceny zboží; změna cen se nevztahuje na již potvrzené objednávky.</p>
-          <p><strong>3.3 Způsoby platby:</strong></p>
+          <p><strong>3.3 Způsoby platby:</strong> objednávky z e-shopu se platí vždy předem, u všech způsobů doručení včetně osobního odběru. Na dobírku nezasíláme.</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse border border-warm-beige rounded">
               <thead className="bg-soft-cream">
@@ -88,29 +88,14 @@ export default function ObchodniPodminkyPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-warm-beige px-3 py-2">Platba kartou online</td>
+                  <td className="border border-warm-beige px-3 py-2">Bankovní převod předem (QR platba)</td>
                   <td className="border border-warm-beige px-3 py-2">Zdarma</td>
-                  <td className="border border-warm-beige px-3 py-2">Okamžitá úhrada přes platební bránu</td>
+                  <td className="border border-warm-beige px-3 py-2">Platební údaje a QR kód se zobrazí hned po odeslání objednávky; zboží odešleme po připsání platby</td>
                 </tr>
                 <tr className="bg-soft-cream">
-                  <td className="border border-warm-beige px-3 py-2">Bankovní převod</td>
+                  <td className="border border-warm-beige px-3 py-2">Hotově nebo kartou v showroomu</td>
                   <td className="border border-warm-beige px-3 py-2">Zdarma</td>
-                  <td className="border border-warm-beige px-3 py-2">Zboží expedováno po přijetí platby</td>
-                </tr>
-                <tr>
-                  <td className="border border-warm-beige px-3 py-2">Hotově v showroomu</td>
-                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
-                  <td className="border border-warm-beige px-3 py-2">Pouze při osobním odběru Praha</td>
-                </tr>
-                <tr className="bg-soft-cream">
-                  <td className="border border-warm-beige px-3 py-2">Dobírka (PPL / Zásilkovna)</td>
-                  <td className="border border-warm-beige px-3 py-2">Dle dopravce</td>
-                  <td className="border border-warm-beige px-3 py-2">Platba při převzetí zásilky</td>
-                </tr>
-                <tr>
-                  <td className="border border-warm-beige px-3 py-2">Záloha 50 % (zakázková výroba)</td>
-                  <td className="border border-warm-beige px-3 py-2">Zdarma</td>
-                  <td className="border border-warm-beige px-3 py-2">Zbývající část při předání</td>
+                  <td className="border border-warm-beige px-3 py-2">Pouze při nákupu přímo v showroomu Praha</td>
                 </tr>
               </tbody>
             </table>
@@ -119,7 +104,7 @@ export default function ObchodniPodminkyPage() {
           <p><strong>3.5</strong> Daňový doklad (faktura) je zasílán elektronicky na e-mailovou adresu kupujícího, nebo přiložen k zásilce.</p>
           <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded text-sm">
             <p className="font-semibold">⚠️ Důležité</p>
-            <p>Prodávající je oprávněn požadovat úhradu zálohy nebo celé ceny před expedicí zboží, zejména u zakázkové výroby (pásky, weft, clip-in) a u objednávek nad 5 000 Kč.</p>
+            <p>Zboží objednané přes e-shop expedujeme (nebo připravíme k osobnímu odběru) až po připsání celé kupní ceny na účet prodávajícího.</p>
           </div>
         </section>
 
@@ -147,11 +132,6 @@ export default function ObchodniPodminkyPage() {
                   <td className="border border-warm-beige px-3 py-2">119 Kč</td>
                   <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
                 </tr>
-                <tr>
-                  <td className="border border-warm-beige px-3 py-2">PPL – doručení na adresu (dobírka)</td>
-                  <td className="border border-warm-beige px-3 py-2">149 Kč</td>
-                  <td className="border border-warm-beige px-3 py-2">1–2 pracovní dny</td>
-                </tr>
                 <tr className="bg-soft-cream">
                   <td className="border border-warm-beige px-3 py-2">Osobní odběr – showroom Praha</td>
                   <td className="border border-warm-beige px-3 py-2">Zdarma</td>
@@ -162,7 +142,7 @@ export default function ObchodniPodminkyPage() {
           </div>
           <p><strong>4.2 Dodací lhůty:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>Skladové zboží: expedice do 1–3 pracovních dnů od potvrzení objednávky (resp. přijetí platby)</li>
+            <li>Skladové zboží: expedice do 1–3 pracovních dnů od přijetí platby</li>
             <li>Zakázková výroba – vlasové pásky, weft, clip-in: <strong>14 pracovních dnů</strong></li>
             <li>Zakázková výroba – keratin prameny, micro keratin: <strong>3 pracovní dny</strong></li>
             <li>Zboží dostupné na objednávku: dle individuální dohody</li>

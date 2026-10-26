@@ -269,7 +269,16 @@ export async function POST(request: NextRequest) {
       }));
 
       // Send confirmation to customer
-      await sendOrderConfirmationEmail(order.email, order.id, emailItems, order.total, order.orderNumber);
+      // Převod předem: do e-mailu číslo účtu a QR platbu (účet z Nastavení, záložně z proměnných pro faktury)
+      let transfer: { account: string | null; iban: string | null } | undefined;
+      if (paymentMethod === 'transfer') {
+        const bank = await prisma.siteSettings.findUnique({ where: { id: 'main' }, select: { bankAccount: true, bankIban: true } }).catch(() => null);
+        transfer = {
+          account: bank?.bankAccount?.trim() || process.env.INVOICE_BANK_ACCOUNT || null,
+          iban: bank?.bankIban?.trim() || process.env.INVOICE_IBAN || null,
+        };
+      }
+      await sendOrderConfirmationEmail(order.email, order.id, emailItems, order.total, order.orderNumber, transfer);
 
       // Send notification to admin
       await sendAdminOrderNotificationEmail(order.id, order.email, emailItems, order.total, order.orderNumber);
