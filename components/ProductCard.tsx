@@ -65,25 +65,36 @@ function getTierExplanation(tier: string): { title: string; description: string;
   }
 }
 
+function getTierBadgeStyle(tier: string): { bg: string; color: string } {
+  switch (tier) {
+    case 'Platinum edition':
+      return { bg: 'rgba(180,140,30,0.1)', color: '#7a5c00' };
+    case 'LUXE':
+      return { bg: 'rgba(74,21,32,0.08)', color: 'var(--burgundy)' };
+    default:
+      return { bg: 'rgba(30,80,140,0.08)', color: '#1e508c' };
+  }
+}
+
 export default function ProductCard({ product, variant }: ProductCardProps) {
   const [showTierModal, setShowTierModal] = useState(false);
-  const [showAddedMessage, setShowAddedMessage] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
-  const { addToCart } = useCart();
   const { user } = useAuth();
   const displayVariant = variant || product.variants[0];
   const isPlatinum = product.tier === 'Platinum edition';
   const displayPrice = product.base_price_per_100g_45cm;
   const isB2B = user?.isWholesale ?? false;
-  const discountedPrice = priceCalculator.applyB2BDiscount(displayPrice, isB2B);
   const shadeColor = HAIR_COLORS[displayVariant?.shade] || HAIR_COLORS[1];
   const baseName = product.name?.trim().length ? product.name : getListingTitle(displayVariant, product.tier);
-  // Pro Standard/LUXE vždy přidáme číslo odstínu, Platinum ho má v názvu automaticky
   const listingTitle = (!isPlatinum && displayVariant?.shade)
     ? `${baseName} · #${displayVariant.shade}`
     : baseName;
   const tierInfo = getTierExplanation(product.tier);
+  const badgeStyle = getTierBadgeStyle(product.tier);
+
+  const shownPrice = isPlatinum && displayVariant?.price_czk ? displayVariant.price_czk : displayPrice;
+  const shownDiscounted = priceCalculator.applyB2BDiscount(shownPrice, isB2B);
 
   const handleTierClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
@@ -92,129 +103,77 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
   };
 
   const closeTierModal = (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    if (e) { e.preventDefault(); e.stopPropagation(); }
     setShowTierModal(false);
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!displayVariant) return;
-
-    // Transform Product+Variant to SkuCartItem format
-    const grams = 100; // Standard 100g pieces
-    const pricePerGram = displayPrice / 100;
-    const lineTotal = pricePerGram * grams;
-
-    // Map tier to customer category
-    const customerCategory =
-      product.tier === 'Platinum edition' ? 'PLATINUM_EDITION' as const :
-      product.tier === 'LUXE' ? 'LUXE' as const :
-      'STANDARD' as const;
-
-    // Create SkuCartItem object
-    const cartItem: Omit<SkuCartItem, 'addedAt'> = {
-      skuId: displayVariant.id || `${product.id}-${displayVariant.shade}`,
-      skuName: listingTitle,
-      customerCategory,
-      shade: displayVariant.shade.toString(),
-      saleMode: 'PIECE_BY_WEIGHT',
-      grams,
-      pricePerGram,
-      lineTotal,
-      ending: 'NONE',
-      assemblyFeeType: 'FLAT',
-      assemblyFeeCzk: 0,
-      assemblyFeeTotal: 0,
-      lineGrandTotal: lineTotal,
-      quantity: 1,
-    };
-
-    addToCart(cartItem);
-    setShowAddedMessage(true);
-    setTimeout(() => setShowAddedMessage(false), 2000);
-  };
+  // Build all images array
+  const allImages: string[] = [];
+  if (product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/'))) {
+    allImages.push(product.images.main);
+  }
+  if (product.images?.gallery && Array.isArray(product.images.gallery)) {
+    allImages.push(...product.images.gallery.filter((img: string) => img && (img.startsWith('http') || img.startsWith('/'))));
+  }
 
   return (
     <>
-      <div className="product-card group block relative rounded-t-2xl overflow-hidden">
+      <div
+        className="product-card group block relative rounded-t-2xl overflow-hidden border"
+        style={{ background: 'var(--white)', borderColor: 'var(--beige)' }}
+      >
         <Link href={`/sku-detail/${product.id}`} className="block">
-          {/* Clickable Tier Badge with Info Icon */}
+
+          {/* Tier badge */}
           <div
             onClick={handleTierClick}
-            className="absolute top-3 left-3 z-10 tier-badge hover:opacity-80 transition cursor-pointer"
+            className="absolute top-3 left-3 z-10 cursor-pointer hover:opacity-80 transition"
             role="button"
             tabIndex={0}
             aria-label={`Zobrazit informace o ${product.tier}`}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleTierClick(e);
-              }
-            }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleTierClick(e); }}
           >
-            {product.tier}
+            <span
+              className="text-[9px] tracking-[0.16em] uppercase px-2.5 py-1 rounded-sm font-normal"
+              style={{ background: badgeStyle.bg, color: badgeStyle.color }}
+            >
+              {product.tier}
+            </span>
           </div>
 
-          {/* Favorite Button */}
-          <div
-            className="absolute top-3 right-3 z-10"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <FavoriteButton
-              productId={product.id}
-              size="md"
-              variant="icon"
-            />
+          {/* Favorite */}
+          <div className="absolute top-3 right-3 z-10" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+            <FavoriteButton productId={product.id} size="md" variant="icon" />
           </div>
 
-      {/* Product Image Gallery */}
-      <div className="aspect-square overflow-hidden relative group">
-        {(() => {
-          // Build all images array: main + gallery
-          const allImages: string[] = [];
-          if (product.images?.main && (product.images.main.startsWith('http') || product.images.main.startsWith('/images/'))) {
-            allImages.push(product.images.main);
-          }
-          if (product.images?.gallery && Array.isArray(product.images.gallery)) {
-            allImages.push(...product.images.gallery.filter((img: string) => img && (img.startsWith('http') || img.startsWith('/'))));
-          }
-
-          if (allImages.length > 0 && !imageError) {
-            return (
+          {/* Image */}
+          <div className="aspect-[3/4] overflow-hidden relative">
+            {allImages.length > 0 && !imageError ? (
               <>
                 <img
                   src={allImages[currentImageIndex] || allImages[0]}
                   alt={listingTitle}
-                  className="w-full h-full object-cover transition-opacity duration-300"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   onError={() => setImageError(true)}
                 />
-                {/* Navigation arrows - show only if multiple images */}
                 {allImages.length > 1 && (
                   <>
                     <button
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length); }}
-                      className="absolute left-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((p) => (p - 1 + allImages.length) % allImages.length); }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
                       aria-label="Předchozí foto"
                     >
-                      <span className="text-xs font-bold text-text-mid">&larr;</span>
+                      <span className="text-xs font-bold" style={{ color: 'var(--text-mid)' }}>&larr;</span>
                     </button>
                     <button
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((prev) => (prev + 1) % allImages.length); }}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setCurrentImageIndex((p) => (p + 1) % allImages.length); }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/80 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm"
                       aria-label="Další foto"
                     >
-                      <span className="text-xs font-bold text-text-mid">&rarr;</span>
+                      <span className="text-xs font-bold" style={{ color: 'var(--text-mid)' }}>&rarr;</span>
                     </button>
-                    {/* Dots for ≤5 images, counter for more */}
                     {allImages.length <= 5 ? (
-                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
                         {allImages.map((_, idx) => (
                           <button
                             key={idx}
@@ -224,190 +183,127 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                         ))}
                       </div>
                     ) : (
-                      <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/50 rounded text-white text-xs font-medium pointer-events-none">
+                      <div className="absolute bottom-3 right-3 px-2 py-0.5 bg-black/40 rounded-sm text-white text-[10px] tracking-[0.05em] pointer-events-none">
                         {currentImageIndex + 1}/{allImages.length}
                       </div>
                     )}
                   </>
                 )}
               </>
-            );
-          }
-
-          // Fallback gradient when no images
-          return (
-            <div
-              className="w-full h-full flex items-center justify-center relative"
-              style={{
-                background: `linear-gradient(135deg, ${shadeColor.hex} 0%, ${shadeColor.hex}dd 50%, ${shadeColor.hex}bb 100%)`
-              }}
-            >
-              <div className="absolute inset-0 opacity-20" style={{
-                backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
-              }} />
-              <div className="relative z-10 text-center">
-                <div className="text-white/90 text-sm font-medium mb-1">
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{ background: `linear-gradient(135deg, ${shadeColor.hex}55, ${shadeColor.hex}99)` }}
+              >
+                <span className="text-[10px] tracking-[0.1em] uppercase font-light" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {displayVariant?.structure || 'Vlasy'}
-                </div>
-                {isPlatinum && displayVariant?.length_cm && (
-                  <div className="text-white/70 text-xs">{displayVariant.length_cm} cm</div>
-                )}
+                </span>
               </div>
-            </div>
-          );
-        })()}
+            )}
 
-        {/* Struktura label */}
-        {displayVariant?.structure && (
-          <div className="absolute bottom-2 left-2 right-2 text-center pointer-events-none" style={{ bottom: (product.images?.gallery?.length || 0) > 0 ? '1.5rem' : '0.5rem' }}>
-            <span className="px-2 py-1 bg-white/90 text-text-dark text-xs font-medium rounded">
-              Struktura: {displayVariant.structure}
-            </span>
+            {/* Out of stock overlay */}
+            {displayVariant && !displayVariant.in_stock && (
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <span className="text-[10px] tracking-[0.14em] uppercase text-white font-light">Vyprodáno</span>
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Out of stock overlay */}
-        {displayVariant && !displayVariant.in_stock && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <span className="text-white text-sm font-semibold">Dočasně vyprodáno</span>
-          </div>
-        )}
-      </div>
-
-      {/* Product Info */}
-      <div className="p-4 bg-soft-cream">
-        {displayVariant && (
-          <div className="space-y-1">
-            {/* Řádek 1: Název (použije product.name, který už je správně formátovaný) */}
-            <h3 className="text-sm font-medium text-burgundy line-clamp-2">
+          {/* Info */}
+          <div className="p-4" style={{ borderTop: '1px solid var(--beige)' }}>
+            <h3
+              className="font-cormorant font-light text-[17px] leading-snug line-clamp-2 mb-3"
+              style={{ color: 'var(--text-dark)' }}
+            >
               {listingTitle}
             </h3>
 
-            {/* Řádek 2: Gramáž (pouze pro Standard/LUXE) */}
-            {!isPlatinum ? (
-              <p className="text-xs text-text-soft">
-                100 g
-              </p>
+            {isB2B ? (
+              <div>
+                <span className="text-[11px] font-light line-through mr-2" style={{ color: 'var(--text-soft)' }}>
+                  {priceCalculator.formatPrice(shownPrice)}
+                </span>
+                <span className="font-cormorant font-light text-[22px]" style={{ color: 'var(--burgundy)' }}>
+                  {priceCalculator.formatPrice(shownDiscounted)}
+                </span>
+                <p className="text-[10px] font-light mt-0.5" style={{ color: '#22783c' }}>-10% B2B sleva</p>
+              </div>
             ) : (
-              <div className="h-4" />
+              <span className="font-cormorant font-light text-[22px]" style={{ color: 'var(--burgundy)' }}>
+                {priceCalculator.formatPrice(shownPrice)}
+              </span>
             )}
-
-            {/* Řádek 4: Cena */}
-            <div className="pt-2">
-              {(() => {
-                // Pro Platinum: použij cenu z varianty (správná pro BULK_G i PIECE_BY_WEIGHT)
-                // Pro Standard/LUXE: base_price_per_100g_45cm
-                const shownPrice = isPlatinum && displayVariant?.price_czk
-                  ? displayVariant.price_czk
-                  : displayPrice;
-                const shownDiscounted = priceCalculator.applyB2BDiscount(shownPrice, isB2B);
-                return isB2B ? (
-                  <div className="space-y-1">
-                    <p className="text-xs line-through text-text-soft">
-                      {priceCalculator.formatPrice(shownPrice)}
-                    </p>
-                    <p className="text-base font-semibold text-burgundy">
-                      {priceCalculator.formatPrice(shownDiscounted)}
-                    </p>
-                    <p className="text-xs text-green-600 font-medium">-10% B2B sleva</p>
-                  </div>
-                ) : (
-                  <p className="text-base font-semibold text-burgundy">
-                    {priceCalculator.formatPrice(shownPrice)}
-                  </p>
-                );
-              })()}
-            </div>
-
           </div>
-        )}
-      </div>
         </Link>
 
-        {/* CTA Buttons - outside Link to avoid hydration issues */}
-        <div className="p-4 bg-soft-cream pt-0">
-          {displayVariant?.in_stock && (
+        {/* CTA */}
+        <div className="px-4 pb-4">
+          {displayVariant?.in_stock ? (
             <Link
               href={`/sku-detail/${product.id}`}
-              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md active:scale-95 block text-center"
+              className="w-full py-2.5 text-[11px] tracking-[0.12em] uppercase font-normal transition-all hover:-translate-y-px block text-center rounded-sm"
+              style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
             >
               Nakonfigurovat
             </Link>
-          )}
-
-          {/* Vyprodáno tlačítko */}
-          {!isPlatinum && displayVariant && !displayVariant.in_stock && (
+          ) : (
             <button
               disabled
-              className="mt-3 w-full py-2 px-4 bg-gray-300 text-text-soft text-sm font-medium rounded-lg cursor-not-allowed"
+              className="w-full py-2.5 text-[11px] tracking-[0.12em] uppercase font-normal rounded-sm cursor-not-allowed opacity-40"
+              style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-soft)' }}
             >
               Vyprodáno
             </button>
           )}
-
-          {/* Platinum - kontaktovat */}
-          {isPlatinum && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                window.location.href = '/kontakt';
-              }}
-              className="mt-3 w-full py-2 px-4 bg-burgundy text-white text-sm font-medium rounded-lg hover:bg-maroon transition-all hover:shadow-md"
-            >
-              Kontaktovat
-            </button>
-          )}
         </div>
       </div>
 
-    {/* Tier Information Modal */}
-    {showTierModal && (
-      <div
-        className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4"
-        onClick={closeTierModal}
-      >
+      {/* Tier modal */}
+      {showTierModal && (
         <div
-          className="bg-white rounded-lg max-w-md w-full p-6 relative"
-          onClick={(e) => e.stopPropagation()}
+          className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4"
+          onClick={closeTierModal}
         >
-          {/* Close button */}
-          <button
-            onClick={closeTierModal}
-            className="absolute top-4 right-4 text-text-soft hover:text-text-mid"
-            aria-label="Zavřít"
+          <div
+            className="max-w-md w-full p-6 relative rounded-sm"
+            style={{ background: 'var(--white)', border: '1px solid var(--beige)' }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          {/* Content */}
-          <div className="pr-8">
-            <h3 className="text-xl font-playfair text-burgundy mb-4">{tierInfo.title}</h3>
-
-            <div className="space-y-4">
-              <div>
-                <h4 className="text-sm font-semibold text-text-mid mb-2">Co to je?</h4>
-                <p className="text-sm text-text-mid leading-relaxed">{tierInfo.description}</p>
-              </div>
-
-              <div>
-                <h4 className="text-sm font-semibold text-text-mid mb-2">Pro koho?</h4>
-                <p className="text-sm text-text-mid leading-relaxed">{tierInfo.forWho}</p>
-              </div>
-            </div>
-
             <button
               onClick={closeTierModal}
-              className="mt-6 w-full py-2 px-4 bg-burgundy text-white rounded-lg hover:bg-maroon transition"
+              className="absolute top-4 right-4 transition-opacity hover:opacity-60"
+              aria-label="Zavřít"
+              style={{ color: 'var(--text-soft)' }}
             >
-              Rozumím
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
+            <div className="pr-8">
+              <h3 className="font-cormorant font-light text-[24px] mb-5" style={{ color: 'var(--text-dark)' }}>
+                {tierInfo.title}
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-[10px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Co to je?</p>
+                  <p className="text-[13px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.description}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Pro koho?</p>
+                  <p className="text-[13px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.forWho}</p>
+                </div>
+              </div>
+              <button
+                onClick={closeTierModal}
+                className="mt-6 w-full py-3 text-[11px] tracking-[0.12em] uppercase font-normal rounded-sm transition-all hover:-translate-y-px"
+                style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
+              >
+                Rozumím
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
     </>
   );
 }
