@@ -186,9 +186,10 @@ export default function CartPage() {
                         <div className="font-cormorant text-2xl font-light" style={{ color: 'var(--text-dark)' }}>
                           {formatPrice(item.lineGrandTotal)}
                         </div>
-                        {item.saleMode === 'BULK_G' && (
-                          <div className="text-[11px] mt-0.5" style={{ color: 'var(--text-soft)' }}>
-                            {formatPrice(item.pricePerGram)}/g
+                        {/* Cena za gram dobře čitelná, ne drobným písmem */}
+                        {item.pricePerGram > 0 && (item.saleMode === 'BULK_G' || item.grams > 0) && (
+                          <div className="text-[15px] font-normal mt-1 whitespace-nowrap" style={{ color: 'var(--text-dark)' }}>
+                            {formatPrice(item.pricePerGram)} / g
                           </div>
                         )}
                       </div>

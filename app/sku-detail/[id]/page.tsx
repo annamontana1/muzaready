@@ -346,6 +346,8 @@ export default function SkuDetailPage() {
   const activeIndex = Math.max(0, currentImage ? allImages.indexOf(currentImage) : 0);
   const lengthCm = isBulk ? bulkLengthValue : pieceByGrams ? selectedLength : sku.lengthCm;
   const endingLabel = ENDING_OPTIONS.find((o) => o.id === selectedEnding)?.label ?? '';
+  // Cena za gram vlasů (bez zakončení) vedle tlačítka Do košíku, dobře čitelná
+  const perGramText = quote && quote.grams > 0 ? `${formatPrice(quote.pricePerGram)} / g` : '';
   const totalText = quote ? formatPrice(quote.lineGrandTotal) : quoteLoading ? '…' : '—';
   const summaryLine = [lengthCm ? `${lengthCm} cm` : null, `${isBulk ? bulkGramsValue : pieceByGrams ? selectedGrams : sku.weightTotalG ?? ''} g`, endingLabel.toLowerCase()]
     .filter(Boolean)
@@ -558,7 +560,7 @@ export default function SkuDetailPage() {
               {/* Desktop: hlavní součet u tlačítka */}
               <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[13px] text-text-mid">{summaryLine}</span>
+                  <span className="text-[13px] text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}</span>
                   <span className="font-jost font-semibold text-[30px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
                 </div>
                 {cta}
@@ -579,6 +581,7 @@ export default function SkuDetailPage() {
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <div className="text-[11px] text-text-mid truncate">{summaryLine}</div>
+          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}</div>}
           <div className="font-jost font-semibold text-[26px] leading-none mt-1 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
         </div>
         {cta}

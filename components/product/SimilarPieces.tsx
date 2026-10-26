@@ -16,6 +16,8 @@ interface Props {
 
 const kind = (p: { isDyed?: boolean; tier?: string }) =>
   [typeof p.isDyed === 'boolean' ? (p.isDyed ? 'Středoevropské' : 'Panenské') : null, p.tier || null].filter(Boolean).join(' · ');
+// API píše „Platinum edition“, detail „Platinum Edition“: porovnávat bez ohledu na velikost písmen
+const sameKind = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 
 export default function SimilarPieces({ id, shade, isDyed, tierLabel }: Props) {
   const [list, setList] = useState<Piece[]>([]);
@@ -37,19 +39,19 @@ export default function SimilarPieces({ id, shade, isDyed, tierLabel }: Props) {
   const mine = kind({ isDyed, tier: tierLabel });
   const sameShade = list.filter((x) => x.shade === s);
   const rows = [
-    { title: `Odstín ${s}${mine ? ` · ${mine}` : ''}`, items: sameShade.filter((x) => kind(x) === mine) },
-    { title: `Odstín ${s} v jiné kategorii`, items: sameShade.filter((x) => kind(x) !== mine) },
+    { title: `Odstín ${s}${mine ? ` · ${mine}` : ''}`, items: sameShade.filter((x) => sameKind(kind(x), mine)) },
+    { title: `Odstín ${s} v jiné kategorii`, items: sameShade.filter((x) => !sameKind(kind(x), mine)) },
     { title: `O odstín světlejší (${s + 1})`, items: list.filter((x) => x.shade === s + 1) },
     { title: `O odstín tmavší (${s - 1})`, items: list.filter((x) => x.shade === s - 1) },
   ].filter((r) => r.items.length);
   if (!rows.length) return null;
 
   return (
-    <section aria-labelledby="h-podobne" className="border-t border-muza-line pt-6 flex flex-col gap-7">
+    <section aria-labelledby="h-podobne" className="pt-4 flex flex-col gap-7">
       <h2 id="h-podobne" className="font-cormorant text-[24px] leading-tight text-muza-ink">Podobné culíky</h2>
       {rows.map((r) => (
         <div key={r.title}>
-          <h3 className="mb-3 text-sm font-normal text-[#45302F]">{r.title}</h3>
+          <h3 className="mb-3 font-jost text-sm font-normal text-[#45302F]">{r.title}</h3>
           <ul className="-mx-4 px-4 lg:mx-0 lg:px-0 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {r.items.slice(0, 10).map((x) => (
               <li key={x.id} className="flex-none w-[104px]">
