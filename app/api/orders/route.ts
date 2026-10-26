@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
 
             orderStatus: 'pending', // GoPay: čeká na platbu; WhatsApp: čeká na potvrzení ve zprávě
             paymentStatus: 'unpaid',
-            paymentMethod: viaWhatsApp ? 'whatsapp' : 'gopay',
+            paymentMethod: viaWhatsApp ? 'whatsapp' : paymentMethod === 'transfer' ? 'bank_transfer' : 'gopay', // admin zná převod jako bank_transfer
             channel: viaWhatsApp ? 'whatsapp' : 'web',
             notesCustomer: note?.trim() || null,
             deliveryStatus: 'pending',
@@ -285,7 +285,7 @@ export async function POST(request: NextRequest) {
         email: order.email,
         total: order.total,
         orderStatus: order.orderStatus,
-        message: viaWhatsApp ? 'Objednávka uložena. Domluva přes WhatsApp.' : 'Objednávka vytvořena. Čeká na platbu přes GoPay.',
+        message: viaWhatsApp ? 'Objednávka uložena. Domluva přes WhatsApp.' : paymentMethod === 'transfer' ? 'Objednávka vytvořena. Čeká na platbu převodem.' : 'Objednávka vytvořena. Čeká na platbu přes GoPay.',
         items: order.items,
       },
       { status: 201 }

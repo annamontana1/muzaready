@@ -71,7 +71,7 @@ export const CreateOrderSchema = z.object({
   shippingInfo: ShippingInfoSchema,
   packetaPoint: PacketaPointSchema.optional(), // Optional Zásilkovna pickup point
   couponCode: z.string().optional(), // Optional coupon code
-  paymentMethod: z.enum(['gopay', 'whatsapp']).default('gopay'), // whatsapp = objednávka bez platby, domluva přes WhatsApp
+  paymentMethod: z.enum(['gopay', 'transfer', 'whatsapp']).default('gopay'), // transfer = převod předem (QR po objednávce); whatsapp = starší objednávky bez platby
   note: z.string().max(1000).optional(), // poznámka zákaznice k objednávce
 });
 

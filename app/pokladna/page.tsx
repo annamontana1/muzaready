@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { useTranslation } from '@/contexts/LanguageContext';
 import AccountOffer from '@/components/checkout/AccountOffer';
+import TransferPayment from '@/components/checkout/TransferPayment';
 
 declare global {
   interface Window {
@@ -36,10 +37,10 @@ interface PacketaOptions {
   language?: string;
 }
 
-// Dokud není připojená GoPay, objednávka se uloží a dokončí zprávou ve WhatsAppu.
-// Po připojení stačí ve Vercelu nastavit NEXT_PUBLIC_PAYMENT_MODE=gopay.
-const PAYMENT_MODE: 'gopay' | 'whatsapp' =
-  process.env.NEXT_PUBLIC_PAYMENT_MODE === 'gopay' ? 'gopay' : 'whatsapp';
+// Platí se vždy předem, u každého způsobu doručení i u osobního odběru:
+// převodem (QR platba hned po objednávce) nebo kartou přes GoPay.
+// Karta se nabídne, až bude GoPay připojená (ve Vercelu NEXT_PUBLIC_PAYMENT_MODE=gopay).
+const CARD_ENABLED = process.env.NEXT_PUBLIC_PAYMENT_MODE === 'gopay';
 const WHATSAPP_NUMBER = '420728722880';
 
 const DELIVERY_OPTIONS = [
@@ -96,7 +97,8 @@ export default function PokladnaPage() {
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
   const [couponOpen, setCouponOpen] = useState(false);
-  const [sent, setSent] = useState<{ orderNumber: number; waLink: string } | null>(null);
+  const [sent, setSent] = useState<{ orderNumber: number; total: number } | null>(null);
+  const [payment, setPayment] = useState<'transfer' | 'gopay'>(CARD_ENABLED ? 'gopay' : 'transfer');
 
   useEffect(() => {
     if (packetaLoaded) return;
@@ -176,7 +178,7 @@ export default function PokladnaPage() {
   const shipping = delivery.price;
   const needsAddress = ['standard', 'dpd', 'ppl'].includes(formData.deliveryMethod);
   const grandTotal = subtotal - couponDiscount + shipping;
-  const viaWhatsApp = PAYMENT_MODE === 'whatsapp';
+  const byTransfer = payment === 'transfer';
 
   const openPacketaWidget = () => {
     if (!window.Packeta) { alert(t('checkout.shippingMethod.packetaLoading')); return; }
@@ -222,7 +224,7 @@ export default function PokladnaPage() {
     try {
       const name = formData.name.trim().replace(/\s+/g, ' ');
       if (!name || !formData.email) return fail('Vyplňte prosím jméno a e-mail.');
-      if (viaWhatsApp && !formData.phone.trim()) return fail('Vyplňte prosím telefon, ozveme se vám na WhatsApp.');
+
       if (formData.deliveryMethod === 'zasilkovna' && !selectedPickupPoint) return fail(t('checkout.shippingMethod.pickupPointRequired'));
       if (needsAddress && (!formData.streetAddress || !formData.city || !formData.zipCode)) return fail(t('checkout.addressRequired'));
 
@@ -257,7 +259,7 @@ export default function PokladnaPage() {
             city: selectedPickupPoint.city, zip: selectedPickupPoint.zip, country: selectedPickupPoint.country,
           } : undefined,
           couponCode: couponApplied && couponCode ? couponCode.trim() : undefined,
-          paymentMethod: PAYMENT_MODE,
+          paymentMethod: payment,
           note: formData.note.trim() || undefined,
         }),
       });
@@ -267,24 +269,12 @@ export default function PokladnaPage() {
       }
       const { orderId, orderNumber, total: orderTotal } = await orderResponse.json();
 
-      if (viaWhatsApp) {
-        const deliveryText = isPoint && selectedPickupPoint
-          ? `Zásilkovna – ${selectedPickupPoint.name}`
-          : isShowroom ? 'Osobní odběr, Revoluční 8' : `${delivery.label} – ${formData.streetAddress}, ${formData.zipCode} ${formData.city}`;
-        const message = [
-          `Dobrý den, posílám objednávku č. ${orderNumber}:`,
-          ...items.map((item) => `• ${describeItem(item)} – ${formatPrice(item.lineGrandTotal)}`),
-          `Doručení: ${deliveryText} (${shipping === 0 ? 'zdarma' : formatPrice(shipping)})`,
-          `Celkem: ${formatPrice(orderTotal)}`,
-          `${name}, ${formData.phone.trim()}`,
-          formData.note.trim() ? `Poznámka: ${formData.note.trim()}` : null,
-        ].filter(Boolean).join('\n');
-        const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-        // Objednávka je uložená v adminu – košík vyprázdníme a otevřeme WhatsApp
+      if (byTransfer) {
+        // Objednávka je uložená, platební údaje a QR kód ukážeme hned
         clearCart();
-        setSent({ orderNumber, waLink });
+        setSent({ orderNumber, total: orderTotal });
         setLoading(false);
-        window.location.href = waLink;
+        window.scrollTo(0, 0);
         return;
       }
 
@@ -307,29 +297,27 @@ export default function PokladnaPage() {
     }
   };
 
-  // ── Odesláno přes WhatsApp ──────────────────────────────────────────────
+  // ── Objednáno, platba převodem hned ─────────────────────────────────────
   if (sent) {
+    const [first, ...rest] = formData.name.trim().split(/\s+/);
     return (
       <div className="min-h-screen bg-muza-cream">
-        <div className="max-w-md mx-auto px-5 py-16 text-center">
+        <div className="max-w-md mx-auto px-5 py-14 text-center">
           <div className="mx-auto w-14 h-14 rounded-full border border-muza-ink text-muza-ink flex items-center justify-center">
             <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
           </div>
           <h1 className="mt-5 font-cormorant text-[40px] leading-none text-muza-ink">Děkujeme</h1>
-          <p className="mt-3 text-sm leading-relaxed text-text-mid">
-            Objednávku č. {sent.orderNumber} máme uloženou. Dokončete prosím odeslání zprávy ve WhatsAppu, potvrdíme vám odstín
-            a dostupnost a pošleme platební údaje.
+          <p className="mt-3 text-[15px] leading-relaxed text-[#45302F]">
+            Objednávku <b className="font-semibold text-text-dark">č. {sent.orderNumber}</b> máme. Potvrzení jsme poslali na {formData.email.trim()}.
           </p>
-          {!account && (() => {
-            const [first, ...rest] = formData.name.trim().split(/\s+/);
-            return <AccountOffer email={formData.email.trim()} firstName={first || ''} lastName={rest.join(' ')} phone={formData.phone.trim()} />;
-          })()}
+          <TransferPayment orderNumber={sent.orderNumber} amount={sent.total} />
+          {!account && <AccountOffer email={formData.email.trim()} firstName={first || ''} lastName={rest.join(' ')} phone={formData.phone.trim()} />}
           <p className="mt-4 text-[13px] text-muza-soft">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
-          <a href={sent.waLink}
-            className="mt-8 flex items-center justify-center gap-2.5 h-14 rounded-full bg-muza-ink text-muza-onink text-[15px] hover:opacity-90 transition-opacity">
-            <WhatsAppIcon />Otevřít WhatsApp
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Dobrý den, mám dotaz k objednávce č. ${sent.orderNumber}.`)}`}
+            target="_blank" rel="noopener" className="mt-6 flex items-center justify-center gap-2 h-12 rounded-full border border-muza-ink text-muza-ink text-sm">
+            <WhatsAppIcon />Máte dotaz? Napište nám
           </a>
-          <Link href="/" className="mt-3 flex items-center justify-center h-12 rounded-full border border-muza-ink text-muza-ink text-sm">
+          <Link href="/" className="mt-3 flex items-center justify-center h-12 text-sm text-muza-ink underline underline-offset-[3px]">
             Zpět do obchodu
           </Link>
         </div>
@@ -353,7 +341,7 @@ export default function PokladnaPage() {
     );
   }
 
-  const submitLabel = loading ? 'Odesílám…' : viaWhatsApp ? 'Objednat přes WhatsApp' : `Zaplatit ${formatPrice(grandTotal)}`;
+  const submitLabel = loading ? 'Odesílám…' : byTransfer ? `Objednat a zaplatit ${formatPrice(grandTotal)}` : `Zaplatit kartou ${formatPrice(grandTotal)}`;
 
   const totals = (
     <div className="pt-4 border-t border-muza-ink">
@@ -405,7 +393,7 @@ export default function PokladnaPage() {
           <form id="checkout" onSubmit={handleSubmit} noValidate className="min-w-0">
             <h1 className="font-cormorant text-[40px] lg:text-[48px] leading-none text-muza-ink">Pokladna</h1>
             <p className="mt-2 text-[13px] text-muza-soft">
-              Zabere to minutu. {viaWhatsApp ? 'Objednávku dokončíte zprávou ve WhatsAppu.' : 'Platba proběhne bezpečně přes GoPay.'}
+              Zabere to minutu. Platí se vždy předem.
             </p>
 
             {error && (
@@ -464,7 +452,7 @@ export default function PokladnaPage() {
                   </label>
                   <label className="block pt-4">
                     <span className={labelClass}>Telefon</span>
-                    <input type="tel" name="phone" autoComplete="tel" required={viaWhatsApp} value={formData.phone} onChange={handleInputChange} disabled={loading}
+                    <input type="tel" name="phone" autoComplete="tel" value={formData.phone} onChange={handleInputChange} disabled={loading}
                       placeholder="+420" className={fieldClass} />
                   </label>
                   <label className="block pt-4">
@@ -562,13 +550,26 @@ export default function PokladnaPage() {
             {/* Platba */}
             <section aria-labelledby="h-platba" className="mt-9">
               <h2 id="h-platba" className={`${sectionTitle} mb-2.5`}>Platba</h2>
-              {viaWhatsApp ? (
-                <p className="text-sm leading-relaxed">
-                  Teď nic neplatíte. Po odeslání vám ve WhatsAppu potvrdíme odstín a dostupnost a pošleme platební údaje.
-                </p>
-              ) : (
-                <p className="text-sm leading-relaxed">Kartou, Apple Pay / Google Pay nebo bankovním převodem. Platbu zpracuje GoPay.</p>
-              )}
+              <p className="mb-2 text-sm text-[#45302F]">Platí se vždy předem, u každého způsobu doručení i u osobního odběru.</p>
+              <div role="radiogroup" aria-labelledby="h-platba" className="border-t border-muza-line">
+                {[
+                  { id: 'transfer' as const, label: 'Bankovním převodem', desc: 'QR platba hned po odeslání objednávky', enabled: true },
+                  { id: 'gopay' as const, label: 'Kartou online', desc: CARD_ENABLED ? 'Apple Pay, Google Pay, karta (GoPay)' : 'připravujeme', enabled: CARD_ENABLED },
+                ].map((o) => {
+                  const on = payment === o.id;
+                  return (
+                    <button key={o.id} type="button" role="radio" aria-checked={on} disabled={loading || !o.enabled}
+                      onClick={() => setPayment(o.id)}
+                      className="w-full flex items-center gap-3.5 min-h-[60px] py-2.5 text-left border-b border-muza-line disabled:opacity-45">
+                      <Radio on={on} />
+                      <span className="flex-1 min-w-0">
+                        <span className={`block text-[15px] ${on ? 'font-normal' : ''}`}>{o.label}</span>
+                        <span className="block text-xs text-muza-soft mt-px">{o.desc}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </section>
 
             {/* Poznámka a slevový kód */}
@@ -638,7 +639,7 @@ export default function PokladnaPage() {
             {totals}
             <button type="submit" form="checkout" disabled={loading}
               className="mt-7 w-full h-14 flex items-center justify-center gap-2.5 rounded-full bg-muza-ink text-muza-onink text-[15px] tracking-[0.02em] hover:opacity-90 transition-opacity disabled:opacity-50">
-              {viaWhatsApp && <WhatsAppIcon />}{submitLabel}
+              {submitLabel}
             </button>
             <Link href="/kosik" className="mt-4 block text-center text-sm text-muza-soft underline underline-offset-2">Zpět do košíku</Link>
           </aside>
@@ -648,7 +649,7 @@ export default function PokladnaPage() {
         <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-muza-cream from-75% to-transparent">
           <button type="submit" form="checkout" disabled={loading}
             className="w-full h-14 flex items-center justify-center gap-2.5 rounded-full bg-muza-ink text-muza-onink text-[15px] tracking-[0.02em] active:opacity-90 transition-opacity disabled:opacity-50">
-            {viaWhatsApp && <WhatsAppIcon />}{submitLabel}
+            {submitLabel}
           </button>
         </div>
       </div>
