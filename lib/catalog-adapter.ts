@@ -11,6 +11,7 @@ import { Product, ProductVariant, ProductCategory, ProductTier, HAIR_COLORS } fr
 import { normalizeSlug } from './slug-normalizer';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
 import { generateVlasyXName, generateVlasyXSlug } from '@/lib/vlasyx-format';
+import { skuPhotos } from '@/lib/sku-image';
 
 // Fallback délky pro rychlé "Do košíku" (100g)
 const FALLBACK_LENGTHS = [45, 40, 50, 55, 60, 65, 70, 75, 80];
@@ -287,6 +288,9 @@ export async function getCatalogProducts(
         const pricePer100g = sku.pricePerGramCzk * 100;
         // Cena za variant: pro PIECE = pricePerGram * weight, pro BULK_G = cena za 100g
         const variantPrice = (isBulkG || weightGrams === 0) ? pricePer100g : sku.pricePerGramCzk * weightGrams;
+        // bez fotky (nebo jen s bílými fotkami) se produkt na e-shopu nezobrazí
+        const photos = skuPhotos(sku.imageUrl, sku.images);
+        if (photos.length === 0) continue;
         const product: Product = {
           id: sku.id,
           sku: sku.sku,
@@ -312,9 +316,9 @@ export async function getCatalogProducts(
             ribbon_color: shadeHex,
           }],
           images: {
-            main: sku.imageUrl || '',
-            hover: sku.imageUrl || '',
-            gallery: Array.isArray(sku.images) ? sku.images : [],
+            main: photos[0],
+            hover: photos[0],
+            gallery: photos,
           },
           base_price_per_100g_45cm: pricePer100g,
           in_stock: inStock,
@@ -368,6 +372,9 @@ export async function getCatalogProducts(
       const productName = displaySku.name?.trim().length ? displaySku.name! : generatedProductName;
 
       const slug = generateVlasyXSlug(vlasyXCategory, vlasyXTier, shadeCode);
+      // bez fotky (nebo jen s bílými fotkami) se produkt na e-shopu nezobrazí
+      const groupPhotos = Array.from(new Set([displaySku, ...skuGroup].flatMap(s => skuPhotos(s.imageUrl, s.images))));
+      if (groupPhotos.length === 0) continue;
       const product: Product = {
         id: displaySku.id, // Použijeme skutečné SKU ID z prvního dostupného SKU
         sku: firstSku.sku,
@@ -397,9 +404,9 @@ export async function getCatalogProducts(
           };
         }),
         images: {
-          main: displaySku.imageUrl || '',
-          hover: displaySku.imageUrl || '',
-          gallery: [],
+          main: groupPhotos[0],
+          hover: groupPhotos[0],
+          gallery: groupPhotos,
         },
         base_price_per_100g_45cm: displaySku.pricePerGramCzk * 100,
         in_stock: skuGroup.some(s => s.inStock && !s.soldOut && (s.availableGrams ?? 0) >= (s.minOrderG ?? 0)),

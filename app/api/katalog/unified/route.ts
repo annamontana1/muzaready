@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { skuImage } from '@/lib/sku-image';
+import { skuPhotos } from '@/lib/sku-image';
 import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { Product } from '@/types/product';
 import { formatPlatinumName, formatPlatinumSlug } from '@/lib/platinum-format';
@@ -25,6 +25,7 @@ interface UnifiedItem {
   slug?: string; // BULK only
   name: string;
   tier: string; // "Standard" | "LUXE" | "Platinum edition"
+  imageUrl?: string;
   shade?: number; // 1-10
   shadeName?: string;
   structure?: string;
@@ -62,6 +63,7 @@ export async function GET(request: NextRequest) {
         if (product.tier === 'Platinum edition') continue;
         if (!product.variants || product.variants.length === 0) continue;
         if (!product.in_stock) continue;
+        if (!product.images?.main) continue; // bez fotky se nezobrazuje
 
         const firstVariant = product.variants[0];
         const pricePerGram = product.base_price_per_100g_45cm / 100;
@@ -71,6 +73,7 @@ export async function GET(request: NextRequest) {
           slug: product.slug,
           name: product.name,
           tier: product.tier,
+          imageUrl: product.images.main,
           shade: firstVariant?.shade,
           shadeName: firstVariant?.shade_name,
           structure: firstVariant?.structure,
@@ -103,6 +106,9 @@ export async function GET(request: NextRequest) {
       for (const sku of skus) {
         // Skip items that are not in stock (already filtered in query, but double-check)
         if (!sku.inStock || sku.soldOut) continue;
+        // bez fotky (nebo jen s bílými fotkami) se kus na e-shopu nezobrazí
+        const photos = skuPhotos(sku.imageUrl, sku.images);
+        if (photos.length === 0) continue;
 
         const shadeCode = sku.shade ? parseInt(sku.shade, 10) : undefined;
         const weight = sku.weightGrams ?? sku.weightTotalG ?? undefined;
@@ -129,7 +135,7 @@ export async function GET(request: NextRequest) {
           slug: pieceSlug,
           name: pieceName,
           tier: tierLabel,
-          imageUrl: skuImage(sku.imageUrl),
+          imageUrl: photos[0],
           shade: shadeCode,
           shadeName: sku.shadeName || undefined,
           structure: sku.structure || undefined,
