@@ -513,6 +513,12 @@ export default function SkuDetailPage() {
               {/* Zakončení jako seznam s kolečky (návrh B3) */}
               <fieldset>
                 <legend className="mb-1.5 font-cormorant text-[24px] leading-tight text-muza-ink">Zakončení</legend>
+                {/* Upozornění: culík se připravuje na míru, nelze vrátit; kolečko vede do obchodních podmínek */}
+                <Link href="/obchodni-podminky#individualni-vyrobek"
+                  className="mb-2.5 inline-flex items-center gap-2 text-[13px] text-[#45302F] hover:text-muza-ink">
+                  <span aria-hidden="true" className="flex-none w-[18px] h-[18px] rounded-full border border-muza-ink text-muza-ink text-[11px] font-semibold leading-none flex items-center justify-center font-jost">i</span>
+                  <span>Individuální výrobek na míru, <span className="underline underline-offset-2">nelze vrátit</span></span>
+                </Link>
                 <div role="radiogroup" aria-label="Zakončení" className="border-t border-muza-line">
                   {ENDING_OPTIONS.map((o) => {
                     const on = selectedEnding === o.id;

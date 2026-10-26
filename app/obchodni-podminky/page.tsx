@@ -179,8 +179,9 @@ export default function ObchodniPodminkyPage() {
             <p>Kupující-spotřebitel má právo odstoupit od kupní smlouvy uzavřené přes e-shop nebo mimo obchodní prostory (telefon, e-mail) bez udání důvodu ve lhůtě <strong>14 dní</strong> od převzetí zboží. Toto právo se nevztahuje na zboží upravené na míru (zakázková výroba), použité zboží a zboží z hygienických důvodů nevhodné k vrácení po otevření.</p>
           </div>
           <p><strong>6.1</strong> Lhůta pro odstoupení: <strong>14 kalendářních dní</strong> ode dne převzetí zboží kupujícím.</p>
-          <p><strong>6.2 Kdy NELZE od smlouvy odstoupit:</strong></p>
+          <p id="individualni-vyrobek"><strong>6.2 Kdy NELZE od smlouvy odstoupit:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
+            <li><strong>Vlasy z e-shopu připravené podle vašeho výběru:</strong> culík odměříme na zvolenou gramáž a délku a zpracujeme se zvoleným zakončením (keratin, mikrokeratin, keratinové pásky, weft). Jde o individuální výrobek na míru, proto ho nelze vrátit.</li>
             <li>Vlasy vyrobené na zakázku podle specifikací kupujícího (zakázkové pásky, weft, keratin prameny, clip-in dle přání)</li>
             <li>Vlasy, které byly aplikovány na hlavu nebo jinak použity</li>
             <li>Vlasy, které byly barveny, zesvětlovány nebo jinak chemicky upravovány kupujícím</li>
