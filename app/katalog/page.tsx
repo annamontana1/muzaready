@@ -37,6 +37,23 @@ interface CatalogItem {
   stepG?: number;
 }
 
+type CatKey = 'luxe' | 'platinum' | 'baby';
+const CATS: { v: CatKey | null; label: string; tier?: string }[] = [
+  { v: null, label: 'Vše' },
+  { v: 'luxe', label: 'Luxe', tier: 'LUXE' },
+  { v: 'platinum', label: 'Platinum', tier: 'Platinum edition' },
+  { v: 'baby', label: 'Baby Shades', tier: 'Baby Shades' },
+];
+const SHADES = [1, 3, 4, 5, 6, 7, 8, 9, 10];
+const babyAllowed = (shade: number | null) => !shade || shade >= 7;
+
+// Změna jednoho parametru v adrese bez přenačtení stránky
+function setParam(key: string, value: string | null) {
+  const p = new URLSearchParams(window.location.search);
+  if (value) p.set(key, value); else p.delete(key);
+  window.history.replaceState(null, '', p.toString() ? `/katalog?${p}` : '/katalog');
+}
+
 export default function CatalogPage() {
   const [items, setItems] = useState<CatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +64,8 @@ export default function CatalogPage() {
   const [shadeFilter, setShadeFilter] = useState<number | null>(null);
   // ?druh=stredoevropske (barvené blond, odstíny 8–10) | panenske (nebarvené, odstíny 1–7)
   const [kind, setKind] = useState<'stredoevropske' | 'panenske' | null>(null);
+  // ?kategorie=luxe|platinum|baby; Baby Shades existují jen v odstínech 7–10
+  const [cat, setCat] = useState<CatKey | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -54,6 +73,8 @@ export default function CatalogPage() {
     if (odstin) setShadeFilter(odstin);
     const druh = params.get('druh');
     if (druh === 'stredoevropske' || druh === 'panenske') setKind(druh);
+    const kat = params.get('kategorie');
+    if (kat === 'luxe' || kat === 'platinum' || kat === 'baby') setCat(kat);
     const typ = params.get('typ');
     if (typ === 'BULK' || typ === 'PIECE') setSelectedType(typ);
     fetchCatalog();
@@ -101,6 +122,7 @@ export default function CatalogPage() {
   const filteredItems = items.filter((item) => {
     if (selectedType !== 'ALL' && item.type !== selectedType) return false;
     if (shadeFilter && Number(item.shade) !== shadeFilter) return false;
+    if (cat && item.tier !== CATS.find((c) => c.v === cat)?.tier) return false;
     if (kind) {
       const s = Number(item.shade);
       if (!s) return false;
@@ -151,21 +173,20 @@ export default function CatalogPage() {
 
         {/* Filters */}
         <div className="mb-10 flex flex-col sm:flex-row gap-6 items-center justify-between">
-          {/* Type Filter */}
-          <div className="flex gap-3">
-            {['ALL', 'BULK', 'PIECE'].map((type) => (
-              <button
-                key={type}
-                onClick={() => setSelectedType(type as 'ALL' | 'BULK' | 'PIECE')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  selectedType === type
-                    ? 'bg-burgundy text-white shadow-medium'
-                    : 'bg-white text-burgundy border border-burgundy hover:bg-ivory'
-                }`}
-              >
-                {type === 'ALL' ? 'Všechny' : type === 'BULK' ? 'Na gramy' : 'Jednotlivé'}
-              </button>
-            ))}
+          {/* Kategorie vlasů */}
+          <div className="flex gap-2 flex-wrap">
+            {CATS.map((c) => {
+              const on = cat === c.v;
+              const disabled = c.v === 'baby' && !babyAllowed(shadeFilter);
+              return (
+                <button key={c.label} type="button" aria-pressed={on} disabled={disabled}
+                  title={disabled ? 'Baby Shades jsou jen v odstínech 7–10' : undefined}
+                  onClick={() => { setCat(c.v); setParam('kategorie', c.v); }}
+                  className={`h-10 px-5 rounded-full text-[14px] border transition-colors disabled:opacity-35 disabled:pointer-events-none ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
+                  {c.label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Sort */}
@@ -190,12 +211,7 @@ export default function CatalogPage() {
             const on = kind === o.v;
             return (
               <button key={o.label} type="button" aria-pressed={on}
-                onClick={() => {
-                  setKind(o.v);
-                  const p = new URLSearchParams(window.location.search);
-                  if (o.v) p.set('druh', o.v); else p.delete('druh');
-                  window.history.replaceState(null, '', p.toString() ? `/katalog?${p}` : '/katalog');
-                }}
+                onClick={() => { setKind(o.v); setParam('druh', o.v); }}
                 className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
                 {o.label}
               </button>
@@ -203,16 +219,29 @@ export default function CatalogPage() {
           })}
         </div>
 
-        <div className="text-sm text-text-mid mb-6 flex items-center gap-3 flex-wrap">
-          Zobrazeno {sortedItems.length} produktů
-          {shadeFilter && (
-            <button type="button" onClick={() => { setShadeFilter(null); window.history.replaceState(null, '', '/katalog'); }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muza-ink text-muza-onink text-xs">
-              Odstín {shadeFilter}
-              <span aria-hidden="true">✕</span><span className="sr-only">Zrušit filtr odstínu</span>
-            </button>
-          )}
+        {/* Odstín */}
+        <div className="mb-6">
+          <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-2">Odstín</div>
+          <div className="flex gap-1.5 flex-wrap">
+            {[null, ...SHADES].map((n) => {
+              const on = shadeFilter === n;
+              return (
+                <button key={n ?? 'vse'} type="button" aria-pressed={on}
+                  aria-label={n ? `Odstín ${n}` : 'Všechny odstíny'}
+                  onClick={() => {
+                    setShadeFilter(n);
+                    setParam('odstin', n ? String(n) : null);
+                    if (cat === 'baby' && !babyAllowed(n)) { setCat(null); setParam('kategorie', null); }
+                  }}
+                  className={`h-10 min-w-10 px-3 rounded-full text-[14px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
+                  {n ?? 'Vše'}
+                </button>
+              );
+            })}
+          </div>
         </div>
+
+        <div className="text-sm text-text-mid mb-6">Zobrazeno {sortedItems.length} produktů</div>
 
         {/* Grid */}
         {sortedItems.length === 0 ? (

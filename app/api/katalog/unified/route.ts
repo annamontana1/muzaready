@@ -129,6 +129,8 @@ export async function GET(request: NextRequest) {
           ? 'Platinum edition'
           : sku.customerCategory === 'LUXE'
           ? 'LUXE'
+          : sku.customerCategory === 'BABY_SHADES'
+          ? 'Baby Shades'
           : 'Standard';
         const computedPriceCzk = weight
           ? Number(((sku.pricePerGramCzk || 0) * weight).toFixed(2))
