@@ -43,6 +43,7 @@ interface UnifiedItem {
   saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
   // druh vlasů: barvené = středoevropské, nebarvené = panenské (virgin)
   isDyed?: boolean;
+  createdAt?: string; // datum přidání, pro řazení Nejnovější
   availableGrams?: number;
   minOrderG?: number;
   stepG?: number;
@@ -163,6 +164,7 @@ export async function GET(request: NextRequest) {
           pricePerGramCzk: sku.pricePerGramCzk || undefined,
           saleMode: sku.saleMode,
           isDyed: sku.isDyed,
+          createdAt: sku.createdAt?.toISOString(),
           availableGrams: sku.availableGrams ?? weight,
           minOrderG: sku.minOrderG ?? undefined,
           stepG: sku.stepG ?? undefined,

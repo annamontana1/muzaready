@@ -33,18 +33,24 @@ interface CatalogItem {
   priority: number;
   saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
   isDyed?: boolean;
+  createdAt?: string;
   availableGrams?: number;
   minOrderG?: number;
   stepG?: number;
 }
 
-type CatKey = 'luxe' | 'platinum' | 'baby';
-const CATS: { v: CatKey | null; label: string; tier?: string }[] = [
-  { v: null, label: 'Vše' },
-  { v: 'luxe', label: 'Luxe', tier: 'LUXE' },
-  { v: 'platinum', label: 'Platinum', tier: 'Platinum edition' },
-  { v: 'baby', label: 'Baby Shades', tier: 'Baby Shades' },
+// Řazení: kategorie se v katalogu nefiltruje (je vidět až na detailu kusu)
+type SortKey = 'recommended' | 'newest' | 'price-asc' | 'price-desc';
+const SORTS: { v: SortKey; label: string }[] = [
+  { v: 'recommended', label: 'Doporučené' },
+  { v: 'newest', label: 'Nejnovější' },
+  { v: 'price-asc', label: 'Nejlevnější' },
+  { v: 'price-desc', label: 'Nejdražší' },
 ];
+// Cena kusu pro řazení: celá cena, u kusů po gramech cena za gram × hmotnost; bez ceny = null
+const priceOf = (i: { priceCzk?: number; pricePerGramCzk?: number; weightGrams?: number }) =>
+  i.priceCzk || (i.pricePerGramCzk && i.weightGrams ? i.pricePerGramCzk * i.weightGrams : i.pricePerGramCzk) || null;
+
 // Stejné fotky odstínů jako ve vzorníku na hlavní stránce
 const SHADES = [
   { num: 1, name: 'Černá', src: '/images/shades/01-cerna.jpg' },
@@ -57,7 +63,6 @@ const SHADES = [
   { num: 9, name: 'Velmi světlá blond', src: '/images/shades/09-velmi-svetla-blond.jpg' },
   { num: 10, name: 'Platinová blond', src: '/images/shades/10-platinova-blond.jpg' },
 ];
-const babyAllowed = (shade: number | null) => !shade || shade >= 7;
 
 // Změna jednoho parametru v adrese bez přenačtení stránky
 function setParam(key: string, value: string | null) {
@@ -71,13 +76,11 @@ export default function CatalogPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<'ALL' | 'BULK' | 'PIECE'>('ALL');
-  const [sortBy, setSortBy] = useState<'recommended' | 'price-asc' | 'price-desc'>('recommended');
+  const [sortBy, setSortBy] = useState<SortKey>('recommended');
   // ?odstin=7 — odkaz ze vzorníku odstínů na hlavní stránce
   const [shadeFilter, setShadeFilter] = useState<number | null>(null);
   // ?druh=stredoevropske (barvené) | panenske (nebarvené, virgin)
   const [kind, setKind] = useState<'stredoevropske' | 'panenske' | null>(null);
-  // ?kategorie=luxe|platinum|baby; Baby Shades existují jen v odstínech 7–10
-  const [cat, setCat] = useState<CatKey | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -85,8 +88,6 @@ export default function CatalogPage() {
     if (odstin) setShadeFilter(odstin);
     const druh = params.get('druh');
     if (druh === 'stredoevropske' || druh === 'panenske') setKind(druh);
-    const kat = params.get('kategorie');
-    if (kat === 'luxe' || kat === 'platinum' || kat === 'baby') setCat(kat);
     const typ = params.get('typ');
     if (typ === 'BULK' || typ === 'PIECE') setSelectedType(typ);
     fetchCatalog();
@@ -108,22 +109,21 @@ export default function CatalogPage() {
     }
   };
 
-  // Sort items
+  // Řazení; kusy bez ceny jsou při řazení podle ceny vždy na konci
   const sortItems = (itemsToSort: CatalogItem[]): CatalogItem[] => {
     const sorted = [...itemsToSort];
+    const byPrice = (dir: 1 | -1) => (a: CatalogItem, b: CatalogItem) => {
+      const pa = priceOf(a), pb = priceOf(b);
+      if (pa === null || pb === null) return pa === pb ? a.priority - b.priority : pa === null ? 1 : -1;
+      return (pa - pb) * dir;
+    };
     switch (sortBy) {
+      case 'newest':
+        return sorted.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '') || a.priority - b.priority);
       case 'price-asc':
-        return sorted.sort((a, b) => {
-          const priceA = a.pricePerGramCzk || a.priceCzk || Infinity;
-          const priceB = b.pricePerGramCzk || b.priceCzk || Infinity;
-          return priceA - priceB;
-        });
+        return sorted.sort(byPrice(1));
       case 'price-desc':
-        return sorted.sort((a, b) => {
-          const priceA = a.pricePerGramCzk || a.priceCzk || 0;
-          const priceB = b.pricePerGramCzk || b.priceCzk || 0;
-          return priceB - priceA;
-        });
+        return sorted.sort(byPrice(-1));
       case 'recommended':
       default:
         return sorted.sort((a, b) => a.priority - b.priority);
@@ -134,7 +134,6 @@ export default function CatalogPage() {
   const filteredItems = items.filter((item) => {
     if (selectedType !== 'ALL' && item.type !== selectedType) return false;
     if (shadeFilter && Number(item.shade) !== shadeFilter) return false;
-    if (cat && item.tier !== CATS.find((c) => c.v === cat)?.tier) return false;
     // druh určuje u kusu pole isDyed (barvené = středoevropské, nebarvené = panenské);
     // u položek bez něj se odvodí z odstínu jako dřív
     if (kind) {
@@ -184,36 +183,6 @@ export default function CatalogPage() {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="mb-10 flex flex-col sm:flex-row gap-6 items-center justify-between">
-          {/* Kategorie vlasů */}
-          <div className="flex gap-2 flex-wrap">
-            {CATS.map((c) => {
-              const on = cat === c.v;
-              const disabled = c.v === 'baby' && !babyAllowed(shadeFilter);
-              return (
-                <button key={c.label} type="button" aria-pressed={on} disabled={disabled}
-                  title={disabled ? 'Baby Shades jsou jen v odstínech 7–10' : undefined}
-                  onClick={() => { setCat(c.v); setParam('kategorie', c.v); }}
-                  className={`h-10 px-5 rounded-full text-[14px] border transition-colors disabled:opacity-35 disabled:pointer-events-none ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
-                  {c.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Sort */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'recommended' | 'price-asc' | 'price-desc')}
-            className="px-4 py-2 rounded-lg border border-burgundy text-burgundy font-medium focus:outline-none focus:ring-2 focus:ring-burgundy"
-          >
-            <option value="recommended">Doporučené</option>
-            <option value="price-asc">Cena: od nejnižší</option>
-            <option value="price-desc">Cena: od nejvyšší</option>
-          </select>
-        </div>
-
         {/* Druh vlasů: stejné dvě volby jako na hlavní stránce */}
         <div className="mb-6 flex gap-2 flex-wrap">
           {([
@@ -246,7 +215,6 @@ export default function CatalogPage() {
                   onClick={() => {
                     setShadeFilter(n);
                     setParam('odstin', n ? String(n) : null);
-                    if (cat === 'baby' && !babyAllowed(n)) { setCat(null); setParam('kategorie', null); }
                   }}
                   className="flex-none w-14 lg:w-16 text-center">
                   <span className={`block h-[76px] lg:h-[88px] rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha transition-[box-shadow,opacity] ${on ? 'ring-2 ring-muza-ink ring-offset-2 ring-offset-soft-cream' : 'opacity-80 hover:opacity-100'}`}>
@@ -264,7 +232,22 @@ export default function CatalogPage() {
           </div>
         </div>
 
-        <div className="text-sm text-text-mid mb-6">Zobrazeno {sortedItems.length} produktů</div>
+        {/* Počet a řazení */}
+        <div className="mb-6 flex items-center gap-3 flex-wrap">
+          <span className="text-sm text-text-mid tabular-nums">{sortedItems.length} {sortedItems.length === 1 ? 'kus' : sortedItems.length >= 2 && sortedItems.length <= 4 ? 'kusy' : 'kusů'}</span>
+          <div role="group" aria-label="Seřadit" className="ml-auto flex items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-soft mr-1 flex-none">Seřadit</span>
+            {SORTS.map((o) => {
+              const on = sortBy === o.v;
+              return (
+                <button key={o.v} type="button" aria-pressed={on} onClick={() => setSortBy(o.v)}
+                  className={`flex-none h-9 px-3.5 rounded-full text-[13px] transition-colors ${on ? 'bg-muza-ink text-muza-onink' : 'text-text-dark hover:bg-muza-mocha/60'}`}>
+                  {o.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Grid */}
         {sortedItems.length === 0 ? (
