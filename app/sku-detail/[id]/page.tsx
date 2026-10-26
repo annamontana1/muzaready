@@ -150,7 +150,6 @@ export default function SkuDetailPage() {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [lengthOpen, setLengthOpen] = useState(false);
-  const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchSku();
@@ -375,14 +374,8 @@ export default function SkuDetailPage() {
   const waMessage = `Dobrý den, mám zájem o ${sku.name || sku.sku}${sku.shadeName ? ` (${sku.shadeName})` : ''}: ${summaryLine}. Můžete mi ho připravit?`;
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
 
-  const onGalleryScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const i = Math.round(el.scrollLeft / el.clientWidth);
-    if (allImages[i] && allImages[i] !== currentImage) setSelectedImage(allImages[i]);
-  };
   const showImage = (i: number) => {
     setSelectedImage(allImages[i]);
-    galleryRef.current?.scrollTo({ left: i * galleryRef.current.clientWidth, behavior: 'smooth' });
   };
 
   const chip = (on: boolean) =>
@@ -406,21 +399,17 @@ export default function SkuDetailPage() {
       <div className="max-w-6xl mx-auto lg:px-12 lg:py-10">
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_440px] lg:gap-16 min-w-0">
 
-          {/* ── Galerie: tenký burgundy rámeček, fotky se dají posouvat prstem ── */}
+          {/* ── Galerie: tenký burgundy rámeček; jedna pevná fotka (žádné tažení prstem,
+               které při posouvání stránky hýbalo fotkou), přepíná se miniaturami pod ní ── */}
           <div className="px-4 pt-4 lg:px-0 lg:pt-0 min-w-0">
             <div className="rounded-t-[186px] rounded-b-[20px] border border-muza-ink p-[5px] max-w-[520px] mx-auto">
               {hasImages ? (
-                <div ref={galleryRef} onScroll={onGalleryScroll}
-                  className="flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-t-[180px] rounded-b-[14px] aspect-[4/5] bg-[#FCF8F4]">
-                  {allImages.map((img, idx) => (
-                    <button key={img} type="button" onClick={() => { setSelectedImage(img); openLightbox(); }}
-                      aria-label={`Zvětšit fotku ${idx + 1} z ${allImages.length}`}
-                      className="relative flex-none w-full h-full snap-center cursor-zoom-in">
-                      <img src={img} alt={idx === 0 ? (sku.name || 'Produkt') : ''} className="absolute inset-0 w-full h-full object-cover"
-                        loading={idx === 0 ? 'eager' : 'lazy'} />
-                    </button>
-                  ))}
-                </div>
+                <button type="button" onClick={openLightbox}
+                  aria-label={`Zvětšit fotku ${activeIndex + 1} z ${allImages.length}`}
+                  className="relative block w-full overflow-hidden rounded-t-[180px] rounded-b-[14px] aspect-[4/5] bg-[#FCF8F4] cursor-zoom-in">
+                  <img src={currentImage || allImages[0]} alt={sku.name || 'Produkt'} draggable={false}
+                    className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none" />
+                </button>
               ) : (
                 <div className="rounded-t-[180px] rounded-b-[14px] aspect-[4/5] flex items-center justify-center text-[11px] tracking-[0.1em] uppercase text-white/60"
                   style={{ background: sku.shadeHex ? `linear-gradient(135deg, ${sku.shadeHex}55, ${sku.shadeHex}aa)` : 'linear-gradient(135deg, #f5f0eb, #d4c5b9)' }}>
