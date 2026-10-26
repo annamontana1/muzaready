@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { GRAM_STEP, pieceGramsLeft } from '@/lib/sale-rule';
+import { PIECE_SOLD_OUT_AT, pieceGramsLeft } from '@/lib/sale-rule';
 import { CreateOrderSchema } from '@/lib/validation/orders';
 export const runtime = 'nodejs';
 
@@ -91,13 +91,13 @@ export async function POST(request: NextRequest) {
             if (currentSku.soldOut) {
               throw new Error(`Culík "${currentSku.name || currentSku.sku}" již není dostupný`);
             }
-            // Culík prodaný po gramech: odečíst gramy, vyprodaný je, až zbude méně než jeden krok (10 g)
+            // Culík prodaný po gramech: odečíst gramy, vyprodaný je, když zbude 50 g nebo méně
             const left = pieceGramsLeft(currentSku);
             if (item.grams > left) {
               throw new Error(`Z culíku "${currentSku.name || currentSku.sku}" zbývá jen ${left} g`);
             }
             const remaining = left - item.grams;
-            const gone = remaining < GRAM_STEP;
+            const gone = remaining <= PIECE_SOLD_OUT_AT;
             await tx.sku.update({
               where: { id: sku.id },
               data: {
