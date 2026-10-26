@@ -44,7 +44,18 @@ const CATS: { v: CatKey | null; label: string; tier?: string }[] = [
   { v: 'platinum', label: 'Platinum', tier: 'Platinum edition' },
   { v: 'baby', label: 'Baby Shades', tier: 'Baby Shades' },
 ];
-const SHADES = [1, 3, 4, 5, 6, 7, 8, 9, 10];
+// Stejné fotky odstínů jako ve vzorníku na hlavní stránce
+const SHADES = [
+  { num: 1, name: 'Černá', src: '/images/shades/01-cerna.jpg' },
+  { num: 3, name: 'Tmavě hnědá', src: '/images/shades/03-tmava-hneda.jpg' },
+  { num: 4, name: 'Hnědá', src: '/images/shades/04-hneda.jpg' },
+  { num: 5, name: 'Světle hnědá', src: '/images/shades/05-svetla-hneda.jpg' },
+  { num: 6, name: 'Tmavá blond', src: '/images/shades/06-tmava-blond.jpg' },
+  { num: 7, name: 'Blond', src: '/images/shades/07-blond.jpg' },
+  { num: 8, name: 'Světlá blond', src: '/images/shades/08-svetla-blond.jpg' },
+  { num: 9, name: 'Velmi světlá blond', src: '/images/shades/09-velmi-svetla-blond.jpg' },
+  { num: 10, name: 'Platinová blond', src: '/images/shades/10-platinova-blond.jpg' },
+];
 const babyAllowed = (shade: number | null) => !shade || shade >= 7;
 
 // Změna jednoho parametru v adrese bez přenačtení stránky
@@ -222,19 +233,29 @@ export default function CatalogPage() {
         {/* Odstín */}
         <div className="mb-6">
           <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-2">Odstín</div>
-          <div className="flex gap-1.5 flex-wrap">
-            {[null, ...SHADES].map((n) => {
+          {/* Fotky odstínů v oblouku jako na hlavní stránce; na mobilu se posouvají do strany */}
+          <div className="-mx-4 px-4 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {[null, ...SHADES].map((x) => {
+              const n = x ? x.num : null;
               const on = shadeFilter === n;
               return (
                 <button key={n ?? 'vse'} type="button" aria-pressed={on}
-                  aria-label={n ? `Odstín ${n}` : 'Všechny odstíny'}
+                  aria-label={x ? `Odstín ${x.num}, ${x.name}` : 'Všechny odstíny'}
                   onClick={() => {
                     setShadeFilter(n);
                     setParam('odstin', n ? String(n) : null);
                     if (cat === 'baby' && !babyAllowed(n)) { setCat(null); setParam('kategorie', null); }
                   }}
-                  className={`h-10 min-w-10 px-3 rounded-full text-[14px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
-                  {n ?? 'Vše'}
+                  className="flex-none w-14 lg:w-16 text-center">
+                  <span className={`block h-[76px] lg:h-[88px] rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha transition-[box-shadow,opacity] ${on ? 'ring-2 ring-muza-ink ring-offset-2 ring-offset-soft-cream' : 'opacity-80 hover:opacity-100'}`}>
+                    {x ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={x.src} alt="" loading="lazy" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="w-full h-full flex items-center justify-center text-[12px] text-text-dark">Vše</span>
+                    )}
+                  </span>
+                  <span className={`mt-1 block font-cormorant text-[18px] leading-none ${on ? 'text-muza-ink' : 'text-text-mid'}`}>{x ? x.num : '\u00A0'}</span>
                 </button>
               );
             })}
