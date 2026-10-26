@@ -129,6 +129,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
       assemblyFeeTotal: 0,
       lineGrandTotal: price,
       quantity: 1,
+      imageUrl: props.imageUrl,
     });
     handleAddedToCart();
   };
@@ -295,6 +296,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         shadeName={props.shadeName || ''}
         structure={props.structure || ''}
         tier={props.tier}
+        imageUrl={props.imageUrl}
         {...(byGrams ? {
           minGrams: props.saleMode === 'BULK_G' ? (props.minOrderG || props.stepG || GRAM_STEP) : PIECE_MIN_GRAMS,
           maxGrams: props.saleMode === 'BULK_G' ? (props.availableGrams || 300) : Math.min(PIECE_MAX_GRAMS, props.availableGrams || props.weightGrams || PIECE_MAX_GRAMS),

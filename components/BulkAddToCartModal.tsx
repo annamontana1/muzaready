@@ -20,6 +20,7 @@ interface BulkAddToCartModalProps {
   stepGrams?: number;
   // culík prodávaný po gramech zůstává v košíku jako PIECE_BY_WEIGHT (server ho tak počítá)
   cartSaleMode?: 'BULK_G' | 'PIECE_BY_WEIGHT';
+  imageUrl?: string; // miniatura v košíku
   onClose: () => void;
   onAdded?: () => void;
 }
@@ -38,6 +39,7 @@ export default function BulkAddToCartModal({
   maxGrams = 300,
   stepGrams = 10,
   cartSaleMode = 'BULK_G',
+  imageUrl,
   onClose,
   onAdded,
 }: BulkAddToCartModalProps) {
@@ -87,6 +89,7 @@ export default function BulkAddToCartModal({
         assemblyFeeTotal,
         lineGrandTotal,
         quantity: 1, // Always 1 for BULK
+        imageUrl,
       };
 
       addToCart(cartItem);

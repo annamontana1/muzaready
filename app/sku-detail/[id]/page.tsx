@@ -260,6 +260,7 @@ export default function SkuDetailPage() {
         lineGrandTotal: quote.lineGrandTotal,
         quantity: 1,
         selectedLength: sku.saleMode === 'BULK_G' || soldByGrams(sku) ? selectedLength : undefined,
+        imageUrl: sku.imageUrl || sku.images?.[0] || undefined,
       });
     }
     router.push('/kosik');

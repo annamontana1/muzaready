@@ -2,12 +2,29 @@
 
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { soldByGrams } from '@/lib/sale-rule';
 import { useTranslation, useLanguage } from '@/contexts/LanguageContext';
 
 export default function CartPage() {
   const { items, updateQuantity, updateGrams, removeFromCart, getTotalPrice, clearCart } = useCart();
+
+  // Miniatury: položky přidané dřív fotku nemají uloženou, dohledáme ji z detailu kusu
+  const [thumbs, setThumbs] = useState<Record<string, string>>({});
+  useEffect(() => {
+    const missing = items.filter((i) => !i.imageUrl && !thumbs[i.skuId]).map((i) => i.skuId);
+    if (!missing.length) return;
+    let alive = true;
+    Promise.all(missing.map((id) => fetch(`/api/sku/public/${id}`).then((r) => (r.ok ? r.json() : null)).catch(() => null)))
+      .then((list) => {
+        if (!alive) return;
+        const next: Record<string, string> = {};
+        list.forEach((sku, i) => { const url = sku?.imageUrl || sku?.images?.[0]; if (url) next[missing[i]] = url; });
+        if (Object.keys(next).length) setThumbs((t) => ({ ...t, ...next }));
+      });
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
   const [isClearing, setIsClearing] = useState(false);
   const { t } = useTranslation();
   const { language } = useLanguage();
@@ -142,7 +159,15 @@ export default function CartPage() {
                   borderBottom: index < items.length - 1 ? `1px solid var(--warm-beige)` : 'none'
                 }}
               >
-                <div className="flex gap-6">
+                <div className="flex gap-4 sm:gap-6">
+                  {/* Miniatura kusu, ať zákaznice vidí, co přesně kupuje */}
+                  <Link href={`/sku-detail/${item.skuId}`} aria-label={`Zobrazit ${item.skuName || 'produkt'}`}
+                    className="flex-none w-[76px] h-[100px] sm:w-[96px] sm:h-[128px] rounded-t-full rounded-b-xl overflow-hidden bg-muza-mocha">
+                    {item.imageUrl || thumbs[item.skuId] ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={item.imageUrl || thumbs[item.skuId]} alt="" className="w-full h-full object-cover" />
+                    ) : null}
+                  </Link>
                   <div className="flex-1 min-w-0">
 
                     {/* Product name */}

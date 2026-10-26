@@ -15,6 +15,7 @@ export interface SkuCartItem {
   lineGrandTotal: number;
   quantity: number; // for legacy support (usually 1 for SKU)
   selectedLength?: number; // délka zvolená v konfigurátoru (cm)
+  imageUrl?: string; // fotka kusu pro miniaturu v košíku
   addedAt: number; // timestamp when added to cart
 }
 
