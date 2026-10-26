@@ -3,6 +3,7 @@
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import { useState } from 'react';
+import { soldByGrams } from '@/lib/sale-rule';
 import { useTranslation, useLanguage } from '@/contexts/LanguageContext';
 
 export default function CartPage() {
@@ -174,7 +175,13 @@ export default function CartPage() {
                         <span style={{ color: 'var(--text-soft)' }}>Zakončení:</span>
                         <span>{getEndingLabel(item.ending)}</span>
                       </div>
-                      {item.saleMode === 'BULK_G' ? (
+                      {item.selectedLength ? (
+                        <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
+                          <span style={{ color: 'var(--text-soft)' }}>Délka:</span>
+                          <span>{item.selectedLength} cm</span>
+                        </div>
+                      ) : null}
+                      {soldByGrams({ saleMode: item.saleMode, customerCategory: item.customerCategory }) ? (
                         <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
                           <span style={{ color: 'var(--text-soft)' }}>Gramáž:</span>
                           <span>{item.grams}g @ {formatPrice(item.pricePerGram)}/g</span>
@@ -187,8 +194,8 @@ export default function CartPage() {
                       )}
                       {item.assemblyFeeTotal > 0 && (
                         <div className="flex gap-2 text-sm font-light" style={{ color: 'var(--text-mid)' }}>
-                          <span style={{ color: 'var(--text-soft)' }}>Servisní poplatek:</span>
-                          <span>{formatPrice(item.assemblyFeeTotal)}</span>
+                          <span style={{ color: 'var(--text-soft)' }}>Cena zakončení:</span>
+                          <span>{formatPrice(item.assemblyFeeTotal)}{item.assemblyFeeType === 'PER_GRAM' ? ` (${item.grams} g × ${formatPrice(item.assemblyFeeCzk)})` : ''}</span>
                         </div>
                       )}
                     </div>

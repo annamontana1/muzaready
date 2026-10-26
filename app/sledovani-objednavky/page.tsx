@@ -281,7 +281,7 @@ export default function OrderTrackingPage() {
                         {item.assemblyFeeTotal !== null && item.assemblyFeeTotal > 0 && (
                           <>
                             <div className="flex justify-between text-sm">
-                              <span className="text-text-mid">Poplatek za montáž:</span>
+                              <span className="text-text-mid">Cena zakončení:</span>
                               <span className="font-semibold text-text-dark">
                                 {formatPrice(item.assemblyFeeTotal)}
                               </span>

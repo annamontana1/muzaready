@@ -183,7 +183,7 @@ function ConfirmationContent() {
                     </p>
                     {item.assemblyFeeTotal && item.assemblyFeeTotal > 0 && (
                       <p className="text-sm text-text-soft">
-                        Poplatek za zakončení: {item.assemblyFeeTotal.toLocaleString('cs-CZ')} Kč
+                        Cena zakončení: {item.assemblyFeeTotal.toLocaleString('cs-CZ')} Kč
                       </p>
                     )}
                   </div>
