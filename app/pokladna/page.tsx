@@ -527,25 +527,28 @@ export default function PokladnaPage() {
                       )}
 
                       {on && needsAddress && (
-                        <div className="ml-[34px] mb-4 grid grid-cols-[1fr_96px] gap-x-3.5">
-                          <label className="col-span-2">
-                            <span className={labelClass}>{dpdPoint ? 'Výdejní místo DPD (název nebo ulice)' : 'Ulice a číslo'}</span>
+                        // Adresa v jedné kartě přes celou šířku, ať se stránka při výběru nerozjíždí
+                        <div className="mb-4 rounded-2xl border border-muza-line bg-[#F7F3EE] p-3.5 flex flex-col gap-3">
+                          <label className="block">
+                            <span className="block mb-1 text-[13px] text-[#45302F]">Ulice a číslo</span>
                             <input type="text" name="streetAddress" autoComplete="street-address" required value={formData.streetAddress}
-                              onChange={handleInputChange} disabled={loading} className={fieldClass} />
+                              onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50" />
                           </label>
-                          <label className="pt-2.5">
-                            <span className={labelClass}>Město</span>
-                            <input type="text" name="city" autoComplete="address-level2" required value={formData.city}
-                              onChange={handleInputChange} disabled={loading} className={fieldClass} />
-                          </label>
-                          <label className="pt-2.5">
-                            <span className={labelClass}>PSČ</span>
-                            <input type="text" name="zipCode" autoComplete="postal-code" inputMode="numeric" required value={formData.zipCode}
-                              onChange={handleInputChange} disabled={loading} className={fieldClass} />
-                          </label>
-                          <label className="col-span-2 pt-2.5">
-                            <span className={labelClass}>Země</span>
-                            <select name="country" autoComplete="country" value={formData.country} onChange={handleInputChange} disabled={loading} className={fieldClass}>
+                          <div className="grid grid-cols-[minmax(0,1fr)_110px] gap-3">
+                            <label className="block min-w-0">
+                              <span className="block mb-1 text-[13px] text-[#45302F]">Město</span>
+                              <input type="text" name="city" autoComplete="address-level2" required value={formData.city}
+                                onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50" />
+                            </label>
+                            <label className="block">
+                              <span className="block mb-1 text-[13px] text-[#45302F]">PSČ</span>
+                              <input type="text" name="zipCode" autoComplete="postal-code" inputMode="numeric" required value={formData.zipCode}
+                                onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50" />
+                            </label>
+                          </div>
+                          <label className="block">
+                            <span className="block mb-1 text-[13px] text-[#45302F]">Země</span>
+                            <select name="country" autoComplete="country" value={formData.country} onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50">
                               <option value="CZ">Česká republika</option>
                               <option value="SK">Slovensko</option>
                               <option value="PL">Polsko</option>

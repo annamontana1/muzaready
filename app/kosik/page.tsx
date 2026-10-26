@@ -194,9 +194,10 @@ export default function CartPage() {
             </button>
           </div>
           {/* Upozornění na jiné podmínky odstoupení u individuálních výrobků a souhlas s podmínkami */}
-          <Link href="/obchodni-podminky#individualni-vyrobek" className="mt-5 flex items-start gap-2.5 text-[13px] leading-snug text-[#45302F] hover:text-muza-ink">
-            <span aria-hidden="true" className="mt-px flex-none w-[18px] h-[18px] rounded-full border border-muza-ink text-muza-ink text-[11px] font-semibold leading-none flex items-center justify-center">i</span>
-            <span>Pozor, u individuálních výrobků na míru platí <span className="underline underline-offset-2">jiné podmínky pro odstoupení od smlouvy</span>.</span>
+          <Link href="/obchodni-podminky#individualni-vyrobek"
+            className="mt-5 flex items-start gap-3 rounded-2xl border border-muza-ink bg-[#F7F3EE] p-3.5 text-sm leading-snug text-text-dark hover:bg-white transition-colors">
+            <span aria-hidden="true" className="mt-px flex-none w-6 h-6 rounded-full bg-muza-ink text-muza-onink text-[13px] font-semibold leading-none flex items-center justify-center">i</span>
+            <span><b className="font-semibold text-muza-ink">Pozor:</b> u individuálních výrobků na míru platí <span className="underline underline-offset-2">jiné podmínky pro odstoupení od smlouvy</span>.</span>
           </Link>
           <label id="souhlas" className={`mt-4 flex items-start gap-2.5 text-sm cursor-pointer rounded-lg transition-colors ${nudge && !agreed ? 'text-error' : ''}`}>
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)}
