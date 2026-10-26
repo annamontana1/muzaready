@@ -446,7 +446,7 @@ export default function SkuDetailPage() {
           {/* ── Informace a konfigurace ── */}
           <div className="px-4 lg:px-0 min-w-0">
             <div className="mt-5 lg:mt-0">
-              <h1 className="font-cormorant font-normal text-[40px] lg:text-[48px] leading-[1.02] text-muza-ink">{title}</h1>
+              <h1 className="font-cormorant font-normal [font-variant-numeric:lining-nums] text-[40px] lg:text-[48px] leading-[1.02] text-muza-ink">{title}</h1>
               {/* Údaje jako tabulka (návrh B): kategorie, odstín, struktura */}
               <dl className="mt-3.5">
                 {[
@@ -550,7 +550,7 @@ export default function SkuDetailPage() {
               </fieldset>
 
               {/* Rozpis ceny: jen tichý přehled, hlavní součet je dole u tlačítka Do košíku */}
-              <div className="border-t border-muza-line pt-3 flex flex-col gap-1.5 text-[13px] text-text-mid" aria-live="polite">
+              <div className="-mt-2 flex flex-col gap-1.5 text-[13px] text-text-mid" aria-live="polite">
                 {quote ? (
                   <>
                     <div className="flex justify-between gap-3">
@@ -579,7 +579,7 @@ export default function SkuDetailPage() {
               <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="text-[13px] text-text-mid">{summaryLine}</span>
-                  <span className="font-cormorant font-semibold text-[34px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
+                  <span className="font-jost font-semibold text-[30px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
                 </div>
                 {cta}
               </div>
@@ -620,7 +620,7 @@ export default function SkuDetailPage() {
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <div className="text-[11px] text-text-mid truncate">{summaryLine}</div>
-          <div className="font-cormorant font-semibold text-[30px] leading-none mt-0.5 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
+          <div className="font-jost font-semibold text-[26px] leading-none mt-1 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
         </div>
         {cta}
       </div>
