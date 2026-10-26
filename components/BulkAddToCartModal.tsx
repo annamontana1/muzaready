@@ -15,6 +15,9 @@ interface BulkAddToCartModalProps {
   shadeName: string;
   structure: string;
   tier: string;
+  minGrams?: number;
+  maxGrams?: number;
+  stepGrams?: number;
   onClose: () => void;
   onAdded?: () => void;
 }
@@ -29,11 +32,14 @@ export default function BulkAddToCartModal({
   shadeName,
   structure,
   tier,
+  minGrams = 50,
+  maxGrams = 300,
+  stepGrams = 10,
   onClose,
   onAdded,
 }: BulkAddToCartModalProps) {
   const { addToCart } = useCart();
-  const [grams, setGrams] = useState(100);
+  const [grams, setGrams] = useState(Math.min(maxGrams, Math.max(minGrams, 100)));
   const [ending, setEnding] = useState<'NONE' | 'KERATIN'>('NONE');
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -118,8 +124,8 @@ export default function BulkAddToCartModal({
           </label>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setGrams(Math.max(50, grams - 10))}
-              disabled={grams <= 50 || isAdding}
+              onClick={() => setGrams(Math.max(minGrams, grams - stepGrams))}
+              disabled={grams <= minGrams || isAdding}
               className="px-3 py-2 border border-warm-beige rounded-lg hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               −
@@ -128,25 +134,26 @@ export default function BulkAddToCartModal({
               type="number"
               value={grams}
               onChange={(e) => {
-                const val = parseInt(e.target.value) || 50;
-                setGrams(Math.max(50, Math.min(300, val)));
+                const val = parseInt(e.target.value) || minGrams;
+                const snapped = minGrams + Math.round((val - minGrams) / stepGrams) * stepGrams;
+                setGrams(Math.max(minGrams, Math.min(maxGrams, snapped)));
               }}
               disabled={isAdding}
               className="w-20 text-center border border-warm-beige rounded-lg py-2 focus:outline-none focus:ring-2 focus:ring-burgundy disabled:opacity-50"
-              min="50"
-              max="300"
-              step="10"
+              min={minGrams}
+              max={maxGrams}
+              step={stepGrams}
             />
             <span className="text-sm text-text-mid">g</span>
             <button
-              onClick={() => setGrams(Math.min(300, grams + 10))}
-              disabled={grams >= 300 || isAdding}
+              onClick={() => setGrams(Math.min(maxGrams, grams + stepGrams))}
+              disabled={grams >= maxGrams || isAdding}
               className="px-3 py-2 border border-warm-beige rounded-lg hover:bg-soft-cream disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               +
             </button>
           </div>
-          <p className="text-xs text-text-soft mt-1">Rozsah: 50-300 g (kroky po 10 g)</p>
+          <p className="text-xs text-text-soft mt-1">Rozsah: {minGrams}–{maxGrams} g (kroky po {stepGrams} g)</p>
         </div>
 
         {/* Ending selector */}

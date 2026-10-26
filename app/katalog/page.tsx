@@ -31,6 +31,10 @@ interface CatalogItem {
   priceEur?: number;
   inStock: boolean;
   priority: number;
+  saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
+  availableGrams?: number;
+  minOrderG?: number;
+  stepG?: number;
 }
 
 export default function CatalogPage() {
@@ -235,6 +239,10 @@ export default function CatalogPage() {
                 pricePerGramCzk={item.pricePerGramCzk}
                 priceCzk={item.priceCzk}
                 inStock={item.inStock}
+                saleMode={item.saleMode}
+                availableGrams={item.availableGrams}
+                minOrderG={item.minOrderG}
+                stepG={item.stepG}
               />
             ))}
           </div>

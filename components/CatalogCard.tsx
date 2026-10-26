@@ -8,6 +8,7 @@ import AddToCartModal from './AddToCartModal';
 import BulkAddToCartModal from './BulkAddToCartModal';
 import PieceCard from './PieceCard';
 import { usePreferences } from '@/lib/preferences-context';
+import { useCart } from '@/hooks/useCart';
 
 /**
  * Unified catalog card for both BULK (Product) and PIECE (SKU) items
@@ -31,6 +32,11 @@ interface CatalogCardProps {
   inStock: boolean;
   imageUrl?: string;
   imageUrl2?: string; // druhá fotka (zblízka), ukáže se jako miniatura pod fotkou
+  // PIECE: celý culík rovnou do košíku (PIECE_BY_WEIGHT), nebo výběr gramáže (BULK_G)
+  saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
+  availableGrams?: number;
+  minOrderG?: number;
+  stepG?: number;
 }
 
 const getTierLabel = (tier: string) => {
@@ -81,6 +87,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
   const [showAddToCartModal, setShowAddToCartModal] = useState(false);
   const [showBulkAddToCartModal, setShowBulkAddToCartModal] = useState(false);
   const { currency, exchangeRate } = usePreferences();
+  const { addToCart } = useCart();
   const rate = exchangeRate || DEFAULT_RATE;
   const shadeColor = getShadeColor(props.shade);
   const tierLabel = getTierLabel(props.tier);
@@ -93,8 +100,34 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
 
     if (props.type !== 'PIECE') return;
 
-    // Open modal for adding to cart
-    setShowAddToCartModal(true);
+    // Po gramech: výběr gramáže; celý culík: rovnou do košíku
+    if (byGrams) setShowBulkAddToCartModal(true);
+    else addWholePiece();
+  };
+
+  const byGrams = props.type === 'PIECE' && props.saleMode === 'BULK_G';
+  const hasPrice = byGrams ? Boolean(props.pricePerGramCzk) : Boolean(props.priceCzk);
+
+  const addWholePiece = () => {
+    const grams = props.weightGrams || 0;
+    const price = props.priceCzk || 0;
+    addToCart({
+      skuId: props.id,
+      skuName: props.name,
+      customerCategory: null,
+      shade: props.shade ? String(props.shade) : null,
+      saleMode: 'PIECE_BY_WEIGHT',
+      grams,
+      pricePerGram: grams > 0 ? price / grams : price,
+      lineTotal: price,
+      ending: 'NONE',
+      assemblyFeeType: 'FLAT',
+      assemblyFeeCzk: 0,
+      assemblyFeeTotal: 0,
+      lineGrandTotal: price,
+      quantity: 1,
+    });
+    handleAddedToCart();
   };
 
   const handleAddedToCart = () => {
@@ -234,10 +267,10 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         meta={[props.shade && `odstín ${props.shade}`, props.lengthCm && `${props.lengthCm} cm`, props.weightGrams && `${props.weightGrams} g`].filter(Boolean).join(' · ')}
         price={props.priceCzk ? formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency) : undefined}
         soldOut={!props.inStock}
-        action={props.inStock && props.priceCzk ? (
-          <button type="button" onClick={handleAddToCart}
-            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] hover:bg-muza-ink hover:text-muza-onink transition-colors">
-            {showAddedMessage ? 'Přidáno' : 'Do košíku'}
+        action={props.inStock ? (
+          <button type="button" onClick={handleAddToCart} disabled={!hasPrice}
+            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] hover:bg-muza-ink hover:text-muza-onink transition-colors disabled:opacity-40 disabled:pointer-events-none">
+            {!hasPrice ? 'Cenu doplňujeme' : showAddedMessage ? 'Přidáno' : byGrams ? 'Do košíku (vybrat gramy)' : 'Do košíku'}
           </button>
         ) : null} />
 
@@ -253,6 +286,11 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         shadeName={props.shadeName || ''}
         structure={props.structure || ''}
         tier={props.tier}
+        {...(byGrams ? {
+          minGrams: props.minOrderG || props.stepG || 10,
+          maxGrams: props.availableGrams || props.weightGrams || 300,
+          stepGrams: props.stepG || 10,
+        } : {})}
         onClose={() => setShowBulkAddToCartModal(false)}
         onAdded={handleAddedToCart}
       />

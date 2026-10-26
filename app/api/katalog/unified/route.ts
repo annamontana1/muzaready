@@ -39,6 +39,11 @@ interface UnifiedItem {
   priceEur?: number;
   inStock: boolean;
   priority: number;
+  // způsob prodeje: celý culík (PIECE_BY_WEIGHT) nebo po gramech (BULK_G)
+  saleMode?: 'PIECE_BY_WEIGHT' | 'BULK_G';
+  availableGrams?: number;
+  minOrderG?: number;
+  stepG?: number;
 }
 
 export async function GET(request: NextRequest) {
@@ -147,6 +152,11 @@ export async function GET(request: NextRequest) {
           weightGrams: weight,
           priceCzk,
           priceEur,
+          pricePerGramCzk: sku.pricePerGramCzk || undefined,
+          saleMode: sku.saleMode,
+          availableGrams: sku.availableGrams ?? weight,
+          minOrderG: sku.minOrderG ?? undefined,
+          stepG: sku.stepG ?? undefined,
           inStock: true, // All items here are in stock (already filtered)
           priority: priority++,
         });
