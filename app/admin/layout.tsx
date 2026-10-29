@@ -18,6 +18,7 @@ const navigation = {
     { href: '/admin/prodeje/novy', label: 'Nový prodej', icon: '🛒' },
     { href: '/admin/objednavky', label: 'Objednávky', icon: '📋' },
     { href: '/admin/zakaznici', label: 'Zákazníci', icon: '👥' },
+    { href: '/admin/velkoobchod-zadosti', label: 'Velkoobchod – žádosti', icon: '🏢' },
     { href: '/admin/reporty', label: 'Reporty', icon: '📈' },
     { href: '/admin/b2b', label: 'B2B Komise', icon: '🤝' },
   ],
