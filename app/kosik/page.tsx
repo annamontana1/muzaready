@@ -3,6 +3,7 @@
 import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider';
 import { useEffect, useState } from 'react';
 import { soldByGrams, GRAM_STEP, PIECE_MIN_GRAMS, PIECE_MAX_GRAMS } from '@/lib/sale-rule';
 
@@ -45,6 +46,8 @@ export default function CartPage() {
   const { items, updateGrams, removeFromCart, getTotalPrice } = useCart();
   const [info, setInfo] = useState<Record<string, PieceInfo>>({});
   const [agreed, setAgreed] = useState(false);
+  const { user } = useAuth();
+  const wholesale = !!user?.isWholesale;
 
   useEffect(() => {
     const missing = items.map((i) => i.skuId).filter((id) => !info[id]);
@@ -180,6 +183,7 @@ export default function CartPage() {
 
         <aside aria-label="Souhrn košíku" className="mt-6 lg:mt-14 lg:sticky lg:top-28">
           <div className="rounded-2xl border border-muza-line bg-muza-cream p-4 flex flex-col gap-2 text-sm">
+            {wholesale && <div className="font-medium text-[#2F5E3D]">Velkoobchodní ceny: −10 % už v cenách</div>}
             <div className="flex justify-between"><span className="text-[#45302F]">Mezisoučet</span><span className="tabular-nums">{formatPrice(subtotal)}</span></div>
             <div className="flex justify-between gap-3"><span className="text-[#45302F]">Doprava</span><span className="text-[#45302F] text-right">vyberete v dalším kroku</span></div>
           </div>

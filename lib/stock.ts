@@ -107,8 +107,12 @@ async function getPriceMatrixLookup(): Promise<Map<string, number>> {
 }
 
 export async function quoteCartLines(
-  lines: Array<{ skuId: string; wantedGrams?: number; ending?: string; selectedLength?: number }>
+  lines: Array<{ skuId: string; wantedGrams?: number; ending?: string; selectedLength?: number }>,
+  opts: { wholesaleDiscountPercent?: number } = {}
 ) {
+  // Velkoobchod: cena za gram vlasů i zakončení se sníží o slevu, ať sedí všechny součty
+  const factor = 1 - (opts.wholesaleDiscountPercent ?? 0) / 100;
+  const discounted = (n: number) => (factor === 1 ? n : Math.round(n * factor * 100) / 100);
   const skuIds = lines.map((l) => l.skuId);
   const skus = await prisma.sku.findMany({
     where: { id: { in: skuIds } },
@@ -180,11 +184,18 @@ export async function quoteCartLines(
       throw new Error('Chybí cena v matice pro vybraný produkt');
     }
 
+    pricePerGram = discounted(Number(pricePerGram));
     const lineTotal = pricePerGram * grams;
 
     // Calculate assembly fee (default to NONE if not specified)
     const ending = line.ending || 'NONE';
-    const assemblyFee = calculateAssemblyFee(ending, grams);
+    const baseFee = calculateAssemblyFee(ending, grams);
+    const assemblyFeeCzk = discounted(baseFee.assemblyFeeCzk);
+    const assemblyFee = {
+      ...baseFee,
+      assemblyFeeCzk,
+      assemblyFeeTotal: baseFee.assemblyFeeType === 'PER_GRAM' ? assemblyFeeCzk * grams : discounted(baseFee.assemblyFeeTotal),
+    };
 
     return {
       sku,
@@ -204,5 +215,5 @@ export async function quoteCartLines(
   });
 
   const total = detailed.reduce((s, d) => s + d.lineGrandTotal, 0);
-  return { items: detailed, total };
+  return { items: detailed, total, wholesaleDiscountPercent: opts.wholesaleDiscountPercent ?? 0 };
 }

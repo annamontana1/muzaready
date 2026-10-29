@@ -37,10 +37,14 @@ export async function POST(request: NextRequest) {
 
     // Validate and quote the cart lines - recalculate all prices to ensure freshness
     let quotedLines;
+    let wholesale = false;
     try {
       // Note: This recalculates ALL prices from the database/matrix
       // This prevents price discrepancies from stale cart items
-      const quote = await quoteCartLines(cartLines);
+      // Velkoobchod: −10 % podle přihlášeného schváleného účtu
+      const { isWholesaleSession, WHOLESALE_DISCOUNT_PERCENT } = await import('@/lib/session-user');
+      wholesale = await isWholesaleSession();
+      const quote = await quoteCartLines(cartLines, { wholesaleDiscountPercent: wholesale ? WHOLESALE_DISCOUNT_PERCENT : 0 });
       quotedLines = quote.items;
     } catch (quoteError: any) {
       return NextResponse.json(
@@ -164,6 +168,7 @@ export async function POST(request: NextRequest) {
             paymentMethod: viaWhatsApp ? 'whatsapp' : paymentMethod === 'transfer' ? 'bank_transfer' : 'gopay', // admin zná převod jako bank_transfer
             channel: viaWhatsApp ? 'whatsapp' : 'web',
             notesCustomer: note?.trim() || null,
+            notesInternal: wholesale ? 'Velkoobchod: ceny se slevou −10 %' : null,
             deliveryStatus: 'pending',
             subtotal: subtotalAmount,
             shippingCost: shippingCost,
