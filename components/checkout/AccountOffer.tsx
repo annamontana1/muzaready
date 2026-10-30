@@ -60,7 +60,7 @@ export default function AccountOffer({ email, firstName, lastName, phone }: Prop
         <input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
           className="mt-1.5 w-full h-[50px] px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light focus:outline-none focus:border-muza-ink" />
       </label>
-      {(error || state === 'error') && <p role="alert" className="mt-2 text-[13px] text-error">{error || 'Účet se nepodařilo vytvořit, zkuste to prosím znovu.'}</p>}
+      {(error || state === 'error') && <p role="alert" className="mt-2 text-[14px] text-error">{error || 'Účet se nepodařilo vytvořit, zkuste to prosím znovu.'}</p>}
       <button type="button" onClick={create} disabled={state === 'saving'}
         className="mt-3 w-full h-[52px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 disabled:opacity-50">
         {state === 'saving' ? 'Vytvářím…' : 'Vytvořit účet'}

@@ -271,7 +271,7 @@ export default function SkuDetailPage() {
                 style={{ borderColor: 'var(--burgundy)', borderRightColor: 'transparent' }}
               />
               <p
-                className="text-[12px] tracking-[0.1em] uppercase font-light"
+                className="text-[13px] tracking-[0.1em] uppercase font-light"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Načítám produkt…
@@ -299,7 +299,7 @@ export default function SkuDetailPage() {
             </p>
             <Link
               href="/katalog"
-              className="text-[11px] tracking-[0.12em] uppercase font-light inline-flex items-center gap-2 transition-colors"
+              className="text-[12px] tracking-[0.12em] uppercase font-light inline-flex items-center gap-2 transition-colors"
               style={{ color: 'var(--text-soft)' }}
             >
               ← Zpět na katalog
@@ -407,7 +407,7 @@ export default function SkuDetailPage() {
                     className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none" />
                 </button>
               ) : (
-                <div className="rounded-t-[180px] rounded-b-[14px] aspect-[4/5] flex items-center justify-center text-[11px] tracking-[0.1em] uppercase text-white/60"
+                <div className="rounded-t-[180px] rounded-b-[14px] aspect-[4/5] flex items-center justify-center text-[12px] tracking-[0.1em] uppercase text-white/60"
                   style={{ background: sku.shadeHex ? `linear-gradient(135deg, ${sku.shadeHex}55, ${sku.shadeHex}aa)` : 'linear-gradient(135deg, #f5f0eb, #d4c5b9)' }}>
                   Foto připravujeme
                 </div>
@@ -470,7 +470,7 @@ export default function SkuDetailPage() {
                     <div className="rounded-2xl border border-muza-ink p-3.5 flex flex-col">
                       <span className="flex items-baseline justify-between gap-1">
                         <span className="text-sm font-normal text-[#45302F]">Gramáž</span>
-                        <span className="text-[11px] text-text-mid whitespace-nowrap">{gramRange}</span>
+                        <span className="text-[12px] text-text-mid whitespace-nowrap">{gramRange}</span>
                       </span>
                       <span className="mt-2.5 leading-none whitespace-nowrap" aria-live="polite">
                         <span className="font-jost font-semibold text-[32px] text-muza-ink tabular-nums">{gramsValue}</span>
@@ -484,7 +484,7 @@ export default function SkuDetailPage() {
                       </span>
                     </div>
                   </div>
-                  <p className="mt-2.5 text-[13px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
+                  <p className="mt-2.5 text-[14px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
                 </div>
               ) : (
                 sku.lengthCm ? (
@@ -497,7 +497,7 @@ export default function SkuDetailPage() {
                         {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{pieceLeft ? ` · ${pieceLeft} g` : ''} · celý culík
                       </span>
                     </span>
-                    <span className="flex items-center gap-1.5 text-[13px] text-muza-ink whitespace-nowrap">
+                    <span className="flex items-center gap-1.5 text-[14px] text-muza-ink whitespace-nowrap">
                       Kam sahá
                       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
                     </span>
@@ -525,7 +525,7 @@ export default function SkuDetailPage() {
                           <span aria-hidden="true" className={`w-5 h-5 flex-none rounded-full transition-[border-width] duration-150 ${on ? 'border-[6px] border-muza-ink' : 'border-[1.5px] border-[#8C7A74]'}`} />
                           <span className="text-[15px] font-normal text-text-dark">{o.label}</span>
                         </span>
-                        <span className="text-[13px] text-[#45302F]">{o.price}</span>
+                        <span className="text-[14px] text-[#45302F]">{o.price}</span>
                       </button>
                     );
                   })}
@@ -533,7 +533,7 @@ export default function SkuDetailPage() {
               </fieldset>
 
               {/* Rozpis ceny: jen tichý přehled, hlavní součet je dole u tlačítka Do košíku */}
-              <div className="-mt-2 flex flex-col gap-1.5 text-[13px] text-text-mid" aria-live="polite">
+              <div className="-mt-2 flex flex-col gap-1.5 text-[14px] text-text-mid" aria-live="polite">
                 {quote ? (
                   <>
                     {wholesalePct > 0 && (
@@ -568,7 +568,7 @@ export default function SkuDetailPage() {
               {/* Desktop: hlavní součet u tlačítka */}
               <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[13px] text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}{wholesalePct > 0 && <span className="block mt-1 text-[13px] font-medium text-[#2F5E3D]">Velkoobchodní cena</span>}</span>
+                  <span className="text-[14px] text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}{wholesalePct > 0 && <span className="block mt-1 text-[14px] font-medium text-[#2F5E3D]">Velkoobchodní cena</span>}</span>
                   <span className="font-jost font-semibold text-[30px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
                 </div>
                 {cta}
@@ -588,8 +588,8 @@ export default function SkuDetailPage() {
       {/* ── Mobil: spodní lišta s cenou ── */}
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] text-text-mid truncate">{summaryLine}</div>
-          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}{wholesalePct > 0 && <span className="ml-1.5 text-[12px] font-medium text-[#2F5E3D]">velkoobchodní cena</span>}</div>}
+          <div className="text-[12px] text-text-mid truncate">{summaryLine}</div>
+          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}{wholesalePct > 0 && <span className="ml-1.5 text-[13px] font-medium text-[#2F5E3D]">velkoobchodní cena</span>}</div>}
           <div className="font-jost font-semibold text-[26px] leading-none mt-1 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
         </div>
         {cta}
@@ -648,7 +648,7 @@ export default function SkuDetailPage() {
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
             >−</button>
-            <span className="text-white text-[12px] tracking-[0.1em] font-light min-w-[3rem] text-center">
+            <span className="text-white text-[13px] tracking-[0.1em] font-light min-w-[3rem] text-center">
               {Math.round(lightboxZoom * 100)}%
             </span>
             <button
@@ -660,7 +660,7 @@ export default function SkuDetailPage() {
             >+</button>
             <button
               onClick={() => { setLightboxZoom(1); setLightboxPos({ x: 0, y: 0 }); }}
-              className="ml-2 px-3 h-9 flex items-center justify-center rounded-sm text-[11px] tracking-[0.1em] uppercase font-light transition-all"
+              className="ml-2 px-3 h-9 flex items-center justify-center rounded-sm text-[12px] tracking-[0.1em] uppercase font-light transition-all"
               style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
@@ -669,7 +669,7 @@ export default function SkuDetailPage() {
 
           {/* Hint */}
           {lightboxZoom === 1 && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] tracking-[0.1em] font-light pointer-events-none" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[12px] tracking-[0.1em] font-light pointer-events-none" style={{ color: 'rgba(255,255,255,0.4)' }}>
               Scrolluj nebo pinch pro přiblížení
             </div>
           )}

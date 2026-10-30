@@ -106,7 +106,7 @@ export default function JakNakupovatPage() {
             <span className="text-burgundy">Jak nakupovat</span>
           </div>
 
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             PRŮVODCE NÁKUPEM
           </div>
@@ -210,7 +210,7 @@ export default function JakNakupovatPage() {
       {/* Tips — flat 3-column layout */}
       <div className="px-8 lg:px-20 py-12" style={{ background: 'var(--beige)' }}>
         <div className="max-w-4xl mx-auto">
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             UŽITEČNÉ RADY
           </div>

@@ -112,7 +112,7 @@ export default function ProdlouzeniVlasuChomutovPage() {
               <span style={{ color: 'var(--burgundy)' }}>Prodloužení vlasů Chomutov</span>
             </nav>
 
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               SHOWROOM PRAHA 1
             </div>
@@ -131,14 +131,14 @@ export default function ProdlouzeniVlasuChomutovPage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/kontakt"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Objednat se
               </Link>
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 E-shop vlasy
@@ -151,19 +151,19 @@ export default function ProdlouzeniVlasuChomutovPage() {
         <section className="px-8 lg:px-20 py-6" style={{ background: 'var(--burgundy)' }}>
           <div className="max-w-4xl flex flex-wrap gap-8" style={{ color: 'var(--ivory)' }}>
             <div>
-              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Showroom</p>
+              <p className="text-[12px] tracking-[0.18em] uppercase mb-1 opacity-70">Showroom</p>
               <p className="text-[14px] font-light">Revoluční 8, Praha 1</p>
             </div>
             <div>
-              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Otevřeno</p>
+              <p className="text-[12px] tracking-[0.18em] uppercase mb-1 opacity-70">Otevřeno</p>
               <p className="text-[14px] font-light">Po–Ne 10–20, na objednání</p>
             </div>
             <div>
-              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Z Chomutov</p>
+              <p className="text-[12px] tracking-[0.18em] uppercase mb-1 opacity-70">Z Chomutov</p>
               <p className="text-[14px] font-light">1,5 hodiny vlakem · 1 hodinu autem</p>
             </div>
             <div>
-              <p className="text-[10px] tracking-[0.18em] uppercase mb-1 opacity-70">Telefon</p>
+              <p className="text-[12px] tracking-[0.18em] uppercase mb-1 opacity-70">Telefon</p>
               <p className="text-[14px] font-light">+420 728 722 880</p>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function ProdlouzeniVlasuChomutovPage() {
         {/* Metody + ceny */}
         <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-4xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               METODY A CENY
             </div>
@@ -188,8 +188,8 @@ export default function ProdlouzeniVlasuChomutovPage() {
               ].map((m) => (
                 <div key={m.name} className="p-6 rounded-sm" style={{ background: 'var(--ivory)' }}>
                   <h3 className="font-cormorant text-[22px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
-                  <p className="text-[13px] mb-3" style={{ color: 'var(--burgundy)' }}>{m.price}</p>
-                  <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
+                  <p className="text-[14px] mb-3" style={{ color: 'var(--burgundy)' }}>{m.price}</p>
+                  <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
                 </div>
               ))}
             </div>
@@ -199,7 +199,7 @@ export default function ProdlouzeniVlasuChomutovPage() {
         {/* Kolekce vlasů */}
         <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-4xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               KOLEKCE VLASŮ
             </div>
@@ -215,14 +215,14 @@ export default function ProdlouzeniVlasuChomutovPage() {
               ].map((k) => (
                 <div key={k.name} className="p-6 rounded-sm border" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <h3 className="font-cormorant text-[22px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>{k.name}</h3>
-                  <p className="text-[11px] tracking-wider uppercase mb-2 font-light" style={{ color: 'var(--accent)' }}>{k.origin}</p>
-                  <p className="text-[13px] mb-3" style={{ color: 'var(--burgundy)' }}>{k.price}</p>
-                  <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{k.desc}</p>
+                  <p className="text-[12px] tracking-wider uppercase mb-2 font-light" style={{ color: 'var(--accent)' }}>{k.origin}</p>
+                  <p className="text-[14px] mb-3" style={{ color: 'var(--burgundy)' }}>{k.price}</p>
+                  <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{k.desc}</p>
                 </div>
               ))}
             </div>
 
-            <Link href="/vlasy-k-prodlouzeni" className="text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+            <Link href="/vlasy-k-prodlouzeni" className="text-[13px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
               Prohlédnout e-shop →
             </Link>
           </div>
@@ -231,7 +231,7 @@ export default function ProdlouzeniVlasuChomutovPage() {
         {/* FAQ */}
         <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-4xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               ČASTÉ OTÁZKY
             </div>
@@ -304,7 +304,7 @@ export default function ProdlouzeniVlasuChomutovPage() {
             <div className="flex flex-wrap gap-4">
               <a
                 href="tel:+420728722880"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 +420 728 722 880
@@ -313,7 +313,7 @@ export default function ProdlouzeniVlasuChomutovPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 Instagram

@@ -118,7 +118,7 @@ export default function StandardTierPage() {
         {/* ─── NADPIS ─── */}
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase mb-1 font-normal" style={{ color: 'var(--accent)' }}>
+            <p className="text-[12px] tracking-[0.2em] uppercase mb-1 font-normal" style={{ color: 'var(--accent)' }}>
               Základní kolekce
             </p>
             <h1 className="font-cormorant font-light leading-none" style={{ fontSize: 'clamp(24px,3vw,36px)', color: 'var(--text-dark)' }}>
@@ -127,7 +127,7 @@ export default function StandardTierPage() {
           </div>
           <Link
             href="/vlasy-k-prodlouzeni"
-            className="text-[11px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-1.5 transition-colors"
+            className="text-[12px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-1.5 transition-colors"
             style={{ color: 'var(--text-soft)' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
@@ -149,7 +149,7 @@ export default function StandardTierPage() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <div
-                  className="text-[10px] tracking-[0.2em] uppercase mb-1 font-normal"
+                  className="text-[12px] tracking-[0.2em] uppercase mb-1 font-normal"
                   style={{ color: 'var(--accent)' }}
                 >
                   Filtrování
@@ -164,7 +164,7 @@ export default function StandardTierPage() {
               {hasActiveFilters && (
                 <button
                   onClick={resetFilters}
-                  className="text-[11px] tracking-[0.12em] uppercase font-light transition-colors flex items-center gap-2"
+                  className="text-[12px] tracking-[0.12em] uppercase font-light transition-colors flex items-center gap-2"
                   style={{ color: 'var(--text-soft)' }}
                   onMouseEnter={e => (e.currentTarget.style.color = 'var(--burgundy)')}
                   onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-soft)')}
@@ -177,7 +177,7 @@ export default function StandardTierPage() {
             {/* Typ vlasu */}
             <div className="mb-8">
               <div
-                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                className="text-[12px] tracking-[0.18em] uppercase mb-4 font-normal"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Typ vlasu
@@ -191,7 +191,7 @@ export default function StandardTierPage() {
                   <button
                     key={value}
                     onClick={() => setColorType(value)}
-                    className="text-[11px] tracking-[0.1em] uppercase px-5 py-2 rounded-sm font-normal transition-all"
+                    className="text-[12px] tracking-[0.1em] uppercase px-5 py-2 rounded-sm font-normal transition-all"
                     style={
                       filters.colorType === value
                         ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -209,7 +209,7 @@ export default function StandardTierPage() {
             {/* Odstíny */}
             <div className="mb-8">
               <div
-                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                className="text-[12px] tracking-[0.18em] uppercase mb-4 font-normal"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Odstín {filters.shades.length > 0 && `· ${filters.shades.sort((a, b) => a - b).map(s => HAIR_COLORS[s]?.name).join(', ')}`}
@@ -224,7 +224,7 @@ export default function StandardTierPage() {
             {/* Struktura */}
             <div className="mb-8">
               <div
-                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                className="text-[12px] tracking-[0.18em] uppercase mb-4 font-normal"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Struktura {filters.structures.length > 0 && `· ${filters.structures.length} vybráno`}
@@ -236,7 +236,7 @@ export default function StandardTierPage() {
                     <button
                       key={name}
                       onClick={() => toggleStructure(name)}
-                      className="text-[10px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-sm font-light transition-all flex-shrink-0 whitespace-nowrap"
+                      className="text-[12px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-sm font-light transition-all flex-shrink-0 whitespace-nowrap"
                       style={
                         isSelected
                           ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -255,7 +255,7 @@ export default function StandardTierPage() {
             {/* Délka */}
             <div>
               <div
-                className="text-[10px] tracking-[0.18em] uppercase mb-4 font-normal"
+                className="text-[12px] tracking-[0.18em] uppercase mb-4 font-normal"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Délka {filters.lengths.length > 0 && `· ${filters.lengths.sort((a, b) => a - b).map(l => `${l} cm`).join(', ')}`}
@@ -265,7 +265,7 @@ export default function StandardTierPage() {
                   <button
                     key={length}
                     onClick={() => toggleLength(length)}
-                    className="text-[11px] tracking-[0.08em] py-2.5 rounded-sm font-light transition-all text-center"
+                    className="text-[12px] tracking-[0.08em] py-2.5 rounded-sm font-light transition-all text-center"
                     style={
                       filters.lengths.includes(length)
                         ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -285,7 +285,7 @@ export default function StandardTierPage() {
               <div className="mt-6 pt-6 flex flex-wrap gap-2" style={{ borderTop: '1px solid var(--beige)' }}>
                 {filters.colorType && (
                   <span
-                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    className="text-[12px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
                     style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                   >
                     {filters.colorType === 'nebarvene' ? 'Nebarvené' : 'Barvené'}
@@ -295,7 +295,7 @@ export default function StandardTierPage() {
                 {filters.shades.sort((a, b) => a - b).map((shade) => (
                   <span
                     key={shade}
-                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    className="text-[12px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
                     style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                   >
                     {HAIR_COLORS[shade]?.name}
@@ -305,7 +305,7 @@ export default function StandardTierPage() {
                 {filters.structures.map((s) => (
                   <span
                     key={s}
-                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    className="text-[12px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
                     style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                   >
                     {s}
@@ -315,7 +315,7 @@ export default function StandardTierPage() {
                 {filters.lengths.sort((a, b) => a - b).map((l) => (
                   <span
                     key={l}
-                    className="text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
+                    className="text-[12px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-sm font-normal flex items-center gap-2"
                     style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                   >
                     {l} cm
@@ -333,7 +333,7 @@ export default function StandardTierPage() {
                 className="inline-block h-7 w-7 rounded-full border-2 animate-spin"
                 style={{ borderColor: 'var(--burgundy)', borderRightColor: 'transparent' }}
               />
-              <p className="mt-4 text-[13px] font-light tracking-[0.1em]" style={{ color: 'var(--text-soft)' }}>
+              <p className="mt-4 text-[14px] font-light tracking-[0.1em]" style={{ color: 'var(--text-soft)' }}>
                 Načítání…
               </p>
             </div>
@@ -341,7 +341,7 @@ export default function StandardTierPage() {
             <>
               {/* Count */}
               <div className="mb-6 flex items-center justify-between">
-                <p className="text-[12px] font-light tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
+                <p className="text-[13px] font-light tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
                   {filteredProducts.length} {filteredProducts.length === 1 ? 'produkt' : filteredProducts.length >= 2 && filteredProducts.length <= 4 ? 'produkty' : 'produktů'}
                   {totalPages > 1 && ` · stránka ${currentPage} z ${totalPages}`}
                 </p>
@@ -363,7 +363,7 @@ export default function StandardTierPage() {
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
-                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[13px] transition-all disabled:opacity-30"
+                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[14px] transition-all disabled:opacity-30"
                         style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
                       >
                         ←
@@ -372,7 +372,7 @@ export default function StandardTierPage() {
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className="w-9 h-9 rounded-sm text-[12px] tracking-[0.05em] font-light transition-all"
+                          className="w-9 h-9 rounded-sm text-[13px] tracking-[0.05em] font-light transition-all"
                           style={
                             currentPage === page
                               ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -385,7 +385,7 @@ export default function StandardTierPage() {
                       <button
                         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={currentPage === totalPages}
-                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[13px] transition-all disabled:opacity-30"
+                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[14px] transition-all disabled:opacity-30"
                         style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
                       >
                         →
@@ -406,7 +406,7 @@ export default function StandardTierPage() {
                   </p>
                   <button
                     onClick={resetFilters}
-                    className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm transition-all hover:-translate-y-px"
+                    className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm transition-all hover:-translate-y-px"
                     style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                   >
                     Vymazat filtry

@@ -152,7 +152,7 @@ export default function OrderConfirmationPage() {
           {/* Nabídka účtu po objednávce */}
           <div className="mb-8">
             <AccountOffer email={contact?.email || order.email} firstName={contact?.firstName || ''} lastName={contact?.lastName || ''} phone={contact?.phone} />
-            <p className="mt-4 text-[13px] text-text-mid">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
+            <p className="mt-4 text-[14px] text-text-mid">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
           </div>
 
           {/* Action Buttons */}

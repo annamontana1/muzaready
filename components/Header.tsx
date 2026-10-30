@@ -61,14 +61,14 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey);
   }, [mobileMenuOpen]);
 
-  const navLinkClass = "whitespace-nowrap text-[12px] tracking-[0.1em] uppercase font-light transition-colors duration-200 hover:text-burgundy";
+  const navLinkClass = "whitespace-nowrap text-[13px] tracking-[0.1em] uppercase font-light transition-colors duration-200 hover:text-burgundy";
   const dropdownClass = "hidden group-hover:block group-focus-within:block absolute left-0 w-56 bg-white shadow-medium border border-beige z-50 rounded-sm";
 
   const dropdownItem = (href: string, label: string) => (
     <Link
       key={href}
       href={href}
-      className="block px-5 py-2.5 text-[12px] tracking-[0.05em] font-light transition-colors hover:bg-ivory"
+      className="block px-5 py-2.5 text-[13px] tracking-[0.05em] font-light transition-colors hover:bg-ivory"
       style={{ color: 'var(--text-mid)' }}
     >
       {label}
@@ -183,7 +183,7 @@ export default function Header() {
               {/* Showroom CTA */}
               <Link
                 href="/showroom"
-                className="hidden 2xl:inline-block whitespace-nowrap text-[11px] tracking-[0.14em] uppercase font-normal px-5 py-[9px] rounded-sm transition-colors duration-200"
+                className="hidden 2xl:inline-block whitespace-nowrap text-[12px] tracking-[0.14em] uppercase font-normal px-5 py-[9px] rounded-sm transition-colors duration-200"
                 style={{ background: '#F6EEE6', color: '#330D0D' }}
               >
                 Showroom
@@ -396,14 +396,14 @@ export default function Header() {
                       {sectionHref ? (
                         <Link
                           href={sectionHref}
-                          className="text-[13px] font-light flex-1"
+                          className="text-[14px] font-light flex-1"
                           style={{ color: 'var(--text-mid)' }}
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {label}
                         </Link>
                       ) : (
-                        <span className="text-[13px] font-light flex-1" style={{ color: 'var(--text-mid)' }}>{label}</span>
+                        <span className="text-[14px] font-light flex-1" style={{ color: 'var(--text-mid)' }}>{label}</span>
                       )}
                       {items.length > 0 && (
                       <button
@@ -428,7 +428,7 @@ export default function Header() {
                           <Link
                             key={href}
                             href={href}
-                            className="block py-1 text-[13px] font-light transition-colors hover:text-burgundy"
+                            className="block py-1 text-[14px] font-light transition-colors hover:text-burgundy"
                             style={{ color: 'var(--text-soft)' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
@@ -442,7 +442,7 @@ export default function Header() {
 
                 <Link
                   href="/dodavatel-vlasu-pro-salony"
-                  className="block py-3 text-[13px] font-light border-b border-beige/50"
+                  className="block py-3 text-[14px] font-light border-b border-beige/50"
                   style={{ color: 'var(--text-mid)' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -450,7 +450,7 @@ export default function Header() {
                 </Link>
                 <Link
                   href="/velkoobchod"
-                  className="block py-3 text-[13px] font-light border-b border-beige/50"
+                  className="block py-3 text-[14px] font-light border-b border-beige/50"
                   style={{ color: 'var(--text-mid)' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -458,7 +458,7 @@ export default function Header() {
                 </Link>
                 <Link
                   href="/showroom"
-                  className="block py-3 text-[13px] font-light"
+                  className="block py-3 text-[14px] font-light"
                   style={{ color: 'var(--text-mid)' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >

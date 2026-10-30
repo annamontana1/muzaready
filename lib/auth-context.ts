@@ -33,8 +33,8 @@ export interface RegisterData {
 }
 
 export interface WholesaleRegisterData extends RegisterData {
-  companyName: string;
-  businessType: string;
+  companyName?: string;
+  businessType?: string;
   website?: string;
   instagram?: string;
   country?: string;

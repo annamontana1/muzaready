@@ -43,7 +43,7 @@ export default function TopContactBar() {
   return (
     <div
       style={{ background: '#330D0D', color: 'rgba(248,244,239,0.9)', borderBottom: '1px solid rgba(246,238,230,0.12)' }}
-      className="relative text-center text-[12px] tracking-[0.12em] py-[10px] px-5 font-light"
+      className="relative text-center text-[13px] tracking-[0.12em] py-[10px] px-5 font-light"
     >
       <div className="hidden md:flex items-center justify-center gap-6">
         <a
@@ -61,12 +61,12 @@ export default function TopContactBar() {
       </div>
       {/* Jazyk a měna – v hlavičce by se nevešly vedle košíku */}
       <div className="hidden xl:flex items-center gap-3 absolute right-6 top-1/2 -translate-y-1/2">
-        <LanguageSwitcher compact className="bg-transparent border-0 text-[12px] tracking-[0.08em] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ivory/70 rounded-sm [&>option]:text-text-dark" />
+        <LanguageSwitcher compact className="bg-transparent border-0 text-[13px] tracking-[0.08em] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ivory/70 rounded-sm [&>option]:text-text-dark" />
         <select
           value={currency}
           onChange={(e) => setCurrency(e.target.value as 'CZK' | 'EUR')}
           aria-label="Měna"
-          className="bg-transparent border-0 text-[12px] tracking-[0.08em] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ivory/70 rounded-sm [&>option]:text-text-dark"
+          className="bg-transparent border-0 text-[13px] tracking-[0.08em] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ivory/70 rounded-sm [&>option]:text-text-dark"
         >
           <option value="CZK">Kč</option>
           <option value="EUR">€</option>

@@ -14,6 +14,11 @@ export function isSocialProfile(value: string): boolean {
   return /^@[a-z0-9._]{2,}$/.test(v) || /(^|\/\/|\.)(instagram\.com|facebook\.com|fb\.com|m\.facebook\.com)\/[^\s]+/.test(v);
 }
 
+// Web salonu: doména s tečkou (např. www.salon.cz nebo https://salon.cz)
+export function isWebsite(value: string): boolean {
+  return /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(value.trim());
+}
+
 export default function WholesaleRegistrationModal({
   isOpen,
   onClose,
@@ -49,8 +54,8 @@ export default function WholesaleRegistrationModal({
     setLocalError(null);
 
     // Validation
-    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
-      setLocalError('Vyplňte všechna povinná pole (email, heslo, jméno, příjmení)');
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.city || !formData.password) {
+      setLocalError('Vyplňte prosím povinná pole: jméno a příjmení, e-mail, telefon, město a heslo.');
       return;
     }
 
@@ -64,18 +69,14 @@ export default function WholesaleRegistrationModal({
       return;
     }
 
-    if (!formData.companyName) {
-      setLocalError('Zadejte název firmy');
+    // Instagram, Facebook nebo web salonu: aspoň jedno, jinak žádost nejde ověřit
+    const hasSocial = formData.instagram.trim() !== '';
+    if (hasSocial && !isSocialProfile(formData.instagram)) {
+      setLocalError('Odkaz na sociální síť zadejte jako instagram.com/…, facebook.com/… nebo @profil.');
       return;
     }
-
-    if (!formData.businessType) {
-      setLocalError('Vyberte typ podnikání');
-      return;
-    }
-
-    if (!isSocialProfile(formData.instagram)) {
-      setLocalError('Zadejte odkaz na Instagram nebo Facebook vašeho salonu, bez něj žádost nemůžeme ověřit.');
+    if (!hasSocial && !isWebsite(formData.website)) {
+      setLocalError('Zadejte Instagram, Facebook nebo web vašeho salonu, bez toho žádost nemůžeme ověřit.');
       return;
     }
 
@@ -86,8 +87,8 @@ export default function WholesaleRegistrationModal({
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone || undefined,
-        companyName: formData.companyName,
-        businessType: formData.businessType,
+        companyName: formData.companyName || undefined,
+        businessType: formData.businessType || undefined,
         website: formData.website || undefined,
         instagram: formData.instagram || undefined,
         country: formData.country || undefined,
@@ -148,10 +149,9 @@ export default function WholesaleRegistrationModal({
             </p>
             <p className="mt-2.5 font-medium text-muza-ink">Co od vás potřebujeme</p>
             <ul className="mt-1 space-y-1 list-disc pl-5">
-              <li><b className="font-semibold">Instagram nebo Facebook vašeho salonu, povinně.</b> Podle profilu ověříme, že salon aktivně působí a sdílí svou práci.</li>
-              <li>Web salonu, pokud ho máte.</li>
+              <li><b className="font-semibold">Instagram, Facebook nebo web vašeho salonu, povinně.</b> Podle něj ověříme, že salon aktivně působí a sdílí svou práci.</li>
             </ul>
-            <p className="mt-2.5 text-[13px] text-[#45302F]">
+            <p className="mt-2.5 text-[14px] text-[#45302F]">
               Slevu zapínáme ručně po kontrole, obvykle do 48 hodin. O schválení vám dáme vědět e-mailem.
             </p>
           </div>
@@ -196,7 +196,7 @@ export default function WholesaleRegistrationModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-mid mb-1">Telefon</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Telefon *</label>
               <input
                 type="tel"
                 name="phone"
@@ -210,7 +210,7 @@ export default function WholesaleRegistrationModal({
 
           {/* Row 3: Company */}
           <div>
-            <label className="block text-sm font-medium text-text-mid mb-1">Název firmy *</label>
+            <label className="block text-sm font-medium text-text-mid mb-1">Název salonu nebo firmy</label>
             <input
               type="text"
               name="companyName"
@@ -256,7 +256,7 @@ export default function WholesaleRegistrationModal({
           {/* Sociální sítě salonu: bez nich registraci nepustíme dál */}
           <div>
             <label className="block text-sm font-medium text-text-mid mb-1">
-              Instagram nebo Facebook salonu *
+              Instagram nebo Facebook salonu
             </label>
             <input
               type="text"
@@ -264,14 +264,13 @@ export default function WholesaleRegistrationModal({
               value={formData.instagram}
               onChange={handleChange}
               disabled={loading}
-              required
               placeholder="např. instagram.com/vas-salon"
               className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
             />
-            <p className="text-xs text-text-soft mt-1">Profil musí být veřejný a aktivní, podle něj žádost ověřujeme.</p>
+            <p className="text-xs text-text-soft mt-1">Vyplňte sociální síť nebo web (aspoň jedno je povinné). Profil musí být veřejný a aktivní, podle něj žádost ověřujeme.</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-mid mb-1">Web salonu (nepovinné)</label>
+            <label className="block text-sm font-medium text-text-mid mb-1">Web salonu</label>
             <input
               type="text"
               name="website"
@@ -298,7 +297,7 @@ export default function WholesaleRegistrationModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-mid mb-1">Město</label>
+              <label className="block text-sm font-medium text-text-mid mb-1">Město *</label>
               <input
                 type="text"
                 name="city"

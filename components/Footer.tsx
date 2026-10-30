@@ -50,16 +50,16 @@ export default function Footer() {
               MÙZA
             </span>
             <span
-              className="text-[10px] tracking-[0.3em] uppercase ml-2 font-light"
+              className="text-[12px] tracking-[0.3em] uppercase ml-2 font-light"
               style={{ color: 'rgba(248,244,239,0.5)' }}
             >
               HAIR SHOP
             </span>
           </Link>
-          <p className="text-[13px] leading-relaxed max-w-[260px] font-light" style={{ color: 'rgba(248,244,239,0.6)' }}>
+          <p className="text-[14px] leading-relaxed max-w-[260px] font-light" style={{ color: 'rgba(248,244,239,0.6)' }}>
             Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze, ruční výroba, 3 úrovně kvality.
           </p>
-          <div className="mt-6 text-[13px] space-y-1.5">
+          <div className="mt-6 text-[14px] space-y-1.5">
             <a
               href="https://wa.me/420728722880"
               target="_blank"
@@ -109,7 +109,7 @@ export default function Footer() {
         {/* O nás */}
         <div>
           <h2
-            className="text-[11px] tracking-[0.16em] uppercase mb-5 font-normal"
+            className="text-[12px] tracking-[0.16em] uppercase mb-5 font-normal"
             style={{ color: 'var(--ivory)' }}
           >
             O nás
@@ -126,7 +126,7 @@ export default function Footer() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="text-[13px] font-light transition hover:opacity-90"
+                  className="text-[14px] font-light transition hover:opacity-90"
                   style={{ color: 'rgba(248,244,239,0.55)' }}
                 >
                   {label}
@@ -139,7 +139,7 @@ export default function Footer() {
         {/* Informace */}
         <div>
           <h2
-            className="text-[11px] tracking-[0.16em] uppercase mb-5 font-normal"
+            className="text-[12px] tracking-[0.16em] uppercase mb-5 font-normal"
             style={{ color: 'var(--ivory)' }}
           >
             Informace
@@ -156,7 +156,7 @@ export default function Footer() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="text-[13px] font-light transition hover:opacity-90"
+                  className="text-[14px] font-light transition hover:opacity-90"
                   style={{ color: 'rgba(248,244,239,0.55)' }}
                 >
                   {label}
@@ -169,7 +169,7 @@ export default function Footer() {
         {/* Produkty */}
         <div>
           <h2
-            className="text-[11px] tracking-[0.16em] uppercase mb-5 font-normal"
+            className="text-[12px] tracking-[0.16em] uppercase mb-5 font-normal"
             style={{ color: 'var(--ivory)' }}
           >
             Produkty
@@ -188,7 +188,7 @@ export default function Footer() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="text-[13px] font-light transition hover:opacity-90"
+                  className="text-[14px] font-light transition hover:opacity-90"
                   style={{ color: 'rgba(248,244,239,0.55)' }}
                 >
                   {label}
@@ -201,7 +201,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div
-        className="max-w-7xl mx-auto pt-7 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px]"
+        className="max-w-7xl mx-auto pt-7 flex flex-col md:flex-row justify-between items-center gap-4 text-[13px]"
         style={{ color: 'rgba(248,244,239,0.62)' }}
       >
         <p>{copyrightText}</p>

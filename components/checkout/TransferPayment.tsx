@@ -63,7 +63,7 @@ export default function TransferPayment({ orderNumber, amount }: { orderNumber: 
           </div>
         ))}
       </dl>
-      {info.iban && info.account && <p className="mt-2 text-[12px] text-muza-soft">IBAN: {info.iban}</p>}
+      {info.iban && info.account && <p className="mt-2 text-[13px] text-muza-soft">IBAN: {info.iban}</p>}
     </div>
   );
 }

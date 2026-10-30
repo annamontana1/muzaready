@@ -21,7 +21,7 @@ export default function MetodyZakonceniPage() {
       {/* Hero header */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.15em] uppercase font-light mb-10"
+          className="text-[12px] tracking-[0.15em] uppercase font-light mb-10"
           style={{ color: 'var(--text-soft)' }}
         >
           <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
@@ -30,7 +30,7 @@ export default function MetodyZakonceniPage() {
         </div>
 
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -54,7 +54,7 @@ export default function MetodyZakonceniPage() {
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div className="max-w-5xl">
           <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
             style={{ color: 'var(--accent)' }}
           >
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -96,7 +96,7 @@ export default function MetodyZakonceniPage() {
 
           <Link
             href="/metody-zakonceni/vlasy-na-keratin"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
             style={{ color: 'var(--text-mid)' }}
           >
             Zjistit více →
@@ -108,7 +108,7 @@ export default function MetodyZakonceniPage() {
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div className="max-w-5xl">
           <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
             style={{ color: 'var(--accent)' }}
           >
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -150,7 +150,7 @@ export default function MetodyZakonceniPage() {
 
           <Link
             href="/metody-zakonceni/vlasove-pasky-tape-in"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
             style={{ color: 'var(--text-mid)' }}
           >
             Zjistit více →
@@ -162,7 +162,7 @@ export default function MetodyZakonceniPage() {
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-5xl">
           <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
             style={{ color: 'var(--accent)' }}
           >
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -204,7 +204,7 @@ export default function MetodyZakonceniPage() {
 
           <Link
             href="/metody-zakonceni/vlasove-tresy"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
             style={{ color: 'var(--text-mid)' }}
           >
             Zjistit více →
@@ -215,7 +215,7 @@ export default function MetodyZakonceniPage() {
       {/* Bottom CTA */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -235,7 +235,7 @@ export default function MetodyZakonceniPage() {
 
         <Link
           href="/vlasy-k-prodlouzeni"
-          className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+          className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
           style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
         >
           Prozkoumat kolekci

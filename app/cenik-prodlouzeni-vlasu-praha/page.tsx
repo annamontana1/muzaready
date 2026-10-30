@@ -138,7 +138,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
             {/* Breadcrumb */}
-            <div className="text-[12px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+            <div className="text-[13px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
               <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
               {' / '}
               <Link href="/prodlouzeni-vlasu-praha" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Prodloužení vlasů Praha</Link>
@@ -146,7 +146,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               <span style={{ color: 'var(--text-dark)' }}>Cena prodloužení vlasů Praha</span>
             </div>
 
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               SHOWROOM PRAHA 1 · REVOLUČNÍ 8
             </div>
@@ -165,7 +165,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* TL;DR blok — pro AI enginy a rychlé čtení */}
         <div className="px-8 lg:px-20 py-10" style={{ background: 'var(--burgundy)' }}>
           <div className="max-w-5xl">
-            <p className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <p className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal" style={{ color: 'rgba(255,255,255,0.6)' }}>
               RYCHLÝ PŘEHLED CEN
             </p>
             <p className="text-[15px] leading-[1.9] font-light" style={{ color: 'rgba(255,255,255,0.9)' }}>
@@ -180,7 +180,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* Ceník aplikace */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               CENY APLIKACE
             </div>
@@ -193,10 +193,10 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               <table className="w-full" style={{ borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.12)' }}>
-                    <th className="text-left py-3 pr-6 text-[11px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Metoda</th>
-                    <th className="text-left py-3 pr-6 text-[11px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Cena aplikace</th>
-                    <th className="text-left py-3 pr-6 text-[11px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Platnost</th>
-                    <th className="text-left py-3 text-[11px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Vlasy</th>
+                    <th className="text-left py-3 pr-6 text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Metoda</th>
+                    <th className="text-left py-3 pr-6 text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Cena aplikace</th>
+                    <th className="text-left py-3 pr-6 text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Platnost</th>
+                    <th className="text-left py-3 text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Vlasy</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -205,14 +205,14 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
                       <td className="py-4 pr-6 text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>{row.method}</td>
                       <td className="py-4 pr-6 text-[14px] font-light" style={{ color: 'var(--burgundy)', fontWeight: 500 }}>{row.price}</td>
                       <td className="py-4 pr-6 text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>{row.validity}</td>
-                      <td className="py-4 text-[13px] font-light" style={{ color: 'var(--text-soft)' }}>{row.note}</td>
+                      <td className="py-4 text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>{row.note}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <p className="text-[13px] font-light mt-5" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-[14px] font-light mt-5" style={{ color: 'var(--text-soft)' }}>
               Cena vlasů se účtuje zvlášť dle zvolené kolekce a délky.{' '}
               <Link href="/ceny-aplikaci" className="hover:underline" style={{ color: 'var(--burgundy)' }}>
                 Kompletní ceník aplikace →
@@ -224,7 +224,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* Ceník vlasů */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               CENY VLASŮ
             </div>
@@ -237,8 +237,8 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               <table className="w-full" style={{ borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.12)' }}>
-                    <th className="text-left py-3 pr-6 text-[11px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Kolekce</th>
-                    <th className="text-left py-3 text-[11px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Cena za 100 g</th>
+                    <th className="text-left py-3 pr-6 text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Kolekce</th>
+                    <th className="text-left py-3 text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>Cena za 100 g</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,7 +252,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               </table>
             </div>
 
-            <p className="text-[13px] font-light mt-5" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-[14px] font-light mt-5" style={{ color: 'var(--text-soft)' }}>
               Cena je za 100 g vlasů v základní délce. Delší vlasy a specifické odstíny na dotaz.{' '}
               <Link href="/vlasy-k-prodlouzeni" className="hover:underline" style={{ color: 'var(--burgundy)' }}>
                 Nakonfigurovat vlasy v e-shopu →
@@ -264,7 +264,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* Příklad celkové ceny */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               PŘÍKLAD KALKULACE
             </div>
@@ -294,11 +294,11 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
                 },
               ].map((ex) => (
                 <div key={ex.label} className="border-b md:border-b-0 md:border-r py-8 md:pr-8 md:last:border-r-0 md:last:pr-0 md:pl-8 md:first:pl-0" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-                  <p className="text-[11px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{ex.label}</p>
+                  <p className="text-[12px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{ex.label}</p>
                   <p className="text-[14px] font-light mb-4" style={{ color: 'var(--text-soft)' }}>{ex.desc}</p>
                   <ul className="space-y-1 mb-5">
                     {ex.breakdown.map((b) => (
-                      <li key={b} className="text-[13px] font-light flex gap-2" style={{ color: 'var(--text-soft)' }}>
+                      <li key={b} className="text-[14px] font-light flex gap-2" style={{ color: 'var(--text-soft)' }}>
                         <span style={{ color: 'var(--accent)' }}>—</span>
                         {b}
                       </li>
@@ -309,7 +309,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               ))}
             </div>
 
-            <p className="text-[13px] font-light mt-8" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-[14px] font-light mt-8" style={{ color: 'var(--text-soft)' }}>
               Přesnou cenu vlasů určuje délka, gramáž a odstín. Konzultaci a kalkulaci zdarma domluvíte na{' '}
               <a href="tel:+420728722880" className="hover:underline" style={{ color: 'var(--burgundy)' }}>+420 728 722 880</a>.
             </p>
@@ -319,7 +319,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* FAQ */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               ČASTÉ DOTAZY
             </div>
@@ -340,7 +340,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* CTA */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               DALŠÍ KROKY
             </div>
@@ -354,7 +354,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
               <a
                 href="tel:+420728722880"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 +420 728 722 880
@@ -363,7 +363,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 @muzahair.cz na Instagramu
@@ -374,21 +374,21 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
             <div className="border-t pt-8 flex flex-col sm:flex-row gap-6" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="text-[12px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Nakonfigurovat vlasy v e-shopu →
               </Link>
               <Link
                 href="/prodlouzeni-vlasu-praha"
-                className="text-[12px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Prodloužení vlasů Praha — metody →
               </Link>
               <Link
                 href="/ceny-aplikaci"
-                className="text-[12px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Kompletní ceník aplikace →

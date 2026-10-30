@@ -112,7 +112,7 @@ export default function VlasoveTresyPage() {
 
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Metody zakončení</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Metody zakončení</span>
           </div>
 
           <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-6" style={{ color: 'var(--text-dark)' }}>
@@ -134,7 +134,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Definice</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Definice</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
             Co je vlasový tres?
@@ -153,7 +153,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Materiál</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Materiál</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Z jakých vlasů tresy vyrábíme?
@@ -180,7 +180,7 @@ export default function VlasoveTresyPage() {
               <div key={t.name} className="py-6 border-b" style={{ borderColor: 'var(--beige)' }}>
                 <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
                   <h3 className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>{t.name}</h3>
-                  <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{t.badge}</span>
+                  <span className="text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{t.badge}</span>
                 </div>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{t.desc}</p>
               </div>
@@ -194,7 +194,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Využití</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Využití</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Pro jaký výrobek tresy šijeme?
@@ -230,7 +230,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Aplikace</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Aplikace</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
             Hollywoodské prodloužení
@@ -248,7 +248,7 @@ export default function VlasoveTresyPage() {
               'Výsledek drží 2–3 měsíce — poté choďte na korekci.',
             ].map((step, i) => (
               <div key={i} className="flex items-start gap-5 py-4 border-b" style={{ borderColor: 'var(--beige)' }}>
-                <span className="flex-shrink-0 text-[11px] tracking-[0.15em] uppercase font-normal pt-0.5" style={{ color: 'var(--accent)', minWidth: '1.5rem' }}>
+                <span className="flex-shrink-0 text-[12px] tracking-[0.15em] uppercase font-normal pt-0.5" style={{ color: 'var(--accent)', minWidth: '1.5rem' }}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{step}</p>
@@ -271,7 +271,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Specifikace</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Specifikace</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Gramáže a délky
@@ -281,9 +281,9 @@ export default function VlasoveTresyPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž</th>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Využití</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Využití</th>
                 </tr>
               </thead>
               <tbody>
@@ -311,7 +311,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Péče</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Péče</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Péče o vlasové tresy
@@ -342,7 +342,7 @@ export default function VlasoveTresyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Časté otázky</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Časté otázky</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Vlasové tresy — co se nejčastěji ptáte
@@ -394,7 +394,7 @@ export default function VlasoveTresyPage() {
       <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
         <div className="max-w-4xl mx-auto">
           <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-12">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               Ceny aplikace
             </div>

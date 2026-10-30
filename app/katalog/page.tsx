@@ -195,7 +195,7 @@ export default function CatalogPage() {
             return (
               <button key={o.label} type="button" aria-pressed={on}
                 onClick={() => { setKind(o.v); setParam('druh', o.v); }}
-                className={`h-9 px-4 rounded-full text-[13px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
+                className={`h-9 px-4 rounded-full text-[14px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
                 {o.label}
               </button>
             );
@@ -204,7 +204,7 @@ export default function CatalogPage() {
 
         {/* Odstín */}
         <div className="mb-6">
-          <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-2">Odstín</div>
+          <div className="text-[12px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-2">Odstín</div>
           {/* Fotky odstínů v oblouku jako na hlavní stránce; na mobilu se posouvají do strany */}
           <div className="-mx-4 px-4 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {[null, ...SHADES].map((x) => {
@@ -223,7 +223,7 @@ export default function CatalogPage() {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={x.src} alt="" loading="lazy" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="w-full h-full flex items-center justify-center text-[12px] text-text-dark">Vše</span>
+                      <span className="w-full h-full flex items-center justify-center text-[13px] text-text-dark">Vše</span>
                     )}
                   </span>
                   <span className={`mt-1 block font-cormorant text-[18px] leading-none ${on ? 'text-muza-ink' : 'text-text-mid'}`}>{x ? x.num : '\u00A0'}</span>
@@ -237,12 +237,12 @@ export default function CatalogPage() {
         <div className="mb-6 flex items-center gap-3 flex-wrap">
           <span className="text-sm text-text-mid tabular-nums">{sortedItems.length} {sortedItems.length === 1 ? 'kus' : sortedItems.length >= 2 && sortedItems.length <= 4 ? 'kusy' : 'kusů'}</span>
           <div role="group" aria-label="Seřadit" className="ml-auto flex items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <span className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-soft mr-1 flex-none">Seřadit</span>
+            <span className="text-[12px] font-medium tracking-[0.14em] uppercase text-muza-soft mr-1 flex-none">Seřadit</span>
             {SORTS.map((o) => {
               const on = sortBy === o.v;
               return (
                 <button key={o.v} type="button" aria-pressed={on} onClick={() => setSortBy(o.v)}
-                  className={`flex-none h-9 px-3.5 rounded-full text-[13px] transition-colors ${on ? 'bg-muza-ink text-muza-onink' : 'text-text-dark hover:bg-muza-mocha/60'}`}>
+                  className={`flex-none h-9 px-3.5 rounded-full text-[14px] transition-colors ${on ? 'bg-muza-ink text-muza-onink' : 'text-text-dark hover:bg-muza-mocha/60'}`}>
                   {o.label}
                 </button>
               );

@@ -155,7 +155,7 @@ export default function TapeInPage() {
 
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Metody zakončení</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Metody zakončení</span>
           </div>
 
           <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-6" style={{ color: 'var(--text-dark)' }}>
@@ -163,7 +163,7 @@ export default function TapeInPage() {
           </h1>
 
           <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }}>
-            <p className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal" style={{ color: 'var(--accent)' }}>
+            <p className="text-[12px] tracking-[0.2em] uppercase mb-3 font-normal" style={{ color: 'var(--accent)' }}>
               Stručně
             </p>
             <p className="leading-relaxed" style={{ color: 'var(--text-dark)' }}>
@@ -178,7 +178,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Princip</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Princip</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
             Jak fungují vlasové pásky tape-in?
@@ -197,7 +197,7 @@ export default function TapeInPage() {
               { title: 'Opakované použití', text: '3–5 přelepení při správné péči' },
             ].map((i, idx) => (
               <div key={i.title} className={`py-6 ${idx > 0 ? 'sm:pl-8 sm:border-l' : ''}`} style={{ borderColor: 'var(--text-soft)' }}>
-                <div className="text-[11px] tracking-[0.2em] uppercase mb-2 font-normal" style={{ color: 'var(--accent)' }}>{i.title}</div>
+                <div className="text-[12px] tracking-[0.2em] uppercase mb-2 font-normal" style={{ color: 'var(--accent)' }}>{i.title}</div>
                 <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{i.text}</div>
               </div>
             ))}
@@ -210,7 +210,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Textury</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Textury</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
             Čtyři struktury — včetně kudrnatých jako unikát na CZ trhu
@@ -241,7 +241,7 @@ export default function TapeInPage() {
                     style={{ color: s.highlight ? 'var(--burgundy)' : 'var(--text-dark)' }}
                   >
                     {s.struktura}
-                    {s.highlight && <span className="ml-2 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--accent)' }}>Unikát</span>}
+                    {s.highlight && <span className="ml-2 text-[12px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--accent)' }}>Unikát</span>}
                   </div>
                   <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{s.popis}</div>
                 </div>
@@ -259,7 +259,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Kolekce</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Kolekce</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-3" style={{ color: 'var(--text-dark)' }}>
             6 kolekcí vlasových pásek — nebarvené i barvené
@@ -273,7 +273,7 @@ export default function TapeInPage() {
               <div key={k.nazev} className="py-6 border-b" style={{ borderColor: 'var(--ivory)' }}>
                 <div className="flex items-start justify-between flex-wrap gap-2 mb-2">
                   <h3 className="font-cormorant text-xl font-light" style={{ color: 'var(--text-dark)' }}>{k.nazev}</h3>
-                  <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{k.tag}</span>
+                  <span className="text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{k.tag}</span>
                 </div>
                 <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--text-soft)' }}>{k.popis}</p>
                 <p className="text-xs" style={{ color: 'var(--text-soft)' }}><strong style={{ color: 'var(--text-dark)' }}>Pro koho:</strong> {k.pro}</p>
@@ -289,7 +289,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Gramáže</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Gramáže</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Gramáže vlasových pásek dle délky
@@ -301,9 +301,9 @@ export default function TapeInPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž / balení (20 ks)</th>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Sendvičových spojů</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Gramáž / balení (20 ks)</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Sendvičových spojů</th>
                 </tr>
               </thead>
               <tbody>
@@ -326,7 +326,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Kalkulace</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Kalkulace</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Kolik balení potřebuji?
@@ -336,10 +336,10 @@ export default function TapeInPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Typ vlasů</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Krátké (30–45 cm)</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Střední (50–65 cm)</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Dlouhé (70–95 cm)</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Typ vlasů</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Krátké (30–45 cm)</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Střední (50–65 cm)</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Dlouhé (70–95 cm)</th>
                 </tr>
               </thead>
               <tbody>
@@ -363,7 +363,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Výroba na míru</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Výroba na míru</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Výroba vlasových pásek ze zákazničina vlastního copu
@@ -377,7 +377,7 @@ export default function TapeInPage() {
 
           <div className="flex items-center gap-3 mb-6" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Jak objednat</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Jak objednat</span>
           </div>
 
           <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
@@ -409,7 +409,7 @@ export default function TapeInPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Časté otázky</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Časté otázky</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Vlasové pásky tape-in — co se nejčastěji ptáte
@@ -429,7 +429,7 @@ export default function TapeInPage() {
       <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
         <div className="max-w-4xl mx-auto">
           <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-10">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               Ceny aplikace
             </div>
@@ -476,7 +476,7 @@ export default function TapeInPage() {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Showroom Praha</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Showroom Praha</span>
             <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
           </div>
           <h2 className="font-cormorant text-[clamp(24px,3vw,40px)] font-light mb-4" style={{ color: 'var(--ivory)' }}>

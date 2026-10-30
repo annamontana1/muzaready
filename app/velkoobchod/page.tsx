@@ -31,7 +31,7 @@ export default function VelkoobchodPage() {
       {/* Breadcrumb */}
       <div className="px-8 lg:px-20 pt-8 pb-0">
         <div
-          className="text-[11px] tracking-[0.15em] uppercase font-light"
+          className="text-[12px] tracking-[0.15em] uppercase font-light"
           style={{ color: 'var(--text-soft)' }}
         >
           <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
@@ -43,7 +43,7 @@ export default function VelkoobchodPage() {
       {/* Hero */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -68,7 +68,7 @@ export default function VelkoobchodPage() {
 
         <button
           onClick={handleCTAClick}
-          className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+          className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
           style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
         >
           Přihlásit / Registrovat B2B
@@ -78,7 +78,7 @@ export default function VelkoobchodPage() {
       {/* Benefits */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -144,7 +144,7 @@ export default function VelkoobchodPage() {
       {/* How it works */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -171,7 +171,7 @@ export default function VelkoobchodPage() {
               style={{ borderColor: 'var(--beige)' }}
             >
               <span
-                className="text-[11px] tracking-[0.15em] uppercase font-light w-8 flex-shrink-0 pt-px"
+                className="text-[12px] tracking-[0.15em] uppercase font-light w-8 flex-shrink-0 pt-px"
                 style={{ color: 'var(--accent)' }}
               >
                 {item.num}
@@ -192,7 +192,7 @@ export default function VelkoobchodPage() {
       {/* Categories */}
       <section id="categories" className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -233,7 +233,7 @@ export default function VelkoobchodPage() {
               </p>
             </div>
             <span
-              className="ml-auto text-[12px] tracking-[0.1em] uppercase font-light flex-shrink-0 pt-px"
+              className="ml-auto text-[13px] tracking-[0.1em] uppercase font-light flex-shrink-0 pt-px"
               style={{ color: 'var(--text-mid)' }}
             >
               Zobrazit →
@@ -258,7 +258,7 @@ export default function VelkoobchodPage() {
               </p>
             </div>
             <span
-              className="ml-auto text-[12px] tracking-[0.1em] uppercase font-light flex-shrink-0 pt-px"
+              className="ml-auto text-[13px] tracking-[0.1em] uppercase font-light flex-shrink-0 pt-px"
               style={{ color: 'var(--text-mid)' }}
             >
               Zobrazit →
@@ -266,7 +266,7 @@ export default function VelkoobchodPage() {
           </Link>
         </div>
 
-        <p className="text-[13px] font-light" style={{ color: 'var(--text-soft)' }}>
+        <p className="text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>
           Platinum Edition může mít individuální ceny — kontaktujte nás pro detaily.
         </p>
       </section>
@@ -274,7 +274,7 @@ export default function VelkoobchodPage() {
       {/* FAQ */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -358,7 +358,7 @@ export default function VelkoobchodPage() {
             style={{ borderColor: 'var(--beige)' }}
           >
             <span
-              className="text-[11px] tracking-[0.15em] uppercase font-light w-16 flex-shrink-0"
+              className="text-[12px] tracking-[0.15em] uppercase font-light w-16 flex-shrink-0"
               style={{ color: 'var(--text-soft)' }}
             >
               E-mail
@@ -376,7 +376,7 @@ export default function VelkoobchodPage() {
             style={{ borderColor: 'var(--beige)' }}
           >
             <span
-              className="text-[11px] tracking-[0.15em] uppercase font-light w-16 flex-shrink-0"
+              className="text-[12px] tracking-[0.15em] uppercase font-light w-16 flex-shrink-0"
               style={{ color: 'var(--text-soft)' }}
             >
               Telefon
@@ -394,14 +394,14 @@ export default function VelkoobchodPage() {
         <div className="flex gap-4 flex-wrap items-center">
           <button
             onClick={handleCTAClick}
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Registrovat B2B účet
           </button>
           <Link
             href="/kontakt"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             Napsat nám →

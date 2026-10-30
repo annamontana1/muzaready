@@ -148,7 +148,7 @@ export default function ShadeGallery({
                       #{shade}
                     </p>
                     <p
-                      className={`text-[10px] transition ${
+                      className={`text-[12px] transition ${
                         isSelected ? 'text-[#4A1E1A]' : 'text-text-soft'
                       }`}
                     >

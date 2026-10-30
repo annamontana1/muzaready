@@ -12,7 +12,7 @@ export default function HairKinds() {
     <section aria-label="Druh vlasů" className="bg-muza-ivory">
       <div className="max-w-7xl mx-auto px-5 lg:px-16 pb-12 lg:pb-16">
         <div className="max-w-[480px]">
-          <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Vyberte vlasy</div>
+          <div className="text-[12px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Vyberte vlasy</div>
           <div className="grid grid-cols-2 gap-2">
             {KINDS.map((k, i) => (
               <Link key={k.name} href={k.href}

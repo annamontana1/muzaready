@@ -23,7 +23,7 @@ export default function ONasPage() {
       {/* Hero */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -50,7 +50,7 @@ export default function ONasPage() {
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div className="max-w-3xl">
           <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
             style={{ color: 'var(--accent)' }}
           >
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -120,7 +120,7 @@ export default function ONasPage() {
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div className="max-w-3xl">
           <div
-            className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
             style={{ color: 'var(--accent)' }}
           >
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -177,7 +177,7 @@ export default function ONasPage() {
       {/* Categories */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -253,7 +253,7 @@ export default function ONasPage() {
               style={{ borderColor: 'var(--beige)' }}
             >
               <span
-                className="text-[11px] tracking-[0.15em] uppercase font-light w-24 flex-shrink-0 pt-px"
+                className="text-[12px] tracking-[0.15em] uppercase font-light w-24 flex-shrink-0 pt-px"
                 style={{ color: 'var(--accent)' }}
               >
                 {item.edition}
@@ -306,7 +306,7 @@ export default function ONasPage() {
       {/* Why us */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -368,7 +368,7 @@ export default function ONasPage() {
       {/* FAQ */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -450,21 +450,21 @@ export default function ONasPage() {
         <div className="flex gap-4 flex-wrap items-center mb-10">
           <Link
             href="/kontakt"
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Kontaktovat nás
           </Link>
           <Link
             href="/vlasy-k-prodlouzeni"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             Prohlédnout kolekci →
           </Link>
         </div>
 
-        <p className="text-[13px] font-light italic" style={{ color: 'var(--text-soft)' }}>
+        <p className="text-[14px] font-light italic" style={{ color: 'var(--text-soft)' }}>
           S láskou k řemeslu a kráse, Anna — zakladatelka Múza Hair Praha
         </p>
       </section>

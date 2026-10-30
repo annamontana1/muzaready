@@ -49,7 +49,7 @@ export default function AddedSheet({ open, onClose, onGoCart, imageUrl, title, s
             <span>
               <span className="block font-cormorant text-[28px] leading-tight text-muza-ink [font-variant-numeric:lining-nums]">{title}</span>
               {(shade || shadeName) && (
-                <span className="block text-[13px] text-[#45302F]">
+                <span className="block text-[14px] text-[#45302F]">
                   odstín {shade && <b className="font-semibold text-text-dark">{shade}</b>}{shade && shadeName ? ' · ' : ''}{shadeName}
                 </span>
               )}

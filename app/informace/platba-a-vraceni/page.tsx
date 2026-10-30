@@ -23,7 +23,7 @@ export default function PlatbaAVraceniPage() {
 
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Informace</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Informace</span>
           </div>
 
           <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-8" style={{ color: 'var(--text-dark)' }}>
@@ -43,7 +43,7 @@ export default function PlatbaAVraceniPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Platba</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Platba</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Způsoby platby
@@ -72,7 +72,7 @@ export default function PlatbaAVraceniPage() {
                   <div className="flex items-center gap-4 mb-1">
                     <span className="font-cormorant text-lg font-light" style={{ color: 'var(--text-dark)' }}>{m.name}</span>
                     {m.badge && (
-                      <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{m.badge}</span>
+                      <span className="text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--accent)' }}>{m.badge}</span>
                     )}
                   </div>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
@@ -93,7 +93,7 @@ export default function PlatbaAVraceniPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Doprava</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Doprava</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Doprava a doručení
@@ -140,7 +140,7 @@ export default function PlatbaAVraceniPage() {
                     <div className="flex items-center gap-3 mb-1">
                       <span className="font-cormorant text-lg font-light" style={{ color: 'var(--text-dark)' }}>{m.name}</span>
                       {!m.available && (
-                        <span className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Připravujeme</span>
+                        <span className="text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Připravujeme</span>
                       )}
                     </div>
                     <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
@@ -148,11 +148,11 @@ export default function PlatbaAVraceniPage() {
                   {m.available && (
                     <div className="flex gap-8 text-sm flex-shrink-0">
                       <div>
-                        <span className="block text-[11px] tracking-[0.15em] uppercase mb-0.5" style={{ color: 'var(--text-soft)' }}>Cena</span>
+                        <span className="block text-[12px] tracking-[0.15em] uppercase mb-0.5" style={{ color: 'var(--text-soft)' }}>Cena</span>
                         <span className="font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>{m.price}</span>
                       </div>
                       <div>
-                        <span className="block text-[11px] tracking-[0.15em] uppercase mb-0.5" style={{ color: 'var(--text-soft)' }}>Doba doručení</span>
+                        <span className="block text-[12px] tracking-[0.15em] uppercase mb-0.5" style={{ color: 'var(--text-soft)' }}>Doba doručení</span>
                         <span style={{ color: 'var(--text-dark)' }}>{m.time}</span>
                       </div>
                     </div>
@@ -169,7 +169,7 @@ export default function PlatbaAVraceniPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Vrácení</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Vrácení</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-6" style={{ color: 'var(--text-dark)' }}>
             Vrácení zboží
@@ -184,7 +184,7 @@ export default function PlatbaAVraceniPage() {
 
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <h3 className="text-[11px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--accent)' }}>Podmínky vrácení</h3>
+              <h3 className="text-[12px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--accent)' }}>Podmínky vrácení</h3>
               <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {[
                   { ok: true, text: 'Lhůta 14 dní od převzetí zboží' },
@@ -204,7 +204,7 @@ export default function PlatbaAVraceniPage() {
             </div>
 
             <div>
-              <h3 className="text-[11px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--accent)' }}>Jak vrátit zboží</h3>
+              <h3 className="text-[12px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--accent)' }}>Jak vrátit zboží</h3>
               <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {([
                   'Napište na muzahaircz@gmail.com — uveďte číslo objednávky a důvod vrácení.',
@@ -213,7 +213,7 @@ export default function PlatbaAVraceniPage() {
                   'Po obdržení zboží vrátíme peníze na bankovní účet do 14 dnů.',
                 ] as (string | null)[]).map((s, i) => (
                   <div key={i} className="flex items-start gap-5 py-4 border-b text-sm" style={{ borderColor: 'var(--ivory)' }}>
-                    <span className="flex-shrink-0 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--accent)', minWidth: '1.5rem' }}>
+                    <span className="flex-shrink-0 text-[12px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--accent)', minWidth: '1.5rem' }}>
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <span style={{ color: 'var(--text-soft)' }}>
@@ -247,7 +247,7 @@ export default function PlatbaAVraceniPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Reklamace</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Reklamace</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Reklamace
@@ -260,7 +260,7 @@ export default function PlatbaAVraceniPage() {
               { label: 'Kontakt', value: 'muzahaircz@gmail.com', note: 'foto + číslo objednávky' },
             ].map((i) => (
               <div key={i.label} className="flex items-start gap-8 py-5 border-b" style={{ borderColor: 'var(--beige)' }}>
-                <div className="w-40 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                <div className="w-40 flex-shrink-0 text-[12px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
                   {i.label}
                 </div>
                 <div>
@@ -272,7 +272,7 @@ export default function PlatbaAVraceniPage() {
           </div>
 
           <div>
-            <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--text-soft)' }}>Co není vadou zboží:</p>
+            <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--text-soft)' }}>Co není vadou zboží:</p>
             <div className="border-t" style={{ borderColor: 'var(--beige)' }}>
               {[
                 'Přirozená odchylka v odstínu barvy oproti zobrazení na monitoru',
@@ -293,7 +293,7 @@ export default function PlatbaAVraceniPage() {
       {/* Související */}
       <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--text-soft)' }}>Související stránky</p>
+          <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-6" style={{ color: 'var(--text-soft)' }}>Související stránky</p>
           <div className="flex flex-wrap gap-3">
             {[
               { href: '/informace/odstoupeni-od-smlouvy', label: 'Formulář odstoupení od smlouvy' },

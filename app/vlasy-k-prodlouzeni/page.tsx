@@ -37,7 +37,7 @@ export default function VlasyKProdlouzenLanding() {
       {/* Hero section */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.15em] uppercase font-light mb-10"
+          className="text-[12px] tracking-[0.15em] uppercase font-light mb-10"
           style={{ color: 'var(--text-soft)' }}
         >
           <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
@@ -46,7 +46,7 @@ export default function VlasyKProdlouzenLanding() {
         </div>
 
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -79,7 +79,7 @@ export default function VlasyKProdlouzenLanding() {
             >
               <div className="flex-1">
                 <div
-                  className="text-[11px] tracking-[0.15em] uppercase font-light mb-2"
+                  className="text-[12px] tracking-[0.15em] uppercase font-light mb-2"
                   style={{ color: 'var(--text-soft)' }}
                 >
                   0{index + 1} — {tier.note}
@@ -98,7 +98,7 @@ export default function VlasyKProdlouzenLanding() {
                 </p>
               </div>
               <div
-                className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-all group-hover:gap-4"
+                className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-all group-hover:gap-4"
                 style={{ color: 'var(--text-mid)' }}
               >
                 Prohlédnout katalog →
@@ -112,7 +112,7 @@ export default function VlasyKProdlouzenLanding() {
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
         <div className="w-12 h-px mb-8" style={{ background: 'var(--accent)' }} />
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -135,7 +135,7 @@ export default function VlasyKProdlouzenLanding() {
             <Link
               key={m.slug}
               href={`/vlasy/${m.slug}`}
-              className="text-[12px] tracking-[0.05em] uppercase font-light transition-colors hover:underline"
+              className="text-[13px] tracking-[0.05em] uppercase font-light transition-colors hover:underline"
               style={{ color: 'var(--text-mid)' }}
             >
               {m.name}

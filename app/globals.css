@@ -14,8 +14,8 @@
     --warm-beige:     #D4C4B0;
     --white:          #FFFFFF;
     --text-dark:      #1C0C0F;
-    --text-mid:       #5A3840;
-    --text-soft:      #73565C; /* ztmaveno z #8C6E73 kvůli kontrastu (WCAG AA i na béžové) */
+    --text-mid:       #47282F;
+    --text-soft:      #5C4046; /* tmavší, ať text není bledý */
     --accent:         #9B3A4A;
 
     /* Tailwind RGB tokens (for bg-opacity etc.) */
@@ -40,7 +40,7 @@
 
   body {
     font-family: var(--font-jost), 'Jost', system-ui, sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     background: var(--ivory);
     color: var(--text-dark);
     overflow-x: clip;

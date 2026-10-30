@@ -31,9 +31,9 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validation
-    if (!email || !password || !firstName || !lastName || !companyName || !businessType) {
+    if (!email || !password || !firstName || !lastName || !phone || !city) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Vyplňte prosím jméno a příjmení, e-mail, telefon, město a heslo.' },
         { status: 400 }
       );
     }
@@ -41,9 +41,10 @@ export async function POST(request: NextRequest) {
     // Salon musí mít veřejný profil na Instagramu nebo Facebooku, podle něj žádost ověřujeme
     const social = String(instagram || '').trim().toLowerCase();
     const socialOk = /^@[a-z0-9._]{2,}$/.test(social) || /(^|\/\/|\.)(instagram\.com|facebook\.com|fb\.com|m\.facebook\.com)\/[^\s]+/.test(social);
-    if (!socialOk) {
+    const webOk = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(String(website || '').trim());
+    if (!socialOk && !webOk) {
       return NextResponse.json(
-        { error: 'Zadejte odkaz na Instagram nebo Facebook vašeho salonu.' },
+        { error: 'Zadejte Instagram, Facebook nebo web vašeho salonu.' },
         { status: 400 }
       );
     }
@@ -81,8 +82,8 @@ export async function POST(request: NextRequest) {
         wholesaleRequested: true,
         isWholesale: false,
         wholesaleRequestedAt: new Date(),
-        companyName,
-        businessType,
+        companyName: companyName || null,
+        businessType: businessType || null,
         website: website || null,
         instagram: instagram || null,
         country: country || null,
@@ -122,13 +123,13 @@ export async function POST(request: NextRequest) {
         await resend.emails.send({
           from: 'objednavky@mail.muzahair.cz',
           to: adminEmail,
-          subject: `Nová žádost o velkoobchodní přístup: ${companyName}`,
+          subject: `Nová žádost o velkoobchodní přístup: ${companyName || `${firstName} ${lastName}`}`,
           html: `
             <h2>Nová žádost o velkoobchodní přístup</h2>
             <p><strong>Jméno:</strong> ${firstName} ${lastName}</p>
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Telefon:</strong> ${phone || 'N/A'}</p>
-            <p><strong>Firma:</strong> ${companyName}</p>
+            <p><strong>Firma:</strong> ${companyName || "—"}</p>
             <p><strong>Typ podnikání:</strong> ${businessType}</p>
             <p><strong>Web:</strong> ${website || 'N/A'}</p>
             <p><strong>Instagram / Facebook:</strong> ${instagram || 'N/A'}</p>

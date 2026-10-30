@@ -146,8 +146,8 @@ export default function Home() {
               <span className="font-cormorant text-[32px] font-light leading-none" style={{ color: 'var(--burgundy)' }}>
                 {item.num}
               </span>
-              <div className="text-[12px] leading-[1.4] font-light" style={{ color: 'var(--text-soft)' }}>
-                <strong className="block text-[13px] font-normal" style={{ color: 'var(--text-mid)' }}>{item.strong}</strong>
+              <div className="text-[13px] leading-[1.4] font-light" style={{ color: 'var(--text-soft)' }}>
+                <strong className="block text-[14px] font-normal" style={{ color: 'var(--text-mid)' }}>{item.strong}</strong>
                 {item.sub}
               </div>
             </div>
@@ -164,7 +164,7 @@ export default function Home() {
                 Naše vlasy<br />k <em className="italic" style={{ color: 'var(--burgundy)' }}>prodloužení</em>
               </h2>
             </div>
-            <Link href="/vlasy-k-prodlouzeni" className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy hidden md:flex" style={{ color: 'var(--text-mid)' }}>
+            <Link href="/vlasy-k-prodlouzeni" className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy hidden md:flex" style={{ color: 'var(--text-mid)' }}>
               Zobrazit vše →
             </Link>
           </div>
@@ -212,7 +212,7 @@ export default function Home() {
                   />
                   {card.badge && (
                     <div
-                      className="absolute top-5 left-5 text-[10px] tracking-[0.14em] uppercase px-2.5 py-1.5 rounded-sm font-normal"
+                      className="absolute top-5 left-5 text-[12px] tracking-[0.14em] uppercase px-2.5 py-1.5 rounded-sm font-normal"
                       style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                     >
                       {card.badge}
@@ -223,7 +223,7 @@ export default function Home() {
                     style={{ background: 'rgba(74,21,32,0.08)' }}
                   >
                     <div
-                      className="text-[11px] tracking-[0.12em] uppercase px-6 py-3 rounded-sm translate-y-2 group-hover:translate-y-0 transition-transform duration-300"
+                      className="text-[12px] tracking-[0.12em] uppercase px-6 py-3 rounded-sm translate-y-2 group-hover:translate-y-0 transition-transform duration-300"
                       style={{ background: 'var(--white)', color: 'var(--burgundy)' }}
                     >
                       Zobrazit kolekci
@@ -232,20 +232,20 @@ export default function Home() {
                 </div>
                 {/* Info area */}
                 <div className="p-6 border-t" style={{ borderColor: 'var(--beige)' }}>
-                  <div className="text-[10px] tracking-[0.16em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>
+                  <div className="text-[12px] tracking-[0.16em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>
                     {card.category}
                   </div>
                   <div className="font-cormorant text-[20px] font-normal mb-1.5 leading-[1.2]" style={{ color: 'var(--text-dark)' }}>
                     {card.name}
                   </div>
-                  <div className="text-[13px] leading-[1.6] mb-4 font-light" style={{ color: 'var(--text-soft)' }}>
+                  <div className="text-[14px] leading-[1.6] mb-4 font-light" style={{ color: 'var(--text-soft)' }}>
                     {card.desc}
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     {card.prices.map(p => (
                       <span
                         key={p}
-                        className="text-[11px] px-2.5 py-1 rounded-full border transition-colors font-light"
+                        className="text-[12px] px-2.5 py-1 rounded-full border transition-colors font-light"
                         style={{ borderColor: 'var(--beige-mid)', color: 'var(--text-mid)' }}
                       >
                         {p}
@@ -271,7 +271,7 @@ export default function Home() {
               style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
             >
               <span className="font-cormorant text-[36px] font-light leading-none block">3</span>
-              <span className="text-[11px] tracking-[0.12em] opacity-80 uppercase font-light">Úrovně kvality</span>
+              <span className="text-[12px] tracking-[0.12em] opacity-80 uppercase font-light">Úrovně kvality</span>
             </div>
           </div>
 
@@ -298,10 +298,10 @@ export default function Home() {
                 >
                   <div>
                     <div className="font-cormorant text-[20px] font-normal" style={{ color: 'var(--text-dark)' }}>{tier.name}</div>
-                    <div className="text-[13px] font-light mt-0.5" style={{ color: 'var(--text-soft)' }}>{tier.desc}</div>
+                    <div className="text-[14px] font-light mt-0.5" style={{ color: 'var(--text-soft)' }}>{tier.desc}</div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-[13px] font-normal whitespace-nowrap" style={{ color: 'var(--text-mid)' }}>{tier.price}</span>
+                    <span className="text-[14px] font-normal whitespace-nowrap" style={{ color: 'var(--text-mid)' }}>{tier.price}</span>
                     <svg aria-hidden="true" className="w-4 h-4 transition-[color,transform] group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" style={{ color: 'var(--burgundy)' }}><path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" /></svg>
                   </div>
                 </Link>
@@ -337,7 +337,7 @@ export default function Home() {
                 <div className="font-cormorant text-[20px] font-normal mb-2.5" style={{ color: 'var(--ivory)' }}>
                   {item.name}
                 </div>
-                <div className="text-[13px] leading-[1.7] font-light" style={{ color: 'rgba(248,244,239,0.82)' }}>
+                <div className="text-[14px] leading-[1.7] font-light" style={{ color: 'rgba(248,244,239,0.82)' }}>
                   {item.desc}
                 </div>
               </div>
@@ -386,14 +386,14 @@ export default function Home() {
             ].map((m) => (
               <div key={m.name} className="bg-white p-10 flex flex-col">
                 <h3 className="font-cormorant text-[22px] font-normal mb-2" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
-                <p className="text-[13px] leading-[1.7] font-light mb-4 flex-1" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
-                <div className="text-[13px] font-normal mb-1" style={{ color: 'var(--burgundy)' }}>{m.price}</div>
-                <div className="text-[11px] font-light mb-6" style={{ color: 'var(--text-soft)' }}>{m.detail}</div>
+                <p className="text-[14px] leading-[1.7] font-light mb-4 flex-1" style={{ color: 'var(--text-soft)' }}>{m.desc}</p>
+                <div className="text-[14px] font-normal mb-1" style={{ color: 'var(--burgundy)' }}>{m.price}</div>
+                <div className="text-[12px] font-light mb-6" style={{ color: 'var(--text-soft)' }}>{m.detail}</div>
                 <div className="flex gap-3 flex-wrap">
-                  <Link href={m.href} className="text-[11px] tracking-[0.1em] uppercase px-4 py-2 rounded-sm border transition-all hover:-translate-y-px" style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}>
+                  <Link href={m.href} className="text-[12px] tracking-[0.1em] uppercase px-4 py-2 rounded-sm border transition-all hover:-translate-y-px" style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}>
                     Více o metodě
                   </Link>
-                  <Link href={m.cenikHref} className="text-[11px] tracking-[0.1em] uppercase px-4 py-2 rounded-sm transition-all hover:-translate-y-px" style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}>
+                  <Link href={m.cenikHref} className="text-[12px] tracking-[0.1em] uppercase px-4 py-2 rounded-sm transition-all hover:-translate-y-px" style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}>
                     Ceník aplikace
                   </Link>
                 </div>
@@ -401,7 +401,7 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <Link href="/prodlouzeni-vlasu-praha" className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy justify-center" style={{ color: 'var(--text-mid)' }}>
+            <Link href="/prodlouzeni-vlasu-praha" className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy justify-center" style={{ color: 'var(--text-mid)' }}>
               Prodloužení vlasů Praha — showroom, ceny, metody →
             </Link>
           </div>
@@ -426,7 +426,7 @@ export default function Home() {
                 <span className="font-cormorant text-[48px] font-light leading-none flex-shrink-0" style={{ color: 'var(--accent)' }}>{s.step}</span>
                 <div className="pt-2">
                   <p className="font-normal text-[15px] mb-1.5" style={{ color: 'var(--text-dark)' }}>{s.title}</p>
-                  <p className="text-[13px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{s.desc}</p>
+                  <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{s.desc}</p>
                 </div>
               </div>
             ))}
@@ -492,7 +492,7 @@ export default function Home() {
                 <p className="font-cormorant text-[18px] font-light leading-[1.7] italic mb-6" style={{ color: 'var(--text-dark)' }}>
                   {review.text}
                 </p>
-                <div className="flex items-center gap-2.5 text-[12px] font-light" style={{ color: 'var(--text-soft)' }}>
+                <div className="flex items-center gap-2.5 text-[13px] font-light" style={{ color: 'var(--text-soft)' }}>
                   <span className="block w-5 h-px" style={{ background: 'var(--beige-mid)' }} />
                   <span>
                     <strong className="font-normal" style={{ color: 'var(--text-mid)' }}>{review.author}</strong>
@@ -517,21 +517,21 @@ export default function Home() {
                     Průvodce prodloužením <em className="italic" style={{ color: 'var(--burgundy)' }}>vlasů</em>
                   </h2>
                 </div>
-                <Link href="/blog" className="text-[12px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-2 hover:text-burgundy transition" style={{ color: 'var(--text-mid)' }}>
+                <Link href="/blog" className="text-[13px] tracking-[0.1em] uppercase font-light hidden md:flex items-center gap-2 hover:text-burgundy transition" style={{ color: 'var(--text-mid)' }}>
                   Všechny články →
                 </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: 'var(--beige)' }}>
                 {latest.map((article) => (
                   <Link key={article.slug} href={`/blog/${article.slug}`} className="bg-white p-8 group block hover:bg-ivory transition-colors">
-                    <div className="text-[10px] tracking-[0.16em] uppercase mb-2 font-normal" style={{ color: 'var(--accent)' }}>{article.category}</div>
+                    <div className="text-[12px] tracking-[0.16em] uppercase mb-2 font-normal" style={{ color: 'var(--accent)' }}>{article.category}</div>
                     <h3 className="font-cormorant text-[19px] font-normal leading-[1.35] mb-3 group-hover:text-burgundy transition-colors" style={{ color: 'var(--text-dark)' }}>
                       {article.title}
                     </h3>
-                    <p className="text-[13px] leading-[1.65] font-light mb-5" style={{ color: 'var(--text-soft)' }}>
+                    <p className="text-[14px] leading-[1.65] font-light mb-5" style={{ color: 'var(--text-soft)' }}>
                       {article.excerpt.slice(0, 100)}…
                     </p>
-                    <span className="text-[11px] tracking-[0.1em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+                    <span className="text-[12px] tracking-[0.1em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
                       Číst článek →
                     </span>
                   </Link>
@@ -563,7 +563,7 @@ export default function Home() {
                   {item.q}
                   <span className="text-[18px] font-light ml-4 flex-shrink-0 group-open:rotate-45 transition-transform duration-200" style={{ color: 'var(--burgundy)' }}>+</span>
                 </summary>
-                <div className="px-6 pb-5 text-[13px] leading-[1.75] font-light" style={{ color: 'var(--text-soft)' }}>
+                <div className="px-6 pb-5 text-[14px] leading-[1.75] font-light" style={{ color: 'var(--text-soft)' }}>
                   {item.a}{' '}
                   {i === 0 && <Link href="/ceny-aplikaci" className="underline" style={{ color: 'var(--burgundy)' }}>Zobrazit ceník →</Link>}
                 </div>
@@ -596,7 +596,7 @@ export default function Home() {
           <div className="flex gap-4 justify-center items-center flex-wrap">
             <Link
               href="/vlasy-k-prodlouzeni"
-              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
               style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--burgundy-light)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'var(--burgundy)')}
@@ -605,7 +605,7 @@ export default function Home() {
             </Link>
             <Link
               href="/showroom"
-              className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy"
+              className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-colors hover:text-burgundy"
               style={{ color: 'var(--text-mid)' }}
             >
               Navštívit showroom →

@@ -154,7 +154,7 @@ export default function KeratinPage() {
             className="px-8 py-10"
             style={{ borderLeft: '3px solid var(--accent)', background: 'var(--beige)' }}
           >
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               CENY APLIKACE
             </div>

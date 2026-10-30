@@ -14,7 +14,7 @@ export default function KontaktPage() {
       {/* Hero */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -39,7 +39,7 @@ export default function KontaktPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div>
             <div
-              className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal"
+              className="text-[12px] tracking-[0.2em] uppercase mb-3 font-normal"
               style={{ color: 'var(--accent)' }}
             >
               Adresa
@@ -54,7 +54,7 @@ export default function KontaktPage() {
 
           <div>
             <div
-              className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal"
+              className="text-[12px] tracking-[0.2em] uppercase mb-3 font-normal"
               style={{ color: 'var(--accent)' }}
             >
               Otevírací doba
@@ -65,14 +65,14 @@ export default function KontaktPage() {
             >
               Po–Ne 10:00–20:00
             </p>
-            <p className="text-[13px] font-light mt-2 tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-[14px] font-light mt-2 tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
               Pouze na objednání
             </p>
           </div>
 
           <div>
             <div
-              className="text-[11px] tracking-[0.2em] uppercase mb-3 font-normal"
+              className="text-[12px] tracking-[0.2em] uppercase mb-3 font-normal"
               style={{ color: 'var(--accent)' }}
             >
               Spojení
@@ -117,7 +117,7 @@ export default function KontaktPage() {
       {/* Contact actions */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -160,7 +160,7 @@ export default function KontaktPage() {
               style={{ borderColor: 'var(--beige)' }}
             >
               <span
-                className="text-[11px] tracking-[0.15em] uppercase font-light w-24 flex-shrink-0"
+                className="text-[12px] tracking-[0.15em] uppercase font-light w-24 flex-shrink-0"
                 style={{ color: 'var(--text-soft)' }}
               >
                 {item.label}
@@ -181,7 +181,7 @@ export default function KontaktPage() {
         <div className="flex gap-4 flex-wrap">
           <a
             href="tel:+420728722880"
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Zavolat
@@ -190,7 +190,7 @@ export default function KontaktPage() {
             href="https://wa.me/420728722880"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             WhatsApp →
@@ -201,7 +201,7 @@ export default function KontaktPage() {
       {/* Map */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -232,7 +232,7 @@ export default function KontaktPage() {
       {/* FAQ */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -305,7 +305,7 @@ export default function KontaktPage() {
         <div className="flex gap-4 flex-wrap items-center">
           <a
             href="tel:+420728722880"
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             +420 728 722 880
@@ -314,7 +314,7 @@ export default function KontaktPage() {
             href="https://www.instagram.com/muzahair.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             @muzahair.cz →

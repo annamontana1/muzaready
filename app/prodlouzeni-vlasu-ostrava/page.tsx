@@ -137,13 +137,13 @@ export default function ProdlouzeniVlasuOstravaPage() {
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
             {/* Breadcrumb */}
-            <div className="text-[12px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+            <div className="text-[13px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
               <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
               {' / '}
               <span style={{ color: 'var(--text-dark)' }}>Prodloužení vlasů Ostrava</span>
             </div>
 
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               PRO KLIENTKY Z OSTRAVY
             </div>
@@ -165,12 +165,12 @@ export default function ProdlouzeniVlasuOstravaPage() {
             <div>
               <p className="font-cormorant text-[22px] font-light mb-1" style={{ color: 'var(--ivory)' }}>Showroom Múza Hair — Praha 1</p>
               <p className="text-[14px] font-light" style={{ color: 'rgba(255,255,255,0.75)' }}>Revoluční 8, Praha 1 · metro B Náměstí Republiky (3 min pěšky)</p>
-              <p className="text-[13px] font-light mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Po–Ne 10:00–20:00 · Pouze na objednání · Ostrava vlakem 3,5 hod</p>
+              <p className="text-[14px] font-light mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Po–Ne 10:00–20:00 · Pouze na objednání · Ostrava vlakem 3,5 hod</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href="tel:+420728722880"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
                 style={{ background: 'var(--ivory)', color: 'var(--burgundy)' }}
               >
                 +420 728 722 880
@@ -179,7 +179,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'var(--ivory)' }}
               >
                 @muzahair.cz
@@ -191,7 +191,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
         {/* Proč přijet z Ostravy */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               PROČ ZA NÁMI
             </div>
@@ -223,7 +223,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
         {/* Metody + ceny */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               CENÍK APLIKACE
             </div>
@@ -234,7 +234,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
             <div className="grid md:grid-cols-3 gap-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               {METHODS.map((m) => (
                 <div key={m.name} className="border-b md:border-b-0 md:border-r py-8 md:pr-8 md:last:border-r-0 md:last:pr-0 md:pl-8 md:first:pl-0" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-                  <p className="text-[11px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{m.subtitle}</p>
+                  <p className="text-[12px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{m.subtitle}</p>
                   <h3 className="font-cormorant text-[20px] font-light mb-5" style={{ color: 'var(--text-dark)' }}>{m.name}</h3>
                   <ul className="space-y-2 mb-6">
                     {m.items.map((item) => (
@@ -246,7 +246,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
                   </ul>
                   <Link
                     href={m.href}
-                    className="text-[12px] tracking-[0.12em] uppercase font-normal hover:underline"
+                    className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
                     style={{ color: 'var(--burgundy)' }}
                   >
                     Více o metodě →
@@ -258,7 +258,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
             <div className="mt-10 pt-8 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               <Link
                 href="/ceny-aplikaci"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Kompletní ceník aplikace →
@@ -270,7 +270,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
         {/* Kvalita vlasů */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               KVALITA VLASŮ
             </div>
@@ -284,7 +284,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
             <div className="grid md:grid-cols-3 gap-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               {VLASY_QUALITY.map((v) => (
                 <div key={v.level} className="border-b md:border-b-0 md:border-r py-8 md:pr-8 md:last:border-r-0 md:last:pr-0 md:pl-8 md:first:pl-0" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-                  <p className="text-[11px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{v.origin}</p>
+                  <p className="text-[12px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{v.origin}</p>
                   <h3 className="font-cormorant text-[20px] font-light mb-3" style={{ color: 'var(--text-dark)' }}>{v.level}</h3>
                   <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{v.desc}</p>
                 </div>
@@ -293,7 +293,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
             <div className="mt-8">
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="text-[12px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--burgundy)' }}
               >
                 Nakonfigurovat vlasy online →
@@ -305,7 +305,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
         {/* Jak to funguje — cesta z Ostravy */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               PLÁNOVÁNÍ NÁVŠTĚVY
             </div>
@@ -320,7 +320,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
                 { step: '04', title: 'Vlasy online s doručením', desc: 'Nechcete cestovat? Nakonfigurujte vlasy v e-shopu — doručíme do Ostravy. Aplikaci pak provedete u lokálního kadeřníka.' },
               ].map((item) => (
                 <div key={item.step} className="border-b py-7 sm:odd:pr-10 sm:even:pl-10 sm:odd:border-r" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-                  <p className="text-[11px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{item.step}</p>
+                  <p className="text-[12px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{item.step}</p>
                   <p className="text-[15px] font-normal mb-1" style={{ color: 'var(--text-dark)' }}>{item.title}</p>
                   <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
                 </div>
@@ -332,7 +332,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
         {/* FAQ */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               ČASTÉ DOTAZY
             </div>
@@ -378,7 +378,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
         {/* CTA */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
               <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
               REZERVACE
             </div>
@@ -392,7 +392,7 @@ export default function ProdlouzeniVlasuOstravaPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="tel:+420728722880"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 +420 728 722 880
@@ -401,14 +401,14 @@ export default function ProdlouzeniVlasuOstravaPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 @muzahair.cz na Instagramu
               </a>
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
               >
                 Objednat vlasy online

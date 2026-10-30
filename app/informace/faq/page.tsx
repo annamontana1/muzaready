@@ -945,7 +945,7 @@ export default function FAQPage() {
       {/* Hero section */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             ČASTÉ DOTAZY
           </div>
@@ -979,7 +979,7 @@ export default function FAQPage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-3 text-[12px] tracking-[0.1em] uppercase font-normal transition-colors border-b-2 -mb-px ${
+                className={`px-4 py-3 text-[13px] tracking-[0.1em] uppercase font-normal transition-colors border-b-2 -mb-px ${
                   selectedCategory === category
                     ? 'border-[var(--burgundy)]'
                     : 'border-transparent hover:border-[var(--text-soft)]'
@@ -1012,7 +1012,7 @@ export default function FAQPage() {
                   >
                     <div className="flex-1">
                       <span
-                        className="text-[10px] tracking-[0.18em] uppercase font-normal block mb-1"
+                        className="text-[12px] tracking-[0.18em] uppercase font-normal block mb-1"
                         style={{ color: 'var(--accent)' }}
                       >
                         {item.category}
@@ -1062,7 +1062,7 @@ export default function FAQPage() {
       {/* Contact CTA */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             KONTAKT
           </div>
@@ -1075,7 +1075,7 @@ export default function FAQPage() {
           <div className="flex flex-wrap gap-4">
             <a
               href="mailto:info@muzahair.cz"
-              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
               style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
             >
               Napsat email
@@ -1084,14 +1084,14 @@ export default function FAQPage() {
               href="https://wa.me/420728722880"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
               style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
             >
               WhatsApp
             </a>
             <a
               href="tel:+420728722880"
-              className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
               style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
             >
               Zavolat

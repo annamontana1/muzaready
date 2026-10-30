@@ -50,7 +50,7 @@ export default function FeaturedPieces() {
   return (
     <section aria-labelledby="h-culiky" className="bg-muza-cream">
       <div className="max-w-7xl mx-auto px-5 lg:px-12 py-14 lg:py-24">
-        <div className="text-[11px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Skladem</div>
+        <div className="text-[12px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Skladem</div>
         <h2 id="h-culiky" className="font-cormorant font-light text-muza-ink text-[36px] leading-[1.04] lg:text-[52px]">
           Culíky <em className="italic">připravené k odeslání.</em>
         </h2>

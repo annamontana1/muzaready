@@ -39,7 +39,7 @@ export default function RecenzePage() {
       {/* Header section */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.15em] uppercase font-light mb-10"
+          className="text-[12px] tracking-[0.15em] uppercase font-light mb-10"
           style={{ color: 'var(--text-soft)' }}
         >
           <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
@@ -48,7 +48,7 @@ export default function RecenzePage() {
         </div>
 
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -87,7 +87,7 @@ export default function RecenzePage() {
                 {stat.value}
               </div>
               <div
-                className="text-[12px] tracking-[0.05em] uppercase font-light"
+                className="text-[13px] tracking-[0.05em] uppercase font-light"
                 style={{ color: 'var(--text-soft)' }}
               >
                 {stat.label}
@@ -118,7 +118,7 @@ export default function RecenzePage() {
               &ldquo;{review.text}&rdquo;
             </p>
             <div
-              className="text-[11px] tracking-[0.18em] uppercase font-light"
+              className="text-[12px] tracking-[0.18em] uppercase font-light"
               style={{ color: 'var(--text-mid)' }}
             >
               {review.author} — {review.location}
@@ -145,14 +145,14 @@ export default function RecenzePage() {
         <div className="flex gap-6 flex-wrap items-center">
           <Link
             href="/vlasy-k-prodlouzeni"
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Prozkoumat kolekci
           </Link>
           <Link
             href="/showroom"
-            className="text-[12px] tracking-[0.1em] uppercase font-light"
+            className="text-[13px] tracking-[0.1em] uppercase font-light"
             style={{ color: 'var(--text-mid)' }}
           >
             Navštívit showroom →

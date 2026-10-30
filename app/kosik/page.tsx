@@ -124,11 +124,11 @@ export default function CartPage() {
                       <div className="flex items-baseline justify-between gap-2">
                         <Link href={`/sku-detail/${item.skuId}`} className="font-cormorant text-[26px] leading-tight text-muza-ink [font-variant-numeric:lining-nums]">{title}</Link>
                         <button type="button" onClick={() => removeFromCart(item.skuId)}
-                          className="text-[13px] text-[#45302F] underline underline-offset-2 py-1">Odebrat</button>
+                          className="text-[14px] text-[#45302F] underline underline-offset-2 py-1">Odebrat</button>
                       </div>
-                      {kind && <p className="text-[13px] text-[#45302F]">{kind}</p>}
+                      {kind && <p className="text-[14px] text-[#45302F]">{kind}</p>}
                       {(item.shade || extra.shadeName) && (
-                        <p className="text-[13px] text-[#45302F]">
+                        <p className="text-[14px] text-[#45302F]">
                           odstín {item.shade && <b className="font-semibold text-text-dark">{item.shade}</b>}{item.shade && extra.shadeName ? ' · ' : ''}{extra.shadeName}
                         </p>
                       )}
@@ -167,7 +167,7 @@ export default function CartPage() {
                       <dt className={dtClass}>Zakončení</dt>
                       <dd className={ddClass}>
                         {ENDING_LABELS[item.ending] || item.ending}
-                        {item.assemblyFeeTotal > 0 && <span className="block text-[13px] text-[#45302F]">{formatPrice(item.assemblyFeeTotal)}</span>}
+                        {item.assemblyFeeTotal > 0 && <span className="block text-[14px] text-[#45302F]">{formatPrice(item.assemblyFeeTotal)}</span>}
                       </dd>
                     </div>
                     <div className={`${rowClass} border-b`}>
@@ -189,7 +189,7 @@ export default function CartPage() {
           </div>
           <div className="hidden lg:block mt-5">
             <div className="flex items-baseline justify-between">
-              <span className="text-[13px] text-[#45302F]">Celkem za zboží</span>
+              <span className="text-[14px] text-[#45302F]">Celkem za zboží</span>
               <span className="font-jost font-semibold text-[28px] text-muza-ink tabular-nums">{formatPrice(subtotal)}</span>
             </div>
             <button type="button" onClick={goCheckout} aria-disabled={!agreed}
@@ -200,7 +200,7 @@ export default function CartPage() {
           {/* Upozornění na jiné podmínky odstoupení u individuálních výrobků a souhlas s podmínkami */}
           <Link href="/obchodni-podminky#individualni-vyrobek"
             className="mt-5 flex items-start gap-3 rounded-2xl border border-muza-ink bg-[#F7F3EE] p-3.5 text-sm leading-snug text-text-dark hover:bg-white transition-colors">
-            <span aria-hidden="true" className="mt-px flex-none w-6 h-6 rounded-full bg-muza-ink text-muza-onink text-[13px] font-semibold leading-none flex items-center justify-center">i</span>
+            <span aria-hidden="true" className="mt-px flex-none w-6 h-6 rounded-full bg-muza-ink text-muza-onink text-[14px] font-semibold leading-none flex items-center justify-center">i</span>
             <span><b className="font-semibold text-muza-ink">Pozor:</b> u individuálních výrobků na míru platí <span className="underline underline-offset-2">jiné podmínky pro odstoupení od smlouvy</span>.</span>
           </Link>
           <label id="souhlas" className={`mt-4 flex items-start gap-2.5 text-sm cursor-pointer rounded-lg transition-colors ${nudge && !agreed ? 'text-error' : ''}`}>
@@ -208,7 +208,7 @@ export default function CartPage() {
               className="mt-0.5 w-[18px] h-[18px] flex-none accent-[#330D0D]" />
             <span>Souhlasím s <Link href="/obchodni-podminky" className="text-muza-ink underline underline-offset-2">obchodními podmínkami</Link>.</span>
           </label>
-          {!agreed && <p className="mt-1.5 ml-7 text-[12px] text-muza-soft">Pro pokračování k pokladně potvrďte souhlas.</p>}
+          {!agreed && <p className="mt-1.5 ml-7 text-[13px] text-muza-soft">Pro pokračování k pokladně potvrďte souhlas.</p>}
           <Link href="/katalog" className="mt-4 inline-block py-1.5 text-sm text-muza-ink underline underline-offset-[3px]">Pokračovat v nákupu</Link>
         </aside>
       </div>
@@ -216,7 +216,7 @@ export default function CartPage() {
       {/* Mobil: spodní lišta se součtem */}
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
-          <div className="text-[12px] text-[#45302F]">Celkem za zboží</div>
+          <div className="text-[13px] text-[#45302F]">Celkem za zboží</div>
           <div className="font-jost font-semibold text-[24px] leading-tight text-muza-ink whitespace-nowrap tabular-nums">{formatPrice(subtotal)}</div>
         </div>
         <button type="button" onClick={goCheckout} aria-disabled={!agreed}

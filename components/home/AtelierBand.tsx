@@ -9,7 +9,7 @@ export default function AtelierBand() {
         <img src="/images/atelier/atelier-12.webp" alt="Tým ateliéru Múza Hair v Praze" loading="lazy" decoding="async"
           width={1600} height={1073} className="block w-full aspect-[3/2] lg:aspect-auto lg:h-full object-cover" />
         <div className="px-5 py-10 lg:px-16 lg:py-20 flex flex-col justify-center">
-          <div className="text-[11px] font-medium tracking-[0.14em] uppercase opacity-70 mb-3">Ateliér Praha 1</div>
+          <div className="text-[12px] font-medium tracking-[0.14em] uppercase opacity-70 mb-3">Ateliér Praha 1</div>
           <h2 id="h-atelier" className="font-cormorant font-light text-[36px] leading-[1.04] lg:text-[52px]">
             Šijeme, tresujeme a balíme <em className="italic">v Praze.</em>
           </h2>

@@ -14,7 +14,7 @@ export default function ShowroomPage() {
       {/* Hero section */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div
-          className="text-[11px] tracking-[0.15em] uppercase font-light mb-10"
+          className="text-[12px] tracking-[0.15em] uppercase font-light mb-10"
           style={{ color: 'var(--text-soft)' }}
         >
           <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
@@ -23,7 +23,7 @@ export default function ShowroomPage() {
         </div>
 
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -66,7 +66,7 @@ export default function ShowroomPage() {
         <div className="flex gap-6 flex-wrap">
           <a
             href="tel:+420728722880"
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Zavolejte nám
@@ -75,7 +75,7 @@ export default function ShowroomPage() {
             href="https://wa.me/420728722880"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[12px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             WhatsApp →
@@ -86,7 +86,7 @@ export default function ShowroomPage() {
       {/* Hours & appointment info */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -121,7 +121,7 @@ export default function ShowroomPage() {
       {/* Contact details */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory-warm)' }}>
         <div
-          className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
+          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
           style={{ color: 'var(--accent)' }}
         >
           <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
@@ -141,7 +141,7 @@ export default function ShowroomPage() {
               style={{ borderColor: 'var(--border-light)' }}
             >
               <div
-                className="text-[11px] tracking-[0.15em] uppercase font-light mb-3"
+                className="text-[12px] tracking-[0.15em] uppercase font-light mb-3"
                 style={{ color: 'var(--text-soft)' }}
               >
                 {item.label}

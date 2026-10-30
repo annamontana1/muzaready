@@ -70,7 +70,7 @@ export default function NasPribehPage() {
 
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">O nás</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">O nás</span>
           </div>
 
           <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-8" style={{ color: 'var(--text-dark)' }}>
@@ -103,7 +103,7 @@ export default function NasPribehPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Historie</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Historie</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
             Naše cesta
@@ -135,7 +135,7 @@ export default function NasPribehPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Hodnoty</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Hodnoty</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
             Naše hodnoty
@@ -157,7 +157,7 @@ export default function NasPribehPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Zakladatelka</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Zakladatelka</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
             Kdo za Mùza Hair stojí
@@ -167,7 +167,7 @@ export default function NasPribehPage() {
             <div className="flex items-start gap-8">
               <div>
                 <h3 className="font-cormorant text-2xl font-light mb-1" style={{ color: 'var(--text-dark)' }}>Anna</h3>
-                <p className="text-[11px] tracking-[0.2em] uppercase mb-4 font-normal" style={{ color: 'var(--accent)' }}>Zakladatelka & CEO</p>
+                <p className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal" style={{ color: 'var(--accent)' }}>Zakladatelka & CEO</p>
                 <p className="text-sm leading-relaxed italic" style={{ color: 'var(--text-soft)' }}>
                   "Věřím, že krásné vlasy nejsou luxus jen pro vyvolené. Každá žena si zaslouží cítit se výjimečně, a my jsme tu od toho, abychom jí v tom pomohli."
                 </p>
@@ -182,7 +182,7 @@ export default function NasPribehPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Kontakt</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Kontakt</span>
           </div>
           <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
             {[
@@ -191,7 +191,7 @@ export default function NasPribehPage() {
               { label: 'Email', value: 'info@muzahair.cz' },
             ].map((c) => (
               <div key={c.label} className="flex items-start gap-8 py-5 border-b" style={{ borderColor: 'var(--beige)' }}>
-                <div className="w-40 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                <div className="w-40 flex-shrink-0 text-[12px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
                   {c.label}
                 </div>
                 <div className="text-sm" style={{ color: 'var(--text-dark)' }}>{c.value}</div>
@@ -206,7 +206,7 @@ export default function NasPribehPage() {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Staňte se součástí příběhu</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Staňte se součástí příběhu</span>
             <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
           </div>
           <h2 className="font-cormorant text-[clamp(24px,3vw,40px)] font-light mb-4" style={{ color: 'var(--ivory)' }}>

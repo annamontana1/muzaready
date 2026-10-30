@@ -286,7 +286,7 @@ export default function CenyAplikaciPage() {
 
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Praha · Showroom</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Praha · Showroom</span>
           </div>
 
           <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-4" style={{ color: 'var(--text-dark)' }}>
@@ -317,7 +317,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Keratinové pramínky · 3–4 hod · Korekce po 2,5–3 měsících</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Keratinové pramínky · 3–4 hod · Korekce po 2,5–3 měsících</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Keratin / Mikrokeratin — prodloužení vlasů Praha
@@ -327,7 +327,7 @@ export default function CenyAplikaciPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase w-1/3" style={{ color: 'var(--text-soft)' }}></th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase w-1/3" style={{ color: 'var(--text-soft)' }}></th>
                   <th className="text-center py-3 font-normal" style={{ color: 'var(--text-soft)' }}>
                     <span className="font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>Standart keratin</span>
                   </th>
@@ -338,12 +338,12 @@ export default function CenyAplikaciPage() {
               </thead>
               <tbody>
                 <tr className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                  <td className="py-4 text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Pramenů / 100 g vlasů</td>
+                  <td className="py-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Pramenů / 100 g vlasů</td>
                   <td className="py-4 text-center" style={{ color: 'var(--text-dark)' }}>130 pramenů</td>
                   <td className="py-4 text-center" style={{ color: 'var(--text-dark)' }}>230 pramenů</td>
                 </tr>
                 <tr className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                  <td className="py-4 text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Nasazení + napramínkování</td>
+                  <td className="py-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Nasazení + napramínkování</td>
                   <td className="py-4 text-center">
                     <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--burgundy)' }}>4 000 Kč</span>
                     <span className="block text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>31 Kč / pramen</span>
@@ -354,7 +354,7 @@ export default function CenyAplikaciPage() {
                   </td>
                 </tr>
                 <tr className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                  <td className="py-4 text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Korekce / posun vlasů</td>
+                  <td className="py-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Korekce / posun vlasů</td>
                   <td className="py-4 text-center">
                     <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--burgundy)' }}>4 500 Kč</span>
                     <span className="block text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>35 Kč / pramen</span>
@@ -384,11 +384,11 @@ export default function CenyAplikaciPage() {
 
           <div className="flex flex-wrap gap-8 text-sm mb-4" style={{ color: 'var(--text-soft)' }}>
             <div>
-              <span className="text-[11px] tracking-[0.15em] uppercase block mb-1" style={{ color: 'var(--text-soft)' }}>Délka aplikace</span>
+              <span className="text-[12px] tracking-[0.15em] uppercase block mb-1" style={{ color: 'var(--text-soft)' }}>Délka aplikace</span>
               <span style={{ color: 'var(--text-dark)' }}>3–4 hodiny</span>
             </div>
             <div>
-              <span className="text-[11px] tracking-[0.15em] uppercase block mb-1" style={{ color: 'var(--text-soft)' }}>Korekce</span>
+              <span className="text-[12px] tracking-[0.15em] uppercase block mb-1" style={{ color: 'var(--text-soft)' }}>Korekce</span>
               <span style={{ color: 'var(--text-dark)' }}>po 2,5–3 měsících</span>
             </div>
           </div>
@@ -404,7 +404,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Bez tepla a chemie · Sendvičový spoj · Korekce po 1,5–2 měsících</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Bez tepla a chemie · Sendvičový spoj · Korekce po 1,5–2 měsících</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Vlasové pásky / Nanotapes / Tape-In — prodloužení vlasů Praha
@@ -417,7 +417,7 @@ export default function CenyAplikaciPage() {
 
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Ceník</p>
+              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Ceník</p>
               <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {[
                   { label: '2,8 cm pásky — nanotapes (1 spoj = 2 pásky)', price: '55 Kč' },
@@ -435,7 +435,7 @@ export default function CenyAplikaciPage() {
             </div>
 
             <div>
-              <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Parametry</p>
+              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Parametry</p>
               <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {[
                   { label: 'Délka posunu', value: '1,5–2 hodiny' },
@@ -444,7 +444,7 @@ export default function CenyAplikaciPage() {
                   { label: 'Spoj', value: 'Neviditelný sendvičový spoj' },
                 ].map((row) => (
                   <div key={row.label} className="flex justify-between items-start py-4 border-b" style={{ borderColor: 'var(--beige)' }}>
-                    <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
+                    <span className="text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
                     <span className="text-sm text-right ml-4" style={{ color: 'var(--text-dark)' }}>{row.value}</span>
                   </div>
                 ))}
@@ -462,7 +462,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Ručně šité tresy na copánky · Bez lepidla a tepla · Korekce po 2–3 měsících</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Ručně šité tresy na copánky · Bez lepidla a tepla · Korekce po 2–3 měsících</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Vlasové tresy / Weft — Hollywoodské prodloužení vlasů Praha
@@ -470,7 +470,7 @@ export default function CenyAplikaciPage() {
 
           <div className="grid md:grid-cols-2 gap-12">
             <div>
-              <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Ceník</p>
+              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Ceník</p>
               <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {[
                   { label: 'Posun / korekce tresů', price: '3 800 Kč' },
@@ -486,7 +486,7 @@ export default function CenyAplikaciPage() {
             </div>
 
             <div>
-              <p className="text-[11px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Parametry</p>
+              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Parametry</p>
               <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
                 {[
                   { label: 'Délka aplikace', value: 'cca 2,5 hodiny' },
@@ -495,7 +495,7 @@ export default function CenyAplikaciPage() {
                   { label: 'Šetrnost', value: 'Šetrné k vlastním vlasům' },
                 ].map((row) => (
                   <div key={row.label} className="flex justify-between items-start py-4 border-b" style={{ borderColor: 'var(--ivory)' }}>
-                    <span className="text-[11px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
+                    <span className="text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
                     <span className="text-sm text-right ml-4" style={{ color: 'var(--text-dark)' }}>{row.value}</span>
                   </div>
                 ))}
@@ -513,7 +513,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Kalkulace</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Kalkulace</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Kolik stojí prodloužení vlasů celkem?
@@ -560,7 +560,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Srovnání</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Srovnání</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Srovnání metod prodloužení vlasů — Praha
@@ -569,11 +569,11 @@ export default function CenyAplikaciPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Metoda</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Cena aplikace</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Korekce</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
-                  <th className="text-center py-3 font-normal text-[11px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Šetrnost</th>
+                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Metoda</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Cena aplikace</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Korekce</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
+                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Šetrnost</th>
                 </tr>
               </thead>
               <tbody>
@@ -602,7 +602,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Výběr metody</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Výběr metody</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Jak vybrat metodu prodloužení vlasů?
@@ -629,7 +629,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Časté dotazy</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Časté dotazy</span>
           </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
             Prodloužení vlasů cena Praha — co se nejčastěji ptáte
@@ -700,7 +700,7 @@ export default function CenyAplikaciPage() {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
-            <span className="text-[11px] tracking-[0.2em] uppercase font-normal">Konzultace zdarma</span>
+            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Konzultace zdarma</span>
             <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
           </div>
           <h2 className="font-cormorant text-[clamp(24px,3vw,40px)] font-light mb-4" style={{ color: 'var(--ivory)' }}>

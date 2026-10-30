@@ -63,9 +63,9 @@ export default function LengthSheet({ open, lengths, value, onChange, onClose }:
         <div className="mx-auto mt-2 mb-1.5 h-1 w-10 rounded-full bg-[#BBAD9F]" />
         <div className="flex items-end justify-between px-4">
           <div>
-            <div className="text-[13px] text-text-mid">Délka vlasů</div>
+            <div className="text-[14px] text-text-mid">Délka vlasů</div>
             <div className="font-cormorant text-[38px] leading-none text-muza-ink">{value} <span className="text-lg">cm</span></div>
-            <div className="mt-0.5 text-[13px] text-text-mid">sahají {zone}</div>
+            <div className="mt-0.5 text-[14px] text-text-mid">sahají {zone}</div>
           </div>
           <div className="text-right">
             <div className="mb-1 text-xs text-text-mid">Vaše výška</div>

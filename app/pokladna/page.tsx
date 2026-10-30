@@ -330,7 +330,7 @@ export default function PokladnaPage() {
           </p>
           <TransferPayment orderNumber={sent.orderNumber} amount={sent.total} />
           {!account && <AccountOffer email={formData.email.trim()} firstName={first || ''} lastName={rest.join(' ')} phone={formData.phone.trim()} />}
-          <p className="mt-4 text-[13px] text-muza-soft">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
+          <p className="mt-4 text-[14px] text-muza-soft">Stav objednávky můžete sledovat i bez účtu, odkaz najdete v e-mailu.</p>
           <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Dobrý den, mám dotaz k objednávce č. ${sent.orderNumber}.`)}`}
             target="_blank" rel="noopener" className="mt-6 flex items-center justify-center gap-2 h-12 rounded-full border border-muza-ink text-muza-ink text-sm">
             <WhatsAppIcon />Máte dotaz? Napište nám
@@ -395,7 +395,7 @@ export default function PokladnaPage() {
             </span>
           </button>
           {summaryOpen && (
-            <div className="px-5 pb-4 space-y-1.5 text-[13px]">
+            <div className="px-5 pb-4 space-y-1.5 text-[14px]">
               {items.map((item) => (
                 <div key={item.skuId} className="flex justify-between gap-3">
                   <span className="text-muza-soft">{describeItem(item)}</span><span>{formatPrice(item.lineGrandTotal)}</span>
@@ -410,7 +410,7 @@ export default function PokladnaPage() {
         <div className="max-w-5xl mx-auto px-5 lg:px-8 pt-7 pb-36 lg:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16 lg:items-start">
           <form id="checkout" onSubmit={handleSubmit} noValidate className="min-w-0">
             <h1 className="font-cormorant text-[40px] lg:text-[48px] leading-none text-muza-ink">Pokladna</h1>
-            <p className="mt-2 text-[13px] text-muza-soft">
+            <p className="mt-2 text-[14px] text-muza-soft">
               Zabere to minutu. Platí se vždy předem.
             </p>
 
@@ -442,12 +442,12 @@ export default function PokladnaPage() {
                     <input type="password" autoComplete="current-password" value={login.password} onChange={(e) => setLogin((l) => ({ ...l, password: e.target.value }))}
                       onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleLogin(); } }} className={fieldClass} />
                   </label>
-                  {loginError && <p role="alert" className="mt-2 text-[13px] text-error">{loginError}</p>}
+                  {loginError && <p role="alert" className="mt-2 text-[14px] text-error">{loginError}</p>}
                   <button type="button" onClick={handleLogin} disabled={loginLoading}
                     className="mt-4 w-full h-[50px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium disabled:opacity-50">
                     {loginLoading ? 'Přihlašuji…' : 'Přihlásit'}
                   </button>
-                  <Link href="/prihlaseni" className="mt-2.5 inline-block text-[13px] text-muza-soft underline underline-offset-2">Zapomenuté heslo</Link>
+                  <Link href="/prihlaseni" className="mt-2.5 inline-block text-[14px] text-muza-soft underline underline-offset-2">Zapomenuté heslo</Link>
                 </div>
               )}
 
@@ -478,7 +478,7 @@ export default function PokladnaPage() {
                     <input type="email" name="email" autoComplete="email" required value={formData.email} onChange={handleInputChange} disabled={loading}
                       placeholder="vas@email.cz" className={fieldClass} />
                   </label>
-                  {!account && <p className="mt-3 text-[13px] text-muza-soft">Registrace není potřeba, objednáte i bez účtu.</p>}
+                  {!account && <p className="mt-3 text-[14px] text-muza-soft">Registrace není potřeba, objednáte i bez účtu.</p>}
                 </>
               )}
             </section>
@@ -530,24 +530,24 @@ export default function PokladnaPage() {
                         // Adresa v jedné kartě přes celou šířku, ať se stránka při výběru nerozjíždí
                         <div className="mb-4 rounded-2xl border border-muza-line bg-[#F7F3EE] p-3.5 flex flex-col gap-3">
                           <label className="block">
-                            <span className="block mb-1 text-[13px] text-[#45302F]">Ulice a číslo</span>
+                            <span className="block mb-1 text-[14px] text-[#45302F]">Ulice a číslo</span>
                             <input type="text" name="streetAddress" autoComplete="street-address" required value={formData.streetAddress}
                               onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50" />
                           </label>
                           <div className="grid grid-cols-[minmax(0,1fr)_110px] gap-3">
                             <label className="block min-w-0">
-                              <span className="block mb-1 text-[13px] text-[#45302F]">Město</span>
+                              <span className="block mb-1 text-[14px] text-[#45302F]">Město</span>
                               <input type="text" name="city" autoComplete="address-level2" required value={formData.city}
                                 onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50" />
                             </label>
                             <label className="block">
-                              <span className="block mb-1 text-[13px] text-[#45302F]">PSČ</span>
+                              <span className="block mb-1 text-[14px] text-[#45302F]">PSČ</span>
                               <input type="text" name="zipCode" autoComplete="postal-code" inputMode="numeric" required value={formData.zipCode}
                                 onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50" />
                             </label>
                           </div>
                           <label className="block">
-                            <span className="block mb-1 text-[13px] text-[#45302F]">Země</span>
+                            <span className="block mb-1 text-[14px] text-[#45302F]">Země</span>
                             <select name="country" autoComplete="country" value={formData.country} onChange={handleInputChange} disabled={loading} className="w-full h-12 px-3.5 rounded-xl border border-[#BBAD9F] bg-white text-base font-light text-text-dark placeholder:text-[#A39389] focus:outline-none focus:border-muza-ink disabled:opacity-50">
                               <option value="CZ">Česká republika</option>
                               <option value="SK">Slovensko</option>

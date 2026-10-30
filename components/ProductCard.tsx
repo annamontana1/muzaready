@@ -183,7 +183,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                         ))}
                       </div>
                     ) : (
-                      <div className="absolute bottom-3 right-3 px-2 py-0.5 bg-black/40 rounded-sm text-white text-[10px] tracking-[0.05em] pointer-events-none">
+                      <div className="absolute bottom-3 right-3 px-2 py-0.5 bg-black/40 rounded-sm text-white text-[12px] tracking-[0.05em] pointer-events-none">
                         {currentImageIndex + 1}/{allImages.length}
                       </div>
                     )}
@@ -195,7 +195,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                 className="w-full h-full flex items-center justify-center"
                 style={{ background: `linear-gradient(135deg, ${shadeColor.hex}55, ${shadeColor.hex}99)` }}
               >
-                <span className="text-[10px] tracking-[0.1em] uppercase font-light" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                <span className="text-[12px] tracking-[0.1em] uppercase font-light" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {displayVariant?.structure || 'Vlasy'}
                 </span>
               </div>
@@ -204,7 +204,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
             {/* Out of stock overlay */}
             {displayVariant && !displayVariant.in_stock && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span className="text-[10px] tracking-[0.14em] uppercase text-white font-light">Vyprodáno</span>
+                <span className="text-[12px] tracking-[0.14em] uppercase text-white font-light">Vyprodáno</span>
               </div>
             )}
           </div>
@@ -220,13 +220,13 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
 
             {isB2B ? (
               <div>
-                <span className="text-[11px] font-light line-through mr-2" style={{ color: 'var(--text-soft)' }}>
+                <span className="text-[12px] font-light line-through mr-2" style={{ color: 'var(--text-soft)' }}>
                   {priceCalculator.formatPrice(shownPrice)}
                 </span>
                 <span className="font-cormorant font-light text-[22px]" style={{ color: 'var(--burgundy)' }}>
                   {priceCalculator.formatPrice(shownDiscounted)}
                 </span>
-                <p className="text-[10px] font-light mt-0.5" style={{ color: '#22783c' }}>Velkoobchodní cena</p>
+                <p className="text-[12px] font-light mt-0.5" style={{ color: '#22783c' }}>Velkoobchodní cena</p>
               </div>
             ) : (
               <span className="font-cormorant font-light text-[22px]" style={{ color: 'var(--burgundy)' }}>
@@ -241,7 +241,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           {displayVariant?.in_stock ? (
             <Link
               href={`/sku-detail/${product.id}`}
-              className="w-full py-2.5 text-[11px] tracking-[0.12em] uppercase font-normal transition-all hover:-translate-y-px block text-center rounded-sm"
+              className="w-full py-2.5 text-[12px] tracking-[0.12em] uppercase font-normal transition-all hover:-translate-y-px block text-center rounded-sm"
               style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
             >
               Nakonfigurovat
@@ -249,7 +249,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
           ) : (
             <button
               disabled
-              className="w-full py-2.5 text-[11px] tracking-[0.12em] uppercase font-normal rounded-sm cursor-not-allowed opacity-40"
+              className="w-full py-2.5 text-[12px] tracking-[0.12em] uppercase font-normal rounded-sm cursor-not-allowed opacity-40"
               style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-soft)' }}
             >
               Vyprodáno
@@ -285,17 +285,17 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
               </h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-[10px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Co to je?</p>
-                  <p className="text-[13px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.description}</p>
+                  <p className="text-[12px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Co to je?</p>
+                  <p className="text-[14px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.description}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Pro koho?</p>
-                  <p className="text-[13px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.forWho}</p>
+                  <p className="text-[12px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Pro koho?</p>
+                  <p className="text-[14px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.forWho}</p>
                 </div>
               </div>
               <button
                 onClick={closeTierModal}
-                className="mt-6 w-full py-3 text-[11px] tracking-[0.12em] uppercase font-normal rounded-sm transition-all hover:-translate-y-px"
+                className="mt-6 w-full py-3 text-[12px] tracking-[0.12em] uppercase font-normal rounded-sm transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Rozumím

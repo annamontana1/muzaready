@@ -20,7 +20,7 @@ export default function BlogPage() {
       {/* Header */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             BLOG
           </div>
@@ -43,10 +43,10 @@ export default function BlogPage() {
                   <div className="flex-1">
                     {/* Meta */}
                     <div className="flex items-center gap-4 mb-3">
-                      <span className="text-[10px] tracking-[0.18em] uppercase font-normal" style={{ color: 'var(--accent)' }}>
+                      <span className="text-[12px] tracking-[0.18em] uppercase font-normal" style={{ color: 'var(--accent)' }}>
                         {article.category}
                       </span>
-                      <span className="text-[10px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                      <span className="text-[12px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
                         <time dateTime={article.publishedAt}>
                           {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
                             year: 'numeric',
@@ -55,7 +55,7 @@ export default function BlogPage() {
                           })}
                         </time>
                       </span>
-                      <span className="text-[10px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
+                      <span className="text-[12px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
                         {article.readTime} min čtení
                       </span>
                     </div>
@@ -71,7 +71,7 @@ export default function BlogPage() {
                     </p>
 
                     {/* Link */}
-                    <span className="text-[12px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+                    <span className="text-[13px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
                       Číst →
                     </span>
                   </div>
@@ -85,7 +85,7 @@ export default function BlogPage() {
       {/* CTA */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[11px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
+          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
             <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
             PORADENSTVÍ
           </div>
@@ -97,7 +97,7 @@ export default function BlogPage() {
           </p>
           <Link
             href="/kontakt"
-            className="text-[12px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Kontaktujte nás

@@ -38,7 +38,7 @@ const config: Config = {
           sand: '#EADCC8',
           line: '#E3D9CE',
           field: '#D9CEC2',
-          soft: '#6E5A55',
+          soft: '#574440', // tmavší, ať text není bledý
           onink: '#F6EEE6',
         },
         maroon: '#6B2535',
@@ -55,8 +55,8 @@ const config: Config = {
 
         // Text
         'text-dark': '#1C0C0F',
-        'text-mid': '#5A3840',
-        'text-soft': '#73565C',
+        'text-mid': '#47282F',
+        'text-soft': '#5C4046',
         accent: '#9B3A4A',
 
         // Akcenty
@@ -75,7 +75,15 @@ const config: Config = {
         jost: ['var(--font-jost)', 'Jost', 'system-ui', 'sans-serif'],
         inter: ['var(--font-jost)', 'Jost', 'system-ui', 'sans-serif'], // alias for backward compat
       },
+      // Písmo na webu větší a o stupeň silnější (majitelka: text byl bledý a malý)
+      fontWeight: {
+        light: '400',
+        normal: '500',
+      },
       fontSize: {
+        xs: ['0.8125rem', { lineHeight: '1.25rem' }],
+        sm: ['0.9375rem', { lineHeight: '1.45rem' }],
+        base: ['1.0625rem', { lineHeight: '1.65rem' }],
         'h1': ['3rem', { lineHeight: '1.2' }],
         'h1-mobile': ['2rem', { lineHeight: '1.2' }],
         'h2': ['2.25rem', { lineHeight: '1.2' }],
