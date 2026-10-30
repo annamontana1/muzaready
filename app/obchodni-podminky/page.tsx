@@ -298,7 +298,7 @@ export default function ObchodniPodminkyPage() {
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>B2B partner je kadeřník, vlasový technik nebo salon, který aktivně nabízí služby prodlužování vlasů.</li>
             <li><strong>Podmínka pro přidělení B2B slevy:</strong> Partner musí mít na svých sociálních sítích (Instagram, Facebook nebo TikTok) viditelně prezentováno, že provádí prodlužování vlasů – tj. aktivní profil s příspěvky o prodloužení, reklamou nebo v popisu profilu.</li>
-            <li>Velkoobchodní sleva: <strong>10–20 % z ceníkové ceny</strong> dle objemu odběru a délky spolupráce.</li>
+            <li>Velkoobchodní ceny: zvýhodněné ceny pro ověřené salony a kadeřnice, platí po přihlášení do schváleného účtu.</li>
             <li>Výše slevy je stanovena individuálně po posouzení profilu partnera prodávajícím.</li>
             <li>Splatnost faktur: 14 dní (po dohodě možno prodloužit na 30 dní).</li>
             <li>Minimální hodnota objednávky pro B2B není stanovena.</li>

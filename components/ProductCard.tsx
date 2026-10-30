@@ -226,7 +226,7 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
                 <span className="font-cormorant font-light text-[22px]" style={{ color: 'var(--burgundy)' }}>
                   {priceCalculator.formatPrice(shownDiscounted)}
                 </span>
-                <p className="text-[10px] font-light mt-0.5" style={{ color: '#22783c' }}>-10% B2B sleva</p>
+                <p className="text-[10px] font-light mt-0.5" style={{ color: '#22783c' }}>Velkoobchodní cena</p>
               </div>
             ) : (
               <span className="font-cormorant font-light text-[22px]" style={{ color: 'var(--burgundy)' }}>

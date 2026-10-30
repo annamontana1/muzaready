@@ -144,7 +144,7 @@ export default function WholesaleRegistrationModal({
           <div className="mb-4 rounded-2xl bg-[#F7F3EE] border border-muza-line p-4 text-sm leading-relaxed text-text-dark">
             <p>
               Spolupracujeme se salony a kadeřnicemi, které se prodlužování vlasů věnují naplno. Po schválení
-              u nás nakupujete <b className="font-semibold">trvale o 10 % levněji</b>, na vlasy i zakončení.
+              u nás nakupujete <b className="font-semibold">trvale za zvýhodněné velkoobchodní ceny</b>, na vlasy i zakončení.
             </p>
             <p className="mt-2.5 font-medium text-muza-ink">Co od vás potřebujeme</p>
             <ul className="mt-1 space-y-1 list-disc pl-5">

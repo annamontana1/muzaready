@@ -183,7 +183,7 @@ export default function CartPage() {
 
         <aside aria-label="Souhrn košíku" className="mt-6 lg:mt-14 lg:sticky lg:top-28">
           <div className="rounded-2xl border border-muza-line bg-muza-cream p-4 flex flex-col gap-2 text-sm">
-            {wholesale && <div className="font-medium text-[#2F5E3D]">Velkoobchodní ceny: −10 % už v cenách</div>}
+            {wholesale && <div className="font-medium text-[#2F5E3D]">Ceny v košíku jsou velkoobchodní</div>}
             <div className="flex justify-between"><span className="text-[#45302F]">Mezisoučet</span><span className="tabular-nums">{formatPrice(subtotal)}</span></div>
             <div className="flex justify-between gap-3"><span className="text-[#45302F]">Doprava</span><span className="text-[#45302F] text-right">vyberete v dalším kroku</span></div>
           </div>

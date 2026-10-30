@@ -237,7 +237,7 @@ export default function ProductConfigurator({
                 {isB2B && (
                   <>
                     <p className="text-sm text-green-600 font-medium mb-2">
-                      ✓ Máte B2B slevu -10%
+                      ✓ Máte velkoobchodní ceny
                     </p>
                     <p className="text-sm line-through text-text-soft mb-1">
                       Původní cena: {priceCalculator.formatPrice(finalPrice / (1 - priceCalculator.getB2BDiscountPercent() / 100))}

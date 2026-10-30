@@ -7,10 +7,10 @@ export default function WholesaleBand({ className = '' }: { className?: string }
       <div className="max-w-5xl mx-auto rounded-3xl bg-muza-ink text-muza-onink px-6 py-8 lg:px-12 lg:py-10 lg:flex lg:items-center lg:gap-10">
         <div className="flex-1">
           <h2 id="h-velkoobchod" className="font-cormorant text-[34px] lg:text-[42px] leading-[1.05] [font-variant-numeric:lining-nums]">
-            Pro salony a kadeřnice: −10 % na všechny vlasy
+            Pro salony a kadeřnice: velkoobchodní ceny
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-[#EADCC8] max-w-xl">
-            Prodlužujete vlasy profesionálně? Zaregistrujte svůj salon a nakupujte u nás trvale o 10 % levněji,
+            Prodlužujete vlasy profesionálně? Zaregistrujte svůj salon a nakupujte u nás trvale za zvýhodněné velkoobchodní ceny,
             na culíky i zakončení. Stačí odkaz na Instagram nebo Facebook salonu, slevu zapneme po krátkém ověření.
           </p>
         </div>

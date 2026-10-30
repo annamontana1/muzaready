@@ -537,7 +537,7 @@ export default function SkuDetailPage() {
                 {quote ? (
                   <>
                     {wholesalePct > 0 && (
-                      <div className="text-[#2F5E3D] font-medium">Velkoobchodní cena: vlasy i zakončení −{wholesalePct} %</div>
+                      <div className="text-[#2F5E3D] font-medium">Velkoobchodní cena (vlasy i zakončení)</div>
                     )}
                     <div className="flex justify-between gap-3">
                       <span>Vlasy · {quote.grams} g × {formatPrice(quote.pricePerGram)}</span>
@@ -568,7 +568,7 @@ export default function SkuDetailPage() {
               {/* Desktop: hlavní součet u tlačítka */}
               <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[13px] text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}{wholesalePct > 0 && <span className="block mt-1 text-[13px] font-medium text-[#2F5E3D]">Velkoobchodní cena −{wholesalePct} %</span>}</span>
+                  <span className="text-[13px] text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}{wholesalePct > 0 && <span className="block mt-1 text-[13px] font-medium text-[#2F5E3D]">Velkoobchodní cena</span>}</span>
                   <span className="font-jost font-semibold text-[30px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
                 </div>
                 {cta}
@@ -589,7 +589,7 @@ export default function SkuDetailPage() {
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <div className="text-[11px] text-text-mid truncate">{summaryLine}</div>
-          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}{wholesalePct > 0 && <span className="ml-1.5 text-[12px] font-medium text-[#2F5E3D]">velkoobchod −{wholesalePct} %</span>}</div>}
+          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}{wholesalePct > 0 && <span className="ml-1.5 text-[12px] font-medium text-[#2F5E3D]">velkoobchodní cena</span>}</div>}
           <div className="font-jost font-semibold text-[26px] leading-none mt-1 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
         </div>
         {cta}
