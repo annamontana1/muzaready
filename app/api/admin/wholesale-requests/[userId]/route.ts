@@ -48,7 +48,7 @@ export async function POST(
       if (resend) {
         try {
           await resend.emails.send({
-          from: 'noreply@muzaready.cz',
+          from: 'objednavky@mail.muzahair.cz',
           to: user.email,
           subject: 'Vaše žádost o velkoobchodní přístup byla schválena',
           html: `
@@ -83,7 +83,7 @@ export async function POST(
       if (resend) {
         try {
           await resend.emails.send({
-            from: 'noreply@muzaready.cz',
+            from: 'objednavky@mail.muzahair.cz',
             to: user.email,
             subject: 'Vaše žádost o velkoobchodní přístup',
             html: `

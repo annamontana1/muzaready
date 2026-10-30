@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import CatalogCard from '@/components/CatalogCard';
+import WholesaleBand from '@/components/WholesaleBand';
 import { Product, ProductVariant } from '@/types/product';
 
 /**
@@ -283,6 +284,7 @@ export default function CatalogPage() {
           </div>
         )}
       </div>
+      <WholesaleBand className="pb-12" />
     </div>
   );
 }

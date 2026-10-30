@@ -7,6 +7,7 @@ import ShadeLadder, { CustomShadeBand } from '@/components/home/ShadeLadder';
 import HairKinds from '@/components/home/HairKinds';
 import FeaturedPieces from '@/components/home/FeaturedPieces';
 import AtelierBand from '@/components/home/AtelierBand';
+import WholesaleBand from '@/components/WholesaleBand';
 
 const StarIcon = () => (
   <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--burgundy)' }}>
@@ -124,6 +125,9 @@ export default function Home() {
 
       {/* ─── ODSTÍN NA MÍRU ─── */}
       <CustomShadeBand />
+
+      {/* ─── VELKOOBCHOD PRO SALONY ─── */}
+      <WholesaleBand className="py-10" />
 
       {/* ─── ATELIÉR ─── */}
       <AtelierBand />

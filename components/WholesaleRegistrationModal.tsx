@@ -8,12 +8,19 @@ interface WholesaleRegistrationModalProps {
   onClose: () => void;
 }
 
+// Odkaz na Instagram/Facebook salonu (nebo @profil), podle kterého žádost ověřujeme
+export function isSocialProfile(value: string): boolean {
+  const v = value.trim().toLowerCase();
+  return /^@[a-z0-9._]{2,}$/.test(v) || /(^|\/\/|\.)(instagram\.com|facebook\.com|fb\.com|m\.facebook\.com)\/[^\s]+/.test(v);
+}
+
 export default function WholesaleRegistrationModal({
   isOpen,
   onClose,
 }: WholesaleRegistrationModalProps) {
   const { registerWholesale, loading, error } = useAuth();
   const [localError, setLocalError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -67,6 +74,11 @@ export default function WholesaleRegistrationModal({
       return;
     }
 
+    if (!isSocialProfile(formData.instagram)) {
+      setLocalError('Zadejte odkaz na Instagram nebo Facebook vašeho salonu, bez něj žádost nemůžeme ověřit.');
+      return;
+    }
+
     try {
       await registerWholesale({
         email: formData.email,
@@ -84,7 +96,7 @@ export default function WholesaleRegistrationModal({
         streetAddress: formData.streetAddress || undefined,
         taxId: formData.taxId || undefined,
       });
-      onClose();
+      setDone(true);
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'Registrace selhala');
     }
@@ -92,11 +104,27 @@ export default function WholesaleRegistrationModal({
 
   if (!isOpen) return null;
 
+  if (done) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div role="status" className="bg-white rounded-2xl max-w-md w-full p-7 text-center">
+          <h2 className="font-cormorant text-[30px] leading-tight text-muza-ink">Děkujeme, žádost máme</h2>
+          <p className="mt-3 text-sm leading-relaxed text-[#45302F]">
+            Projdeme profil vašeho salonu a velkoobchodní slevu zapneme obvykle do 48 hodin. Jakmile bude aktivní,
+            pošleme vám e-mail. Pak stačí nakupovat přihlášená a sleva se odečte sama.
+          </p>
+          <button type="button" onClick={() => { setDone(false); onClose(); }}
+            className="mt-6 w-full h-[50px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium">Zpět do obchodu</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto">
         <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-burgundy">Registrace na velkoobchod</h2>
+          <h2 className="font-cormorant text-[30px] leading-tight text-muza-ink">Velkoobchodní ceny pro salony</h2>
           <button
             onClick={onClose}
             className="text-text-soft hover:text-text-mid text-2xl font-light"
@@ -112,10 +140,21 @@ export default function WholesaleRegistrationModal({
             </div>
           )}
 
-          <p className="text-sm text-text-mid mb-4">
-            Vyplňte formulář pro registraci na velkoobchodní program. Po odeslání budeme vaši žádost
-            zpracovávat.
-          </p>
+          {/* Proč a za jakých podmínek: salon musí být vidět na sociálních sítích */}
+          <div className="mb-4 rounded-2xl bg-[#F7F3EE] border border-muza-line p-4 text-sm leading-relaxed text-text-dark">
+            <p>
+              Spolupracujeme se salony a kadeřnicemi, které se prodlužování vlasů věnují naplno. Po schválení
+              u nás nakupujete <b className="font-semibold">trvale o 10 % levněji</b>, na vlasy i zakončení.
+            </p>
+            <p className="mt-2.5 font-medium text-muza-ink">Co od vás potřebujeme</p>
+            <ul className="mt-1 space-y-1 list-disc pl-5">
+              <li><b className="font-semibold">Instagram nebo Facebook vašeho salonu, povinně.</b> Podle profilu ověříme, že salon aktivně působí a sdílí svou práci.</li>
+              <li>Web salonu, pokud ho máte.</li>
+            </ul>
+            <p className="mt-2.5 text-[13px] text-[#45302F]">
+              Slevu zapínáme ručně po kontrole, obvykle do 48 hodin. O schválení vám dáme vědět e-mailem.
+            </p>
+          </div>
 
           {/* Row 1: Personal Info */}
           <div className="grid md:grid-cols-2 gap-4">
@@ -214,34 +253,34 @@ export default function WholesaleRegistrationModal({
             </div>
           </div>
 
-          {/* Row 5: Web */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-text-mid mb-1">
-                Webové stránky
-              </label>
-              <input
-                type="url"
-                name="website"
-                value={formData.website}
-                onChange={handleChange}
-                disabled={loading}
-                placeholder="https://..."
-                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-text-mid mb-1">Instagram</label>
-              <input
-                type="text"
-                name="instagram"
-                value={formData.instagram}
-                onChange={handleChange}
-                disabled={loading}
-                placeholder="@vaseJmeno"
-                className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
-              />
-            </div>
+          {/* Sociální sítě salonu: bez nich registraci nepustíme dál */}
+          <div>
+            <label className="block text-sm font-medium text-text-mid mb-1">
+              Instagram nebo Facebook salonu *
+            </label>
+            <input
+              type="text"
+              name="instagram"
+              value={formData.instagram}
+              onChange={handleChange}
+              disabled={loading}
+              required
+              placeholder="instagram.com/vas-salon nebo facebook.com/vas-salon"
+              className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
+            />
+            <p className="text-xs text-text-soft mt-1">Profil musí být veřejný a aktivní, podle něj žádost ověřujeme.</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-text-mid mb-1">Web salonu (nepovinné)</label>
+            <input
+              type="text"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              disabled={loading}
+              placeholder="www.vas-salon.cz"
+              className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
+            />
           </div>
 
           {/* Row 6: Address */}

@@ -1,11 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import WholesaleRegistrationModal from '@/components/WholesaleRegistrationModal';
 
 export default function VelkoobchodPage() {
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+
+  // Odkaz „Získejte velkoobchodní slevu“ (?registrace=1) otevře formulář rovnou
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('registrace') === '1') setShowRegistrationModal(true);
+  }, []);
 
   const isLoggedIn = false;
   const isApproved = false;

@@ -38,6 +38,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Salon musí mít veřejný profil na Instagramu nebo Facebooku, podle něj žádost ověřujeme
+    const social = String(instagram || '').trim().toLowerCase();
+    const socialOk = /^@[a-z0-9._]{2,}$/.test(social) || /(^|\/\/|\.)(instagram\.com|facebook\.com|fb\.com|m\.facebook\.com)\/[^\s]+/.test(social);
+    if (!socialOk) {
+      return NextResponse.json(
+        { error: 'Zadejte odkaz na Instagram nebo Facebook vašeho salonu.' },
+        { status: 400 }
+      );
+    }
+
     if (password.length < 8) {
       return NextResponse.json(
         { error: 'Password must be at least 8 characters' },
@@ -106,11 +116,11 @@ export async function POST(request: NextRequest) {
     });
 
     // Send notification email to admin
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@muzaready.cz';
+    const adminEmail = process.env.ADMIN_EMAIL || 'muzahaircz@gmail.com';
     if (resend) {
       try {
         await resend.emails.send({
-          from: 'noreply@muzaready.cz',
+          from: 'objednavky@mail.muzahair.cz',
           to: adminEmail,
           subject: `Nová žádost o velkoobchodní přístup: ${companyName}`,
           html: `
@@ -121,10 +131,10 @@ export async function POST(request: NextRequest) {
             <p><strong>Firma:</strong> ${companyName}</p>
             <p><strong>Typ podnikání:</strong> ${businessType}</p>
             <p><strong>Web:</strong> ${website || 'N/A'}</p>
-            <p><strong>Instagram:</strong> ${instagram || 'N/A'}</p>
+            <p><strong>Instagram / Facebook:</strong> ${instagram || 'N/A'}</p>
             <p><strong>Adresa:</strong> ${streetAddress || ''}, ${zipCode || ''} ${city || ''}, ${country || ''}</p>
             <p><strong>IČ:</strong> ${taxId || 'N/A'}</p>
-            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/wholesale-requests">Schválit nebo zamítnout</a></p>
+            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/velkoobchod-zadosti">Schválit nebo zamítnout</a></p>
           `,
         });
       } catch (emailError) {
