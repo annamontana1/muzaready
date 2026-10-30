@@ -265,7 +265,7 @@ export default function WholesaleRegistrationModal({
               onChange={handleChange}
               disabled={loading}
               required
-              placeholder="instagram.com/vas-salon nebo facebook.com/vas-salon"
+              placeholder="např. instagram.com/vas-salon"
               className="w-full px-3 py-2 border border-warm-beige rounded-md focus:outline-none focus:ring-blue-500"
             />
             <p className="text-xs text-text-soft mt-1">Profil musí být veřejný a aktivní, podle něj žádost ověřujeme.</p>

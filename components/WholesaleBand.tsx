@@ -6,7 +6,7 @@ export default function WholesaleBand({ className = '' }: { className?: string }
     <section aria-labelledby="h-velkoobchod" className={`px-4 lg:px-8 ${className}`}>
       <div className="max-w-5xl mx-auto rounded-3xl bg-muza-ink text-muza-onink px-6 py-8 lg:px-12 lg:py-10 lg:flex lg:items-center lg:gap-10">
         <div className="flex-1">
-          <h2 id="h-velkoobchod" className="font-cormorant text-[34px] lg:text-[42px] leading-[1.05]">
+          <h2 id="h-velkoobchod" className="font-cormorant text-[34px] lg:text-[42px] leading-[1.05] [font-variant-numeric:lining-nums]">
             Pro salony a kadeřnice: −10 % na všechny vlasy
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-[#EADCC8] max-w-xl">
