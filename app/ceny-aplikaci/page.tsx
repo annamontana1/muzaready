@@ -264,6 +264,81 @@ const jsonLd = [
   },
 ];
 
+// Vzhled podle schváleného e-shopu (návrh B3): krémová stránka, tenké vínové linky,
+// tabulky údajů, velké tučné ceny a tlačítka do oblouku
+const WA_LINK = `https://wa.me/420728722880?text=${encodeURIComponent('Dobrý den, chtěla bych se objednat na aplikaci vlasů.')}`;
+
+const h2Class = 'font-cormorant text-[32px] lg:text-[40px] leading-[1.05] text-muza-ink';
+const rowClass = 'flex items-start justify-between gap-4 py-3 border-t border-muza-line';
+const dtClass = 'text-sm text-[#45302F]';
+const ddClass = 'text-[15px] text-text-dark text-right';
+const priceClass = 'font-jost font-semibold text-muza-ink tabular-nums';
+
+function Rows({ rows }: { rows: { k: string; v: React.ReactNode }[] }) {
+  return (
+    <dl className="border-b border-muza-line">
+      {rows.map((r) => (
+        <div key={r.k} className={rowClass}>
+          <dt className={dtClass}>{r.k}</dt>
+          <dd className={ddClass}>{r.v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function PriceCard({ name, price, note, rows }: { name: string; price: string; note?: string; rows: { k: string; v: React.ReactNode }[] }) {
+  return (
+    <div className="rounded-2xl border border-muza-ink bg-[#F7F3EE] p-4 lg:p-5">
+      <div className="font-cormorant text-[24px] leading-tight text-muza-ink">{name}</div>
+      <div className="mt-2 text-[13px] text-[#45302F]">Nasazení</div>
+      <div className={`${priceClass} text-[30px] leading-none mt-1`}>{price}</div>
+      {note && <div className="mt-1 text-[13px] text-[#45302F]">{note}</div>}
+      <dl className="mt-3">
+        {rows.map((r) => (
+          <div key={r.k} className="flex items-baseline justify-between gap-3 py-2.5 border-t border-muza-line">
+            <dt className="text-[13px] text-[#45302F]">{r.k}</dt>
+            <dd className="text-[15px] text-text-dark text-right">{r.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+function MoreLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} className="mt-5 inline-flex items-center gap-1.5 text-[15px] text-muza-ink underline underline-offset-[3px]">
+      {children}
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
+    </Link>
+  );
+}
+
+const METHODS = [
+  { id: 'keratin', label: 'Keratin' },
+  { id: 'nanotapes', label: 'Pásky / Tape-in' },
+  { id: 'weft', label: 'Weft / Tresy' },
+  { id: 'kalkulace', label: 'Celková cena' },
+  { id: 'srovnani', label: 'Srovnání' },
+  { id: 'dotazy', label: 'Časté dotazy' },
+];
+
+const FAQ = [
+  { q: 'Kolik stojí prodloužení vlasů keratinem Praha?', a: 'Nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 2,5–3 měsících. Cena vlasů se účtuje zvlášť.' },
+  { q: 'Kolik stojí mikrokeratin prodloužení vlasů?', a: 'Mikrokeratin nasazení 5 000 Kč (230 pramenů / 100 g, 22 Kč/pramen), korekce 5 500 Kč. Menší diskrétní kapsle, neviditelná i při sepnutých vlasech. Šetrnější k vlastním vlasům než standart keratin.' },
+  { q: 'Kolik stojí vlasové pásky?', a: 'Vlasové pásky (nanotapes, tapes, tape-in) 55 Kč/spoj (2,8 cm) nebo 65 Kč/spoj (4 cm). Balení 10 spojů = 550 Kč aplikace. Cena vlasových pásků se účtuje zvlášť. Korekce po 1,5–2 měsících.' },
+  { q: 'Kolik stojí nanotapes prodloužení vlasů Praha?', a: 'Nanotapes Praha 55 Kč za 1 spoj (2 pásky, šíře 2,8 cm). 1 balení = 10 spojů. Posun 1,5–2 hod, korekce po 1,5–2 měsících. Cena vlasových pásků se účtuje zvlášť. Showroom Revoluční 8, Praha 1.' },
+  { q: 'Kolik stojí vlasové tresy?', a: 'Posun vlasových tresů 3 800 Kč. Prvotní nasazení individuálně na konzultaci. Tresy vyrábíme na zakázku, výroba 14 pracovních dní. Cena samotných tresů se účtuje zvlášť.' },
+  { q: 'Kolik stojí weft prodloužení vlasů Praha?', a: 'Weft prodloužení vlasů Praha: posun tresů 3 800 Kč, showroom Revoluční 8, Praha 1. Aplikace cca 2,5 hod, korekce po 2–3 měsících. Nasazení individuálně po konzultaci. Cena tresů zvlášť.' },
+  { q: 'Kolik stojí hollywoodské prodloužení vlasů Praha?', a: 'Hollywoodské prodloužení (weft, vlasové tresy): posun 3 800 Kč, Praha 1. Ručně šité tresy přišívané na copánky bez lepidla a tepla. Nasazení na konzultaci, aplikace 2,5 hod, korekce po 2–3 měsících.' },
+  { q: 'Jaký je rozdíl mezi nanotapes a tape-in?', a: 'Nanotapes a tape-in jsou stejná metoda, liší se šíří pásku: nanotapes 2,8 cm (55 Kč/spoj), tape-in 4 cm (65 Kč/spoj). Obě jsou sendvičový spoj bez chemie a tepla.' },
+  { q: 'Jaký je rozdíl mezi keratinovým a mikrokeratinovým prodloužením vlasů?', a: 'Standart keratin: větší kapsle, 130 pramenů / 100 g, nasazení 4 000 Kč. Mikrokeratin: menší kapsle, 230 pramenů / 100 g, nasazení 5 000 Kč. Mikrokeratin je diskrétnější a šetrnější k vlastním vlasům.' },
+  { q: 'Zahrnuje cena aplikace i vlasy?', a: 'Ne, cena aplikace a cena vlasů se vždy účtují zvlášť. Vlasy si vyberete v e-shopu podle odstínu, délky a gramáže.' },
+  { q: 'Mohu si koupit vlasy bez aplikace?', a: 'Ano, keratinové pramínky, nanotapes / tape-in pásky i vlasové tresy prodáváme samostatně přes e-shop. Aplikaci si zajistíte u nás nebo u své kadeřnice.' },
+  { q: 'Jak si objednat prodloužení vlasů v Praze?', a: 'Zavolejte na +420 728 722 880 nebo napište na WhatsApp či Instagram @muzahair.cz. Showroom: Revoluční 8, Praha 1, Po–Ne 10:00–20:00, pouze na objednání.' },
+];
+
 export default function CenyAplikaciPage() {
   return (
     <>
@@ -275,467 +350,249 @@ export default function CenyAplikaciPage() {
         />
       ))}
 
-      {/* Hero */}
-      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-sm mb-8 flex gap-2" style={{ color: 'var(--text-soft)' }}>
-            <Link href="/" className="hover:opacity-70 transition">Domů</Link>
-            <span>/</span>
-            <span style={{ color: 'var(--burgundy)' }}>Ceník aplikace</span>
+      <div className="bg-muza-ivory text-text-dark">
+        {/* Úvod */}
+        <section className="px-4 lg:px-8 pt-6 lg:pt-12">
+          <div className="max-w-4xl mx-auto">
+            <nav aria-label="Drobečková navigace" className="text-[13px] text-[#45302F] flex gap-2">
+              <Link href="/" className="underline underline-offset-2">Domů</Link><span aria-hidden="true">/</span><span>Ceník aplikace</span>
+            </nav>
+            <h1 className="mt-4 font-cormorant text-[40px] lg:text-[56px] leading-[1.02] text-muza-ink">Ceník prodlužování vlasů Praha</h1>
+            <p className="mt-3 text-[17px] leading-relaxed text-[#45302F]">
+              Keratin, mikrokeratin, nanotapes (tape-in) a weft (hollywoodské prodloužení). Ceny jsou za <b className="font-semibold text-text-dark">aplikaci (práci)</b>,
+              vlasy se účtují zvlášť a vyberete si je v <Link href="/katalog" className="text-muza-ink underline underline-offset-2">e-shopu</Link>.
+            </p>
+
+            {/* Showroom a objednání */}
+            <div className="mt-6 rounded-2xl border border-muza-ink bg-[#F7F3EE] p-4 lg:p-5">
+              <div className="font-cormorant text-[24px] leading-tight text-muza-ink">Aplikace jen v showroomu, na objednání</div>
+              <Rows rows={[
+                { k: 'Adresa', v: <b className="font-semibold">Revoluční 8, Praha 1</b> },
+                { k: 'Otevřeno', v: 'Po–Ne 10:00–20:00' },
+                { k: 'Telefon', v: <a href="tel:+420728722880" className="text-muza-ink underline underline-offset-2">+420 728 722 880</a> },
+              ]} />
+              <div className="mt-4 grid grid-cols-2 gap-2.5">
+                <a href={WA_LINK} target="_blank" rel="noopener"
+                  className="h-[50px] rounded-full bg-muza-ink text-muza-onink text-sm font-medium flex items-center justify-center hover:opacity-90">Objednat se</a>
+                <a href="tel:+420728722880"
+                  className="h-[50px] rounded-full border border-muza-ink text-muza-ink text-sm font-medium flex items-center justify-center">Zavolat</a>
+              </div>
+            </div>
+
+            {/* Rychlé skoky na metody */}
+            <nav aria-label="Metody" className="mt-6 -mx-4 px-4 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {METHODS.map((m) => (
+                <a key={m.id} href={`#${m.id}`} className="flex-none h-11 px-4 rounded-full bg-muza-mocha text-text-dark text-sm flex items-center hover:bg-[#D3C6B9]">{m.label}</a>
+              ))}
+            </nav>
           </div>
+        </section>
 
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Praha · Showroom</span>
+        {/* Keratin */}
+        <section id="keratin" className="px-4 lg:px-8 pt-12 scroll-mt-24">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Keratin a mikrokeratin</h2>
+            <p className="mt-2 text-[15px] text-[#45302F]">Keratinové pramínky · aplikace 3–4 hodiny · korekce po 2,5–3 měsících</p>
+            <div className="mt-5 grid sm:grid-cols-2 gap-3">
+              <PriceCard name="Standart keratin" price="4 000 Kč" note="31 Kč / pramen"
+                rows={[{ k: 'Korekce / posun', v: <><b className="font-semibold">4 500 Kč</b> · 35 Kč / pramen</> }, { k: 'Pramenů / 100 g', v: '130' }]} />
+              <PriceCard name="Mikrokeratin" price="5 000 Kč" note="22 Kč / pramen"
+                rows={[{ k: 'Korekce / posun', v: <><b className="font-semibold">5 500 Kč</b> · 24 Kč / pramen</> }, { k: 'Pramenů / 100 g', v: '230' }]} />
+            </div>
+            <p className="mt-3 text-[14px] text-[#45302F]">Ceny jsou za 100 g vlasů. Cena samotných vlasů se účtuje zvlášť podle gramáže a délky.</p>
+            <dl className="mt-5 border-b border-muza-line">
+              {[
+                { k: 'Standart keratin', v: 'Větší kapsle, robustnější spoj. Vhodný pro silnější vlasy. Při sepnutých vlasech může být kapsle lehce viditelná.' },
+                { k: 'Mikrokeratin', v: 'Menší, diskrétnější kapsle, neviditelná i při sepnutých vlasech. Šetrnější k vlastním vlasům. Více pramenů = přirozenější výsledek.' },
+              ].map((r) => (
+                <div key={r.k} className="py-3 border-t border-muza-line">
+                  <dt className="text-[15px] font-medium text-text-dark">{r.k}</dt>
+                  <dd className="mt-1 text-[15px] leading-relaxed text-[#45302F]">{r.v}</dd>
+                </div>
+              ))}
+            </dl>
+            <MoreLink href="/metody-zakonceni/vlasy-na-keratin">Více o keratinové metodě</MoreLink>
           </div>
+        </section>
 
-          <h1 className="font-cormorant text-[clamp(28px,4vw,52px)] font-light leading-tight mb-4" style={{ color: 'var(--text-dark)' }}>
-            Ceník prodlužování vlasů Praha
-          </h1>
-          <p className="text-lg mb-3" style={{ color: 'var(--text-soft)' }}>
-            Keratin · Mikrokeratin · Nanotapes (Tape-In) · Weft (Hollywoodské prodloužení)
-          </p>
-          <p className="text-sm mb-8" style={{ color: 'var(--text-soft)' }}>
-            Ceny jsou za <strong style={{ color: 'var(--text-dark)' }}>aplikaci (práci)</strong>. Cena vlasů se vždy účtuje zvlášť —{' '}
-            <Link href="/vlasy-k-prodlouzeni" className="underline hover:opacity-75" style={{ color: 'var(--burgundy)' }}>
-              nakonfigurujte si je v e-shopu
-            </Link>.
-          </p>
+        {/* Pásky */}
+        <section id="nanotapes" className="px-4 lg:px-8 pt-14 scroll-mt-24">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Vlasové pásky · Nanotapes · Tape-in</h2>
+            <p className="mt-2 text-[15px] text-[#45302F]">Bez tepla a chemie · sendvičový spoj · korekce po 1,5–2 měsících</p>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#45302F]">
+              <b className="font-semibold text-text-dark">Nanotapes</b> a <b className="font-semibold text-text-dark">tape-in</b> jsou stejná metoda, liší se jen šíří pásku: 2,8 cm (nanotapes) a 4 cm (tape-in).
+            </p>
+            <div className="mt-5 grid sm:grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-muza-ink bg-[#F7F3EE] p-4 lg:p-5">
+                <div className="font-cormorant text-[24px] leading-tight text-muza-ink">Ceník</div>
+                <Rows rows={[
+                  { k: 'Nanotapes 2,8 cm, 1 spoj (2 pásky)', v: <span className={`${priceClass} text-[18px]`}>55 Kč</span> },
+                  { k: 'Tape-in 4 cm, 1 spoj (2 pásky)', v: <span className={`${priceClass} text-[18px]`}>65 Kč</span> },
+                  { k: 'Balení 10 spojů (2,8 cm)', v: <span className={`${priceClass} text-[18px]`}>550 Kč</span> },
+                  { k: 'Posun / korekce', v: 'podle počtu spojů' },
+                ]} />
+                <p className="mt-3 text-[14px] text-[#45302F]">Cena vlasových pásků se účtuje zvlášť.</p>
+              </div>
+              <div className="rounded-2xl border border-muza-line bg-[#F7F3EE] p-4 lg:p-5">
+                <div className="font-cormorant text-[24px] leading-tight text-muza-ink">Parametry</div>
+                <Rows rows={[
+                  { k: 'Délka posunu', v: '1,5–2 hodiny' },
+                  { k: 'Korekce', v: 'každých 1,5–2 měsíce' },
+                  { k: 'Chemie / teplo', v: 'bez chemie, bez tepla' },
+                  { k: 'Spoj', v: 'neviditelný sendvičový' },
+                ]} />
+              </div>
+            </div>
+            <MoreLink href="/metody-zakonceni/vlasove-pasky-tape-in">Více o páskách (nanotapes / tape-in)</MoreLink>
+          </div>
+        </section>
 
-          <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }}>
-            <p className="font-cormorant text-lg font-light mb-1" style={{ color: 'var(--text-dark)' }}>Aplikace pouze v showroomu na objednání — Praha 1</p>
-            <p className="text-sm" style={{ color: 'var(--text-soft)' }}>
-              <span className="font-medium" style={{ color: 'var(--text-dark)' }}>Revoluční 8, Praha 1</span> · Po–Ne 10:00–20:00 ·{' '}
-              <a href="tel:+420728722880" className="hover:underline" style={{ color: 'var(--burgundy)' }}>+420 728 722 880</a>
+        {/* Weft */}
+        <section id="weft" className="px-4 lg:px-8 pt-14 scroll-mt-24">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Vlasové tresy · Weft · hollywoodské prodloužení</h2>
+            <p className="mt-2 text-[15px] text-[#45302F]">Ručně šité tresy na copánky · bez lepidla a tepla · korekce po 2–3 měsících</p>
+            <div className="mt-5 grid sm:grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-muza-ink bg-[#F7F3EE] p-4 lg:p-5">
+                <div className="font-cormorant text-[24px] leading-tight text-muza-ink">Ceník</div>
+                <div className="mt-2 text-[13px] text-[#45302F]">Posun / korekce tresů</div>
+                <div className={`${priceClass} text-[30px] leading-none mt-1`}>3 800 Kč</div>
+                <Rows rows={[{ k: 'Prvotní nasazení', v: 'na konzultaci' }]} />
+                <p className="mt-3 text-[14px] text-[#45302F]">Cena tresů se účtuje zvlášť. Tresy vyrábíme na zakázku, výroba 14 pracovních dní.</p>
+              </div>
+              <div className="rounded-2xl border border-muza-line bg-[#F7F3EE] p-4 lg:p-5">
+                <div className="font-cormorant text-[24px] leading-tight text-muza-ink">Parametry</div>
+                <Rows rows={[
+                  { k: 'Délka aplikace', v: 'cca 2,5 hodiny' },
+                  { k: 'Korekce', v: 'každé 2–3 měsíce' },
+                  { k: 'Chemie / lepidlo / teplo', v: 'bez chemie, lepidla i tepla' },
+                  { k: 'Šetrnost', v: 'šetrné k vlastním vlasům' },
+                ]} />
+              </div>
+            </div>
+            <MoreLink href="/metody-zakonceni/vlasove-tresy">Více o hollywoodském prodloužení (weft)</MoreLink>
+          </div>
+        </section>
+
+        {/* Celková cena */}
+        <section id="kalkulace" className="px-4 lg:px-8 pt-14 scroll-mt-24">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Kolik stojí prodloužení celkem?</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#45302F]">
+              Cena se skládá ze <b className="font-semibold text-text-dark">dvou částí</b>: vlasy (gramáž × délka × kvalita) a aplikace. Například:
+            </p>
+            <div className="mt-5 grid sm:grid-cols-3 gap-3">
+              {[
+                { title: 'Keratin standart', lines: [['100 g vlasů, 50 cm', '~ 5 800 Kč*'], ['Aplikace', '4 000 Kč']], total: '~ 9 800 Kč' },
+                { title: 'Nanotapes 2,8 cm', lines: [['1 balení, 10 spojů', '~ 1 600 Kč*'], ['Aplikace (10 spojů)', '550 Kč']], total: '~ 2 150 Kč' },
+                { title: 'Weft (hollywoodské)', lines: [['Sada tresů', 'na dotaz*'], ['Posun', '3 800 Kč']], total: 'nasazení na konzultaci' },
+              ].map((ex) => (
+                <div key={ex.title} className="rounded-2xl border border-muza-line bg-[#F7F3EE] p-4">
+                  <div className="font-cormorant text-[22px] leading-tight text-muza-ink">{ex.title}</div>
+                  <dl className="mt-2">
+                    {ex.lines.map(([k, v]) => (
+                      <div key={k} className="flex justify-between gap-3 py-2 border-t border-muza-line text-[14px]">
+                        <dt className="text-[#45302F]">{k}</dt><dd className="text-text-dark">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <div className="mt-2 pt-2.5 border-t border-muza-ink flex items-baseline justify-between gap-3">
+                    <span className="text-[13px] text-[#45302F]">Celkem</span>
+                    <span className={`${priceClass} text-[20px] text-right`}>{ex.total}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-[14px] text-[#45302F]">
+              * Ceny vlasů jsou orientační a závisí na gramáži, délce a kvalitě. Přesnou cenu uvidíte u každého culíku v <Link href="/katalog" className="text-muza-ink underline underline-offset-2">e-shopu</Link>.
             </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Keratin */}
-      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16" id="keratin">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Keratinové pramínky · 3–4 hod · Korekce po 2,5–3 měsících</span>
-          </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
-            Keratin / Mikrokeratin — prodloužení vlasů Praha
-          </h2>
-
-          <div className="overflow-x-auto mb-8">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase w-1/3" style={{ color: 'var(--text-soft)' }}></th>
-                  <th className="text-center py-3 font-normal" style={{ color: 'var(--text-soft)' }}>
-                    <span className="font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>Standart keratin</span>
-                  </th>
-                  <th className="text-center py-3 font-normal" style={{ color: 'var(--text-soft)' }}>
-                    <span className="font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>Mikrokeratin</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                  <td className="py-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Pramenů / 100 g vlasů</td>
-                  <td className="py-4 text-center" style={{ color: 'var(--text-dark)' }}>130 pramenů</td>
-                  <td className="py-4 text-center" style={{ color: 'var(--text-dark)' }}>230 pramenů</td>
-                </tr>
-                <tr className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                  <td className="py-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Nasazení + napramínkování</td>
-                  <td className="py-4 text-center">
-                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--burgundy)' }}>4 000 Kč</span>
-                    <span className="block text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>31 Kč / pramen</span>
-                  </td>
-                  <td className="py-4 text-center">
-                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--burgundy)' }}>5 000 Kč</span>
-                    <span className="block text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>22 Kč / pramen</span>
-                  </td>
-                </tr>
-                <tr className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                  <td className="py-4 text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>Korekce / posun vlasů</td>
-                  <td className="py-4 text-center">
-                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--burgundy)' }}>4 500 Kč</span>
-                    <span className="block text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>35 Kč / pramen</span>
-                  </td>
-                  <td className="py-4 text-center">
-                    <span className="font-cormorant text-2xl font-light" style={{ color: 'var(--burgundy)' }}>5 500 Kč</span>
-                    <span className="block text-xs mt-0.5" style={{ color: 'var(--text-soft)' }}>24 Kč / pramen</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p className="text-xs italic mb-6" style={{ color: 'var(--text-soft)' }}>Ceny jsou uvedeny za 100 g vlasů. Cena samotných vlasů se účtuje zvlášť dle gramáže a délky.</p>
-
-          <div className="border-t mb-6" style={{ borderColor: 'var(--text-dark)' }}>
-            {[
-              { title: 'Standart keratin', desc: 'Větší kapsle, robustnější spoj. Vhodný pro silnější vlasy. Při sepnutých vlasech může být kapsle lehce viditelná.' },
-              { title: 'Mikrokeratin', desc: 'Menší, diskrétnější kapsle — neviditelná i při sepnutých vlasech. Šetrnější k vlastním vlasům. Více pramenů = přirozenější výsledek.' },
-            ].map((item) => (
-              <div key={item.title} className="py-5 border-b" style={{ borderColor: 'var(--ivory)' }}>
-                <div className="font-cormorant text-lg font-light mb-1" style={{ color: 'var(--text-dark)' }}>{item.title}</div>
-                <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{item.desc}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-8 text-sm mb-4" style={{ color: 'var(--text-soft)' }}>
-            <div>
-              <span className="text-[12px] tracking-[0.15em] uppercase block mb-1" style={{ color: 'var(--text-soft)' }}>Délka aplikace</span>
-              <span style={{ color: 'var(--text-dark)' }}>3–4 hodiny</span>
-            </div>
-            <div>
-              <span className="text-[12px] tracking-[0.15em] uppercase block mb-1" style={{ color: 'var(--text-soft)' }}>Korekce</span>
-              <span style={{ color: 'var(--text-dark)' }}>po 2,5–3 měsících</span>
-            </div>
-          </div>
-
-          <Link href="/metody-zakonceni/vlasy-na-keratin" className="text-sm hover:opacity-75 transition" style={{ color: 'var(--accent)' }}>
-            Více o keratinové metodě →
-          </Link>
-        </div>
-      </section>
-
-      {/* Tape-in / Nanotapes */}
-      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16" id="nanotapes">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Bez tepla a chemie · Sendvičový spoj · Korekce po 1,5–2 měsících</span>
-          </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
-            Vlasové pásky / Nanotapes / Tape-In — prodloužení vlasů Praha
-          </h2>
-
-          <p className="text-xs italic mb-8" style={{ color: 'var(--text-soft)' }}>
-            <strong style={{ color: 'var(--text-dark)' }}>Nanotapes</strong> a <strong style={{ color: 'var(--text-dark)' }}>tape-in</strong> jsou označení pro stejnou metodu vlasových pásků.
-            Liší se pouze šíří pásku — 2,8 cm (nanotapes) vs 4 cm (standardní tape-in).
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Ceník</p>
-              <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-                {[
-                  { label: '2,8 cm pásky — nanotapes (1 spoj = 2 pásky)', price: '55 Kč' },
-                  { label: '4 cm pásky — tape-in (1 spoj = 2 pásky)', price: '65 Kč' },
-                  { label: 'Balení 10 spojů (2,8 cm)', price: '550 Kč' },
-                  { label: 'Posun / korekce', price: 'Dle počtu spojů' },
-                ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-4 border-b" style={{ borderColor: 'var(--beige)' }}>
-                    <span className="text-sm" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
-                    <span className="font-cormorant text-xl font-light ml-4 flex-shrink-0" style={{ color: 'var(--burgundy)' }}>{row.price}</span>
+        {/* Srovnání metod */}
+        <section id="srovnani" className="px-4 lg:px-8 pt-14 scroll-mt-24">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Srovnání metod</h2>
+            <div className="mt-5 grid sm:grid-cols-2 gap-3">
+              {[
+                { name: 'Standart keratin', price: '4 000 Kč / 100 g', correction: 'po 2,5–3 měsících', duration: '3–4 hodiny', gentle: 3 },
+                { name: 'Mikrokeratin', price: '5 000 Kč / 100 g', correction: 'po 2,5–3 měsících', duration: '3–4 hodiny', gentle: 4 },
+                { name: 'Nanotapes / Tape-in', price: '55–65 Kč / spoj', correction: 'po 1,5–2 měsících', duration: '1,5–2 hodiny', gentle: 4 },
+                { name: 'Weft (hollywoodské)', price: 'posun 3 800 Kč', correction: 'po 2–3 měsících', duration: 'cca 2,5 hodiny', gentle: 4 },
+              ].map((m) => (
+                <div key={m.name} className="rounded-2xl border border-muza-line bg-[#F7F3EE] p-4">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="font-cormorant text-[22px] leading-tight text-muza-ink">{m.name}</span>
+                    <span className={`${priceClass} text-[16px] text-right`}>{m.price}</span>
                   </div>
-                ))}
-              </div>
-              <p className="text-xs italic mt-3" style={{ color: 'var(--text-soft)' }}>Cena vlasových pásků se účtuje zvlášť.</p>
-            </div>
-
-            <div>
-              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Parametry</p>
-              <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-                {[
-                  { label: 'Délka posunu', value: '1,5–2 hodiny' },
-                  { label: 'Frekvence korekce', value: 'každých 1,5–2 měsíce' },
-                  { label: 'Chemie / teplo', value: 'Bez chemie, bez tepla' },
-                  { label: 'Spoj', value: 'Neviditelný sendvičový spoj' },
-                ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-start py-4 border-b" style={{ borderColor: 'var(--beige)' }}>
-                    <span className="text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
-                    <span className="text-sm text-right ml-4" style={{ color: 'var(--text-dark)' }}>{row.value}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/metody-zakonceni/vlasove-pasky-tape-in" className="inline-block mt-5 text-sm hover:opacity-75 transition" style={{ color: 'var(--accent)' }}>
-                Více o nanotapes / tape-in metodě →
-              </Link>
+                  <Rows rows={[
+                    { k: 'Korekce', v: m.correction },
+                    { k: 'Délka aplikace', v: m.duration },
+                    { k: 'Šetrnost', v: <span aria-label={`${m.gentle} ze 4`} className="tracking-[0.15em] text-muza-ink">{'●'.repeat(m.gentle)}<span className="text-muza-mocha">{'●'.repeat(4 - m.gentle)}</span></span> },
+                  ]} />
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Weft */}
-      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16" id="weft">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Ručně šité tresy na copánky · Bez lepidla a tepla · Korekce po 2–3 měsících</span>
+        {/* Jak vybrat */}
+        <section className="px-4 lg:px-8 pt-14">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Jak vybrat metodu?</h2>
+            <dl className="mt-4 border-b border-muza-line">
+              {[
+                { q: 'Chcete diskrétní pramínky?', a: 'Mikrokeratin: 230 pramenů / 100 g, neviditelný i při sepnutých vlasech.' },
+                { q: 'Chcete nejrychlejší aplikaci?', a: 'Nanotapes / tape-in: nasazení 1,5–2 hodiny, ideální při kratším cyklu korekcí.' },
+                { q: 'Chcete maximální objem bez chemie?', a: 'Weft (hollywoodské prodloužení): tresy přišívané na copánky, bez lepidla a tepla.' },
+                { q: 'Nevíte si rady?', a: 'Domluvte si konzultaci, zdarma poradíme, která metoda sedí vašim vlasům.' },
+              ].map((r) => (
+                <div key={r.q} className="py-3.5 border-t border-muza-line">
+                  <dt className="text-[16px] font-medium text-text-dark">{r.q}</dt>
+                  <dd className="mt-1 text-[15px] leading-relaxed text-[#45302F]">{r.a}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
-            Vlasové tresy / Weft — Hollywoodské prodloužení vlasů Praha
-          </h2>
+        </section>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Ceník</p>
-              <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-                {[
-                  { label: 'Posun / korekce tresů', price: '3 800 Kč' },
-                  { label: 'Prvotní nasazení', price: 'Na dotaz' },
-                ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-center py-4 border-b" style={{ borderColor: 'var(--ivory)' }}>
-                    <span className="text-sm" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
-                    <span className="font-cormorant text-xl font-light ml-4 flex-shrink-0" style={{ color: 'var(--burgundy)' }}>{row.price}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs italic mt-3" style={{ color: 'var(--text-soft)' }}>Cena vlasových tresů se účtuje zvlášť. Tresy vyrábíme na zakázku — výroba 14 pracovních dní.</p>
-            </div>
-
-            <div>
-              <p className="text-[12px] tracking-[0.2em] uppercase font-normal mb-4" style={{ color: 'var(--accent)' }}>Parametry</p>
-              <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-                {[
-                  { label: 'Délka aplikace', value: 'cca 2,5 hodiny' },
-                  { label: 'Frekvence korekce', value: 'každé 2–3 měsíce' },
-                  { label: 'Chemie / lepidlo / teplo', value: 'Bez chemie, bez lepidla, bez tepla' },
-                  { label: 'Šetrnost', value: 'Šetrné k vlastním vlasům' },
-                ].map((row) => (
-                  <div key={row.label} className="flex justify-between items-start py-4 border-b" style={{ borderColor: 'var(--ivory)' }}>
-                    <span className="text-[12px] tracking-[0.1em] uppercase" style={{ color: 'var(--text-soft)' }}>{row.label}</span>
-                    <span className="text-sm text-right ml-4" style={{ color: 'var(--text-dark)' }}>{row.value}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/metody-zakonceni/vlasove-tresy" className="inline-block mt-5 text-sm hover:opacity-75 transition" style={{ color: 'var(--accent)' }}>
-                Více o hollywoodském prodloužení (weft) →
-              </Link>
+        {/* Časté dotazy */}
+        <section id="dotazy" className="px-4 lg:px-8 pt-14 scroll-mt-24">
+          <div className="max-w-4xl mx-auto">
+            <h2 className={h2Class}>Časté dotazy k cenám</h2>
+            <div className="mt-4 border-b border-muza-line">
+              {FAQ.map((f) => (
+                <details key={f.q} className="group border-t border-muza-line">
+                  <summary className="flex items-center justify-between gap-3 py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                    <h3 className="text-[16px] font-medium text-text-dark">{f.q}</h3>
+                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#330D0D" strokeWidth="1.5" className="flex-none transition-transform duration-200 group-open:rotate-180"><path d="M6 9l6 6 6-6" /></svg>
+                  </summary>
+                  <p className="pb-4 text-[15px] leading-relaxed text-[#45302F]">{f.a}</p>
+                </details>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Celková cena */}
-      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Kalkulace</span>
+        {/* Objednání */}
+        <section className="px-4 lg:px-8 py-14">
+          <div className="max-w-4xl mx-auto rounded-3xl bg-muza-ink text-muza-onink px-6 py-8 lg:px-12 lg:py-10 text-center">
+            <h2 className="font-cormorant text-[34px] lg:text-[42px] leading-[1.05]">Domluvte si konzultaci zdarma</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#EADCC8] max-w-xl mx-auto">
+              Napište nám nebo zavolejte. Společně vybereme metodu i vlasy přímo pro vás.
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-2.5 justify-center">
+              <a href={WA_LINK} target="_blank" rel="noopener"
+                className="h-[52px] px-7 rounded-full bg-[#F7F3EE] text-muza-ink text-sm font-medium flex items-center justify-center hover:bg-white">Napsat na WhatsApp</a>
+              <a href="tel:+420728722880"
+                className="h-[52px] px-7 rounded-full border border-[#EADCC8] text-muza-onink text-sm font-medium flex items-center justify-center">+420 728 722 880</a>
+              <Link href="/katalog"
+                className="h-[52px] px-7 rounded-full border border-[#EADCC8] text-muza-onink text-sm font-medium flex items-center justify-center">Vybrat vlasy</Link>
+            </div>
           </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
-            Kolik stojí prodloužení vlasů celkem?
-          </h2>
-          <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
-            Výsledná cena se skládá ze <strong style={{ color: 'var(--text-dark)' }}>dvou složek</strong>: ceny vlasů (gramáž × délka × kvalita) a ceny aplikace (výše). Například:
-          </p>
-
-          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-            {[
-              {
-                title: 'Příklad: Keratin standart',
-                lines: ['100 g vlasů 50 cm ~ 5 800 Kč*', '+ Aplikace 4 000 Kč'],
-                total: '~ 9 800 Kč celkem',
-              },
-              {
-                title: 'Příklad: Nanotapes (2,8 cm)',
-                lines: ['1 balení 10 spojů ~ 1 600 Kč*', '+ Aplikace 550 Kč (10 spojů)'],
-                total: '~ 2 150 Kč celkem',
-              },
-              {
-                title: 'Příklad: Weft (hollywoodské)',
-                lines: ['Sada tresů na dotaz*', '+ Posun 3 800 Kč'],
-                total: 'Nasazení na konzultaci',
-              },
-            ].map((item) => (
-              <div key={item.title} className="py-6 border-b" style={{ borderColor: 'var(--beige)' }}>
-                <div className="font-cormorant text-lg font-light mb-2" style={{ color: 'var(--text-dark)' }}>{item.title}</div>
-                {item.lines.map((l, i) => (
-                  <div key={i} className="text-sm" style={{ color: 'var(--text-soft)' }}>{l}</div>
-                ))}
-                <div className="font-cormorant text-lg font-light mt-2" style={{ color: 'var(--burgundy)' }}>{item.total}</div>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs italic mt-4" style={{ color: 'var(--text-soft)' }}>* Ceny vlasů jsou orientační a závisí na gramáži, délce a zvolené kvalitě. Přesnou cenu zjistíte v{' '}
-            <Link href="/vlasy-k-prodlouzeni" className="underline hover:opacity-75" style={{ color: 'var(--burgundy)' }}>konfigurátoru vlasů</Link>.
-          </p>
-        </div>
-      </section>
-
-      {/* Srovnání metod */}
-      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Srovnání</span>
-          </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
-            Srovnání metod prodloužení vlasů — Praha
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b" style={{ borderColor: 'var(--text-dark)' }}>
-                  <th className="text-left py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Metoda</th>
-                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Cena aplikace</th>
-                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Korekce</th>
-                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Délka</th>
-                  <th className="text-center py-3 font-normal text-[12px] tracking-[0.15em] uppercase" style={{ color: 'var(--text-soft)' }}>Šetrnost</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { name: 'Standart keratin', price: '4 000 Kč / 100g', correction: 'po 2,5–3 měs.', duration: '3–4 hod', gentle: '●●●○' },
-                  { name: 'Mikrokeratin', price: '5 000 Kč / 100g', correction: 'po 2,5–3 měs.', duration: '3–4 hod', gentle: '●●●●' },
-                  { name: 'Nanotapes / Tape-In', price: '55–65 Kč / spoj', correction: 'po 1,5–2 měs.', duration: '1,5–2 hod', gentle: '●●●●' },
-                  { name: 'Weft (Hollywoodské)', price: 'posun 3 800 Kč', correction: 'po 2–3 měs.', duration: 'cca 2,5 hod', gentle: '●●●●' },
-                ].map((row) => (
-                  <tr key={row.name} className="border-b" style={{ borderColor: 'var(--ivory)' }}>
-                    <td className="py-4" style={{ color: 'var(--text-dark)' }}>{row.name}</td>
-                    <td className="py-4 text-center font-cormorant text-lg font-light" style={{ color: 'var(--burgundy)' }}>{row.price}</td>
-                    <td className="py-4 text-center" style={{ color: 'var(--text-soft)' }}>{row.correction}</td>
-                    <td className="py-4 text-center" style={{ color: 'var(--text-soft)' }}>{row.duration}</td>
-                    <td className="py-4 text-center" style={{ color: 'var(--text-soft)' }}>{row.gentle}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* Jak vybrat metodu */}
-      <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Výběr metody</span>
-          </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
-            Jak vybrat metodu prodloužení vlasů?
-          </h2>
-
-          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-            {[
-              { q: 'Chcete diskrétní pramínky?', a: 'Mikrokeratin — 230 pramenů / 100 g, neviditelný i při sepnutých vlasech.' },
-              { q: 'Chcete nejrychlejší aplikaci?', a: 'Nanotapes / Tape-In — nasazení 1,5–2 hod, ideální při pravidelném zkracování cyklu.' },
-              { q: 'Chcete maximální objem bez chemie?', a: 'Weft (hollywoodské prodloužení) — tresy přišívané na copánky, bez lepidla ani tepla.' },
-              { q: 'Nevíte si rady?', a: 'Domluvte si konzultaci — zdarma poradíme, která metoda je vhodná pro vaše vlasy.' },
-            ].map((item) => (
-              <div key={item.q} className="py-5 border-b" style={{ borderColor: 'var(--beige)' }}>
-                <div className="font-cormorant text-lg font-light mb-1" style={{ color: 'var(--text-dark)' }}>{item.q}</div>
-                <div className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{item.a}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section style={{ background: 'var(--beige)' }} className="px-8 lg:px-20 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-3 mb-4" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Časté dotazy</span>
-          </div>
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
-            Prodloužení vlasů cena Praha — co se nejčastěji ptáte
-          </h2>
-
-          <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
-            {[
-              {
-                q: 'Kolik stojí prodloužení vlasů keratinem Praha?',
-                a: 'Nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 2,5–3 měsících. Cena vlasů se účtuje zvlášť.',
-              },
-              {
-                q: 'Kolik stojí mikrokeratin prodloužení vlasů?',
-                a: 'Mikrokeratin nasazení 5 000 Kč (230 pramenů / 100 g, 22 Kč/pramen), korekce 5 500 Kč. Menší diskrétní kapsle — neviditelná i při sepnutých vlasech. Šetrnější k vlastním vlasům než standart keratin.',
-              },
-              {
-                q: 'Kolik stojí vlasové pásky?',
-                a: 'Vlasové pásky (nanotapes, tapes, tape-in) — 55 Kč/spoj (2,8 cm) nebo 65 Kč/spoj (4 cm). Balení 10 spojů = 550 Kč aplikace. Cena vlasových pásků se účtuje zvlášť. Korekce po 1,5–2 měsících.',
-              },
-              {
-                q: 'Kolik stojí nanotapes prodloužení vlasů Praha?',
-                a: 'Nanotapes Praha — 55 Kč za 1 spoj (2 pásky, šíře 2,8 cm). 1 balení = 10 spojů. Posun 1,5–2 hod, korekce po 1,5–2 měsících. Cena vlasových pásků se účtuje zvlášť. Showroom Revoluční 8, Praha 1.',
-              },
-              {
-                q: 'Kolik stojí vlasové tresy?',
-                a: 'Posun vlasových tresů 3 800 Kč. Prvotní nasazení individuálně na konzultaci. Tresy vyrábíme na zakázku — výroba 14 pracovních dní. Cena samotných tresů se účtuje zvlášť.',
-              },
-              {
-                q: 'Kolik stojí weft prodloužení vlasů Praha?',
-                a: 'Weft prodloužení vlasů Praha — posun tresů 3 800 Kč, showroom Revoluční 8, Praha 1. Aplikace cca 2,5 hod, korekce po 2–3 měsících. Nasazení individuálně po konzultaci. Cena tresů zvlášť.',
-              },
-              {
-                q: 'Kolik stojí hollywoodské prodloužení vlasů Praha?',
-                a: 'Hollywoodské prodloužení (weft, vlasové tresy) — posun 3 800 Kč, Praha 1. Ručně šité tresy přišívané na copánky bez lepidla a tepla. Nasazení na konzultaci, aplikace 2,5 hod, korekce po 2–3 měsících.',
-              },
-              {
-                q: 'Jaký je rozdíl mezi nanotapes a tape-in?',
-                a: 'Nanotapes a tape-in jsou stejná metoda, liší se šíří pásku: nanotapes 2,8 cm (55 Kč/spoj), tape-in 4 cm (65 Kč/spoj). Obě jsou sendvičový spoj bez chemie a tepla.',
-              },
-              {
-                q: 'Jaký je rozdíl mezi keratinovým a mikrokeratinovým prodloužením vlasů?',
-                a: 'Standart keratin — větší kapsle, 130 pramenů / 100 g, nasazení 4 000 Kč. Mikrokeratin — menší kapsle, 230 pramenů / 100 g, nasazení 5 000 Kč. Mikrokeratin je diskrétnější a šetrnější k vlastním vlasům.',
-              },
-              {
-                q: 'Zahrnuje cena aplikace i vlasy?',
-                a: 'Ne — cena aplikace a cena vlasů se vždy účtují zvlášť. Vlasy si nakonfigurujete v e-shopu dle gramáže, délky a kvality.',
-              },
-              {
-                q: 'Mohu si koupit vlasy bez aplikace?',
-                a: 'Ano — keratinové pramínky, nanotapes / tape-in pásky i vlasové tresy prodáváme samostatně přes e-shop. Aplikaci si zajistíte u nás nebo u své kadeřnice.',
-              },
-              {
-                q: 'Jak si objednat prodloužení vlasů v Praze?',
-                a: 'Zavolejte na +420 728 722 880 nebo napište na Instagram @muzahair.cz. Showroom: Revoluční 8, Praha 1 — Po–Ne 10:00–20:00, pouze na objednání.',
-              },
-            ].map((item, i) => (
-              <div key={i} className="py-6 border-b" style={{ borderColor: 'var(--ivory)' }}>
-                <h3 className="font-cormorant text-lg font-light mb-2" style={{ color: 'var(--text-dark)' }}>{item.q}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-soft)' }}>{item.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section style={{ background: 'var(--burgundy)' }} className="px-8 lg:px-20 py-16 text-center">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
-            <span className="text-[12px] tracking-[0.2em] uppercase font-normal">Konzultace zdarma</span>
-            <span className="block w-8 h-px" style={{ background: 'rgba(255,255,255,0.4)' }} />
-          </div>
-          <h2 className="font-cormorant text-[clamp(24px,3vw,40px)] font-light mb-4" style={{ color: 'var(--ivory)' }}>
-            Domluvte si konzultaci
-          </h2>
-          <p className="text-sm mb-8 leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            Zavolejte nám nebo napište na Instagram — vybereme metodu a vlasy přímo pro vás.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <a
-              href="tel:+420728722880"
-              className="px-6 py-3 text-sm font-medium rounded-sm transition hover:opacity-90"
-              style={{ background: 'var(--ivory)', color: 'var(--burgundy)' }}
-            >
-              +420 728 722 880
-            </a>
-            <a
-              href="https://www.instagram.com/muzahair.cz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border px-6 py-3 text-sm font-medium rounded-sm transition hover:opacity-90"
-              style={{ borderColor: 'rgba(255,255,255,0.5)', color: 'var(--ivory)' }}
-            >
-              @muzahair.cz na Instagramu
-            </a>
-            <Link
-              href="/vlasy-k-prodlouzeni"
-              className="border px-6 py-3 text-sm font-medium rounded-sm transition hover:opacity-90"
-              style={{ borderColor: 'rgba(255,255,255,0.5)', color: 'var(--ivory)' }}
-            >
-              Nakonfigurovat vlasy
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </>
   );
 }
