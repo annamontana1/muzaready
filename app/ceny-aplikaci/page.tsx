@@ -285,10 +285,10 @@ const METHODS: PriceMethod[] = [
 ];
 
 const QUICK = [
-  { q: 'Kolik stojí prodloužení vlasů v Praze?', a: 'Aplikace stojí od 550 Kč (10 spojů pásků) do 5 000 Kč (mikrokeratin na 100 g). Vlasy se platí zvlášť.' },
+  { q: 'Kolik stojí prodloužení vlasů v Praze?', a: 'Orientační ceny aplikací najdete v ceníku výše. Přesnou cenu vám řekneme na osobní konzultaci, vlasy se platí zvlášť.' },
   { q: 'Zahrnuje cena i vlasy?', a: 'Ne. Vlasy si vyberete v e-shopu podle odstínu, délky a gramáže.' },
   { q: 'Jak často na korekci?', a: 'Pásky po 1,5–2 měsících, keratin po 2,5–3 měsících, weft po 2–3 měsících.' },
-  { q: 'Kde se aplikuje?', a: 'V showroomu Revoluční 8, Praha 1, na objednání, Po–Ne 10:00–20:00.' },
+  { q: 'Kde se aplikuje?', a: 'V našem partnerském salonu. Termín domluvíme přes WhatsApp.' },
 ];
 
 const FAQ = [
@@ -324,10 +324,10 @@ export default function CenyAplikaciPage() {
           </nav>
           <h1 className="mt-4 font-cormorant text-[40px] lg:text-[56px] leading-[1.02] text-muza-ink">Ceník aplikace vlasů Praha</h1>
 
-          {/* Přímá odpověď (pro Google i AI asistenty) */}
+          {/* Úvod: přesná cena na konzultaci, aplikace v partnerském salonu */}
           <p className="mt-4 border-l-[3px] border-muza-ink bg-[#F7F3EE] rounded-r-xl px-4 py-3 text-[17px] leading-relaxed">
-            Aplikace prodloužení stojí <b className="font-semibold">od 550 Kč</b> (pásky) <b className="font-semibold">do 5 000 Kč</b> (mikrokeratin na 100 g).
-            Vlasy se platí zvlášť a vyberete si je v <Link href="/katalog" className="text-muza-ink underline underline-offset-2">e-shopu</Link>.
+            <b className="font-semibold">Přesnou cenu aplikace se dozvíte na osobní konzultaci.</b> Prodloužit vlasy můžete v našem
+            partnerském salonu, ceny aplikací najdete pod tímto textem.
           </p>
 
           <div className="mt-6"><PriceTabs methods={METHODS} /></div>
