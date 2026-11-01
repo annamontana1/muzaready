@@ -357,7 +357,7 @@ export default function CenyAplikaciPage() {
               {FAQ.map((f) => (
                 <details key={f.q} className="group border-t border-muza-line">
                   <summary className="flex items-center justify-between gap-3 py-3.5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                    <h3 className="text-[15px] font-medium">{f.q}</h3>
+                    <h3 className="font-jost text-[15px] font-medium">{f.q}</h3>
                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#330D0D" strokeWidth="1.5" className="flex-none transition-transform duration-200 group-open:rotate-180"><path d="M6 9l6 6 6-6" /></svg>
                   </summary>
                   <p className="pb-3.5 text-[15px] leading-relaxed text-[#45302F]">{f.a}</p>
