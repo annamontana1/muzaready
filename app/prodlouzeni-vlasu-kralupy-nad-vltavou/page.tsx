@@ -129,13 +129,13 @@ export default function ProdlouzeniVlasuKralupyNadVltavouPage() {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <Link
-                href="/kontakt"
+              <a
+                href="https://wa.me/420728722880?text=Dobr%C3%BD%20den%2C%20cht%C4%9Bla%20bych%20se%20objednat%20na%20aplikaci%20vlas%C5%AF." target="_blank" rel="noopener"
                 className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Objednat se
-              </Link>
+              </a>
               <Link
                 href="/vlasy-k-prodlouzeni"
                 className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px border"

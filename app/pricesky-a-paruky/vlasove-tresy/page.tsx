@@ -336,12 +336,12 @@ export default function VlasoveTresyPage() {
             >
               Prohlédnout kolekce
             </Link>
-            <Link
-              href="/kontakt"
+            <a
+              href="https://wa.me/420728722880?text=Dobr%C3%BD%20den%2C%20cht%C4%9Bla%20bych%20se%20objednat%20na%20aplikaci%20vlas%C5%AF." target="_blank" rel="noopener"
               className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-text-dark transition"
             >
               Rezervovat konzultaci
-            </Link>
+            </a>
           </div>
         </section>
 
