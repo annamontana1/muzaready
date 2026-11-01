@@ -140,14 +140,6 @@ const jsonLd = [
       },
       {
         '@type': 'Question',
-        name: 'Kolik stojí prodloužení vlasů celkem?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Celková cena prodloužení vlasů = cena vlasů + cena aplikace. Tyto dvě složky se vždy účtují zvlášť. Příklad: keratin standart — vlasy 50 cm / 100 g ~ 5 800 Kč + aplikace 4 000 Kč = ~ 9 800 Kč. Nanotapes — 10 spojů ~ 1 600 Kč + aplikace 550 Kč = ~ 2 150 Kč.',
-        },
-      },
-      {
-        '@type': 'Question',
         name: 'Jaký je rozdíl mezi nanotapes a tape-in?',
         acceptedAnswer: {
           '@type': 'Answer',
