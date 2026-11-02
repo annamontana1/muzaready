@@ -57,7 +57,7 @@ export default function Footer() {
             </span>
           </Link>
           <p className="text-sm leading-relaxed max-w-[260px] font-light" style={{ color: 'rgba(248,244,239,0.6)' }}>
-            Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze, ruční výroba, 3 úrovně kvality.
+            Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze, ruční výroba, 4 edice vlasů.
           </p>
           <div className="mt-6 text-sm space-y-1.5">
             <a

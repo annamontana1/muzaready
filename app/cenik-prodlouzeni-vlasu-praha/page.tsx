@@ -53,7 +53,7 @@ const jsonLd = [
         name: 'Kolik stojí keratin prodloužení vlasů Praha?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Keratin prodloužení vlasů Praha: aplikace standart keratin 4 000 Kč / 100 g (130 pramenů), mikrokeratin 5 000 Kč / 100 g (230 pramenů). Korekce po 2,5–3 měsících. Cena vlasů se účtuje zvlášť — od 6 900 Kč (Standard) do 10 900 Kč (Platinum Edition) za 100 g.',
+          text: 'Keratin prodloužení vlasů Praha: aplikace standart keratin 4 000 Kč / 100 g (130 pramenů), mikrokeratin 5 000 Kč / 100 g (230 pramenů). Korekce po 3–4 měsících. Cena vlasů se účtuje zvlášť — od 6 900 Kč (Standard) do 10 900 Kč (Platinum Edition) za 100 g.',
         },
       },
       {
@@ -77,7 +77,7 @@ const jsonLd = [
         name: 'Jaký je rozdíl v ceně vlasů Standard, LUXE a Platinum?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Mùza Hair nabízí 3 úrovně kvality vlasů: Standard od 6 900 Kč/100 g (kvalitní barvené vlasy), LUXE od 8 900 Kč/100 g (prémiové středoevropské vlasy), Platinum Edition od 10 900 Kč/100 g (panenské nebarvené vlasy nejvyšší kvality). Baby Shades (světlé odstíny) od 7 900 Kč/100 g.',
+          text: 'Mùza Hair nabízí 4 edice vlasů: Standard od 6 900 Kč/100 g (kvalitní barvené vlasy), LUXE od 8 900 Kč/100 g (prémiové středoevropské vlasy), Platinum Edition od 10 900 Kč/100 g (panenské nebarvené vlasy nejvyšší kvality). Baby Shades (světlé odstíny) od 7 900 Kč/100 g.',
         },
       },
     ],
@@ -153,7 +153,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               Keratin · Nanotapes (Tape-In) · Weft (Hollywoodské prodloužení)
             </p>
             <p className="text-sm leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Vlastní barvírna · Pravé vlasy · 3 úrovně kvality · Od roku 2016
+              Vlastní barvírna · Pravé vlasy · 4 edice vlasů · Od roku 2016
             </p>
           </div>
         </div>

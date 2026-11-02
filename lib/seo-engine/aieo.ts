@@ -58,12 +58,12 @@ export function generateAIEOContent(pageType: string, pageData?: any): AIEOConte
       {
         question: 'Jaký je rozdíl mezi keratin a tape-in vlasy?',
         answer:
-          'Keratin (hot fusion) používá keratinové spoje tavené teplem, vydrží 3-6 měsíců, vhodný pro trvalé prodloužení. Tape-in používá pásky, aplikace je rychlejší (1 hodina), šetrnější k vlasům, posun každých 6-8 týdnů.',
+          'Keratin (hot fusion) používá keratinové spoje tavené teplem, vydrží 3–4 měsíců, vhodný pro trvalé prodloužení. Tape-in používá pásky, aplikace je rychlejší (1 hodina), šetrnější k vlasům, posun každých 6-8 týdnů.',
       },
       {
         question: 'Jak dlouho vydrží prodloužené vlasy?',
         answer:
-          'Keratinové prodloužení vydrží 3-6 měsíců, tape-in pásky se posouvají každých 6-8 týdnů a mohou se používat opakovaně. Samotné vlasy při správné péči vydrží 1-2 roky.',
+          'Keratinové prodloužení vydrží 3–4 měsíců, tape-in pásky se posouvají každých 6-8 týdnů a mohou se používat opakovaně. Samotné vlasy při správné péči vydrží 1-2 roky.',
       },
       {
         question: 'Jsou vlasy Mùza Hair pravé lidské vlasy?',

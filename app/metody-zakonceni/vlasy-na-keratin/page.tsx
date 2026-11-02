@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Keratin a Mikrokeratin | Metody prodlužování vlasů | Mùza Hair',
-  description: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3-6 měsíců. Profesionální aplikace s trvanlivým výsledkem.',
+  description: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3–4 měsíců. Profesionální aplikace s trvanlivým výsledkem.',
 };
 
 const faqSchema = {
@@ -23,7 +23,7 @@ const faqSchema = {
       name: 'Jak dlouho vydrží keratinové prodloužení vlasů?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Keratinové prodloužení vydrží 2,5–3 měsíce do korekce. Životnost závisí na péči — používejte šampon bez sulfátů a kondicionér pouze na délky.',
+        text: 'Keratinové prodloužení vydrží 3–4 měsíce do korekce. Životnost závisí na péči — používejte šampon bez sulfátů a kondicionér pouze na délky.',
       },
     },
     {

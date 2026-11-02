@@ -53,7 +53,7 @@ const jsonLd = [
         name: 'Kolik stojí prodloužení vlasů keratinem?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Prodloužení vlasů keratinem — nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 2,5–3 měsících. Cena vlasů se účtuje zvlášť.',
+          text: 'Prodloužení vlasů keratinem — nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 3–4 měsících. Cena vlasů se účtuje zvlášť.',
         },
       },
       {
@@ -61,7 +61,7 @@ const jsonLd = [
         name: 'Kolik stojí prodloužení vlasů keratinem Praha?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Prodloužení vlasů keratinem Praha — nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 2,5–3 měsících. Cena vlasů se účtuje zvlášť. Showroom Revoluční 8, Praha 1.',
+          text: 'Prodloužení vlasů keratinem Praha — nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 3–4 měsících. Cena vlasů se účtuje zvlášť. Showroom Revoluční 8, Praha 1.',
         },
       },
       {
@@ -69,7 +69,7 @@ const jsonLd = [
         name: 'Kolik stojí mikrokeratin prodloužení vlasů?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Mikrokeratin prodloužení vlasů — nasazení 5 000 Kč (230 pramenů / 100 g, 22 Kč/pramen), korekce 5 500 Kč. Mikrokeratin má menší, diskrétnější kapsli než standart — neviditelný i při sepnutých vlasech. Aplikace 3–4 hod, korekce po 2,5–3 měsících.',
+          text: 'Mikrokeratin prodloužení vlasů — nasazení 5 000 Kč (230 pramenů / 100 g, 22 Kč/pramen), korekce 5 500 Kč. Mikrokeratin má menší, diskrétnější kapsli než standart — neviditelný i při sepnutých vlasech. Aplikace 3–4 hod, korekce po 3–4 měsících.',
         },
       },
       // ── Tape-in / Nanotapes ──
@@ -263,10 +263,10 @@ const WA_LINK = `https://wa.me/420728722880?text=${encodeURIComponent('Dobrý de
 
 const METHODS: PriceMethod[] = [
   { id: 'keratin', name: 'Keratin', sub: '130 pramenů / 100 g · aplikace 3–4 hodiny',
-    rows: [['Nasazení (100 g)', '4 000 Kč'], ['Korekce / posun', '4 500 Kč'], ['Cena za pramen', '31 Kč'], ['Korekce za', '2,5–3 měsíce']],
+    rows: [['Nasazení (100 g)', '4 000 Kč'], ['Korekce / posun', '4 500 Kč'], ['Cena za pramen', '31 Kč'], ['Korekce za', '3–4 měsíce']],
     more: { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Více o keratinu' } },
   { id: 'mikrokeratin', name: 'Mikrokeratin', sub: '230 pramenů / 100 g · nejdiskrétnější spoj',
-    rows: [['Nasazení (100 g)', '5 000 Kč'], ['Korekce / posun', '5 500 Kč'], ['Cena za pramen', '22 Kč'], ['Korekce za', '2,5–3 měsíce']],
+    rows: [['Nasazení (100 g)', '5 000 Kč'], ['Korekce / posun', '5 500 Kč'], ['Cena za pramen', '22 Kč'], ['Korekce za', '3–4 měsíce']],
     more: { href: '/metody-zakonceni/vlasy-na-keratin', label: 'Více o mikrokeratinu' } },
   { id: 'pasky', name: 'Pásky (tape-in)', sub: 'Nanotapes 2,8 cm a tape-in 4 cm · bez tepla a chemie',
     rows: [['Spoj 2,8 cm (nanotapes)', '55 Kč'], ['Spoj 4 cm (tape-in)', '65 Kč'], ['Balení 10 spojů', '550 Kč'], ['Korekce za', '1,5–2 měsíce']],
@@ -279,12 +279,12 @@ const METHODS: PriceMethod[] = [
 const QUICK = [
   { q: 'Kolik stojí prodloužení vlasů v Praze?', a: 'Orientační ceny aplikací najdete v ceníku výše. Přesnou cenu vám řekneme na osobní konzultaci, vlasy se platí zvlášť.' },
   { q: 'Zahrnuje cena i vlasy?', a: 'Ne. Vlasy si vyberete v e-shopu podle odstínu, délky a gramáže.' },
-  { q: 'Jak často na korekci?', a: 'Pásky po 1,5–2 měsících, keratin po 2,5–3 měsících, weft po 2–3 měsících.' },
+  { q: 'Jak často na korekci?', a: 'Pásky po 1,5–2 měsících, keratin po 3–4 měsících, weft po 2–3 měsících.' },
   { q: 'Kde se aplikuje?', a: 'V našem partnerském salonu. Termín domluvíme přes WhatsApp.' },
 ];
 
 const FAQ = [
-  { q: 'Kolik stojí prodloužení vlasů keratinem Praha?', a: 'Nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 2,5–3 měsících. Cena vlasů se účtuje zvlášť.' },
+  { q: 'Kolik stojí prodloužení vlasů keratinem Praha?', a: 'Nasazení standart keratin 4 000 Kč (130 pramenů / 100 g, 31 Kč/pramen), korekce 4 500 Kč. Aplikace trvá 3–4 hodiny, korekce po 3–4 měsících. Cena vlasů se účtuje zvlášť.' },
   { q: 'Kolik stojí mikrokeratin prodloužení vlasů?', a: 'Mikrokeratin nasazení 5 000 Kč (230 pramenů / 100 g, 22 Kč/pramen), korekce 5 500 Kč. Menší diskrétní kapsle, neviditelná i při sepnutých vlasech. Šetrnější k vlastním vlasům než standart keratin.' },
   { q: 'Kolik stojí vlasové pásky?', a: 'Vlasové pásky (nanotapes, tapes, tape-in) 55 Kč/spoj (2,8 cm) nebo 65 Kč/spoj (4 cm). Balení 10 spojů = 550 Kč aplikace. Cena vlasových pásků se účtuje zvlášť. Korekce po 1,5–2 měsících.' },
   { q: 'Kolik stojí nanotapes prodloužení vlasů Praha?', a: 'Nanotapes Praha 55 Kč za 1 spoj (2 pásky, šíře 2,8 cm). 1 balení = 10 spojů. Posun 1,5–2 hod, korekce po 1,5–2 měsících. Cena vlasových pásků se účtuje zvlášť. Showroom Revoluční 8, Praha 1.' },

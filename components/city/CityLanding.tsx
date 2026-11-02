@@ -19,7 +19,7 @@ const WA_LINK =
   'https://wa.me/420728722880?text=Dobr%C3%BD%20den%2C%20cht%C4%9Bla%20bych%20se%20objednat%20na%20aplikaci%20vlas%C5%AF.';
 
 const METHODS = [
-  { name: 'Keratin', desc: 'Mikrokeratinové spoje, nejpřirozenější výsledek. Vydrží 4–6 měsíců.' },
+  { name: 'Keratin', desc: 'Keratinové a mikrokeratinové spoje, nejpřirozenější výsledek. Korekce po 3–4 měsících.' },
   { name: 'Nanotapes', desc: 'Tenké pásky bez tepla, šetrné k vlasům. Přelepují se po 6–10 týdnech.' },
   { name: 'Weft', desc: 'Přišitý tres pro maximální objem. Posun po 4–6 měsících.' },
 ];
@@ -28,6 +28,7 @@ const QUALITY = [
   { name: 'Standard', desc: 'Pevná struktura, skvělý poměr ceny a kvality.' },
   { name: 'Luxe', desc: 'Jemnější vlasy, nadýchaný objem a husté konce.' },
   { name: 'Platinum', desc: 'Panenské vlasy z výkupu v Česku a na Slovensku.' },
+  { name: 'Baby Shades', desc: 'Nejjemnější světlé odstíny, prodávají se jako celý culík.' },
 ];
 
 function faq(d: CityData) {
@@ -42,7 +43,7 @@ function faq(d: CityData) {
     },
     {
       q: `Mohu si vlasy objednat online ${d.from}?`,
-      a: 'Ano. Vlasy Standard, Luxe i Platinum objednáte v e-shopu, doručíme do 48 hodin. Pokud si nejste jistá odstínem, napište nám na WhatsApp nebo Instagram a poradíme na dálku.',
+      a: 'Ano. Vlasy Standard, Luxe, Platinum i Baby Shades objednáte v e-shopu, doručíme do 48 hodin. Pokud si nejste jistá odstínem, napište nám na WhatsApp nebo Instagram a poradíme na dálku.',
     },
     {
       q: 'Kolik stojí prodloužení vlasů?',
@@ -168,7 +169,7 @@ export default function CityLanding({ data: d }: { data: CityData }) {
             </p>
           </div>
           <div>
-            <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Tři úrovně kvality</h2>
+            <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Čtyři edice vlasů</h2>
             <ul className="mt-5">
               {QUALITY.map((m) => (
                 <li key={m.name} className="py-3 border-t border-muza-line">

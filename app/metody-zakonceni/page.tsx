@@ -26,7 +26,7 @@ const METHODS = [
   {
     name: 'Keratin / Mikrokeratin',
     href: '/metody-zakonceni/vlasy-na-keratin',
-    desc: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3–6 měsíců a díky přirozenému vzhledu jsou ideální i pro aktivní životní styl.',
+    desc: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3–4 měsíců a díky přirozenému vzhledu jsou ideální i pro aktivní životní styl.',
     points: ['Trvanlivé 3–6 měsíců', 'Přirozený vzhled', 'Pro aktivní životní styl'],
   },
   {
@@ -109,7 +109,7 @@ export default function MetodyZakonceniPage() {
           Vyberte vlasy k prodloužení
         </h2>
         <p className="mt-3 text-base text-[#45302F]">
-          Prohlédněte si naši kolekci panenských a barvených vlasů ve třech edicích kvality.
+          Prohlédněte si naši kolekci panenských a barvených vlasů ve čtyřech edicích: Standard, Luxe, Platinum a Baby Shades.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link href="/vlasy-k-prodlouzeni" className={BTN_PRIMARY}>Prozkoumat kolekci</Link>

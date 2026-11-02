@@ -216,7 +216,7 @@ export default function KoupitVlasyPrahaPage() {
                 <div className="text-3xl mb-3">🔗</div>
                 <h3 className="text-xl font-playfair text-burgundy mb-2">Vlasy na keratin</h3>
                 <p className="text-gray-600 text-sm mb-3">
-                  Připevnění keratinovými spojeními. Nejpřirozenější výsledek, trvanlivost 3–6 měsíců.
+                  Připevnění keratinovými spojeními. Nejpřirozenější výsledek, trvanlivost 3–4 měsíců.
                 </p>
                 <p className="text-burgundy text-sm font-medium">Zobrazit metodu →</p>
               </Link>

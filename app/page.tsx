@@ -24,11 +24,11 @@ const FAQ = [
   },
   {
     q: 'Jaký je rozdíl mezi nanotapes a keratinem?',
-    a: 'Nanotapes jsou vlasové pásky se sendvičovým spojem bez tepla, korekce po 1,5–2 měsících. Keratin jsou pramínky s keratinovou kapslí, korekce po 2,5–3 měsících. Pásky se aplikují rychleji, keratin drží déle.',
+    a: 'Nanotapes jsou vlasové pásky se sendvičovým spojem bez tepla, korekce po 1,5–2 měsících. Keratin jsou pramínky s keratinovou kapslí, korekce po 3–4 měsících. Pásky se aplikují rychleji, keratin drží déle.',
   },
   {
     q: 'Jak dlouho vydrží prodloužené vlasy?',
-    a: 'Keratin 2,5–3 měsíce, nanotapes 1,5–2 měsíce, weft 2–3 měsíce do korekce. Hodně záleží na péči: šampon bez sulfátů, česání od konečků a ochrana před teplem.',
+    a: 'Keratin 3–4 měsíce, nanotapes 1,5–2 měsíce, weft 2–3 měsíce do korekce. Hodně záleží na péči: šampon bez sulfátů, česání od konečků a ochrana před teplem.',
   },
   {
     q: 'Jsou vlasy pravé?',

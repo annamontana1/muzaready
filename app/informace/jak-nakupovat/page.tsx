@@ -85,7 +85,7 @@ const tips = [
   },
   {
     title: 'Jakou metodu zvolit?',
-    content: 'Keratin je nejtrvanlivější (3–6 měsíců), tapes jsou nejšetrnější k vlastním vlasům, weft je nejrychlejší na aplikaci.',
+    content: 'Keratin je nejtrvanlivější (3–4 měsíců), tapes jsou nejšetrnější k vlastním vlasům, weft je nejrychlejší na aplikaci.',
     href: '/metody-zakonceni',
     linkText: 'Přehled metod',
   },

@@ -413,7 +413,7 @@ Keratinové prodloužení patří k nejrozšířenějším metodám. Jednotlivé
 
 ### Standart keratin
 
-Klasická keratinová metoda pracuje s prameny o standardní tloušťce. **100 gramů vlasů obsahuje přibližně 130 pramenů.** Cena za nasazení (první aplikaci) je **4 000 Kč**, korekce po 2,5–3 měsících pak vychází na **4 500 Kč**. Cena za jeden pramen je **31 Kč**. Celková aplikace trvá **3 až 4 hodiny**. Více informací najdete na stránce [vlasy na keratin](/metody-zakonceni/vlasy-na-keratin).
+Klasická keratinová metoda pracuje s prameny o standardní tloušťce. **100 gramů vlasů obsahuje přibližně 130 pramenů.** Cena za nasazení (první aplikaci) je **4 000 Kč**, korekce po 3–4 měsících pak vychází na **4 500 Kč**. Cena za jeden pramen je **31 Kč**. Celková aplikace trvá **3 až 4 hodiny**. Více informací najdete na stránce [vlasy na keratin](/metody-zakonceni/vlasy-na-keratin).
 
 ### Mikrokeratin
 
@@ -426,7 +426,7 @@ Mikrokeratin je jemnější varianta klasického keratinu. Prameny jsou podstatn
 | Cena aplikace | 55–65 Kč/spoj | 4 000 Kč (nasazení) | 5 000 Kč (nasazení) |
 | Šetrnost | Velmi šetrné (bez tepla) | Střední (teplo) | Vysoká (menší spoje) |
 | Délka aplikace | 1,5–2 hod | 3–4 hod | 3–4 hod |
-| Korekce | po 1,5–2 měsících | po 2,5–3 měsících | po 2,5–3 měsících |
+| Korekce | po 1,5–2 měsících | po 3–4 měsících | po 3–4 měsících |
 | Viditelnost spojů | Páska (viditelná z boku) | Keratin. uzel | Minimální uzel |
 | Vhodné pro | Jemné až střední vlasy | Střední až silné vlasy | Všechny typy vlasů |
 
@@ -447,7 +447,7 @@ Nanotapes jsou ideální volbou, pokud:
 Standart keratin je vhodný pro:
 
 - Ženy se **středně silnými až silnými vlastními vlasy**
-- Ty, které chtějí **delší interval mezi korekcemi** (2,5–3 měsíce)
+- Ty, které chtějí **delší interval mezi korekcemi** (3–4 měsíce)
 - Klientky, které preferují **individuální prameny** s přirozeným pohybem
 - Případy, kdy je prodloužení plánováno na **delší dobu** (více než půl roku)
 
@@ -531,7 +531,7 @@ Keratinové prodloužení existuje ve dvou variantách – standart keratin a mi
 - **Nasazení (první aplikace):** 4 000 Kč
 - **Korekce:** 4 500 Kč
 - **100 g = přibližně 130 pramenů**, cena za pramen **31 Kč**
-- Aplikace trvá **3–4 hodiny**, korekce jsou doporučeny po **2,5–3 měsících**
+- Aplikace trvá **3–4 hodiny**, korekce jsou doporučeny po **3–4 měsících**
 
 **Příklad celkové ceny:** Vlasy 50 cm / 100 g (přibližně 5 800 Kč) + nasazení (4 000 Kč) = **přibližně 9 800 Kč**
 
@@ -540,7 +540,7 @@ Keratinové prodloužení existuje ve dvou variantách – standart keratin a mi
 - **Nasazení:** 5 000 Kč
 - **Korekce:** 5 500 Kč
 - **100 g = přibližně 230 pramenů**, cena za pramen **22 Kč**
-- Aplikace trvá **3–4 hodiny**, korekce po **2,5–3 měsících**
+- Aplikace trvá **3–4 hodiny**, korekce po **3–4 měsících**
 
 Mikrokeratin je dražší na nasazení, ale díky menším pamenům je šetrnější k vlasům a spoje jsou méně viditelné.
 
@@ -570,8 +570,8 @@ Weft je vhodný pro ženy, které chtějí výrazné zhoustnutí vlasů nebo vý
 
 | Metoda | Cena aplikace (nasazení) | Korekce | Délka aplikace | Korekce po |
 |---|---|---|---|---|
-| Standart keratin | 4 000 Kč | 4 500 Kč | 3–4 hod | 2,5–3 měsíce |
-| Mikrokeratin | 5 000 Kč | 5 500 Kč | 3–4 hod | 2,5–3 měsíce |
+| Standart keratin | 4 000 Kč | 4 500 Kč | 3–4 hod | 3–4 měsíce |
+| Mikrokeratin | 5 000 Kč | 5 500 Kč | 3–4 hod | 3–4 měsíce |
 | Nanotapes (2,8 cm) | 55 Kč/spoj | 55 Kč/spoj | 1,5–2 hod | 1,5–2 měsíce |
 | Nanotapes (4 cm) | 65 Kč/spoj | 65 Kč/spoj | 1,5–2 hod | 1,5–2 měsíce |
 | Weft | na dotaz | 3 800 Kč | na dotaz | 2–3 měsíce |
@@ -621,7 +621,7 @@ Chcete znát přesné ceny pro váš konkrétní případ? Prohlédněte si aktu
   {
     slug: 'jak-dlouho-vydrzi-prodlouzeni-vlasu',
     title: 'Jak dlouho vydrží prodloužení vlasů? Keratin, nanotapes, weft – životnost a korekce',
-    excerpt: 'Keratin vydrží 2,5–3 měsíce, nanotapes 1,5–2 měsíce, weft 2–3 měsíce. Zjistěte, jak prodloužit životnost prodloužených vlasů a kdy jít na korekci.',
+    excerpt: 'Keratin vydrží 3–4 měsíce, nanotapes 1,5–2 měsíce, weft 2–3 měsíce. Zjistěte, jak prodloužit životnost prodloužených vlasů a kdy jít na korekci.',
     content: `
 # Jak dlouho vydrží prodloužení vlasů?
 
@@ -693,7 +693,7 @@ Ano, prodloužené vlasy bazén nevylučují. Chlorovaná voda však může osla
 
 ### Vypadají prodloužené vlasy přirozeně i po 2 měsících?
 
-Záleží na metodě a stavu korekce. U nanotapes jsou po 2 měsících pásky již viditelně posunuté od kořenů – vlasy stále vypadají hezky, ale je načase na korekci. U keratinu se 2 měsíce po aplikaci vlasy stále vypadají přirozeně, korekce je doporučena spíše po 2,5–3 měsících. Obecně platí: čím déle korekci odkládáte, tím méně přirozeně prodloužení vypadá.
+Záleží na metodě a stavu korekce. U nanotapes jsou po 2 měsících pásky již viditelně posunuté od kořenů – vlasy stále vypadají hezky, ale je načase na korekci. U keratinu se 2 měsíce po aplikaci vlasy stále vypadají přirozeně, korekce je doporučena spíše po 3–4 měsících. Obecně platí: čím déle korekci odkládáte, tím méně přirozeně prodloužení vypadá.
 
 ---
 
@@ -993,7 +993,7 @@ Nejrozšířenější metoda v Praze. Keratinové pramínky se přilepují ke ko
 |----------|---------|
 | Cena aplikace | od 4 000 Kč (100 g) |
 | Počet pramenů | 130–230 ks / 100 g |
-| Korekce | po 2,5–3 měsících |
+| Korekce | po 3–4 měsících |
 | Vhodné pro | silnější vlastní vlasy |
 
 **Mikrokeratin** (mini kapsle) je vhodný pro jemnější a řidší vlastní vlasy — diskrétnější a lehčí.

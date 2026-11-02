@@ -246,7 +246,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
                 {
                   icon: '✅',
                   title: 'Od roku 2016 v Praze',
-                  desc: 'Téměř 10 let zkušeností. Tisíce spokojených zákaznic v Praze i po celé ČR. Recenze k nahlédnutí.',
+                  desc: 'Na trhu od roku 2016. Tisíce spokojených zákaznic v Praze i po celé ČR. Recenze k nahlédnutí.',
                 },
               ].map((item) => (
                 <div key={item.title} className="bg-ivory p-6 rounded-xl border border-gray-100">
@@ -328,7 +328,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
                 <div className="text-3xl mb-3">🔗</div>
                 <h3 className="text-xl font-playfair text-burgundy mb-2">Vlasy na keratin</h3>
                 <p className="text-gray-600 text-sm mb-3 leading-relaxed">
-                  Vlasy zakončené keratinovými spojeními — nejpřirozenější výsledek prodloužení. Aplikace trvá 2–4 hodiny, trvanlivost 3–6 měsíců. Vhodné pro všechny typy vlasů.
+                  Vlasy zakončené keratinovými spojeními — nejpřirozenější výsledek prodloužení. Aplikace trvá 2–4 hodiny, trvanlivost 3–4 měsíců. Vhodné pro všechny typy vlasů.
                 </p>
                 <ul className="text-xs text-gray-500 space-y-1 mb-3">
                   <li>• Trvanlivost: 3–6 měsíců</li>

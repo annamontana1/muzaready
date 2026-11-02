@@ -29,7 +29,7 @@ const stats = [
   { value: '4.9', label: 'Průměrné hodnocení' },
   { value: '500+', label: 'Spokojených zákaznic' },
   { value: '98%', label: 'Míra spokojenosti' },
-  { value: '8+', label: 'Let na trhu' },
+  { value: '2016', label: 'Na trhu od roku' },
 ];
 
 export default function RecenzePage() {
