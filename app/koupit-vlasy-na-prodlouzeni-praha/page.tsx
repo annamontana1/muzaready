@@ -38,8 +38,8 @@ export default function KoupitVlasyPrahaPage() {
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '09:00',
-      closes: '19:00',
+      opens: '10:00',
+      closes: '16:00',
     },
     hasMap: 'https://maps.google.com/?q=Praha',
     priceRange: '3900 Kč - 12 000 Kč',

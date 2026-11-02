@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { pieceTitle } from '@/lib/piece-title';
 import { useEffect, useState } from 'react';
 
 // Podobné culíky až úplně dole na detailu, ve třech řadách:
@@ -59,10 +60,10 @@ export default function SimilarPieces({ id, shade, isDyed, tierLabel }: Props) {
                   <span className="block h-[132px] rounded-t-full rounded-b-[10px] border border-muza-ink p-[3px]">
                     <span className="block w-full h-full rounded-t-full rounded-b-lg overflow-hidden bg-muza-mocha">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={x.imageUrl} alt={x.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      <img src={x.imageUrl} alt={pieceTitle({ id: x.id, shade: x.shade, name: x.name })} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     </span>
                   </span>
-                  <span className="mt-1.5 block text-sm font-normal text-text-dark">{x.name.split(' · ')[0]}</span>
+                  <span className="mt-1.5 block text-sm font-normal text-text-dark">{pieceTitle({ id: x.id, shade: x.shade, name: x.name })}</span>
                   <span className="block text-xs text-[#45302F]">{[x.tier, x.structure].filter(Boolean).join(' · ') || `odstín ${x.shade}`}</span>
                 </Link>
               </li>

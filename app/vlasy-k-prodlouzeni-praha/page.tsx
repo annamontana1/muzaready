@@ -50,8 +50,8 @@ export default function VlasyKProdlouzeniPrahaPage() {
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        opens: '09:00',
-        closes: '19:00',
+        opens: '10:00',
+        closes: '16:00',
       },
     ],
     hasMap: 'https://maps.google.com/?q=Praha',
@@ -157,7 +157,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
           {/* Opening hours badge */}
           <div className="inline-flex items-center gap-2 bg-ivory border border-burgundy/20 rounded-full px-5 py-2 mb-10">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-700">Showroom Praha: Po–Ne 9:00–19:00 · Konzultace po domluvě</span>
+            <span className="text-sm font-medium text-gray-700">Showroom Praha: Po–Ne 10:00–16:00 · jindy po domluvě</span>
           </div>
 
           {/* CTA buttons */}
@@ -463,7 +463,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
                     <span className="text-burgundy text-lg mt-0.5">🕐</span>
                     <div>
                       <p className="font-semibold text-gray-900">Otevírací doba</p>
-                      <p className="text-gray-600 text-sm">Po–Ne: 9:00–19:00 (po předchozí domluvě)</p>
+                      <p className="text-gray-600 text-sm">Po–Ne: 10:00–16:00, jindy po domluvě</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

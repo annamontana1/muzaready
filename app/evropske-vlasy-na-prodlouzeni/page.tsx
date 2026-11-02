@@ -83,7 +83,7 @@ export default function EvropskevlasyPage() {
         name: 'Kde v ČR mohu koupit pravé evropské vlasy na prodloužení?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Mùza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen po–ne 9:00–19:00. Online objednávka přes e-shop s dodáním do 48 h po celé České republice. Certifikovaný původ vlasů, transparentní informace o zdroji.',
+          text: 'Mùza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen Po–Ne 10:00–16:00, jindy po domluvě. Online objednávka přes e-shop s dodáním do 48 h po celé České republice. Certifikovaný původ vlasů, transparentní informace o zdroji.',
         },
       },
     ],
@@ -571,7 +571,7 @@ export default function EvropskevlasyPage() {
                 },
                 {
                   q: 'Kde v ČR mohu koupit pravé evropské vlasy na prodloužení?',
-                  a: 'Mùza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen Po–Ne 9:00–19:00 po předchozí domluvě. Online objednávka s dodáním do 48 h po celé České republice. Garantujeme certifikovaný původ vlasů z Ukrainy, Polska a Rumunska.',
+                  a: 'Mùza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen Po–Ne 10:00–16:00, jindy po domluvě. Online objednávka s dodáním do 48 h po celé České republice. Garantujeme certifikovaný původ vlasů z Ukrainy, Polska a Rumunska.',
                 },
               ].map((item, i) => (
                 <details key={i} className="bg-white border border-gray-200 rounded-xl p-5 group">

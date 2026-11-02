@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Showroom Praha 1 | Výběr vlasů na objednání | Mùza Hair',
-  description: 'Showroom Mùza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Ne 10–20, pouze na objednání.',
+  description: 'Showroom Mùza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Ne 10–16, jindy po domluvě, pouze na objednání.',
   alternates: { canonical: 'https://www.muzahair.cz/showroom' },
 };
 
@@ -97,7 +97,7 @@ export default function ShowroomPage() {
           <dl className="mt-6">
             <div className="flex justify-between gap-4 py-3 border-t border-b border-muza-line">
               <dt className="text-sm text-[#45302F]">Pondělí – neděle</dt>
-              <dd className="text-sm font-medium text-right">10:00–20:00</dd>
+              <dd className="text-sm font-medium text-right">10:00–16:00, jindy po domluvě</dd>
             </div>
           </dl>
           <p className="mt-5 text-base leading-relaxed text-[#45302F]">

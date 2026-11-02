@@ -170,26 +170,6 @@ Pokud si nejste jistí, **napište nám** - pošleme vám kalkulačku nebo vám 
   },
   {
     category: 'Objednávání',
-    question: 'Můžu si objednat vzorek vlasů?',
-    answer: `**Ano!** Nabízíme vzorky odstínů:
-
-**Co dostanete:**
-- Malý pramen vlasů (cca 5-10 g)
-- Přesně ten odstín a strukturu, který zvažujete
-- Možnost přiložit si k vlasům a vyzkoušet doma
-
-**Cena vzorku:** 200 Kč (při následné objednávce vlasů vám částku odečteme)
-
-**Jak objednat:**
-1. Napište nám email: muzahaircz@gmail.com
-2. Uveďte, který odstín a strukturu chcete
-3. Pošleme vám platební údaje
-4. Po zaplacení expedujeme do 2 prac. dnů
-
-**TIP:** Pokud jste v Praze, můžete **zdarma** navštívit showroom a prohlédnout si všechny vzorky naživo!`
-  },
-  {
-    category: 'Objednávání',
     question: 'Dostanu potvrzení objednávky?',
     answer: `**Ano, dostanete 2 emaily:**
 
@@ -298,7 +278,7 @@ Zboží vyráběné na zakázku (pásky, weft, clip-in) připravujeme **14 praco
 
 **1. Osobní odběr v showroomu** ZDARMA
 - Adresa: Revoluční 8, Praha 1, 110 00
-- Otevřeno: Po–Ne 10:00–20:00, **pouze na objednání**
+- Otevřeno: Po–Ne 10:00–16:00, **jindy po domluvě**
 
 **Postup:**
 1. Při objednávce zvolte "Osobní odběr"
@@ -397,7 +377,7 @@ Platba je i v tomto případě předem převodem na IBAN **CZ70 0300 0000 0003 2
    - Stejnou metodou, jakou jste platili
    - Poštovné za doručení k vám **NEVRACÍME**
 
-**TIP:** Pokud si nejste jistí odstínem, objednejte si **vzorek** (200 Kč) - tím se vyhnete vracení!`
+**TIP:** Pokud si nejste jistí odstínem, pošlete nám fotku svých vlasů na WhatsApp +420 728 722 880 a poradíme ještě před objednávkou.`
   },
   {
     category: 'Vrácení a reklamace',
@@ -450,16 +430,9 @@ Platba je i v tomto případě předem převodem na IBAN **CZ70 0300 0000 0003 2
 - Postupujte podle standardní reklamace (viz výše)
 - Výměna nebo vrácení peněz
 
-**Možnost B: Výměna odstínu**
-- Pokud odstín nesedí, ale vlasy jsou nepoužité
-- Můžeme vyměnit za jiný odstín
-- Platíte pouze rozdíl v ceně (pokud je)
-- Poplatek za výměnu: 200 Kč
-
-**Možnost C: Profesionální poradenství**
+**Možnost B: Poradenství předem**
 - **PŘED aplikací** nám zavolejte
 - Pomůžeme vám vybrat správný odstín
-- Můžeme poslat vzorky ZDARMA (pro kadeřnictví)
 
 **Nemůžeme reklamovat:**
 - Vlasy po aplikaci klientovi
@@ -697,7 +670,7 @@ Adresa:
 Revoluční 8
 Praha 1, 110 00
 
-Otevřeno: **Po–Ne 10:00–20:00, pouze na objednání**
+Otevřeno: **Po–Ne 10:00–16:00, jindy po domluvě**
 
 **Co u nás můžete:**
 ✅ Prohlédnout si **všechny vzorky** odstínů

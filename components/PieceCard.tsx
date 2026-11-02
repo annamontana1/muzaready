@@ -26,10 +26,12 @@ export default function PieceCard({ id, name, shade, photos, meta, price, soldOu
     <div className="group">
       <Link href={`/sku-detail/${id}`} className="block">
         <div className="relative aspect-[3/4] rounded-t-full rounded-b-2xl border border-muza-ink p-1 overflow-hidden">
+          {/* mocha podklad, dokud se fotka nenačte (žádný prázdný oblouk) */}
+          <div aria-hidden="true" className="absolute inset-1 rounded-t-full rounded-b-xl bg-muza-mocha" />
           {src ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={src} alt={name} loading="lazy" decoding="async"
-              className="w-full h-full object-cover object-[center_25%] rounded-t-full rounded-b-xl transition-transform duration-500 group-hover:scale-[1.03]" />
+              className="relative w-full h-full object-cover object-[center_25%] rounded-t-full rounded-b-xl transition-transform duration-500 group-hover:scale-[1.03]" />
           ) : (
             <div className="w-full h-full rounded-t-full rounded-b-xl bg-muza-mocha" />
           )}
