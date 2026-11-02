@@ -5,7 +5,7 @@ import PriceTabs, { type PriceMethod } from './PriceTabs';
 export const metadata: Metadata = {
   title: 'Ceník prodloužení vlasů Praha 2025 | Mùza Hair',
   description: 'Ceník aplikace prodloužení vlasů v Praze: keratin, mikrokeratin, vlasové pásky (tape-in) a weft. Přesnou cenu aplikace se dozvíte na osobní konzultaci.',
-  alternates: { canonical: 'https://muzahair.cz/ceny-aplikaci' },
+  alternates: { canonical: 'https://www.muzahair.cz/ceny-aplikaci' },
   keywords: [
     'prodloužení vlasů Praha cena',
     'kolik stojí weft prodloužení',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Ceník prodloužení vlasů Praha 2025 | Mùza Hair',
     description: 'Ceník aplikace prodloužení vlasů v Praze: keratin, mikrokeratin, pásky (tape-in) a weft. Přesnou cenu aplikace se dozvíte na osobní konzultaci.',
-    url: 'https://muzahair.cz/ceny-aplikaci',
+    url: 'https://www.muzahair.cz/ceny-aplikaci',
     siteName: 'Mùza Hair',
     locale: 'cs_CZ',
     type: 'website',
@@ -39,8 +39,8 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-      { '@type': 'ListItem', position: 2, name: 'Ceník aplikace', item: 'https://muzahair.cz/ceny-aplikaci' },
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Ceník aplikace', item: 'https://www.muzahair.cz/ceny-aplikaci' },
     ],
   },
   {
@@ -184,8 +184,8 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: 'Mùza Hair',
-    '@id': 'https://muzahair.cz',
-    url: 'https://muzahair.cz',
+    '@id': 'https://www.muzahair.cz',
+    url: 'https://www.muzahair.cz',
     telephone: '+420728722880',
     address: {
       '@type': 'PostalAddress',

@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         title,
         description,
         type: 'website',
-        url: `https://muzahair.cz/produkt/${params.slug}`,
+        url: `https://www.muzahair.cz/produkt/${params.slug}`,
         images: [
           {
             url: product.images.main || '/og-image.jpg',
@@ -134,18 +134,18 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
 
   // Breadcrumb data
   const breadcrumbItems = [
-    { name: 'Domů', url: 'https://muzahair.cz' },
+    { name: 'Domů', url: 'https://www.muzahair.cz' },
     {
       name: 'Vlasy k prodloužení',
-      url: 'https://muzahair.cz/vlasy-k-prodlouzeni',
+      url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni',
     },
     {
       name: product.category === 'nebarvene_panenske' ? 'Nebarvené panenské' : 'Barvené blond',
-      url: `https://muzahair.cz/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-vlasy'}`,
+      url: `https://www.muzahair.cz/vlasy-k-prodlouzeni/${product.category === 'nebarvene_panenske' ? 'nebarvene-panenske' : 'barvene-vlasy'}`,
     },
     {
       name: product.name,
-      url: `https://muzahair.cz/produkt/${product.slug}`,
+      url: `https://www.muzahair.cz/produkt/${product.slug}`,
     },
   ];
 
@@ -155,11 +155,11 @@ export default async function ProductPage({ params, searchParams }: ProductPageP
       <ProductSchema
         name={product.name}
         description={product.description}
-        image={product.images.main || 'https://muzahair.cz/placeholder.jpg'}
+        image={product.images.main || 'https://www.muzahair.cz/placeholder.jpg'}
         sku={product.sku}
         price={product.base_price_per_100g_45cm}
         availability={product.in_stock}
-        url={`https://muzahair.cz/produkt/${product.slug}`}
+        url={`https://www.muzahair.cz/produkt/${product.slug}`}
         rating={
           product.review_count && product.review_count > 0
             ? {

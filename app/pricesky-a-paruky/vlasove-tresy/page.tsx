@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   description:
     'Ručně šité vlasové tresy (hand-tied weft) z pravých vlasů — Standard, Luxe, Platinum, Baby Shades. Hollywood weft pro maximální objem. Výroba na zakázku 14 dní. Showroom Praha.',
   alternates: {
-    canonical: 'https://muzahair.cz/pricesky-a-paruky/vlasove-tresy',
+    canonical: 'https://www.muzahair.cz/pricesky-a-paruky/vlasove-tresy',
   },
   openGraph: {
     title: 'Vlasové tresy (Weft) Praha | Ručně šité | Mùza Hair',
     description:
       'Ručně šité vlasové tresy z pravých vlasů — Standard, Luxe, Platinum, Baby Shades. Hollywood weft pro maximální objem. Výroba na zakázku 14 dní.',
-    url: 'https://muzahair.cz/pricesky-a-paruky/vlasove-tresy',
+    url: 'https://www.muzahair.cz/pricesky-a-paruky/vlasove-tresy',
   },
 };
 

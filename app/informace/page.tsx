@@ -4,11 +4,11 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Informace a průvodce | Prodloužení vlasů | Mùza Hair Praha',
   description: 'Průvodce prodloužením vlasů — FAQ, jak nakupovat, obchodní podmínky, platba a vrácení, odeslání a stav objednávky. Mùza Hair Praha.',
-  alternates: { canonical: 'https://muzahair.cz/informace' },
+  alternates: { canonical: 'https://www.muzahair.cz/informace' },
   openGraph: {
     title: 'Informace a průvodce | Prodloužení vlasů | Mùza Hair Praha',
     description: 'Průvodce prodloužením vlasů — FAQ, jak nakupovat, obchodní podmínky, platba a vrácení, odeslání a stav objednávky. Mùza Hair Praha.',
-    url: 'https://muzahair.cz/informace',
+    url: 'https://www.muzahair.cz/informace',
     locale: 'cs_CZ',
     type: 'website',
   },

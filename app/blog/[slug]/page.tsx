@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       title: article.title,
       description: article.excerpt,
       type: 'article',
-      url: `https://muzahair.cz/blog/${params.slug}`,
+      url: `https://www.muzahair.cz/blog/${params.slug}`,
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       authors: [article.author],
@@ -65,7 +65,7 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
     '@type': 'Article',
     headline: article.title,
     description: article.excerpt,
-    image: `https://muzahair.cz${article.imageUrl}`,
+    image: `https://www.muzahair.cz${article.imageUrl}`,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
     author: {
@@ -77,21 +77,21 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
       name: 'Mùza Hair',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://muzahair.cz/logo.png',
+        url: 'https://www.muzahair.cz/logo.png',
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://muzahair.cz/blog/${params.slug}`,
+      '@id': `https://www.muzahair.cz/blog/${params.slug}`,
     },
     keywords: article.tags.join(', '),
   };
 
   // Breadcrumb data
   const breadcrumbItems = [
-    { name: 'Domů', url: 'https://muzahair.cz' },
-    { name: 'Blog', url: 'https://muzahair.cz/blog' },
-    { name: article.title, url: `https://muzahair.cz/blog/${params.slug}` },
+    { name: 'Domů', url: 'https://www.muzahair.cz' },
+    { name: 'Blog', url: 'https://www.muzahair.cz/blog' },
+    { name: article.title, url: `https://www.muzahair.cz/blog/${params.slug}` },
   ];
 
   return (

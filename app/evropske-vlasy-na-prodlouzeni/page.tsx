@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Evropské vlasy na prodloužení Praha | Remy | Mùza Hair',
   description: 'Pravé evropské vlasy na prodloužení Praha — remy, panenské i slovanské. Nejlepší volba pro české a evropské ženy. Showroom Praha, dodání 48 h po ČR. Od 3 900 Kč.',
-  alternates: { canonical: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni' },
+  alternates: { canonical: 'https://www.muzahair.cz/evropske-vlasy-na-prodlouzeni' },
   keywords: [
     'evropské vlasy na prodloužení Praha',
     'evropské vlasy prodej',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Evropské vlasy na prodloužení Praha | Remy | Mùza Hair',
     description: 'Prémiové evropské vlasy na prodloužení — remy, panenské a slovanské. Praha showroom + dodání po celé ČR.',
-    url: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/evropske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -33,19 +33,19 @@ export default function EvropskevlasyPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Domů',
-        item: 'https://muzahair.cz',
+        item: 'https://www.muzahair.cz',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Vlasy k prodloužení',
-        item: 'https://muzahair.cz/vlasy-k-prodlouzeni',
+        item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: 'Evropské vlasy na prodloužení',
-        item: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni',
+        item: 'https://www.muzahair.cz/evropske-vlasy-na-prodlouzeni',
       },
     ],
   };

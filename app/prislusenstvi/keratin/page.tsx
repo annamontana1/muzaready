@@ -4,11 +4,11 @@ import PagePlaceholder from '@/components/PagePlaceholder';
 export const metadata: Metadata = {
   title: 'Keratinové bondy na prodloužení vlasů | Příslušenství | Mùza Hair',
   description: 'Keratinové bondy pro aplikaci vlasů na prodloužení. Profesionální kvalita, vhodné pro keratin metodu. Mùza Hair Praha.',
-  alternates: { canonical: 'https://muzahair.cz/prislusenstvi/keratin' },
+  alternates: { canonical: 'https://www.muzahair.cz/prislusenstvi/keratin' },
   openGraph: {
     title: 'Keratinové bondy na prodloužení vlasů | Příslušenství | Mùza Hair',
     description: 'Keratinové bondy pro aplikaci vlasů na prodloužení. Profesionální kvalita, vhodné pro keratin metodu. Mùza Hair Praha.',
-    url: 'https://muzahair.cz/prislusenstvi/keratin',
+    url: 'https://www.muzahair.cz/prislusenstvi/keratin',
     locale: 'cs_CZ',
     type: 'website',
   },

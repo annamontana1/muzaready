@@ -4,11 +4,11 @@ import PagePlaceholder from '@/components/PagePlaceholder';
 export const metadata: Metadata = {
   title: 'Clip-in vlasy z pravých vlasů | Příčesky | Mùza Hair Praha',
   description: 'Clip-in vlasy z pravých slovanských vlasů — rychlé nasazení bez lepidla. Standard, LUXE, Platinum. Vlastní výroba Praha. Snadná aplikace doma.',
-  alternates: { canonical: 'https://muzahair.cz/pricesky-a-paruky/clip-in-vlasy' },
+  alternates: { canonical: 'https://www.muzahair.cz/pricesky-a-paruky/clip-in-vlasy' },
   openGraph: {
     title: 'Clip-in vlasy z pravých vlasů | Příčesky | Mùza Hair Praha',
     description: 'Clip-in vlasy z pravých slovanských vlasů — rychlé nasazení bez lepidla. Standard, LUXE, Platinum. Vlastní výroba Praha. Snadná aplikace doma.',
-    url: 'https://muzahair.cz/pricesky-a-paruky/clip-in-vlasy',
+    url: 'https://www.muzahair.cz/pricesky-a-paruky/clip-in-vlasy',
     locale: 'cs_CZ',
     type: 'website',
   },

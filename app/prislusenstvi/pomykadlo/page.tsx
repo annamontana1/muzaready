@@ -4,11 +4,11 @@ import PagePlaceholder from '@/components/PagePlaceholder';
 export const metadata: Metadata = {
   title: 'Pomykadlo pro keratin vlasy | Příslušenství | Mùza Hair Praha',
   description: 'Profesionální pomykadlo (keratinová kleště) pro aplikaci keratinových bondů. Správná teplota pro dlouhou trvanlivost. Mùza Hair Praha.',
-  alternates: { canonical: 'https://muzahair.cz/prislusenstvi/pomykadlo' },
+  alternates: { canonical: 'https://www.muzahair.cz/prislusenstvi/pomykadlo' },
   openGraph: {
     title: 'Pomykadlo pro keratin vlasy | Příslušenství | Mùza Hair Praha',
     description: 'Profesionální pomykadlo (keratinová kleště) pro aplikaci keratinových bondů. Správná teplota pro dlouhou trvanlivost. Mùza Hair Praha.',
-    url: 'https://muzahair.cz/prislusenstvi/pomykadlo',
+    url: 'https://www.muzahair.cz/prislusenstvi/pomykadlo',
     locale: 'cs_CZ',
     type: 'website',
   },

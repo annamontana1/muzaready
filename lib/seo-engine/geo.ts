@@ -161,7 +161,7 @@ export function generateGeoSeo(
       '@context': 'https://schema.org',
       '@type': 'HairSalon',
       name: 'Mùza Hair',
-      image: 'https://muzahair.cz/og-image.jpg',
+      image: 'https://www.muzahair.cz/og-image.jpg',
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Revoluční 8',
@@ -174,7 +174,7 @@ export function generateGeoSeo(
         latitude: 50.0912,
         longitude: 14.4302,
       },
-      url: 'https://muzahair.cz',
+      url: 'https://www.muzahair.cz',
       telephone: '+420728722880',
       priceRange: '$$',
       openingHoursSpecification: [
@@ -216,7 +216,7 @@ export function generateNearMeSchema(userLocation?: { lat: number; lng: number }
     name: 'Mùza Hair - Prodej vlasů a prodlužování',
     description:
       'Český výrobce pravých vlasů k prodloužení. Showroom Praha, dodání po celé ČR do 48h.',
-    image: 'https://muzahair.cz/og-image.jpg',
+    image: 'https://www.muzahair.cz/og-image.jpg',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Revoluční 8',
@@ -233,7 +233,7 @@ export function generateNearMeSchema(userLocation?: { lat: number; lng: number }
     hasMap: 'https://goo.gl/maps/muzahair',
     telephone: '+420728722880',
     email: 'muzahaircz@gmail.com',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     priceRange: '$$',
     currenciesAccepted: 'CZK, EUR',
     paymentAccepted: 'Cash, Credit Card, Bank Transfer',

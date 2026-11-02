@@ -2,9 +2,13 @@ import { MetadataRoute } from 'next';
 import { getCatalogProducts } from '@/lib/catalog-adapter';
 import { blogArticles } from '@/lib/blog-articles';
 import { MESTA } from '@/lib/mesta';
+import prisma from '@/lib/prisma';
+
+// Mapa webu se obnovuje každou hodinu (nové a prodané culíky)
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://muzahair.cz';
+  const baseUrl = 'https://www.muzahair.cz';
 
   // Static pages — pouze existující URL bez redirectů
   const staticPages: MetadataRoute.Sitemap = [
@@ -151,6 +155,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: Failed to fetch products from DB:', error);
   }
 
+  // Jednotlivé culíky v nabídce (detail /sku-detail/[id])
+  let skuPages: MetadataRoute.Sitemap = [];
+  try {
+    const skus = await prisma.sku.findMany({
+      where: { isListed: true, soldOut: false },
+      select: { id: true, updatedAt: true },
+    });
+    skuPages = skus.map((s) => ({
+      url: `${baseUrl}/sku-detail/${s.id}`,
+      lastModified: s.updatedAt,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error('Sitemap: Failed to fetch SKUs from DB:', error);
+  }
+
   // City product pages
   const cityPages: MetadataRoute.Sitemap = MESTA.map((m) => ({
     url: `${baseUrl}/vlasy/${m.slug}`,
@@ -167,5 +188,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...productPages, ...cityPages, ...blogPages];
+  return [...staticPages, ...productPages, ...skuPages, ...cityPages, ...blogPages];
 }

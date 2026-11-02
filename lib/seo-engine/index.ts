@@ -186,8 +186,8 @@ export function generateCompleteSEO(
     title,
     description,
     keywords: [...new Set(keywords)].slice(0, 15), // Unique, max 15
-    canonicalUrl: `https://muzahair.cz${slug}`,
-    ogImage: 'https://muzahair.cz/og-image.jpg',
+    canonicalUrl: `https://www.muzahair.cz${slug}`,
+    ogImage: 'https://www.muzahair.cz/og-image.jpg',
     structuredData,
     aieoContent,
     seasonal: {

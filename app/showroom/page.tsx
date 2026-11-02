@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Showroom Praha 1 | Výběr vlasů na objednání | Mùza Hair',
   description: 'Showroom Mùza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Ne 10–20, pouze na objednání.',
-  alternates: { canonical: 'https://muzahair.cz/showroom' },
+  alternates: { canonical: 'https://www.muzahair.cz/showroom' },
 };
 
 export default function ShowroomPage() {

@@ -61,7 +61,7 @@ export default function Home() {
     '@type': 'Store',
     name: 'Mùza Hair',
     description: 'Český výrobce pravých vlasů k prodloužení od roku 2016. Vlastní barvírna v Praze, showroom Praha 1.',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     telephone: '+420728722880',
     address: {
       '@type': 'PostalAddress',

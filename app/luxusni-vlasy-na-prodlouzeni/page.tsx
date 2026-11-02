@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Luxusní vlasy na prodloužení | LUXE & Platinum | Mùza Hair',
   description: 'Luxusní vlasy na prodloužení — certifikované panenské a slovanské vlasy z Evropy. LUXE a Platinum edition. Showroom Praha, dodání do 48 h. Od 6 900 Kč.',
-  alternates: { canonical: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni' },
+  alternates: { canonical: 'https://www.muzahair.cz/luxusni-vlasy-na-prodlouzeni' },
   keywords: [
     'luxusní vlasy na prodloužení',
     'prémiové vlasy na prodloužení Praha',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Luxusní Vlasy na Prodloužení | Mùza Hair Praha',
     description: 'Certifikované panenské a slovanské vlasy z Evropy. LUXE a Platinum edition. Showroom Praha.',
-    url: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/luxusni-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -29,20 +29,20 @@ export default function LuxusniVlasyPage() {
     '@type': 'ItemList',
     name: 'Luxusní vlasy na prodloužení — Mùza Hair Praha',
     description: 'Prémiové panenské a slovanské vlasy na prodloužení nejvyšší kvality.',
-    url: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/luxusni-vlasy-na-prodlouzeni',
     itemListElement: [
       {
         '@type': 'ListItem',
         position: 1,
         name: 'LUXE Panenské vlasy',
-        url: 'https://muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/luxe',
+        url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/luxe',
         description: 'Panenské vlasy LUXE kvality — chemicky neošetřené, od jednoho dárce.',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Platinum Slovanské vlasy',
-        url: 'https://muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition',
+        url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition',
         description: 'Nejvyšší kvalita — slovanské panenské vlasy z Ukrajiny, Polska a Rumunska.',
       },
     ],

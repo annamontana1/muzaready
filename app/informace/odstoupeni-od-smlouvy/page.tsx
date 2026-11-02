@@ -5,7 +5,7 @@ import PrintButton from '@/components/PrintButton';
 export const metadata: Metadata = {
   title: 'Formulář pro odstoupení od smlouvy | Mùza Hair',
   description: 'Formulář pro odstoupení od kupní smlouvy do 14 dnů od převzetí zboží. Vytiskněte, vyplňte a zašlete e-mailem nebo poštou.',
-  alternates: { canonical: 'https://muzahair.cz/informace/odstoupeni-od-smlouvy' },
+  alternates: { canonical: 'https://www.muzahair.cz/informace/odstoupeni-od-smlouvy' },
   robots: { index: true, follow: true },
 };
 

@@ -1,6 +1,6 @@
 // Register this webhook in Fakturoid:
 // App.fakturoid.cz → Nastavení → Webhooky → Přidat webhook
-// URL: https://muzahair.cz/api/webhooks/fakturoid
+// URL: https://www.muzahair.cz/api/webhooks/fakturoid
 // Events: invoice_paid, proforma_paid, invoice_overdue
 
 import { NextRequest, NextResponse } from 'next/server';

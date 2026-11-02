@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Jak nakupovat | Mùza Hair Praha',
   description: 'Průvodce nákupem vlasů k prodloužení v 5 krocích. Výběr kvality, odstínu, délky, gramáže a zakončení. Doprava Zásilkovna a DPD, platba kartou nebo převodem.',
-  alternates: { canonical: 'https://muzahair.cz/informace/jak-nakupovat' },
+  alternates: { canonical: 'https://www.muzahair.cz/informace/jak-nakupovat' },
 };
 
 const steps = [

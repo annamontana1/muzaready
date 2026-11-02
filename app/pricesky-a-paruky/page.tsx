@@ -4,11 +4,11 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Příčesky a paruky z pravých vlasů | Clip-in | Mùza Hair',
   description: 'Clip-in příčesky, ofiny, culíky a paruky na míru z pravých vlasů. Mùza Hair Praha — prémiová kvalita, vlastní výroba. Clip-in od 1 900 Kč.',
-  alternates: { canonical: 'https://muzahair.cz/pricesky-a-paruky' },
+  alternates: { canonical: 'https://www.muzahair.cz/pricesky-a-paruky' },
   openGraph: {
     title: 'Příčesky a paruky z pravých vlasů | Mùza Hair',
     description: 'Clip-in příčesky, ofiny, culíky a paruky na míru. Pravé vlasy, vlastní výroba Praha.',
-    url: 'https://muzahair.cz/pricesky-a-paruky',
+    url: 'https://www.muzahair.cz/pricesky-a-paruky',
     locale: 'cs_CZ',
     type: 'website',
   },

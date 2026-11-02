@@ -61,7 +61,7 @@ function faq(d: CityData) {
 }
 
 export function cityMetadata(d: CityData): Metadata {
-  const url = `https://muzahair.cz/${d.slug}`;
+  const url = `https://www.muzahair.cz/${d.slug}`;
   const description = `Prodloužení vlasů ${d.local ? d.city : `pro klientky ${d.from}`}: aplikace v našem partnerském salonu v Praze, pravé vlasy z vlastní barvírny. Přesná cena na osobní konzultaci.`;
   return {
     title: `Prodloužení vlasů ${d.city} | Pravé vlasy, keratin, nanotapes | Mùza Hair`,

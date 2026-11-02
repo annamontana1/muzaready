@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Náš příběh | Mùza Hair Praha',
   description: 'Více než 8 let pomáháme ženám cítit se krásně. Česká rodinná firma s vlastní barvírnou a showroomem v Praze.',
-  alternates: { canonical: 'https://muzahair.cz/informace/nas-pribeh' },
+  alternates: { canonical: 'https://www.muzahair.cz/informace/nas-pribeh' },
 };
 
 const timeline = [

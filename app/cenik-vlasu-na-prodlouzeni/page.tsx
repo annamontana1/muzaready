@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Ceník vlasů na prodloužení Praha 2026 | Mùza Hair',
   description: 'Ceník pravých vlasů na prodloužení Praha 2026. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Ceny závisí na délce (35–75 cm) a gramáži. Mùza Hair — výrobce vlasů Praha od 2016.',
-  alternates: { canonical: 'https://muzahair.cz/cenik-vlasu-na-prodlouzeni' },
+  alternates: { canonical: 'https://www.muzahair.cz/cenik-vlasu-na-prodlouzeni' },
   keywords: [
     'cena vlasů na prodloužení Praha',
     'kolik stojí pravé vlasy na prodloužení',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Ceník Vlasů na Prodloužení Praha 2026 | Mùza Hair',
     description: 'Přehledný ceník pravých vlasů na prodloužení. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Výrobce vlasů Praha od roku 2016.',
-    url: 'https://muzahair.cz/cenik-vlasu-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/cenik-vlasu-na-prodlouzeni',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -72,13 +72,13 @@ export default function CenikVlasuPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Domů',
-        item: 'https://muzahair.cz',
+        item: 'https://www.muzahair.cz',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Ceník vlasů na prodloužení',
-        item: 'https://muzahair.cz/cenik-vlasu-na-prodlouzeni',
+        item: 'https://www.muzahair.cz/cenik-vlasu-na-prodlouzeni',
       },
     ],
   };

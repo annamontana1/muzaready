@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cena prodloužení vlasů Praha 2025 — Keratin, Tape-In, Weft | Mùza Hair',
     description: 'Kompletní ceník prodloužení vlasů Praha. Ceny vlasů + aplikace. Keratin, nanotapes, weft. Vlastní barvírna Praha 1.',
-    url: 'https://muzahair.cz/cenik-prodlouzeni-vlasu-praha',
+    url: 'https://www.muzahair.cz/cenik-prodlouzeni-vlasu-praha',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://muzahair.cz/cenik-prodlouzeni-vlasu-praha',
+    canonical: 'https://www.muzahair.cz/cenik-prodlouzeni-vlasu-praha',
   },
 };
 
@@ -31,9 +31,9 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-      { '@type': 'ListItem', position: 2, name: 'Prodloužení vlasů Praha', item: 'https://muzahair.cz/prodlouzeni-vlasu-praha' },
-      { '@type': 'ListItem', position: 3, name: 'Cena prodloužení vlasů Praha', item: 'https://muzahair.cz/cenik-prodlouzeni-vlasu-praha' },
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Prodloužení vlasů Praha', item: 'https://www.muzahair.cz/prodlouzeni-vlasu-praha' },
+      { '@type': 'ListItem', position: 3, name: 'Cena prodloužení vlasů Praha', item: 'https://www.muzahair.cz/cenik-prodlouzeni-vlasu-praha' },
     ],
   },
   {

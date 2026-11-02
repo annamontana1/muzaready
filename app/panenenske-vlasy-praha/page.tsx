@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Panenské vlasy Praha | Virgin hair na prodloužení | Mùza Hair',
   description: 'Panenské vlasy Praha — chemicky neošetřené, od jednoho dárce, se zachovanou kutikulou. LUXE a Platinum edition. Showroom Praha, od 6 900 Kč.',
-  alternates: { canonical: 'https://muzahair.cz/panenenske-vlasy-praha' },
+  alternates: { canonical: 'https://www.muzahair.cz/panenenske-vlasy-praha' },
   keywords: [
     'panenské vlasy Praha',
     'panenské vlasy na prodloužení',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Panenské Vlasy na Prodloužení Praha | Mùza Hair',
     description: 'Chemicky neošetřené panenské vlasy od jednoho dárce se zachovanou kutikulou. LUXE a Platinum edition. Showroom Praha.',
-    url: 'https://muzahair.cz/panenenske-vlasy-praha',
+    url: 'https://www.muzahair.cz/panenenske-vlasy-praha',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -35,7 +35,7 @@ export default function PanenskéVlasyPrahaPage() {
       '@type': 'Brand',
       name: 'Mùza Hair',
     },
-    url: 'https://muzahair.cz/panenenske-vlasy-praha',
+    url: 'https://www.muzahair.cz/panenenske-vlasy-praha',
     offers: [
       {
         '@type': 'Offer',
@@ -43,7 +43,7 @@ export default function PanenskéVlasyPrahaPage() {
         price: '6900',
         priceValidUntil: '2026-12-31',
         availability: 'https://schema.org/InStock',
-        url: 'https://muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/luxe',
+        url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/luxe',
         name: 'Panenské vlasy LUXE',
       },
       {
@@ -52,7 +52,7 @@ export default function PanenskéVlasyPrahaPage() {
         price: '10900',
         priceValidUntil: '2026-12-31',
         availability: 'https://schema.org/InStock',
-        url: 'https://muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition',
+        url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition',
         name: 'Panenské vlasy Platinum (slovanské)',
       },
     ],
@@ -105,19 +105,19 @@ export default function PanenskéVlasyPrahaPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Domů',
-        item: 'https://muzahair.cz',
+        item: 'https://www.muzahair.cz',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Vlasy k prodloužení',
-        item: 'https://muzahair.cz/vlasy-k-prodlouzeni',
+        item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: 'Panenské vlasy Praha',
-        item: 'https://muzahair.cz/panenenske-vlasy-praha',
+        item: 'https://www.muzahair.cz/panenenske-vlasy-praha',
       },
     ],
   };

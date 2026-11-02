@@ -373,7 +373,7 @@ export const sendAdminOrderNotificationEmail = async (
                 </tbody>
               </table>
 
-              <p><strong>Akce:</strong> Přejdi do <a href="https://muzahair.cz/admin/objednavky/${orderId}" style="color: #8B1538; text-decoration: none;">admin panelu</a> pro více informací.</p>
+              <p><strong>Akce:</strong> Přejdi do <a href="https://www.muzahair.cz/admin/objednavky/${orderId}" style="color: #8B1538; text-decoration: none;">admin panelu</a> pro více informací.</p>
 
               <div class="footer">
                 <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
@@ -586,7 +586,7 @@ export const sendPaymentReminderEmail = async (
               <p>Pro dokončení objednávky prosím dokončete platbu. Pokud jste již zaplatili, tento email můžete ignorovat.</p>
 
               <p style="text-align: center;">
-                <a href="https://muzahair.cz/sledovani-objednavky" class="button">Sledovat objednávku</a>
+                <a href="https://www.muzahair.cz/sledovani-objednavky" class="button">Sledovat objednávku</a>
               </p>
 
               <p>Pokud máte jakékoliv dotazy, kontaktujte nás prosím na <strong>muzahaircz@gmail.com</strong>.</p>
@@ -687,7 +687,7 @@ export const sendInvoiceEmail = async (
                 <strong>Mùza Hair s.r.o.</strong><br>
                 Revoluční 8, Praha<br>
                 Tel: +420 728 722 880 | Email: muzahaircz@gmail.com<br>
-                <a href="https://muzahair.cz" style="color: #3a2020;">www.muzahair.cz</a>
+                <a href="https://www.muzahair.cz" style="color: #3a2020;">www.muzahair.cz</a>
               </p>
             </div>
           </div>

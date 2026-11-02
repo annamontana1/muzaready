@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Vlasy k prodloužení ${mesto.name} — keratinové pramínky, nanotapes, tresy | Mùza Hair`,
     description: `Vlasy k prodloužení ${mesto.inCity} — objednávka online, doprava do ${mesto.name}. Keratinové pramínky, vlasové pásky nanotapes, vlasové tresy weft. Pravé vlasy, výroba Praha.`,
-    alternates: { canonical: `https://muzahair.cz/vlasy/${mesto.slug}` },
+    alternates: { canonical: `https://www.muzahair.cz/vlasy/${mesto.slug}` },
     keywords: [
       `vlasy k prodloužení ${mesto.name}`,
       `vlasové pásky ${mesto.name}`,
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `Vlasy k prodloužení ${mesto.name} | Mùza Hair`,
       description: `Keratinové pramínky, nanotapes, vlasové tresy — objednávka online, doprava do ${mesto.name}. Pravé vlasy od českého výrobce.`,
-      url: `https://muzahair.cz/vlasy/${mesto.slug}`,
+      url: `https://www.muzahair.cz/vlasy/${mesto.slug}`,
       siteName: 'Mùza Hair',
       locale: 'cs_CZ',
       type: 'website',
@@ -50,9 +50,9 @@ export default function MestoPage({ params }: Props) {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-        { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://muzahair.cz/vlasy-k-prodlouzeni' },
-        { '@type': 'ListItem', position: 3, name: mesto.name, item: `https://muzahair.cz/vlasy/${mesto.slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+        { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni' },
+        { '@type': 'ListItem', position: 3, name: mesto.name, item: `https://www.muzahair.cz/vlasy/${mesto.slug}` },
       ],
     },
     {
@@ -102,19 +102,19 @@ export default function MestoPage({ params }: Props) {
           '@type': 'ListItem',
           position: 1,
           name: 'Keratinové pramínky',
-          url: 'https://muzahair.cz/vlasy-k-prodlouzeni',
+          url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni',
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Vlasové pásky Nanotapes / Tape-In',
-          url: 'https://muzahair.cz/metody-zakonceni/vlasove-pasky-tape-in',
+          url: 'https://www.muzahair.cz/metody-zakonceni/vlasove-pasky-tape-in',
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: 'Vlasové tresy Weft',
-          url: 'https://muzahair.cz/metody-zakonceni/vlasove-tresy',
+          url: 'https://www.muzahair.cz/metody-zakonceni/vlasove-tresy',
         },
       ],
     },

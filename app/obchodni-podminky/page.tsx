@@ -20,7 +20,7 @@ export default function ObchodniPodminkyPage() {
         <p>Showroom: [Adresa showroomu], Praha</p>
         <p>E-mail: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
         <p>Telefon: <a href="tel:+420728722880" className="text-burgundy underline">+420 728 722 880</a></p>
-        <p>Web: <a href="https://muzahair.cz" className="text-burgundy underline">muzahair.cz</a></p>
+        <p>Web: <a href="https://www.muzahair.cz" className="text-burgundy underline">muzahair.cz</a></p>
       </div>
 
       {/* Obsah */}

@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Dodavatel vlasů pro salony Praha — B2B Mùza Hair',
     description: 'Velkoobchodní ceny na prémiové slovanské vlasy. Praha sklad, vlastní barvírna, partnerský program pro kadeřnice a extension technicians.',
-    url: 'https://muzahair.cz/dodavatel-vlasu-pro-salony',
+    url: 'https://www.muzahair.cz/dodavatel-vlasu-pro-salony',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://muzahair.cz/dodavatel-vlasu-pro-salony',
+    canonical: 'https://www.muzahair.cz/dodavatel-vlasu-pro-salony',
   },
 };
 
@@ -35,16 +35,16 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-      { '@type': 'ListItem', position: 2, name: 'Dodavatel vlasů pro salony', item: 'https://muzahair.cz/dodavatel-vlasu-pro-salony' },
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Dodavatel vlasů pro salony', item: 'https://www.muzahair.cz/dodavatel-vlasu-pro-salony' },
     ],
   },
   {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': 'https://muzahair.cz/#organization',
+    '@id': 'https://www.muzahair.cz/#organization',
     name: 'Mùza Hair',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     description: 'Prémiový dodavatel vlasů na prodloužení pro kadeřnické salony a extension technicians v České republice. Praha sklad, vlastní barvírna, slovanské panenské vlasy.',
     address: {
       '@type': 'PostalAddress',

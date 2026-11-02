@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Platba a vrácení | Mùza Hair Praha',
   description: 'Způsoby platby, doprava a podmínky vrácení zboží. Zásilkovna 89 Kč, DPD 68 Kč, osobní odběr Praha zdarma.',
-  alternates: { canonical: 'https://muzahair.cz/informace/platba-a-vraceni' },
+  alternates: { canonical: 'https://www.muzahair.cz/informace/platba-a-vraceni' },
 };
 
 export default function PlatbaAVraceniPage() {

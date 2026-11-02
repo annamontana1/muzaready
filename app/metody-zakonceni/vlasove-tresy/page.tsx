@@ -5,7 +5,7 @@ import WeftInfoBanner from '@/components/WeftInfoBanner';
 export const metadata: Metadata = {
   title: 'Vlasové tresy (Weft) | Ručně šité | Mùza Hair Praha',
   description: 'Ručně šité vlasové tresy z panenských, středoevropských a dětských vlasů. Hollywoodské prodloužení přišíváním na copánky. Výroba 14 dní, platba 100 %. Praha.',
-  alternates: { canonical: 'https://muzahair.cz/metody-zakonceni/vlasove-tresy' },
+  alternates: { canonical: 'https://www.muzahair.cz/metody-zakonceni/vlasove-tresy' },
   openGraph: {
     title: 'Vlasové tresy (Weft) | Mùza Hair Praha',
     description: 'Ručně šité vlasové tresy z panenských, středoevropských a dětských vlasů. Hollywoodské prodloužení. Výroba 14 dní.',

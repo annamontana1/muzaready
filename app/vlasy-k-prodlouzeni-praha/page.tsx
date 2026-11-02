@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Vlasy k prodloužení Praha | Showroom & e-shop | Mùza Hair',
   description: 'Vlasy k prodloužení Praha — prémiový showroom, keratin, tape-in, weft/tresy. Osobní konzultace, dodání 48 h po celé ČR. Ceny od 3 900 Kč.',
-  alternates: { canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni-praha' },
+  alternates: { canonical: 'https://www.muzahair.cz/vlasy-k-prodlouzeni-praha' },
   keywords: [
     'vlasy k prodloužení Praha',
     'prodlužování vlasů Praha',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Vlasy k Prodloužení Praha | Showroom & E-shop | Mùza Hair',
     description: 'Jediný prémiový showroom s pravými vlasy k prodloužení v Praze. Panenské, slovanské a evropské vlasy. Keratin, tape-in, weft/tresy.',
-    url: 'https://muzahair.cz/vlasy-k-prodlouzeni-praha',
+    url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni-praha',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -31,7 +31,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
     '@type': 'LocalBusiness',
     name: 'Mùza Hair Praha — Showroom vlasy k prodloužení',
     description: 'Prémiový showroom s pravými vlasy k prodloužení v Praze. Panenské, slovanské a evropské vlasy. Keratin, tape-in, weft/tresy. Na trhu od roku 2016.',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     telephone: '+420',
     address: {
       '@type': 'PostalAddress',
@@ -56,8 +56,8 @@ export default function VlasyKProdlouzeniPrahaPage() {
     ],
     hasMap: 'https://maps.google.com/?q=Praha',
     priceRange: '3 900 Kč – 12 000 Kč',
-    image: 'https://muzahair.cz/og-image.jpg',
-    sameAs: ['https://muzahair.cz'],
+    image: 'https://www.muzahair.cz/og-image.jpg',
+    sameAs: ['https://www.muzahair.cz'],
   };
 
   const breadcrumbJsonLd = {
@@ -68,13 +68,13 @@ export default function VlasyKProdlouzeniPrahaPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Domů',
-        item: 'https://muzahair.cz',
+        item: 'https://www.muzahair.cz',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Vlasy k prodloužení Praha',
-        item: 'https://muzahair.cz/vlasy-k-prodlouzeni-praha',
+        item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni-praha',
       },
     ],
   };

@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Luxusní vlasy na prodloužení — kolekce LUXE | Mùza Hair Praha',
     description: 'Prémiové panenské slovanské vlasy na prodloužení. Vlastní barvírna, showroom Praha 1. Keratin, tape in, weft. Konzultace zdarma.',
-    url: 'https://muzahair.cz/vlasy-k-prodlouzeni/luxe',
+    url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/luxe',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni/luxe',
+    canonical: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/luxe',
   },
 };
 
@@ -39,9 +39,9 @@ export default function LuxeLayout({ children }: { children: React.ReactNode }) 
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-      { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://muzahair.cz/vlasy-k-prodlouzeni' },
-      { '@type': 'ListItem', position: 3, name: 'LUXE vlasy', item: 'https://muzahair.cz/vlasy-k-prodlouzeni/luxe' },
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni' },
+      { '@type': 'ListItem', position: 3, name: 'LUXE vlasy', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/luxe' },
     ],
   };
   return (

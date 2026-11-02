@@ -222,15 +222,15 @@ export function generateEntityMarkup() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': 'https://muzahair.cz/#organization',
+    '@id': 'https://www.muzahair.cz/#organization',
     name: 'Mùza Hair',
     alternateName: ['Muza Hair', 'Mùza Hair', 'Mùza Hair Praha'],
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://muzahair.cz/logo.png',
+      url: 'https://www.muzahair.cz/logo.png',
     },
-    image: 'https://muzahair.cz/og-image.jpg',
+    image: 'https://www.muzahair.cz/og-image.jpg',
     description:
       'Český výrobce a prodejce pravých vlasů k prodloužení. Showroom Praha, vlastní barvírna, dodání 48h.',
     foundingDate: '2016',

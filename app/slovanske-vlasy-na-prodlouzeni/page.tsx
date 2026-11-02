@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Slovanské vlasy na prodloužení Praha | Mùza Hair',
   description: 'Slovanské vlasy na prodloužení — certifikovaný původ z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín. Showroom Praha, dodání do 48 h. Platinum edition od 10 900 Kč.',
-  alternates: { canonical: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni' },
+  alternates: { canonical: 'https://www.muzahair.cz/slovanske-vlasy-na-prodlouzeni' },
   keywords: [
     'slovanské vlasy na prodloužení',
     'slovanské vlasy Praha',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Slovanské Vlasy na Prodloužení | Mùza Hair Praha',
     description: 'Certifikovaný původ z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín. Platinum edition.',
-    url: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/slovanske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -34,7 +34,7 @@ export default function SlovanskevlasyPage() {
       '@type': 'Brand',
       name: 'Mùza Hair',
     },
-    url: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/slovanske-vlasy-na-prodlouzeni',
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'CZK',

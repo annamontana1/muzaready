@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description:
       'Kompletní průvodce jak poznat nejkvalitnější vlasy na prodloužení. 5 klíčových kritérií, srovnání tříd kvality a rady od expertů z Prahy.',
     type: 'article',
-    url: 'https://muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
     publishedTime: '2026-01-15T09:00:00+01:00',
     modifiedTime: '2026-04-19T10:00:00+02:00',
     authors: ['Mùza Hair'],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
       'Kompletní průvodce jak poznat nejkvalitnější vlasy na prodloužení. Panenské vlasy Praha, 5 kritérií kvality.',
   },
   alternates: {
-    canonical: 'https://muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
+    canonical: 'https://www.muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
   },
 };
 
@@ -49,25 +49,25 @@ const articleSchema = {
   headline: 'Jak poznat nejkvalitnější vlasy na prodloužení — kompletní průvodce 2026',
   description:
     'Kompletní průvodce jak poznat nejkvalitnější vlasy na prodloužení v roce 2026. Panenské vlasy Praha, certifikát původu, srovnání kvality Standard vs LUXE vs Platinum.',
-  image: 'https://muzahair.cz/og-image.jpg',
+  image: 'https://www.muzahair.cz/og-image.jpg',
   datePublished: '2026-01-15T09:00:00+01:00',
   dateModified: '2026-04-19T10:00:00+02:00',
   author: {
     '@type': 'Organization',
     name: 'Mùza Hair',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
   },
   publisher: {
     '@type': 'Organization',
     name: 'Mùza Hair',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://muzahair.cz/logo.png',
+      url: 'https://www.muzahair.cz/logo.png',
     },
   },
   mainEntityOfPage: {
     '@type': 'WebPage',
-    '@id': 'https://muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
+    '@id': 'https://www.muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
   },
   keywords:
     'nejkvalitnější vlasy na prodloužení, panenské vlasy Praha, certifikované vlasy na prodloužení, slovanské vlasy, kvalita vlasů',
@@ -124,11 +124,11 @@ const faqSchema = {
 };
 
 const breadcrumbItems = [
-  { name: 'Domů', url: 'https://muzahair.cz' },
-  { name: 'Blog', url: 'https://muzahair.cz/blog' },
+  { name: 'Domů', url: 'https://www.muzahair.cz' },
+  { name: 'Blog', url: 'https://www.muzahair.cz/blog' },
   {
     name: 'Nejkvalitnější vlasy na prodloužení',
-    url: 'https://muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
   },
 ];
 

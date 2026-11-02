@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     // TODO: Send email with reset link
     // For now, log the reset URL (in production, this should send an email)
-    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://muzahair.cz'}/reset-hesla?token=${token}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.muzahair.cz'}/reset-hesla?token=${token}`;
     console.log(`Password reset link for ${email}: ${resetUrl}`);
 
     // In production, you would use a service like Resend, SendGrid, or Mailgun

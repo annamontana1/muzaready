@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'České vlasy na prodloužení | Výrobce Praha | Mùza Hair',
   description: 'Mùza Hair — český výrobce vlasů na prodloužení od roku 2016. Vlastní barvírna v Praze, panenské a slovanské vlasy, keratin i pásky. Showroom Praha, dodání do 48 h.',
-  alternates: { canonical: 'https://muzahair.cz/ceske-vlasy-na-prodlouzeni' },
+  alternates: { canonical: 'https://www.muzahair.cz/ceske-vlasy-na-prodlouzeni' },
   keywords: [
     'české vlasy na prodloužení',
     'český výrobce vlasů',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'České Vlasy na Prodloužení | Mùza Hair Praha',
     description: 'Český výrobce vlasů na prodloužení od roku 2016. Vlastní barvírna Praha, panenské a slovanské vlasy.',
-    url: 'https://muzahair.cz/ceske-vlasy-na-prodlouzeni',
+    url: 'https://www.muzahair.cz/ceske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -29,7 +29,7 @@ export default function CeskeVlasyPage() {
     '@type': 'LocalBusiness',
     name: 'Mùza Hair Praha',
     description: 'Český výrobce pravých vlasů na prodloužení od roku 2016. Vlastní barvírna v Praze.',
-    url: 'https://muzahair.cz',
+    url: 'https://www.muzahair.cz',
     foundingDate: '2016',
     address: {
       '@type': 'PostalAddress',

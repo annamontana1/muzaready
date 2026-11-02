@@ -3,11 +3,11 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Ceník vlasů na prodloužení 2025 | Mùza Hair Praha',
   description: 'Ceník vlasů na prodloužení Mùza Hair. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Ceny keratinu, nanotapes a weft aplikací.',
-  alternates: { canonical: 'https://muzahair.cz/cenik' },
+  alternates: { canonical: 'https://www.muzahair.cz/cenik' },
   openGraph: {
     title: 'Ceník vlasů na prodloužení | Mùza Hair',
     description: 'Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Ceny aplikací keratinu a nanotapes.',
-    url: 'https://muzahair.cz/cenik',
+    url: 'https://www.muzahair.cz/cenik',
     locale: 'cs_CZ',
     type: 'website',
   },

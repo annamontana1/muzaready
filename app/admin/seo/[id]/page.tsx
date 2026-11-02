@@ -34,7 +34,7 @@ function SerpPreview({ title, description, url }: { title: string; description: 
         {truncatedTitle || 'Název stránky'}
       </div>
       <div className="text-sm text-[#006621] mb-1">
-        https://muzahair.cz{url}
+        https://www.muzahair.cz{url}
       </div>
       <div className="text-sm text-[#545454]">
         {truncatedDesc || 'Popis stránky se zobrazí zde...'}
@@ -373,7 +373,7 @@ export default function AdminSeoEditPage() {
                 type="text"
                 value={formData.ogImageUrl || ''}
                 onChange={(e) => handleChange('ogImageUrl', e.target.value)}
-                placeholder="https://muzahair.cz/og-image.jpg"
+                placeholder="https://www.muzahair.cz/og-image.jpg"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy focus:border-transparent"
               />
             </div>
@@ -407,7 +407,7 @@ export default function AdminSeoEditPage() {
                 type="text"
                 value={formData.canonicalUrl || ''}
                 onChange={(e) => handleChange('canonicalUrl', e.target.value)}
-                placeholder="https://muzahair.cz/o-nas"
+                placeholder="https://www.muzahair.cz/o-nas"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy focus:border-transparent"
               />
               <p className="text-xs text-gray-500 mt-1">

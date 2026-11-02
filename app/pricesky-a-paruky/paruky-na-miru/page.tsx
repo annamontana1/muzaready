@@ -4,11 +4,11 @@ import PagePlaceholder from '@/components/PagePlaceholder';
 export const metadata: Metadata = {
   title: 'Paruky na míru z pravých vlasů | Mùza Hair Praha',
   description: 'Paruky na míru z pravých slovanských vlasů. Individuální výroba v Praze — délka, hustota, cap size. Konzultace zdarma.',
-  alternates: { canonical: 'https://muzahair.cz/pricesky-a-paruky/paruky-na-miru' },
+  alternates: { canonical: 'https://www.muzahair.cz/pricesky-a-paruky/paruky-na-miru' },
   openGraph: {
     title: 'Paruky na míru z pravých vlasů | Mùza Hair Praha',
     description: 'Paruky na míru z pravých slovanských vlasů. Individuální výroba v Praze — délka, hustota, cap size. Konzultace zdarma.',
-    url: 'https://muzahair.cz/pricesky-a-paruky/paruky-na-miru',
+    url: 'https://www.muzahair.cz/pricesky-a-paruky/paruky-na-miru',
     locale: 'cs_CZ',
     type: 'website',
   },

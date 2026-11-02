@@ -4,11 +4,11 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Příslušenství k prodloužení vlasů | Keratin, Hřebeny | Mùza Hair',
   description: 'Příslušenství pro prodloužení a péči o vlasy — keratin, speciální hřebeny, kosmetika. Vše pro správnou péči o prodloužené vlasy. Mùza Hair Praha.',
-  alternates: { canonical: 'https://muzahair.cz/prislusenstvi' },
+  alternates: { canonical: 'https://www.muzahair.cz/prislusenstvi' },
   openGraph: {
     title: 'Příslušenství k prodloužení vlasů | Keratin, Hřebeny | Mùza Hair',
     description: 'Příslušenství pro prodloužení a péči o vlasy — keratin, speciální hřebeny, kosmetika. Vše pro správnou péči o prodloužené vlasy. Mùza Hair Praha.',
-    url: 'https://muzahair.cz/prislusenstvi',
+    url: 'https://www.muzahair.cz/prislusenstvi',
     locale: 'cs_CZ',
     type: 'website',
   },

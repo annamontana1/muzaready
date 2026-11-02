@@ -5,11 +5,11 @@ import { MESTA } from '@/lib/mesta';
 export const metadata: Metadata = {
   title: 'Vlasy k prodloužení — doručení po celé ČR | Mùza Hair',
   description: 'Vlasy k prodloužení s doručením po celé České republice. Keratinové pramínky, vlasové pásky nanotapes, vlasové tresy weft. Objednávka online, doprava do 2 pracovních dní.',
-  alternates: { canonical: 'https://muzahair.cz/vlasy' },
+  alternates: { canonical: 'https://www.muzahair.cz/vlasy' },
   openGraph: {
     title: 'Vlasy k prodloužení — doručení po celé ČR | Mùza Hair',
     description: 'Keratinové pramínky, nanotapes, vlasové tresy — objednávka online s doručením do celé ČR.',
-    url: 'https://muzahair.cz/vlasy',
+    url: 'https://www.muzahair.cz/vlasy',
     siteName: 'Mùza Hair',
     locale: 'cs_CZ',
     type: 'website',

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'Vlasové pásky Tape-In Praha | Mùza Hair',
     description:
       'Prémiové vlasové pásky tape-in z pravých vlasů — Standard, Luxe, Platinum. Kudrnaté pásky jako unikát na CZ trhu. Výroba na zakázku za 14 dní. Showroom Praha.',
-    url: 'https://muzahair.cz/metody-zakonceni/vlasove-pasky-tape-in',
+    url: 'https://www.muzahair.cz/metody-zakonceni/vlasove-pasky-tape-in',
   },
 };
 

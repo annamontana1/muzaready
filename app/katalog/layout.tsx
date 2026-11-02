@@ -3,11 +3,11 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Katalog vlasů na prodloužení | Všechny produkty | Mùza Hair',
   description: 'Kompletní katalog vlasů na prodloužení Mùza Hair — Standard, LUXE, Platinum. Nebarvené i barvené vlasy, příčesky, paruky. Showroom Praha.',
-  alternates: { canonical: 'https://muzahair.cz/katalog' },
+  alternates: { canonical: 'https://www.muzahair.cz/katalog' },
   openGraph: {
     title: 'Katalog vlasů na prodloužení | Všechny produkty | Mùza Hair',
     description: 'Kompletní katalog vlasů na prodloužení Mùza Hair — Standard, LUXE, Platinum. Nebarvené i barvené vlasy, příčesky, paruky. Showroom Praha.',
-    url: 'https://muzahair.cz/katalog',
+    url: 'https://www.muzahair.cz/katalog',
     locale: 'cs_CZ',
     type: 'website',
   },

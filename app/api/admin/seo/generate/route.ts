@@ -13,7 +13,7 @@ import {
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const SITE_URL = 'https://muzahair.cz';
+const SITE_URL = 'https://www.muzahair.cz';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 // Fetch and extract text content from a page

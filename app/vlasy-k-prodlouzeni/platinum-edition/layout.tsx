@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Platinum Edition — Exkluzivní vlasy na prodloužení | Mùza Hair Praha',
     description: 'Nejvyšší kvalita panenských vlasů. Vlastní barvírna, showroom Praha 1.',
-    url: 'https://muzahair.cz/vlasy-k-prodlouzeni/platinum-edition',
+    url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/platinum-edition',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni/platinum-edition',
+    canonical: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/platinum-edition',
   },
 };
 
@@ -27,9 +27,9 @@ export default function PlatinumLayout({ children }: { children: React.ReactNode
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-      { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://muzahair.cz/vlasy-k-prodlouzeni' },
-      { '@type': 'ListItem', position: 3, name: 'Platinum Edition', item: 'https://muzahair.cz/vlasy-k-prodlouzeni/platinum-edition' },
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni' },
+      { '@type': 'ListItem', position: 3, name: 'Platinum Edition', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/platinum-edition' },
     ],
   };
   return (

@@ -4,11 +4,11 @@ import PagePlaceholder from '@/components/PagePlaceholder';
 export const metadata: Metadata = {
   title: 'Pravé paruky z lidských vlasů | Mùza Hair Praha',
   description: 'Pravé paruky z lidských vlasů — přirozený vzhled, pohodlné nošení. Vlastní výroba Mùza Hair Praha. Možnost barvení a tvarování.',
-  alternates: { canonical: 'https://muzahair.cz/pricesky-a-paruky/prave-paruky' },
+  alternates: { canonical: 'https://www.muzahair.cz/pricesky-a-paruky/prave-paruky' },
   openGraph: {
     title: 'Pravé paruky z lidských vlasů | Mùza Hair Praha',
     description: 'Pravé paruky z lidských vlasů — přirozený vzhled, pohodlné nošení. Vlastní výroba Mùza Hair Praha. Možnost barvení a tvarování.',
-    url: 'https://muzahair.cz/pricesky-a-paruky/prave-paruky',
+    url: 'https://www.muzahair.cz/pricesky-a-paruky/prave-paruky',
     locale: 'cs_CZ',
     type: 'website',
   },

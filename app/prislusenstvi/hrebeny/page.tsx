@@ -4,11 +4,11 @@ import PagePlaceholder from '@/components/PagePlaceholder';
 export const metadata: Metadata = {
   title: 'Hřebeny pro prodloužené vlasy | Speciální péče | Mùza Hair',
   description: 'Speciální hřebeny pro prodloužené vlasy — šetrné rozčesávání bez poškození bondů. Mùza Hair Praha.',
-  alternates: { canonical: 'https://muzahair.cz/prislusenstvi/hrebeny' },
+  alternates: { canonical: 'https://www.muzahair.cz/prislusenstvi/hrebeny' },
   openGraph: {
     title: 'Hřebeny pro prodloužené vlasy | Speciální péče | Mùza Hair',
     description: 'Speciální hřebeny pro prodloužené vlasy — šetrné rozčesávání bez poškození bondů. Mùza Hair Praha.',
-    url: 'https://muzahair.cz/prislusenstvi/hrebeny',
+    url: 'https://www.muzahair.cz/prislusenstvi/hrebeny',
     locale: 'cs_CZ',
     type: 'website',
   },

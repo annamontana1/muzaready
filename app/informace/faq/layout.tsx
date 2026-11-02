@@ -3,11 +3,11 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Časté otázky o prodloužení vlasů | FAQ | Mùza Hair Praha',
   description: 'Odpovědi na nejčastější otázky o prodloužení vlasů — keratin, nanotapes, weft, péče, trvanlivost, ceny. Mùza Hair Praha.',
-  alternates: { canonical: 'https://muzahair.cz/informace/faq' },
+  alternates: { canonical: 'https://www.muzahair.cz/informace/faq' },
   openGraph: {
     title: 'Časté otázky o prodloužení vlasů | FAQ | Mùza Hair Praha',
     description: 'Odpovědi na nejčastější otázky o prodloužení vlasů — keratin, nanotapes, weft, péče, trvanlivost, ceny. Mùza Hair Praha.',
-    url: 'https://muzahair.cz/informace/faq',
+    url: 'https://www.muzahair.cz/informace/faq',
     locale: 'cs_CZ',
     type: 'website',
   },

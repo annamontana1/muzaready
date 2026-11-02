@@ -24,11 +24,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Vlasy na prodloužení Praha — Standard kolekce | Mùza Hair',
     description: 'Kvalitní pravé vlasy k prodloužení. Vlastní barvírna, showroom Praha 1. Keratin, tape in, weft.',
-    url: 'https://muzahair.cz/vlasy-k-prodlouzeni/standard',
+    url: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/standard',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni/standard',
+    canonical: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/standard',
   },
 };
 
@@ -37,9 +37,9 @@ export default function StandardLayout({ children }: { children: React.ReactNode
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://muzahair.cz' },
-      { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://muzahair.cz/vlasy-k-prodlouzeni' },
-      { '@type': 'ListItem', position: 3, name: 'Standard vlasy', item: 'https://muzahair.cz/vlasy-k-prodlouzeni/standard' },
+      { '@type': 'ListItem', position: 1, name: 'Domů', item: 'https://www.muzahair.cz' },
+      { '@type': 'ListItem', position: 2, name: 'Vlasy k prodloužení', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni' },
+      { '@type': 'ListItem', position: 3, name: 'Standard vlasy', item: 'https://www.muzahair.cz/vlasy-k-prodlouzeni/standard' },
     ],
   };
   return (
