@@ -43,7 +43,10 @@ async function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promis
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext('2d');
+  // Fotky z iPhonu jsou v širším barevném prostoru Display P3; plátno ve stejném prostoru
+  // zachová barvy a teplotu (výchozí sRGB plátno je při převodu posouvá). Starší prohlížeče použijí sRGB.
+  const ctx = (canvas.getContext('2d', { colorSpace: 'display-p3' } as CanvasRenderingContext2DSettings) ||
+    canvas.getContext('2d')) as CanvasRenderingContext2D | null;
   if (!ctx) throw new Error('Canvas není podporován');
   ctx.drawImage(img, 0, 0, width, height);
 
