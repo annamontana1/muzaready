@@ -147,7 +147,7 @@ export default function KontaktPage() {
           <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Revoluční 8, Praha</h2>
           <div className="mt-6 relative w-full aspect-[4/3] md:aspect-[16/7] bg-muza-mocha rounded-2xl overflow-hidden">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2559.8!2d14.4285!3d50.0908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94f7a8c17c5d%3A0x0!2sRevolu%C4%8Dn%C3%AD+8%2C+110+00+Praha+1!5e0!3m2!1scs!2scz!4v1"
+              src="https://www.google.com/maps?q=Revolu%C4%8Dn%C3%AD+8,+110+00+Praha+1&hl=cs&z=16&output=embed"
               className="absolute inset-0 h-full w-full border-0"
               allowFullScreen
               loading="lazy"
