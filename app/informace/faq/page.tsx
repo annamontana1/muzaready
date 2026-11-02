@@ -742,12 +742,6 @@ Prodloužení samotné neděláme v showroomu, ale v našem **partnerském salon
 - Vyzkoušíte si vzorky
 - Doporučíme vám přesně, co potřebujete
 
-**Pro kadeřnice:**
-Nabízíme **profesionální školení** aplikace vlasů:
-- Kurz: 2 hodiny
-- Cena: 1 500 Kč (nebo ZDARMA při nákupu nad 10k)
-- Certifikát po absolvování
-
 **Všechny konzultace jsou NEZÁVAZNÉ** - nemusíte nic kupovat!`
   },
   {
