@@ -58,7 +58,7 @@ export default function PieceAbout({ lengthCm, grams, endingId, endingLabel, isD
     });
   }
   if (shade || shadeName) {
-    rows.push({ k: `Odstín${shade ? ` ${shade}` : ''}`, v: [shadeName, structure].filter(Boolean).join(', ') || '—' });
+    rows.push({ k: `Odstín${shade ? ` ${shade}` : ''}`, v: shadeName || '—' });
   }
   if (ENDING_TEXT[endingId]) rows.push({ k: endingLabel, v: ENDING_TEXT[endingId] });
 

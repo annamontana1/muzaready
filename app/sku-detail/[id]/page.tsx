@@ -439,7 +439,6 @@ export default function SkuDetailPage() {
                 {[
                   categoryText ? { k: 'Kategorie', v: <>{categoryText}</> } : null,
                   sku.shade || sku.shadeName ? { k: 'Odstín', v: <>{sku.shade ? <b className="font-semibold">{sku.shade}</b> : null}{sku.shade && sku.shadeName ? ' · ' : ''}{sku.shadeName}</> } : null,
-                  sku.structure ? { k: 'Struktura', v: <>{sku.structure}</> } : null,
                 ].filter((r): r is { k: string; v: JSX.Element } => r !== null).map((r) => (
                   <div key={r.k} className="flex items-center justify-between gap-3 py-3 border-t border-muza-line last:border-b">
                     <dt className="text-sm font-normal text-[#45302F]">{r.k}</dt>

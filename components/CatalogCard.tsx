@@ -187,22 +187,13 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
             {/* Hair info overlay */}
             <div className="relative z-10 text-center">
               <div className="text-white/90 text-sm font-medium mb-1">
-                {props.structure || 'Vlasy'}
+                Vlasy
               </div>
               {props.lengthCm && (
                 <div className="text-white/70 text-xs">{props.lengthCm} cm</div>
               )}
             </div>
           </div>
-
-          {/* Struktura label pod fotkou */}
-          {props.structure && (
-            <div className="absolute bottom-2 left-2 right-2 text-center">
-              <span className="px-2 py-1 bg-white/90 text-text-dark text-xs font-medium rounded">
-                Struktura: {props.structure}
-              </span>
-            </div>
-          )}
 
             {/* Favorite Button */}
             <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>

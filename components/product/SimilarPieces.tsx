@@ -64,7 +64,7 @@ export default function SimilarPieces({ id, shade, isDyed, tierLabel }: Props) {
                     </span>
                   </span>
                   <span className="mt-1.5 block text-sm font-normal text-text-dark">{pieceTitle({ id: x.id, shade: x.shade, name: x.name })}</span>
-                  <span className="block text-xs text-[#45302F]">{[x.tier, x.structure].filter(Boolean).join(' · ') || `odstín ${x.shade}`}</span>
+                  <span className="block text-xs text-[#45302F]">{[x.tier].filter(Boolean).join(' · ') || `odstín ${x.shade}`}</span>
                 </Link>
               </li>
             ))}
