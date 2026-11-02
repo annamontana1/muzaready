@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!mesto) return {};
 
   return {
-    title: `Vlasy k prodloužení ${mesto.name} — keratinové pramínky, nanotapes, tresy | Múza Hair`,
+    title: `Vlasy k prodloužení ${mesto.name} — keratinové pramínky, nanotapes, tresy | Mùza Hair`,
     description: `Vlasy k prodloužení ${mesto.inCity} — objednávka online, doprava do ${mesto.name}. Keratinové pramínky, vlasové pásky nanotapes, vlasové tresy weft. Pravé vlasy, výroba Praha.`,
     alternates: { canonical: `https://muzahair.cz/vlasy/${mesto.slug}` },
     keywords: [
@@ -31,10 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `vlasy na prodloužení ${mesto.name} koupit`,
     ],
     openGraph: {
-      title: `Vlasy k prodloužení ${mesto.name} | Múza Hair`,
+      title: `Vlasy k prodloužení ${mesto.name} | Mùza Hair`,
       description: `Keratinové pramínky, nanotapes, vlasové tresy — objednávka online, doprava do ${mesto.name}. Pravé vlasy od českého výrobce.`,
       url: `https://muzahair.cz/vlasy/${mesto.slug}`,
-      siteName: 'Múza Hair',
+      siteName: 'Mùza Hair',
       locale: 'cs_CZ',
       type: 'website',
     },
@@ -80,7 +80,7 @@ export default function MestoPage({ params }: Props) {
           name: `Kolik stojí vlasové tresy ${mesto.inCity}?`,
           acceptedAnswer: {
             '@type': 'Answer',
-            text: `Vlasové tresy (weft) na zakázku doručíme do ${mesto.name}. Výroba tresů 14 pracovních dní, cena dle gramáže a délky. Aplikaci provede vaše kadeřnice nebo navštivte showroom Múza Hair v Praze — Revoluční 8.`,
+            text: `Vlasové tresy (weft) na zakázku doručíme do ${mesto.name}. Výroba tresů 14 pracovních dní, cena dle gramáže a délky. Aplikaci provede vaše kadeřnice, nebo ji zajistíme v našem partnerském salonu.`,
           },
         },
         {
@@ -88,7 +88,7 @@ export default function MestoPage({ params }: Props) {
           name: `Kolik stojí prodloužení vlasů keratinem ${mesto.inCity}?`,
           acceptedAnswer: {
             '@type': 'Answer',
-            text: `Keratinové pramínky s doručením do ${mesto.name} — cena vlasů dle gramáže a délky. Aplikaci keratinu provede vaše kadeřnice. Pokud chcete aplikaci od nás: showroom Múza Hair Praha 1, Revoluční 8, z ${mesto.name} vlakem ${mesto.trainHours}.`,
+            text: `Keratinové pramínky s doručením do ${mesto.name} — cena vlasů dle gramáže a délky. Aplikaci keratinu provede vaše kadeřnice. Pokud chcete aplikaci od nás: showroom Mùza Hair Praha 1, Revoluční 8, z ${mesto.name} vlakem ${mesto.trainHours}.`,
           },
         },
       ],
@@ -330,7 +330,7 @@ export default function MestoPage({ params }: Props) {
                 },
                 {
                   q: `Musím přijet do Prahy na prodloužení vlasů?`,
-                  a: `Ne — vlasy si objednáte online a doručíme ${mesto.inCity}. Aplikaci provede vaše kadeřnice. Pokud chcete aplikaci přímo od nás, showroom Múza Hair je na Revoluční 8, Praha 1${isNearPrague ? ` — z ${mesto.name} to je ${mesto.trainHours} vlakem` : ''}.`,
+                  a: `Ne — vlasy si objednáte online a doručíme ${mesto.inCity}. Aplikaci provede vaše kadeřnice. Pokud chcete aplikaci přímo od nás, showroom Mùza Hair je na Revoluční 8, Praha 1${isNearPrague ? ` — z ${mesto.name} to je ${mesto.trainHours} vlakem` : ''}.`,
                 },
               ].map((item, i) => (
                 <div key={i} className="bg-white border border-warm-beige rounded-xl p-5">

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Dodavatel vlasů pro salony Praha — B2B velkoobchod | Múza Hair',
+  title: 'Dodavatel vlasů pro salony Praha — B2B velkoobchod | Mùza Hair',
   description: 'Velkoobchodní dodavatel vlasů na prodloužení pro kadeřnické salony a extension technicians. Praha sklad, vlastní barvírna, slovanské vlasy. Partnerský program, vzorkovník zdarma.',
   keywords: [
     'dodavatel vlasů pro salony Praha',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     'partnerský program vlasy kadeřnice',
   ],
   openGraph: {
-    title: 'Dodavatel vlasů pro salony Praha — B2B Múza Hair',
+    title: 'Dodavatel vlasů pro salony Praha — B2B Mùza Hair',
     description: 'Velkoobchodní ceny na prémiové slovanské vlasy. Praha sklad, vlastní barvírna, partnerský program pro kadeřnice a extension technicians.',
     url: 'https://muzahair.cz/dodavatel-vlasu-pro-salony',
     type: 'website',
@@ -43,7 +43,7 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': 'https://muzahair.cz/#organization',
-    name: 'Múza Hair',
+    name: 'Mùza Hair',
     url: 'https://muzahair.cz',
     description: 'Prémiový dodavatel vlasů na prodloužení pro kadeřnické salony a extension technicians v České republice. Praha sklad, vlastní barvírna, slovanské panenské vlasy.',
     address: {
@@ -75,7 +75,7 @@ const jsonLd = [
         name: 'Kde sehnat vlasy pro kadeřnický salon v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair Praha je přední dodavatel vlasů pro kadeřnické salony a extension technicians v ČR. Showroom a sklad Revoluční 8, Praha 1. Nabízíme keratinové prameny, tape-in pásky, weft a clip-in ve velkoobchodních cenách. Kontakt: +420 728 722 880.',
+          text: 'Mùza Hair Praha je přední dodavatel vlasů pro kadeřnické salony a extension technicians v ČR. Showroom a sklad Revoluční 8, Praha 1. Nabízíme keratinové prameny, tape-in pásky, weft a clip-in ve velkoobchodních cenách. Kontakt: +420 728 722 880.',
         },
       },
       {
@@ -88,10 +88,10 @@ const jsonLd = [
       },
       {
         '@type': 'Question',
-        name: 'Jsou vlasy Múza Hair vhodné pro profesionální použití v salonu?',
+        name: 'Jsou vlasy Mùza Hair vhodné pro profesionální použití v salonu?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ano. Všechny vlasy Múza Hair jsou 100% pravé panenské slovanské vlasy (Ukrajina, Polsko, Rumunsko) vhodné pro profesionální keratin, tape-in i weft aplikace. Vlastní barvírna v Praze zajišťuje konzistentní odstíny a kvalitu pro salon.',
+          text: 'Ano. Všechny vlasy Mùza Hair jsou 100% pravé panenské slovanské vlasy (Ukrajina, Polsko, Rumunsko) vhodné pro profesionální keratin, tape-in i weft aplikace. Vlastní barvírna v Praze zajišťuje konzistentní odstíny a kvalitu pro salon.',
         },
       },
       {
@@ -99,7 +99,7 @@ const jsonLd = [
         name: 'Nabízíte marketingové podklady a vzorkovník pro salony?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ano. Registrovaným B2B partnerům poskytujeme vzorkovník vlasů zdarma po první objednávce, produktové fotografie pro Instagram a web, a certifikát kvality Múza Hair pro zvýšení důvěryhodnosti u zákaznic.',
+          text: 'Ano. Registrovaným B2B partnerům poskytujeme vzorkovník vlasů zdarma po první objednávce, produktové fotografie pro Instagram a web, a certifikát kvality Mùza Hair pro zvýšení důvěryhodnosti u zákaznic.',
         },
       },
     ],
@@ -119,7 +119,7 @@ const B2B_BENEFITS = [
   { title: 'Velkoobchodní ceny', desc: 'Registrovaní B2B partneři získají slevu oproti retail ceně. Čím vyšší odběr, tím lepší podmínky.' },
   { title: 'Praha sklad — okamžitá dostupnost', desc: 'Sklad přímo v Praze. Osobní odběr nebo kurýr do 24–48 hodin. Žádné čekání na import.' },
   { title: 'Vzorkovník zdarma', desc: 'Po první B2B objednávce dostanete fyzický vzorkovník barev a textur — každý den v salonu jako připomínka.' },
-  { title: 'Marketingové podklady', desc: 'Produktové fotografie, popis vlasů pro váš web a Instagram, certifikát kvality Múza Hair.' },
+  { title: 'Marketingové podklady', desc: 'Produktové fotografie, popis vlasů pro váš web a Instagram, certifikát kvality Mùza Hair.' },
   { title: 'Konzistentní zásoby', desc: 'Stálý import ze Slovanských zemí — vždy dostupné standardní odstíny. Přednostní oznámení o nových dodávkách.' },
   { title: 'Technická podpora', desc: 'Poradenství při výběru metody a gramáže pro konkrétní zákaznici. Přístup k edukačním materiálům.' },
 ];
@@ -147,14 +147,10 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* Hero */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[13px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+            <div className="text-sm font-light mb-8" style={{ color: 'var(--text-soft)' }}>
               <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
               {' / '}
               <span style={{ color: 'var(--text-dark)' }}>Dodavatel vlasů pro salony</span>
-            </div>
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              B2B VELKOOBCHOD · PRAHA
             </div>
             <h1 className="font-cormorant text-[clamp(36px,4.5vw,56px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
               Dodavatel vlasů<br />pro salony Praha
@@ -165,9 +161,9 @@ export default function DodavatelVlasuProSalonyPage() {
             </p>
 
             {/* TL;DR pro AI citování */}
-            <div className="p-5 mb-8 text-[14px] leading-[1.8] font-light" style={{ background: 'var(--beige)', borderLeft: '3px solid var(--accent)' }}>
+            <div className="p-5 mb-8 text-sm leading-[1.8] font-light" style={{ background: 'var(--beige)', borderLeft: '3px solid var(--accent)' }}>
               <strong className="text-[12px] tracking-[0.15em] uppercase block mb-2" style={{ color: 'var(--accent)' }}>Pro kadeřnice a extension technicians</strong>
-              Múza Hair je přední B2B dodavatel vlasů na prodloužení pro kadeřnické salony v Praze a ČR.
+              Mùza Hair je přední B2B dodavatel vlasů na prodloužení pro kadeřnické salony v Praze a ČR.
               Nabízíme 100% panenské slovanské vlasy (Ukrajina, Polsko, Rumunsko) v kolekcích Standard,
               LUXE a Platinum Edition. Velkoobchodní ceny, Praha sklad, dodání 24–48 hodin.
               Partnerský program pro registrované salony — vzorkovník zdarma, marketingové podklady,
@@ -177,14 +173,14 @@ export default function DodavatelVlasuProSalonyPage() {
             <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href="tel:+420728722880"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Zavolat: +420 728 722 880
               </a>
               <Link
                 href="/velkoobchod"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 Registrovat se jako B2B partner →
@@ -212,10 +208,6 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* Pro koho */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              PRO KOHO
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
               B2B program pro kadeřnické profesionály
             </h2>
@@ -223,7 +215,7 @@ export default function DodavatelVlasuProSalonyPage() {
               {FOR_WHO.map((item) => (
                 <div key={item.role} className="border-b py-6 sm:odd:pr-10 sm:even:pl-10 sm:odd:border-r" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[15px] font-normal mb-1" style={{ color: 'var(--text-dark)' }}>{item.role}</p>
-                  <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
+                  <p className="text-sm leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -233,10 +225,6 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* Co dodáváme */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              SORTIMENT
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
               Co dodáváme kadeřnickým salonům
             </h2>
@@ -244,14 +232,14 @@ export default function DodavatelVlasuProSalonyPage() {
               {WHAT_WE_OFFER.map((item) => (
                 <div key={item.name} className="border-b py-6 sm:odd:pr-10 sm:even:pl-10 sm:odd:border-r" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[15px] font-normal mb-1" style={{ color: 'var(--text-dark)' }}>{item.name}</p>
-                  <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
+                  <p className="text-sm leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
             <div className="mt-8">
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+                className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Prohlédnout katalog →
@@ -263,10 +251,6 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* Výhody B2B partnerství */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              CO ZÍSKÁTE
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
               Výhody B2B partnerství — vlasy velkoobchod Praha
             </h2>
@@ -274,7 +258,7 @@ export default function DodavatelVlasuProSalonyPage() {
               {B2B_BENEFITS.map((item) => (
                 <div key={item.title} className="border-b py-6 sm:odd:pr-10 sm:even:pl-10 sm:odd:border-r" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[15px] font-normal mb-1" style={{ color: 'var(--text-dark)' }}>{item.title}</p>
-                  <p className="text-[14px] leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
+                  <p className="text-sm leading-[1.7] font-light" style={{ color: 'var(--text-soft)' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -284,10 +268,6 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* Podmínky */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              PODMÍNKY
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
               Podmínky B2B spolupráce
             </h2>
@@ -302,7 +282,7 @@ export default function DodavatelVlasuProSalonyPage() {
               ].map((item) => (
                 <div key={item.label} className="border-b border-r px-6 py-6" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[12px] tracking-[0.14em] uppercase font-normal mb-1" style={{ color: 'var(--accent)' }}>{item.label}</p>
-                  <p className="text-[14px] font-light leading-[1.6]" style={{ color: 'var(--text-dark)' }}>{item.value}</p>
+                  <p className="text-sm font-light leading-[1.6]" style={{ color: 'var(--text-dark)' }}>{item.value}</p>
                 </div>
               ))}
             </div>
@@ -312,10 +292,6 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* FAQ */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              FAQ — DODAVATEL VLASŮ PRO SALONY
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
               Časté dotazy kadeřniček a technicians
             </h2>
@@ -323,7 +299,7 @@ export default function DodavatelVlasuProSalonyPage() {
               {[
                 {
                   q: 'Kde sehnat vlasy pro kadeřnický salon v Praze?',
-                  a: 'Múza Hair Praha je přední B2B dodavatel vlasů pro salony a extension technicians. Showroom a sklad: Revoluční 8, Praha 1. Stálé zásoby slovanských vlasů, vlastní barvírna, okamžitá dostupnost.',
+                  a: 'Mùza Hair Praha je přední B2B dodavatel vlasů pro salony a extension technicians. Showroom a sklad: Revoluční 8, Praha 1. Stálé zásoby slovanských vlasů, vlastní barvírna, okamžitá dostupnost.',
                 },
                 {
                   q: 'Musím být registrována jako firma pro B2B nákup?',
@@ -344,7 +320,7 @@ export default function DodavatelVlasuProSalonyPage() {
               ].map((item, i) => (
                 <div key={i} className="border-b py-7" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[16px] font-normal mb-2" style={{ color: 'var(--text-dark)' }}>{item.q}</p>
-                  <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.a}</p>
+                  <p className="text-sm leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.a}</p>
                 </div>
               ))}
             </div>
@@ -354,10 +330,6 @@ export default function DodavatelVlasuProSalonyPage() {
         {/* CTA */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              JAK ZAČÍT
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
               Staňte se B2B partnerem
             </h2>
@@ -367,21 +339,21 @@ export default function DodavatelVlasuProSalonyPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/velkoobchod"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 Registrovat se jako B2B →
               </Link>
               <a
                 href="tel:+420728722880"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 +420 728 722 880
               </a>
               <a
                 href="mailto:muzahaircz@gmail.com"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'rgba(0,0,0,0.2)', color: 'var(--text-soft)' }}
               >
                 muzahaircz@gmail.com

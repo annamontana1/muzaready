@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Výkup vlasů pro nemocné | Darování vlasů | Múza Hair',
-  description: 'Darujte vlasy nemocným dětem a dospělým. Múza Hair zprostředkovává výkup a darování pravých vlasů. Minimální délka 25 cm, vlasy musí být zdravé a neobarvené.',
+  title: 'Výkup vlasů pro nemocné | Darování vlasů | Mùza Hair',
+  description: 'Darujte vlasy nemocným dětem a dospělým. Mùza Hair zprostředkovává výkup a darování pravých vlasů. Minimální délka 25 cm, vlasy musí být zdravé a neobarvené.',
   alternates: { canonical: 'https://muzahair.cz/vykup-vlasu-pro-nemocne' },
   openGraph: {
-    title: 'Výkup vlasů pro nemocné | Múza Hair',
+    title: 'Výkup vlasů pro nemocné | Mùza Hair',
     description: 'Darujte vlasy nemocným. Výkup pravých vlasů — min. 25 cm, zdravé, neobarvené.',
     url: 'https://muzahair.cz/vykup-vlasu-pro-nemocne',
     locale: 'cs_CZ',

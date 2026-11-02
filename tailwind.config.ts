@@ -14,7 +14,7 @@ const config: Config = {
     extend: {
       colors: {
         burgundy: {
-          DEFAULT: '#4A1520',
+          DEFAULT: '#330D0D',
           light: '#6B2535',
           dark: '#2A0A0B',
           50: '#FCF3F3',
@@ -24,7 +24,7 @@ const config: Config = {
           400: '#A84E5A',
           500: '#8B3040',
           600: '#6B2535',
-          700: '#4A1520',
+          700: '#330D0D',
           800: '#2A0A0B',
           900: '#160508',
           950: '#0A0204',

@@ -29,7 +29,7 @@ export default function ShadeLadder() {
           <h2 id="h-odstiny" className="font-cormorant font-light text-muza-ink text-[34px] leading-[1.04] lg:text-[48px]">
             Najděte svůj odstín. <em className="italic">Barvíme ho sami.</em>
           </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-text-mid max-w-[420px]">
+          <p className="mt-4 text-base leading-relaxed text-[#45302F] max-w-[420px]">
             Odstíny z naší pražské barvírny. Vyberte ten svůj a ukážeme vám vlasy, které ho mají skladem.
           </p>
 
@@ -77,11 +77,11 @@ export function CustomShadeBand() {
             <h3 className="font-cormorant font-light text-[30px] lg:text-[36px] leading-tight">
               Váš odstín mezi nimi není? <em className="italic text-muza-sand">Namícháme ho.</em>
             </h3>
-            <p className="mt-2 text-sm text-[#D8C3BA]">Pošlete fotku vlasů na denním světle a připravíme odstín na míru.</p>
+            <p className="mt-2 text-base text-[#D8C3BA]">Pošlete fotku vlasů na denním světle a připravíme odstín na míru.</p>
           </div>
           <a href={`${WHATSAPP}?text=${encodeURIComponent('Dobrý den, posílám fotku svých vlasů, můžete mi namíchat odstín na míru?')}`}
             target="_blank" rel="noopener"
-            className="h-14 px-8 flex-none rounded-full bg-muza-onink text-muza-ink text-[15px] flex items-center justify-center hover:opacity-90 transition-opacity">
+            className="h-[52px] px-7 flex-none rounded-full bg-muza-onink text-muza-ink text-sm font-medium flex items-center justify-center hover:opacity-90 transition-opacity">
             Poslat fotku
           </a>
         </div>
@@ -93,17 +93,17 @@ function ShadeInfo({ shade }: { shade: (typeof SHADES)[number] }) {
   return (
     <div aria-live="polite">
       <div className="flex items-baseline gap-3">
-        <span className="font-cormorant text-[44px] leading-none text-muza-ink">{shade.num}</span>
+        <span className="font-cormorant [font-variant-numeric:lining-nums] text-[44px] leading-none text-muza-ink">{shade.num}</span>
         <span className="text-lg">{shade.name}</span>
       </div>
       <div className="mt-5 flex flex-col sm:flex-row gap-3">
         <Link href={`/katalog?odstin=${shade.num}`}
-          className="h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm flex items-center justify-center hover:opacity-90 transition-opacity">
+          className="h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium flex items-center justify-center hover:opacity-90 transition-opacity">
           Vlasy v odstínu {shade.num}
         </Link>
         <a href={`${WHATSAPP}?text=${encodeURIComponent('Dobrý den, nevím si rady s výběrem odstínu, můžete mi poradit?')}`}
           target="_blank" rel="noopener"
-          className="h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm flex items-center justify-center hover:bg-muza-ink hover:text-muza-onink transition-colors">
+          className="h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium flex items-center justify-center hover:bg-muza-ink hover:text-muza-onink transition-colors">
           Nevím, poraďte
         </a>
       </div>

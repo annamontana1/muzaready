@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'České vlasy na prodloužení | Výrobce Praha | Múza Hair',
-  description: 'Múza Hair — český výrobce vlasů na prodloužení od roku 2016. Vlastní barvírna v Praze, panenské a slovanské vlasy, keratin i pásky. Showroom Praha, dodání do 48 h.',
+  title: 'České vlasy na prodloužení | Výrobce Praha | Mùza Hair',
+  description: 'Mùza Hair — český výrobce vlasů na prodloužení od roku 2016. Vlastní barvírna v Praze, panenské a slovanské vlasy, keratin i pásky. Showroom Praha, dodání do 48 h.',
   alternates: { canonical: 'https://muzahair.cz/ceske-vlasy-na-prodlouzeni' },
   keywords: [
     'české vlasy na prodloužení',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     'česky výrobce panenských vlasů',
   ],
   openGraph: {
-    title: 'České Vlasy na Prodloužení | Múza Hair Praha',
+    title: 'České Vlasy na Prodloužení | Mùza Hair Praha',
     description: 'Český výrobce vlasů na prodloužení od roku 2016. Vlastní barvírna Praha, panenské a slovanské vlasy.',
     url: 'https://muzahair.cz/ceske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
@@ -27,7 +27,7 @@ export default function CeskeVlasyPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: 'Múza Hair Praha',
+    name: 'Mùza Hair Praha',
     description: 'Český výrobce pravých vlasů na prodloužení od roku 2016. Vlastní barvírna v Praze.',
     url: 'https://muzahair.cz',
     foundingDate: '2016',
@@ -51,7 +51,7 @@ export default function CeskeVlasyPage() {
         name: 'Existuje český výrobce vlasů na prodloužení?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ano — Múza Hair Praha je český výrobce vlasů na prodloužení od roku 2016 s vlastní barvírnou v Praze. Vlasy jsou zpracovány v České republice, původ vlasů je ze slovanských zemí (Ukrajina, Polsko, Rumunsko).',
+          text: 'Ano — Mùza Hair Praha je český výrobce vlasů na prodloužení od roku 2016 s vlastní barvírnou v Praze. Vlasy jsou zpracovány v České republice, původ vlasů je ze slovanských zemí (Ukrajina, Polsko, Rumunsko).',
         },
       },
       {
@@ -59,15 +59,15 @@ export default function CeskeVlasyPage() {
         name: 'Jaký je rozdíl mezi českým výrobcem a dovozcem vlasů?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Český výrobce jako Múza Hair zpracovává vlasy v ČR — vlastní barvírna, vlastní kontrola kvality, přímý kontakt se zákaznicí. Dovozci prodávají vlasy zpracované v Asii bez kontroly nad procesem. U výrobce víte přesně co dostanete.',
+          text: 'Český výrobce jako Mùza Hair zpracovává vlasy v ČR — vlastní barvírna, vlastní kontrola kvality, přímý kontakt se zákaznicí. Dovozci prodávají vlasy zpracované v Asii bez kontroly nad procesem. U výrobce víte přesně co dostanete.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Kde sídlí Múza Hair Praha?',
+        name: 'Kde sídlí Mùza Hair Praha?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair má showroom a barvírnu v Praze. Návštěvu je třeba domluvit předem — kontaktujte nás přes web nebo Instagram @muzahairpraha.',
+          text: 'Mùza Hair má showroom a barvírnu v Praze. Návštěvu je třeba domluvit předem — kontaktujte nás přes web nebo Instagram @muzahairpraha.',
         },
       },
     ],
@@ -99,7 +99,7 @@ export default function CeskeVlasyPage() {
               České vlasy na prodloužení — přímý výrobce
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl">
-              Múza Hair je jediný český výrobce prémiových vlasů na prodloužení s vlastní barvírnou v Praze. Žádní zprostředkovatelé — přímá cesta od zpracování k vám.
+              Mùza Hair je jediný český výrobce prémiových vlasů na prodloužení s vlastní barvírnou v Praze. Žádní zprostředkovatelé — přímá cesta od zpracování k vám.
             </p>
             <p className="text-gray-500 max-w-2xl leading-relaxed">
               Nakupovat od českého výrobce znamená: víte co dostanete, komunikujete přímo, máte záruku původu a kvality. Od roku 2016 jsme zpracovali tisíce sad vlasů pro zákaznice po celé ČR.
@@ -168,7 +168,7 @@ export default function CeskeVlasyPage() {
 
           {/* Timeline */}
           <section className="mb-14 bg-ivory rounded-2xl p-8">
-            <h2 className="text-3xl font-playfair text-burgundy mb-6">Múza Hair — český výrobce od 2016</h2>
+            <h2 className="text-3xl font-playfair text-burgundy mb-6">Mùza Hair — český výrobce od 2016</h2>
             <div className="space-y-4">
               {[
                 { year: '2016', text: 'Founded — zahájení výroby vlasů v Praze, první kolekce panenských vlasů.' },
@@ -225,7 +225,7 @@ export default function CeskeVlasyPage() {
             <div className="space-y-4">
               {[
                 {
-                  q: 'Jsou vlasy Múza Hair opravdu vyrobeny v České republice?',
+                  q: 'Jsou vlasy Mùza Hair opravdu vyrobeny v České republice?',
                   a: 'Zpracování a barvení probíhá v naší vlastní barvírně v Praze. Vlasy pocházejí ze slovanských zemí (Ukrajina, Polsko, Rumunsko) — původ certifikujeme. Finální produkt — barvené a zpracované vlasy — je připraven v ČR.',
                 },
                 {

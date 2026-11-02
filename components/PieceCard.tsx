@@ -15,7 +15,14 @@ type Props = {
   action?: ReactNode; // např. tlačítko Do košíku v katalogu
 };
 
+// Krátký název karty („Culík C04“); délka, odstín a gramáž jsou v řádku pod ním
+const pieceTitle = (id: string, name: string) => {
+  const code = id.match(/-(c\d+)$/i)?.[1];
+  return code ? `Culík ${code.toUpperCase()}` : name.split(' · ')[0];
+};
+
 export default function PieceCard({ id, name, photos, meta, price, soldOut, action }: Props) {
+  const title = pieceTitle(id, name);
   const [active, setActive] = useState(0);
   const src = photos[active] ?? photos[0];
 
@@ -52,12 +59,12 @@ export default function PieceCard({ id, name, photos, meta, price, soldOut, acti
       )}
 
       <Link href={`/sku-detail/${id}`} className="block">
-        <div className="mt-2.5 text-[14px] leading-snug text-text-dark">{name}</div>
-        {meta ? <div className="mt-0.5 text-[13px] text-muza-soft">{meta}</div> : null}
+        <div className="mt-2.5 font-cormorant text-[22px] leading-tight text-muza-ink [font-variant-numeric:lining-nums]">{title}</div>
+        {meta ? <div className="mt-0.5 text-sm text-[#45302F]">{meta}</div> : null}
         <div className="mt-1.5 flex items-center justify-between gap-2">
-          {price ? <span className="font-cormorant text-[20px] leading-none text-muza-ink">{price}</span> : <span />}
+          {price ? <span className="font-jost font-semibold text-base leading-none text-muza-ink tabular-nums">{price}</span> : <span />}
           {/* Dostupnost: každý kus v nabídce je skladem, prodaný se ukáže jako vyprodaný */}
-          <span className={`inline-flex items-center gap-1.5 text-[13px] ${soldOut ? 'text-muza-soft' : 'text-[#2F6B45]'}`}>
+          <span className={`inline-flex items-center gap-1.5 text-sm ${soldOut ? 'text-muza-soft' : 'text-[#2F6B45]'}`}>
             <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full ${soldOut ? 'bg-muza-soft' : 'bg-[#2F6B45]'}`} />
             {soldOut ? 'Vyprodáno' : 'Skladem'}
           </span>

@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
         totalSpent: orders.reduce((sum, o) => sum + o.total, 0),
       },
       gdprInfo: {
-        controller: 'Múza Hair s.r.o.',
+        controller: 'Mùza Hair s.r.o.',
         controllerContact: 'info@muzahair.cz',
         dataRetentionPeriod: '7 let (daňové účely)',
         rights: [

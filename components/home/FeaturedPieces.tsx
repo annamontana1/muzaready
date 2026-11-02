@@ -50,11 +50,10 @@ export default function FeaturedPieces() {
   return (
     <section aria-labelledby="h-culiky" className="bg-muza-cream">
       <div className="max-w-7xl mx-auto px-5 lg:px-12 py-14 lg:py-24">
-        <div className="text-[12px] font-medium tracking-[0.14em] uppercase text-muza-ink mb-3">Skladem</div>
         <h2 id="h-culiky" className="font-cormorant font-light text-muza-ink text-[36px] leading-[1.04] lg:text-[52px]">
           Culíky <em className="italic">připravené k odeslání.</em>
         </h2>
-        <p className="mt-3 text-[15px] leading-relaxed text-text-mid max-w-[480px]">
+        <p className="mt-3 text-base leading-relaxed text-[#45302F] max-w-[480px]">
           Každý culík je originál: jedna dárkyně, jedna délka, jeden odstín.
         </p>
 
@@ -74,7 +73,7 @@ export default function FeaturedPieces() {
         </ul>
 
         <Link href="/katalog?typ=PIECE"
-          className="mt-8 h-13 min-h-[52px] flex items-center justify-center rounded-full border border-muza-ink text-muza-ink text-[15px] hover:bg-muza-ink hover:text-muza-onink transition-colors lg:max-w-[360px]">
+          className="mt-8 h-[52px] px-7 flex items-center justify-center rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:bg-muza-ink hover:text-muza-onink transition-colors lg:max-w-[360px]">
           Zobrazit {total ? `všech ${total}` : 'všechny'} culíky
         </Link>
       </div>

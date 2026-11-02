@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Platinum Edition — Exkluzivní vlasy na prodloužení | Múza Hair Praha',
+  title: 'Platinum Edition — Exkluzivní vlasy na prodloužení | Mùza Hair Praha',
   description: 'Exkluzivní kolekce Platinum Edition — nejvyšší kvalita panenských vlasů na prodloužení. Slovanské vlasy, vlastní barvírna Praha, showroom Revoluční 8, Praha 1.',
   keywords: [
     'platinum vlasy na prodloužení',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     'nejlepší vlasy na prodloužení Praha',
   ],
   openGraph: {
-    title: 'Platinum Edition — Exkluzivní vlasy na prodloužení | Múza Hair Praha',
+    title: 'Platinum Edition — Exkluzivní vlasy na prodloužení | Mùza Hair Praha',
     description: 'Nejvyšší kvalita panenských vlasů. Vlastní barvírna, showroom Praha 1.',
     url: 'https://muzahair.cz/vlasy-k-prodlouzeni/platinum-edition',
     type: 'website',

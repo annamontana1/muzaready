@@ -2,410 +2,231 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import WholesaleRegistrationModal from '@/components/WholesaleRegistrationModal';
+
+const BTN_PRIMARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity';
+const BTN_SECONDARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:opacity-90 transition-opacity';
+
+const STEPS = [
+  {
+    title: 'Pošlete žádost',
+    text: 'Vyplňte krátký formulář: jméno, e-mail, telefon, město a odkaz na Instagram, Facebook nebo web salonu.',
+  },
+  {
+    title: 'Ověříme váš salon',
+    text: 'Žádost projdeme obvykle do 24–48 hodin a o schválení vám dáme vědět e-mailem.',
+  },
+  {
+    title: 'Nakupujete za velkoobchodní ceny',
+    text: 'Po přihlášení se vám v katalogu zobrazí velkoobchodní ceny na culíky i zakončení.',
+  },
+];
+
+const BENEFITS = [
+  { label: 'Ceny', value: 'Velkoobchodní, po schválení účtu' },
+  { label: 'Výroba', value: 'Vlastní barvírna v ČR' },
+  { label: 'Kvality', value: 'Standard, LUXE, Platinum Edition' },
+  { label: 'Zakončení', value: 'Keratin, mikrokeratin, tape-in, tresy' },
+  { label: 'Platba', value: 'Předem převodem, QR kód' },
+  { label: 'Doprava', value: 'Po celé ČR a SR' },
+  { label: 'Minimální odběr', value: 'Není' },
+];
+
+const FAQ = [
+  {
+    q: 'Kdo může požádat o velkoobchodní ceny?',
+    a: 'Kadeřnické salony, kadeřnice a specialistky na prodlužování vlasů, které s vlasy pracují profesionálně.',
+  },
+  {
+    q: 'Co potřebuji k registraci?',
+    a: 'Jméno, e-mail, telefon, město, heslo a odkaz alespoň na jedno z: Instagram, Facebook nebo web salonu. Název firmy je nepovinný.',
+  },
+  {
+    q: 'Jak dlouho trvá schválení?',
+    a: 'Obvykle 24–48 hodin. O schválení vás informujeme e-mailem, poté se po přihlášení zobrazí velkoobchodní ceny.',
+  },
+  {
+    q: 'Jak se platí?',
+    a: 'Vždy předem bankovním převodem, platební údaje i QR kód dostanete hned po odeslání objednávky. Na dobírku neposíláme.',
+  },
+  {
+    q: 'Je minimální objednávka?',
+    a: 'Ne. U větších zakázek se rádi domluvíme individuálně.',
+  },
+  {
+    q: 'Jak je to s Platinum Edition?',
+    a: 'Platinum Edition může mít individuální cenu. Napište nám na muzahaircz@gmail.com, co potřebujete, a pošleme nabídku.',
+  },
+];
 
 export default function VelkoobchodPage() {
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
-  // Odkaz „Získejte velkoobchodní slevu“ (?registrace=1) otevře formulář rovnou
+  // Odkaz z pásu „Získat velkoobchodní slevu“ (?registrace=1) otevře formulář rovnou
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get('registrace') === '1') setShowRegistrationModal(true);
   }, []);
 
-  const isLoggedIn = false;
-  const isApproved = false;
-
-  const handleCTAClick = () => {
-    if (!isLoggedIn) {
-      setShowRegistrationModal(true);
-    } else if (!isApproved) {
-      document.getElementById('approval-status')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const openModal = () => setShowRegistrationModal(true);
 
   return (
-    <div style={{ background: 'var(--white)' }}>
-
-      {/* Breadcrumb */}
-      <div className="px-8 lg:px-20 pt-8 pb-0">
-        <div
-          className="text-[12px] tracking-[0.15em] uppercase font-light"
-          style={{ color: 'var(--text-soft)' }}
-        >
-          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
-          {' / '}
-          <span style={{ color: 'var(--text-dark)' }}>Velkoobchod</span>
-        </div>
-      </div>
-
+    <div className="bg-muza-cream text-text-dark font-jost">
       {/* Hero */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          B2B partneři
-        </div>
+      <section className="px-4 lg:px-8 pt-8 pb-16 lg:pt-12 lg:pb-24">
+        <div className="max-w-6xl mx-auto">
+          <nav aria-label="Drobečková navigace" className="text-sm text-[#45302F] mb-8 lg:mb-12">
+            <Link href="/" className="hover:underline">Domů</Link>
+            <span className="mx-2">/</span>
+            <span className="text-text-dark">Velkoobchod</span>
+          </nav>
 
-        <h1
-          className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6 max-w-3xl"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Velkoobchod pro salony a kadeřníky
-        </h1>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-xl mb-4" style={{ color: 'var(--text-soft)' }}>
-          Získejte velkoobchodní ceny na nebarvené a barvené vlasy — Standard, LUXE, Platinum Edition.
-        </p>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-xl mb-12" style={{ color: 'var(--text-soft)' }}>
-          Jsme český výrobce se svou barvírnou. Dodáváme nebarvené i barvené vlasy k prodloužení
-          pro profesionály. Registrujte se a po schválení uvidíte velkoobchodní ceny.
-        </p>
-
-        <button
-          onClick={handleCTAClick}
-          className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
-          style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-        >
-          Přihlásit / Registrovat B2B
-        </button>
-      </section>
-
-      {/* Benefits */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Výhody
-        </div>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Výhody pro B2B partnery
-        </h2>
-
-        <div className="flex flex-col gap-0 max-w-2xl">
-          {[
-            {
-              title: 'Vlastní barvírna v ČR',
-              text: 'Kontrola kvality každého culíku přímo v naší výrobě',
-            },
-            {
-              title: 'Široké spektrum produktů',
-              text: 'Nebarvené i barvené vlasy ve třech kvalitách: Standard, LUXE, Platinum Edition',
-            },
-            {
-              title: 'Konfigurace na míru',
-              text: 'Délka, gramáž, zakončení (keratin, mikrokeratin, tape-in, vlasové tresy)',
-            },
-            {
-              title: 'Rychlá logistika',
-              text: 'Efektivní dodání po celé ČR a SR',
-            },
-            {
-              title: 'Velkoobchodní ceny',
-              text: 'Individuální slevové podmínky po schválení B2B účtu',
-            },
-            {
-              title: 'Podpora a poradenství',
-              text: 'Pomoc při výběru produktů, péče o vlasy, v budoucnu i školení',
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 py-6 border-b"
-              style={{ borderColor: 'var(--ivory-warm)' }}
-            >
-              <span
-                className="block w-4 h-px mt-[13px] flex-shrink-0"
-                style={{ background: 'var(--accent)' }}
-              />
-              <div>
-                <p className="text-[15px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>
-                  {item.title}
-                </p>
-                <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-                  {item.text}
-                </p>
+          <div className="lg:grid lg:grid-cols-[1fr_380px] lg:gap-16 lg:items-center">
+            <div className="max-w-[720px]">
+              <h1 className="font-cormorant text-[40px] lg:text-[60px] leading-[1.05] font-light">
+                Velkoobchod pro salony a kadeřnice
+              </h1>
+              <p className="mt-5 text-base leading-relaxed text-[#45302F]">
+                Mùza je český výrobce pravých vlasů s vlastní barvírnou. Registrovaným a schváleným salonům
+                nabízíme velkoobchodní ceny na nebarvené i barvené vlasy ve kvalitách Standard, LUXE
+                a Platinum Edition.
+              </p>
+              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                <button type="button" onClick={openModal} className={BTN_PRIMARY}>
+                  Požádat o velkoobchodní ceny
+                </button>
+                <Link href="/katalog" className={BTN_SECONDARY}>
+                  Prohlédnout katalog
+                </Link>
               </div>
             </div>
-          ))}
+
+            <div className="hidden lg:block">
+              <div className="relative aspect-[4/5] rounded-t-full overflow-hidden bg-muza-mocha">
+                <Image
+                  src="/images/atelier/atelier-07.webp"
+                  alt="Dílna Mùza, kde vlasy ručně zpracováváme"
+                  fill
+                  sizes="380px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Proces
+      {/* Jak to funguje */}
+      <section className="px-4 lg:px-8 py-16 lg:py-20 bg-muza-ivory">
+        <div className="max-w-[720px] mx-auto">
+          <h2 className="font-cormorant text-[34px] lg:text-[42px] leading-[1.1] font-light">Jak to funguje</h2>
+          <ol className="mt-8">
+            {STEPS.map((step) => (
+              <li key={step.title} className="py-4 border-t border-muza-line">
+                <p className="text-base font-medium">{step.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-[#45302F]">{step.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
+      </section>
 
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Jak to funguje
-        </h2>
+      {/* Co získáte */}
+      <section className="px-4 lg:px-8 py-16 lg:py-20">
+        <div className="max-w-[720px] mx-auto">
+          <h2 className="font-cormorant text-[34px] lg:text-[42px] leading-[1.1] font-light">Co získáte</h2>
+          <dl className="mt-8">
+            {BENEFITS.map((row) => (
+              <div key={row.label} className="flex justify-between gap-6 py-3 border-t border-muza-line">
+                <dt className="text-sm text-[#45302F]">{row.label}</dt>
+                <dd className="text-sm font-medium text-right">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-6 text-sm leading-relaxed text-[#45302F]">
+            Rádi poradíme s výběrem odstínu, délky, gramáže i zakončení.
+          </p>
+        </div>
+      </section>
 
-        <div className="flex flex-col gap-0 max-w-2xl">
-          {[
-            { num: '01', title: 'Registrace', text: 'Vyplňte B2B registrační formulář s údaji o vaší firmě' },
-            { num: '02', title: 'Schválení', text: 'Vaši registraci schválíme do 24–48 hodin' },
-            { num: '03', title: 'Nákup za B2B ceny', text: 'Po přihlášení vidíte velkoobchodní ceny' },
-            { num: '04', title: 'Výroba a dodání', text: 'Standardní doba dodání podle kategorie produktu' },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-8 py-6 border-b"
-              style={{ borderColor: 'var(--beige)' }}
+      {/* Sortiment */}
+      <section className="px-4 lg:px-8 py-16 lg:py-20 bg-muza-ivory">
+        <div className="max-w-[720px] mx-auto">
+          <h2 className="font-cormorant text-[34px] lg:text-[42px] leading-[1.1] font-light">Sortiment</h2>
+          <p className="mt-4 text-base leading-relaxed text-[#45302F]">
+            V katalogu najdete celý sortiment. Velkoobchodní ceny se zobrazí po přihlášení schváleného účtu.
+          </p>
+          <div className="mt-8">
+            <Link
+              href="/vlasy-k-prodlouzeni/nebarvene-panenske"
+              className="flex justify-between items-center gap-6 py-4 border-t border-muza-line hover:opacity-80"
             >
-              <span
-                className="text-[12px] tracking-[0.15em] uppercase font-light w-8 flex-shrink-0 pt-px"
-                style={{ color: 'var(--accent)' }}
-              >
-                {item.num}
+              <span>
+                <span className="block text-base font-medium">Nebarvené panenské vlasy</span>
+                <span className="block text-sm text-[#45302F]">Standard, LUXE, Platinum Edition</span>
               </span>
-              <div>
-                <p className="text-[15px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>
-                  {item.title}
-                </p>
-                <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-                  {item.text}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section id="categories" className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Sortiment
-        </div>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-4"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          B2B kategorie produktů
-        </h2>
-
-        <p className="text-[15px] leading-[1.8] font-light mb-12" style={{ color: 'var(--text-soft)' }}>
-          {!isLoggedIn || !isApproved
-            ? 'Velkoobchodní ceny dostupné po přihlášení a schválení účtu.'
-            : 'Vyberte kategorii pro zobrazení velkoobchodních cen.'}
-        </p>
-
-        <div className="w-16 h-px mb-10" style={{ background: 'var(--accent)' }} />
-
-        <div className="flex flex-col gap-0 max-w-2xl mb-8">
-          <Link
-            href="/vlasy-k-prodlouzeni/nebarvene-panenske"
-            className="flex items-start gap-4 py-6 border-b transition-opacity hover:opacity-70"
-            style={{ borderColor: 'var(--beige)' }}
-          >
-            <span
-              className="block w-4 h-px mt-[11px] flex-shrink-0"
-              style={{ background: 'var(--accent)' }}
-            />
-            <div>
-              <p className="text-[15px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>
-                Nebarvené panenské vlasy
-              </p>
-              <p className="text-[15px] font-light" style={{ color: 'var(--text-soft)' }}>
-                Tři úrovně kvality: Standard / LUXE / Platinum Edition
-              </p>
-            </div>
-            <span
-              className="ml-auto text-[13px] tracking-[0.1em] uppercase font-light flex-shrink-0 pt-px"
-              style={{ color: 'var(--text-mid)' }}
+              <span aria-hidden="true" className="text-muza-ink">→</span>
+            </Link>
+            <Link
+              href="/vlasy-k-prodlouzeni/barvene-vlasy"
+              className="flex justify-between items-center gap-6 py-4 border-t border-b border-muza-line hover:opacity-80"
             >
-              Zobrazit →
-            </span>
-          </Link>
-
-          <Link
-            href="/vlasy-k-prodlouzeni/barvene-vlasy"
-            className="flex items-start gap-4 py-6 border-b transition-opacity hover:opacity-70"
-            style={{ borderColor: 'var(--beige)' }}
-          >
-            <span
-              className="block w-4 h-px mt-[11px] flex-shrink-0"
-              style={{ background: 'var(--accent)' }}
-            />
-            <div>
-              <p className="text-[15px] font-light mb-1" style={{ color: 'var(--text-dark)' }}>
-                Barvené a Blond vlasy
-              </p>
-              <p className="text-[15px] font-light" style={{ color: 'var(--text-soft)' }}>
-                Standard / LUXE / Platinum Edition (individuální ceny)
-              </p>
-            </div>
-            <span
-              className="ml-auto text-[13px] tracking-[0.1em] uppercase font-light flex-shrink-0 pt-px"
-              style={{ color: 'var(--text-mid)' }}
-            >
-              Zobrazit →
-            </span>
-          </Link>
+              <span>
+                <span className="block text-base font-medium">Barvené a blond vlasy</span>
+                <span className="block text-sm text-[#45302F]">Z naší barvírny, Standard, LUXE, Platinum Edition</span>
+              </span>
+              <span aria-hidden="true" className="text-muza-ink">→</span>
+            </Link>
+          </div>
+          <div className="mt-8">
+            <Link href="/katalog" className={BTN_SECONDARY}>
+              Celý katalog
+            </Link>
+          </div>
         </div>
-
-        <p className="text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>
-          Platinum Edition může mít individuální ceny — kontaktujte nás pro detaily.
-        </p>
       </section>
 
       {/* FAQ */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Časté dotazy
-        </div>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Dotazy B2B partnerů
-        </h2>
-
-        <div className="flex flex-col gap-0 max-w-2xl">
-          {[
-            {
-              q: 'Kdo může požádat o B2B účet?',
-              a: 'B2B účet je určen pro kadeřnické salony, profesionální kadeřníky na OSVČ, e-shopy se zaměřením na vlasy a další podnikatelské subjekty v beauty odvětví.',
-            },
-            {
-              q: 'Za jak dlouho schvalujete registrace?',
-              a: 'Standardně do 24–48 hodin od odeslání kompletního registračního formuláře. O schválení vás budeme informovat e-mailem.',
-            },
-            {
-              q: 'Jaká je výše slevy pro schválené B2B účty?',
-              a: 'Výše slevy je individuální a závisí na objemu odběru a podmínkách spolupráce. Kontaktujte nás pro konkrétní nabídku.',
-            },
-            {
-              q: 'Jsou minimální objednávky (MOQ)?',
-              a: 'Standardně nemáme nastavené MOQ. U velkých zakázek řešíme podmínky individuálně — kontaktujte nás pro detaily.',
-            },
-            {
-              q: 'Jak řešíte dostupnost produktů?',
-              a: 'Část produktů máme na skladě, část vyrábíme na objednávku. Doba dodání se liší podle typu produktu a je vždy uvedena u každé položky. Pro B2B partnery zajišťujeme přednostní výrobu.',
-            },
-            {
-              q: 'Jak funguje individuální cena u Platinum Edition?',
-              a: 'Platinum Edition má často specifické požadavky. Přidejte produkt do košíku a odešlete poptávku, nebo nás kontaktujte přímo na muzahaircz@gmail.com s detaily vašich požadavků.',
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 py-6 border-b"
-              style={{ borderColor: 'var(--ivory-warm)' }}
-            >
-              <span
-                className="block w-4 h-px mt-[13px] flex-shrink-0"
-                style={{ background: 'var(--accent)' }}
-              />
-              <div>
-                <p className="text-[15px] font-light mb-2" style={{ color: 'var(--text-dark)' }}>
-                  {item.q}
-                </p>
-                <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-                  {item.a}
-                </p>
-              </div>
-            </div>
-          ))}
+      <section className="px-4 lg:px-8 py-16 lg:py-20">
+        <div className="max-w-[720px] mx-auto">
+          <h2 className="font-cormorant text-[34px] lg:text-[42px] leading-[1.1] font-light">Časté dotazy</h2>
+          <div className="mt-8 border-b border-muza-line">
+            {FAQ.map((item) => (
+              <details key={item.q} className="group border-t border-muza-line">
+                <summary className="flex justify-between items-center gap-6 py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <span className="text-base font-medium">{item.q}</span>
+                  <span aria-hidden="true" className="text-muza-ink text-xl leading-none transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="pb-4 text-sm leading-relaxed text-[#45302F]">{item.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div className="w-16 h-px mb-8" style={{ background: 'var(--accent)' }} />
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-4"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Potřebujete poradit?
-        </h2>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-md mb-10" style={{ color: 'var(--text-soft)' }}>
-          Náš tým je připraven odpovědět na vaše dotazy a pomoci vám s výběrem produktů.
-        </p>
-
-        <div className="flex flex-col gap-0 max-w-sm mb-12">
-          <div
-            className="flex items-center gap-8 py-5 border-b"
-            style={{ borderColor: 'var(--beige)' }}
-          >
-            <span
-              className="text-[12px] tracking-[0.15em] uppercase font-light w-16 flex-shrink-0"
-              style={{ color: 'var(--text-soft)' }}
-            >
-              E-mail
-            </span>
-            <a
-              href="mailto:muzahaircz@gmail.com"
-              className="text-[15px] font-light transition-opacity hover:opacity-70"
-              style={{ color: 'var(--text-dark)' }}
-            >
-              muzahaircz@gmail.com
-            </a>
+      {/* Závěrečná výzva */}
+      <section className="px-4 lg:px-8 pb-20">
+        <div className="max-w-[720px] mx-auto rounded-3xl bg-muza-ivory px-6 py-10 lg:px-12 text-center">
+          <h2 className="font-cormorant text-[34px] lg:text-[42px] leading-[1.1] font-light">
+            Začněte nakupovat za velkoobchodní ceny
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-[#45302F]">
+            Registrace zabere pár minut. Dotazy rádi zodpovíme na{' '}
+            <a href="mailto:muzahaircz@gmail.com" className="underline underline-offset-2">muzahaircz@gmail.com</a>
+            {' '}nebo na{' '}
+            <a href="tel:+420728722880" className="underline underline-offset-2 whitespace-nowrap">+420 728 722 880</a>.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <button type="button" onClick={openModal} className={BTN_PRIMARY}>
+              Požádat o velkoobchodní ceny
+            </button>
+            <Link href="/kontakt" className={BTN_SECONDARY}>
+              Napsat nám
+            </Link>
           </div>
-          <div
-            className="flex items-center gap-8 py-5 border-b"
-            style={{ borderColor: 'var(--beige)' }}
-          >
-            <span
-              className="text-[12px] tracking-[0.15em] uppercase font-light w-16 flex-shrink-0"
-              style={{ color: 'var(--text-soft)' }}
-            >
-              Telefon
-            </span>
-            <a
-              href="tel:+420728722880"
-              className="text-[15px] font-light transition-opacity hover:opacity-70"
-              style={{ color: 'var(--text-dark)' }}
-            >
-              +420 728 722 880
-            </a>
-          </div>
-        </div>
-
-        <div className="flex gap-4 flex-wrap items-center">
-          <button
-            onClick={handleCTAClick}
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
-            style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-          >
-            Registrovat B2B účet
-          </button>
-          <Link
-            href="/kontakt"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
-            style={{ color: 'var(--text-mid)' }}
-          >
-            Napsat nám →
-          </Link>
         </div>
       </section>
 
@@ -413,7 +234,6 @@ export default function VelkoobchodPage() {
         isOpen={showRegistrationModal}
         onClose={() => setShowRegistrationModal(false)}
       />
-
     </div>
   );
 }

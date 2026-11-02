@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { BreadcrumbSchema } from '@/components/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Jak poznat nejkvalitnější vlasy na prodloužení — průvodce 2026 | Múza Hair',
+  title: 'Jak poznat nejkvalitnější vlasy na prodloužení — průvodce 2026 | Mùza Hair',
   description:
     'Kompletní průvodce jak poznat nejkvalitnější vlasy na prodloužení v roce 2026. Panenské vlasy Praha, certifikát původu, srovnání kvality Standard vs LUXE vs Platinum.',
   keywords: [
@@ -13,16 +13,16 @@ export const metadata: Metadata = {
     'certifikované vlasy na prodloužení',
     'nejlepší vlasy na prodloužení 2026',
   ],
-  authors: [{ name: 'Múza Hair' }],
+  authors: [{ name: 'Mùza Hair' }],
   openGraph: {
-    title: 'Jak poznat nejkvalitnější vlasy na prodloužení — průvodce 2026 | Múza Hair',
+    title: 'Jak poznat nejkvalitnější vlasy na prodloužení — průvodce 2026 | Mùza Hair',
     description:
       'Kompletní průvodce jak poznat nejkvalitnější vlasy na prodloužení. 5 klíčových kritérií, srovnání tříd kvality a rady od expertů z Prahy.',
     type: 'article',
     url: 'https://muzahair.cz/blog/nejkvalitnějsi-vlasy-na-prodlouzeni',
     publishedTime: '2026-01-15T09:00:00+01:00',
     modifiedTime: '2026-04-19T10:00:00+02:00',
-    authors: ['Múza Hair'],
+    authors: ['Mùza Hair'],
     tags: [
       'nejkvalitnější vlasy na prodloužení',
       'panenské vlasy',
@@ -54,12 +54,12 @@ const articleSchema = {
   dateModified: '2026-04-19T10:00:00+02:00',
   author: {
     '@type': 'Organization',
-    name: 'Múza Hair',
+    name: 'Mùza Hair',
     url: 'https://muzahair.cz',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'Múza Hair',
+    name: 'Mùza Hair',
     logo: {
       '@type': 'ImageObject',
       url: 'https://muzahair.cz/logo.png',
@@ -117,7 +117,7 @@ const faqSchema = {
       name: 'Kde koupit certifikované vlasy na prodloužení v Praze?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Múza Hair nabízí certifikované vlasy na prodloužení v Praze od roku 2016. Všechny naše vlasy mají certifikát původu, pochází od slovanských a českých dárců a jsou k dispozici ve třech třídách kvality: Standard, LUXE a Platinum. Navštivte náš e-shop nebo se objednejte na konzultaci v naší pražské provozovně.',
+        text: 'Mùza Hair nabízí certifikované vlasy na prodloužení v Praze od roku 2016. Všechny naše vlasy mají certifikát původu, pochází od slovanských a českých dárců a jsou k dispozici ve třech třídách kvality: Standard, LUXE a Platinum. Navštivte náš e-shop nebo se objednejte na konzultaci v naší pražské provozovně.',
       },
     },
   ],
@@ -193,7 +193,7 @@ export default function NejkvalitnějsiVlasyPage() {
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 pb-6 border-b border-gray-200">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-burgundy">Múza Hair</span>
+                <span className="font-medium text-burgundy">Mùza Hair</span>
                 <span>— Praha, od 2016</span>
               </div>
               <div className="flex items-center gap-2">
@@ -299,7 +299,7 @@ export default function NejkvalitnějsiVlasyPage() {
               </p>
 
               <p className="mb-4 leading-relaxed">
-                V Múza Hair se věnujeme prémiovým vlasovým prodloužením od roku 2016.
+                V Mùza Hair se věnujeme prémiovým vlasovým prodloužením od roku 2016.
                 Za tu dobu jsme otestovali desítky dodavatelů, prošli stovkami
                 konzultací a naučili se přesně, co dělá vlasy skutečně výjimečnými.
                 V tomto průvodci sdílíme vše, co potřebujete vědět, abyste se
@@ -462,7 +462,7 @@ export default function NejkvalitnějsiVlasyPage() {
                 </div>
                 <p className="mt-3 ml-12 text-sm text-gray-600">
                   <strong>Jak to zjistit:</strong> Zeptejte se dodavatele na certifikát původu
-                  nebo dokumentaci dárce. Poctivé firmy jako Múza Hair tento doklad na vyžádání
+                  nebo dokumentaci dárce. Poctivé firmy jako Mùza Hair tento doklad na vyžádání
                   poskytnou.
                 </p>
               </div>
@@ -644,7 +644,7 @@ export default function NejkvalitnějsiVlasyPage() {
                   </ul>
                 </div>
                 <p className="ml-12 text-sm text-gray-600">
-                  Múza Hair jako český výrobce a dodavatel vlasových prodloužení
+                  Mùza Hair jako český výrobce a dodavatel vlasových prodloužení
                   pracuje výhradně s prověřenými zdroji, u nichž garantujeme
                   etický odběr a transparentní původ každé šarže. Pro naše{' '}
                   <Link
@@ -665,7 +665,7 @@ export default function NejkvalitnějsiVlasyPage() {
               </h2>
 
               <p className="mb-6 leading-relaxed">
-                Múza Hair nabízí vlasy na prodloužení ve třech jasně definovaných třídách
+                Mùza Hair nabízí vlasy na prodloužení ve třech jasně definovaných třídách
                 kvality. Každá třída je optimalizována pro jiný typ zákaznice — od těch,
                 kteří hledají vynikající poměr cena/výkon, po ty, kteří chtějí absolutní
                 maximum bez kompromisů.
@@ -832,7 +832,7 @@ export default function NejkvalitnějsiVlasyPage() {
               <div className="bg-ivory rounded-xl p-6 my-6 border-l-4 border-burgundy">
                 <p className="font-semibold text-burgundy mb-2">Věděli jste?</p>
                 <p className="text-gray-700 text-sm leading-relaxed">
-                  Múza Hair vznikla v Praze v roce 2016 jako první český specializovaný
+                  Mùza Hair vznikla v Praze v roce 2016 jako první český specializovaný
                   výrobce a distributor prémiových vlasových prodloužení. Za deset let
                   jsme zpracovali vlasy od více než 2 000 dárkyň ze Čech, Slovenska
                   a dalších slovanských zemí. Každý pramen je sledovatelný zpět ke svému
@@ -1078,7 +1078,7 @@ export default function NejkvalitnějsiVlasyPage() {
                   </summary>
                   <div className="px-5 pb-5 text-gray-700 text-sm leading-relaxed border-t border-gray-100">
                     <p className="pt-4">
-                      Múza Hair nabízí certifikované vlasy na prodloužení v Praze od roku 2016.
+                      Mùza Hair nabízí certifikované vlasy na prodloužení v Praze od roku 2016.
                       Všechny naše vlasy mají certifikát původu, pochází od slovanských
                       a českých dárců a jsou k dispozici ve třech třídách kvality: Standard,
                       LUXE a Platinum. Navštivte náš{' '}
@@ -1133,7 +1133,7 @@ export default function NejkvalitnějsiVlasyPage() {
               </div>
 
               <p className="mb-4 leading-relaxed">
-                Múza Hair tyto standardy naplňuje u každé šarže. Jsme česká firma s pražským
+                Mùza Hair tyto standardy naplňuje u každé šarže. Jsme česká firma s pražským
                 zázemím — ne anonymní dropshipping z druhého konce světa. Každý pramen,
                 který opustí naše sklady, splňuje přísná kritéria kvality, která jsme si
                 za 10 let existence nastavili.

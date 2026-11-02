@@ -195,7 +195,7 @@ export default function CatalogPage() {
             return (
               <button key={o.label} type="button" aria-pressed={on}
                 onClick={() => { setKind(o.v); setParam('druh', o.v); }}
-                className={`h-9 px-4 rounded-full text-[14px] border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
+                className={`h-9 px-4 rounded-full text-sm border transition-colors ${on ? 'bg-muza-ink text-muza-onink border-muza-ink' : 'bg-transparent text-text-dark border-muza-line hover:border-muza-ink'}`}>
                 {o.label}
               </button>
             );
@@ -223,7 +223,7 @@ export default function CatalogPage() {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={x.src} alt="" loading="lazy" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="w-full h-full flex items-center justify-center text-[13px] text-text-dark">Vše</span>
+                      <span className="w-full h-full flex items-center justify-center text-sm text-text-dark">Vše</span>
                     )}
                   </span>
                   <span className={`mt-1 block font-cormorant text-[18px] leading-none ${on ? 'text-muza-ink' : 'text-text-mid'}`}>{x ? x.num : '\u00A0'}</span>
@@ -242,7 +242,7 @@ export default function CatalogPage() {
               const on = sortBy === o.v;
               return (
                 <button key={o.v} type="button" aria-pressed={on} onClick={() => setSortBy(o.v)}
-                  className={`flex-none h-9 px-3.5 rounded-full text-[14px] transition-colors ${on ? 'bg-muza-ink text-muza-onink' : 'text-text-dark hover:bg-muza-mocha/60'}`}>
+                  className={`flex-none h-9 px-3.5 rounded-full text-sm transition-colors ${on ? 'bg-muza-ink text-muza-onink' : 'text-text-dark hover:bg-muza-mocha/60'}`}>
                   {o.label}
                 </button>
               );

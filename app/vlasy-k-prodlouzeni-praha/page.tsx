@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Vlasy k prodloužení Praha | Showroom & e-shop | Múza Hair',
+  title: 'Vlasy k prodloužení Praha | Showroom & e-shop | Mùza Hair',
   description: 'Vlasy k prodloužení Praha — prémiový showroom, keratin, tape-in, weft/tresy. Osobní konzultace, dodání 48 h po celé ČR. Ceny od 3 900 Kč.',
   alternates: { canonical: 'https://muzahair.cz/vlasy-k-prodlouzeni-praha' },
   keywords: [
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     'tape-in vlasy Praha',
   ],
   openGraph: {
-    title: 'Vlasy k Prodloužení Praha | Showroom & E-shop | Múza Hair',
+    title: 'Vlasy k Prodloužení Praha | Showroom & E-shop | Mùza Hair',
     description: 'Jediný prémiový showroom s pravými vlasy k prodloužení v Praze. Panenské, slovanské a evropské vlasy. Keratin, tape-in, weft/tresy.',
     url: 'https://muzahair.cz/vlasy-k-prodlouzeni-praha',
     locale: 'cs_CZ',
@@ -29,7 +29,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
   const localBusinessJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: 'Múza Hair Praha — Showroom vlasy k prodloužení',
+    name: 'Mùza Hair Praha — Showroom vlasy k prodloužení',
     description: 'Prémiový showroom s pravými vlasy k prodloužení v Praze. Panenské, slovanské a evropské vlasy. Keratin, tape-in, weft/tresy. Na trhu od roku 2016.',
     url: 'https://muzahair.cz',
     telephone: '+420',
@@ -88,7 +88,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
         name: 'Kde v Praze si mohu koupit vlasy k prodloužení osobně?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair provozuje od roku 2016 prémiový showroom v Praze — jediné místo v hlavním městě, kde si pravé vlasy k prodloužení můžete osobně prohlédnout, ohmatat a porovnat různé délky, odstíny i kvality. Konzultace je zdarma, po předchozí domluvě.',
+          text: 'Mùza Hair provozuje od roku 2016 prémiový showroom v Praze — jediné místo v hlavním městě, kde si pravé vlasy k prodloužení můžete osobně prohlédnout, ohmatat a porovnat různé délky, odstíny i kvality. Konzultace je zdarma, po předchozí domluvě.',
         },
       },
       {
@@ -96,7 +96,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
         name: 'Jaké typy vlasů k prodloužení jsou dostupné v pražském showroomu?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'V pražském showroomu Múza Hair najdete vlasy na keratin (keratinová spojení), vlasy na pásky (tape-in), wefty/tresy pro zapletení i vplétání. Dostupné ve třech kvalitách: Standard (remy), LUXE (panenské) a Platinum (slovanské panenské). Délky od 35 do 75 cm.',
+          text: 'V pražském showroomu Mùza Hair najdete vlasy na keratin (keratinová spojení), vlasy na pásky (tape-in), wefty/tresy pro zapletení i vplétání. Dostupné ve třech kvalitách: Standard (remy), LUXE (panenské) a Platinum (slovanské panenské). Délky od 35 do 75 cm.',
         },
       },
       {
@@ -104,15 +104,15 @@ export default function VlasyKProdlouzeniPrahaPage() {
         name: 'Jak rychle dostanu vlasy k prodloužení objednané online?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Vlasy k prodloužení objednané v e-shopu Múza Hair jsou expedovány zpravidla do 24 hodin od přijetí objednávky. Standardní dodání po celé České republice trvá 1–2 pracovní dny, tedy maximálně 48 hodin.',
+          text: 'Vlasy k prodloužení objednané v e-shopu Mùza Hair jsou expedovány zpravidla do 24 hodin od přijetí objednávky. Standardní dodání po celé České republice trvá 1–2 pracovní dny, tedy maximálně 48 hodin.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Kolik stojí vlasy k prodloužení v Praze u Múza Hair?',
+        name: 'Kolik stojí vlasy k prodloužení v Praze u Mùza Hair?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ceny vlasů k prodloužení u Múza Hair začínají od 3 900 Kč za sadu Standard (remy vlasy). LUXE panenské vlasy jsou od 6 900 Kč a Platinum slovanské panenské vlasy od 10 900 Kč. Cena vždy závisí na délce a gramáži sady.',
+          text: 'Ceny vlasů k prodloužení u Mùza Hair začínají od 3 900 Kč za sadu Standard (remy vlasy). LUXE panenské vlasy jsou od 6 900 Kč a Platinum slovanské panenské vlasy od 10 900 Kč. Cena vždy závisí na délce a gramáži sady.',
         },
       },
     ],
@@ -151,7 +151,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
             Jediný prémiový showroom pro vlasy k prodloužení v Praze. Přijďte osobně nebo objednejte online — dodání do 48 hodin po celé ČR.
           </p>
           <p className="text-gray-500 mb-6 max-w-2xl">
-            Hledáte kde koupit vlasy k prodloužení v Praze? Múza Hair je český výrobce s vlastní barvírnou a pražským showroomem od roku 2016. Nabízíme panenské, slovanské i evropské vlasy ve třech kvalitách — vždy s osobní konzultací a garancí původu.
+            Hledáte kde koupit vlasy k prodloužení v Praze? Mùza Hair je český výrobce s vlastní barvírnou a pražským showroomem od roku 2016. Nabízíme panenské, slovanské i evropské vlasy ve třech kvalitách — vždy s osobní konzultací a garancí původu.
           </p>
 
           {/* Opening hours badge */}
@@ -182,7 +182,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
               Jediný prémiový showroom vlasů k prodloužení v Praze
             </h2>
             <p className="text-gray-600 mb-6 max-w-3xl">
-              V Praze neexistuje druhé místo, kde byste si mohli panenské a slovanské vlasy k prodloužení osobně prohlédnout a vyzkoušet. Múza Hair showroom je unikátní — máme stálou zásobu vzorků ve všech délkách, gramážích a odstínech. Víte přesně, co kupujete.
+              V Praze neexistuje druhé místo, kde byste si mohli panenské a slovanské vlasy k prodloužení osobně prohlédnout a vyzkoušet. Mùza Hair showroom je unikátní — máme stálou zásobu vzorků ve všech délkách, gramážích a odstínech. Víte přesně, co kupujete.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -214,7 +214,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
           {/* Why Muza section */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-6">
-              Proč nakupovat vlasy k prodloužení u Múza Hair?
+              Proč nakupovat vlasy k prodloužení u Mùza Hair?
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -261,7 +261,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
           {/* 3 ways to buy */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-3">
-              3 způsoby, jak získat vlasy k prodloužení od Múza Hair
+              3 způsoby, jak získat vlasy k prodloužení od Mùza Hair
             </h2>
             <p className="text-gray-500 mb-8">Vyberte si způsob, který vám nejlépe vyhovuje.</p>
             <div className="grid md:grid-cols-3 gap-6">
@@ -444,12 +444,12 @@ export default function VlasyKProdlouzeniPrahaPage() {
           {/* Location/showroom section */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-6">
-              Kde nás najdete — Praha showroom Múza Hair
+              Kde nás najdete — Praha showroom Mùza Hair
             </h2>
             <div className="grid md:grid-cols-2 gap-8 items-start">
               <div>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  Múza Hair showroom se nachází v Praze a je dostupný po předchozí telefonické nebo e-mailové domluvě. Otevřeno každý den v týdnu od 9:00 do 19:00 — včetně víkendů a svátků.
+                  Mùza Hair showroom se nachází v Praze a je dostupný po předchozí telefonické nebo e-mailové domluvě. Otevřeno každý den v týdnu od 9:00 do 19:00 — včetně víkendů a svátků.
                 </p>
                 <div className="bg-ivory rounded-xl p-6 border border-gray-100 space-y-3">
                   <div className="flex items-start gap-3">
@@ -471,7 +471,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
                     <div>
                       <p className="font-semibold text-gray-900">Rezervace konzultace</p>
                       <Link href="/kontakt" className="text-burgundy text-sm hover:underline">
-                        Kontaktovat Múza Hair →
+                        Kontaktovat Mùza Hair →
                       </Link>
                     </div>
                   </div>
@@ -480,7 +480,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
               <div className="bg-gray-100 rounded-xl h-64 flex items-center justify-center border border-gray-200">
                 <div className="text-center">
                   <p className="text-4xl mb-3">🗺️</p>
-                  <p className="text-gray-500 text-sm mb-3">Showroom Múza Hair, Praha</p>
+                  <p className="text-gray-500 text-sm mb-3">Showroom Mùza Hair, Praha</p>
                   <a
                     href="https://maps.google.com/?q=Praha"
                     target="_blank"
@@ -594,18 +594,18 @@ export default function VlasyKProdlouzeniPrahaPage() {
               {[
                 {
                   q: 'Kde v Praze si mohu koupit vlasy k prodloužení osobně?',
-                  a: 'Múza Hair provozuje od roku 2016 prémiový showroom v Praze — jediné místo v hlavním městě, kde si pravé vlasy k prodloužení můžete osobně prohlédnout, ohmatat a porovnat různé délky, odstíny i kvality. Konzultace je zdarma, po předchozí domluvě. Kontakt a adresu najdete na stránce /kontakt.',
+                  a: 'Mùza Hair provozuje od roku 2016 prémiový showroom v Praze — jediné místo v hlavním městě, kde si pravé vlasy k prodloužení můžete osobně prohlédnout, ohmatat a porovnat různé délky, odstíny i kvality. Konzultace je zdarma, po předchozí domluvě. Kontakt a adresu najdete na stránce /kontakt.',
                 },
                 {
                   q: 'Jaké typy vlasů k prodloužení jsou k dispozici?',
-                  a: 'U Múza Hair najdete vlasy na keratin (keratinová spojení), vlasy na pásky (tape-in) a wefty/tresy. Všechny typy jsou dostupné ve třech kvalitách: Standard (remy vlasy), LUXE (panenské vlasy) a Platinum (slovanské panenské vlasy). Délky od 35 do 75 cm.',
+                  a: 'U Mùza Hair najdete vlasy na keratin (keratinová spojení), vlasy na pásky (tape-in) a wefty/tresy. Všechny typy jsou dostupné ve třech kvalitách: Standard (remy vlasy), LUXE (panenské vlasy) a Platinum (slovanské panenské vlasy). Délky od 35 do 75 cm.',
                 },
                 {
                   q: 'Jak rychle dostanu vlasy k prodloužení objednané online?',
-                  a: 'Vlasy objednané v e-shopu Múza Hair jsou expedovány do 24 hodin od přijetí objednávky. Standardní dodání přes přepravní společnost trvá 1–2 pracovní dny, tedy maximálně 48 hodin po celé České republice.',
+                  a: 'Vlasy objednané v e-shopu Mùza Hair jsou expedovány do 24 hodin od přijetí objednávky. Standardní dodání přes přepravní společnost trvá 1–2 pracovní dny, tedy maximálně 48 hodin po celé České republice.',
                 },
                 {
-                  q: 'Kolik stojí vlasy k prodloužení u Múza Hair Praha?',
+                  q: 'Kolik stojí vlasy k prodloužení u Mùza Hair Praha?',
                   a: 'Ceny začínají od 3 900 Kč za sadu Standard (remy vlasy, délka cca 45–55 cm, 100 g). LUXE panenské vlasy jsou od 6 900 Kč a Platinum slovanské panenské vlasy od 10 900 Kč. Přesná cena vždy závisí na délce a gramáži sady.',
                 },
               ].map((item, i) => (

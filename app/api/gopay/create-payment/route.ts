@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       items: [
         {
           type: 'ITEM',
-          name: 'Objednávka vlasů - Múza Hair',
+          name: 'Objednávka vlasů - Mùza Hair',
           amount: amountInCents,
           count: 1,
         },

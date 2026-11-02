@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Luxusní vlasy na prodloužení | LUXE & Platinum | Múza Hair',
+  title: 'Luxusní vlasy na prodloužení | LUXE & Platinum | Mùza Hair',
   description: 'Luxusní vlasy na prodloužení — certifikované panenské a slovanské vlasy z Evropy. LUXE a Platinum edition. Showroom Praha, dodání do 48 h. Od 6 900 Kč.',
   alternates: { canonical: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni' },
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     'high-end vlasy na prodloužení',
   ],
   openGraph: {
-    title: 'Luxusní Vlasy na Prodloužení | Múza Hair Praha',
+    title: 'Luxusní Vlasy na Prodloužení | Mùza Hair Praha',
     description: 'Certifikované panenské a slovanské vlasy z Evropy. LUXE a Platinum edition. Showroom Praha.',
     url: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
@@ -27,7 +27,7 @@ export default function LuxusniVlasyPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Luxusní vlasy na prodloužení — Múza Hair Praha',
+    name: 'Luxusní vlasy na prodloužení — Mùza Hair Praha',
     description: 'Prémiové panenské a slovanské vlasy na prodloužení nejvyšší kvality.',
     url: 'https://muzahair.cz/luxusni-vlasy-na-prodlouzeni',
     itemListElement: [
@@ -81,7 +81,7 @@ export default function LuxusniVlasyPage() {
         name: 'Kde si mohu koupit luxusní vlasy na prodloužení v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair má showroom v Praze kde si luxusní vlasy LUXE a Platinum můžete prohlédnout osobně. Dostupné také v online e-shopu s dodáním do 48 hodin po celé ČR.',
+          text: 'Mùza Hair má showroom v Praze kde si luxusní vlasy LUXE a Platinum můžete prohlédnout osobně. Dostupné také v online e-shopu s dodáním do 48 hodin po celé ČR.',
         },
       },
     ],
@@ -122,7 +122,7 @@ export default function LuxusniVlasyPage() {
               Certifikované panenské a slovanské vlasy z Evropy. Nejvyšší kvalita na českém trhu — LUXE a Platinum edition.
             </p>
             <p className="text-gray-500 max-w-2xl leading-relaxed">
-              Luxusní vlasy na prodloužení nejsou jen o délce — jsou o původu, zpracování a trvanlivosti. Múza Hair nabízí výhradně prémiové vlasy s certifikovaným evropským původem, které vydrží 12 až 24 měsíců.
+              Luxusní vlasy na prodloužení nejsou jen o délce — jsou o původu, zpracování a trvanlivosti. Mùza Hair nabízí výhradně prémiové vlasy s certifikovaným evropským původem, které vydrží 12 až 24 měsíců.
             </p>
           </div>
 
@@ -195,7 +195,7 @@ export default function LuxusniVlasyPage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-3">✅ Luxusní panenské vlasy (Múza Hair)</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">✅ Luxusní panenské vlasy (Mùza Hair)</h3>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li>✓ Od jednoho dárce — jednotná struktura</li>
                   <li>✓ Kutikuly zachovány ve správném směru</li>
@@ -259,7 +259,7 @@ export default function LuxusniVlasyPage() {
                 },
                 {
                   q: 'Jak poznám luxusní vlasy na prodloužení?',
-                  a: 'Luxusní vlasy mají přirozený lesk (ne plastický), jsou hebké na dotek a mají zachovanou kutikulu — vlasy se třepí méně, nesplétají a nezamotávají. Certifikát původu je samozřejmostí. U Múza Hair garantujeme původ každé sady.',
+                  a: 'Luxusní vlasy mají přirozený lesk (ne plastický), jsou hebké na dotek a mají zachovanou kutikulu — vlasy se třepí méně, nesplétají a nezamotávají. Certifikát původu je samozřejmostí. U Mùza Hair garantujeme původ každé sady.',
                 },
                 {
                   q: 'Je rozdíl v luxusních vlasech na keratin vs. pásky?',

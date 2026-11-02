@@ -75,12 +75,13 @@ const getShadeColor = (shade?: number): { hex: string; name: string } => {
 
 const DEFAULT_RATE = 1 / 25.5;
 
+
 const formatCurrencyValue = (value: number, currency: 'CZK' | 'EUR') => {
   return new Intl.NumberFormat(currency === 'CZK' ? 'cs-CZ' : 'en-US', {
     style: 'currency',
     currency,
-    minimumFractionDigits: currency === 'CZK' ? 1 : 2,
-    maximumFractionDigits: currency === 'CZK' ? 1 : 2,
+    minimumFractionDigits: currency === 'CZK' ? 0 : 2,
+    maximumFractionDigits: currency === 'CZK' ? 0 : 2,
   }).format(value);
 };
 
@@ -274,12 +275,12 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         action={!props.inStock ? null : byGrams ? (
           // Po gramech se nejdřív vybírá délka a gramáž na detailu (návrh 19)
           <Link href={`/sku-detail/${props.id}`}
-            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] flex items-center justify-center hover:bg-muza-ink hover:text-muza-onink transition-colors">
+            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-sm flex items-center justify-center hover:bg-muza-ink hover:text-muza-onink transition-colors">
             Vybrat délku a gramáž
           </Link>
         ) : (
           <button type="button" onClick={handleAddToCart} disabled={!hasPrice}
-            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-[14px] hover:bg-muza-ink hover:text-muza-onink transition-colors disabled:opacity-40 disabled:pointer-events-none">
+            className="mt-3 w-full h-11 rounded-full border border-muza-ink text-muza-ink text-sm hover:bg-muza-ink hover:text-muza-onink transition-colors disabled:opacity-40 disabled:pointer-events-none">
             {!hasPrice ? 'Cenu doplňujeme' : showAddedMessage ? 'Přidáno' : 'Do košíku'}
           </button>
         )} />

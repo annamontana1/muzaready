@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Informace a průvodce | Prodloužení vlasů | Múza Hair Praha',
-  description: 'Průvodce prodloužením vlasů — FAQ, jak nakupovat, obchodní podmínky, platba a vrácení, odeslání a stav objednávky. Múza Hair Praha.',
+  title: 'Informace a průvodce | Prodloužení vlasů | Mùza Hair Praha',
+  description: 'Průvodce prodloužením vlasů — FAQ, jak nakupovat, obchodní podmínky, platba a vrácení, odeslání a stav objednávky. Mùza Hair Praha.',
   alternates: { canonical: 'https://muzahair.cz/informace' },
   openGraph: {
-    title: 'Informace a průvodce | Prodloužení vlasů | Múza Hair Praha',
-    description: 'Průvodce prodloužením vlasů — FAQ, jak nakupovat, obchodní podmínky, platba a vrácení, odeslání a stav objednávky. Múza Hair Praha.',
+    title: 'Informace a průvodce | Prodloužení vlasů | Mùza Hair Praha',
+    description: 'Průvodce prodloužením vlasů — FAQ, jak nakupovat, obchodní podmínky, platba a vrácení, odeslání a stav objednávky. Mùza Hair Praha.',
     url: 'https://muzahair.cz/informace',
     locale: 'cs_CZ',
     type: 'website',
@@ -56,10 +56,6 @@ export default function InformacePage() {
       {/* Header */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-3xl">
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            ZÁKAZNICKÝ SERVIS
-          </div>
           <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12]" style={{ color: 'var(--text-dark)' }}>
             Informace
           </h1>
@@ -81,7 +77,7 @@ export default function InformacePage() {
                   <h2 className="font-cormorant text-[clamp(20px,2vw,26px)] font-light mb-2" style={{ color: 'var(--text-dark)' }}>
                     {item.title}
                   </h2>
-                  <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+                  <p className="text-sm leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
                     {item.description}
                   </p>
                 </div>

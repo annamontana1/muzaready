@@ -271,7 +271,7 @@ export default function SkuDetailPage() {
                 style={{ borderColor: 'var(--burgundy)', borderRightColor: 'transparent' }}
               />
               <p
-                className="text-[13px] tracking-[0.1em] uppercase font-light"
+                className="text-sm tracking-[0.1em] uppercase font-light"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Načítám produkt…
@@ -397,7 +397,7 @@ export default function SkuDetailPage() {
 
           {/* ── Galerie: tenký burgundy rámeček; jedna pevná fotka (žádné tažení prstem,
                které při posouvání stránky hýbalo fotkou), přepíná se miniaturami pod ní ── */}
-          <div className="px-4 pt-4 lg:px-0 lg:pt-0 min-w-0">
+          <div className="px-4 pt-4 lg:px-0 lg:pt-0 min-w-0 lg:sticky lg:top-28 lg:self-start">
             <div className="rounded-t-[186px] rounded-b-[20px] border border-muza-ink p-[5px] max-w-[520px] mx-auto">
               {hasImages ? (
                 <button type="button" onClick={openLightbox}
@@ -484,7 +484,7 @@ export default function SkuDetailPage() {
                       </span>
                     </div>
                   </div>
-                  <p className="mt-2.5 text-[14px] text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
+                  <p className="mt-2.5 text-sm text-text-mid">Na plné prodloužení obvykle stačí 100–150 g.</p>
                 </div>
               ) : (
                 sku.lengthCm ? (
@@ -497,7 +497,7 @@ export default function SkuDetailPage() {
                         {sku.lengthCm} cm · {hairZone(sku.lengthCm)}{pieceLeft ? ` · ${pieceLeft} g` : ''} · celý culík
                       </span>
                     </span>
-                    <span className="flex items-center gap-1.5 text-[14px] text-muza-ink whitespace-nowrap">
+                    <span className="flex items-center gap-1.5 text-sm text-muza-ink whitespace-nowrap">
                       Kam sahá
                       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 6l6 6-6 6" /></svg>
                     </span>
@@ -525,7 +525,7 @@ export default function SkuDetailPage() {
                           <span aria-hidden="true" className={`w-5 h-5 flex-none rounded-full transition-[border-width] duration-150 ${on ? 'border-[6px] border-muza-ink' : 'border-[1.5px] border-[#8C7A74]'}`} />
                           <span className="text-[15px] font-normal text-text-dark">{o.label}</span>
                         </span>
-                        <span className="text-[14px] text-[#45302F]">{o.price}</span>
+                        <span className="text-sm text-[#45302F]">{o.price}</span>
                       </button>
                     );
                   })}
@@ -533,7 +533,7 @@ export default function SkuDetailPage() {
               </fieldset>
 
               {/* Rozpis ceny: jen tichý přehled, hlavní součet je dole u tlačítka Do košíku */}
-              <div className="-mt-2 flex flex-col gap-1.5 text-[14px] text-text-mid" aria-live="polite">
+              <div className="-mt-2 flex flex-col gap-1.5 text-sm text-text-mid" aria-live="polite">
                 {quote ? (
                   <>
                     {wholesalePct > 0 && (
@@ -568,7 +568,7 @@ export default function SkuDetailPage() {
               {/* Desktop: hlavní součet u tlačítka */}
               <div className="hidden lg:flex flex-col gap-3 rounded-2xl border border-muza-ink p-5">
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[14px] text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}{wholesalePct > 0 && <span className="block mt-1 text-[14px] font-medium text-[#2F5E3D]">Velkoobchodní cena</span>}</span>
+                  <span className="text-sm text-text-mid">{summaryLine}{perGramText && <span className="block mt-1 text-[16px] font-normal text-muza-ink">{perGramText}</span>}{wholesalePct > 0 && <span className="block mt-1 text-sm font-medium text-[#2F5E3D]">Velkoobchodní cena</span>}</span>
                   <span className="font-jost font-semibold text-[30px] leading-none text-muza-ink whitespace-nowrap tabular-nums">{totalText}</span>
                 </div>
                 {cta}
@@ -589,7 +589,7 @@ export default function SkuDetailPage() {
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-muza-line px-4 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <div className="text-[12px] text-text-mid truncate">{summaryLine}</div>
-          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}{wholesalePct > 0 && <span className="ml-1.5 text-[13px] font-medium text-[#2F5E3D]">velkoobchodní cena</span>}</div>}
+          {perGramText && <div className="text-[15px] font-normal text-muza-ink whitespace-nowrap">{perGramText}{wholesalePct > 0 && <span className="ml-1.5 text-sm font-medium text-[#2F5E3D]">velkoobchodní cena</span>}</div>}
           <div className="font-jost font-semibold text-[26px] leading-none mt-1 text-muza-ink whitespace-nowrap tabular-nums">{totalText}</div>
         </div>
         {cta}
@@ -648,7 +648,7 @@ export default function SkuDetailPage() {
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.22)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.12)')}
             >−</button>
-            <span className="text-white text-[13px] tracking-[0.1em] font-light min-w-[3rem] text-center">
+            <span className="text-white text-sm tracking-[0.1em] font-light min-w-[3rem] text-center">
               {Math.round(lightboxZoom * 100)}%
             </span>
             <button

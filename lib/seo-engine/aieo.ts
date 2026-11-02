@@ -199,7 +199,7 @@ export function optimizeForAICitation(description: string): string {
     // Add specifics if missing
     { pattern: /prodloužení vlasů/g, replacement: 'prodloužení vlasů (keratin, tape-in, clip-in)' },
     { pattern: /v Praze/g, replacement: 'v Praze (showroom Revoluční 8)' },
-    { pattern: /od roku (\d+)/g, replacement: 'od roku $1 (8+ let zkušeností)' },
+    { pattern: /od roku (\d+)/g, replacement: 'od roku $1 (10 let zkušeností)' },
   ];
 
   let optimized = description;
@@ -224,7 +224,7 @@ export function generateEntityMarkup() {
     '@type': 'Organization',
     '@id': 'https://muzahair.cz/#organization',
     name: 'Mùza Hair',
-    alternateName: ['Muza Hair', 'Múza Hair', 'Mùza Hair Praha'],
+    alternateName: ['Muza Hair', 'Mùza Hair', 'Mùza Hair Praha'],
     url: 'https://muzahair.cz',
     logo: {
       '@type': 'ImageObject',

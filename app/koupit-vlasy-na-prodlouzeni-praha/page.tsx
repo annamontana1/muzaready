@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Koupit vlasy na prodloužení Praha | Showroom | Múza Hair',
-  description: 'Kde koupit pravé vlasy na prodloužení v Praze? Múza Hair — showroom Praha, panenské a slovanské vlasy, keratin i pásky. Osobně nebo online. Ceny od 3 900 Kč.',
+  title: 'Koupit vlasy na prodloužení Praha | Showroom | Mùza Hair',
+  description: 'Kde koupit pravé vlasy na prodloužení v Praze? Mùza Hair — showroom Praha, panenské a slovanské vlasy, keratin i pásky. Osobně nebo online. Ceny od 3 900 Kč.',
   alternates: { canonical: 'https://muzahair.cz/koupit-vlasy-na-prodlouzeni-praha' },
   keywords: [
     'kde koupit vlasy na prodloužení Praha',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     'vlasy na prodloužení Praha e-shop',
   ],
   openGraph: {
-    title: 'Koupit vlasy na prodloužení Praha | Múza Hair showroom',
+    title: 'Koupit vlasy na prodloužení Praha | Mùza Hair showroom',
     description: 'Prémiový showroom s pravými vlasy na prodloužení v Praze. Panenské, slovanské a evropské vlasy. Keratin, pásky, tresy.',
     url: 'https://muzahair.cz/koupit-vlasy-na-prodlouzeni-praha',
     locale: 'cs_CZ',
@@ -27,7 +27,7 @@ export default function KoupitVlasyPrahaPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Store',
-    name: 'Múza Hair Praha',
+    name: 'Mùza Hair Praha',
     description: 'Prémiový showroom s pravými vlasy na prodloužení v Praze. Panenské a slovanské vlasy.',
     url: 'https://muzahair.cz',
     address: {
@@ -54,7 +54,7 @@ export default function KoupitVlasyPrahaPage() {
         name: 'Kde koupit pravé vlasy na prodloužení v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair provozuje prémiový showroom v Praze, kde si můžete pravé vlasy na prodloužení prohlédnout osobně. Vlasy jsou dostupné také v online e-shopu s dodáním do 48 hodin po celé ČR.',
+          text: 'Mùza Hair provozuje prémiový showroom v Praze, kde si můžete pravé vlasy na prodloužení prohlédnout osobně. Vlasy jsou dostupné také v online e-shopu s dodáním do 48 hodin po celé ČR.',
         },
       },
       {
@@ -62,7 +62,7 @@ export default function KoupitVlasyPrahaPage() {
         name: 'Kolik stojí pravé vlasy na prodloužení v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ceny pravých vlasů na prodloužení u Múza Hair začínají od 3 900 Kč za sadu Standard. LUXE kvalita se pohybuje od 6 900 Kč a Platinum edition od 10 900 Kč. Cena závisí na délce a gramáži.',
+          text: 'Ceny pravých vlasů na prodloužení u Mùza Hair začínají od 3 900 Kč za sadu Standard. LUXE kvalita se pohybuje od 6 900 Kč a Platinum edition od 10 900 Kč. Cena závisí na délce a gramáži.',
         },
       },
       {
@@ -78,7 +78,7 @@ export default function KoupitVlasyPrahaPage() {
         name: 'Lze si vlasy na prodloužení vybrat osobně v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ano, v showroomu Múza Hair v Praze si můžete vlasy prohlédnout, ohmatat a porovnat různé délky, odstíny a kvality. Konzultace je zdarma, po domluvě.',
+          text: 'Ano, v showroomu Mùza Hair v Praze si můžete vlasy prohlédnout, ohmatat a porovnat různé délky, odstíny a kvality. Konzultace je zdarma, po domluvě.',
         },
       },
     ],
@@ -110,10 +110,10 @@ export default function KoupitVlasyPrahaPage() {
             Kde koupit pravé vlasy na prodloužení v Praze
           </h1>
           <p className="text-xl text-gray-600 mb-4 max-w-3xl">
-            Múza Hair — prémiový showroom i e-shop s panenскými a slovanskými vlasy. Osobní konzultace v Praze nebo dodání do 48 h po celé ČR.
+            Mùza Hair — prémiový showroom i e-shop s panenскými a slovanskými vlasy. Osobní konzultace v Praze nebo dodání do 48 h po celé ČR.
           </p>
           <p className="text-gray-500 mb-10 max-w-2xl">
-            Hledáte kde koupit kvalitní vlasy na prodloužení v Praze? Nejste sami — ale pozor: ne každý e-shop je skutečný prodejce vlasů. Múza Hair je český výrobce s vlastní barvírnou a showroomem v Praze od roku 2016.
+            Hledáte kde koupit kvalitní vlasy na prodloužení v Praze? Nejste sami — ale pozor: ne každý e-shop je skutečný prodejce vlasů. Mùza Hair je český výrobce s vlastní barvírnou a showroomem v Praze od roku 2016.
           </p>
 
           {/* CTA buttons */}
@@ -135,7 +135,7 @@ export default function KoupitVlasyPrahaPage() {
           {/* Why Muza */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-6">
-              Proč koupit vlasy na prodloužení u Múza Hair Praha?
+              Proč koupit vlasy na prodloužení u Mùza Hair Praha?
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -279,7 +279,7 @@ export default function KoupitVlasyPrahaPage() {
           {/* How to buy */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-6">
-              Jak koupit vlasy na prodloužení u Múza Hair
+              Jak koupit vlasy na prodloužení u Mùza Hair
             </h2>
             <div className="grid md:grid-cols-4 gap-4">
               {[
@@ -308,7 +308,7 @@ export default function KoupitVlasyPrahaPage() {
               {[
                 {
                   q: 'Kde v Praze si mohu vlasy na prodloužení osobně prohlédnout?',
-                  a: 'Múza Hair provozuje showroom v Praze. Přijďte po předchozí domluvě — vlasy si ohmatáte, porovnáte délky a odstíny a dostanete bezplatnou konzultaci.',
+                  a: 'Mùza Hair provozuje showroom v Praze. Přijďte po předchozí domluvě — vlasy si ohmatáte, porovnáte délky a odstíny a dostanete bezplatnou konzultaci.',
                 },
                 {
                   q: 'Je lepší koupit vlasy online nebo v showroomu?',

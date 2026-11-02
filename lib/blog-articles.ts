@@ -714,7 +714,7 @@ Chcete vědět více o cenách nebo metodách? Prohlédněte si naše [ceny apli
     content: `
 # Vlasy na prodloužení podle barvy — kompletní průvodce 2025
 
-**TL;DR:** Múza Hair Praha nabízí vlasy na prodloužení ve všech přirozených odstínech — od černé přes hnědé až po platinovou blond. Vlasy jsou 100% panenské slovanského původu. Showroom Revoluční 8, Praha 1. Konzultace zdarma.
+**TL;DR:** Mùza Hair Praha nabízí vlasy na prodloužení ve všech přirozených odstínech — od černé přes hnědé až po platinovou blond. Vlasy jsou 100% panenské slovanského původu. Showroom Revoluční 8, Praha 1. Konzultace zdarma.
 
 Výběr správné barvy vlasů na prodloužení je klíčový pro přirozený výsledek. Příliš světlé nebo tmavé prodloužení bude vidět okamžitě. V tomto průvodci vám ukážeme, co očekávat od každého odstínu, a poradíme jak vybrat ten správný.
 
@@ -810,7 +810,7 @@ Platinové vlasy jsou **nejsvětlejší přirozený odstín** — nordic blond, 
 - Vyžadují panenské vlasy bez chemického zpracování
 - Jsou řidší na trhu — vyšší cena
 - Při nesprávné péči mohou žloutnout — používejte fialový šampon
-- Dostupné zejména v Baby Shades kolekci Múza Hair
+- Dostupné zejména v Baby Shades kolekci Mùza Hair
 
 ✅ Dostupné v kolekcích: Baby Shades, LUXE
 
@@ -840,7 +840,7 @@ Prodloužení navazuje na délky a konce vlasů — ne na kořeny. Proto matchuj
 Prodloužení ve stejném tónu jako vlastní vlasy může působit tmavěji. Půl tónu světleji zajistí přirozené splývání.
 
 **3. Konzultace v showroomu Praha**
-Nejspolehlivější je fyzické porovnání vlasů v přírodním světle. V showroomu Múza Hair Praha vám pomůžeme vybrat přesný odstín zdarma.
+Nejspolehlivější je fyzické porovnání vlasů v přírodním světle. V showroomu Mùza Hair Praha vám pomůžeme vybrat přesný odstín zdarma.
 
 ---
 
@@ -853,12 +853,12 @@ Panenské vlasy lze nabarvit stejně jako vlastní vlasy. Barvení vlasů světl
 Barva v prodloužených vlasech vydrží podobně jako ve vlastních — závisí na péči. Barvené vlasy vyžadují barevné šampony a kondicionéry bez sulfátů.
 
 ### Jsou dostupné ombré nebo balayage vlasy na prodloužení?
-Múza Hair nabízí vlastní barvírnu v Praze — lze domluvit custom barvení na přání zákaznice.
+Mùza Hair nabízí vlastní barvírnu v Praze — lze domluvit custom barvení na přání zákaznice.
 
 ### Kde koupit vlasy na prodloužení v Praze?
-Múza Hair showroom, Revoluční 8, Praha 1. Konzultace a výběr barvy zdarma osobně.
+Mùza Hair showroom, Revoluční 8, Praha 1. Konzultace a výběr barvy zdarma osobně.
     `,
-    author: 'Múza Hair Team',
+    author: 'Mùza Hair Team',
     publishedAt: '2025-04-14',
     updatedAt: '2025-04-14',
     category: 'Průvodce',
@@ -873,7 +873,7 @@ Múza Hair showroom, Revoluční 8, Praha 1. Konzultace a výběr barvy zdarma o
     content: `
 # Řecké vlasy a jemné vlasy na prodloužení
 
-**TL;DR:** Řecké vlasy jsou označení pro středomořský typ vlasů — přirozeně tmavé, husté, mírně vlnité. Jemné vlasy (tenká struktura) vyžadují speciální přístup k prodloužení — šetrné metody jako mikrokeratin nebo tape-in. Múza Hair Praha, konzultace zdarma, Revoluční 8, Praha 1.
+**TL;DR:** Řecké vlasy jsou označení pro středomořský typ vlasů — přirozeně tmavé, husté, mírně vlnité. Jemné vlasy (tenká struktura) vyžadují speciální přístup k prodloužení — šetrné metody jako mikrokeratin nebo tape-in. Mùza Hair Praha, konzultace zdarma, Revoluční 8, Praha 1.
 
 ---
 
@@ -894,7 +894,7 @@ V kontextu vlasů na prodloužení "řecké vlasy" nejsou samostatnou kategorií
 - Přirozeně odolné a dlouhověké
 
 ### Kde koupit řecké vlasy v Praze?
-Múza Hair Praha pracuje s vlasy **slovanského a východoevropského původu** — vlasy z Ukrajiny, Polska a Rumunska mají velmi podobné vlastnosti jako středomořské vlasy. Jsou přirozeně tmavé, silné a zdravé.
+Mùza Hair Praha pracuje s vlasy **slovanského a východoevropského původu** — vlasy z Ukrajiny, Polska a Rumunska mají velmi podobné vlastnosti jako středomořské vlasy. Jsou přirozeně tmavé, silné a zdravé.
 
 ✅ V showroomu Praha vám pomůžeme vybrat přesnou texturu a barvu pro váš typ vlasů.
 
@@ -952,9 +952,9 @@ Ano, ale je nutná konzultace. Doporučujeme mikrokeratin nebo tape-in metodu a 
 Jemné vlasy = tenký průřez každého vlasu. Řídké vlasy = méně vlasů na hlavě. Lze mít oboje, nebo jen jedno. Na konzultaci vám naše stylistka typ vlasů posoudí zdarma.
 
 ### Kde v Praze prodlouží vlasy pro jemné vlasy?
-Múza Hair Praha, showroom Revoluční 8, Praha 1. Specializujeme se na individuální konzultace — pro každý typ vlasů doporučíme optimální metodu a gramáž.
+Mùza Hair Praha, showroom Revoluční 8, Praha 1. Specializujeme se na individuální konzultace — pro každý typ vlasů doporučíme optimální metodu a gramáž.
     `,
-    author: 'Múza Hair Team',
+    author: 'Mùza Hair Team',
     publishedAt: '2025-04-14',
     updatedAt: '2025-04-14',
     category: 'Průvodce',
@@ -969,7 +969,7 @@ Múza Hair Praha, showroom Revoluční 8, Praha 1. Specializujeme se na individu
     content: `
 # Kde prodloužit vlasy v Praze 2025?
 
-**TL;DR:** Prodloužení vlasů v Praze stojí od 4 000 Kč za aplikaci + cena vlasů od 6 900 Kč/100 g. Klíčové je vybrat salon s vlastními vlasy — ne jen aplikaci cizích. Múza Hair (Revoluční 8, Praha 1) je český výrobce pravých vlasů s vlastní barvírnou od roku 2016. Nabízí keratin, nanotapes i weft.
+**TL;DR:** Prodloužení vlasů v Praze stojí od 4 000 Kč za aplikaci + cena vlasů od 6 900 Kč/100 g. Klíčové je vybrat salon s vlastními vlasy — ne jen aplikaci cizích. Mùza Hair (Revoluční 8, Praha 1) je český výrobce pravých vlasů s vlastní barvírnou od roku 2016. Nabízí keratin, nanotapes i weft.
 
 ---
 
@@ -1046,13 +1046,13 @@ Kvalitní prodejce vlasů ručí za kvalitu — například výměnou produktu p
 
 ## Proč si vlasy pořídit od výrobce, ne jen od salonu?
 
-Koupí vlasů přímo od výrobce (jako je Múza Hair) máte jistotu:
+Koupí vlasů přímo od výrobce (jako je Mùza Hair) máte jistotu:
 
 - **Znáte původ vlasů** — slovanské, panenské nebo barvené vlastní barvírnou
 - **Platíte méně** — žádný zprostředkovatel
-- **Vlasy si necháte aplikovat kdekoliv** — u vaší kadeřnice, nebo v showroomu Múza Hair v Praze
+- **Vlasy si necháte aplikovat kdekoliv** — u vaší kadeřnice, nebo v showroomu Mùza Hair v Praze
 
-**Múza Hair Praha** (Revoluční 8, Praha 1) je český výrobce vlasů k prodloužení od roku 2016. Vlasy doručíme i poštou kamkoliv v ČR — vaše kadeřnice je pak aplikuje.
+**Mùza Hair Praha** (Revoluční 8, Praha 1) je český výrobce vlasů k prodloužení od roku 2016. Vlasy doručíme i poštou kamkoliv v ČR — vaše kadeřnice je pak aplikuje.
 
 ---
 
@@ -1075,13 +1075,13 @@ Koupí vlasů přímo od výrobce (jako je Múza Hair) máte jistotu:
 ## Kde v Praze prodloužit vlasy — doporučení podle potřeby
 
 **Chcete prémiové slovanské vlasy s vlastní barvírnou:**
-→ Múza Hair, Revoluční 8, Praha 1 — showroom, online obchod, doručení ČR
+→ Mùza Hair, Revoluční 8, Praha 1 — showroom, online obchod, doručení ČR
 
 **Chcete jen aplikaci a vlasy si pořídíte sami:**
 → Objednejte vlasy online (muzahair.cz), vaše kadeřnice je aplikuje
 
 **Máte jemné vlasy:**
-→ Zvolte mikrokeratin nebo nanotapes — konzultace zdarma v showroomu Múza Hair
+→ Zvolte mikrokeratin nebo nanotapes — konzultace zdarma v showroomu Mùza Hair
 
 **Chcete největší objem bez lepidel:**
 → Weft / hollywoodská metoda — tresy na zakázku, výroba 14 dní
@@ -1094,18 +1094,18 @@ Koupí vlasů přímo od výrobce (jako je Múza Hair) máte jistotu:
 Celková cena se skládá z ceny vlasů a ceny aplikace. Vlasy 100 g od 6 900 Kč, aplikace keratin od 4 000 Kč. Celkem tedy od cca 10 900 Kč za základní prodloužení. Prémiové vlasy LUXE + aplikace = od 12 900 Kč.
 
 ### Musím za prodloužením do Prahy přijet osobně?
-Vlasy si objednáte online na muzahair.cz s doručením do 48 hodin. Aplikaci provede vaše kadeřnice, nebo přijeďte do showroomu Múza Hair, Revoluční 8, Praha 1.
+Vlasy si objednáte online na muzahair.cz s doručením do 48 hodin. Aplikaci provede vaše kadeřnice, nebo přijeďte do showroomu Mùza Hair, Revoluční 8, Praha 1.
 
 ### Jak dlouho trvá aplikace prodloužení vlasů?
 Keratin 100 g trvá 2–3 hodiny, nanotapes 1,5–2 hodiny, weft 2–3 hodiny. Záleží na zkušenosti kadeřnice a počtu pramenů.
 
 ### Jak zjistím, která metoda je pro mě vhodná?
-Závisí hlavně na vašich vlastních vlasech. Jemné a řidší vlasy → mikrokeratin nebo nanotapes. Silné zdravé vlasy → keratin nebo weft. Konzultaci zdarma nabízí showroom Múza Hair.
+Závisí hlavně na vašich vlastních vlasech. Jemné a řidší vlasy → mikrokeratin nebo nanotapes. Silné zdravé vlasy → keratin nebo weft. Konzultaci zdarma nabízí showroom Mùza Hair.
 
 ### Jsou prodloužené vlasy znát?
-Při správné aplikaci a gramáži ne. Klíčová je správná barva — proto vlastní barvírna Múza Hair míchá odstíny na míru, ne z hotového vzorníku.
+Při správné aplikaci a gramáži ne. Klíčová je správná barva — proto vlastní barvírna Mùza Hair míchá odstíny na míru, ne z hotového vzorníku.
     `,
-    author: 'Múza Hair Team',
+    author: 'Mùza Hair Team',
     publishedAt: '2025-04-15',
     updatedAt: '2025-04-15',
     category: 'Průvodce',
@@ -1172,9 +1172,9 @@ Panenské vlasy se poznají obtížně pouhým pohledem. Spolehlivé znaky:
 3. **Mírný přirozený zápach** — ne chemický
 4. **Certifikát původu** od výrobce
 
-## Múza Hair — kde najdete panenské vlasy v Praze?
+## Mùza Hair — kde najdete panenské vlasy v Praze?
 
-Kolekce **Platinum Edition** od Múza Hair jsou 100% panenské nebarvené vlasy slovanského původu. Sbírány a zpracovávány s maximální péčí o zachování přirozené struktury.
+Kolekce **Platinum Edition** od Mùza Hair jsou 100% panenské nebarvené vlasy slovanského původu. Sbírány a zpracovávány s maximální péčí o zachování přirozené struktury.
 
 Kolekce **LUXE** jsou prémiové slovanské vlasy — mohou zahrnovat jak panenské nebarvené, tak profesionálně barvené v naší vlastní barvírně v Praze.
 
@@ -1188,12 +1188,12 @@ Kolekce **Standard** jsou kvalitní remy vlasy vhodné pro zákaznice, které hl
 Pro ty, kdo chtějí vlasy zesvětlit nebo barvit na nestandardní odstín — ano. Pro ty, kdo hledají konkrétní blond odstín, může být kvalitně obarvená remy kolekce ideální volbou.
 
 ### Kde koupit panenské vlasy v Praze?
-Múza Hair, showroom Revoluční 8, Praha 1. Online obchod s doručením do ČR: muzahair.cz/vlasy-k-prodlouzeni/platinum-edition
+Mùza Hair, showroom Revoluční 8, Praha 1. Online obchod s doručením do ČR: muzahair.cz/vlasy-k-prodlouzeni/platinum-edition
 
 ### Jsou slovanské vlasy panenské?
-Závisí na konkrétním výrobci. Slovanský původ označuje geografii — vlasy ze Slovenska, Polska, Rumunska, Ukrajiny. Zda jsou panenské závisí na zpracování. Múza Hair nabízí slovanské panenské vlasy v kolekci Platinum Edition.
+Závisí na konkrétním výrobci. Slovanský původ označuje geografii — vlasy ze Slovenska, Polska, Rumunska, Ukrajiny. Zda jsou panenské závisí na zpracování. Mùza Hair nabízí slovanské panenské vlasy v kolekci Platinum Edition.
     `,
-    author: 'Múza Hair Team',
+    author: 'Mùza Hair Team',
     publishedAt: '2025-04-15',
     updatedAt: '2025-04-15',
     category: 'Průvodce',
@@ -1216,7 +1216,7 @@ Závisí na konkrétním výrobci. Slovanský původ označuje geografii — vla
     content: `
 # Dodavatel vlasů pro kadeřníky — průvodce B2B nákupem
 
-**TL;DR:** Dobrý dodavatel vlasů pro kadeřnické salony nabízí konzistentní kvalitu, stálé odstíny, rychlé dodání a individuální podmínky. Múza Hair je český výrobce vlasů s vlastní barvírnou — dodává do salonů po celé ČR.
+**TL;DR:** Dobrý dodavatel vlasů pro kadeřnické salony nabízí konzistentní kvalitu, stálé odstíny, rychlé dodání a individuální podmínky. Mùza Hair je český výrobce vlasů s vlastní barvírnou — dodává do salonů po celé ČR.
 
 ---
 
@@ -1247,7 +1247,7 @@ Slovanské vlasy (Polsko, Slovensko, Rumunsko, Ukrajina) jsou tradičně nejkval
 - Jak jsou barveny blond odstíny — peroxid jaké síly?
 - Jsou vlasy po barvení ošetřeny (keratin, argan) nebo přirozeně?
 
-Salon s vlastní barvírnou má přímou kontrolu nad procesem. **Múza Hair** provozuje vlastní barvírnu v Praze od roku 2016 — míchá odstíny dle vzorníku, kontroluje výsledek před expedicí.
+Salon s vlastní barvírnou má přímou kontrolu nad procesem. **Mùza Hair** provozuje vlastní barvírnu v Praze od roku 2016 — míchá odstíny dle vzorníku, kontroluje výsledek před expedicí.
 
 ### Skladová dostupnost
 - Jaké délky jsou skladem?
@@ -1260,9 +1260,9 @@ Salon s vlastní barvírnou má přímou kontrolu nad procesem. **Múza Hair** p
 
 ---
 
-## Jak probíhá B2B spolupráce s Múza Hair
+## Jak probíhá B2B spolupráce s Mùza Hair
 
-Múza Hair nabízí B2B program pro kadeřnické salony, beauty studia a prodejny vlasů. Podmínky:
+Mùza Hair nabízí B2B program pro kadeřnické salony, beauty studia a prodejny vlasů. Podmínky:
 
 | Parametr | Detail |
 |----------|--------|
@@ -1294,7 +1294,7 @@ Různé metody vyžadují různé typy vlasů. Keratin → standardní zápon. T
 
 ## FAQ — dodavatel vlasů pro salony
 
-### Jak získat B2B ceny od Múza Hair?
+### Jak získat B2B ceny od Mùza Hair?
 Zaregistrujte se na [muzahair.cz/velkoobchod](/velkoobchod) nebo kontaktujte nás na info@muzahair.cz. Po ověření IČ vám nastavíme B2B přístup s velkoobchodními cenami.
 
 ### Mohu jako kadeřnice koupit vzorník odstínů?
@@ -1306,7 +1306,7 @@ Garantujeme konzistenci kvality v rámci šarže. Při prokazatelném výrobním
 ### Je možné objednat vlasy na zakázku?
 Ano — vlasové tresy (weft) vyrábíme na zakázku s dobou výroby 14 dní. U keratinových záponů a pásek pracujeme ze skladu s dostupností ihned.
     `,
-    author: 'Múza Hair Team',
+    author: 'Mùza Hair Team',
     publishedAt: '2025-04-15',
     updatedAt: '2025-04-15',
     category: 'B2B',

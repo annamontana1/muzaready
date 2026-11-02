@@ -3,7 +3,7 @@ import Link from 'next/link';
 import PrintButton from '@/components/PrintButton';
 
 export const metadata: Metadata = {
-  title: 'Formulář pro odstoupení od smlouvy | Múza Hair',
+  title: 'Formulář pro odstoupení od smlouvy | Mùza Hair',
   description: 'Formulář pro odstoupení od kupní smlouvy do 14 dnů od převzetí zboží. Vytiskněte, vyplňte a zašlete e-mailem nebo poštou.',
   alternates: { canonical: 'https://muzahair.cz/informace/odstoupeni-od-smlouvy' },
   robots: { index: true, follow: true },
@@ -76,7 +76,7 @@ export default function OdstoupeniOdSmlouvyPage() {
           <div className="mb-6 p-4 bg-soft-cream rounded text-sm">
             <p className="font-bold text-text-dark mb-1">Prodávající (adresát):</p>
             <p className="text-text-mid">
-              Múza Hair s.r.o.<br />
+              Mùza Hair s.r.o.<br />
               Revoluční 8, Praha 1, 110 00<br />
               IČO: 17989230<br />
               E-mail: muzahaircz@gmail.com
@@ -178,7 +178,7 @@ export default function OdstoupeniOdSmlouvyPage() {
 
           {/* Footer formuláře */}
           <div className="mt-8 pt-4 border-t border-warm-beige text-xs text-text-soft text-center">
-            Múza Hair s.r.o. · Revoluční 8, Praha 1 · muzahaircz@gmail.com · +420 728 722 880
+            Mùza Hair s.r.o. · Revoluční 8, Praha 1 · muzahaircz@gmail.com · +420 728 722 880
           </div>
         </div>
 

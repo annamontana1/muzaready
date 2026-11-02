@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Obchodní podmínky | Múza Hair Praha',
+  title: 'Obchodní podmínky | Mùza Hair Praha',
   description: 'Všeobecné obchodní podmínky pro nákup vlasů k prodloužení na muzahair.cz. Platné od 1. 5. 2025.',
 };
 
@@ -14,7 +14,7 @@ export default function ObchodniPodminkyPage() {
       {/* Kontaktní údaje prodávajícího */}
       <div className="bg-soft-cream border border-warm-beige rounded-lg p-5 mb-10 text-sm leading-relaxed">
         <p className="font-semibold text-text-dark mb-1">Prodávající:</p>
-        <p>Anna Zvinchuk, Múza Hair Praha s.r.o.</p>
+        <p>Anna Zvinchuk, Mùza Hair Praha s.r.o.</p>
         <p>IČO: 17989230 &nbsp;|&nbsp; Prodávající není plátcem DPH.</p>
         <p>Sídlo: Revoluční 8, 198 00 Praha</p>
         <p>Showroom: [Adresa showroomu], Praha</p>
@@ -47,8 +47,8 @@ export default function ObchodniPodminkyPage() {
         {/* Čl. 1 */}
         <section id="cl1">
           <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 1 – Úvodní ustanovení a základní pojmy</h2>
-          <p><strong>1.1</strong> Tyto všeobecné obchodní podmínky (dále jen „obchodní podmínky") se vztahují na smlouvy uzavřené prostřednictvím e-shopu Múza Hair Praha umístněného na webovém rozhraní <strong>www.muzahair.cz</strong> (dále jen „webové rozhraní") a dále na smlouvy uzavřené osobně v showroomu prodávajícího.</p>
-          <p><strong>1.2 Prodávajícím</strong> je: Anna Zvinchuk, Múza Hair Praha s.r.o., IČO: 17989230, se sídlem Revoluční 8, 198 00 Praha (dále jen „prodávající").</p>
+          <p><strong>1.1</strong> Tyto všeobecné obchodní podmínky (dále jen „obchodní podmínky") se vztahují na smlouvy uzavřené prostřednictvím e-shopu Mùza Hair Praha umístněného na webovém rozhraní <strong>www.muzahair.cz</strong> (dále jen „webové rozhraní") a dále na smlouvy uzavřené osobně v showroomu prodávajícího.</p>
+          <p><strong>1.2 Prodávajícím</strong> je: Anna Zvinchuk, Mùza Hair Praha s.r.o., IČO: 17989230, se sídlem Revoluční 8, 198 00 Praha (dále jen „prodávající").</p>
           <p><strong>1.3 Kupujícím</strong> je fyzická nebo právnická osoba, která uzavírá smlouvu s prodávajícím (dále jen „kupující"). Kupující-spotřebitel je fyzická osoba jednající mimo rámec své podnikatelské činnosti.</p>
           <p><strong>1.4 Zbožím</strong> se rozumí produkty nabízené na webovém rozhraní – zejména pravé lidské vlasy k prodloužení, vlasové pásky, vlasové tresy (weft), keratin prameny, clip-in vlasy a vlasové doplňky.</p>
           <p><strong>1.5</strong> Právní vztahy těmito obchodními podmínkami výslovně neupravené se řídí právním řádem České republiky, zejména zákonem č. 89/2012 Sb., občanský zákoník. Prodej lidských vlasů je v souladu s § 112 občanského zákoníku – lidské vlasy jsou věcí movitou, kterou lze přenechat jinému i za odměnu. Prodej vlasů prostřednictvím e-shopu není právně omezen.</p>
@@ -172,8 +172,8 @@ export default function ObchodniPodminkyPage() {
             <li>Vlasy, u nichž došlo ke znatelnému snížení kvality vlivem nevhodné péče (nevhodné šampony, barvení bez konzultace, přehnívání), nelze reklamovat.</li>
             <li>Po aplikaci vlasů v salonu nebo showroomu nejsou vlasy považovány za použité – pokud nebyly chemicky ani mechanicky poškozeny.</li>
           </ul>
-          <p><strong>5.2</strong> Doporučení před nákupem: Pokud si nejste jistá výběrem odstínu nebo délky, doporučujeme konzultaci v showroomu Múza Hair Praha – konzultace je zdarma. Vzorník barev je k dispozici osobně.</p>
-          <p><strong>5.3</strong> Kupující bere na vědomí, že vlasy zakoupené jako „barvené" prošly procesem odbarvování a/nebo tónování v barvírně Múza Hair. Tyto vlasy jsou připraveny k použití a není doporučeno je dále zesvětlovat v domácích podmínkách bez konzultace s odborníkem.</p>
+          <p><strong>5.2</strong> Doporučení před nákupem: Pokud si nejste jistá výběrem odstínu nebo délky, doporučujeme konzultaci v showroomu Mùza Hair Praha – konzultace je zdarma. Vzorník barev je k dispozici osobně.</p>
+          <p><strong>5.3</strong> Kupující bere na vědomí, že vlasy zakoupené jako „barvené" prošly procesem odbarvování a/nebo tónování v barvírně Mùza Hair. Tyto vlasy jsou připraveny k použití a není doporučeno je dále zesvětlovat v domácích podmínkách bez konzultace s odborníkem.</p>
         </section>
 
         {/* Čl. 6 */}
@@ -237,7 +237,7 @@ export default function ObchodniPodminkyPage() {
           <p><strong>8.1 Kde reklamaci uplatnit:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>E-mailem: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a> (uveďte číslo objednávky, popis vady, fotografie)</li>
-            <li>Osobně: v showroomu Múza Hair Praha (po předchozí domluvě)</li>
+            <li>Osobně: v showroomu Mùza Hair Praha (po předchozí domluvě)</li>
             <li>Písemně na adresu: [Adresa prodávajícího], Praha</li>
           </ul>
           <p><strong>8.2 Co uvést v reklamaci:</strong></p>
@@ -317,7 +317,7 @@ export default function ObchodniPodminkyPage() {
         {/* Čl. 11 */}
         <section id="cl11">
           <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 11 – Ochrana osobních údajů (GDPR)</h2>
-          <p><strong>11.1</strong> Správcem osobních údajů je: Anna Zvinchuk, Múza Hair Praha s.r.o., IČO: 17989230.</p>
+          <p><strong>11.1</strong> Správcem osobních údajů je: Anna Zvinchuk, Mùza Hair Praha s.r.o., IČO: 17989230.</p>
           <p><strong>11.2 Jaké údaje zpracováváme:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>Identifikační údaje: jméno, příjmení, IČO (u B2B)</li>
@@ -337,7 +337,7 @@ export default function ObchodniPodminkyPage() {
           <h2 className="text-xl font-semibold text-text-dark border-b border-warm-beige pb-2 mb-4">Článek 12 – Závěrečná ustanovení</h2>
           <p><strong>12.1</strong> Tyto obchodní podmínky jsou platné a účinné od <strong>1. 5. 2025</strong>. Prodávající si vyhrazuje právo tyto podmínky měnit – změny vstupují v platnost dnem zveřejnění na webovém rozhraní.</p>
           <p><strong>12.2</strong> Mimosoudní řešení spotřebitelských sporů: Kupující-spotřebitel má právo obrátit se na Českou obchodní inspekci (ČOI) – <a href="https://www.coi.cz" target="_blank" rel="noopener noreferrer" className="text-burgundy underline">www.coi.cz</a>, nebo na platformu pro řešení sporů online: <a href="http://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-burgundy underline">ec.europa.eu/consumers/odr</a>.</p>
-          <p><strong>12.3</strong> Tyto obchodní podmínky jsou dostupné na webovém rozhraní muzahair.cz/obchodni-podminky/ a jsou k dispozici v showroomu Múza Hair Praha.</p>
+          <p><strong>12.3</strong> Tyto obchodní podmínky jsou dostupné na webovém rozhraní muzahair.cz/obchodni-podminky/ a jsou k dispozici v showroomu Mùza Hair Praha.</p>
           <p><strong>12.4</strong> Kupující odesláním objednávky stvrzuje, že se s těmito obchodními podmínkami seznámil a souhlasí s nimi.</p>
         </section>
 
@@ -358,7 +358,7 @@ export default function ObchodniPodminkyPage() {
           <h2 className="text-lg font-semibold text-text-dark mb-4">Příloha č. 1 – Vzorový formulář pro odstoupení od smlouvy</h2>
           <p className="text-sm text-text-mid mb-4">Vyplňte a zašlete pouze v případě, že chcete odstoupit od smlouvy.</p>
           <div className="text-sm space-y-2 text-text-mid">
-            <p><strong>Komu:</strong> Múza Hair Praha s.r.o., [adresa], Praha &nbsp;|&nbsp; <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
+            <p><strong>Komu:</strong> Mùza Hair Praha s.r.o., [adresa], Praha &nbsp;|&nbsp; <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></p>
             <p>Oznamuji, že tímto odstupuji od kupní smlouvy na zboží:</p>
             <div className="space-y-2 ml-4">
               {[

@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import PriceTabs, { type PriceMethod } from './PriceTabs';
 
 export const metadata: Metadata = {
-  title: 'Ceník prodloužení vlasů Praha 2025 | Múza Hair',
+  title: 'Ceník prodloužení vlasů Praha 2025 | Mùza Hair',
   description: 'Ceník aplikace prodloužení vlasů v Praze: keratin, mikrokeratin, vlasové pásky (tape-in) a weft. Přesnou cenu aplikace se dozvíte na osobní konzultaci.',
   alternates: { canonical: 'https://muzahair.cz/ceny-aplikaci' },
   keywords: [
@@ -25,10 +25,10 @@ export const metadata: Metadata = {
     'vlasové tresy Praha cena',
   ],
   openGraph: {
-    title: 'Ceník prodloužení vlasů Praha 2025 | Múza Hair',
+    title: 'Ceník prodloužení vlasů Praha 2025 | Mùza Hair',
     description: 'Ceník aplikace prodloužení vlasů v Praze: keratin, mikrokeratin, pásky (tape-in) a weft. Přesnou cenu aplikace se dozvíte na osobní konzultaci.',
     url: 'https://muzahair.cz/ceny-aplikaci',
-    siteName: 'Múza Hair',
+    siteName: 'Mùza Hair',
     locale: 'cs_CZ',
     type: 'website',
   },
@@ -119,7 +119,7 @@ const jsonLd = [
         name: 'Kolik stojí weft prodloužení vlasů Praha?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Weft prodloužení vlasů Praha — posun tresů 3 800 Kč, showroom Revoluční 8, Praha 1. Nasazení se stanovuje individuálně po konzultaci. Aplikace trvá přibližně 2,5 hodiny, korekce po 2–3 měsících. Cena tresů se účtuje zvlášť.',
+          text: 'Weft prodloužení vlasů Praha — posun tresů 3 800 Kč v našem partnerském salonu. Nasazení se stanovuje individuálně po konzultaci. Aplikace trvá přibližně 2,5 hodiny, korekce po 2–3 měsících. Cena tresů se účtuje zvlášť.',
         },
       },
       {
@@ -167,7 +167,7 @@ const jsonLd = [
         name: 'Kde v Praze si mohu nechat prodloužit vlasy?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Prodloužení vlasů keratinem, mikrokeratiinem, nanotapes, tape-in i weft (hollywoodské prodloužení) provádíme v showroomu Múza Hair, Revoluční 8, Praha 1. Po–Ne 10:00–20:00, pouze na objednání. Tel: +420 728 722 880.',
+          text: 'Prodloužení vlasů keratinem, mikrokeratiinem, nanotapes, tape-in i weft (hollywoodské prodloužení) provádíme v našem partnerském salonu, pouze na objednání. Objednání přes WhatsApp nebo na +420 728 722 880.',
         },
       },
       {
@@ -183,7 +183,7 @@ const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: 'Múza Hair',
+    name: 'Mùza Hair',
     '@id': 'https://muzahair.cz',
     url: 'https://muzahair.cz',
     telephone: '+420728722880',
@@ -289,13 +289,13 @@ const FAQ = [
   { q: 'Kolik stojí vlasové pásky?', a: 'Vlasové pásky (nanotapes, tapes, tape-in) 55 Kč/spoj (2,8 cm) nebo 65 Kč/spoj (4 cm). Balení 10 spojů = 550 Kč aplikace. Cena vlasových pásků se účtuje zvlášť. Korekce po 1,5–2 měsících.' },
   { q: 'Kolik stojí nanotapes prodloužení vlasů Praha?', a: 'Nanotapes Praha 55 Kč za 1 spoj (2 pásky, šíře 2,8 cm). 1 balení = 10 spojů. Posun 1,5–2 hod, korekce po 1,5–2 měsících. Cena vlasových pásků se účtuje zvlášť. Showroom Revoluční 8, Praha 1.' },
   { q: 'Kolik stojí vlasové tresy?', a: 'Posun vlasových tresů 3 800 Kč. Prvotní nasazení individuálně na konzultaci. Tresy vyrábíme na zakázku, výroba 14 pracovních dní. Cena samotných tresů se účtuje zvlášť.' },
-  { q: 'Kolik stojí weft prodloužení vlasů Praha?', a: 'Weft prodloužení vlasů Praha: posun tresů 3 800 Kč, showroom Revoluční 8, Praha 1. Aplikace cca 2,5 hod, korekce po 2–3 měsících. Nasazení individuálně po konzultaci. Cena tresů zvlášť.' },
+  { q: 'Kolik stojí weft prodloužení vlasů Praha?', a: 'Weft prodloužení vlasů Praha: posun tresů 3 800 Kč v našem partnerském salonu. Aplikace cca 2,5 hod, korekce po 2–3 měsících. Nasazení individuálně po konzultaci. Cena tresů zvlášť.' },
   { q: 'Kolik stojí hollywoodské prodloužení vlasů Praha?', a: 'Hollywoodské prodloužení (weft, vlasové tresy): posun 3 800 Kč, Praha 1. Ručně šité tresy přišívané na copánky bez lepidla a tepla. Nasazení na konzultaci, aplikace 2,5 hod, korekce po 2–3 měsících.' },
   { q: 'Jaký je rozdíl mezi nanotapes a tape-in?', a: 'Nanotapes a tape-in jsou stejná metoda, liší se šíří pásku: nanotapes 2,8 cm (55 Kč/spoj), tape-in 4 cm (65 Kč/spoj). Obě jsou sendvičový spoj bez chemie a tepla.' },
   { q: 'Jaký je rozdíl mezi keratinovým a mikrokeratinovým prodloužením vlasů?', a: 'Standart keratin: větší kapsle, 130 pramenů / 100 g, nasazení 4 000 Kč. Mikrokeratin: menší kapsle, 230 pramenů / 100 g, nasazení 5 000 Kč. Mikrokeratin je diskrétnější a šetrnější k vlastním vlasům.' },
   { q: 'Zahrnuje cena aplikace i vlasy?', a: 'Ne, cena aplikace a cena vlasů se vždy účtují zvlášť. Vlasy si vyberete v e-shopu podle odstínu, délky a gramáže.' },
   { q: 'Mohu si koupit vlasy bez aplikace?', a: 'Ano, keratinové pramínky, nanotapes / tape-in pásky i vlasové tresy prodáváme samostatně přes e-shop. Aplikaci si zajistíte u nás nebo u své kadeřnice.' },
-  { q: 'Jak si objednat prodloužení vlasů v Praze?', a: 'Zavolejte na +420 728 722 880 nebo napište na WhatsApp či Instagram @muzahair.cz. Showroom: Revoluční 8, Praha 1, Po–Ne 10:00–20:00, pouze na objednání.' },
+  { q: 'Jak si objednat prodloužení vlasů v Praze?', a: 'Zavolejte na +420 728 722 880 nebo napište na WhatsApp či Instagram @muzahair.cz. Aplikace probíhá v našem partnerském salonu, pouze na objednání.' },
 ];
 
 export default function CenyAplikaciPage() {
@@ -311,7 +311,7 @@ export default function CenyAplikaciPage() {
 
       <div className="bg-muza-ivory text-text-dark pb-6">
         <div className="max-w-3xl mx-auto px-4 lg:px-8 pt-6 lg:pt-12">
-          <nav aria-label="Drobečková navigace" className="text-[13px] text-[#45302F] flex gap-2">
+          <nav aria-label="Drobečková navigace" className="text-sm text-[#45302F] flex gap-2">
             <Link href="/" className="underline underline-offset-2">Domů</Link><span aria-hidden="true">/</span><span>Ceník aplikace</span>
           </nav>
           <h1 className="mt-4 font-cormorant text-[40px] lg:text-[56px] leading-[1.02] text-muza-ink">Ceník aplikace vlasů Praha</h1>
@@ -361,7 +361,7 @@ export default function CenyAplikaciPage() {
           {/* Objednání */}
           <section className="mt-10 rounded-3xl bg-muza-ink text-muza-onink px-6 py-8 text-center">
             <h2 className="font-cormorant text-[32px] leading-[1.05]">Konzultace zdarma</h2>
-            <p className="mt-2 text-[15px] text-[#EADCC8]">Showroom Revoluční 8, Praha 1 · Po–Ne 10:00–20:00, na objednání</p>
+            <p className="mt-2 text-[15px] text-[#EADCC8]">Aplikace v našem partnerském salonu · pouze na objednání</p>
             <div className="mt-5 flex flex-col sm:flex-row gap-2.5 justify-center">
               <a href={WA_LINK} target="_blank" rel="noopener"
                 className="h-[52px] px-7 rounded-full bg-[#F7F3EE] text-muza-ink text-sm font-medium flex items-center justify-center hover:bg-white">Objednat se na WhatsAppu</a>

@@ -286,11 +286,11 @@ export default function ProductCard({ product, variant }: ProductCardProps) {
               <div className="space-y-4">
                 <div>
                   <p className="text-[12px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Co to je?</p>
-                  <p className="text-[14px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.description}</p>
+                  <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.description}</p>
                 </div>
                 <div>
                   <p className="text-[12px] tracking-[0.15em] uppercase mb-1.5 font-normal" style={{ color: 'var(--text-soft)' }}>Pro koho?</p>
-                  <p className="text-[14px] font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.forWho}</p>
+                  <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--text-mid)' }}>{tierInfo.forWho}</p>
                 </div>
               </div>
               <button

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Slovanské vlasy na prodloužení Praha | Múza Hair',
+  title: 'Slovanské vlasy na prodloužení Praha | Mùza Hair',
   description: 'Slovanské vlasy na prodloužení — certifikovaný původ z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín. Showroom Praha, dodání do 48 h. Platinum edition od 10 900 Kč.',
   alternates: { canonical: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni' },
   keywords: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'pravé slovanské vlasy',
   ],
   openGraph: {
-    title: 'Slovanské Vlasy na Prodloužení | Múza Hair Praha',
+    title: 'Slovanské Vlasy na Prodloužení | Mùza Hair Praha',
     description: 'Certifikovaný původ z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín. Platinum edition.',
     url: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
@@ -32,7 +32,7 @@ export default function SlovanskevlasyPage() {
     description: 'Prémiové slovanské panenské vlasy z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín, zachovaná kutikula.',
     brand: {
       '@type': 'Brand',
-      name: 'Múza Hair',
+      name: 'Mùza Hair',
     },
     url: 'https://muzahair.cz/slovanske-vlasy-na-prodlouzeni',
     offers: {
@@ -74,7 +74,7 @@ export default function SlovanskevlasyPage() {
         name: 'Kde koupit slovanské vlasy na prodloužení v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair prodává slovanské vlasy v Platinum edici — dostupné v showroomu Praha nebo v online e-shopu. Certifikát původu (Ukrajina, Polsko, Rumunsko) je součástí každé sady.',
+          text: 'Mùza Hair prodává slovanské vlasy v Platinum edici — dostupné v showroomu Praha nebo v online e-shopu. Certifikát původu (Ukrajina, Polsko, Rumunsko) je součástí každé sady.',
         },
       },
       {
@@ -123,7 +123,7 @@ export default function SlovanskevlasyPage() {
               Certifikované vlasy z Ukrajiny, Polska a Rumunska. Přirozený evropský odstín, panenská kvalita, trvanlivost až 24 měsíců.
             </p>
             <p className="text-gray-500 max-w-2xl leading-relaxed">
-              Slovanské vlasy jsou uznávány jako nejkvalitnější vlasy na světě pro prodloužení — a Múza Hair je přivází přímo z původu, bez zprostředkovatelů. Každá sada je certifikována.
+              Slovanské vlasy jsou uznávány jako nejkvalitnější vlasy na světě pro prodloužení — a Mùza Hair je přivází přímo z původu, bez zprostředkovatelů. Každá sada je certifikována.
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export default function SlovanskevlasyPage() {
           {/* Origin map section */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-6">
-              Odkud pocházejí slovanské vlasy Múza Hair
+              Odkud pocházejí slovanské vlasy Mùza Hair
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -203,7 +203,7 @@ export default function SlovanskevlasyPage() {
                 },
                 {
                   title: 'Certifikovaný původ',
-                  desc: 'Každá sada Platinum vlasů u Múza Hair má certifikát o původu. Víte přesně odkud vlasy pocházejí — žádné pochybné asijské zpracování.',
+                  desc: 'Každá sada Platinum vlasů u Mùza Hair má certifikát o původu. Víte přesně odkud vlasy pocházejí — žádné pochybné asijské zpracování.',
                   icon: '📋',
                 },
               ].map((item) => (

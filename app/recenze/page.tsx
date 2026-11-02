@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Recenze zákaznic | Prodloužení vlasů Praha | Múza Hair',
-  description: 'Reálné recenze zákaznic Múza Hair Praha. Zkušenosti s keratinem, nanotapes a weft produženími. 500+ spokojených zákaznic, hodnocení 4,9/5.',
+  title: 'Recenze zákaznic | Prodloužení vlasů Praha | Mùza Hair',
+  description: 'Reálné recenze zákaznic Mùza Hair Praha. Zkušenosti s keratinem, nanotapes a weft produženími. 500+ spokojených zákaznic, hodnocení 4,9/5.',
   alternates: { canonical: 'https://muzahair.cz/recenze' },
 };
 
@@ -47,13 +47,6 @@ export default function RecenzePage() {
           <span style={{ color: 'var(--text-mid)' }}>Recenze</span>
         </div>
 
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          RECENZE ZÁKAZNÍKŮ
-        </div>
 
         <h1
           className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6"
@@ -87,7 +80,7 @@ export default function RecenzePage() {
                 {stat.value}
               </div>
               <div
-                className="text-[13px] tracking-[0.05em] uppercase font-light"
+                className="text-sm tracking-[0.05em] uppercase font-light"
                 style={{ color: 'var(--text-soft)' }}
               >
                 {stat.label}
@@ -145,14 +138,14 @@ export default function RecenzePage() {
         <div className="flex gap-6 flex-wrap items-center">
           <Link
             href="/vlasy-k-prodlouzeni"
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Prozkoumat kolekci
           </Link>
           <Link
             href="/showroom"
-            className="text-[13px] tracking-[0.1em] uppercase font-light"
+            className="text-sm tracking-[0.1em] uppercase font-light"
             style={{ color: 'var(--text-mid)' }}
           >
             Navštívit showroom →

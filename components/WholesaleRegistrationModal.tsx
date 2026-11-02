@@ -151,7 +151,7 @@ export default function WholesaleRegistrationModal({
             <ul className="mt-1 space-y-1 list-disc pl-5">
               <li><b className="font-semibold">Instagram, Facebook nebo web vašeho salonu, povinně.</b> Podle něj ověříme, že salon aktivně působí a sdílí svou práci.</li>
             </ul>
-            <p className="mt-2.5 text-[14px] text-[#45302F]">
+            <p className="mt-2.5 text-sm text-[#45302F]">
               Slevu zapínáme ručně po kontrole, obvykle do 48 hodin. O schválení vám dáme vědět e-mailem.
             </p>
           </div>

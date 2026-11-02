@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { blogArticles } from '@/lib/blog-articles';
 
 export const metadata: Metadata = {
-  title: 'Blog o prodloužení vlasů | Tipy a průvodce | Múza Hair',
+  title: 'Blog o prodloužení vlasů | Tipy a průvodce | Mùza Hair',
   description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality. Experti z Mùza Hair sdílejí know-how.',
   alternates: { canonical: 'https://muzahair.cz/blog' },
   openGraph: {
-    title: 'Blog o prodloužení vlasů | Múza Hair Praha',
+    title: 'Blog o prodloužení vlasů | Mùza Hair Praha',
     description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality.',
     type: 'website',
     url: 'https://muzahair.cz/blog',
@@ -20,10 +20,6 @@ export default function BlogPage() {
       {/* Header */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            BLOG
-          </div>
           <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
             Magazín & Tipy
           </h1>
@@ -71,7 +67,7 @@ export default function BlogPage() {
                     </p>
 
                     {/* Link */}
-                    <span className="text-[13px] tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
+                    <span className="text-sm tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
                       Číst →
                     </span>
                   </div>
@@ -85,10 +81,6 @@ export default function BlogPage() {
       {/* CTA */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            PORADENSTVÍ
-          </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Máte otázku o prodlužování vlasů?
           </h2>
@@ -97,7 +89,7 @@ export default function BlogPage() {
           </p>
           <Link
             href="/kontakt"
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Kontaktujte nás

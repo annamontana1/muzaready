@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Kontakt a showroom Praha 1 | Múza Hair',
-  description: 'Showroom Múza Hair Praha — Revoluční 8, Praha. Otevřeno Po–Ne 10:00–20:00 pouze na objednání. Zavolejte nám nebo napište na Instagram.',
+  title: 'Kontakt a showroom Praha 1 | Mùza Hair',
+  description: 'Showroom Mùza Hair Praha — Revoluční 8, Praha. Otevřeno Po–Ne 10:00–20:00 pouze na objednání. Zavolejte nám nebo napište na Instagram.',
   alternates: { canonical: 'https://muzahair.cz/kontakt' },
 };
 
@@ -65,7 +65,7 @@ export default function KontaktPage() {
             >
               Po–Ne 10:00–20:00
             </p>
-            <p className="text-[14px] font-light mt-2 tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-sm font-light mt-2 tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
               Pouze na objednání
             </p>
           </div>
@@ -181,7 +181,7 @@ export default function KontaktPage() {
         <div className="flex gap-4 flex-wrap">
           <a
             href="tel:+420728722880"
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Zavolat
@@ -190,7 +190,7 @@ export default function KontaktPage() {
             href="https://wa.me/420728722880"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             WhatsApp →
@@ -224,7 +224,7 @@ export default function KontaktPage() {
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Múza Hair Praha — showroom Revoluční 8"
+            title="Mùza Hair Praha — showroom Revoluční 8"
           />
         </div>
       </section>
@@ -305,7 +305,7 @@ export default function KontaktPage() {
         <div className="flex gap-4 flex-wrap items-center">
           <a
             href="tel:+420728722880"
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             +420 728 722 880
@@ -314,7 +314,7 @@ export default function KontaktPage() {
             href="https://www.instagram.com/muzahair.cz"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             @muzahair.cz →

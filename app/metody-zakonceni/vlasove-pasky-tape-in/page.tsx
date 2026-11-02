@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Vlasové pásky Tape-In Praha | Múza Hair',
+  title: 'Vlasové pásky Tape-In Praha | Mùza Hair',
   description:
     'Prémiové vlasové pásky tape-in z pravých vlasů — Standard, Luxe, Platinum. Kudrnaté pásky jako unikát na CZ trhu. Výroba na zakázku za 14 dní. Showroom Praha.',
   openGraph: {
-    title: 'Vlasové pásky Tape-In Praha | Múza Hair',
+    title: 'Vlasové pásky Tape-In Praha | Mùza Hair',
     description:
       'Prémiové vlasové pásky tape-in z pravých vlasů — Standard, Luxe, Platinum. Kudrnaté pásky jako unikát na CZ trhu. Výroba na zakázku za 14 dní. Showroom Praha.',
     url: 'https://muzahair.cz/metody-zakonceni/vlasove-pasky-tape-in',
@@ -24,10 +24,10 @@ const faqs = [
   },
   {
     q: 'Jsou dostupné kudrnaté vlasové pásky tape-in?',
-    a: 'Ano — kudrnaté vlasové pásky tape-in jsou jedním z našich unikátů. Zatímco většina dodavatelů nabízí pouze rovné nebo mírně vlnité pásky, v Múza Hair Praha máme k dispozici čtyři struktury: rovné, mírně vlnité, vlnité a kudrnaté. Kudrnaté pásky pro kudrnaté vlasy jsou v ČR dostupné jen ojediněle — u nás je najdete ve všech délkách a kolekcích.',
+    a: 'Ano — kudrnaté vlasové pásky tape-in jsou jedním z našich unikátů. Zatímco většina dodavatelů nabízí pouze rovné nebo mírně vlnité pásky, v Mùza Hair Praha máme k dispozici čtyři struktury: rovné, mírně vlnité, vlnité a kudrnaté. Kudrnaté pásky pro kudrnaté vlasy jsou v ČR dostupné jen ojediněle — u nás je najdete ve všech délkách a kolekcích.',
   },
   {
-    q: 'Kolik gramů má jedno balení vlasových pásek Múza Hair?',
+    q: 'Kolik gramů má jedno balení vlasových pásek Mùza Hair?',
     a: 'Balení obsahuje 20 pásků (10 sendvičových spojů). Gramáž závisí na délce: 30 cm = 18 g, 40 cm = 22 g, 50 cm = 27 g, 60 cm = 31 g, 70 cm = 38 g, 80 cm = 44 g, 90 cm = 51 g, 95 cm = 54 g. Pro plné prodloužení středně hustých vlasů počítejte s 5–7 balením podle délky a požadovaného objemu.',
   },
   {
@@ -167,7 +167,7 @@ export default function TapeInPage() {
               Stručně
             </p>
             <p className="leading-relaxed" style={{ color: 'var(--text-dark)' }}>
-              Múza Hair Praha nabízí vlasové pásky tape-in z pravých slovanských vlasů — Standard, Luxe a Platinum, nebarvené i barvené v naší vlastní pražské barvírně. Pásky jsou dostupné v délkách 30–95 cm ve čtyřech strukturách: rovné, mírně vlnité, vlnité a <strong>kudrnaté</strong> — unikát na českém trhu. Výroba na zakázku trvá 14 dní, skladové varianty odesíláme ihned. Osobní výběr v showroomu Praha zdarma.
+              Mùza Hair Praha nabízí vlasové pásky tape-in z pravých slovanských vlasů — Standard, Luxe a Platinum, nebarvené i barvené v naší vlastní pražské barvírně. Pásky jsou dostupné v délkách 30–95 cm ve čtyřech strukturách: rovné, mírně vlnité, vlnité a <strong>kudrnaté</strong> — unikát na českém trhu. Výroba na zakázku trvá 14 dní, skladové varianty odesíláme ihned. Osobní výběr v showroomu Praha zdarma.
             </p>
           </div>
         </div>
@@ -429,10 +429,6 @@ export default function TapeInPage() {
       <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
         <div className="max-w-4xl mx-auto">
           <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-10">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              Ceny aplikace
-            </div>
             <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
               Ceny přelepení a repositioningu vlasových pásek tape-in se liší podle salonu a množství pásků. Přehled orientačních sazeb najdete na stránce cen aplikací.
             </p>

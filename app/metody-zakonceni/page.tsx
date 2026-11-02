@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Metody zakončení vlasů | Keratin, Tape-in, Vlasové tresy | Múza Hair',
+  title: 'Metody zakončení vlasů | Keratin, Tape-in, Vlasové tresy | Mùza Hair',
   description: 'Přehled metod zakončení a aplikace vlasů k prodloužení. Keratin, Mikrokeratin, Tape-in nano tapes a ručně šité vlasové tresy.',
   alternates: { canonical: 'https://muzahair.cz/metody-zakonceni' },
   openGraph: {
-    title: 'Metody zakončení vlasů | Keratin, Tape-in, Weft | Múza Hair',
+    title: 'Metody zakončení vlasů | Keratin, Tape-in, Weft | Mùza Hair',
     description: 'Přehled metod zakončení vlasů — keratin, mikrokeratin, nanotapes a vlasové tresy weft. Poradíme s výběrem.',
     url: 'https://muzahair.cz/metody-zakonceni',
     locale: 'cs_CZ',
@@ -29,13 +29,6 @@ export default function MetodyZakonceniPage() {
           <span style={{ color: 'var(--text-dark)' }}>Metody zakončení</span>
         </div>
 
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Aplikace vlasů
-        </div>
 
         <h1
           className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6 max-w-3xl"
@@ -53,13 +46,6 @@ export default function MetodyZakonceniPage() {
       {/* Method 01 — Keratin */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div className="max-w-5xl">
-          <div
-            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            01
-          </div>
 
           <h2
             className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6"
@@ -96,7 +82,7 @@ export default function MetodyZakonceniPage() {
 
           <Link
             href="/metody-zakonceni/vlasy-na-keratin"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
             style={{ color: 'var(--text-mid)' }}
           >
             Zjistit více →
@@ -107,13 +93,6 @@ export default function MetodyZakonceniPage() {
       {/* Method 02 — Tape-In */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div className="max-w-5xl">
-          <div
-            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            02
-          </div>
 
           <h2
             className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6"
@@ -150,7 +129,7 @@ export default function MetodyZakonceniPage() {
 
           <Link
             href="/metody-zakonceni/vlasove-pasky-tape-in"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
             style={{ color: 'var(--text-mid)' }}
           >
             Zjistit více →
@@ -161,13 +140,6 @@ export default function MetodyZakonceniPage() {
       {/* Method 03 — Weft */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-5xl">
-          <div
-            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            03
-          </div>
 
           <h2
             className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6"
@@ -204,7 +176,7 @@ export default function MetodyZakonceniPage() {
 
           <Link
             href="/metody-zakonceni/vlasove-tresy"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
             style={{ color: 'var(--text-mid)' }}
           >
             Zjistit více →
@@ -214,13 +186,6 @@ export default function MetodyZakonceniPage() {
 
       {/* Bottom CTA */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Kolekce vlasů
-        </div>
 
         <h2
           className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6 max-w-xl"
@@ -235,7 +200,7 @@ export default function MetodyZakonceniPage() {
 
         <Link
           href="/vlasy-k-prodlouzeni"
-          className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+          className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
           style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
         >
           Prozkoumat kolekci

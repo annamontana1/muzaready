@@ -2,12 +2,12 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Příslušenství k prodloužení vlasů | Keratin, Hřebeny | Múza Hair',
-  description: 'Příslušenství pro prodloužení a péči o vlasy — keratin, speciální hřebeny, kosmetika. Vše pro správnou péči o prodloužené vlasy. Múza Hair Praha.',
+  title: 'Příslušenství k prodloužení vlasů | Keratin, Hřebeny | Mùza Hair',
+  description: 'Příslušenství pro prodloužení a péči o vlasy — keratin, speciální hřebeny, kosmetika. Vše pro správnou péči o prodloužené vlasy. Mùza Hair Praha.',
   alternates: { canonical: 'https://muzahair.cz/prislusenstvi' },
   openGraph: {
-    title: 'Příslušenství k prodloužení vlasů | Keratin, Hřebeny | Múza Hair',
-    description: 'Příslušenství pro prodloužení a péči o vlasy — keratin, speciální hřebeny, kosmetika. Vše pro správnou péči o prodloužené vlasy. Múza Hair Praha.',
+    title: 'Příslušenství k prodloužení vlasů | Keratin, Hřebeny | Mùza Hair',
+    description: 'Příslušenství pro prodloužení a péči o vlasy — keratin, speciální hřebeny, kosmetika. Vše pro správnou péči o prodloužené vlasy. Mùza Hair Praha.',
     url: 'https://muzahair.cz/prislusenstvi',
     locale: 'cs_CZ',
     type: 'website',

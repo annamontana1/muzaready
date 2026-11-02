@@ -78,7 +78,7 @@ export const sendOrderConfirmationEmail = async (
             </div>
             <div class="content">
               <p>Dobrý den,</p>
-              <p>Děkujeme vám za vaši objednávku v obchodě <strong>Múza Hair</strong>.</p>
+              <p>Děkujeme vám za vaši objednávku v obchodě <strong>Mùza Hair</strong>.</p>
 
               <div class="order-id">
                 <strong>Číslo objednávky:</strong> ${orderNum}
@@ -197,7 +197,7 @@ export const sendPaymentConfirmationEmail = async (
 
               <p>Vaše objednávka je nyní zaplacena a připravena k odeslání. Brzy vám pošleme informace o odesílání balíčku.</p>
 
-              <p>Děkujeme vám za vašich nákup v obchodě <strong>Múza Hair</strong>.</p>
+              <p>Děkujeme vám za vašich nákup v obchodě <strong>Mùza Hair</strong>.</p>
 
               <div class="footer">
                 <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
@@ -270,7 +270,7 @@ export const sendShippingNotificationEmail = async (
 
               <p>Balíček by měl k vám dorazit do několika pracovních dnů.</p>
 
-              <p>Děkujeme za vaši trpělivost a za nákup v obchodě <strong>Múza Hair</strong>.</p>
+              <p>Děkujeme za vaši trpělivost a za nákup v obchodě <strong>Mùza Hair</strong>.</p>
 
               <div class="footer">
                 <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
@@ -347,7 +347,7 @@ export const sendAdminOrderNotificationEmail = async (
             </div>
             <div class="content">
               <p>Dobrý den,</p>
-              <p>Přišla nová objednávka v e-shopu <strong>Múza Hair</strong>.</p>
+              <p>Přišla nová objednávka v e-shopu <strong>Mùza Hair</strong>.</p>
 
               <div class="order-id">
                 <strong>Číslo objednávky:</strong> ${orderId}<br>
@@ -443,7 +443,7 @@ export const sendDeliveryConfirmationEmail = async (
 
               <p>Doufáme, že jste s vaším nákupem spokojeni. Pokud máte jakékoliv dotazy nebo připomínky, neváhejte nás kontaktovat.</p>
 
-              <p>Děkujeme za váš nákup v obchodě <strong>Múza Hair</strong> a těšíme se na další spolupráci!</p>
+              <p>Děkujeme za váš nákup v obchodě <strong>Mùza Hair</strong> a těšíme se na další spolupráci!</p>
 
               <div class="footer">
                 <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
@@ -806,7 +806,7 @@ export const sendLowStockAlert = async (
               </a>
 
               <div class="footer">
-                <p>Tento email byl automaticky vygenerován systémem Múza Hair.</p>
+                <p>Tento email byl automaticky vygenerován systémem Mùza Hair.</p>
                 <p>Pro změnu nastavení upozornění na nízké zásoby přejděte do administrace.</p>
               </div>
             </div>
@@ -816,7 +816,7 @@ export const sendLowStockAlert = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'Múza Hair <noreply@mail.muzahair.cz>',
+      from: 'Mùza Hair <noreply@mail.muzahair.cz>',
       replyTo: 'muzahaircz@gmail.com',
       to: [adminEmail],
       subject: `⚠️ UPOZORNĚNÍ: ${lowStockItems.length} produktů s nízkými zásobami`,

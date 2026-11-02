@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Panenské vlasy Praha | Virgin hair na prodloužení | Múza Hair',
+  title: 'Panenské vlasy Praha | Virgin hair na prodloužení | Mùza Hair',
   description: 'Panenské vlasy Praha — chemicky neošetřené, od jednoho dárce, se zachovanou kutikulou. LUXE a Platinum edition. Showroom Praha, od 6 900 Kč.',
   alternates: { canonical: 'https://muzahair.cz/panenenske-vlasy-praha' },
   keywords: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'panenské vlasy cena',
   ],
   openGraph: {
-    title: 'Panenské Vlasy na Prodloužení Praha | Múza Hair',
+    title: 'Panenské Vlasy na Prodloužení Praha | Mùza Hair',
     description: 'Chemicky neošetřené panenské vlasy od jednoho dárce se zachovanou kutikulou. LUXE a Platinum edition. Showroom Praha.',
     url: 'https://muzahair.cz/panenenske-vlasy-praha',
     locale: 'cs_CZ',
@@ -28,12 +28,12 @@ export default function PanenskéVlasyPrahaPage() {
   const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'Panenské vlasy na prodloužení — Múza Hair Praha',
+    name: 'Panenské vlasy na prodloužení — Mùza Hair Praha',
     description:
       'Chemicky neošetřené panenské vlasy (virgin hair) od jednoho dárce se zachovanou přirozenou kutikulou. Dostupné ve variantách LUXE a Platinum. Trvanlivost 12–24 měsíců.',
     brand: {
       '@type': 'Brand',
-      name: 'Múza Hair',
+      name: 'Mùza Hair',
     },
     url: 'https://muzahair.cz/panenenske-vlasy-praha',
     offers: [
@@ -91,7 +91,7 @@ export default function PanenskéVlasyPrahaPage() {
         name: 'Kde mohu koupit panenské vlasy v Praze?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair prodává panenské vlasy ve svém pražském showroomu, kde si sady můžete osobně prohlédnout a porovnat odstíny. Dostupné jsou také v online e-shopu s dodáním po celé ČR do 48 hodin. Nabízíme varianty LUXE (panenské evropské) a Platinum (slovanské panenské z Ukrajiny, Polska a Rumunska).',
+          text: 'Mùza Hair prodává panenské vlasy ve svém pražském showroomu, kde si sady můžete osobně prohlédnout a porovnat odstíny. Dostupné jsou také v online e-shopu s dodáním po celé ČR do 48 hodin. Nabízíme varianty LUXE (panenské evropské) a Platinum (slovanské panenské z Ukrajiny, Polska a Rumunska).',
         },
       },
     ],
@@ -161,7 +161,7 @@ export default function PanenskéVlasyPrahaPage() {
               Chemicky neošetřené vlasy od jednoho dárce se zachovanou přirozenou kutikulou. Nejvyšší standard prodloužení vlasů — dostupný v Praze od roku 2016.
             </p>
             <p className="text-gray-500 max-w-2xl leading-relaxed">
-              Panenské vlasy (virgin hair) jsou tou nejčistší formou vlasů na prodloužení. Múza Hair je nabízí ve dvou prémiových kolekcích — LUXE a Platinum — s garantovaným evropským původem a certifikátem kvality.
+              Panenské vlasy (virgin hair) jsou tou nejčistší formou vlasů na prodloužení. Mùza Hair je nabízí ve dvou prémiových kolekcích — LUXE a Platinum — s garantovaným evropským původem a certifikátem kvality.
             </p>
           </div>
 
@@ -388,7 +388,7 @@ export default function PanenskéVlasyPrahaPage() {
                   <h3 className="font-semibold text-gray-900">Původ a certifikát</h3>
                 </div>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Pravé panenské vlasy přicházejí s certifikátem původu — konkrétní zemí, regionem nebo dokumentací odběru. Pokud dodavatel původ vlasů nedokáže prokázat, jde o varovný signál. Múza Hair garantuje certifikovaný evropský původ.
+                  Pravé panenské vlasy přicházejí s certifikátem původu — konkrétní zemí, regionem nebo dokumentací odběru. Pokud dodavatel původ vlasů nedokáže prokázat, jde o varovný signál. Mùza Hair garantuje certifikovaný evropský původ.
                 </p>
               </div>
               <div className="bg-ivory rounded-xl p-5">
@@ -517,7 +517,7 @@ export default function PanenskéVlasyPrahaPage() {
                 },
                 {
                   q: 'Kde mohu koupit panenské vlasy v Praze?',
-                  a: 'Múza Hair prodává panenské vlasy ve svém pražském showroomu, kde si sady můžete osobně prohlédnout a porovnat odstíny. Dostupné jsou také v online e-shopu s dodáním po celé ČR do 48 hodin. Nabízíme varianty LUXE (panenské evropské) a Platinum (slovanské panenské z Ukrajiny, Polska a Rumunska).',
+                  a: 'Mùza Hair prodává panenské vlasy ve svém pražském showroomu, kde si sady můžete osobně prohlédnout a porovnat odstíny. Dostupné jsou také v online e-shopu s dodáním po celé ČR do 48 hodin. Nabízíme varianty LUXE (panenské evropské) a Platinum (slovanské panenské z Ukrajiny, Polska a Rumunska).',
                 },
               ].map((item, i) => (
                 <details key={i} className="bg-white border border-gray-200 rounded-xl p-5 group">
@@ -586,7 +586,7 @@ export default function PanenskéVlasyPrahaPage() {
               Pořiďte si panenské vlasy v Praze
             </h2>
             <p className="text-white/80 mb-2 max-w-lg mx-auto">
-              Múza Hair — prémiové vlasové prodloužení od roku 2016. Showroom Praha, online objednávky, poradenství zdarma.
+              Mùza Hair — prémiové vlasové prodloužení od roku 2016. Showroom Praha, online objednávky, poradenství zdarma.
             </p>
             <p className="text-white/60 text-sm mb-6 max-w-md mx-auto">
               Chemicky neošetřené panenské vlasy LUXE a Platinum — s certifikátem původu a garancí kvality.

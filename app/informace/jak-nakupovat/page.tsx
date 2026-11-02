@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Jak nakupovat | Múza Hair Praha',
+  title: 'Jak nakupovat | Mùza Hair Praha',
   description: 'Průvodce nákupem vlasů k prodloužení v 5 krocích. Výběr kvality, odstínu, délky, gramáže a zakončení. Doprava Zásilkovna a DPD, platba kartou nebo převodem.',
   alternates: { canonical: 'https://muzahair.cz/informace/jak-nakupovat' },
 };
@@ -17,7 +17,7 @@ const steps = [
       'LUXE — prémiová kvalita, delší životnost, sytější barvy',
       'Platinum Edition — nejkvalitnější, pro náročné klientky',
       'Nebarvené panenské — pro maximální přirozenost a snadné dobarvení',
-      'Barvené blond — barevné variace z vlastní barvírny Múza Hair',
+      'Barvené blond — barevné variace z vlastní barvírny Mùza Hair',
     ],
   },
   {
@@ -106,10 +106,6 @@ export default function JakNakupovatPage() {
             <span className="text-burgundy">Jak nakupovat</span>
           </div>
 
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            PRŮVODCE NÁKUPEM
-          </div>
 
           <h1 className="font-cormorant text-[clamp(36px,4vw,56px)] font-light leading-tight text-text-dark mb-4">
             Jak nakupovat
@@ -210,10 +206,6 @@ export default function JakNakupovatPage() {
       {/* Tips — flat 3-column layout */}
       <div className="px-8 lg:px-20 py-12" style={{ background: 'var(--beige)' }}>
         <div className="max-w-4xl mx-auto">
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            UŽITEČNÉ RADY
-          </div>
           <div className="grid md:grid-cols-3 gap-8">
             {tips.map((tip) => (
               <div key={tip.title}>

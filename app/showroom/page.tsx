@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Showroom Praha 1 | Prodloužení vlasů na objednání | Múza Hair',
-  description: 'Showroom Múza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Ne 10–20, pouze na objednání.',
+  title: 'Showroom Praha 1 | Výběr vlasů na objednání | Mùza Hair',
+  description: 'Showroom Mùza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Ne 10–20, pouze na objednání.',
   alternates: { canonical: 'https://muzahair.cz/showroom' },
 };
 
@@ -22,13 +22,6 @@ export default function ShowroomPage() {
           <span style={{ color: 'var(--text-mid)' }}>Showroom</span>
         </div>
 
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          SHOWROOM PRAHA
-        </div>
 
         <h1
           className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6"
@@ -66,7 +59,7 @@ export default function ShowroomPage() {
         <div className="flex gap-6 flex-wrap">
           <a
             href="tel:+420728722880"
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px inline-block"
+            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Zavolejte nám
@@ -75,7 +68,7 @@ export default function ShowroomPage() {
             href="https://wa.me/420728722880"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             WhatsApp →
@@ -85,13 +78,6 @@ export default function ShowroomPage() {
 
       {/* Hours & appointment info */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          OTEVÍRACÍ DOBA
-        </div>
 
         <h2
           className="font-cormorant text-[clamp(26px,3vw,38px)] font-light mb-8"
@@ -120,13 +106,6 @@ export default function ShowroomPage() {
 
       {/* Contact details */}
       <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory-warm)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          KONTAKT
-        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
           {[

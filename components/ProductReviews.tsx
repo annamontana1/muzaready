@@ -139,17 +139,12 @@ export default function ProductReviews({ skuId }: ProductReviewsProps) {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="py-8">
-        <p className="text-text-mid text-center">Načítání recenzí...</p>
-      </div>
-    );
-  }
+  // Bez recenzí se blok vůbec neukazuje (každý culík je jedinečný kus)
+  if (loading || reviews.length === 0) return null;
 
   return (
     <div className="py-8">
-      <h2 className="text-2xl font-bold mb-6">Hodnocení zákazníků</h2>
+      <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink mb-6">Hodnocení zákaznic</h2>
 
       {/* Summary */}
       {summary && summary.totalReviews > 0 && (

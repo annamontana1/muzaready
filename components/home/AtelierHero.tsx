@@ -1,11 +1,13 @@
+import Link from 'next/link';
+
 // Úvod: hned pod hlavičkou plyne souvislý pás černobílých fotek z ateliéru a nadpis;
 // pod ním odstíny, výběr druhu vlasů (HairKinds) a culíky k odeslání
 
 // Fotky jdou bez mezer těsně za sebou; pás je zdvojený, aby se smyčka (posun o −50 %) nikdy nepřetrhla
 const PHOTOS = [
   { id: '10', alt: 'Výroba paruky: háčkování vlasů do krajky na hlavě figuríny' },
-  { id: '07', alt: 'Ateliér Múza Hair v Praze: tým u pracovních stolů šije tresy a tresuje vlasy' },
-  { id: '12', alt: 'Tým ateliéru Múza Hair' },
+  { id: '07', alt: 'Ateliér Mùza Hair v Praze: tým u pracovních stolů šije tresy a tresuje vlasy' },
+  { id: '12', alt: 'Tým ateliéru Mùza Hair' },
   { id: '08', alt: 'Šití vlasové tresy na průmyslovém stroji' },
   { id: '15', alt: 'Balení objednávky: vlasy v hedvábném papíru v krabici' },
   { id: '09', alt: 'Ruční šití tresy zahnutou jehlou' },
@@ -42,9 +44,13 @@ export default function AtelierHero() {
         <h1 className="font-cormorant font-light text-muza-ink text-[44px] leading-[1.02] lg:text-[64px] tracking-[-0.01em]">
           Každý pramen prošel <em className="italic">našima rukama.</em>
         </h1>
-        <p className="mt-4 text-[15px] leading-relaxed text-text-mid max-w-[420px]">
+        <p className="mt-4 text-base leading-relaxed text-[#45302F] max-w-[420px]">
           Pravé vlasy z vlastní barvírny v Praze. Vyberte odstín a druh vlasů.
         </p>
+        <Link href="/katalog"
+          className="mt-6 inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity">
+          Najít odstín
+        </Link>
       </div>
     </section>
   );

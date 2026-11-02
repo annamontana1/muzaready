@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Ceník vlasů na prodloužení Praha 2026 | Múza Hair',
-  description: 'Ceník pravých vlasů na prodloužení Praha 2026. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Ceny závisí na délce (35–75 cm) a gramáži. Múza Hair — výrobce vlasů Praha od 2016.',
+  title: 'Ceník vlasů na prodloužení Praha 2026 | Mùza Hair',
+  description: 'Ceník pravých vlasů na prodloužení Praha 2026. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Ceny závisí na délce (35–75 cm) a gramáži. Mùza Hair — výrobce vlasů Praha od 2016.',
   alternates: { canonical: 'https://muzahair.cz/cenik-vlasu-na-prodlouzeni' },
   keywords: [
     'cena vlasů na prodloužení Praha',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'cena prodloužení vlasů Praha 2026',
   ],
   openGraph: {
-    title: 'Ceník Vlasů na Prodloužení Praha 2026 | Múza Hair',
+    title: 'Ceník Vlasů na Prodloužení Praha 2026 | Mùza Hair',
     description: 'Přehledný ceník pravých vlasů na prodloužení. Standard od 3 900 Kč, LUXE od 6 900 Kč, Platinum od 10 900 Kč. Výrobce vlasů Praha od roku 2016.',
     url: 'https://muzahair.cz/cenik-vlasu-na-prodlouzeni',
     locale: 'cs_CZ',
@@ -34,7 +34,7 @@ export default function CenikVlasuPage() {
         name: 'Kolik stojí pravé vlasy na prodloužení v Praze v roce 2026?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Ceny pravých vlasů na prodloužení u Múza Hair v Praze začínají od 3 900 Kč za Standard sadu (45 cm, 100 g). LUXE panenské vlasy jsou od 6 900 Kč a Platinum slovanské vlasy od 10 900 Kč. Konečná cena závisí na délce (35–75 cm) a gramáži (80–150 g). Pozor: tato cena je za samotné vlasy (produkt) — nikoliv za salon a aplikaci.',
+          text: 'Ceny pravých vlasů na prodloužení u Mùza Hair v Praze začínají od 3 900 Kč za Standard sadu (45 cm, 100 g). LUXE panenské vlasy jsou od 6 900 Kč a Platinum slovanské vlasy od 10 900 Kč. Konečná cena závisí na délce (35–75 cm) a gramáži (80–150 g). Pozor: tato cena je za samotné vlasy (produkt) — nikoliv za salon a aplikaci.',
         },
       },
       {
@@ -42,7 +42,7 @@ export default function CenikVlasuPage() {
         name: 'Jaký je rozdíl mezi cenou vlasů a cenou za prodloužení v salonu?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Existují dvě různé ceny: 1) Cena za vlasy (produkt) — koupíte vlasy a dostanete je domů nebo je odnesete do salonu. To je Múza Hair. 2) Cena salonu za prodloužení vlasů zahrnuje práci stylistky a může zahrnovat nebo nezahrnovat vlasy. U Múza Hair kupujete pouze vlasy od 3 900 Kč. Aplikaci pak řešíte se svou stylistkou.',
+          text: 'Existují dvě různé ceny: 1) Cena za vlasy (produkt) — koupíte vlasy a dostanete je domů nebo je odnesete do salonu. To je Mùza Hair. 2) Cena salonu za prodloužení vlasů zahrnuje práci stylistky a může zahrnovat nebo nezahrnovat vlasy. U Mùza Hair kupujete pouze vlasy od 3 900 Kč. Aplikaci pak řešíte se svou stylistkou.',
         },
       },
       {
@@ -58,7 +58,7 @@ export default function CenikVlasuPage() {
         name: 'Je levnější koupit vlasy u výrobce nebo platit salonu za vše?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Koupit vlasy přímo u výrobce jako Múza Hair je výrazně levnější než platit salonu, který vlasy nakoupí a přidá svou marži. Při koupi vlasů za 6 900 Kč + práce stylistky cca 2 000–4 000 Kč zaplatíte celkem 9 000–11 000 Kč. V salonu za kompletní prodloužení s LUXE kvalitou vlasů zaplatíte 15 000–25 000 Kč.',
+          text: 'Koupit vlasy přímo u výrobce jako Mùza Hair je výrazně levnější než platit salonu, který vlasy nakoupí a přidá svou marži. Při koupi vlasů za 6 900 Kč + práce stylistky cca 2 000–4 000 Kč zaplatíte celkem 9 000–11 000 Kč. V salonu za kompletní prodloužení s LUXE kvalitou vlasů zaplatíte 15 000–25 000 Kč.',
         },
       },
     ],
@@ -225,7 +225,7 @@ export default function CenikVlasuPage() {
               Transparentní ceny pravých vlasů na prodloužení přímo od výrobce. Panenské vlasy od 3 900 Kč — bez zprostředkovatelů, bez skrytých poplatků.
             </p>
             <p className="text-gray-500 max-w-2xl leading-relaxed">
-              Múza Hair je český výrobce pravých vlasů na prodloužení se sídlem v Praze. Na trhu od roku 2016. Prodáváme vlasy jako produkt — ne salónní službu. Díky tomu jsou naše ceny výrazně nižší než u salónů.
+              Mùza Hair je český výrobce pravých vlasů na prodloužení se sídlem v Praze. Na trhu od roku 2016. Prodáváme vlasy jako produkt — ne salónní službu. Díky tomu jsou naše ceny výrazně nižší než u salónů.
             </p>
           </div>
 
@@ -235,7 +235,7 @@ export default function CenikVlasuPage() {
               Důležité: kupujete vlasy — ne salónní službu
             </h2>
             <p className="text-amber-800 text-sm leading-relaxed mb-3">
-              Hledáte-li <strong>„cena prodloužení vlasů Praha"</strong>, pravděpodobně narazíte na weby salónů, které nabízejí kompletní službu (vlasy + aplikace stylistkou). Múza Hair je e-shop a showroom — <strong>prodáváme vlasy jako produkt</strong>, které si pak necháte aplikovat u své stylistky.
+              Hledáte-li <strong>„cena prodloužení vlasů Praha"</strong>, pravděpodobně narazíte na weby salónů, které nabízejí kompletní službu (vlasy + aplikace stylistkou). Mùza Hair je e-shop a showroom — <strong>prodáváme vlasy jako produkt</strong>, které si pak necháte aplikovat u své stylistky.
             </p>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div className="bg-white rounded-lg p-4">
@@ -248,7 +248,7 @@ export default function CenikVlasuPage() {
                 </ul>
               </div>
               <div className="bg-white rounded-lg p-4">
-                <p className="font-semibold text-burgundy mb-1">Múza Hair — pouze vlasy</p>
+                <p className="font-semibold text-burgundy mb-1">Mùza Hair — pouze vlasy</p>
                 <ul className="text-gray-700 space-y-1">
                   <li>• Kupujete vlasy jako produkt</li>
                   <li>• Cena: 3 900–32 800 Kč dle délky a kvality</li>
@@ -492,7 +492,7 @@ export default function CenikVlasuPage() {
               <div className="bg-burgundy/5 border-2 border-burgundy/20 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">💎</span>
-                  <h3 className="font-semibold text-burgundy text-lg">Múza Hair + vaše stylistka</h3>
+                  <h3 className="font-semibold text-burgundy text-lg">Mùza Hair + vaše stylistka</h3>
                 </div>
                 <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                   Koupíte vlasy u nás za výrobní cenu. Zaplatíte zvlášť stylistce za aplikaci. Celkově výrazně méně.
@@ -525,7 +525,7 @@ export default function CenikVlasuPage() {
               <p className="text-gray-600 text-sm leading-relaxed">
                 Pokud již máte svou stylistku nebo salón, kde prodloužení vlasů nabízejí, vždy se vyplatí přinést vlastní vlasy od výrobce.
                 Ušetříte na marži salónu — ta je typicky 50–150 % z ceny vlasů. Navíc máte jistotu původu a kvality vlasů,
-                protože dostanete certifikát od Múza Hair. Pokud ještě stylistku nemáte, rádi vám s výběrem pomůžeme —
+                protože dostanete certifikát od Mùza Hair. Pokud ještě stylistku nemáte, rádi vám s výběrem pomůžeme —
                 kontaktujte nás nebo přijďte do showroomu v Praze.
               </p>
             </div>
@@ -653,7 +653,7 @@ export default function CenikVlasuPage() {
               {[
                 {
                   q: 'Kolik stojí pravé vlasy na prodloužení v Praze v roce 2026?',
-                  a: 'Ceny pravých vlasů na prodloužení u Múza Hair začínají od 3 900 Kč za sadu Standard (35 cm, 80 g). Nejpopulárnější konfigurace — LUXE vlasy 45 cm, 100 g — stojí 8 600 Kč. Platinum vlasy stejné konfigurace jsou za 13 600 Kč. Tato cena je za samotné vlasy jako produkt, nikoliv za salonní aplikaci.',
+                  a: 'Ceny pravých vlasů na prodloužení u Mùza Hair začínají od 3 900 Kč za sadu Standard (35 cm, 80 g). Nejpopulárnější konfigurace — LUXE vlasy 45 cm, 100 g — stojí 8 600 Kč. Platinum vlasy stejné konfigurace jsou za 13 600 Kč. Tato cena je za samotné vlasy jako produkt, nikoliv za salonní aplikaci.',
                 },
                 {
                   q: 'Proč jsou panenské vlasy dražší než běžné?',
@@ -664,7 +664,7 @@ export default function CenikVlasuPage() {
                   a: 'Cena vlasů na prodloužení keratinovou metodou závisí pouze na kvalitě, délce a gramáži vlasů — ne na metodě aplikace. Keratinové zakončení (kapsle) je součástí sady. Ceny začínají od 3 900 Kč (Standard) a LUXE od 6 900 Kč za sadu 35 cm / 80 g. Cena práce stylistky za aplikaci keratinu se pohybuje od 1 500 Kč výše — to si platíte zvlášť.',
                 },
                 {
-                  q: 'Jsou ceny vlasů u Múza Hair vč. DPH?',
+                  q: 'Jsou ceny vlasů u Mùza Hair vč. DPH?',
                   a: 'Ceny uvedené v ceníku jsou ceny bez DPH. Výsledná cena s DPH je zobrazena při přidání produktu do košíku. Orientační ceny v přehledových tabulkách jsou pro porovnání bez DPH.',
                 },
                 {
@@ -686,7 +686,7 @@ export default function CenikVlasuPage() {
           {/* Trust signals */}
           <section className="mb-14 bg-ivory rounded-2xl p-8">
             <h2 className="text-2xl font-playfair text-burgundy mb-6">
-              Proč kupovat vlasy na prodloužení u Múza Hair?
+              Proč kupovat vlasy na prodloužení u Mùza Hair?
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[

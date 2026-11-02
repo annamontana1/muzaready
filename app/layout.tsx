@@ -24,8 +24,8 @@ const jost = Jost({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.muzahair.cz'),
-  title: "Pravé vlasy k prodloužení Praha | Múza Hair",
-  description: "Múza Hair Praha — český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy weft. Standard, Luxe, Platinum. Showroom Revoluční 8, Praha 1.",
+  title: "Pravé vlasy k prodloužení Praha | Mùza Hair",
+  description: "Mùza Hair Praha — český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy weft. Standard, Luxe, Platinum. Showroom Revoluční 8, Praha 1.",
   keywords: [
     "vlasy k prodloužení",
     "panenské vlasy",
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'cs_CZ',
     url: 'https://www.muzahair.cz',
-    siteName: 'Múza Hair',
-    title: 'Pravé vlasy k prodloužení Praha | Múza Hair',
+    siteName: 'Mùza Hair',
+    title: 'Pravé vlasy k prodloužení Praha | Mùza Hair',
     description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna v Praze. Keratinové pramínky, nanotapes, vlasové tresy. Showroom Revoluční 8, Praha 1.',
     images: [
       {
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Múza Hair Praha | Pravé vlasy k prodloužení',
+    title: 'Mùza Hair Praha | Pravé vlasy k prodloužení',
     description: 'Český výrobce pravých vlasů od roku 2016. Vlastní barvírna Praha. Keratin, nanotapes, weft.',
     images: ['/og-image.jpg'],
   },
@@ -139,7 +139,7 @@ export default function RootLayout({
               {
                 '@type': 'LocalBusiness',
                 '@id': 'https://muzahair.cz/#business',
-                name: 'Múza Hair',
+                name: 'Mùza Hair',
                 url: 'https://muzahair.cz',
                 telephone: '+420728722880',
                 email: 'muzahaircz@gmail.com',
@@ -177,7 +177,7 @@ export default function RootLayout({
               {
                 '@type': 'Organization',
                 '@id': 'https://muzahair.cz/#organization',
-                name: 'Múza Hair s.r.o.',
+                name: 'Mùza Hair s.r.o.',
                 url: 'https://muzahair.cz',
                 logo: { '@type': 'ImageObject', url: 'https://muzahair.cz/logo.png' },
                 foundingDate: '2016',
@@ -187,7 +187,7 @@ export default function RootLayout({
                 '@type': 'WebSite',
                 '@id': 'https://muzahair.cz/#website',
                 url: 'https://muzahair.cz',
-                name: 'Múza Hair',
+                name: 'Mùza Hair',
                 publisher: { '@id': 'https://muzahair.cz/#organization' },
                 potentialAction: {
                   '@type': 'SearchAction',

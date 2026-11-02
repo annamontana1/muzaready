@@ -39,7 +39,7 @@ const faqSchema = {
       name: 'Mohu si keratin vlasy objednat online a nechat je aplikovat u své kadeřnice?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Ano — Múza Hair doručí keratin vlasy kamkoliv v ČR do 2 pracovních dní. Vaše kadeřnice je pak aplikuje. Nebo přijeďte do showroomu Revoluční 8, Praha 1.',
+        text: 'Ano — Mùza Hair doručí keratin vlasy kamkoliv v ČR do 2 pracovních dní. Vaše kadeřnice je pak aplikuje, nebo aplikaci zajistíme v našem partnerském salonu.',
       },
     },
   ],
@@ -154,10 +154,6 @@ export default function KeratinPage() {
             className="px-8 py-10"
             style={{ borderLeft: '3px solid var(--accent)', background: 'var(--beige)' }}
           >
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              CENY APLIKACE
-            </div>
             <p className="text-text-mid text-sm mb-4 leading-relaxed">
               Ceny aplikace keratinových pramínků závisí na délce vlasů a množství bondinků. Přehled všech sazeb najdete na stránce cen aplikací.
             </p>

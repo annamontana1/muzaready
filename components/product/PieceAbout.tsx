@@ -3,7 +3,7 @@
 // Texty jsou návrh k doladění majitelkou.
 
 const TIER_TEXT: Record<string, string> = {
-  'Platinum Edition': 'Nejvyšší řada Múza: nejjemnější vlasy s maximálním leskem a hebkostí, vybírané kus po kusu.',
+  'Platinum Edition': 'Nejvyšší řada Mùza: nejjemnější vlasy s maximálním leskem a hebkostí, vybírané kus po kusu.',
   Luxe: 'Prémiové vlasy pro každodenní nošení, hebké a s dlouhou životností.',
   'Baby Shades': 'Jemné světlé odstíny prodávané jako celý culík, tak jak je na fotce.',
 };

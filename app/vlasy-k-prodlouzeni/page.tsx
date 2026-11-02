@@ -98,7 +98,7 @@ export default function VlasyKProdlouzenLanding() {
                 </p>
               </div>
               <div
-                className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-all group-hover:gap-4"
+                className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 transition-all group-hover:gap-4"
                 style={{ color: 'var(--text-mid)' }}
               >
                 Prohlédnout katalog →
@@ -135,7 +135,7 @@ export default function VlasyKProdlouzenLanding() {
             <Link
               key={m.slug}
               href={`/vlasy/${m.slug}`}
-              className="text-[13px] tracking-[0.05em] uppercase font-light transition-colors hover:underline"
+              className="text-sm tracking-[0.05em] uppercase font-light transition-colors hover:underline"
               style={{ color: 'var(--text-mid)' }}
             >
               {m.name}

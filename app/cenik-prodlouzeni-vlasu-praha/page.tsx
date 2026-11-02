@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Cena prodloužení vlasů Praha 2025 | Keratin, Tape-In, Weft | Múza Hair',
+  title: 'Cena prodloužení vlasů Praha 2025 | Keratin, Tape-In, Weft | Mùza Hair',
   description: 'Kolik stojí prodloužení vlasů v Praze? Keratin od 4 000 Kč, nanotapes 55–65 Kč/spoj, weft od 3 800 Kč. Ceny vlasů Standard od 6 900 Kč, LUXE od 8 900 Kč. Showroom Praha 1.',
   keywords: [
     'cena prodloužení vlasů Praha',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'ceny vlasů na prodloužení Praha',
   ],
   openGraph: {
-    title: 'Cena prodloužení vlasů Praha 2025 — Keratin, Tape-In, Weft | Múza Hair',
+    title: 'Cena prodloužení vlasů Praha 2025 — Keratin, Tape-In, Weft | Mùza Hair',
     description: 'Kompletní ceník prodloužení vlasů Praha. Ceny vlasů + aplikace. Keratin, nanotapes, weft. Vlastní barvírna Praha 1.',
     url: 'https://muzahair.cz/cenik-prodlouzeni-vlasu-praha',
     type: 'website',
@@ -77,7 +77,7 @@ const jsonLd = [
         name: 'Jaký je rozdíl v ceně vlasů Standard, LUXE a Platinum?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair nabízí 3 úrovně kvality vlasů: Standard od 6 900 Kč/100 g (kvalitní barvené vlasy), LUXE od 8 900 Kč/100 g (prémiové středoevropské vlasy), Platinum Edition od 10 900 Kč/100 g (panenské nebarvené vlasy nejvyšší kvality). Baby Shades (světlé odstíny) od 7 900 Kč/100 g.',
+          text: 'Mùza Hair nabízí 3 úrovně kvality vlasů: Standard od 6 900 Kč/100 g (kvalitní barvené vlasy), LUXE od 8 900 Kč/100 g (prémiové středoevropské vlasy), Platinum Edition od 10 900 Kč/100 g (panenské nebarvené vlasy nejvyšší kvality). Baby Shades (světlé odstíny) od 7 900 Kč/100 g.',
         },
       },
     ],
@@ -112,12 +112,12 @@ const FAQ = [
     a: 'Záleží na délce cílového výsledku a gramáži. Kratší výsledek (do 40 cm) = 100 g vlasů. Střední délka (55 cm) = 100–150 g. Dlouhé vlasy (65+ cm) = 150–200 g. Přesnou kalkulaci dostanete na konzultaci zdarma v showroomu Praha 1, Revoluční 8.',
   },
   {
-    q: 'Je cena prodloužení vlasů v Praze u Múza Hair srovnatelná s jinými salóny?',
-    a: 'Múza Hair má vlastní barvírnu a vyrábí vlasové tresy na zakázku — neplatíte marži za zprostředkovatele. Ceny aplikace i vlasů jsou transparentní. Showroom Praha 1, Revoluční 8.',
+    q: 'Je cena prodloužení vlasů v Praze u Mùza Hair srovnatelná s jinými salóny?',
+    a: 'Mùza Hair má vlastní barvírnu a vyrábí vlasové tresy na zakázku — neplatíte marži za zprostředkovatele. Ceny aplikace i vlasů jsou transparentní. Showroom Praha 1, Revoluční 8.',
   },
   {
     q: 'Mohu si vlasy na prodloužení objednat online bez návštěvy Prahy?',
-    a: 'Ano — vlasy Standard, LUXE, Platinum Edition a Baby Shades jsou dostupné v e-shopu s doručením po celé ČR. Aplikaci vlasů pak provedeme v showroomu Praha 1 nebo u vás ve spolupracujícím salónu.',
+    a: 'Ano — vlasy Standard, LUXE, Platinum Edition a Baby Shades jsou dostupné v e-shopu s doručením po celé ČR. Aplikaci pak provede vaše kadeřnice, nebo ji zajistíme v našem partnerském salonu.',
   },
 ];
 
@@ -138,7 +138,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
             {/* Breadcrumb */}
-            <div className="text-[13px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+            <div className="text-sm font-light mb-8" style={{ color: 'var(--text-soft)' }}>
               <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
               {' / '}
               <Link href="/prodlouzeni-vlasu-praha" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Prodloužení vlasů Praha</Link>
@@ -146,17 +146,13 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               <span style={{ color: 'var(--text-dark)' }}>Cena prodloužení vlasů Praha</span>
             </div>
 
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              SHOWROOM PRAHA 1 · REVOLUČNÍ 8
-            </div>
             <h1 className="font-cormorant text-[clamp(38px,5vw,58px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
               Cena prodloužení vlasů Praha 2025
             </h1>
             <p className="text-[15px] leading-[1.8] font-light max-w-2xl mb-2" style={{ color: 'var(--text-soft)' }}>
               Keratin · Nanotapes (Tape-In) · Weft (Hollywoodské prodloužení)
             </p>
-            <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-sm leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
               Vlastní barvírna · Pravé vlasy · 3 úrovně kvality · Od roku 2016
             </p>
           </div>
@@ -165,14 +161,11 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* TL;DR blok — pro AI enginy a rychlé čtení */}
         <div className="px-8 lg:px-20 py-10" style={{ background: 'var(--burgundy)' }}>
           <div className="max-w-5xl">
-            <p className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              RYCHLÝ PŘEHLED CEN
-            </p>
             <p className="text-[15px] leading-[1.9] font-light" style={{ color: 'rgba(255,255,255,0.9)' }}>
               Cena prodloužení vlasů v Praze: keratin od 4 000 Kč (aplikace) + vlasy od 6 900 Kč/100 g.
               Nanotapes 55–65 Kč/spoj + vlasy. Weft posun od 3 800 Kč + tresy na zakázku.
               Celková cena keratin prodloužení v Praze tedy <strong style={{ color: 'var(--ivory)', fontWeight: 500 }}>od 10 900 Kč</strong>.
-              Múza Hair, Revoluční 8, Praha 1.
+              Mùza Hair, Revoluční 8, Praha 1.
             </p>
           </div>
         </div>
@@ -180,10 +173,6 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* Ceník aplikace */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              CENY APLIKACE
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
               Ceník aplikace prodloužení vlasů Praha
             </h2>
@@ -202,17 +191,17 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
                 <tbody>
                   {APPLICATION_PRICES.map((row, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
-                      <td className="py-4 pr-6 text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>{row.method}</td>
-                      <td className="py-4 pr-6 text-[14px] font-light" style={{ color: 'var(--burgundy)', fontWeight: 500 }}>{row.price}</td>
-                      <td className="py-4 pr-6 text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>{row.validity}</td>
-                      <td className="py-4 text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>{row.note}</td>
+                      <td className="py-4 pr-6 text-sm font-normal" style={{ color: 'var(--text-dark)' }}>{row.method}</td>
+                      <td className="py-4 pr-6 text-sm font-light" style={{ color: 'var(--burgundy)', fontWeight: 500 }}>{row.price}</td>
+                      <td className="py-4 pr-6 text-sm font-light" style={{ color: 'var(--text-soft)' }}>{row.validity}</td>
+                      <td className="py-4 text-sm font-light" style={{ color: 'var(--text-soft)' }}>{row.note}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <p className="text-[14px] font-light mt-5" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-sm font-light mt-5" style={{ color: 'var(--text-soft)' }}>
               Cena vlasů se účtuje zvlášť dle zvolené kolekce a délky.{' '}
               <Link href="/ceny-aplikaci" className="hover:underline" style={{ color: 'var(--burgundy)' }}>
                 Kompletní ceník aplikace →
@@ -224,10 +213,6 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* Ceník vlasů */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              CENY VLASŮ
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
               Ceník vlasů na prodloužení
             </h2>
@@ -244,15 +229,15 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
                 <tbody>
                   {HAIR_PRICES.map((row, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
-                      <td className="py-4 pr-6 text-[14px] font-normal" style={{ color: 'var(--text-dark)' }}>{row.collection}</td>
-                      <td className="py-4 text-[14px] font-light" style={{ color: 'var(--burgundy)', fontWeight: 500 }}>{row.price}</td>
+                      <td className="py-4 pr-6 text-sm font-normal" style={{ color: 'var(--text-dark)' }}>{row.collection}</td>
+                      <td className="py-4 text-sm font-light" style={{ color: 'var(--burgundy)', fontWeight: 500 }}>{row.price}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <p className="text-[14px] font-light mt-5" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-sm font-light mt-5" style={{ color: 'var(--text-soft)' }}>
               Cena je za 100 g vlasů v základní délce. Delší vlasy a specifické odstíny na dotaz.{' '}
               <Link href="/vlasy-k-prodlouzeni" className="hover:underline" style={{ color: 'var(--burgundy)' }}>
                 Nakonfigurovat vlasy v e-shopu →
@@ -264,10 +249,6 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* Příklad celkové ceny */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              PŘÍKLAD KALKULACE
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-8" style={{ color: 'var(--text-dark)' }}>
               Příklad celkové ceny prodloužení vlasů v Praze
             </h2>
@@ -295,10 +276,10 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               ].map((ex) => (
                 <div key={ex.label} className="border-b md:border-b-0 md:border-r py-8 md:pr-8 md:last:border-r-0 md:last:pr-0 md:pl-8 md:first:pl-0" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[12px] tracking-[0.18em] uppercase font-normal mb-2" style={{ color: 'var(--accent)' }}>{ex.label}</p>
-                  <p className="text-[14px] font-light mb-4" style={{ color: 'var(--text-soft)' }}>{ex.desc}</p>
+                  <p className="text-sm font-light mb-4" style={{ color: 'var(--text-soft)' }}>{ex.desc}</p>
                   <ul className="space-y-1 mb-5">
                     {ex.breakdown.map((b) => (
-                      <li key={b} className="text-[14px] font-light flex gap-2" style={{ color: 'var(--text-soft)' }}>
+                      <li key={b} className="text-sm font-light flex gap-2" style={{ color: 'var(--text-soft)' }}>
                         <span style={{ color: 'var(--accent)' }}>—</span>
                         {b}
                       </li>
@@ -309,7 +290,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               ))}
             </div>
 
-            <p className="text-[14px] font-light mt-8" style={{ color: 'var(--text-soft)' }}>
+            <p className="text-sm font-light mt-8" style={{ color: 'var(--text-soft)' }}>
               Přesnou cenu vlasů určuje délka, gramáž a odstín. Konzultaci a kalkulaci zdarma domluvíte na{' '}
               <a href="tel:+420728722880" className="hover:underline" style={{ color: 'var(--burgundy)' }}>+420 728 722 880</a>.
             </p>
@@ -319,10 +300,6 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* FAQ */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              ČASTÉ DOTAZY
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-10" style={{ color: 'var(--text-dark)' }}>
               Cena prodloužení vlasů Praha — odpovědi
             </h2>
@@ -330,7 +307,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
               {FAQ.map((item, i) => (
                 <div key={i} className="border-b py-7" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
                   <p className="text-[16px] font-normal mb-2" style={{ color: 'var(--text-dark)' }}>{item.q}</p>
-                  <p className="text-[14px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.a}</p>
+                  <p className="text-sm leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>{item.a}</p>
                 </div>
               ))}
             </div>
@@ -340,10 +317,6 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
         {/* CTA */}
         <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
           <div className="max-w-5xl">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              DALŠÍ KROKY
-            </div>
             <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
               Zjistěte přesnou cenu pro vás
             </h2>
@@ -354,7 +327,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
               <a
                 href="tel:+420728722880"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
                 style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
               >
                 +420 728 722 880
@@ -363,7 +336,7 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
                 href="https://www.instagram.com/muzahair.cz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+                className="text-sm px-8 py-3.5 rounded-full font-medium border transition-all hover:-translate-y-px"
                 style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
               >
                 @muzahair.cz na Instagramu
@@ -374,21 +347,21 @@ export default function CenikProdlouzeniVlasuPrahaPage() {
             <div className="border-t pt-8 flex flex-col sm:flex-row gap-6" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
               <Link
                 href="/vlasy-k-prodlouzeni"
-                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-sm tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Nakonfigurovat vlasy v e-shopu →
               </Link>
               <Link
                 href="/prodlouzeni-vlasu-praha"
-                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-sm tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Prodloužení vlasů Praha — metody →
               </Link>
               <Link
                 href="/ceny-aplikaci"
-                className="text-[13px] tracking-[0.12em] uppercase font-normal hover:underline"
+                className="text-sm tracking-[0.12em] uppercase font-normal hover:underline"
                 style={{ color: 'var(--text-soft)' }}
               >
                 Kompletní ceník aplikace →

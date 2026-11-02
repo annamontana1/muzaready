@@ -124,7 +124,7 @@ export const MESTA: Mesto[] = [
     region: 'Středočeský kraj',
     distanceKm: 30,
     trainHours: '30 min',
-    tagline: 'hned vedle Prahy — z Kladna do showroomu Múza Hair se dostanete za 30 minut. Vlasy objednáte online nebo přijedete osobně.',
+    tagline: 'hned vedle Prahy — z Kladna do showroomu Mùza Hair se dostanete za 30 minut. Vlasy objednáte online nebo přijedete osobně.',
   },
   {
     slug: 'mlada-boleslav',

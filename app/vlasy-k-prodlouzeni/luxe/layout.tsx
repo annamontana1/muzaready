@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Luxusní vlasy na prodloužení Praha | Kolekce LUXE | Múza Hair',
+  title: 'Luxusní vlasy na prodloužení Praha | Kolekce LUXE | Mùza Hair',
   description: 'Prémiové panenské vlasy na prodloužení — kolekce LUXE. Slovanské vlasy z Evropy, 100% remy, vlastní barvírna Praha. Showroom Revoluční 8, Praha 1. Konzultace zdarma.',
   keywords: [
     'luxusní vlasy na prodloužení',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     'východoevropské vlasy prodloužení',
   ],
   openGraph: {
-    title: 'Luxusní vlasy na prodloužení — kolekce LUXE | Múza Hair Praha',
+    title: 'Luxusní vlasy na prodloužení — kolekce LUXE | Mùza Hair Praha',
     description: 'Prémiové panenské slovanské vlasy na prodloužení. Vlastní barvírna, showroom Praha 1. Keratin, tape in, weft. Konzultace zdarma.',
     url: 'https://muzahair.cz/vlasy-k-prodlouzeni/luxe',
     type: 'website',

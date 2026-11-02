@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Múza Hair Praha – pravé vlasy k prodloužení | O nás',
+  title: 'Mùza Hair Praha – pravé vlasy k prodloužení | O nás',
   description:
     'Jsme český výrobce prémiových pravých vlasů k prodloužení. Zakladatelka Anna stojí za panenskou kvalitou vlasů z vlastního pražského ateliéru.',
   alternates: { canonical: 'https://muzahair.cz/o-nas' },
   openGraph: {
-    title: 'Múza Hair Praha – pravé vlasy k prodloužení | O nás',
+    title: 'Mùza Hair Praha – pravé vlasy k prodloužení | O nás',
     description:
       'Jsme český výrobce prémiových pravých vlasů k prodloužení. Zakladatelka Anna stojí za panenskou kvalitou vlasů z vlastního pražského ateliéru.',
     url: 'https://muzahair.cz/o-nas',
@@ -22,23 +22,16 @@ export default function ONasPage() {
 
       {/* Hero */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          O nás
-        </div>
 
         <h1
           className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-8 max-w-3xl"
           style={{ color: 'var(--text-dark)' }}
         >
-          Múza Hair Praha: pravé vlasy k prodloužení z pražského ateliéru s příběhem
+          Mùza Hair Praha: pravé vlasy k prodloužení z pražského ateliéru s příběhem
         </h1>
 
         <p className="text-[15px] leading-[1.8] font-light max-w-2xl" style={{ color: 'var(--text-soft)' }}>
-          Múza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení
+          Mùza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení
           s vlastní barvírnou a ruční výrobou v Praze. Zakladatelka Anna nabízí vlasy ve čtyřech
           liniích — Standard, Luxe, Platinum a Baby Shades — z východoevropských, středoevropských
           i dětských vlasů nejvyšší kvality. V pražském ateliéru vyrábíme tape-in pásky, wefty,
@@ -49,13 +42,6 @@ export default function ONasPage() {
       {/* Story — Chapter 1 */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
         <div className="max-w-3xl">
-          <div
-            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            Příběh
-          </div>
 
           <h2
             className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-10"
@@ -109,7 +95,7 @@ export default function ONasPage() {
 
             <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
               Tato zkušenost mě přivedla k jedinému možnému řešení: vzít celý proces do vlastních rukou.
-              Tak vznikla Múza Hair Praha — značka stojící na poctivosti, vlastní výrobě a přímém výkupu
+              Tak vznikla Mùza Hair Praha — značka stojící na poctivosti, vlastní výrobě a přímém výkupu
               vlasů od dárkyň v České republice i zahraničí.
             </p>
           </div>
@@ -119,13 +105,6 @@ export default function ONasPage() {
       {/* Story — Chapter 2 */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
         <div className="max-w-3xl">
-          <div
-            className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            Výroba
-          </div>
 
           <h2
             className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-10"
@@ -136,7 +115,7 @@ export default function ONasPage() {
 
           <div className="flex flex-col gap-6">
             <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Múza Hair Praha dnes stojí na vlastní barvírně, ruční výrobě a profesionálním týmu
+              Mùza Hair Praha dnes stojí na vlastní barvírně, ruční výrobě a profesionálním týmu
               v pražském ateliéru. Nejsme překupníci — každý produkt vzniká přímo u nás.
             </p>
 
@@ -176,13 +155,6 @@ export default function ONasPage() {
 
       {/* Categories */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Kolekce
-        </div>
 
         <h2
           className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-4"
@@ -192,7 +164,7 @@ export default function ONasPage() {
         </h2>
 
         <p className="text-[15px] leading-[1.8] font-light max-w-xl mb-12" style={{ color: 'var(--text-soft)' }}>
-          V pražském ateliéru Múza Hair vyrábíme produkty ze čtyř kategorií pravých vlasů —
+          V pražském ateliéru Mùza Hair vyrábíme produkty ze čtyř kategorií pravých vlasů —
           každá má svou strukturu, hustotu i charakter.
         </p>
 
@@ -305,13 +277,6 @@ export default function ONasPage() {
 
       {/* Why us */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Proč Múza Hair
-        </div>
 
         <h2
           className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
@@ -367,13 +332,6 @@ export default function ONasPage() {
 
       {/* FAQ */}
       <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
-        <div
-          className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-          Časté otázky
-        </div>
 
         <h2
           className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
@@ -385,8 +343,8 @@ export default function ONasPage() {
         <div className="flex flex-col gap-0 max-w-2xl">
           {[
             {
-              q: 'Co je Múza Hair Praha?',
-              a: 'Múza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze. Vyrábíme tape-in pásky, wefty, clip-in vlasy, keratin prameny i paruky na míru — vždy z vlasů s ověřeným původem, ve čtyřech edicích: Standard, Luxe, Platinum a Baby Shades.',
+              q: 'Co je Mùza Hair Praha?',
+              a: 'Mùza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze. Vyrábíme tape-in pásky, wefty, clip-in vlasy, keratin prameny i paruky na míru — vždy z vlasů s ověřeným původem, ve čtyřech edicích: Standard, Luxe, Platinum a Baby Shades.',
             },
             {
               q: 'Odkud pocházejí vaše vlasy?',
@@ -450,22 +408,22 @@ export default function ONasPage() {
         <div className="flex gap-4 flex-wrap items-center mb-10">
           <Link
             href="/kontakt"
-            className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
             style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
           >
             Kontaktovat nás
           </Link>
           <Link
             href="/vlasy-k-prodlouzeni"
-            className="text-[13px] tracking-[0.1em] uppercase font-light flex items-center gap-2"
+            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2"
             style={{ color: 'var(--text-mid)' }}
           >
             Prohlédnout kolekci →
           </Link>
         </div>
 
-        <p className="text-[14px] font-light italic" style={{ color: 'var(--text-soft)' }}>
-          S láskou k řemeslu a kráse, Anna — zakladatelka Múza Hair Praha
+        <p className="text-sm font-light italic" style={{ color: 'var(--text-soft)' }}>
+          S láskou k řemeslu a kráse, Anna — zakladatelka Mùza Hair Praha
         </p>
       </section>
 

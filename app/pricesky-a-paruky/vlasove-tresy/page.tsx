@@ -3,14 +3,14 @@ import { Metadata } from 'next';
 import WeftInfoBanner from '@/components/WeftInfoBanner';
 
 export const metadata: Metadata = {
-  title: 'Vlasové tresy (Weft) Praha | Ručně šité | Múza Hair',
+  title: 'Vlasové tresy (Weft) Praha | Ručně šité | Mùza Hair',
   description:
     'Ručně šité vlasové tresy (hand-tied weft) z pravých vlasů — Standard, Luxe, Platinum, Baby Shades. Hollywood weft pro maximální objem. Výroba na zakázku 14 dní. Showroom Praha.',
   alternates: {
     canonical: 'https://muzahair.cz/pricesky-a-paruky/vlasove-tresy',
   },
   openGraph: {
-    title: 'Vlasové tresy (Weft) Praha | Ručně šité | Múza Hair',
+    title: 'Vlasové tresy (Weft) Praha | Ručně šité | Mùza Hair',
     description:
       'Ručně šité vlasové tresy z pravých vlasů — Standard, Luxe, Platinum, Baby Shades. Hollywood weft pro maximální objem. Výroba na zakázku 14 dní.',
     url: 'https://muzahair.cz/pricesky-a-paruky/vlasove-tresy',
@@ -34,7 +34,7 @@ const jsonLd = {
       name: 'Jaký je rozdíl mezi ručně šitými a strojově šitými tresy?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Ručně šité tresy (hand-tied weft) jsou vázány ručně — tram je extrémně tenký (0,5–1 mm), flexibilní a přilne k hlavě bez hrubých přechodů. Lze je stříhat bez rizika rozpadnutí. Strojově šité tresy mají silnější tram a jsou vhodné pro sewing-in nebo clip-in, ale méně se hodí pro velmi jemné vlasy. V Múza Hair Praha nabízíme výhradně ručně šité vlasové tresy nejvyšší kvality.',
+        text: 'Ručně šité tresy (hand-tied weft) jsou vázány ručně — tram je extrémně tenký (0,5–1 mm), flexibilní a přilne k hlavě bez hrubých přechodů. Lze je stříhat bez rizika rozpadnutí. Strojově šité tresy mají silnější tram a jsou vhodné pro sewing-in nebo clip-in, ale méně se hodí pro velmi jemné vlasy. V Mùza Hair Praha nabízíme výhradně ručně šité vlasové tresy nejvyšší kvality.',
       },
     },
     {
@@ -50,7 +50,7 @@ const jsonLd = {
       name: 'Kolik gramů weft potřebuji pro plné prodloužení?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Jedno balení vlasových tresů Múza Hair obsahuje 100 g vlasů. Pro plné prodloužení středně hustých vlasů počítejte s 1–2 balením (100–200 g). Jemné vlasy obvykle vystačí se 100 g, husté vlasy vyžadují 200–300 g. Záleží také na požadovaném objemu a délce — delší tresy jsou těžší a hustší. Přesné doporučení získáte na bezplatné konzultaci v našem pražském showroomu.',
+        text: 'Jedno balení vlasových tresů Mùza Hair obsahuje 100 g vlasů. Pro plné prodloužení středně hustých vlasů počítejte s 1–2 balením (100–200 g). Jemné vlasy obvykle vystačí se 100 g, husté vlasy vyžadují 200–300 g. Záleží také na požadovaném objemu a délce — delší tresy jsou těžší a hustší. Přesné doporučení získáte na bezplatné konzultaci v našem pražském showroomu.',
       },
     },
     {
@@ -82,7 +82,7 @@ const jsonLd = {
       name: 'Jaké délky vlasových tresů jsou dostupné?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Vlasové tresy Múza Hair jsou dostupné v délkách 45–80 cm. Délka se měří od vrcholu tramu k nejdelšímu vlasu. Pro přirozený výsledek doporučujeme vybrat délku o 5–10 cm kratší než požadovaná výsledná délka — vlasy se po aplikaci "usadí". Přesnou délku doporučíme na konzultaci podle délky a hustoty vašich vlastních vlasů.',
+        text: 'Vlasové tresy Mùza Hair jsou dostupné v délkách 45–80 cm. Délka se měří od vrcholu tramu k nejdelšímu vlasu. Pro přirozený výsledek doporučujeme vybrat délku o 5–10 cm kratší než požadovaná výsledná délka — vlasy se po aplikaci "usadí". Přesnou délku doporučíme na konzultaci podle délky a hustoty vašich vlastních vlasů.',
       },
     },
   ],
@@ -199,7 +199,7 @@ export default function VlasoveTresyPage() {
               <li><strong>Speciální lepidlo / páska</strong> — rychlá varianta pro přechodné nošení.</li>
             </ul>
             <p>
-              <strong>Hollywood weft</strong> je speciální varianta s velmi tenkým tramem, ručně vázaným (hand-tied). Tram leží na hlavě zcela ploše, je neviditelný i při rozepnutých vlasech a lze ho stříhat bez rizika rozpadnutí. Právě tento typ nabízí Múza Hair Praha.
+              <strong>Hollywood weft</strong> je speciální varianta s velmi tenkým tramem, ručně vázaným (hand-tied). Tram leží na hlavě zcela ploše, je neviditelný i při rozepnutých vlasech a lze ho stříhat bez rizika rozpadnutí. Právě tento typ nabízí Mùza Hair Praha.
             </p>
           </div>
         </section>
@@ -230,7 +230,7 @@ export default function VlasoveTresyPage() {
             </div>
           </div>
           <p className="mt-4 text-text-mid text-sm">
-            <strong>Múza Hair Praha nabízí výhradně ručně šité vlasové tresy</strong> — všechny kolekce (Standard, Luxe, Platinum, Baby Shades).
+            <strong>Mùza Hair Praha nabízí výhradně ručně šité vlasové tresy</strong> — všechny kolekce (Standard, Luxe, Platinum, Baby Shades).
           </p>
         </section>
 

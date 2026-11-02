@@ -29,7 +29,7 @@ export default function PriceTabs({ methods }: { methods: PriceMethod[] }) {
         <section key={m.id} role="tabpanel" id={`panel-${m.id}`} aria-labelledby={`tab-${m.id}`} hidden={i !== active}
           className="mt-3 rounded-2xl border border-muza-ink bg-[#F7F3EE] p-4 lg:p-5">
           <h2 className="font-cormorant text-[28px] leading-tight text-muza-ink">{m.name}: cena aplikace</h2>
-          <p className="mt-1 text-[14px] text-[#45302F]">{m.sub}</p>
+          <p className="mt-1 text-sm text-[#45302F]">{m.sub}</p>
           <table className="mt-3 w-full">
             <tbody>
               {m.rows.map(([k, v]) => (

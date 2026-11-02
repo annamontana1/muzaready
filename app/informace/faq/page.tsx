@@ -945,10 +945,6 @@ export default function FAQPage() {
       {/* Hero section */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            ČASTÉ DOTAZY
-          </div>
           <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
             Odpovědi na vaše otázky
           </h1>
@@ -979,7 +975,7 @@ export default function FAQPage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-3 text-[13px] tracking-[0.1em] uppercase font-normal transition-colors border-b-2 -mb-px ${
+                className={`px-4 py-3 text-sm tracking-[0.1em] uppercase font-normal transition-colors border-b-2 -mb-px ${
                   selectedCategory === category
                     ? 'border-[var(--burgundy)]'
                     : 'border-transparent hover:border-[var(--text-soft)]'
@@ -998,7 +994,7 @@ export default function FAQPage() {
             {filteredFAQs.length === 0 ? (
               <div className="py-12">
                 <p className="text-[15px] font-light mb-2" style={{ color: 'var(--text-dark)' }}>Nenašli jsme odpověď na váš dotaz.</p>
-                <p className="text-[14px] font-light" style={{ color: 'var(--text-soft)' }}>
+                <p className="text-sm font-light" style={{ color: 'var(--text-soft)' }}>
                   Zkuste jiné hledání nebo nás kontaktujte na{' '}
                   <a href="mailto:info@muzahair.cz" style={{ color: 'var(--burgundy)' }} className="hover:underline">info@muzahair.cz</a>
                 </p>
@@ -1040,7 +1036,7 @@ export default function FAQPage() {
                   {openQuestion === index && (
                     <div className="pb-6">
                       <div
-                        className="text-[14px] leading-[1.9] font-light"
+                        className="text-sm leading-[1.9] font-light"
                         style={{ color: 'var(--text-soft)' }}
                         dangerouslySetInnerHTML={{
                           __html: item.answer
@@ -1062,10 +1058,6 @@ export default function FAQPage() {
       {/* Contact CTA */}
       <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
         <div className="max-w-4xl">
-          <div className="text-[12px] tracking-[0.2em] uppercase mb-6 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-            <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-            KONTAKT
-          </div>
           <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
             Nenašli jste odpověď?
           </h2>
@@ -1075,7 +1067,7 @@ export default function FAQPage() {
           <div className="flex flex-wrap gap-4">
             <a
               href="mailto:info@muzahair.cz"
-              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal transition-all hover:-translate-y-px"
+              className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
               style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
             >
               Napsat email
@@ -1084,14 +1076,14 @@ export default function FAQPage() {
               href="https://wa.me/420728722880"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+              className="text-sm px-8 py-3.5 rounded-full font-medium border transition-all hover:-translate-y-px"
               style={{ borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
             >
               WhatsApp
             </a>
             <a
               href="tel:+420728722880"
-              className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm font-normal border transition-all hover:-translate-y-px"
+              className="text-sm px-8 py-3.5 rounded-full font-medium border transition-all hover:-translate-y-px"
               style={{ borderColor: 'var(--text-soft)', color: 'var(--text-soft)' }}
             >
               Zavolat

@@ -118,9 +118,6 @@ export default function LuxeTierPage() {
         {/* ─── NADPIS ─── */}
         <div className="flex items-end justify-between mb-6">
           <div>
-            <p className="text-[12px] tracking-[0.2em] uppercase mb-1 font-normal" style={{ color: 'var(--accent)' }}>
-              Prémiová kolekce
-            </p>
             <h1 className="font-cormorant font-light leading-none" style={{ fontSize: 'clamp(24px,3vw,36px)', color: 'var(--text-dark)' }}>
               Vlasy k prodloužení <em className="italic" style={{ color: 'var(--burgundy)' }}>LUXE</em>
             </h1>
@@ -191,7 +188,7 @@ export default function LuxeTierPage() {
                   <button
                     key={value}
                     onClick={() => setColorType(value)}
-                    className="text-[12px] tracking-[0.1em] uppercase px-5 py-2 rounded-sm font-normal transition-all"
+                    className="text-sm px-5 py-2 rounded-full font-medium transition-all"
                     style={
                       filters.colorType === value
                         ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -333,7 +330,7 @@ export default function LuxeTierPage() {
                 className="inline-block h-7 w-7 rounded-full border-2 animate-spin"
                 style={{ borderColor: 'var(--burgundy)', borderRightColor: 'transparent' }}
               />
-              <p className="mt-4 text-[14px] font-light tracking-[0.1em]" style={{ color: 'var(--text-soft)' }}>
+              <p className="mt-4 text-sm font-light tracking-[0.1em]" style={{ color: 'var(--text-soft)' }}>
                 Načítání…
               </p>
             </div>
@@ -341,7 +338,7 @@ export default function LuxeTierPage() {
             <>
               {/* Count */}
               <div className="mb-6 flex items-center justify-between">
-                <p className="text-[13px] font-light tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
+                <p className="text-sm font-light tracking-[0.05em]" style={{ color: 'var(--text-soft)' }}>
                   {filteredProducts.length} {filteredProducts.length === 1 ? 'produkt' : filteredProducts.length >= 2 && filteredProducts.length <= 4 ? 'produkty' : 'produktů'}
                   {totalPages > 1 && ` · stránka ${currentPage} z ${totalPages}`}
                 </p>
@@ -363,7 +360,7 @@ export default function LuxeTierPage() {
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
-                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[14px] transition-all disabled:opacity-30"
+                        className="w-9 h-9 rounded-sm flex items-center justify-center text-sm transition-all disabled:opacity-30"
                         style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
                       >
                         ←
@@ -372,7 +369,7 @@ export default function LuxeTierPage() {
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className="w-9 h-9 rounded-sm text-[13px] tracking-[0.05em] font-light transition-all"
+                          className="w-9 h-9 rounded-sm text-sm tracking-[0.05em] font-light transition-all"
                           style={
                             currentPage === page
                               ? { background: 'var(--burgundy)', color: 'var(--ivory)' }
@@ -385,7 +382,7 @@ export default function LuxeTierPage() {
                       <button
                         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={currentPage === totalPages}
-                        className="w-9 h-9 rounded-sm flex items-center justify-center text-[14px] transition-all disabled:opacity-30"
+                        className="w-9 h-9 rounded-sm flex items-center justify-center text-sm transition-all disabled:opacity-30"
                         style={{ border: '1px solid var(--beige-mid)', color: 'var(--text-mid)' }}
                       >
                         →
@@ -401,12 +398,12 @@ export default function LuxeTierPage() {
                   >
                     Žádné produkty nenalezeny
                   </p>
-                  <p className="text-[14px] font-light mb-8" style={{ color: 'var(--text-soft)' }}>
+                  <p className="text-sm font-light mb-8" style={{ color: 'var(--text-soft)' }}>
                     Zkuste změnit nebo vymazat filtry.
                   </p>
                   <button
                     onClick={resetFilters}
-                    className="text-[13px] tracking-[0.14em] uppercase px-8 py-3.5 rounded-sm transition-all hover:-translate-y-px"
+                    className="text-sm px-8 py-3.5 rounded-full transition-all hover:-translate-y-px"
                     style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
                   >
                     Vymazat filtry

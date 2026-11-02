@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Evropské vlasy na prodloužení Praha | Remy | Múza Hair',
+  title: 'Evropské vlasy na prodloužení Praha | Remy | Mùza Hair',
   description: 'Pravé evropské vlasy na prodloužení Praha — remy, panenské i slovanské. Nejlepší volba pro české a evropské ženy. Showroom Praha, dodání 48 h po ČR. Od 3 900 Kč.',
   alternates: { canonical: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni' },
   keywords: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'slovanské evropské vlasy',
   ],
   openGraph: {
-    title: 'Evropské vlasy na prodloužení Praha | Remy | Múza Hair',
+    title: 'Evropské vlasy na prodloužení Praha | Remy | Mùza Hair',
     description: 'Prémiové evropské vlasy na prodloužení — remy, panenské a slovanské. Praha showroom + dodání po celé ČR.',
     url: 'https://muzahair.cz/evropske-vlasy-na-prodlouzeni',
     locale: 'cs_CZ',
@@ -83,7 +83,7 @@ export default function EvropskevlasyPage() {
         name: 'Kde v ČR mohu koupit pravé evropské vlasy na prodloužení?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Múza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen po–ne 9:00–19:00. Online objednávka přes e-shop s dodáním do 48 h po celé České republice. Certifikovaný původ vlasů, transparentní informace o zdroji.',
+          text: 'Mùza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen po–ne 9:00–19:00. Online objednávka přes e-shop s dodáním do 48 h po celé České republice. Certifikovaný původ vlasů, transparentní informace o zdroji.',
         },
       },
     ],
@@ -120,7 +120,7 @@ export default function EvropskevlasyPage() {
             Pravé remy a panenské evropské vlasy — nejlepší volba pro české a středoevropské ženy. Showroom Praha, dodání do 48 hodin po celé ČR.
           </p>
           <p className="text-gray-500 mb-10 max-w-2xl">
-            Evropské vlasy na prodloužení jsou přirozenou volbou pro ženy v České republice. Textura, tloušťka i přirozená vlnitost odpovídají evropskému typu vlasů — výsledek vypadá přirozeně a nerozeznáte prodloužení od vlastních vlasů. Múza Hair je česká firma specializující se na evropské a slovanské vlasy od roku 2016.
+            Evropské vlasy na prodloužení jsou přirozenou volbou pro ženy v České republice. Textura, tloušťka i přirozená vlnitost odpovídají evropskému typu vlasů — výsledek vypadá přirozeně a nerozeznáte prodloužení od vlastních vlasů. Mùza Hair je česká firma specializující se na evropské a slovanské vlasy od roku 2016.
           </p>
 
           {/* CTA buttons */}
@@ -153,7 +153,7 @@ export default function EvropskevlasyPage() {
                   Klíčový rozdíl oproti asijským vlasům spočívá v průměru vlasového vlákna a pigmentaci. Evropské vlasy mají přirozeně tenčí průměr, jsou méně pigmentované a mají jemnější texturu. To je činí snadno prolínatelné s vlastními vlasy středoevropských žen — výsledek vypadá zcela přirozeně.
                 </p>
                 <p className="text-gray-600 leading-relaxed">
-                  U Múza Hair se specializujeme výhradně na vlasy evropského a slovanského původu. Každá šarže vlasů je ověřena co do původu a prochází vstupní kontrolou kvality v naší provozovně v Praze.
+                  U Mùza Hair se specializujeme výhradně na vlasy evropského a slovanského původu. Každá šarže vlasů je ověřena co do původu a prochází vstupní kontrolou kvality v naší provozovně v Praze.
                 </p>
               </div>
               <div className="bg-ivory rounded-xl p-6 border border-burgundy/10">
@@ -327,10 +327,10 @@ export default function EvropskevlasyPage() {
           {/* Origin section */}
           <section className="mb-14">
             <h2 className="text-3xl font-playfair text-burgundy mb-6">
-              Odkud pocházejí evropské vlasy u Múza Hair?
+              Odkud pocházejí evropské vlasy u Mùza Hair?
             </h2>
             <p className="text-gray-600 mb-8 max-w-3xl leading-relaxed">
-              Múza Hair spolupracuje výhradně s prověřenými dodavateli ze tří klíčových zemí. Každý zdroj má specifické vlastnosti vlasů — společně pokrývají celé spektrum evropské vlasové textury.
+              Mùza Hair spolupracuje výhradně s prověřenými dodavateli ze tří klíčových zemí. Každý zdroj má specifické vlastnosti vlasů — společně pokrývají celé spektrum evropské vlasové textury.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               {[
@@ -432,7 +432,7 @@ export default function EvropskevlasyPage() {
           {/* Quality tiers at Muza */}
           <section className="mb-14 bg-ivory rounded-2xl p-8">
             <h2 className="text-3xl font-playfair text-burgundy mb-2">
-              Evropské vlasy u Múza Hair — ceník 2026
+              Evropské vlasy u Mùza Hair — ceník 2026
             </h2>
             <p className="text-gray-500 text-sm mb-6">
               Orientační ceny za celou sadu (délka 45–65 cm, 100 g). Přesná cena závisí na délce a gramáži.
@@ -571,7 +571,7 @@ export default function EvropskevlasyPage() {
                 },
                 {
                   q: 'Kde v ČR mohu koupit pravé evropské vlasy na prodloužení?',
-                  a: 'Múza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen Po–Ne 9:00–19:00 po předchozí domluvě. Online objednávka s dodáním do 48 h po celé České republice. Garantujeme certifikovaný původ vlasů z Ukrainy, Polska a Rumunska.',
+                  a: 'Mùza Hair prodává pravé evropské vlasy na prodloužení v pražském showroomu i online v e-shopu. Showroom je otevřen Po–Ne 9:00–19:00 po předchozí domluvě. Online objednávka s dodáním do 48 h po celé České republice. Garantujeme certifikovaný původ vlasů z Ukrainy, Polska a Rumunska.',
                 },
               ].map((item, i) => (
                 <details key={i} className="bg-white border border-gray-200 rounded-xl p-5 group">

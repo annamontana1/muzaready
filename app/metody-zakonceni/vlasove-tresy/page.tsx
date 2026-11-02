@@ -3,11 +3,11 @@ import { Metadata } from 'next';
 import WeftInfoBanner from '@/components/WeftInfoBanner';
 
 export const metadata: Metadata = {
-  title: 'Vlasové tresy (Weft) | Ručně šité | Múza Hair Praha',
+  title: 'Vlasové tresy (Weft) | Ručně šité | Mùza Hair Praha',
   description: 'Ručně šité vlasové tresy z panenských, středoevropských a dětských vlasů. Hollywoodské prodloužení přišíváním na copánky. Výroba 14 dní, platba 100 %. Praha.',
   alternates: { canonical: 'https://muzahair.cz/metody-zakonceni/vlasove-tresy' },
   openGraph: {
-    title: 'Vlasové tresy (Weft) | Múza Hair Praha',
+    title: 'Vlasové tresy (Weft) | Mùza Hair Praha',
     description: 'Ručně šité vlasové tresy z panenských, středoevropských a dětských vlasů. Hollywoodské prodloužení. Výroba 14 dní.',
   },
 };
@@ -21,7 +21,7 @@ const jsonLd = {
       name: 'Kolik stojí vlasové tresy (weft) Praha?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Posun vlasových tresů v Praze stojí od 3 800 Kč. Cena tresů se účtuje zvlášť — ručně šité tresy na zakázku vyrábí Múza Hair do 14 dní.',
+        text: 'Posun vlasových tresů v Praze stojí od 3 800 Kč. Cena tresů se účtuje zvlášť — ručně šité tresy na zakázku vyrábí Mùza Hair do 14 dní.',
       },
     },
     {
@@ -394,10 +394,6 @@ export default function VlasoveTresyPage() {
       <section style={{ background: 'var(--ivory)' }} className="px-8 lg:px-20 py-16">
         <div className="max-w-4xl mx-auto">
           <div style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1.5rem' }} className="mb-12">
-            <div className="text-[12px] tracking-[0.2em] uppercase mb-4 font-normal flex items-center gap-3" style={{ color: 'var(--accent)' }}>
-              <span className="block w-8 h-px" style={{ background: 'var(--accent)' }} />
-              Ceny aplikace
-            </div>
             <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-soft)' }}>
               Ceny Hollywoodského prodloužení přišíváním tresů na copánky závisí na množství tresů a délce vlasů. Kompletní přehled sazeb najdete na stránce cen aplikací.
             </p>
