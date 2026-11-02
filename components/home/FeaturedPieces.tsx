@@ -61,9 +61,9 @@ export default function FeaturedPieces() {
           {(items ?? Array.from({ length: 4 }, () => null)).map((p, i) => (
             <li key={p ? p.id : i}>
               {p ? (
-                <PieceCard id={p.id} name={p.name}
+                <PieceCard id={p.id} name={p.name} shade={p.shade}
                   photos={[p.imageUrl || `/images/shades/${SHADE_IMG[p.shade ?? 5] ?? '05-svetla-hneda'}.jpg`, ...(p.imageUrl2 ? [p.imageUrl2] : [])]}
-                  meta={[p.shade && `odstín ${p.shade}`, p.lengthCm && `${p.lengthCm} cm`, p.weightGrams && `${p.weightGrams} g`].filter(Boolean).join(' · ')}
+                  meta={[p.lengthCm && `${p.lengthCm} cm`, p.weightGrams && `${p.weightGrams} g`].filter(Boolean).join(' · ')}
                   price={p.priceCzk ? fmt(p.priceCzk) : undefined} />
               ) : (
                 <div aria-hidden="true" className="aspect-[3/4] rounded-t-full rounded-b-2xl bg-muza-mocha/60 animate-pulse" />
@@ -74,7 +74,7 @@ export default function FeaturedPieces() {
 
         <Link href="/katalog?typ=PIECE"
           className="mt-8 h-[52px] px-7 flex items-center justify-center rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:bg-muza-ink hover:text-muza-onink transition-colors lg:max-w-[360px]">
-          Zobrazit {total ? `všech ${total}` : 'všechny'} culíky
+          {total ? `Zobrazit všech ${total} ${total >= 5 ? 'culíků' : 'culíky'}` : 'Zobrazit všechny culíky'}
         </Link>
       </div>
     </section>

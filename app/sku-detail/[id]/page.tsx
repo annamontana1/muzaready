@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProductReviews from '@/components/ProductReviews';
+import { pieceTitle } from '@/lib/piece-title';
 import LengthSheet, { hairZone } from '@/components/product/LengthSheet';
 import PieceAbout from '@/components/product/PieceAbout';
 import AddedSheet from '@/components/product/AddedSheet';
@@ -228,7 +229,7 @@ export default function SkuDetailPage() {
     {
       addToCart({
         skuId: sku.id,
-        skuName: sku.name || sku.sku,
+        skuName: pieceTitle(sku),
         customerCategory: sku.customerCategory,
         saleMode: sku.saleMode,
         shade: sku.shade || undefined,
@@ -361,7 +362,7 @@ export default function SkuDetailPage() {
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
 
   // Název jen číslo culíku („Culík C04“), podrobnosti jsou v tabulce pod ním
-  const title = (sku.name || 'Bez názvu').split(' · ')[0];
+  const title = pieceTitle(sku);
   const druh = typeof sku.isDyed === 'boolean' ? (sku.isDyed ? 'Středoevropské' : 'Panenské') : null;
   const categoryText = [druh, catInfo.label].filter(Boolean).join(' · ');
   const lengthVal = isBulk ? bulkLengthValue : selectedLength;

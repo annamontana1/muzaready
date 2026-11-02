@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Showroom Praha 1 | Výběr vlasů na objednání | Mùza Hair',
@@ -7,147 +8,110 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://www.muzahair.cz/showroom' },
 };
 
+const BTN_PRIMARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity';
+const BTN_SECONDARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:opacity-90 transition-opacity';
+
+const CONTACTS: { label: string; value: string; href?: string }[] = [
+  { label: 'Adresa', value: 'Revoluční 8, 110 00 Praha 1' },
+  { label: 'Telefon', value: '+420 728 722 880', href: 'tel:+420728722880' },
+  { label: 'E-mail', value: 'muzahaircz@gmail.com', href: 'mailto:muzahaircz@gmail.com' },
+  { label: 'WhatsApp', value: '+420 728 722 880', href: 'https://wa.me/420728722880' },
+];
+
 export default function ShowroomPage() {
   return (
-    <div style={{ background: 'var(--white)' }}>
+    <div className="bg-muza-cream text-text-dark font-jost">
+      {/* Úvod */}
+      <section className="mx-auto max-w-5xl px-4 pt-8 pb-12 md:pt-12 md:pb-16">
+        <nav className="text-sm text-[#45302F] flex gap-2" aria-label="Drobečková navigace">
+          <Link href="/" className="hover:text-muza-ink">Domů</Link>
+          <span aria-hidden="true">/</span>
+          <span className="text-muza-ink">Showroom</span>
+        </nav>
 
-      {/* Hero section */}
-      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
-        <div
-          className="text-[12px] tracking-[0.15em] uppercase font-light mb-10"
-          style={{ color: 'var(--text-soft)' }}
-        >
-          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
-          {' — '}
-          <span style={{ color: 'var(--text-mid)' }}>Showroom</span>
-        </div>
+        <div className="mt-8 grid gap-10 md:grid-cols-[1fr_300px] md:items-center">
+          <div>
+            <h1 className="font-cormorant text-[40px] md:text-[56px] leading-[1.08] text-muza-ink">Showroom Praha</h1>
+            <p className="mt-5 text-base leading-relaxed max-w-xl text-[#45302F]">
+              Navštivte náš showroom v centru Prahy. Osobní konzultace, ukázky vlasů
+              a profesionální poradenství od našich specialistů.
+            </p>
 
+            <dl className="mt-8 max-w-xl">
+              {CONTACTS.map((item, i) => {
+                const external = item.href?.startsWith('http');
+                return (
+                  <div
+                    key={item.label}
+                    className={`flex justify-between gap-4 py-3 border-t border-muza-line ${i === CONTACTS.length - 1 ? 'border-b' : ''}`}
+                  >
+                    <dt className="text-sm text-[#45302F]">{item.label}</dt>
+                    <dd className="text-sm font-medium text-right">
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          target={external ? '_blank' : undefined}
+                          rel={external ? 'noopener noreferrer' : undefined}
+                          className="text-muza-ink hover:underline underline-offset-4"
+                        >
+                          {item.value}
+                        </a>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
 
-        <h1
-          className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Showroom Praha
-        </h1>
-
-        <p
-          className="text-[15px] leading-[1.8] font-light max-w-[520px] mb-12"
-          style={{ color: 'var(--text-soft)' }}
-        >
-          Navštivte náš showroom v centru Prahy. Osobní konzultace, ukázky vlasů
-          a profesionální poradenství od našich specialistů.
-        </p>
-
-        {/* Address & phone large display */}
-        <div className="flex flex-col gap-4 mb-12">
-          <div className="w-12 h-px" style={{ background: 'var(--accent)' }} />
-          <p
-            className="font-cormorant text-[clamp(22px,2.5vw,32px)] font-light"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Revoluční 8, Praha 1
-          </p>
-          <a
-            href="tel:+420728722880"
-            className="font-cormorant text-[clamp(20px,2vw,28px)] font-light transition-opacity hover:opacity-70"
-            style={{ color: 'var(--burgundy)' }}
-          >
-            +420 728 722 880
-          </a>
-        </div>
-
-        <div className="flex gap-6 flex-wrap">
-          <a
-            href="tel:+420728722880"
-            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
-            style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-          >
-            Zavolejte nám
-          </a>
-          <a
-            href="https://wa.me/420728722880"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2"
-            style={{ color: 'var(--text-mid)' }}
-          >
-            WhatsApp →
-          </a>
-        </div>
-      </section>
-
-      {/* Hours & appointment info */}
-      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
-
-        <h2
-          className="font-cormorant text-[clamp(26px,3vw,38px)] font-light mb-8"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Pouze na objednání
-        </h2>
-
-        <div className="max-w-md">
-          <div
-            className="flex justify-between py-4 border-b text-[15px] font-light"
-            style={{ borderColor: 'var(--border-light)', color: 'var(--text-soft)' }}
-          >
-            <span>Pondělí — Neděle</span>
-            <span style={{ color: 'var(--text-dark)' }}>10:00 — 20:00</span>
-          </div>
-          <div
-            className="py-6 text-[15px] leading-[1.8] font-light"
-            style={{ color: 'var(--text-soft)' }}
-          >
-            Showroom je otevřen výhradně po předchozí domluvě.
-            Pro rezervaci termínu nás kontaktujte telefonicky nebo emailem.
-          </div>
-        </div>
-      </section>
-
-      {/* Contact details */}
-      <section className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory-warm)' }}>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
-          {[
-            { label: 'Adresa', value: 'Revoluční 8, 110 00 Praha 1', href: undefined },
-            { label: 'Telefon', value: '+420 728 722 880', href: 'tel:+420728722880' },
-            { label: 'Email', value: 'muzahaircz@gmail.com', href: 'mailto:muzahaircz@gmail.com' },
-            { label: 'WhatsApp', value: '+420 728 722 880', href: 'https://wa.me/420728722880' },
-          ].map((item, i) => (
-            <div
-              key={item.label}
-              className="py-8 pr-8 border-b md:border-b-0 md:border-r last:border-r-0"
-              style={{ borderColor: 'var(--border-light)' }}
-            >
-              <div
-                className="text-[12px] tracking-[0.15em] uppercase font-light mb-3"
-                style={{ color: 'var(--text-soft)' }}
-              >
-                {item.label}
-              </div>
-              {item.href ? (
-                <a
-                  href={item.href}
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                  rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="text-[15px] font-light transition-opacity hover:opacity-70"
-                  style={{ color: 'var(--text-dark)' }}
-                >
-                  {item.value}
-                </a>
-              ) : (
-                <span
-                  className="text-[15px] font-light"
-                  style={{ color: 'var(--text-dark)' }}
-                >
-                  {item.value}
-                </span>
-              )}
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a href="tel:+420728722880" className={BTN_PRIMARY}>Zavolejte nám</a>
+              <a href="https://wa.me/420728722880" target="_blank" rel="noopener noreferrer" className={BTN_SECONDARY}>
+                Napsat na WhatsApp
+              </a>
             </div>
-          ))}
+          </div>
+
+          <div className="hidden md:block">
+            <div className="relative aspect-[3/4] rounded-t-full rounded-b-[12px] overflow-hidden bg-muza-mocha">
+              <Image
+                src="/images/atelier/atelier-12.webp"
+                alt="Tým Mùza"
+                fill
+                sizes="300px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* Otevírací doba */}
+      <section className="bg-muza-ivory">
+        <div className="mx-auto max-w-3xl px-4 py-14">
+          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Pouze na objednání</h2>
+          <dl className="mt-6">
+            <div className="flex justify-between gap-4 py-3 border-t border-b border-muza-line">
+              <dt className="text-sm text-[#45302F]">Pondělí – neděle</dt>
+              <dd className="text-sm font-medium text-right">10:00–20:00</dd>
+            </div>
+          </dl>
+          <p className="mt-5 text-base leading-relaxed text-[#45302F]">
+            Showroom je otevřen výhradně po předchozí domluvě.
+            Pro rezervaci termínu nás kontaktujte telefonicky nebo e-mailem.
+          </p>
+          <p className="mt-3 text-base leading-relaxed text-[#45302F]">
+            V showroomu si vlasy vyberete a koupíte. Samotná aplikace probíhá v našem partnerském salonu v Praze.
+          </p>
+          <Link href="/kontakt" className="mt-5 inline-block text-sm text-muza-ink underline underline-offset-4">
+            Mapa a další kontakty
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

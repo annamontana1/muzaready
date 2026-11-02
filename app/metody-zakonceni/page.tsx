@@ -1,212 +1,121 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Metody zakončení vlasů | Keratin, Tape-in, Vlasové tresy | Mùza Hair',
-  description: 'Přehled metod zakončení a aplikace vlasů k prodloužení. Keratin, Mikrokeratin, Tape-in nano tapes a ručně šité vlasové tresy.',
+  description:
+    'Přehled metod zakončení vlasů k prodloužení: keratin, mikrokeratin, tape-in nano tapes a ručně šité vlasové tresy. Aplikace v našem partnerském salonu v Praze.',
   alternates: { canonical: 'https://www.muzahair.cz/metody-zakonceni' },
   openGraph: {
     title: 'Metody zakončení vlasů | Keratin, Tape-in, Weft | Mùza Hair',
-    description: 'Přehled metod zakončení vlasů — keratin, mikrokeratin, nanotapes a vlasové tresy weft. Poradíme s výběrem.',
+    description: 'Přehled metod zakončení vlasů: keratin, mikrokeratin, nanotapes a vlasové tresy weft. Poradíme s výběrem.',
     url: 'https://www.muzahair.cz/metody-zakonceni',
+    siteName: 'Mùza Hair',
     locale: 'cs_CZ',
     type: 'website',
   },
 };
 
+const BTN_PRIMARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity';
+const BTN_SECONDARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:opacity-90 transition-opacity';
+
+const METHODS = [
+  {
+    name: 'Keratin / Mikrokeratin',
+    href: '/metody-zakonceni/vlasy-na-keratin',
+    desc: 'Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3–6 měsíců a díky přirozenému vzhledu jsou ideální i pro aktivní životní styl.',
+    points: ['Trvanlivé 3–6 měsíců', 'Přirozený vzhled', 'Pro aktivní životní styl'],
+  },
+  {
+    name: 'Vlasové pásky Tape-In',
+    href: '/metody-zakonceni/vlasove-pasky-tape-in',
+    desc: 'Šetrná metoda sendvičového spoje. 6 kolekcí, kudrnaté pásky jako unikát na CZ trhu. Výroba ze zákazničina copu za 14 dní.',
+    points: ['Sendvičový spoj, neviditelné', 'Kudrnaté pásky k dispozici', 'Výroba ze zákazničina copu'],
+  },
+  {
+    name: 'Vlasové tresy (Weft)',
+    href: '/metody-zakonceni/vlasove-tresy',
+    desc: 'Přišívají se na copánky bez chemie a tepla. Vyrábíme na zakázku z jakýchkoliv vlasů za 14 pracovních dní. Cena dle gramáže v konfigurátoru.',
+    points: ['Výroba z vašeho culíku', 'Bez chemie a tepla', 'Výroba 14 dní'],
+  },
+];
+
 export default function MetodyZakonceniPage() {
   return (
-    <div style={{ background: 'var(--white)' }}>
+    <div className="bg-muza-cream text-text-dark font-jost">
+      <section className="mx-auto max-w-6xl px-4 pt-8 pb-12 md:pt-12 md:pb-16">
+        <nav className="text-sm text-[#45302F] flex gap-2" aria-label="Drobečková navigace">
+          <Link href="/" className="hover:text-muza-ink">Domů</Link>
+          <span aria-hidden="true">/</span>
+          <span className="text-muza-ink">Metody zakončení</span>
+        </nav>
 
-      {/* Hero header */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div
-          className="text-[12px] tracking-[0.15em] uppercase font-light mb-10"
-          style={{ color: 'var(--text-soft)' }}
-        >
-          <Link href="/" className="hover:underline" style={{ color: 'var(--text-soft)' }}>Domů</Link>
-          {' / '}
-          <span style={{ color: 'var(--text-dark)' }}>Metody zakončení</span>
-        </div>
-
-
-        <h1
-          className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-6 max-w-3xl"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Metody zakončení vlasů
-        </h1>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-xl" style={{ color: 'var(--text-soft)' }}>
-          Vyberte si metodu aplikace, která nejlépe vyhovuje vašim vlasům a životnímu stylu.
-          Každá metoda má své specifické výhody a je vhodná pro různé typy vlasů.
-        </p>
-      </section>
-
-      {/* Method 01 — Keratin */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-        <div className="max-w-5xl">
-
-          <h2
-            className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Keratin / Mikrokeratin
-          </h2>
-
-          <p className="text-[15px] leading-[1.8] font-light mb-10 max-w-xl" style={{ color: 'var(--text-soft)' }}>
-            Nejpopulárnější metoda prodlužování vlasů v ČR. Keratinové pramínky vydrží 3–6 měsíců
-            a díky přirozenému vzhledu jsou ideální i pro aktivní životní styl.
-          </p>
-
-          <div className="mb-10">
-            <div className="w-16 h-px mb-8" style={{ background: 'var(--accent)' }} />
-            <div className="flex flex-col gap-0">
-              {['Trvanlivé 3–6 měsíců', 'Přirozený vzhled', 'Pro aktivní životní styl'].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 py-5 border-b"
-                  style={{ borderColor: 'var(--ivory-warm)' }}
-                >
-                  <span
-                    className="block w-4 h-px mt-[11px] flex-shrink-0"
-                    style={{ background: 'var(--accent)' }}
-                  />
-                  <span className="text-[15px] font-light leading-[1.8]" style={{ color: 'var(--text-soft)' }}>
-                    {item}
-                  </span>
-                </div>
-              ))}
+        <div className="mt-8 grid gap-10 md:grid-cols-[1fr_300px] md:gap-16 md:items-center">
+          <div className="max-w-[640px]">
+            <h1 className="font-cormorant text-[40px] md:text-[56px] leading-[1.08] text-muza-ink">
+              Metody zakončení vlasů
+            </h1>
+            <p className="mt-5 text-base leading-relaxed">
+              Vyberte si metodu aplikace, která nejlépe vyhovuje vašim vlasům a životnímu stylu.
+              Každá metoda má své výhody a hodí se pro jiný typ vlasů.
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-[#45302F]">
+              Aplikaci provádíme v našem partnerském salonu v Praze. Vlasy si můžete vybrat osobně
+              v showroomu nebo objednat online.
+            </p>
+          </div>
+          <div className="hidden md:block">
+            <div className="relative aspect-[3/4] rounded-t-full rounded-b-[12px] overflow-hidden bg-muza-mocha">
+              <Image
+                src="/images/atelier/atelier-10.webp"
+                alt="Vlasy k prodloužení s různými typy zakončení v ateliéru Mùza"
+                fill
+                sizes="300px"
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
-
-          <Link
-            href="/metody-zakonceni/vlasy-na-keratin"
-            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
-            style={{ color: 'var(--text-mid)' }}
-          >
-            Zjistit více →
-          </Link>
         </div>
       </section>
 
-      {/* Method 02 — Tape-In */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
-        <div className="max-w-5xl">
-
-          <h2
-            className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Vlasové pásky Tape-In
-          </h2>
-
-          <p className="text-[15px] leading-[1.8] font-light mb-10 max-w-xl" style={{ color: 'var(--text-soft)' }}>
-            Šetrná metoda sendvičového spoje. 6 kolekcí, kudrnaté pásky jako unikát na CZ trhu.
-            Výroba ze zákazničina copu za 14 dní.
-          </p>
-
-          <div className="mb-10">
-            <div className="w-16 h-px mb-8" style={{ background: 'var(--accent)' }} />
-            <div className="flex flex-col gap-0">
-              {['Sendvičový spoj — neviditelné', 'Kudrnaté pásky k dispozici', 'Výroba ze zákazničina copu'].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 py-5 border-b"
-                  style={{ borderColor: 'var(--beige)' }}
-                >
-                  <span
-                    className="block w-4 h-px mt-[11px] flex-shrink-0"
-                    style={{ background: 'var(--accent)' }}
-                  />
-                  <span className="text-[15px] font-light leading-[1.8]" style={{ color: 'var(--text-soft)' }}>
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Link
-            href="/metody-zakonceni/vlasove-pasky-tape-in"
-            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
-            style={{ color: 'var(--text-mid)' }}
-          >
-            Zjistit více →
-          </Link>
+      <section className="bg-muza-ivory">
+        <div className="mx-auto max-w-6xl px-4 py-14 md:py-20">
+          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Tři metody</h2>
+          <ul className="mt-8 grid gap-4 md:grid-cols-3">
+            {METHODS.map((m) => (
+              <li key={m.href} className="flex flex-col rounded-[12px] bg-muza-cream p-6">
+                <h3 className="font-cormorant text-[28px] leading-tight text-muza-ink">{m.name}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[#45302F]">{m.desc}</p>
+                <ul className="mt-5 mb-6 border-b border-muza-line">
+                  {m.points.map((p) => (
+                    <li key={p} className="py-3 border-t border-muza-line text-sm">{p}</li>
+                  ))}
+                </ul>
+                <Link href={m.href} className={`${BTN_SECONDARY} mt-auto self-start`}>
+                  Zjistit více
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* Method 03 — Weft */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-5xl">
-
-          <h2
-            className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Vlasové tresy (Weft)
-          </h2>
-
-          <p className="text-[15px] leading-[1.8] font-light mb-10 max-w-xl" style={{ color: 'var(--text-soft)' }}>
-            Přišívají se na copánky bez chemie a tepla. Vyrábíme na zakázku z jakýchkoliv vlasů
-            za 14 pracovních dní. Cena dle gramáže v konfigurátoru.
-          </p>
-
-          <div className="mb-10">
-            <div className="w-16 h-px mb-8" style={{ background: 'var(--accent)' }} />
-            <div className="flex flex-col gap-0">
-              {['Výroba z vašeho culíku', 'Bez chemie a tepla', 'Výroba 14 dní'].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-4 py-5 border-b"
-                  style={{ borderColor: 'var(--beige)' }}
-                >
-                  <span
-                    className="block w-4 h-px mt-[11px] flex-shrink-0"
-                    style={{ background: 'var(--accent)' }}
-                  />
-                  <span className="text-[15px] font-light leading-[1.8]" style={{ color: 'var(--text-soft)' }}>
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Link
-            href="/metody-zakonceni/vlasove-tresy"
-            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2 w-fit"
-            style={{ color: 'var(--text-mid)' }}
-          >
-            Zjistit více →
-          </Link>
-        </div>
-      </section>
-
-      {/* Bottom CTA */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-6 max-w-xl"
-          style={{ color: 'var(--text-dark)' }}
-        >
+      <section className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">
           Vyberte vlasy k prodloužení
         </h2>
-
-        <p className="text-[15px] leading-[1.8] font-light mb-10 max-w-md" style={{ color: 'var(--text-soft)' }}>
+        <p className="mt-3 text-base text-[#45302F]">
           Prohlédněte si naši kolekci panenských a barvených vlasů ve třech edicích kvality.
         </p>
-
-        <Link
-          href="/vlasy-k-prodlouzeni"
-          className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
-          style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-        >
-          Prozkoumat kolekci
-        </Link>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link href="/vlasy-k-prodlouzeni" className={BTN_PRIMARY}>Prozkoumat kolekci</Link>
+          <Link href="/kontakt" className={BTN_SECONDARY}>Poradit s výběrem</Link>
+        </div>
       </section>
-
     </div>
   );
 }

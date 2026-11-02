@@ -109,7 +109,7 @@ export default function Footer() {
         {/* O nás */}
         <div>
           <h2
-            className="text-[12px] tracking-[0.16em] uppercase mb-5 font-normal"
+            className="text-base mb-4 font-medium"
             style={{ color: 'var(--ivory)' }}
           >
             O nás
@@ -139,7 +139,7 @@ export default function Footer() {
         {/* Informace */}
         <div>
           <h2
-            className="text-[12px] tracking-[0.16em] uppercase mb-5 font-normal"
+            className="text-base mb-4 font-medium"
             style={{ color: 'var(--ivory)' }}
           >
             Informace
@@ -169,7 +169,7 @@ export default function Footer() {
         {/* Produkty */}
         <div>
           <h2
-            className="text-[12px] tracking-[0.16em] uppercase mb-5 font-normal"
+            className="text-base mb-4 font-medium"
             style={{ color: 'var(--ivory)' }}
           >
             Produkty
@@ -210,7 +210,7 @@ export default function Footer() {
             Obchodní podmínky
           </Link>
           <span>·</span>
-          <Link href="/informace/ochrana-soukromi" className="hover:opacity-70 transition">
+          <Link href="/informace/ochrana-osobnich-udaju" className="hover:opacity-70 transition">
             Ochrana soukromí
           </Link>
           <span>·</span>

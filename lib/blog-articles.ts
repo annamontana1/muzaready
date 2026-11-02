@@ -1050,7 +1050,7 @@ Koupí vlasů přímo od výrobce (jako je Mùza Hair) máte jistotu:
 
 - **Znáte původ vlasů** — slovanské, panenské nebo barvené vlastní barvírnou
 - **Platíte méně** — žádný zprostředkovatel
-- **Vlasy si necháte aplikovat kdekoliv** — u vaší kadeřnice, nebo v showroomu Mùza Hair v Praze
+- **Vlasy si necháte aplikovat kdekoliv** — u vaší kadeřnice, nebo v našem partnerském salonu v Praze
 
 **Mùza Hair Praha** (Revoluční 8, Praha 1) je český výrobce vlasů k prodloužení od roku 2016. Vlasy doručíme i poštou kamkoliv v ČR — vaše kadeřnice je pak aplikuje.
 
@@ -1094,7 +1094,7 @@ Koupí vlasů přímo od výrobce (jako je Mùza Hair) máte jistotu:
 Celková cena se skládá z ceny vlasů a ceny aplikace. Vlasy 100 g od 6 900 Kč, aplikace keratin od 4 000 Kč. Celkem tedy od cca 10 900 Kč za základní prodloužení. Prémiové vlasy LUXE + aplikace = od 12 900 Kč.
 
 ### Musím za prodloužením do Prahy přijet osobně?
-Vlasy si objednáte online na muzahair.cz s doručením do 48 hodin. Aplikaci provede vaše kadeřnice, nebo přijeďte do showroomu Mùza Hair, Revoluční 8, Praha 1.
+Vlasy si objednáte online na muzahair.cz s doručením do 48 hodin. Aplikaci provede vaše kadeřnice, nebo ji uděláme v našem partnerském salonu v Praze. Vlasy si můžete vybrat osobně v showroomu Mùza Hair, Revoluční 8, Praha 1.
 
 ### Jak dlouho trvá aplikace prodloužení vlasů?
 Keratin 100 g trvá 2–3 hodiny, nanotapes 1,5–2 hodiny, weft 2–3 hodiny. Záleží na zkušenosti kadeřnice a počtu pramenů.

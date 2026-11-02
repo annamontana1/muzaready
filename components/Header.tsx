@@ -61,7 +61,7 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKey);
   }, [mobileMenuOpen]);
 
-  const navLinkClass = "whitespace-nowrap text-sm tracking-[0.1em] uppercase font-light transition-colors duration-200 hover:text-burgundy";
+  const navLinkClass = "whitespace-nowrap text-[15px] font-normal transition-colors duration-200 hover:text-burgundy";
   const dropdownClass = "hidden group-hover:block group-focus-within:block absolute left-0 w-56 bg-white shadow-medium border border-beige z-50 rounded-sm";
 
   const dropdownItem = (href: string, label: string) => (

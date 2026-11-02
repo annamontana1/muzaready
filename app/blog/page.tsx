@@ -4,98 +4,80 @@ import { blogArticles } from '@/lib/blog-articles';
 
 export const metadata: Metadata = {
   title: 'Blog o prodloužení vlasů | Tipy a průvodce | Mùza Hair',
-  description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality. Experti z Mùza Hair sdílejí know-how.',
+  description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality od Mùza Hair.',
   alternates: { canonical: 'https://www.muzahair.cz/blog' },
   openGraph: {
-    title: 'Blog o prodloužení vlasů | Mùza Hair Praha',
+    title: 'Blog o prodloužení vlasů | Mùza Hair',
     description: 'Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality.',
     type: 'website',
     url: 'https://www.muzahair.cz/blog',
   },
 };
 
+const BTN_PRIMARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity';
+const BTN_SECONDARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:opacity-90 transition-opacity';
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('cs-CZ', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
 export default function BlogPage() {
+  // Nejnovější články nahoře
+  const articles = [...blogArticles].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+
   return (
-    <div style={{ background: 'var(--ivory)' }} className="min-h-screen">
-      {/* Header */}
-      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-4xl">
-          <h1 className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] mb-6" style={{ color: 'var(--text-dark)' }}>
-            Magazín & Tipy
-          </h1>
-          <p className="text-[15px] leading-[1.8] font-light max-w-2xl" style={{ color: 'var(--text-soft)' }}>
-            Průvodce, tipy a expertní rady o prodlužování vlasů, péči a výběru správné kvality. Vše od profesionálů z Mùza Hair.
-          </p>
-        </div>
-      </div>
+    <div className="bg-muza-cream text-text-dark font-jost">
+      <section className="mx-auto max-w-6xl px-4 pt-8 pb-10 md:pt-12 md:pb-14">
+        <nav className="text-sm text-[#45302F] flex gap-2" aria-label="Drobečková navigace">
+          <Link href="/" className="hover:text-muza-ink">Domů</Link>
+          <span aria-hidden="true">/</span>
+          <span className="text-muza-ink">Blog</span>
+        </nav>
+        <h1 className="mt-8 font-cormorant text-[40px] md:text-[56px] leading-[1.08] text-muza-ink">
+          Blog o prodloužení vlasů
+        </h1>
+        <p className="mt-5 text-base leading-relaxed text-[#45302F] max-w-2xl">
+          Průvodce, tipy a rady o prodlužování vlasů, péči a výběru správné kvality.
+        </p>
+      </section>
 
-      {/* Articles list */}
-      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--beige)' }}>
-        <div className="max-w-4xl">
-          {blogArticles.map((article, index) => (
-            <article key={article.slug} className="border-b" style={{ borderColor: 'rgba(0,0,0,0.08)' }}>
-              <Link href={`/blog/${article.slug}`} className="block py-10 group">
-                <div className="flex flex-col md:flex-row md:items-baseline md:gap-8">
-                  <div className="flex-1">
-                    {/* Meta */}
-                    <div className="flex items-center gap-4 mb-3">
-                      <span className="text-[12px] tracking-[0.18em] uppercase font-normal" style={{ color: 'var(--accent)' }}>
-                        {article.category}
-                      </span>
-                      <span className="text-[12px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
-                        <time dateTime={article.publishedAt}>
-                          {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </time>
-                      </span>
-                      <span className="text-[12px] tracking-[0.12em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>
-                        {article.readTime} min čtení
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h2 className="font-cormorant text-[clamp(22px,2.2vw,30px)] font-light leading-tight mb-3 group-hover:opacity-70 transition-opacity" style={{ color: 'var(--text-dark)' }}>
-                      {article.title}
-                    </h2>
-
-                    {/* Excerpt */}
-                    <p className="text-[15px] leading-[1.8] font-light mb-4 max-w-2xl" style={{ color: 'var(--text-soft)' }}>
-                      {article.excerpt}
-                    </p>
-
-                    {/* Link */}
-                    <span className="text-sm tracking-[0.14em] uppercase font-normal" style={{ color: 'var(--burgundy)' }}>
-                      Číst →
-                    </span>
-                  </div>
-                </div>
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {articles.map((article) => (
+            <li key={article.slug}>
+              <Link
+                href={`/blog/${article.slug}`}
+                className="flex h-full flex-col rounded-[12px] bg-muza-ivory p-6 hover:opacity-90 transition-opacity"
+              >
+                <time dateTime={article.publishedAt} className="text-sm text-[#45302F]">
+                  {formatDate(article.publishedAt)}
+                </time>
+                <h2 className="mt-3 font-cormorant text-[26px] leading-[1.15] text-muza-ink">
+                  {article.title}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-[#45302F] line-clamp-1">{article.excerpt}</p>
               </Link>
-            </article>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
 
-      {/* CTA */}
-      <div className="px-8 lg:px-20 py-16" style={{ background: 'var(--ivory)' }}>
-        <div className="max-w-4xl">
-          <h2 className="font-cormorant text-[clamp(24px,2.5vw,34px)] font-light mb-4" style={{ color: 'var(--text-dark)' }}>
+      <section className="bg-muza-ivory">
+        <div className="mx-auto max-w-3xl px-4 py-14 text-center">
+          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">
             Máte otázku o prodlužování vlasů?
           </h2>
-          <p className="text-[15px] leading-[1.8] font-light mb-8 max-w-xl" style={{ color: 'var(--text-soft)' }}>
-            Náš tým expertů vám rád poradí s výběrem správné délky, kvality a péče.
+          <p className="mt-3 text-base text-[#45302F]">
+            Rádi poradíme s výběrem délky, kvality i péče.
           </p>
-          <Link
-            href="/kontakt"
-            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px inline-block"
-            style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-          >
-            Kontaktujte nás
-          </Link>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/kontakt" className={BTN_PRIMARY}>Napsat nám</Link>
+            <Link href="/katalog" className={BTN_SECONDARY}>Prohlédnout katalog</Link>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

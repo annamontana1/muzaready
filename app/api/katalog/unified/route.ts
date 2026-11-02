@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getPriceMatrixLookup } from '@/lib/stock';
+import { MATRIX_TIER, matrixCategory } from '@/lib/sale-rule';
 import prisma from '@/lib/prisma';
 import { skuPhotos } from '@/lib/sku-image';
 import { HIDDEN_SKUS } from '@/lib/hidden-skus';
@@ -116,6 +118,9 @@ export async function GET(request: NextRequest) {
         take: 100,
       });
 
+      // Stejný ceník jako košík a pokladna (lib/stock.ts quoteCartLines), aby karta a detail ukazovaly stejnou cenu
+      const priceMatrixMap = await getPriceMatrixLookup().catch(() => new Map<string, number>());
+
       for (const sku of skus) {
         // Skip items that are not in stock (already filtered in query, but double-check)
         if (!sku.inStock || sku.soldOut) continue;
@@ -139,10 +144,12 @@ export async function GET(request: NextRequest) {
           : sku.customerCategory === 'STANDARD'
           ? 'Standard'
           : ''; // bez kategorie
-        const computedPriceCzk = weight
-          ? Number(((sku.pricePerGramCzk || 0) * weight).toFixed(2))
-          : Number((sku.pricePerGramCzk || 0).toFixed(2));
-        const priceCzk = sku.priceCzkTotal ?? computedPriceCzk;
+        const matrixPerGram = priceMatrixMap.get(
+          `${matrixCategory(sku)}_${MATRIX_TIER[sku.customerCategory || 'STANDARD'] || 'standard'}_${sku.lengthCm}`,
+        );
+        const perGram = matrixPerGram ?? sku.pricePerGramCzk ?? 0;
+        const computedPriceCzk = weight ? Number((perGram * weight).toFixed(2)) : Number(perGram.toFixed(2));
+        const priceCzk = matrixPerGram ? computedPriceCzk : (sku.priceCzkTotal ?? computedPriceCzk);
         const priceEur = Number((priceCzk * czkToEur).toFixed(2));
 
         items.push({
@@ -161,7 +168,7 @@ export async function GET(request: NextRequest) {
           weightGrams: weight,
           priceCzk,
           priceEur,
-          pricePerGramCzk: sku.pricePerGramCzk || undefined,
+          pricePerGramCzk: perGram || undefined,
           saleMode: sku.saleMode,
           isDyed: sku.isDyed,
           createdAt: sku.createdAt?.toISOString(),

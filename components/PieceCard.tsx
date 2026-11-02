@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
+import { pieceTitle } from '@/lib/piece-title';
 
 // Karta jednoho culíku ve tvaru z hlavní stránky: fotka v oblouku s tenkým rámečkem,
 // pod ní dvě miniatury (z dálky / zblízka) a klepnutím na miniaturu se velká fotka přepne
 type Props = {
   id: string;
   name: string;
+  shade?: number | string; // odstín patří do názvu („Culík C04 · odstín 10“)
   photos: string[]; // [z dálky, zblízka]
   meta?: string;
   price?: string;
@@ -15,14 +17,8 @@ type Props = {
   action?: ReactNode; // např. tlačítko Do košíku v katalogu
 };
 
-// Krátký název karty („Culík C04“); délka, odstín a gramáž jsou v řádku pod ním
-const pieceTitle = (id: string, name: string) => {
-  const code = id.match(/-(c\d+)$/i)?.[1];
-  return code ? `Culík ${code.toUpperCase()}` : name.split(' · ')[0];
-};
-
-export default function PieceCard({ id, name, photos, meta, price, soldOut, action }: Props) {
-  const title = pieceTitle(id, name);
+export default function PieceCard({ id, name, shade, photos, meta, price, soldOut, action }: Props) {
+  const title = pieceTitle({ id, name, shade });
   const [active, setActive] = useState(0);
   const src = photos[active] ?? photos[0];
 

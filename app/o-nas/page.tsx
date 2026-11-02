@@ -1,432 +1,176 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Mùza Hair Praha – pravé vlasy k prodloužení | O nás',
+  title: 'O nás | Pravé vlasy k prodloužení z Prahy | Mùza Hair',
   description:
-    'Jsme český výrobce prémiových pravých vlasů k prodloužení. Zakladatelka Anna stojí za panenskou kvalitou vlasů z vlastního pražského ateliéru.',
+    'Mùza je český výrobce pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze. Příběh zakladatelky Anny a toho, jak naše vlasy vznikají.',
   alternates: { canonical: 'https://www.muzahair.cz/o-nas' },
   openGraph: {
-    title: 'Mùza Hair Praha – pravé vlasy k prodloužení | O nás',
+    title: 'O nás | Mùza Hair',
     description:
-      'Jsme český výrobce prémiových pravých vlasů k prodloužení. Zakladatelka Anna stojí za panenskou kvalitou vlasů z vlastního pražského ateliéru.',
+      'Mùza je český výrobce pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze.',
     url: 'https://www.muzahair.cz/o-nas',
+    siteName: 'Mùza Hair',
     locale: 'cs_CZ',
     type: 'website',
   },
 };
 
+const BTN_PRIMARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity';
+const BTN_SECONDARY =
+  'inline-flex items-center justify-center h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium hover:opacity-90 transition-opacity';
+
+const STEPS = [
+  {
+    title: 'Výkup od dárkyň',
+    text: 'Vlasy vykupujeme přímo od dárkyň. Každý culík pochází od jednoho dárce — z Česka, Ukrajiny, Vietnamu, Řecka a Kazachstánu. Vlasy od různých dárkyň nikdy nemícháme.',
+  },
+  {
+    title: 'Vlastní barvírna',
+    text: 'V barvírně pracuje pět specialistů, každý zodpovídá za svou část procesu. Díky vlastní metodě odbarvování dokážeme pravé vlasy zesvětlit až na platinovou blond bez poškození vlákna.',
+  },
+  {
+    title: 'Ruční výroba v Praze',
+    text: 'Tape-in pásky a wefty vyrábíme za 14 dní, keratin prameny a micro ring za 3 dny. Skladové barvy expedujeme ihned.',
+  },
+  {
+    title: 'Pravými vlasy se zabýváme od roku 2016',
+    text: 'Nekupujeme hotové produkty od třetích stran. Každý výrobní krok probíhá pod naším dohledem.',
+  },
+];
+
+const CATEGORIES = [
+  { name: 'Východoevropské vlasy', desc: 'silnější, přirozeně tmavší odstíny, výjimečná hustota a dlouhá životnost' },
+  { name: 'Středoevropské vlasy', desc: 'jemnější struktura, přirozené blond i hnědé tóny, ideální pro středoevropský typ' },
+  { name: 'Dětské vlasy — nejvyšší kvalita', desc: 'nejjemnější textura, nedotčená struktura, mimořádná hebkost a přirozený lesk' },
+];
+
+const EDITIONS = [
+  { name: 'Standard', desc: 'Spolehlivá kvalita pro každodenní nošení a salony' },
+  { name: 'Luxe', desc: 'Prémiový výběr pro náročnější zákaznice a stylisty' },
+  { name: 'Platinum', desc: 'Nejlepší culíky z naší nabídky' },
+  { name: 'Baby Shades', desc: 'Exkluzivní světlé odstíny z nejjemnějších vlasů, bez přebarvování' },
+];
+
 export default function ONasPage() {
   return (
-    <div style={{ background: 'var(--white)' }}>
+    <div className="bg-muza-cream text-text-dark font-jost">
+      {/* Úvod a příběh */}
+      <section className="mx-auto max-w-6xl px-4 pt-8 pb-14 md:pt-12 md:pb-20">
+        <nav className="text-sm text-[#45302F] flex gap-2" aria-label="Drobečková navigace">
+          <Link href="/" className="hover:text-muza-ink">Domů</Link>
+          <span aria-hidden="true">/</span>
+          <span className="text-muza-ink">O nás</span>
+        </nav>
 
-      {/* Hero */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-
-        <h1
-          className="font-cormorant text-[clamp(40px,5vw,60px)] font-light leading-[1.12] tracking-[-0.01em] mb-8 max-w-3xl"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Mùza Hair Praha: pravé vlasy k prodloužení z pražského ateliéru s příběhem
-        </h1>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-2xl" style={{ color: 'var(--text-soft)' }}>
-          Mùza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení
-          s vlastní barvírnou a ruční výrobou v Praze. Zakladatelka Anna nabízí vlasy ve čtyřech
-          liniích — Standard, Luxe, Platinum a Baby Shades — z východoevropských, středoevropských
-          i dětských vlasů nejvyšší kvality. V pražském ateliéru vyrábíme tape-in pásky, wefty,
-          clip-in vlasy a keratin prameny z vlasů s ověřeným původem.
-        </p>
-      </section>
-
-      {/* Story — Chapter 1 */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-        <div className="max-w-3xl">
-
-          <h2
-            className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-10"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Jak jeden darovaný copánek změnil můj pohled na vlasy
-          </h2>
-
-          <div className="flex flex-col gap-6">
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Můj příběh začíná před dvanácti lety na Ukrajině — u jednoho neočekávaného setkání v lékárně.
-              Zaplatila jsem starší paní léky. Ona mě na oplátku pozvala na pirohy a ve staré krabičce
-              obalené novinami mi ukázala poklad: dlouhý, zapletený copánek uložený celá desetiletí.
+        <div className="mt-8 grid gap-10 md:grid-cols-[1fr_340px] md:gap-16 md:items-center">
+          <div className="max-w-[640px]">
+            <h1 className="font-cormorant text-[40px] md:text-[56px] leading-[1.08] text-muza-ink">
+              Pravé vlasy z pražského ateliéru
+            </h1>
+            <p className="mt-5 text-base leading-relaxed">
+              Mùza je český výrobce pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze.
+              Zakladatelka Anna nabízí vlasy ve čtyřech liniích — Standard, Luxe, Platinum a Baby Shades —
+              z východoevropských, středoevropských i dětských vlasů nejvyšší kvality.
             </p>
-
-            {/* Pull quote */}
-            <div className="py-8 border-l-2 pl-8" style={{ borderColor: 'var(--burgundy)' }}>
-              <p
-                className="font-cormorant text-[clamp(22px,2.5vw,30px)] font-light leading-[1.4] italic"
-                style={{ color: 'var(--burgundy)' }}
-              >
-                „Nech si ho na památku," řekla tiše.
-              </p>
-            </div>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Netušila jsem, že právě tento dar změní směr mého života.
+            <p className="mt-4 text-base leading-relaxed text-[#45302F]">
+              Můj příběh začal na Ukrajině, setkáním v lékárně. Starší paní mi na oplátku za zaplacené léky
+              darovala dlouhý copánek, který schovávala desetiletí. „Nech si ho na památku,“ řekla tiše.
+              Hledání, co s ním, mě zavedlo k paní Olze do Dnipropetrovsku, která ručně vyráběla paruky
+              a příčesky z pravých vlasů.
             </p>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Sama jsem nikdy neměla příliš husté vlasy — a tak mě napadlo nechat si z copánku vyrobit
-              vlasový příčesek. Toto hledání mě zavedlo téměř 800 kilometrů od mé rodné vesnice,
-              do Dnipropetrovsku, k paní Olze, která ručně vyráběla luxusní paruky a příčesky
-              z pravých vlasů. Jakmile jsem uviděla její práci, bylo mi jasné: takové řemeslo by
-              mělo poptávku i v Česku.
+            <p className="mt-4 text-base leading-relaxed text-[#45302F]">
+              Pak přišly roky cestování po výkupnách a testování kvality. Jeden dodavatel mi místo panenských
+              vlasů poslal spálené prameny, které po umytí ztvrdly jako plast. Tehdy jsem se rozhodla vzít celý
+              proces do vlastních rukou. Tak vznikla Mùza.
             </p>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Následujících deset let jsem zasvětila hledání těch nejlepších pravých vlasů k prodloužení.
-              Cestovala jsem, navštěvovala výkupny, osobně testovala kvalitu, elasticitu i reakci vlasů
-              na barvení. Naučila jsem se rozpoznat skutečně panenské, nebarvené vlasy od levných
-              směsí z továren.
-            </p>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Nebylo to vždy snadné. Jeden dodavatel mi po roce spolehlivé spolupráce místo slíbených
-              panenských vlasů poslal zplstnatělé dredy a spálené blond prameny, které po umytí ztvrdly
-              jako plast. Přišla jsem o peníze. Ale získala jsem něco cennějšího: přesné pochopení toho,
-              co skutečná kvalita znamená — a co jsou jen prázdná slova.
-            </p>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Tato zkušenost mě přivedla k jedinému možnému řešení: vzít celý proces do vlastních rukou.
-              Tak vznikla Mùza Hair Praha — značka stojící na poctivosti, vlastní výrobě a přímém výkupu
-              vlasů od dárkyň v České republice i zahraničí.
-            </p>
+          </div>
+          <div className="relative aspect-[3/4] w-full max-w-[340px] mx-auto rounded-t-full rounded-b-[12px] overflow-hidden bg-muza-mocha">
+            <Image
+              src="/images/atelier/atelier-08.webp"
+              alt="Ateliér Mùza v Praze, kde vlasy ručně zpracováváme"
+              fill
+              sizes="(min-width: 768px) 340px, 90vw"
+              className="object-cover"
+              priority
+            />
           </div>
         </div>
       </section>
 
-      {/* Story — Chapter 2 */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
-        <div className="max-w-3xl">
-
-          <h2
-            className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-10"
-            style={{ color: 'var(--text-dark)' }}
-          >
-            Vlastní výroba a technologie, která mluví sama za sebe
-          </h2>
-
-          <div className="flex flex-col gap-6">
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Mùza Hair Praha dnes stojí na vlastní barvírně, ruční výrobě a profesionálním týmu
-              v pražském ateliéru. Nejsme překupníci — každý produkt vzniká přímo u nás.
-            </p>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Naším největším technologickým přínosem je vlastní metoda průmyslového odbarvování vlasů,
-              kterou jsme zdokonalovali přes pět let. V naší barvírně pracuje pět specialistů — každý
-              zodpovídá za konkrétní část procesu. Díky tomu dokážeme odbarvit pravé vlasy až na
-              platinové blond odstíny bez poškození vlasového vlákna. Naše blond vlasy jsou hebké,
-              živé a lesklé — ne suché a křehké jako vlasy zpracované továrním způsobem.
-            </p>
-
-            {/* Pull quote */}
-            <div className="py-8 border-l-2 pl-8" style={{ borderColor: 'var(--burgundy)' }}>
-              <p
-                className="font-cormorant text-[clamp(22px,2.5vw,28px)] font-light leading-[1.4]"
-                style={{ color: 'var(--text-dark)' }}
-              >
-                Každý culík pochází od jednoho dárce — z Česka, Ukrajiny, Vietnamu, Řecka
-                a Kazachstánu.
-              </p>
-            </div>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Nabízíme dvě základní kategorie vlasů. Panenské, nebarvené vlasy — chemicky nedotčené,
-              s přirozenou strukturou, ideální pro zesvětlování nebo další tónování. A profesionálně
-              tónované vlasy zpracované přímo v naší barvírně, kde každý krok procesu odbarvování
-              probíhá pod odborným dohledem.
-            </p>
-
-            <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-              Na trhu, kde mnoho firem prodává „evropské" vlasy nejasného původu, jdeme opačnou cestou.
-              Kvalitu nepoznáte podle etikety, ale podle pružnosti, lesku a zdravé struktury každého pramene.
-            </p>
+      {/* Jak vlasy vznikají */}
+      <section className="bg-muza-ivory">
+        <div className="mx-auto max-w-6xl px-4 py-14 md:py-20 grid gap-10 md:grid-cols-[340px_1fr] md:gap-16 md:items-center">
+          <div className="hidden md:block relative aspect-[3/4] rounded-t-full rounded-b-[12px] overflow-hidden bg-muza-mocha">
+            <Image
+              src="/images/atelier/atelier-11.webp"
+              alt="Ruční zpracování vlasů v dílně Mùza"
+              fill
+              sizes="340px"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Jak vlasy vznikají</h2>
+            <ol className="mt-6 border-b border-muza-line">
+              {STEPS.map((s) => (
+                <li key={s.title} className="py-3 border-t border-muza-line">
+                  <p className="text-base font-medium">{s.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-[#45302F]">{s.text}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-4"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Co v našem ateliéru najdete
-        </h2>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-xl mb-12" style={{ color: 'var(--text-soft)' }}>
-          V pražském ateliéru Mùza Hair vyrábíme produkty ze čtyř kategorií pravých vlasů —
-          každá má svou strukturu, hustotu i charakter.
-        </p>
-
-        <div className="w-16 h-px mb-10" style={{ background: 'var(--accent)' }} />
-
-        <h3
-          className="font-cormorant text-[22px] font-light mb-6"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Kategorie vlasů
-        </h3>
-
-        <div className="flex flex-col gap-0 mb-16 max-w-2xl">
-          {[
-            { name: 'Východoevropské vlasy', desc: 'silnější, přirozeně tmavší odstíny, výjimečná hustota a dlouhá životnost' },
-            { name: 'Středoevropské vlasy', desc: 'jemnější struktura, přirozené blond i hnědé tóny, ideální pro středoevropský typ' },
-            { name: 'Dětské vlasy — nejvyšší kvalita', desc: 'nejjemnější textura, nedotčená struktura, mimořádná hebkost a přirozený lesk' },
-            { name: 'Baby Shades', desc: 'speciální linie v nejsvětlejších, přirozeně světlých odstínech pro ty, které touží po blond bez kompromisů' },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 py-5 border-b"
-              style={{ borderColor: 'var(--beige)' }}
-            >
-              <span
-                className="block w-4 h-px mt-[11px] flex-shrink-0"
-                style={{ background: 'var(--accent)' }}
-              />
-              <div>
-                <span className="text-[15px] font-light" style={{ color: 'var(--text-dark)' }}>
-                  {item.name}
-                </span>
-                <span className="text-[15px] font-light" style={{ color: 'var(--text-soft)' }}>
-                  {' '}— {item.desc}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <h3
-          className="font-cormorant text-[22px] font-light mb-6"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Produktové edice
-        </h3>
-
-        <div className="flex flex-col gap-0 mb-16 max-w-2xl">
-          {[
-            { edition: 'Standard', desc: 'Spolehlivá kvalita pro každodenní nošení a salony' },
-            { edition: 'Luxe', desc: 'Prémiový výběr pro náročnější zákaznice a stylisty' },
-            { edition: 'Platinum', desc: 'Nejlepší culíky z naší nabídky — pro ty, pro které je kvalita na prvním místě' },
-            { edition: 'Baby Shades', desc: 'Exkluzivní světlé odstíny z nejjemnějších vlasů — přirozeně, bez přebarvování' },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-8 py-5 border-b"
-              style={{ borderColor: 'var(--beige)' }}
-            >
-              <span
-                className="text-[12px] tracking-[0.15em] uppercase font-light w-24 flex-shrink-0 pt-px"
-                style={{ color: 'var(--accent)' }}
-              >
-                {item.edition}
-              </span>
-              <span className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-                {item.desc}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <h3
-          className="font-cormorant text-[22px] font-light mb-6"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Typy produktů ve všech edicích
-        </h3>
-
-        <div className="flex flex-col gap-0 max-w-2xl mb-6">
-          {[
-            'Vlasové pásky tape-in — výroba na zakázku za 14 dní',
-            'Wefty pro Hollywood metodu prodloužení — výroba za 14 dní',
-            'Keratin prameny a micro ring — výroba za 3 dny',
-            'Panenské nebarvené culíky (raw hair) pro salony',
-            'Clip-in vlasy Praha — sady, pásy, culíky',
-            'Clip-in ofiny z pravých vlasů',
-            'Paruky na míru',
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 py-5 border-b"
-              style={{ borderColor: 'var(--beige)' }}
-            >
-              <span
-                className="block w-4 h-px mt-[11px] flex-shrink-0"
-                style={{ background: 'var(--accent)' }}
-              />
-              <span className="text-[15px] font-light leading-[1.8]" style={{ color: 'var(--text-soft)' }}>
-                {item}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <p className="text-[15px] font-light" style={{ color: 'var(--text-dark)' }}>
-          Všechny produkty vznikají ručně v Praze — ne v továrně.
-        </p>
-      </section>
-
-      {/* Why us */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--beige)' }}>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Pět důvodů, proč nám zákaznice věří
-        </h2>
-
-        <div className="flex flex-col gap-0 max-w-3xl">
-          {[
-            {
-              title: '12 let zkušeností s pravými vlasy',
-              text: 'Dvanáct let přímé práce s vlasy od dárkyň, vlastní výroby a spolupráce se salony v celé ČR. Tato zkušenost se odráží v každém produktu, který opustí náš ateliér.',
-            },
-            {
-              title: 'Vlastní barvírna a ruční výroba v Praze',
-              text: 'Nekupujeme hotové produkty od třetích stran — zpracováváme vlasy přímo u nás. Každý výrobní krok probíhá pod naším dohledem v pražském ateliéru.',
-            },
-            {
-              title: 'Ověřený původ každého culíku',
-              text: 'Vlasy vykupujeme přímo od dárkyň v Česku, Ukrajině, Polsku, Rumunsku, Vietnamu, Řecku a Kazachstánu. Každý culík pochází od jednoho dárce a má jasnou historii.',
-            },
-            {
-              title: 'Vlastní technologie odbarvování',
-              text: 'Naše pětileté know-how v průmyslovém odbarvování umožňuje získat platinové blond vlasy bez poškození vlasového vlákna. V barvírně pracuje pět specialistů, každý zodpovědný za svou část procesu.',
-            },
-            {
-              title: 'Showroom Praha — osobní výběr vlasů',
-              text: 'Nemusíte nakupovat naslepo. V pražském showroomu si vlasy prohlédnete, osaháte a vyberete přesně ten odstín a délku, který vám sedí. Konzultace je zdarma.',
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 py-6 border-b"
-              style={{ borderColor: 'var(--ivory-warm)' }}
-            >
-              <span
-                className="block w-4 h-px mt-[13px] flex-shrink-0"
-                style={{ background: 'var(--accent)' }}
-              />
-              <div>
-                <p className="text-[15px] font-light mb-2" style={{ color: 'var(--text-dark)' }}>
-                  {item.title}
-                </p>
-                <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-                  {item.text}
-                </p>
-              </div>
-            </div>
-          ))}
+      {/* Linie vlasů */}
+      <section className="mx-auto max-w-6xl px-4 py-14 md:py-20">
+        <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Naše vlasy</h2>
+        <div className="mt-6 grid gap-10 md:grid-cols-2 md:gap-16">
+          <div>
+            <h3 className="text-base font-medium">Edice</h3>
+            <dl className="mt-3 border-b border-muza-line">
+              {EDITIONS.map((e) => (
+                <div key={e.name} className="grid grid-cols-[120px_1fr] gap-4 py-3 border-t border-muza-line">
+                  <dt className="text-sm font-medium text-muza-ink">{e.name}</dt>
+                  <dd className="text-sm text-[#45302F]">{e.desc}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div>
+            <h3 className="text-base font-medium">Kategorie vlasů</h3>
+            <dl className="mt-3 border-b border-muza-line">
+              {CATEGORIES.map((c) => (
+                <div key={c.name} className="py-3 border-t border-muza-line">
+                  <dt className="text-sm font-medium text-muza-ink">{c.name}</dt>
+                  <dd className="mt-0.5 text-sm text-[#45302F]">{c.desc}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory-warm)' }}>
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-12"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Co se zákaznice nejčastěji ptají
-        </h2>
-
-        <div className="flex flex-col gap-0 max-w-2xl">
-          {[
-            {
-              q: 'Co je Mùza Hair Praha?',
-              a: 'Mùza Hair Praha je český výrobce a dodavatel prémiových pravých vlasů k prodloužení s vlastní barvírnou a ruční výrobou v Praze. Vyrábíme tape-in pásky, wefty, clip-in vlasy, keratin prameny i paruky na míru — vždy z vlasů s ověřeným původem, ve čtyřech edicích: Standard, Luxe, Platinum a Baby Shades.',
-            },
-            {
-              q: 'Odkud pocházejí vaše vlasy?',
-              a: 'Vlasy vykupujeme přímo od dárkyň v České republice, Ukrajině, Polsku, Rumunsku, Vietnamu, Řecku a Kazachstánu. Každý culík pochází od jednoho dárce, má ověřený původ a prochází ruční kontrolou v pražském ateliéru. Vlasy od různých dárkyň nikdy nemícháme.',
-            },
-            {
-              q: 'Jsou vaše vlasy skutečně panenské?',
-              a: 'Nabízíme dvě kategorie vlasů. První jsou panenské, nebarvené vlasy — chemicky nedotčené, ideální pro zesvětlování nebo tónování. Druhá kategorie jsou profesionálně tónované vlasy z naší vlastní barvírny, kde pracuje pět specialistů — každý zodpovídá za konkrétní část procesu průmyslového odbarvování. Výsledkem jsou vlasy hebké, živé a bez poškození vlákna.',
-            },
-            {
-              q: 'Kde vás najdu v Praze?',
-              a: 'Máme fyzický showroom v Praze, kde si vlasy osobně prohlédnete a vyberete. Konzultace je zdarma a vítaná. Přesnou adresu a aktuální otevírací dobu najdete na muzahair.cz — nebo nás kontaktujte přímo pro sjednání termínu.',
-            },
-            {
-              q: 'Nabízíte velkoobchodní prodej pro salony?',
-              a: 'Ano, spolupracujeme s kadeřnickými salony a extension technicians po celé ČR. Nabízíme velkoobchodní ceny, komisní prodej a možnost osobního odběru v Praze. Spolupracujeme výhradně s odborníky, kteří sdílejí naše hodnoty — poctivost a preciznost.',
-            },
-            {
-              q: 'Jak dlouho trvá výroba vlasů na zakázku?',
-              a: 'Záleží na produktu. Tape-in pásky, wefty a clip-in vlasy vyrábíme za 14 dní. Keratin prameny, micro keratin a micro ring jsou připraveny za 3 dny. Skladové barvy expedujeme ihned. Přesné termíny potvrdíme při objednávce.',
-            },
-          ].map((faq, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-4 py-6 border-b"
-              style={{ borderColor: 'var(--beige)' }}
-            >
-              <span
-                className="block w-4 h-px mt-[13px] flex-shrink-0"
-                style={{ background: 'var(--accent)' }}
-              />
-              <div>
-                <p className="text-[15px] font-light mb-2" style={{ color: 'var(--text-dark)' }}>
-                  {faq.q}
-                </p>
-                <p className="text-[15px] leading-[1.8] font-light" style={{ color: 'var(--text-soft)' }}>
-                  {faq.a}
-                </p>
-              </div>
-            </div>
-          ))}
+      {/* Závěrečná výzva */}
+      <section className="mx-auto max-w-6xl px-4 pb-20">
+        <div className="rounded-[12px] bg-muza-ivory px-6 py-12 md:px-12 text-center">
+          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Přijďte se podívat</h2>
+          <p className="mt-3 text-base leading-relaxed text-[#45302F] max-w-xl mx-auto">
+            V pražském showroomu si vlasy prohlédnete, osaháte a vyberete odstín i délku. Konzultace je zdarma
+            a nezávazná.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/katalog" className={BTN_PRIMARY}>Prohlédnout katalog</Link>
+            <Link href="/kontakt" className={BTN_SECONDARY}>Kontaktovat nás</Link>
+          </div>
+          <p className="mt-8 text-sm text-[#45302F]">S láskou k řemeslu, Anna, zakladatelka Mùza</p>
         </div>
       </section>
-
-      {/* CTA */}
-      <section className="px-8 lg:px-20 py-20" style={{ background: 'var(--ivory)' }}>
-        <div className="w-16 h-px mb-8" style={{ background: 'var(--accent)' }} />
-
-        <h2
-          className="font-cormorant text-[clamp(28px,3vw,40px)] font-light mb-4"
-          style={{ color: 'var(--text-dark)' }}
-        >
-          Přijďte se podívat
-        </h2>
-
-        <p className="text-[15px] leading-[1.8] font-light max-w-lg mb-10" style={{ color: 'var(--text-soft)' }}>
-          Srdečně vás zvu do našeho pražského showroomu, kde si vlasy prohlédnete, osaháte
-          a vyberete přesně ten odstín a délku pro vás. Konzultace je zdarma a nezávazná.
-        </p>
-
-        <div className="flex gap-4 flex-wrap items-center mb-10">
-          <Link
-            href="/kontakt"
-            className="text-sm px-8 py-3.5 rounded-full font-medium transition-all hover:-translate-y-px"
-            style={{ background: 'var(--burgundy)', color: 'var(--ivory)' }}
-          >
-            Kontaktovat nás
-          </Link>
-          <Link
-            href="/vlasy-k-prodlouzeni"
-            className="text-sm tracking-[0.1em] uppercase font-light flex items-center gap-2"
-            style={{ color: 'var(--text-mid)' }}
-          >
-            Prohlédnout kolekci →
-          </Link>
-        </div>
-
-        <p className="text-sm font-light italic" style={{ color: 'var(--text-soft)' }}>
-          S láskou k řemeslu a kráse, Anna — zakladatelka Mùza Hair Praha
-        </p>
-      </section>
-
     </div>
   );
 }

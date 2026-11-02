@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
   }
 
   return {
-    title: `${article.title} | Mùza Hair Blog`,
+    title: `${article.title} | Mùza Hair`,
     description: article.excerpt,
     authors: [{ name: article.author }],
     openGraph: {
@@ -103,147 +103,121 @@ export default function BlogArticlePage({ params }: BlogArticlePageProps) {
       />
       <BreadcrumbSchema items={breadcrumbItems} />
 
-      <article className="py-12 bg-white">
-        <div className="container mx-auto px-4 max-w-4xl">
-          {/* Breadcrumb */}
-          <nav className="mb-6 text-sm">
-            <ol className="flex items-center gap-2 text-text-mid">
+      <article className="bg-muza-cream text-text-dark font-jost">
+        <div className="mx-auto max-w-3xl px-4 pt-8 pb-16 md:pt-12">
+          <nav className="text-sm text-[#45302F]" aria-label="Drobečková navigace">
+            <ol className="flex items-center gap-2">
               <li>
-                <Link href="/" className="hover:text-burgundy transition">
-                  Domů
-                </Link>
+                <Link href="/" className="hover:text-muza-ink">Domů</Link>
               </li>
-              <li>/</li>
+              <li aria-hidden="true">/</li>
               <li>
-                <Link href="/blog" className="hover:text-burgundy transition">
-                  Blog
-                </Link>
+                <Link href="/blog" className="hover:text-muza-ink">Blog</Link>
               </li>
-              <li>/</li>
-              <li className="text-burgundy font-medium line-clamp-1">{article.title}</li>
+              <li aria-hidden="true">/</li>
+              <li className="text-muza-ink line-clamp-1">{article.title}</li>
             </ol>
           </nav>
 
-          {/* Article Header */}
-          <header className="mb-8">
-            {/* Category Badge */}
-            <div className="mb-4">
-              <span className="px-3 py-1 bg-burgundy/10 text-burgundy rounded-full text-sm font-medium">
-                {article.category}
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-playfair text-burgundy mb-4">
+          <header className="mt-8 pb-6 border-b border-muza-line">
+            <h1 className="font-cormorant text-[36px] md:text-[48px] leading-[1.1] text-muza-ink">
               {article.title}
             </h1>
-
-            {/* Excerpt */}
-            <p className="text-xl text-text-mid mb-6">{article.excerpt}</p>
-
-            {/* Meta */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-text-mid pb-6 border-b border-warm-beige">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-burgundy">{article.author}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                📅
-                <time dateTime={article.publishedAt}>
-                  {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </time>
-              </div>
-              <div className="flex items-center gap-2">
-                📖 {article.readTime} min čtení
-              </div>
-            </div>
+            <p className="mt-5 text-base leading-relaxed text-[#45302F]">{article.excerpt}</p>
+            <p className="mt-5 text-sm text-[#45302F]">
+              {article.category} ·{' '}
+              <time dateTime={article.publishedAt}>
+                {new Date(article.publishedAt).toLocaleDateString('cs-CZ', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>{' '}
+              · {article.readTime} min čtení
+            </p>
           </header>
 
-          {/* Featured Image Placeholder */}
-          <div className="aspect-video bg-gradient-to-br from-burgundy/20 to-maroon/20 rounded-xl mb-8 flex items-center justify-center">
-            <span className="text-8xl">📰</span>
-          </div>
-
-          {/* Article Content */}
-          <div className="prose prose-lg max-w-none">
+          <div className="mt-8 text-base leading-relaxed">
             <div
               className="article-content"
               dangerouslySetInnerHTML={{
                 __html: article.content
                   .replace(/\n/g, '<br />')
-                  .replace(/## (.*?)(<br \/>|$)/g, '<h2 class="text-2xl font-semibold text-burgundy mt-8 mb-4">$1</h2>')
-                  .replace(/### (.*?)(<br \/>|$)/g, '<h3 class="text-xl font-semibold text-burgundy mt-6 mb-3">$1</h3>')
-                  .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-burgundy">$1</strong>')
-                  .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-burgundy hover:text-maroon underline">$1</a>')
-                  .replace(/- (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2">$1</li>')
-                  .replace(/✅ (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2 text-green-600">✅ $1</li>')
-                  .replace(/❌ (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2 text-red-600">❌ $1</li>')
-                  .replace(/⚠️ (.*?)(<br \/>|$)/g, '<li class="ml-6 mb-2 text-orange-600">⚠️ $1</li>')
-                  .replace(/---(<br \/>|$)/g, '<hr class="my-8 border-warm-beige" />')
-                  .replace(/# (.*?)(<br \/>|$)/g, '<h1 class="text-3xl font-playfair text-burgundy mt-8 mb-4">$1</h1>'),
+                  .replace(/### (.*?)(<br \/>|$)/g, '<h3 class="font-jost text-lg font-medium text-muza-ink mt-6 mb-2">$1</h3>')
+                  .replace(/## (.*?)(<br \/>|$)/g, '<h2 class="font-cormorant text-[32px] leading-tight text-muza-ink mt-10 mb-3">$1</h2>')
+                  .replace(/\*\*(.*?)\*\*/g, '<strong class="font-medium text-muza-ink">$1</strong>')
+                  .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-muza-ink underline underline-offset-4">$1</a>')
+                  .replace(/- (.*?)(<br \/>|$)/g, '<li class="list-none py-3 border-t border-muza-line">$1</li>')
+                  .replace(/✅ (.*?)(<br \/>|$)/g, '<li class="list-none py-3 border-t border-muza-line">✅ $1</li>')
+                  .replace(/❌ (.*?)(<br \/>|$)/g, '<li class="list-none py-3 border-t border-muza-line">❌ $1</li>')
+                  .replace(/⚠️ (.*?)(<br \/>|$)/g, '<li class="list-none py-3 border-t border-muza-line">⚠️ $1</li>')
+                  .replace(/---(<br \/>|$)/g, '<hr class="my-8 border-muza-line" />')
+                  .replace(/# (.*?)(<br \/>|$)/g, '<h2 class="font-cormorant text-[32px] leading-tight text-muza-ink mt-10 mb-3">$1</h2>'),
               }}
             />
           </div>
 
-          {/* Tags */}
           {article.tags && article.tags.length > 0 && (
-            <div className="mt-12 pt-8 border-t border-warm-beige">
-              <div className="flex flex-wrap gap-2">
-                <span className="text-sm text-text-mid font-medium">Štítky:</span>
-                {article.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 bg-ivory text-text-mid rounded-full text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+            <div className="mt-12 pt-8 border-t border-muza-line flex flex-wrap items-center gap-2">
+              <span className="text-sm text-[#45302F]">Štítky:</span>
+              {article.tags.map((tag) => (
+                <span key={tag} className="px-3 py-1 rounded-full border border-muza-line text-sm text-[#45302F]">
+                  {tag}
+                </span>
+              ))}
             </div>
           )}
 
-          {/* CTA */}
-          <div className="mt-12 bg-ivory rounded-xl p-8 text-center">
-            <h3 className="text-2xl font-playfair text-burgundy mb-3">
-              Připraveni vyzkoušet naše vlasy?
-            </h3>
-            <p className="text-text-mid mb-6">
-              Prohlédněte si naši kompletní nabídku prémiových vlasů k prodloužení
+          <div className="mt-12 rounded-[12px] bg-muza-ivory px-6 py-10 text-center">
+            <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">
+              Vyberte si vlasy k prodloužení
+            </h2>
+            <p className="mt-3 text-base text-[#45302F]">
+              Prohlédněte si celou nabídku pravých vlasů Mùza.
             </p>
-            <Link href="/vlasy-k-prodlouzeni" className="btn-primary inline-block">
-              Zobrazit produkty
-            </Link>
-          </div>
-
-          {/* Related Articles */}
-          <div className="mt-12">
-            <h3 className="text-2xl font-playfair text-burgundy mb-6">Další články</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              {blogArticles
-                .filter((a) => a.slug !== article.slug)
-                .slice(0, 2)
-                .map((relatedArticle) => (
-                  <Link
-                    key={relatedArticle.slug}
-                    href={`/blog/${relatedArticle.slug}`}
-                    className="bg-ivory rounded-lg p-6 hover:shadow-medium transition"
-                  >
-                    <span className="text-xs text-burgundy font-medium">
-                      {relatedArticle.category}
-                    </span>
-                    <h4 className="text-lg font-semibold text-burgundy mt-2 mb-2">
-                      {relatedArticle.title}
-                    </h4>
-                    <p className="text-sm text-text-mid line-clamp-2">
-                      {relatedArticle.excerpt}
-                    </p>
-                  </Link>
-                ))}
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/katalog"
+                className="inline-flex items-center justify-center h-[52px] px-7 rounded-full bg-muza-ink text-muza-onink text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Prohlédnout katalog
+              </Link>
+              <Link
+                href="/kontakt"
+                className="inline-flex items-center justify-center h-[52px] px-7 rounded-full border border-muza-ink text-muza-ink text-sm font-medium"
+              >
+                Napsat nám
+              </Link>
             </div>
           </div>
+        </div>
+
+        <div className="mx-auto max-w-6xl px-4 pb-16">
+          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Další články</h2>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[...blogArticles]
+              .filter((a) => a.slug !== article.slug)
+              .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+              .slice(0, 3)
+              .map((related) => (
+                <li key={related.slug}>
+                  <Link
+                    href={`/blog/${related.slug}`}
+                    className="flex h-full flex-col rounded-[12px] bg-muza-ivory p-6 hover:opacity-90 transition-opacity"
+                  >
+                    <time dateTime={related.publishedAt} className="text-sm text-[#45302F]">
+                      {new Date(related.publishedAt).toLocaleDateString('cs-CZ', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    <h3 className="mt-3 font-cormorant text-[26px] leading-[1.15] text-muza-ink">{related.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-[#45302F] line-clamp-1">{related.excerpt}</p>
+                  </Link>
+                </li>
+              ))}
+          </ul>
         </div>
       </article>
     </>

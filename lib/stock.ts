@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { pieceCode, pieceTitle } from '@/lib/piece-title';
 import { GRAM_STEP, MATRIX_TIER, PIECE_DEFAULT_GRAMS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, matrixCategory, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
 
 // Shade name map (mirrors HAIR_COLORS in types/product.ts)
@@ -26,6 +27,7 @@ export function buildSkuDisplayName(sku: {
   if (sku.name && sku.name !== 'undefined' && sku.name.trim() !== '') {
     return sku.name;
   }
+  if (pieceCode(sku.sku)) return pieceTitle(sku);
   const shadeNum = parseInt(sku.shade || '', 10);
   const tierLabel = TIER_LABELS[sku.customerCategory || ''] || 'Standard';
   const shadeName = Number.isFinite(shadeNum) ? (SHADE_NAMES[shadeNum] || `#${shadeNum}`) : '';
@@ -83,7 +85,7 @@ export function calculateAssemblyFee(
   }
 }
 
-async function getPriceMatrixLookup(): Promise<Map<string, number>> {
+export async function getPriceMatrixLookup(): Promise<Map<string, number>> {
   const entries = await prisma.priceMatrix.findMany();
   const map = new Map<string, number>();
 

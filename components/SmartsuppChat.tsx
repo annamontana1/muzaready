@@ -34,7 +34,7 @@ export default function SmartsuppChat() {
       }
 
       window._smartsupp.key = smartsupp_key;
-      window._smartsupp.cookieDomain = '.muzaready.cz';
+      window._smartsupp.cookieDomain = '.muzahair.cz';
 
       // Optional: Set visitor variables
       window._smartsupp.visitorVariables = {
@@ -51,6 +51,9 @@ export default function SmartsuppChat() {
       return () => window.removeEventListener('load', initSmartsupp);
     }
   }, [mounted]);
+
+  // Bez klíče se chat nenačítá (jinak hlásí chybu na každé stránce)
+  if (!process.env.NEXT_PUBLIC_SMARTSUPP_KEY) return null;
 
   return (
     <>

@@ -7,6 +7,7 @@ import FavoriteButton from './FavoriteButton';
 import AddToCartModal from './AddToCartModal';
 import BulkAddToCartModal from './BulkAddToCartModal';
 import PieceCard from './PieceCard';
+import { pieceTitle } from '@/lib/piece-title';
 import { GRAM_STEP, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS } from '@/lib/sale-rule';
 import { usePreferences } from '@/lib/preferences-context';
 import { useCart } from '@/hooks/useCart';
@@ -117,7 +118,7 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
     const price = props.priceCzk || 0;
     addToCart({
       skuId: props.id,
-      skuName: props.name,
+      skuName: pieceTitle({ id: props.id, shade: props.shade, name: props.name }),
       customerCategory: null,
       shade: props.shade ? String(props.shade) : null,
       saleMode: 'PIECE_BY_WEIGHT',
@@ -267,9 +268,9 @@ export default function CatalogCard({ ...props }: CatalogCardProps) {
         onAdded={handleAddedToCart}
       />
 
-      <PieceCard id={props.id} name={props.name}
+      <PieceCard id={props.id} name={props.name} shade={props.shade}
         photos={[props.imageUrl, props.imageUrl2].filter((u): u is string => Boolean(u))}
-        meta={[props.shade && `odstín ${props.shade}`, props.lengthCm && `${props.lengthCm} cm`, props.weightGrams && `${props.weightGrams} g`].filter(Boolean).join(' · ')}
+        meta={[props.lengthCm && `${props.lengthCm} cm`, props.weightGrams && `${props.weightGrams} g`].filter(Boolean).join(' · ')}
         price={props.priceCzk ? formatCurrencyValue(currency === 'CZK' ? props.priceCzk : props.priceCzk * rate, currency) : undefined}
         soldOut={!props.inStock}
         action={!props.inStock ? null : byGrams ? (
