@@ -100,15 +100,14 @@ export default function KontaktPage() {
         </div>
       </section>
 
-      {/* Pouze na objednání */}
+      {/* Otevírací doba */}
       <section className="bg-muza-ivory">
         <div className="mx-auto max-w-3xl px-4 py-14">
           <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">
-            Showroom funguje pouze na objednání
+            Otevřeno Po–Pá 10–16
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[#45302F]">
-            Každé setkání věnujeme individuální pozornost. Prosím, zavolejte nebo napište
-            předem — domluvíme konkrétní čas jen pro vás.
+            Návštěvu nám prosím předem napište. Jiný čas nebo víkend se dá také domluvit.
           </p>
         </div>
       </section>
