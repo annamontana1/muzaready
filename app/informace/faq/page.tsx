@@ -278,7 +278,7 @@ Zboží vyráběné na zakázku (pásky, weft, clip-in) připravujeme **14 praco
 
 **1. Osobní odběr v showroomu** ZDARMA
 - Adresa: Revoluční 8, Praha 1, 110 00
-- Otevřeno: Po–Ne 10:00–16:00, **jindy po domluvě**
+- Otevřeno: Po–Pá 10:00–16:00, **jiné hodiny a víkend po domluvě**
 
 **Postup:**
 1. Při objednávce zvolte "Osobní odběr"
@@ -670,7 +670,7 @@ Adresa:
 Revoluční 8
 Praha 1, 110 00
 
-Otevřeno: **Po–Ne 10:00–16:00, jindy po domluvě**
+Otevřeno: **Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě**
 
 **Co u nás můžete:**
 ✅ Prohlédnout si **všechny vzorky** odstínů

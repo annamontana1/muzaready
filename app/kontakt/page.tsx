@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Kontakt a showroom Praha 1 | Mùza Hair',
-  description: 'Showroom Mùza Hair Praha — Revoluční 8, Praha. Otevřeno Po–Ne 10:00–16:00, jindy po domluvě. Zavolejte nám nebo napište na Instagram.',
+  description: 'Showroom Mùza Hair Praha — Revoluční 8, Praha. Otevřeno Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě. Zavolejte nám nebo napište na Instagram.',
   alternates: { canonical: 'https://www.muzahair.cz/kontakt' },
 };
 

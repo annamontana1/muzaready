@@ -157,7 +157,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
           {/* Opening hours badge */}
           <div className="inline-flex items-center gap-2 bg-ivory border border-burgundy/20 rounded-full px-5 py-2 mb-10">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-700">Showroom Praha: Po–Ne 10:00–16:00 · jindy po domluvě</span>
+            <span className="text-sm font-medium text-gray-700">Showroom Praha: Po–Pá 10:00–16:00 · jiné hodiny a víkend po domluvě</span>
           </div>
 
           {/* CTA buttons */}

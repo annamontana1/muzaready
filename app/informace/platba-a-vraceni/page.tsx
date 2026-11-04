@@ -119,7 +119,7 @@ export default function PlatbaAVraceniPage() {
                 name: 'Osobní odběr — showroom Praha',
                 price: 'Zdarma',
                 time: 'Po domluvě',
-                desc: 'Revoluční 8, Praha. Po–Ne 10:00–16:00, jindy po domluvě.',
+                desc: 'Revoluční 8, Praha. Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě.',
                 available: true,
               },
               {
