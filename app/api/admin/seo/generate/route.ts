@@ -212,7 +212,7 @@ function generateStructuredData(pageType: PageType, data: {
           ...baseOrg,
           "@type": "LocalBusiness",
           "priceRange": "$$",
-          "openingHours": "Mo-Fr 09:00-18:00"
+          "openingHours": "Mo-Fr 10:00-16:00"
         }
       }, null, 2);
 

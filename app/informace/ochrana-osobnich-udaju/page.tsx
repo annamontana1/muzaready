@@ -777,7 +777,7 @@ export default function OchranaOsobnichUdajuPage() {
                   <br />
                   <strong>Telefon:</strong> [TELEFON]
                   <br />
-                  <strong>Provozní doba:</strong> Po-Pá 9:00-17:00
+                  <strong>Provozní doba:</strong> Po–Pá 10:00–16:00
                 </p>
               </div>
             </div>

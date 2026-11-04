@@ -17,7 +17,7 @@ const MAPS_LINK = 'https://www.google.com/maps/search/?api=1&query=Revolu%C4%8Dn
 
 const FACTS = [
   { k: 'Adresa', v: 'Revoluční 8, Praha' },
-  { k: 'Otevírací doba', v: 'Po–Ne 10:00–16:00, jindy po domluvě' },
+  { k: 'Otevírací doba', v: 'Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě' },
 ];
 
 const CONTACTS = [

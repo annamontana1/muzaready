@@ -335,7 +335,7 @@ Pokud je zboží poškozené, **pošleme náhradní ZDARMA** nebo vrátíme pen�
   {
     category: 'Doprava',
     question: 'Doručujete do zahraničí?',
-    answer: `Ano, **po individuální domluvě**. Cenu poštovného stanovíme podle země a hmotnosti zásilky. Napište nám na WhatsApp +420 728 722 880 nebo na muzahaircz@gmail.com, kam chcete vlasy poslat.
+    answer: `Ano, zasíláme do **všech zemí Evropy**. Cena dopravy je individuální a přepočítáme ji podle země a zásilky. Napište nám na WhatsApp +420 728 722 880 nebo na muzahaircz@gmail.com, kam chcete vlasy poslat.
 
 Platba je i v tomto případě předem převodem na IBAN **CZ70 0300 0000 0003 2128 6011**.`
   },

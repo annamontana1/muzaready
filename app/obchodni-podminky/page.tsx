@@ -140,7 +140,7 @@ export default function ObchodniPodminkyPage() {
                 <tr className="bg-soft-cream">
                   <td className="border border-warm-beige px-3 py-2">Osobní odběr – showroom Praha</td>
                   <td className="border border-warm-beige px-3 py-2">Zdarma</td>
-                  <td className="border border-warm-beige px-3 py-2">Dle dohody, Po–So 10–18 h</td>
+                  <td className="border border-warm-beige px-3 py-2">Dle dohody, Po–Pá 10–16 h, jindy po domluvě</td>
                 </tr>
               </tbody>
             </table>
@@ -154,7 +154,7 @@ export default function ObchodniPodminkyPage() {
           </ul>
           <p><strong>4.3</strong> Při převzetí zboží je kupující povinen zkontrolovat neporušenost obalu. Zjistí-li poškození, informuje okamžitě dopravce a prodávajícího. Zásilku s viditelně poškozeným obalem je kupující oprávněn odmítnout.</p>
           <p><strong>4.4</strong> Pokud kupující zásilku bezdůvodně odmítne převzít nebo si ji nevyzvedne, prodávající je oprávněn účtovat náklady na dopravu a případné skladné.</p>
-          <p><strong>4.5</strong> Zasílání do zahraničí je možné po individuální domluvě. Výše poštovného pro zahraniční zásilky je stanovena individuálně dle destinace a hmotnosti zásilky.</p>
+          <p><strong>4.5</strong> Zasíláme do všech zemí Evropy. Cena dopravy do zahraničí je individuální a přepočítává se podle země určení a zásilky; před odesláním ji kupujícímu sdělíme.</p>
         </section>
 
         {/* Čl. 5 */}
@@ -348,7 +348,7 @@ export default function ObchodniPodminkyPage() {
             <li>Běžné dotazy: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
             <li>Reklamace: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
             <li>B2B / Velkoobchod: <a href="mailto:muzahaircz@gmail.com" className="text-burgundy underline">muzahaircz@gmail.com</a></li>
-            <li>Showroom Praha: [Adresa] – Po–So 10–18 h</li>
+            <li>Showroom Praha: [Adresa] – Po–Pá 10–16 h, jindy po domluvě</li>
             <li>Telefon: <a href="tel:+420728722880" className="text-burgundy underline">+420 728 722 880</a></li>
           </ul>
         </section>

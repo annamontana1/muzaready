@@ -30,7 +30,7 @@ export function OrganizationSchema() {
       contactType: 'customer service',
       availableLanguage: ['Czech', 'Slovak'],
     },
-    openingHours: 'Mo-Su 10:00-16:00',
+    openingHours: 'Mo-Fr 10:00-16:00',
     paymentAccepted: 'Cash, Credit Card, Bank Transfer',
     currenciesAccepted: 'CZK',
     areaServed: {

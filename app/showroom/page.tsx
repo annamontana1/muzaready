@@ -96,8 +96,8 @@ export default function ShowroomPage() {
           <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Pouze na objednání</h2>
           <dl className="mt-6">
             <div className="flex justify-between gap-4 py-3 border-t border-b border-muza-line">
-              <dt className="text-sm text-[#45302F]">Pondělí – neděle</dt>
-              <dd className="text-sm font-medium text-right">10:00–16:00, jindy po domluvě</dd>
+              <dt className="text-sm text-[#45302F]">Pondělí – pátek</dt>
+              <dd className="text-sm font-medium text-right">10:00–16:00, jiné hodiny a víkend po domluvě</dd>
             </div>
           </dl>
           <p className="mt-5 text-base leading-relaxed text-[#45302F]">

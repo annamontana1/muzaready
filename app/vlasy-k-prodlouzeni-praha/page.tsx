@@ -49,7 +49,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
         opens: '10:00',
         closes: '16:00',
       },
@@ -463,7 +463,7 @@ export default function VlasyKProdlouzeniPrahaPage() {
                     <span className="text-burgundy text-lg mt-0.5">🕐</span>
                     <div>
                       <p className="font-semibold text-gray-900">Otevírací doba</p>
-                      <p className="text-gray-600 text-sm">Po–Ne: 10:00–16:00, jindy po domluvě</p>
+                      <p className="text-gray-600 text-sm">Po–Pá: 10:00–16:00, jiné hodiny a víkend po domluvě</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

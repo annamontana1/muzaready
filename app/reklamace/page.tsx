@@ -213,7 +213,7 @@ export default function ReturnsPage() {
             <strong>Telefon:</strong> +420 728 722 880<br />
             <strong>WhatsApp:</strong> +420 728 722 880<br />
             <strong>Adresa:</strong> Revoluční 8, 110 00 Praha 1<br />
-            <strong>Otevírací doba:</strong> Po–Ne 10:00–16:00, jindy po domluvě
+            <strong>Otevírací doba:</strong> Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě
           </p>
         </section>
 
