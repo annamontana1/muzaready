@@ -93,7 +93,7 @@ export default function ShowroomPage() {
       {/* Otevírací doba */}
       <section className="bg-muza-ivory">
         <div className="mx-auto max-w-3xl px-4 py-14">
-          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Pouze na objednání</h2>
+          <h2 className="font-cormorant text-[32px] md:text-[40px] leading-tight text-muza-ink">Otevírací doba</h2>
           <dl className="mt-6">
             <div className="flex justify-between gap-4 py-3 border-t border-b border-muza-line">
               <dt className="text-sm text-[#45302F]">Pondělí – pátek</dt>
@@ -101,8 +101,8 @@ export default function ShowroomPage() {
             </div>
           </dl>
           <p className="mt-5 text-base leading-relaxed text-[#45302F]">
-            Showroom je otevřen výhradně po předchozí domluvě.
-            Pro rezervaci termínu nás kontaktujte telefonicky nebo e-mailem.
+            Otevřeno Po–Pá 10–16, návštěvu nám prosím předem napište.
+            Jiný čas nebo víkend se dá také domluvit, kontaktujte nás telefonicky nebo e-mailem.
           </p>
           <p className="mt-3 text-base leading-relaxed text-[#45302F]">
             V showroomu si vlasy vyberete a koupíte. Samotná aplikace probíhá v našem partnerském salonu v Praze.
