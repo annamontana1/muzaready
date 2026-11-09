@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Showroom Praha 1 | Výběr vlasů na objednání | Mùza Hair',
-  description: 'Showroom Mùza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Pá 10–16, jiné hodiny a víkend po domluvě, pouze na objednání.',
+  description: 'Showroom Mùza Hair — Revoluční 8, Praha 1 (metro Náměstí Republiky). Keratin, nanotapes, weft. Osobní konzultace a ukázky vlasů. Po–Pá 10–16, jiné hodiny a víkend po domluvě.',
   alternates: { canonical: 'https://www.muzahair.cz/showroom' },
 };
 
@@ -101,7 +101,7 @@ export default function ShowroomPage() {
             </div>
           </dl>
           <p className="mt-5 text-base leading-relaxed text-[#45302F]">
-            Otevřeno Po–Pá 10–16, návštěvu nám prosím předem napište.
+            Otevřeno Po–Pá 10–16, v jiný čas po domluvě. Návštěvu nám prosím předem napište.
             Jiný čas nebo víkend se dá také domluvit, kontaktujte nás telefonicky nebo e-mailem.
           </p>
           <p className="mt-3 text-base leading-relaxed text-[#45302F]">
