@@ -779,7 +779,7 @@ export default function OchranaOsobnichUdajuPage() {
                   <br />
                   <strong>Telefon:</strong> [TELEFON]
                   <br />
-                  <strong>Provozní doba:</strong> Po–Pá 10:00–16:00
+                  <strong>Provozní doba:</strong> Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě
                 </p>
               </div>
             </div>

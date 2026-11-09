@@ -230,7 +230,7 @@ export default function CeskeVlasyPage() {
                 },
                 {
                   q: 'Mohu navštívit výrobnu nebo showroom v Praze?',
-                  a: 'Showroom v Praze je dostupný po domluvě. Přijďte si vlasy prohlédnout osobně, porovnat délky, odstíny a konzultovat výběr zdarma.',
+                  a: 'Showroom na Revoluční 8 v Praze 1 je otevřený Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě. Přijďte si vlasy prohlédnout osobně, porovnat délky, odstíny a konzultovat výběr zdarma.',
                 },
                 {
                   q: 'Jak dlouho trvá výroba zakázkové sady?',

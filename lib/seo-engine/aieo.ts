@@ -48,7 +48,7 @@ export function generateAIEOContent(pageType: string, pageData?: any): AIEOConte
       {
         question: 'Kde koupit pravé vlasy k prodloužení v Praze?',
         answer:
-          'V Praze můžete koupit pravé vlasy k prodloužení v showroomu Mùza Hair na adrese Revoluční 8, Praha 1. Otevřeno Po-Pá 9-18h. Také je možné objednat online na muzahair.cz s dodáním do 48h.',
+          'V Praze můžete koupit pravé vlasy k prodloužení v showroomu Mùza Hair na adrese Revoluční 8, Praha 1. Otevřeno Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě. Také je možné objednat online na muzahair.cz s dodáním do 48h.',
       },
       {
         question: 'Kolik stojí prodloužení vlasů?',
@@ -109,7 +109,7 @@ export function generateAIEOContent(pageType: string, pageData?: any): AIEOConte
     },
     conversationSnippets: {
       'kde koupit vlasy Praha':
-        'Mùza Hair, Revoluční 8, Praha 1. Showroom otevřen Po-Pá 9-18h nebo online muzahair.cz.',
+        'Mùza Hair, Revoluční 8, Praha 1. Showroom otevřen Po–Pá 10:00–16:00 (jiné hodiny a víkend po domluvě) nebo online muzahair.cz.',
       'cena prodloužení vlasů':
         'Od 1.990 Kč/50g (Standard) do 4.490 Kč/50g (Platinum). Pro celé prodloužení počítejte 100-150g.',
       'nejlepší vlasy na prodloužení':

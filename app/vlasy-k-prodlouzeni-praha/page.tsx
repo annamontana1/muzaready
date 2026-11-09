@@ -449,14 +449,14 @@ export default function VlasyKProdlouzeniPrahaPage() {
             <div className="grid md:grid-cols-2 gap-8 items-start">
               <div>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  Mùza Hair showroom se nachází v Praze a je dostupný po předchozí telefonické nebo e-mailové domluvě. Otevřeno každý den v týdnu od 9:00 do 19:00 — včetně víkendů a svátků.
+                  Mùza Hair showroom najdete na Revoluční 8 v Praze 1. Otevřeno Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě — návštěvu nám prosím předem napište nebo zavolejte.
                 </p>
                 <div className="bg-ivory rounded-xl p-6 border border-gray-100 space-y-3">
                   <div className="flex items-start gap-3">
                     <span className="text-burgundy text-lg mt-0.5">📍</span>
                     <div>
                       <p className="font-semibold text-gray-900">Adresa showroomu</p>
-                      <p className="text-gray-600 text-sm">Praha, Česká republika</p>
+                      <p className="text-gray-600 text-sm">Revoluční 8, 110 00 Praha 1</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

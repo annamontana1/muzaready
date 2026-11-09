@@ -186,7 +186,7 @@ export default function NasPribehPage() {
           </div>
           <div className="border-t" style={{ borderColor: 'var(--text-dark)' }}>
             {[
-              { label: 'Showroom Praha', value: 'Centrum Prahy (přesná adresa po domluvě)' },
+              { label: 'Showroom Praha', value: 'Revoluční 8, Praha 1 · Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě' },
               { label: 'Telefon', value: '+420 728 722 880' },
               { label: 'Email', value: 'muzahaircz@gmail.com' },
             ].map((c) => (
