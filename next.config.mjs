@@ -59,6 +59,12 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Stará adresa obchodních podmínek (dřív přesměrovávala stránka sama, Google to hlásil jako chybu)
+      {
+        source: '/informace/obchodni-podminky',
+        destination: '/obchodni-podminky',
+        permanent: true,
+      },
       // Nový katalog (/katalog) nahrazuje staré stránky kategorií: všechny vedou do něj
       // (dočasně, ne permanentně, kdyby se staré stránky ještě vracely)
       {

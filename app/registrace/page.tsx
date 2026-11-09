@@ -200,7 +200,7 @@ export default function RegisterPage() {
 
         <p className="mt-4 text-xs text-text-soft text-center">
           Registrací souhlasíte s{' '}
-          <Link href="/informace/obchodni-podminky" className="text-burgundy hover:underline">
+          <Link href="/obchodni-podminky" className="text-burgundy hover:underline">
             obchodními podmínkami
           </Link>{' '}
           a{' '}

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 import { ProductSchema, BreadcrumbSchema } from '@/components/StructuredData';
 import { HAIR_COLORS, Product } from '@/types/product';
 import { priceCalculator } from '@/lib/price-calculator';
@@ -121,8 +121,14 @@ export async function generateStaticParams() {
 export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const product = await getProductBySlug(params.slug);
 
+  // Produkt už neexistuje (staré adresy z Googlu): trvale do katalogu se stejným druhem vlasů
   if (!product) {
-    notFound();
+    const slug = params.slug || '';
+    permanentRedirect(
+      slug.startsWith('nebarvene') ? '/katalog?druh=panenske'
+        : slug.startsWith('barvene') ? '/katalog?druh=stredoevropske'
+        : '/katalog'
+    );
   }
 
   // Parse query params for pre-filling configurator

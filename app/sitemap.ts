@@ -15,11 +15,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
 
     // Vlasy k prodloužení
-    { url: `${baseUrl}/vlasy-k-prodlouzeni`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/standard`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/luxe`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/platinum-edition`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/baby-shades`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
 
     // Metody zakončení
     { url: `${baseUrl}/metody-zakonceni`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
@@ -69,16 +64,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/katalog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.7 },
 
     // Nebarvené vlasy subpages
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/nebarvene-panenske`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/nebarvene-panenske/standard`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.75 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/nebarvene-panenske/luxe`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.75 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/nebarvene-panenske/platinum-edition`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.75 },
 
     // Barvené vlasy
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/barvene-vlasy`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/barvene-vlasy/standard`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.75 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/barvene-vlasy/luxe`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.75 },
-    { url: `${baseUrl}/vlasy-k-prodlouzeni/barvene-vlasy/platinum-edition`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.75 },
 
     // Příčesky subpages
     { url: `${baseUrl}/pricesky-a-paruky/clip-in-vlasy`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },

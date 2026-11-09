@@ -195,7 +195,7 @@ export default function JakNakupovatPage() {
               Vlasy objednané <strong>s konkrétním zakončením</strong> (mikrokeratin, keratin, pásky, weft, tapes) jsou vyráběny na zakázku podle vašich parametrů.
               Na toto zboží se <strong>nevztahuje právo na odstoupení od smlouvy</strong> do 14 dní dle § 1837 písm. d) občanského zákoníku.
               Vrátit lze pouze vlasy <strong>bez zakončení</strong> v původním, neporušeném stavu.{' '}
-              <Link href="/informace/obchodni-podminky" className="underline hover:opacity-75" style={{ color: 'var(--burgundy)' }}>
+              <Link href="/obchodni-podminky" className="underline hover:opacity-75" style={{ color: 'var(--burgundy)' }}>
                 Více v obchodních podmínkách
               </Link>.
             </p>
@@ -254,7 +254,7 @@ export default function JakNakupovatPage() {
               { href: '/informace/platba-a-vraceni', label: 'Platba a vrácení' },
               { href: '/informace/faq', label: 'Časté dotazy' },
               { href: '/ceny-aplikaci', label: 'Ceny aplikace' },
-              { href: '/informace/obchodni-podminky', label: 'Obchodní podmínky' },
+              { href: '/obchodni-podminky', label: 'Obchodní podmínky' },
               { href: '/sledovani-objednavky', label: 'Sledování objednávky' },
             ].map((l, i) => (
               <span key={l.href} className="flex items-center gap-4">

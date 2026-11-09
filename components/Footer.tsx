@@ -151,7 +151,7 @@ export default function Footer() {
               { href: '/informace/platba-a-vraceni', label: 'Vracení a výměna' },
               { href: '/informace/odstoupeni-od-smlouvy', label: 'Odstoupení od smlouvy' },
               { href: '/informace/faq', label: 'FAQ' },
-              { href: '/informace/obchodni-podminky', label: 'Obchodní podmínky' },
+              { href: '/obchodni-podminky', label: 'Obchodní podmínky' },
             ].map(({ href, label }) => (
               <li key={href}>
                 <Link
@@ -209,7 +209,7 @@ export default function Footer() {
           <p>Anna Zvinchuk · IČO 17989230 · neplátce DPH · Revoluční 8, 110 00 Praha 1</p>
         </div>
         <div className="flex gap-5">
-          <Link href="/informace/obchodni-podminky" className="hover:opacity-70 transition">
+          <Link href="/obchodni-podminky" className="hover:opacity-70 transition">
             Obchodní podmínky
           </Link>
           <span>·</span>

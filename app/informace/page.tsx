@@ -34,7 +34,7 @@ const items = [
     description: 'Přijímané způsoby platby, podmínky vrácení zboží a reklamace.',
   },
   {
-    href: '/informace/obchodni-podminky',
+    href: '/obchodni-podminky',
     title: 'Obchodní podmínky',
     description: 'Plné znění obchodních podmínek e-shopu Mùza Hair.',
   },

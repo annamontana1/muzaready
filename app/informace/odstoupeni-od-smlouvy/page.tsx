@@ -54,7 +54,7 @@ export default function OdstoupeniOdSmlouvyPage() {
             Právo na odstoupení se <strong>nevztahuje</strong> na zboží vyrobené na zakázku dle přání zákazníka
             (např. vlasové tresy šité na míru, keratinové pramínky s konkrétní gramáží a délkou na objednávku).
             Podrobnosti viz{' '}
-            <Link href="/informace/obchodni-podminky" className="underline hover:text-amber-900">Obchodní podmínky</Link>.
+            <Link href="/obchodni-podminky" className="underline hover:text-amber-900">Obchodní podmínky</Link>.
           </p>
         </div>
 

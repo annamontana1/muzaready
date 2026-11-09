@@ -164,7 +164,7 @@ export default function Header() {
                   {dropdownItem('/informace/odeslani-a-stav-objednavky', 'Doprava')}
                   {dropdownItem('/informace/platba-a-vraceni', 'Výměna a vrácení')}
                   {dropdownItem('/informace/faq', 'FAQ')}
-                  {dropdownItem('/informace/obchodni-podminky', 'Obchodní podmínky')}
+                  {dropdownItem('/obchodni-podminky', 'Obchodní podmínky')}
                   {dropdownItem('/showroom', 'Showroom Praha')}
                 </div>
               </div>
