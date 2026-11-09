@@ -64,7 +64,7 @@ function generateReceiptHtml(params: {
   <p class="total">Celkem: ${new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(totalAmount)}</p>
   ${notes ? `<p><em>Poznámka: ${notes}</em></p>` : ''}
   <div class="footer">
-    <p>Mùza Hair s.r.o. &bull; info@muzahair.cz &bull; muzahair.cz</p>
+    <p>Anna Zvinchuk — Mùza Hair Praha &bull; muzahaircz@gmail.com &bull; muzahair.cz</p>
     <p>Tato účtenka slouží jako doklad o komisním prodeji.</p>
   </div>
 </body>
@@ -232,7 +232,7 @@ export async function POST(
             ${notes ? `<p>Poznámka: ${notes}</p>` : ''}
             ${invoiceUrl ? `<p><a href="${invoiceUrl}">Zobrazit fakturu</a></p>` : ''}
             <hr/>
-            <p style="color:#888;font-size:12px;">Mùza Hair s.r.o. &bull; info@muzahair.cz</p>
+            <p style="color:#888;font-size:12px;">Anna Zvinchuk — Mùza Hair Praha &bull; muzahaircz@gmail.com</p>
           `,
           attachments: receiptHtml
             ? [

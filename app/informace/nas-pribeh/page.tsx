@@ -188,7 +188,7 @@ export default function NasPribehPage() {
             {[
               { label: 'Showroom Praha', value: 'Centrum Prahy (přesná adresa po domluvě)' },
               { label: 'Telefon', value: '+420 728 722 880' },
-              { label: 'Email', value: 'info@muzahair.cz' },
+              { label: 'Email', value: 'muzahaircz@gmail.com' },
             ].map((c) => (
               <div key={c.label} className="flex items-start gap-8 py-5 border-b" style={{ borderColor: 'var(--beige)' }}>
                 <div className="w-40 flex-shrink-0 text-[12px] tracking-[0.15em] uppercase font-normal" style={{ color: 'var(--text-soft)' }}>

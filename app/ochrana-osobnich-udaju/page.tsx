@@ -12,10 +12,11 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-text-dark">1. Správce osobních údajů</h2>
           <p>
-            <strong>Mùza Hair Praha</strong><br />
-            Revoluční 8, 110 00 Praha 1<br />
+            <strong>Anna Zvinchuk</strong> (značka Mùza Hair Praha)<br />
+            IČO: 17989230<br />
+            Provozovna: Revoluční 8, 110 00 Praha 1<br />
             Telefon: +420 728 722 880<br />
-            E-mail: info@muzahair.cz
+            E-mail: muzahaircz@gmail.com
           </p>
         </section>
 
@@ -89,7 +90,7 @@ export default function PrivacyPolicyPage() {
             <li><strong>Právo vznést námitku:</strong> proti zpracování na základě oprávněného zájmu</li>
             <li><strong>Právo odvolat souhlas:</strong> kdykoli odvolat souhlas s marketingovými e-maily</li>
           </ul>
-          <p className="mt-4">Pro uplatnění svých práv nás kontaktujte na <strong>info@muzahair.cz</strong>.</p>
+          <p className="mt-4">Pro uplatnění svých práv nás kontaktujte na <strong>muzahaircz@gmail.com</strong>.</p>
         </section>
 
         <section>
@@ -145,7 +146,7 @@ export default function PrivacyPolicyPage() {
             V případě jakýchkoli dotazů týkajících se ochrany osobních údajů nás prosím kontaktujte:
           </p>
           <p className="mt-4">
-            <strong>E-mail:</strong> info@muzahair.cz<br />
+            <strong>E-mail:</strong> muzahaircz@gmail.com<br />
             <strong>Telefon:</strong> +420 728 722 880<br />
             <strong>Adresa:</strong> Revoluční 8, 110 00 Praha 1
           </p>

@@ -19,7 +19,7 @@ export default function ReturnsPage() {
             <strong>1.2 Jak odstoupit:</strong>
           </p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Zašlete e-mail na <strong>info@muzahair.cz</strong> s uvedením čísla objednávky</li>
+            <li>Zašlete e-mail na <strong>muzahaircz@gmail.com</strong> s uvedením čísla objednávky</li>
             <li>Nebo vyplňte formulář na našem webu</li>
             <li>Zboží zašlete zpět na adresu: <strong>Revoluční 8, 110 00 Praha 1</strong></li>
           </ul>
@@ -80,7 +80,7 @@ export default function ReturnsPage() {
           <h2 className="text-2xl font-semibold mb-4 text-text-dark">4. Jak podat reklamaci</h2>
           <p><strong>Krok 1:</strong> Kontaktujte nás co nejdříve</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>E-mail: <strong>info@muzahair.cz</strong></li>
+            <li>E-mail: <strong>muzahaircz@gmail.com</strong></li>
             <li>Telefon: <strong>+420 728 722 880</strong></li>
             <li>Uveďte: číslo objednávky, popis vady, přiložte fotky</li>
           </ul>
@@ -209,7 +209,7 @@ export default function ReturnsPage() {
             neváhejte nás kontaktovat. Rádi vám poradíme!
           </p>
           <p className="mt-4">
-            <strong>E-mail:</strong> info@muzahair.cz<br />
+            <strong>E-mail:</strong> muzahaircz@gmail.com<br />
             <strong>Telefon:</strong> +420 728 722 880<br />
             <strong>WhatsApp:</strong> +420 728 722 880<br />
             <strong>Adresa:</strong> Revoluční 8, 110 00 Praha 1<br />

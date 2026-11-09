@@ -684,7 +684,7 @@ export const sendInvoiceEmail = async (
 
             <div class="footer">
               <p>
-                <strong>Mùza Hair s.r.o.</strong><br>
+                <strong>Anna Zvinchuk — Mùza Hair Praha</strong><br>
                 Revoluční 8, Praha<br>
                 Tel: +420 728 722 880 | Email: muzahaircz@gmail.com<br>
                 <a href="https://www.muzahair.cz" style="color: #3a2020;">www.muzahair.cz</a>

@@ -103,7 +103,7 @@ export async function POST(
             ${reason ? `<p>Důvod vrácení: ${reason}</p>` : ''}
             ${notes ? `<p>Poznámka: ${notes}</p>` : ''}
             <hr/>
-            <p style="color:#888;font-size:12px;">Mùza Hair s.r.o. &bull; info@muzahair.cz</p>
+            <p style="color:#888;font-size:12px;">Anna Zvinchuk — Mùza Hair Praha &bull; muzahaircz@gmail.com</p>
           `,
         });
 

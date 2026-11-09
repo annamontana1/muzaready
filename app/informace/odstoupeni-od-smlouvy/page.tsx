@@ -76,7 +76,7 @@ export default function OdstoupeniOdSmlouvyPage() {
           <div className="mb-6 p-4 bg-soft-cream rounded text-sm">
             <p className="font-bold text-text-dark mb-1">Prodávající (adresát):</p>
             <p className="text-text-mid">
-              Mùza Hair s.r.o.<br />
+              Anna Zvinchuk — Mùza Hair Praha<br />
               Revoluční 8, Praha 1, 110 00<br />
               IČO: 17989230<br />
               E-mail: muzahaircz@gmail.com
@@ -178,7 +178,7 @@ export default function OdstoupeniOdSmlouvyPage() {
 
           {/* Footer formuláře */}
           <div className="mt-8 pt-4 border-t border-warm-beige text-xs text-text-soft text-center">
-            Mùza Hair s.r.o. · Revoluční 8, Praha 1 · muzahaircz@gmail.com · +420 728 722 880
+            Anna Zvinchuk — Mùza Hair Praha · Revoluční 8, Praha 1 · muzahaircz@gmail.com · +420 728 722 880
           </div>
         </div>
 

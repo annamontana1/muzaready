@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         "invoiceNumber" TEXT NOT NULL UNIQUE,
         "orderId" TEXT NOT NULL UNIQUE,
 
-        "supplierName" TEXT NOT NULL DEFAULT 'Mùza Hair s.r.o.',
+        "supplierName" TEXT NOT NULL DEFAULT 'Anna Zvinchuk — Mùza Hair Praha',
         "supplierStreet" TEXT,
         "supplierCity" TEXT,
         "supplierZipCode" TEXT,

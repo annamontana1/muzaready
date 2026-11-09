@@ -1295,7 +1295,7 @@ Různé metody vyžadují různé typy vlasů. Keratin → standardní zápon. T
 ## FAQ — dodavatel vlasů pro salony
 
 ### Jak získat B2B ceny od Mùza Hair?
-Zaregistrujte se na [muzahair.cz/velkoobchod](/velkoobchod) nebo kontaktujte nás na info@muzahair.cz. Po ověření IČ vám nastavíme B2B přístup s velkoobchodními cenami.
+Zaregistrujte se na [muzahair.cz/velkoobchod](/velkoobchod) nebo kontaktujte nás na muzahaircz@gmail.com. Po ověření IČ vám nastavíme B2B přístup s velkoobchodními cenami.
 
 ### Mohu jako kadeřnice koupit vzorník odstínů?
 Ano — vzorník zasíláme zdarma na vyžádání registrovaným B2B partnerům. Obsahuje všechny aktuální odstíny v miniaturách.

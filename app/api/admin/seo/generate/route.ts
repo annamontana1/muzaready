@@ -172,7 +172,7 @@ function generateStructuredData(pageType: PageType, data: {
       "addressCountry": "CZ"
     },
     "telephone": "+420728722880",
-    "email": "info@muzahair.cz"
+    "email": "muzahaircz@gmail.com"
   };
 
   switch (pageType) {

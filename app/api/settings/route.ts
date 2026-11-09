@@ -10,7 +10,7 @@ const SETTINGS_ID = 'main';
 const DEFAULT_SETTINGS = {
   phone: '+420 728 722 880',
   phoneWhatsapp: '420728722880',
-  email: 'info@muzahair.cz',
+  email: 'muzahaircz@gmail.com',
   emailSupport: null,
   addressStreet: 'Revoluční 8',
   addressCity: 'Praha',
@@ -29,7 +29,7 @@ const DEFAULT_SETTINGS = {
   newsletterEnabled: true,
   newsletterTitle: 'Newsletter',
   newsletterSubtitle: 'Získejte slevu 10% na první nákup',
-  companyName: 'Mùza Hair s.r.o.',
+  companyName: 'Anna Zvinchuk — Mùza Hair Praha',
   logoUrl: '/images/logo/muza-logo.png',
   logoAlt: 'Mùza Hair Shop',
   faviconUrl: null,

@@ -77,14 +77,14 @@ export async function POST(request: NextRequest) {
         orderId: order.id,
 
         // Supplier info (will be configured via env vars or settings)
-        supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Mùza Hair s.r.o.',
-        supplierStreet: process.env.INVOICE_SUPPLIER_STREET,
-        supplierCity: process.env.INVOICE_SUPPLIER_CITY,
-        supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP,
+        supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Anna Zvinchuk — Mùza Hair Praha',
+        supplierStreet: process.env.INVOICE_SUPPLIER_STREET || 'Revoluční 8',
+        supplierCity: process.env.INVOICE_SUPPLIER_CITY || 'Praha 1',
+        supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP || '110 00',
         supplierCountry: 'CZ',
-        supplierIco: process.env.INVOICE_SUPPLIER_ICO,
+        supplierIco: process.env.INVOICE_SUPPLIER_ICO || '17989230',
         supplierDic: process.env.INVOICE_SUPPLIER_DIC,
-        supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'info@muzahair.cz',
+        supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'muzahaircz@gmail.com',
         supplierPhone: process.env.INVOICE_SUPPLIER_PHONE || '+420 728 722 880',
 
         // Customer info

@@ -17,7 +17,7 @@ export default function LowStockAlertsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [threshold, setThreshold] = useState(200);
-  const [adminEmail, setAdminEmail] = useState('info@muzahair.cz');
+  const [adminEmail, setAdminEmail] = useState('muzahaircz@gmail.com');
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
   const [emailSending, setEmailSending] = useState(false);
 
@@ -242,7 +242,7 @@ export default function LowStockAlertsPage() {
           </p>
           <p className="mt-3 text-xs text-gray-500 bg-gray-50 p-3 rounded font-mono">
             <strong className="block mb-1">Cron job příklad:</strong>
-            GET /api/admin/stock/check-low-stock?threshold=200&sendEmail=true&email=info@muzahair.cz
+            GET /api/admin/stock/check-low-stock?threshold=200&sendEmail=true&email=muzahaircz@gmail.com
           </p>
         </div>
       </div>

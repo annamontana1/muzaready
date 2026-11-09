@@ -28,10 +28,10 @@ export default function OchranaOsobnichUdajuPage() {
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-4">
             <h3 className="font-bold text-text-dark mb-2">Správce osobních údajů:</h3>
-            <p className="mb-2"><strong>Název:</strong> [NÁZEV SPOLEČNOSTI / JMÉNO PODNIKATELE]</p>
-            <p className="mb-2"><strong>IČO:</strong> [IČO]</p>
-            <p className="mb-2"><strong>Sídlo:</strong> Revoluční 8, Praha 1, 110 00</p>
-            <p className="mb-2"><strong>E-mail:</strong> [EMAIL]</p>
+            <p className="mb-2"><strong>Název:</strong> Anna Zvinchuk, fyzická osoba podnikající (značka Mùza Hair Praha)</p>
+            <p className="mb-2"><strong>IČO:</strong> 17989230</p>
+            <p className="mb-2"><strong>Provozovna:</strong> Revoluční 8, Praha 1, 110 00</p>
+            <p className="mb-2"><strong>E-mail:</strong> muzahaircz@gmail.com</p>
             <p className="mb-2"><strong>Telefon:</strong> [TELEFON]</p>
             <p className="text-sm text-text-mid mt-4">
               (dále jen „správce" nebo „my")
@@ -259,7 +259,7 @@ export default function OchranaOsobnichUdajuPage() {
                 <br />
                 <strong>Předávané údaje:</strong> Částka, e-mail, variabilní symbol (platební údaje zpracovává přímo brána)
                 <br />
-                <strong>Příjemci:</strong> [NÁZEV PLATEBNÍ BRÁNY]
+                <strong>Příjemci:</strong> GoPay s.r.o. (platební brána)
               </p>
             </div>
 
@@ -408,7 +408,7 @@ export default function OchranaOsobnichUdajuPage() {
               Pro uplatnění kteréhokoliv z výše uvedených práv nás kontaktujte:
             </p>
             <ul className="list-disc pl-6 text-text-mid">
-              <li><strong>E-mailem:</strong> [EMAIL]</li>
+              <li><strong>E-mailem:</strong> muzahaircz@gmail.com</li>
               <li><strong>Poštou:</strong> Revoluční 8, Praha 1, 110 00</li>
               <li><strong>Telefonicky:</strong> [TELEFON]</li>
             </ul>
@@ -664,7 +664,7 @@ export default function OchranaOsobnichUdajuPage() {
 
           <p className="mb-4">
             Pokud zjistíte, že nám dítě mladší 16 let poskytlo osobní údaje bez souhlasu zákonného
-            zástupce, kontaktujte nás prosím na <strong>[EMAIL]</strong> a tyto údaje neprodleně
+            zástupce, kontaktujte nás prosím na <strong>muzahaircz@gmail.com</strong> a tyto údaje neprodleně
             vymažeme.
           </p>
 
@@ -762,18 +762,20 @@ export default function OchranaOsobnichUdajuPage() {
               <div>
                 <h4 className="font-semibold text-text-dark mb-2">Správce osobních údajů</h4>
                 <p className="text-text-mid text-sm">
-                  <strong>Název:</strong> [NÁZEV SPOLEČNOSTI / JMÉNO PODNIKATELE]
+                  <strong>Název:</strong> Anna Zvinchuk (značka Mùza Hair Praha)
                   <br />
-                  <strong>IČO:</strong> [IČO]
+                  <strong>IČO:</strong> 17989230
                   <br />
-                  <strong>Adresa:</strong> Revoluční 8, Praha 1, 110 00
+                  <strong>Provozovna:</strong> Revoluční 8, Praha 1, 110 00
+                  <br />
+                  <strong>E-mail:</strong> muzahaircz@gmail.com
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold text-text-dark mb-2">Kontakt</h4>
                 <p className="text-text-mid text-sm">
-                  <strong>E-mail:</strong> [EMAIL]
+                  <strong>E-mail:</strong> muzahaircz@gmail.com
                   <br />
                   <strong>Telefon:</strong> [TELEFON]
                   <br />

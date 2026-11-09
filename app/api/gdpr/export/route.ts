@@ -140,12 +140,12 @@ export async function POST(request: NextRequest) {
         totalSpent: orders.reduce((sum, o) => sum + o.total, 0),
       },
       gdprInfo: {
-        controller: 'Mùza Hair s.r.o.',
-        controllerContact: 'info@muzahair.cz',
+        controller: 'Anna Zvinchuk — Mùza Hair Praha',
+        controllerContact: 'muzahaircz@gmail.com',
         dataRetentionPeriod: '7 let (daňové účely)',
         rights: [
           'Právo na přístup k údajům (tento export)',
-          'Právo na opravu údajů (kontaktujte info@muzahair.cz)',
+          'Právo na opravu údajů (kontaktujte muzahaircz@gmail.com)',
           'Právo na výmaz údajů (použijte /api/gdpr/delete)',
           'Právo na omezení zpracování',
           'Právo na přenositelnost údajů',

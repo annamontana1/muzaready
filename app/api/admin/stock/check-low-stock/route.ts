@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const threshold = parseInt(searchParams.get('threshold') || '200', 10);
     const sendEmail = searchParams.get('sendEmail') === 'true';
-    const adminEmail = searchParams.get('email') || 'info@muzahair.cz';
+    const adminEmail = searchParams.get('email') || 'muzahaircz@gmail.com';
 
     // Find SKUs with low available grams
     const lowStockItems = await prisma.sku.findMany({

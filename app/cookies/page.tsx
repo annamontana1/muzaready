@@ -198,7 +198,7 @@ export default function CookiesPage() {
             Pokud máte jakékoli dotazy týkající se používání cookies na našem webu, kontaktujte nás:
           </p>
           <p className="mt-4">
-            <strong>E-mail:</strong> info@muzahair.cz<br />
+            <strong>E-mail:</strong> muzahaircz@gmail.com<br />
             <strong>Telefon:</strong> +420 728 722 880<br />
             <strong>Adresa:</strong> Revoluční 8, 110 00 Praha 1
           </p>

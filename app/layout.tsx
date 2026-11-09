@@ -177,7 +177,10 @@ export default function RootLayout({
               {
                 '@type': 'Organization',
                 '@id': 'https://www.muzahair.cz/#organization',
-                name: 'Mùza Hair s.r.o.',
+                name: 'Mùza Hair Praha',
+                legalName: 'Anna Zvinchuk',
+                taxID: '17989230',
+                email: 'muzahaircz@gmail.com',
                 url: 'https://www.muzahair.cz',
                 logo: { '@type': 'ImageObject', url: 'https://www.muzahair.cz/logo.png' },
                 foundingDate: '2016',

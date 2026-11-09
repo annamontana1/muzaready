@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   tiktokUrl: null,
   youtubeUrl: null,
   copyrightText: '© {year} Mùza Hair. Všechna práva vyhrazena.',
-  companyName: 'Mùza Hair s.r.o.',
+  companyName: 'Anna Zvinchuk — Mùza Hair Praha',
 };
 
 export default function Footer() {
@@ -204,7 +204,10 @@ export default function Footer() {
         className="max-w-7xl mx-auto pt-7 flex flex-col md:flex-row justify-between items-center gap-4 text-sm"
         style={{ color: 'rgba(248,244,239,0.62)' }}
       >
-        <p>{copyrightText}</p>
+        <div className="text-center md:text-left">
+          <p>{copyrightText}</p>
+          <p>Anna Zvinchuk · IČO 17989230 · neplátce DPH · Revoluční 8, 110 00 Praha 1</p>
+        </div>
         <div className="flex gap-5">
           <Link href="/informace/obchodni-podminky" className="hover:opacity-70 transition">
             Obchodní podmínky
