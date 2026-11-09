@@ -7,8 +7,6 @@ Allow: /
 # Disallow admin/internal pages
 Disallow: /api/
 Disallow: /admin/
-Disallow: /_next/
-Disallow: /static/
 
 # Disallow auth and personalized pages
 Disallow: /auth/
