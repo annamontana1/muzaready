@@ -101,7 +101,7 @@ export default function ShowroomPage() {
             </div>
           </dl>
           <p className="mt-5 text-base leading-relaxed text-[#45302F]">
-            Otevřeno Po–Pá 10–16, v jiný čas po domluvě. Návštěvu nám prosím předem napište.
+            Otevřeno Po–Pá 10:00–16:00, jiné hodiny a víkend po domluvě. Návštěvu nám prosím předem napište.
             Jiný čas nebo víkend se dá také domluvit, kontaktujte nás telefonicky nebo e-mailem.
           </p>
           <p className="mt-3 text-base leading-relaxed text-[#45302F]">
