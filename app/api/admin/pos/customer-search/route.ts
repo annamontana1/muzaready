@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/admin-auth';
+import { searchCustomers } from '@/lib/customers';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,6 +20,26 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = getSupabaseAdminClient();
 
+    // 1) CRM zákazníci (jméno, e-mail, telefon, Instagram, firma, IČO)
+    const crm = await searchCustomers(q, 8);
+    const crmResult = crm.map((c) => ({
+      source: 'customer' as const,
+      customerId: c.id,
+      email: c.email || '',
+      firstName: c.firstName,
+      lastName: c.lastName,
+      phone: c.phone || '',
+      instagramHandle: c.instagramHandle || '',
+      companyName: c.companyName || '',
+      ico: c.ico || '',
+      dic: c.dic || '',
+      street: c.street || '',
+      city: c.city || '',
+      zipCode: c.zipCode || '',
+      isB2B: !!(c.companyName || c.ico),
+    }));
+
+    // 2) Starší zákazníci, kteří jsou zatím jen v objednávkách
     // Search orders — match name, email, phone, company, ICO
     // Use ilike for case-insensitive partial match
     const { data: orders } = await supabase
@@ -31,17 +52,14 @@ export async function GET(request: NextRequest) {
       .order('createdAt', { ascending: false })
       .limit(40);
 
-    if (!orders || orders.length === 0) {
-      return NextResponse.json({ customers: [] });
-    }
-
     // Deduplicate: prefer the most recent record per email.
     // If no email (or store email), fall back to phone dedup.
-    const seenEmails = new Set<string>();
-    const seenPhones = new Set<string>();
-    const unique: typeof orders = [];
+    // Zákazníky, které už vrátilo CRM, z objednávek neopakovat.
+    const seenEmails = new Set<string>(crmResult.map((c) => c.email.toLowerCase()).filter(Boolean));
+    const seenPhones = new Set<string>(crmResult.map((c) => c.phone.replace(/\s/g, '')).filter(Boolean));
+    const unique: NonNullable<typeof orders> = [];
 
-    for (const o of orders) {
+    for (const o of orders || []) {
       const emailKey = o.email?.toLowerCase();
       const phoneKey = o.phone?.replace(/\s/g, '');
 
@@ -54,15 +72,16 @@ export async function GET(request: NextRequest) {
       }
 
       unique.push(o);
-      if (unique.length >= 8) break;
+      if (crmResult.length + unique.length >= 8) break;
     }
 
-    const result = unique.map((o) => ({
+    const orderResult = unique.map((o) => ({
       source: 'order' as const,
       email: o.email === STORE_EMAIL ? '' : o.email,
       firstName: o.firstName,
       lastName: o.lastName,
       phone: o.phone || '',
+      instagramHandle: '',
       companyName: o.companyName || '',
       ico: o.ico || '',
       dic: o.dic || '',
@@ -72,7 +91,7 @@ export async function GET(request: NextRequest) {
       isB2B: !!(o.companyName || o.ico),
     }));
 
-    return NextResponse.json({ customers: result });
+    return NextResponse.json({ customers: [...crmResult, ...orderResult] });
   } catch (error: any) {
     console.error('Customer search error:', error);
     return NextResponse.json({ customers: [] });

@@ -29,11 +29,11 @@ async function getAccessToken(): Promise<string> {
     method: 'POST',
     headers: {
       'Authorization': `Basic ${credentials}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
       'Accept': 'application/json',
       'User-Agent': USER_AGENT,
     },
-    body: 'grant_type=client_credentials',
+    body: JSON.stringify({ grant_type: 'client_credentials' }),
   });
 
   if (!response.ok) {
@@ -102,11 +102,12 @@ export interface FakturoidContact {
  */
 export async function findContactByEmail(email: string): Promise<FakturoidContact | null> {
   try {
-    const contacts = await fakturoidFetch(`/subjects/search.json?query=${encodeURIComponent(email)}`);
-    if (contacts && contacts.length > 0) {
-      return contacts[0];
-    }
-    return null;
+    // Fakturoid v3: GET /subjects/search.json?query= (hledá ve jménu, e-mailu, IČO…)
+    const wanted = email.trim().toLowerCase();
+    const contacts = await fakturoidFetch(`/subjects/search.json?query=${encodeURIComponent(wanted)}`);
+    if (!Array.isArray(contacts)) return null;
+    // Fulltext vrací i částečné shody — fakturu smí dostat jen kontakt s přesně tímto e-mailem
+    return contacts.find((c: any) => (c?.email || '').trim().toLowerCase() === wanted) || null;
   } catch (error) {
     console.error('Fakturoid find contact error:', error);
     return null;
@@ -162,6 +163,7 @@ export interface FakturoidInvoice {
   lines: FakturoidInvoiceLine[];
   due?: number; // days until due
   proforma?: boolean; // create as proforma invoice
+  custom_id?: string; // naše ID objednávky (pro dohledání)
 }
 
 /**
@@ -170,7 +172,6 @@ export interface FakturoidInvoice {
 export async function createInvoice(invoice: FakturoidInvoice): Promise<any> {
   try {
     const { proforma, ...invoiceData } = invoice;
-    const endpoint = proforma ? '/invoices.json' : '/invoices.json';
     // Fakturoid v3: use document_type to distinguish
     const body = proforma
       ? { ...invoiceData, document_type: 'proforma' }
@@ -186,23 +187,41 @@ export async function createInvoice(invoice: FakturoidInvoice): Promise<any> {
 }
 
 /**
- * Convert proforma to final invoice in Fakturoid
+ * Convert proforma to final invoice in Fakturoid.
+ * Fakturoid v3: when a proforma payment is recorded via POST /payments.json,
+ * Fakturoid auto-creates the final invoice and sets proforma.related_id to its ID.
+ * No fire event needed — just fetch the proforma and read related_id.
  */
-export async function convertProformaToInvoice(proformaId: number): Promise<{ success: boolean; invoiceId?: number; invoiceNumber?: string; invoiceUrl?: string }> {
+export async function convertProformaToInvoice(proformaId: number, paidAmount?: number, currency?: string): Promise<{ success: boolean; invoiceId?: number; invoiceNumber?: string; invoiceUrl?: string }> {
   try {
-    // Fire "invoice" event on proforma to convert it
-    await fakturoidFetch(`/invoices/${proformaId}/fire.json`, {
-      method: 'POST',
-      body: JSON.stringify({ event: 'invoice' }),
-    });
+    // If a paid amount is provided, record the payment first (this triggers auto-creation of the invoice)
+    if (paidAmount !== undefined) {
+      await fakturoidFetch(`/invoices/${proformaId}/payments.json`, {
+        method: 'POST',
+        body: JSON.stringify({ amount: String(paidAmount), currency: currency || 'CZK' }),
+      });
+    }
 
-    // After conversion, get the new invoice details
-    const invoice = await fakturoidFetch(`/invoices/${proformaId}.json`);
+    // Fakturoid auto-creates the invoice when proforma is paid; read related_id
+    const proforma = await fakturoidFetch(`/invoices/${proformaId}.json`);
+    const relatedId = proforma?.related_id;
+
+    if (relatedId) {
+      const invoice = await fakturoidFetch(`/invoices/${relatedId}.json`);
+      return {
+        success: true,
+        invoiceId: invoice?.id,
+        invoiceNumber: invoice?.number,
+        invoiceUrl: invoice?.public_html_url,
+      };
+    }
+
+    // Proforma is paid but auto-invoice not yet generated; return proforma itself
     return {
       success: true,
-      invoiceId: invoice?.id,
-      invoiceNumber: invoice?.number,
-      invoiceUrl: invoice?.public_html_url,
+      invoiceId: proforma?.id,
+      invoiceNumber: proforma?.number,
+      invoiceUrl: proforma?.public_html_url,
     };
   } catch (error) {
     console.error('Fakturoid convertProformaToInvoice error:', error);
@@ -213,28 +232,58 @@ export async function convertProformaToInvoice(proformaId: number): Promise<{ su
 /**
  * Mark invoice as paid
  */
-export async function markInvoicePaid(invoiceId: number): Promise<void> {
+export async function markInvoicePaid(
+  invoiceId: number,
+  paidOn?: Date
+): Promise<{ success: boolean; alreadyPaid?: boolean; error?: string }> {
   try {
-    await fakturoidFetch(`/invoices/${invoiceId}/fire.json`, {
+    // Fakturoid v3: úhrada se zapisuje přes /payments.json (event "pay" už neexistuje).
+    // Bez `amount` se uhradí celý zbytek. Děkovný e-mail neposíláme z Fakturoidu —
+    // potvrzení platby odchází z e-shopu (jeden e-mail, ať je platba zapsaná odkudkoli).
+    await fakturoidFetch(`/invoices/${invoiceId}/payments.json`, {
       method: 'POST',
-      body: JSON.stringify({ event: 'pay' }),
+      body: JSON.stringify({
+        paid_on: (paidOn || new Date()).toISOString().split('T')[0],
+        send_thank_you_email: false,
+      }),
     });
-  } catch (error) {
+    return { success: true };
+  } catch (error: any) {
+    const message = String(error?.message || error);
+    // 403 „Payment cannot be added to already paid invoice“ = už je uhrazeno (např. spárováno bankou)
+    if (/already paid/i.test(message)) return { success: true, alreadyPaid: true };
     console.error('Fakturoid mark paid error:', error);
+    return { success: false, error: message };
+  }
+}
+
+/**
+ * Načte doklad z Fakturoidu (stav, číslo, veřejný odkaz).
+ */
+export async function getInvoice(invoiceId: number): Promise<any | null> {
+  try {
+    return await fakturoidFetch(`/invoices/${invoiceId}.json`);
+  } catch (error) {
+    console.error('Fakturoid get invoice error:', error);
+    return null;
   }
 }
 
 /**
  * Send invoice by email
  */
-export async function sendInvoiceByEmail(invoiceId: number, email?: string): Promise<void> {
+export async function sendInvoiceByEmail(invoiceId: number, email?: string): Promise<boolean> {
   try {
-    await fakturoidFetch(`/invoices/${invoiceId}/deliver.json`, {
+    // Fakturoid v3: POST /invoices/{id}/message.json (jen placené tarify).
+    // Předmět a text se berou z nastavení účtu; deliver_now obejde odesílací okno.
+    await fakturoidFetch(`/invoices/${invoiceId}/message.json`, {
       method: 'POST',
-      ...(email ? { body: JSON.stringify({ email }) } : {}),
+      body: JSON.stringify({ ...(email ? { email } : {}), deliver_now: true }),
     });
+    return true;
   } catch (error) {
     console.error('Fakturoid send email error:', error);
+    return false;
   }
 }
 
@@ -247,24 +296,33 @@ export async function updateInvoiceDueDate(invoiceId: number, dueDateIso: string
 
 /**
  * Cancel invoice in Fakturoid (storno)
- * Works for unpaid invoices. For paid invoices, creates a credit note.
+ * Works for unpaid invoices. For paid invoices, removes payment first then cancels.
  */
 export async function cancelInvoice(invoiceId: number): Promise<{ success: boolean; message?: string }> {
-  // Step 1: try direct cancel (works for unpaid invoices)
+  // Step 1: try direct cancel via fire event (works for unpaid invoices in v3)
   try {
-    await fakturoidFetch(`/invoices/${invoiceId}/cancel.json`, { method: 'POST' });
+    await fakturoidFetch(`/invoices/${invoiceId}/fire.json?event=cancel`, { method: 'POST' });
     return { success: true, message: 'Faktura stornována ve Fakturoidu' };
   } catch (firstError: any) {
-    // Step 2: invoice might be paid — try undepay first, then cancel
+    // Step 2: invoice might be paid — remove payment(s) first, then cancel
     try {
-      await fakturoidFetch(`/invoices/${invoiceId}/fire.json?event=undepay`, { method: 'POST' });
-      await fakturoidFetch(`/invoices/${invoiceId}/cancel.json`, { method: 'POST' });
-      return { success: true, message: 'Platba odznačena a faktura stornována ve Fakturoidu' };
+      // Get all payments on this invoice
+      const payments = await fakturoidFetch(`/invoices/${invoiceId}/payments.json`);
+      if (Array.isArray(payments) && payments.length > 0) {
+        for (const payment of payments) {
+          await fakturoidFetch(`/invoices/${invoiceId}/payments/${payment.id}.json`, {
+            method: 'DELETE',
+          });
+        }
+      }
+      // Now cancel
+      await fakturoidFetch(`/invoices/${invoiceId}/fire.json?event=cancel`, { method: 'POST' });
+      return { success: true, message: 'Platba odstraněna a faktura stornována ve Fakturoidu' };
     } catch (secondError: any) {
       console.error('Fakturoid cancelInvoice error:', secondError);
       return {
         success: false,
-        message: 'Fakturu nelze stornovat. Stornujte ji ručně ve Fakturoidu.',
+        message: 'Fakturu nelze stornovat automaticky. Stornujte ji ručně ve Fakturoidu.',
       };
     }
   }
@@ -296,6 +354,8 @@ export interface OrderForInvoice {
   paymentMethod?: string;
   isPaid?: boolean;
   proforma?: boolean; // create proforma (zálohová faktura) instead of regular invoice
+  dueDays?: number; // splatnost ve dnech (výchozí: zálohovka 3, faktura 14)
+  sendEmail?: boolean; // false = fakturu jen vytvořit, neposílat (výchozí true)
 }
 
 /**
@@ -309,6 +369,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
   invoiceId?: number;
   invoiceNumber?: string;
   invoiceUrl?: string;
+  emailSent?: boolean; // true = Fakturoid odeslal doklad zákazníkovi e-mailem
   error?: string;
 }> {
   try {
@@ -359,7 +420,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       order_number: order.orderId,
       payment_method: order.paymentMethod === 'gopay' ? 'card' : 'bank',
       currency: 'CZK',
-      due: order.proforma ? 3 : 14,
+      due: order.dueDays ?? (order.proforma ? 3 : 14),
       lines,
       proforma: order.proforma || false,
     });
@@ -374,19 +435,14 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
     }
 
     // 5. Send invoice/proforma email via Fakturoid
-    //    Fakturoid sám řeší odesílací okno (nastaveno na fakturoid.cz).
-    if (order.customerEmail) {
-      try {
-        await fakturoidFetch(`/invoices/${invoice.id}/deliver.json`, {
-          method: 'POST',
-          body: JSON.stringify({ email: order.customerEmail }),
-        });
-        console.log(`✅ Fakturoid email delivered for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}`);
-      } catch (deliverError: any) {
-        console.error(`❌ Fakturoid deliver FAILED for invoice ${invoice.id} (${invoice.number}) to ${order.customerEmail}:`, deliverError?.message || deliverError);
+    let emailSent = false;
+    if (order.customerEmail && order.sendEmail !== false) {
+      emailSent = await sendInvoiceByEmail(invoice.id, order.customerEmail);
+      if (emailSent) {
+        console.log(`✅ Fakturoid email sent for invoice ${invoice.id} (${invoice.number})`);
+      } else {
+        console.error(`❌ Fakturoid email FAILED for invoice ${invoice.id} (${invoice.number})`);
       }
-    } else {
-      console.warn(`⚠️ Fakturoid deliver skipped — no customerEmail for invoice ${invoice.id}`);
     }
 
     return {
@@ -394,6 +450,7 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
       invoiceId: invoice.id,
       invoiceNumber: invoice.number,
       invoiceUrl: invoice.public_html_url,
+      emailSent,
     };
   } catch (error: any) {
     console.error('Fakturoid createInvoiceFromOrder error:', error);

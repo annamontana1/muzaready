@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/admin-auth';
-import { createInvoiceFromOrder, isFakturoidConfigured } from '@/lib/fakturoid';
+import { isFakturoidConfigured } from '@/lib/fakturoid';
+import { findOrCreateCustomer, normalizeEmail, normalizeInstagram, normalizePhone } from '@/lib/customers';
+import { BANK_TRANSFER_DUE_DAYS, STORE_EMAIL, createFakturoidInvoiceForOrder } from '@/lib/order-invoice';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -20,7 +22,7 @@ interface PosItem {
 }
 
 interface PosBody {
-  channel: 'prodejna' | 'instagram' | 'eshop';
+  channel: 'prodejna' | 'store' | 'instagram' | 'eshop';
   customerType: 'anonymous' | 'new' | 'b2b';
   customer: {
     firstName?: string;
@@ -34,6 +36,7 @@ interface PosBody {
     street?: string;
     city?: string;
     zipCode?: string;
+    instagramHandle?: string;
   };
   items: PosItem[];
   discountPercent: number;
@@ -57,6 +60,36 @@ export async function POST(request: NextRequest) {
 
     if (!paymentMethod || !['hotovost', 'karta', 'prevod'].includes(paymentMethod)) {
       return NextResponse.json({ error: 'Neplatný způsob platby' }, { status: 400 });
+    }
+
+    // --- Zákazník ---
+    const isStoreSale = channel === 'prodejna' || channel === 'store';
+    const isTransfer = paymentMethod === 'prevod';
+    const customerEmail = normalizeEmail(customer?.email);
+    const customerPhone = normalizePhone(customer?.phone);
+    const customerInstagram = normalizeInstagram(customer?.instagramHandle);
+    const customerDisplayName = (
+      customer?.companyName || `${customer?.contactPerson || customer?.firstName || ''} ${customer?.lastName || ''}`
+    ).trim();
+
+    // Platba převodem = faktura na jméno → zákazníka musíme znát a umět mu ji doručit.
+    // (Dřív se takový prodej uložil na adresu prodejny a klient nešel dohledat.)
+    if (channel === 'instagram' || isTransfer) {
+      if (customerType === 'anonymous' || !customerDisplayName) {
+        return NextResponse.json(
+          { error: 'Vyplňte jméno zákazníka — u prodeje na fakturu nemůže být anonymní.' },
+          { status: 400 }
+        );
+      }
+      if (!customerEmail && !customerPhone && !customerInstagram) {
+        return NextResponse.json(
+          { error: 'Vyplňte aspoň jeden kontakt na zákazníka: e-mail, telefon nebo Instagram.' },
+          { status: 400 }
+        );
+      }
+    }
+    if (customer?.email && !customerEmail) {
+      return NextResponse.json({ error: 'E-mail zákazníka nemá platný tvar.' }, { status: 400 });
     }
 
     // --- Calculate totals ---
@@ -128,10 +161,35 @@ export async function POST(request: NextRequest) {
 
     const firstName = customer?.contactPerson || customer?.firstName || 'Prodejní';
     const lastName = customer?.lastName || (customerType === 'anonymous' ? 'Místo' : '');
-    const email = customer?.email || 'prodejna@muzahair.cz';
+    const email = customerEmail || STORE_EMAIL;
 
     const supabase = getSupabaseAdminClient();
     const now = new Date().toISOString();
+
+    const warnings: string[] = [];
+
+    // --- CRM: najít nebo založit zákazníka (e-mail → Instagram → telefon) ---
+    let customerId: string | null = null;
+    if (customerType !== 'anonymous') {
+      const crmCustomer = await findOrCreateCustomer({
+        firstName: customer?.contactPerson || customer?.firstName,
+        lastName: customer?.lastName,
+        email: customerEmail || undefined,
+        phone: customer?.phone,
+        instagramHandle: customer?.instagramHandle,
+        companyName: customer?.companyName,
+        ico: customer?.ico,
+        dic: customer?.dic,
+        street: customer?.street,
+        city: customer?.city,
+        zipCode: customer?.zipCode,
+        source: channel === 'instagram' ? 'instagram' : isStoreSale ? 'store' : 'admin',
+      });
+      customerId = crmCustomer?.id || null;
+      if (!customerId) {
+        warnings.push('Zákazníka se nepodařilo uložit do sekce Zákazníci — objednávka i faktura vznikly normálně.');
+      }
+    }
 
     // --- Find or create matching SKUs ---
     const structureMap: Record<string, string> = {
@@ -239,10 +297,11 @@ export async function POST(request: NextRequest) {
 
     // --- Create order ---
     const orderId = randomUUID();
-    const isPaid = paymentMethod !== 'prevod';
+    const isPaid = !isTransfer;
 
-    const { error: orderError } = await supabase.from('orders').insert({
+    const { data: insertedOrder, error: orderError } = await supabase.from('orders').insert({
       id: orderId,
+      customerId,
       email,
       firstName,
       lastName,
@@ -257,7 +316,7 @@ export async function POST(request: NextRequest) {
       deliveryMethod: shipping?.carrier || 'osobni',
       orderStatus: isPaid ? 'paid' : 'pending',
       paymentStatus: isPaid ? 'paid' : 'unpaid',
-      deliveryStatus: channel === 'prodejna' ? 'delivered' : 'pending',
+      deliveryStatus: isStoreSale ? 'delivered' : 'pending',
       paymentMethod: paymentMethodMap[paymentMethod] || 'cash',
       channel: channelMap[channel] || 'store',
       subtotal,
@@ -266,11 +325,14 @@ export async function POST(request: NextRequest) {
       total,
       tags: JSON.stringify(['pos', channel]),
       riskScore: 0,
-      notesInternal: note || `POS prodej – ${channel}`,
+      notesInternal: [
+        note || `POS prodej – ${channel}`,
+        customerInstagram ? `Instagram: @${customerInstagram}` : '',
+      ].filter(Boolean).join('\n'),
       paidAt: isPaid ? now : null,
       createdAt: now,
       updatedAt: now,
-    });
+    }).select('orderNumber').single();
 
     if (orderError) {
       console.error('Order create error:', orderError.message);
@@ -302,11 +364,12 @@ export async function POST(request: NextRequest) {
       skuId: itemSkuIds[idx],
       saleMode: 'BULK_G',
       grams: item.grams,
-      pricePerGram: item.pricePerGram,
+      // Sloupce jsou celočíselné; přesná částka je v lineTotal / assemblyFeeTotal
+      pricePerGram: Math.round(item.pricePerGram),
       lineTotal: item.lineTotal,
       nameSnapshot: item.name,
       ending: endingMap[item.ending] || 'NONE',
-      assemblyFeeCzk: item.endingPricePerGram,
+      assemblyFeeCzk: Math.round(item.endingPricePerGram),
       assemblyFeeTotal: item.endingTotal,
       createdAt: now,
     }));
@@ -314,6 +377,7 @@ export async function POST(request: NextRequest) {
     const { error: itemsError } = await supabase.from('order_items').insert(orderItemsData);
     if (itemsError) {
       console.error('Order items create error:', itemsError.message);
+      warnings.push('Položky objednávky se nepodařilo uložit — zkontrolujte objednávku v detailu.');
     }
 
     // --- Create order history entry ---
@@ -333,69 +397,41 @@ export async function POST(request: NextRequest) {
     }
 
     // --- Fakturoid ---
-    let invoiceResult = null;
-    if (invoiceType === 'fakturoid' && isFakturoidConfigured()) {
+    // Převod = vždy faktura (je na ní číslo účtu, VS a QR kód). Běžná faktura, ne zálohovka.
+    const wantsInvoice = invoiceType === 'fakturoid' || isTransfer;
+    let invoiceResult: Awaited<ReturnType<typeof createFakturoidInvoiceForOrder>> | null = null;
+    let invoiceEmailSent = false;
+
+    if (wantsInvoice && !isFakturoidConfigured()) {
+      warnings.push('Fakturoid není nakonfigurován — faktura nevznikla.');
+    } else if (wantsInvoice) {
       try {
-        const invoiceLines = processedItems.map((item) => ({
-          name: item.name + (item.ending !== 'Bez zakončení' ? ` + ${item.ending}` : ''),
-          quantity: item.grams,
-          unitPrice: item.pricePerGram + item.endingPricePerGram,
-          unit: 'g',
-        }));
+        invoiceResult = await createFakturoidInvoiceForOrder(orderId);
+        invoiceEmailSent = !!invoiceResult.emailSent;
 
-        if (shippingCost > 0 && shipping) {
-          invoiceLines.push({
-            name: `Doprava – ${shipping.carrier}`,
-            quantity: 1,
-            unitPrice: shippingCost,
-            unit: 'ks',
+        if (!invoiceResult.success) {
+          warnings.push(
+            `Fakturu se nepodařilo vytvořit (${invoiceResult.error || 'neznámá chyba'}). Vytvořte ji v detailu objednávky.`
+          );
+        } else if (customerEmail && !invoiceEmailSent && invoiceResult.invoiceUrl) {
+          // Fakturoid e-mail neodeslal → pošleme odkaz na fakturu sami
+          const { sendInvoiceLinkEmail } = await import('@/lib/email');
+          const dueDate = isPaid ? undefined : new Date(Date.now() + BANK_TRANSFER_DUE_DAYS * 24 * 60 * 60 * 1000);
+          invoiceEmailSent = await sendInvoiceLinkEmail(customerEmail, {
+            customerName: customerDisplayName,
+            orderNumber: insertedOrder?.orderNumber ?? orderId.substring(0, 8),
+            invoiceNumber: invoiceResult.invoiceNumber,
+            invoiceUrl: invoiceResult.invoiceUrl,
+            amount: total,
+            dueDate,
           });
+          if (!invoiceEmailSent) {
+            warnings.push('Fakturu se nepodařilo odeslat e-mailem — pošlete zákazníkovi odkaz ručně.');
+          }
         }
-
-        if (discountAmount > 0) {
-          invoiceLines.push({
-            name: `Sleva ${discountPercent}%`,
-            quantity: 1,
-            unitPrice: -discountAmount,
-            unit: 'ks',
-          });
-        }
-
-        // Use the actual customer email only — not the store fallback.
-        // Using the store email would find an existing contact and apply its name instead of the typed one.
-        const invoiceEmail = customer?.email || undefined;
-
-        invoiceResult = await createInvoiceFromOrder({
-          orderId,
-          customerName: customer?.companyName || `${firstName} ${lastName}`.trim(),
-          customerEmail: invoiceEmail,
-          customerPhone: customer?.phone,
-          customerIco: customer?.ico,
-          customerDic: customer?.dic,
-          customerStreet: customer?.street,
-          customerCity: customer?.city,
-          customerZip: customer?.zipCode,
-          items: invoiceLines,
-          shippingPrice: 0,
-          paymentMethod: paymentMethodMap[paymentMethod] || 'cash',
-          isPaid,
-          proforma: paymentMethod === 'prevod',
-        });
-
-        if (invoiceResult?.success && invoiceResult.invoiceId) {
-          await supabase
-            .from('orders')
-            .update({
-              fakturoidInvoiceId: String(invoiceResult.invoiceId),
-              fakturoidIsProforma: paymentMethod === 'prevod',
-              fakturoidInvoiceUrl: invoiceResult.invoiceUrl || null,
-              fakturoidInvoiceNum: invoiceResult.invoiceNumber || null,
-              updatedAt: new Date().toISOString(),
-            })
-            .eq('id', orderId);
-        }
-      } catch (invoiceError) {
+      } catch (invoiceError: any) {
         console.error('Fakturoid invoice error (non-blocking):', invoiceError);
+        warnings.push('Chyba při vytváření faktury — vytvořte ji v detailu objednávky.');
       }
     }
 
@@ -405,12 +441,28 @@ export async function POST(request: NextRequest) {
         message: 'Prodej byl úspěšně vytvořen',
         order: {
           id: orderId,
+          orderNumber: insertedOrder?.orderNumber ?? null,
           total,
           status: isPaid ? 'paid' : 'pending',
           paymentMethod,
           itemCount: processedItems.length,
         },
-        invoice: invoiceResult,
+        customer: {
+          id: customerId,
+          name: customerDisplayName,
+          email: customerEmail,
+          instagramHandle: customerInstagram,
+        },
+        invoice: invoiceResult
+          ? {
+              success: invoiceResult.success,
+              invoiceNumber: invoiceResult.invoiceNumber || null,
+              invoiceUrl: invoiceResult.invoiceUrl || null,
+              emailSent: invoiceEmailSent,
+              dueDays: isPaid ? null : BANK_TRANSFER_DUE_DAYS,
+            }
+          : null,
+        warnings,
       },
       { status: 201 }
     );

@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 
 interface Customer {
   id: string;
-  source: 'registered' | 'guest';
+  source: 'registered' | 'guest' | 'customer';
+  instagramHandle?: string | null;
   email: string;
   firstName: string;
   lastName: string;
@@ -175,7 +176,7 @@ export default function CustomersPage() {
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Hledat jmeno, email, telefon, firmu..."
+              placeholder="Hledat jméno, e-mail, telefon, Instagram, firmu…"
               className="w-full pl-10 pr-4 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37]"
             />
           </div>
@@ -305,12 +306,15 @@ export default function CustomersPage() {
                           {customer.companyName && (
                             <div className="text-xs text-stone-400">{customer.companyName}</div>
                           )}
+                          {customer.instagramHandle && (
+                            <div className="text-xs text-stone-400">@{customer.instagramHandle}</div>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-stone-600">
                       <div className="flex items-center gap-1.5">
-                        {customer.email}
+                        {customer.email || '\u2014'}
                         {customer.source === 'guest' && (
                           <span className="text-[10px] bg-stone-100 text-stone-400 px-1.5 py-0.5 rounded">
                             host

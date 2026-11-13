@@ -48,6 +48,20 @@ interface CustomerData {
   street: string;
   city: string;
   zipCode: string;
+  instagramHandle: string;
+}
+
+interface SaleResult {
+  orderId: string;
+  orderNumber: number | null;
+  total: number;
+  customerName: string;
+  customerEmail: string | null;
+  invoiceNumber: string | null;
+  invoiceUrl: string | null;
+  emailSent: boolean;
+  dueDays: number | null;
+  warnings: string[];
 }
 
 interface ShippingOption {
@@ -57,7 +71,8 @@ interface ShippingOption {
 }
 
 interface CustomerSuggestion {
-  source: 'registered' | 'order';
+  source: 'registered' | 'order' | 'customer';
+  instagramHandle?: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -186,6 +201,7 @@ export default function UnifiedNewSalePage() {
     street: '',
     city: '',
     zipCode: '',
+    instagramHandle: '',
   });
 
   // ARES lookup
@@ -274,6 +290,7 @@ export default function UnifiedNewSalePage() {
       street: s.street || '',
       city: s.city || '',
       zipCode: s.zipCode || '',
+      instagramHandle: s.instagramHandle || '',
     });
     if (s.isB2B) setCustomerType('b2b');
     else setCustomerType('new');
@@ -322,6 +339,9 @@ export default function UnifiedNewSalePage() {
 
   // Submit
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Hotový prodej na fakturu — potvrzovací obrazovka s odkazem na fakturu
+  const [saleResult, setSaleResult] = useState<SaleResult | null>(null);
+  const [copied, setCopied] = useState<'link' | 'message' | null>(null);
 
   // ─── Derived values ──────────────────────────────────────────
 
@@ -501,7 +521,40 @@ export default function UnifiedNewSalePage() {
     if (ch === 'prodejna') setPaymentMethod('hotovost');
     else if (ch === 'instagram') setPaymentMethod('prevod');
     else setPaymentMethod('hotovost');
-    setInvoiceType(null);
+    // Instagram = převod na fakturu → zákazník nemůže být anonymní a faktura je daná
+    if (ch === 'instagram') {
+      setInvoiceType('fakturoid');
+      setCustomerType((prev) => (prev === 'anonymous' ? 'new' : prev));
+    } else {
+      setInvoiceType(null);
+    }
+  }
+
+  // Prodej na fakturu (Instagram nebo převod): jméno + aspoň jeden kontakt
+  const needsCustomer = channel === 'instagram' || paymentMethod === 'prevod';
+  const customerName = (customerType === 'b2b'
+    ? customer.companyName || customer.contactPerson
+    : customer.firstName
+  ).trim();
+  const hasContact = !!(customer.email.trim() || customer.phone.trim() || customer.instagramHandle.trim());
+  const customerProblem: string | null = !needsCustomer
+    ? null
+    : customerType === 'anonymous'
+      ? 'Prodej na fakturu nemůže být anonymní — vyplňte zákazníka.'
+      : !customerName
+        ? 'Vyplňte jméno zákazníka.'
+        : !hasContact
+          ? 'Vyplňte aspoň jeden kontakt: e-mail, telefon nebo Instagram.'
+          : null;
+
+  async function copyText(text: string, what: 'link' | 'message') {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(what);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      showToast('Kopírování se nezdařilo — označte text a zkopírujte ručně', 'error');
+    }
   }
 
   // ─── Submit ──────────────────────────────────────────────────
@@ -509,6 +562,11 @@ export default function UnifiedNewSalePage() {
   async function handleSubmit() {
     if (cart.length === 0) {
       showToast('Nejdříve přidejte položky do košíku', 'error');
+      return;
+    }
+
+    if (customerProblem) {
+      showToast(customerProblem, 'error');
       return;
     }
 
@@ -532,6 +590,7 @@ export default function UnifiedNewSalePage() {
                 lastName: customer.lastName,
                 email: customer.email,
                 phone: customer.phone,
+                instagramHandle: customer.instagramHandle || undefined,
                 ico: customer.ico || undefined,
                 street: customer.street || undefined,
                 city: customer.city || undefined,
@@ -540,9 +599,14 @@ export default function UnifiedNewSalePage() {
             : {
                 companyName: customer.companyName,
                 ico: customer.ico,
+                dic: customer.dic || undefined,
                 firstName: customer.contactPerson,
                 email: customer.email,
                 phone: customer.phone,
+                instagramHandle: customer.instagramHandle || undefined,
+                street: customer.street || undefined,
+                city: customer.city || undefined,
+                zipCode: customer.zipCode || undefined,
               },
         items: cart.map((item) => ({
           category: item.config.category,
@@ -579,7 +643,22 @@ export default function UnifiedNewSalePage() {
       showToast('Prodej byl úspěšně vytvořen', 'success');
 
       const orderId = data.order?.id;
-      if (invoiceType === 'uctenka') {
+      if (data.invoice || paymentMethod === 'prevod') {
+        // Faktura: zůstat na potvrzovací obrazovce (odkaz na fakturu, zpráva do DM)
+        setSaleResult({
+          orderId,
+          orderNumber: data.order?.orderNumber ?? null,
+          total: data.order?.total ?? grandTotal,
+          customerName: data.customer?.name || customerName,
+          customerEmail: data.customer?.email || null,
+          invoiceNumber: data.invoice?.invoiceNumber || null,
+          invoiceUrl: data.invoice?.invoiceUrl || null,
+          emailSent: !!data.invoice?.emailSent,
+          dueDays: data.invoice?.dueDays ?? null,
+          warnings: data.warnings || [],
+        });
+        window.scrollTo({ top: 0 });
+      } else if (invoiceType === 'uctenka') {
         router.push(`/admin/prodeje/doklad?id=${orderId}`);
       } else {
         router.push('/admin/objednavky');
@@ -601,6 +680,103 @@ export default function UnifiedNewSalePage() {
   const btnOutline = 'border border-stone-300 hover:bg-stone-50 text-stone-700 font-medium px-4 py-2 rounded-lg transition-colors';
 
   const shadeOptions = getShadeRange(productCategory, productType);
+
+  // ─── Hotovo: prodej na fakturu ───────────────────────────────
+
+  if (saleResult) {
+    const r = saleResult;
+    const unpaid = r.dueDays !== null;
+    const dmMessage = r.invoiceUrl
+      ? [
+          `Dobrý den, děkujeme za Vaši objednávku 🤍`,
+          `Fakturu na ${formatPrice(r.total)} najdete zde: ${r.invoiceUrl}`,
+          unpaid
+            ? `Je na ní číslo účtu, variabilní symbol i QR kód pro platbu. Splatnost je ${r.dueDays} dny. Po přijetí platby Vám pošleme potvrzení.`
+            : `Faktura je uhrazená a slouží jako doklad o zaplacení.`,
+        ].join('\n')
+      : '';
+
+    return (
+      <div className="max-w-2xl mx-auto py-8 px-4">
+        <div className={sectionClass}>
+          <h1 className="text-2xl font-bold text-stone-800 mb-1">Prodej uložen</h1>
+          <p className="text-sm text-stone-500 mb-5">
+            {r.orderNumber ? `Objednávka č. ${r.orderNumber} · ` : ''}{r.customerName} · {formatPrice(r.total)}
+          </p>
+
+          {r.warnings.length > 0 && (
+            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 space-y-1">
+              {r.warnings.map((w, i) => <p key={i}>{w}</p>)}
+            </div>
+          )}
+
+          <dl className="text-sm divide-y divide-stone-100 border-y border-stone-100 mb-5">
+            <div className="flex justify-between gap-4 py-2.5">
+              <dt className="text-stone-500">Zákazník</dt>
+              <dd className="font-medium text-stone-800 text-right">Uložen do zákazníků</dd>
+            </div>
+            <div className="flex justify-between gap-4 py-2.5">
+              <dt className="text-stone-500">Faktura</dt>
+              <dd className="font-medium text-stone-800 text-right">
+                {r.invoiceNumber ? `${r.invoiceNumber} — ${unpaid ? `čeká na platbu, splatnost ${r.dueDays} dny` : 'uhrazená'}` : 'Nevznikla'}
+              </dd>
+            </div>
+            <div className="flex justify-between gap-4 py-2.5">
+              <dt className="text-stone-500">E-mail s fakturou</dt>
+              <dd className={`font-medium text-right ${r.emailSent ? 'text-green-700' : 'text-amber-700'}`}>
+                {r.emailSent
+                  ? `Odeslán na ${r.customerEmail}`
+                  : r.customerEmail
+                    ? 'Neodeslán — pošlete odkaz ručně'
+                    : 'Zákazník nemá e-mail — pošlete odkaz do zprávy'}
+              </dd>
+            </div>
+          </dl>
+
+          {r.invoiceUrl && (
+            <div className="space-y-3 mb-6">
+              <label className={labelClass}>Zpráva pro zákazníka (Instagram, WhatsApp…)</label>
+              <textarea
+                readOnly
+                rows={5}
+                className={inputClass + ' bg-stone-50 text-stone-700'}
+                value={dmMessage}
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <div className="flex flex-wrap gap-2">
+                <button type="button" className={btnPrimary} onClick={() => copyText(dmMessage, 'message')}>
+                  {copied === 'message' ? 'Zkopírováno ✓' : 'Zkopírovat zprávu'}
+                </button>
+                <button type="button" className={btnOutline} onClick={() => copyText(r.invoiceUrl!, 'link')}>
+                  {copied === 'link' ? 'Zkopírováno ✓' : 'Zkopírovat jen odkaz'}
+                </button>
+                <a href={r.invoiceUrl} target="_blank" rel="noopener noreferrer" className={btnOutline}>
+                  Otevřít fakturu
+                </a>
+              </div>
+            </div>
+          )}
+
+          {unpaid && (
+            <p className="text-sm text-stone-600 bg-stone-50 rounded-lg px-4 py-3 mb-6">
+              Až platba dorazí, otevřete objednávku a přepněte platbu na <strong>Zaplaceno</strong>. Faktura se
+              označí jako uhrazená a zákazníkovi odejde potvrzení platby. Když platbu spáruje Fakturoid z banky,
+              stane se to samo.
+            </p>
+          )}
+
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className={btnPrimary} onClick={() => router.push(`/admin/objednavky/${r.orderId}`)}>
+              Otevřít objednávku
+            </button>
+            <button type="button" className={btnOutline} onClick={() => window.location.reload()}>
+              Další prodej
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ─── JSX ─────────────────────────────────────────────────────
 
@@ -640,7 +816,7 @@ export default function UnifiedNewSalePage() {
 
         {/* Vyhledat zákazníka */}
         <div className="relative mb-4" ref={customerSearchRef}>
-          <label className={labelClass}>Vyhledat zákazníka (jméno, email, firma, IČO…)</label>
+          <label className={labelClass}>Vyhledat zákazníka (jméno, e-mail, telefon, Instagram, firma, IČO…)</label>
           <div className="relative">
             <input
               type="text"
@@ -692,6 +868,7 @@ export default function UnifiedNewSalePage() {
                   </div>
                   <div className="text-xs text-stone-500 mt-0.5 flex gap-3">
                     {s.email && <span>{s.email}</span>}
+                    {s.instagramHandle && <span>@{s.instagramHandle}</span>}
                     {s.phone && <span>{s.phone}</span>}
                     {s.ico && <span>IČO: {s.ico}</span>}
                   </div>
@@ -718,7 +895,9 @@ export default function UnifiedNewSalePage() {
               key={ct.value}
               type="button"
               onClick={() => setCustomerType(ct.value)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              disabled={ct.value === 'anonymous' && needsCustomer}
+              title={ct.value === 'anonymous' && needsCustomer ? 'Prodej na fakturu nemůže být anonymní' : undefined}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                 customerType === ct.value
                   ? 'bg-[#722F37] text-white'
                   : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
@@ -760,6 +939,17 @@ export default function UnifiedNewSalePage() {
                   value={customer.phone}
                   onChange={(e) => setCustomer((p) => ({ ...p, phone: e.target.value }))}
                   placeholder="+420..."
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Instagram</label>
+                <input
+                  className={inputClass}
+                  value={customer.instagramHandle}
+                  onChange={(e) => setCustomer((p) => ({ ...p, instagramHandle: e.target.value }))}
+                  placeholder="@jmeno"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                 />
               </div>
               <div>
@@ -918,11 +1108,31 @@ export default function UnifiedNewSalePage() {
                 placeholder="+420..."
               />
             </div>
+            <div>
+              <label className={labelClass}>Instagram</label>
+              <input
+                className={inputClass}
+                value={customer.instagramHandle}
+                onChange={(e) => setCustomer((p) => ({ ...p, instagramHandle: e.target.value }))}
+                placeholder="@jmeno"
+                autoCapitalize="none"
+                autoCorrect="off"
+              />
+            </div>
           </div>
         )}
 
         {customerType === 'anonymous' && (
           <p className="text-sm text-stone-500 italic">Bez záznamu zákazníka</p>
+        )}
+
+        {customerType !== 'anonymous' && (
+          <p className={`mt-4 text-xs ${customerProblem ? 'text-red-600' : 'text-stone-500'}`}>
+            {customerProblem
+              || (needsCustomer && !customer.email.trim()
+                ? 'Bez e-mailu faktura neodejde sama — po uložení dostanete odkaz, který pošlete do zprávy.'
+                : 'Zákazník se po uložení objeví v sekci Zákazníci a příště ho najdete ve vyhledávání.')}
+          </p>
         )}
       </div>
 
@@ -1421,7 +1631,7 @@ export default function UnifiedNewSalePage() {
           {channel === 'instagram' && (
             <div className="bg-stone-50 rounded-lg px-4 py-3 text-sm text-stone-600">
               <span className="font-medium text-stone-700">Převod na účet</span>
-              <span className="ml-2 text-stone-500">— bude vygenerována proforma faktura</span>
+              <span className="ml-2 text-stone-500">— zákazník dostane fakturu s QR platbou</span>
             </div>
           )}
 
@@ -1447,7 +1657,16 @@ export default function UnifiedNewSalePage() {
       )}
 
       {/* ── 9. FAKTURA ──────────────────────────────────────── */}
-      {cart.length > 0 && (
+      {cart.length > 0 && needsCustomer && (
+        <div className={sectionClass}>
+          <h2 className="text-lg font-semibold text-stone-800 mb-2">Faktura</h2>
+          <p className="text-sm text-stone-600">
+            Platba převodem: po uložení se ve Fakturoidu vystaví faktura s QR platbou a splatností 3 dny
+            {customer.email.trim() ? ` a odešle se na ${customer.email.trim()}.` : '. Odkaz na ni pošlete zákazníkovi do zprávy.'}
+          </p>
+        </div>
+      )}
+      {cart.length > 0 && !needsCustomer && (
         <div className={sectionClass}>
           <h2 className="text-lg font-semibold text-stone-800 mb-4">Chce zákazník fakturu?</h2>
           <div className="grid grid-cols-2 gap-3">
@@ -1492,9 +1711,7 @@ export default function UnifiedNewSalePage() {
 
           {invoiceType === 'fakturoid' && (
             <p className="mt-3 text-xs text-[#722F37] bg-[#722F37]/5 border border-[#722F37]/20 rounded-lg px-3 py-2">
-              {paymentMethod === 'prevod'
-                ? '⏳ Převod na účet: nejprve se vytvoří proforma faktura. Po potvrzení platby v detailu objednávky klikněte "Vytvořit fakturu".'
-                : '✅ Fakturoid faktura bude vytvořena a zákazník ji dostane emailem'}
+              ✅ Fakturoid faktura bude vytvořena jako uhrazená a zákazník ji dostane e-mailem
             </p>
           )}
           {invoiceType === 'uctenka' && (
@@ -1580,8 +1797,7 @@ export default function UnifiedNewSalePage() {
             <div className="bg-white rounded-lg px-3 py-2 border border-stone-200 flex justify-between items-center">
               <span className="text-stone-500">Platba:</span>
               <span className="font-medium text-stone-700">
-                {channel === 'instagram' ? 'Převod na účet (proforma faktura)' :
-                  paymentMethod === 'prevod' ? 'Převod (proforma faktura)' :
+                {channel === 'instagram' || paymentMethod === 'prevod' ? 'Převod na účet (faktura, splatnost 3 dny)' :
                   paymentMethod === 'hotovost' ? 'Hotovost (pokladní doklad)' : 'Karta (Fakturoid faktura)'}
               </span>
             </div>
@@ -1592,10 +1808,12 @@ export default function UnifiedNewSalePage() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={isSubmitting || cart.length === 0 || !invoiceType}
+              disabled={isSubmitting || cart.length === 0 || (!invoiceType && !needsCustomer) || !!customerProblem}
               className={`${btnPrimary} text-base px-8 py-3`}
             >
-              {isSubmitting ? 'Vytvářím...' : invoiceType === 'fakturoid'
+              {isSubmitting ? 'Vytvářím...' : customerProblem
+                ? 'Doplňte zákazníka ↑'
+                : needsCustomer || invoiceType === 'fakturoid'
                 ? '🧾 Potvrdit + vytvořit fakturu'
                 : invoiceType === 'uctenka'
                 ? '📋 Potvrdit + vytisknout doklad'

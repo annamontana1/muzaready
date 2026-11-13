@@ -1,136 +1,142 @@
-// Register this webhook in Fakturoid:
-// App.fakturoid.cz → Nastavení → Webhooky → Přidat webhook
-// URL: https://www.muzahair.cz/api/webhooks/fakturoid
-// Events: invoice_paid, proforma_paid, invoice_overdue
+// Webhook z Fakturoidu — platba spárovaná z banky / faktura po splatnosti.
+//
+// Nastavení ve Fakturoidu: Nastavení → Webhooky → Přidat webhook
+//   URL:     https://muzahair.cz/api/webhooks/fakturoid
+//   Události: invoice_paid, invoice_overdue
+//   (volitelně) Authorization hlavička = hodnota env FAKTUROID_WEBHOOK_SECRET
+//
+// Bezpečnost: tělu webhooku se nevěří. Z něj se vezme jen ID dokladu a jeho stav
+// se ověří přímo v API Fakturoidu — podvržený požadavek tak nic nezmění.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { convertProformaToInvoice } from '@/lib/fakturoid';
+import { cancelInvoice } from '@/lib/fakturoid';
+import { customerEmailOf, settleOrderPaid, verifyInvoiceStatus } from '@/lib/order-invoice';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { event, invoice } = body;
-
-    if (!invoice?.number) {
-      return NextResponse.json({ ok: true });
+    // Volitelná kontrola sdíleného tajemství (když je nastavené na obou stranách)
+    const secret = process.env.FAKTUROID_WEBHOOK_SECRET;
+    if (secret && req.headers.get('authorization') !== secret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const invoiceNumber = invoice.number as string;
-    const paidAt = invoice.paid_at ? new Date(invoice.paid_at) : new Date();
+    const payload = await req.json();
 
-    if (event === 'invoice_paid' || event === 'proforma_paid') {
-      // Try to find matching Order by fakturoidInvoiceNum
-      const order = await prisma.order.findFirst({
-        where: {
-          fakturoidInvoiceNum: invoiceNumber,
+    // Fakturoid v3: { webhook_id, event_name, created_at, body: { invoice, payment? } }
+    // (starší tvar { event, invoice } necháváme pro jistotu taky)
+    const event: string = payload?.event_name || payload?.event || '';
+    const invoice = payload?.body?.invoice || payload?.invoice;
+    const invoiceId = Number(invoice?.id);
+
+    if (!invoiceId || (event !== 'invoice_paid' && event !== 'invoice_overdue')) {
+      return NextResponse.json({ ok: true, ignored: true });
+    }
+
+    // ── Ověření u Fakturoidu ───────────────────────────────────────────────
+    const expected = event === 'invoice_paid' ? 'paid' : 'overdue';
+    const verified = await verifyInvoiceStatus(invoiceId, expected);
+    if (!verified.ok) {
+      console.warn(`Fakturoid webhook ${event} for invoice ${invoiceId} not confirmed by API — ignored`);
+      return NextResponse.json({ ok: true, ignored: true });
+    }
+
+    const number: string | undefined = verified.invoice?.number;
+    const order = await prisma.order.findFirst({
+      where: {
+        OR: [
+          { fakturoidInvoiceId: String(invoiceId) },
+          ...(number ? [{ fakturoidInvoiceNum: number }] : []),
+        ],
+      },
+    });
+
+    if (!order) {
+      // Doklad nepatří k žádné objednávce e-shopu (např. ruční faktura) — nic neděláme
+      return NextResponse.json({ ok: true, ignored: true });
+    }
+
+    // ── Zaplaceno ──────────────────────────────────────────────────────────
+    if (event === 'invoice_paid') {
+      const paidOn = verified.invoice?.paid_on ? new Date(verified.invoice.paid_on) : new Date();
+
+      // Atomický přechod na „zaplaceno“ — proběhne jen jednou, i když webhook
+      // přijde opakovaně nebo objednávku mezitím odškrtl admin.
+      const transition = await prisma.order.updateMany({
+        where: { id: order.id, paymentStatus: { not: 'paid' } },
+        data: {
+          paymentStatus: 'paid',
+          paidAt: paidOn,
+          ...(order.orderStatus === 'pending' || order.orderStatus === 'draft'
+            ? { orderStatus: 'processing' }
+            : {}),
+          lastStatusChangeAt: new Date(),
         },
       });
 
-      if (order) {
-        await prisma.order.update({
-          where: { id: order.id },
+      if (transition.count === 1) {
+        await prisma.orderHistory.create({
           data: {
-            paymentStatus: 'paid',
-            paidAt,
+            orderId: order.id,
+            field: 'paymentStatus',
+            oldValue: order.paymentStatus,
+            newValue: 'paid',
+            changeType: 'status_change',
+            note: `Platba spárována ve Fakturoidu (faktura ${number || invoiceId})`,
+            changedBy: 'fakturoid',
           },
         });
-        console.log(`Order ${order.id} marked as paid via Fakturoid webhook`);
+        await settleOrderPaid(order.id, 'fakturoid');
+        console.log(`Order ${order.id} marked as paid via Fakturoid webhook (invoice ${number})`);
       }
 
-      // Try to find matching B2bSale by invoiceNumber
-      const b2bSale = await prisma.b2bSale.findFirst({
-        where: { invoiceNumber },
-        include: { partner: true },
-      });
-
-      if (b2bSale) {
-        // Create B2bPayment record automatically (avoid duplicates)
-        const existingPayment = await prisma.b2bPayment.findFirst({
-          where: {
-            partnerId: b2bSale.partnerId,
-            note: { contains: invoiceNumber },
-          },
-        });
-
-        if (!existingPayment) {
-          await prisma.b2bPayment.create({
-            data: {
-              partnerId: b2bSale.partnerId,
-              amount: invoice.total,
-              method: 'airbank',
-              date: paidAt,
-              note: `Automaticky z Fakturoidu — faktura ${invoiceNumber}`,
-            },
-          });
-          console.log(`B2bPayment vytvořena: ${invoice.total} Kč pro partnera ${b2bSale.partnerId}`);
-        }
-
-        // Log to B2bHistory
-        try {
-          await prisma.b2bHistory.create({
-            data: {
-              partnerId: b2bSale.partnerId,
-              type: 'payment_received',
-              description: `Platba ${invoice.total} Kč přijata automaticky (faktura ${invoiceNumber})`,
-              amount: invoice.total,
-            },
-          });
-        } catch (e) {
-          console.error('B2bHistory error (non-blocking):', e);
-        }
-
-        console.log(`B2bSale ${b2bSale.id} platba zpracována přes Fakturoid webhook`);
-      }
-
-      // For proforma_paid: convert to final invoice and deliver to customer
-      if (event === 'proforma_paid' && invoice.id) {
-        try {
-          const result = await convertProformaToInvoice(invoice.id);
-          console.log('Proforma converted to invoice:', result);
-        } catch (err) {
-          console.error('Failed to convert proforma:', err);
-        }
-      }
+      return NextResponse.json({ ok: true });
     }
 
-    // Proforma vypršela — automaticky stornovat objednávku
-    if (event === 'invoice_overdue') {
-      const order = await prisma.order.findFirst({
-        where: { fakturoidInvoiceNum: invoiceNumber, paymentStatus: 'unpaid' },
+    // ── Po splatnosti → storno objednávky i faktury ────────────────────────
+    const cancelled = await prisma.order.updateMany({
+      where: { id: order.id, paymentStatus: 'unpaid', orderStatus: { not: 'cancelled' } },
+      data: { orderStatus: 'cancelled', lastStatusChangeAt: new Date() },
+    });
+
+    if (cancelled.count === 1) {
+      await prisma.orderHistory.create({
+        data: {
+          orderId: order.id,
+          field: 'orderStatus',
+          oldValue: order.orderStatus,
+          newValue: 'cancelled',
+          changeType: 'status_change',
+          note: `Faktura ${number || invoiceId} nebyla uhrazena ve splatnosti — objednávka stornována`,
+          changedBy: 'fakturoid',
+        },
       });
 
-      if (order) {
-        await prisma.order.update({
-          where: { id: order.id },
-          data: { orderStatus: 'cancelled', lastStatusChangeAt: new Date() },
-        });
+      try {
+        await cancelInvoice(invoiceId);
+      } catch (e) {
+        console.error('Fakturoid cancel error:', e);
+      }
 
-        // Stornovat zálohovku ve Fakturoidu
-        if (order.fakturoidInvoiceId) {
-          try {
-            const { cancelInvoice } = await import('@/lib/fakturoid');
-            await cancelInvoice(Number(order.fakturoidInvoiceId));
-          } catch (e) {
-            console.error('Fakturoid cancel error:', e);
-          }
-        }
-
-        // Poslat email zákazníkovi
+      const email = customerEmailOf(order);
+      if (email) {
         try {
           const { sendOrderCancellationEmail } = await import('@/lib/email');
-          await sendOrderCancellationEmail(order.email, order.id, 'Zálohovka vypršela');
+          await sendOrderCancellationEmail(email, order.id, 'Faktura nebyla uhrazena ve lhůtě splatnosti');
         } catch (e) {
           console.error('Cancel email error:', e);
         }
-
-        console.log(`Order ${order.id} automaticky stornována — zálohovka vypršela`);
       }
+
+      console.log(`Order ${order.id} stornována — faktura po splatnosti`);
     }
 
     return NextResponse.json({ ok: true });
   } catch (error: any) {
     console.error('Fakturoid webhook error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }

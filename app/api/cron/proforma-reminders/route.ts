@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendProformaReminder } from '@/lib/emails/proforma-reminder';
 import { cancelInvoice } from '@/lib/fakturoid';
+import { BANK_TRANSFER_DUE_DAYS, customerEmailOf } from '@/lib/order-invoice';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -15,27 +16,36 @@ export async function GET(req: Request) {
 
   try {
     const now = Date.now();
+    const DAY = 24 * 60 * 60 * 1000;
 
-    // ── 1. Reminder: zálohovky expirují zítra (vytvořeny přesně před 2 dny) ──
+    // Nezaplacené doklady k úhradě převodem: běžné faktury (Instagram, prodej
+    // z adminu) i starší zálohovky. Splatnost BANK_TRANSFER_DUE_DAYS dní.
+    const awaitingPayment = {
+      fakturoidInvoiceId: { not: null },
+      paymentStatus: 'unpaid',
+      orderStatus: { not: 'cancelled' },
+      OR: [{ fakturoidIsProforma: true }, { paymentMethod: 'bank_transfer' }],
+    };
+
+    // ── 1. Připomínka: splatnost je zítra ──
     const orders = await prisma.order.findMany({
       where: {
-        fakturoidIsProforma: true,
-        paymentStatus: 'unpaid',
-        orderStatus: { not: 'cancelled' },
+        ...awaitingPayment,
         createdAt: {
-          gte: new Date(now - 2 * 24 * 60 * 60 * 1000),
-          lte: new Date(now - 1 * 24 * 60 * 60 * 1000),
+          gte: new Date(now - (BANK_TRANSFER_DUE_DAYS - 1) * DAY),
+          lte: new Date(now - (BANK_TRANSFER_DUE_DAYS - 2) * DAY),
         },
       },
     });
 
     let reminded = 0;
     for (const order of orders) {
-      if (!order.email || !order.fakturoidInvoiceUrl) continue;
+      const reminderEmail = customerEmailOf(order);
+      if (!reminderEmail || !order.fakturoidInvoiceUrl) continue;
       const dueDate = new Date(order.createdAt);
-      dueDate.setDate(dueDate.getDate() + 3);
+      dueDate.setDate(dueDate.getDate() + BANK_TRANSFER_DUE_DAYS);
       await sendProformaReminder({
-        customerEmail: order.email,
+        customerEmail: reminderEmail,
         customerName: `${order.firstName} ${order.lastName}`,
         invoiceNumber: order.fakturoidInvoiceNum || '',
         amount: order.total,
@@ -45,13 +55,11 @@ export async function GET(req: Request) {
       reminded++;
     }
 
-    // ── 2. Auto-storno: zálohovky starší 3+ dnů, stále nezaplacené ──
+    // ── 2. Auto-storno: den po splatnosti a stále nezaplaceno ──
     const expiredOrders = await prisma.order.findMany({
       where: {
-        fakturoidIsProforma: true,
-        paymentStatus: 'unpaid',
-        orderStatus: { not: 'cancelled' },
-        createdAt: { lte: new Date(now - 3 * 24 * 60 * 60 * 1000) },
+        ...awaitingPayment,
+        createdAt: { lte: new Date(now - (BANK_TRANSFER_DUE_DAYS + 1) * DAY) },
       },
     });
 
@@ -72,12 +80,15 @@ export async function GET(req: Request) {
         }
       }
 
-      // Email zákazníkovi
-      try {
-        const { sendOrderCancellationEmail } = await import('@/lib/email');
-        await sendOrderCancellationEmail(order.email, order.id, 'Zálohovka vypršela bez zaplacení');
-      } catch (e) {
-        console.error(`Cancel email failed for order ${order.id}:`, e);
+      // Email zákazníkovi (objednávky bez e-mailu jsou uložené na adresu prodejny — tam neposílat)
+      const cancelEmail = customerEmailOf(order);
+      if (cancelEmail) {
+        try {
+          const { sendOrderCancellationEmail } = await import('@/lib/email');
+          await sendOrderCancellationEmail(cancelEmail, order.id, 'Faktura nebyla uhrazena ve lhůtě splatnosti');
+        } catch (e) {
+          console.error(`Cancel email failed for order ${order.id}:`, e);
+        }
       }
 
       cancelled++;

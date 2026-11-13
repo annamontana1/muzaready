@@ -33,7 +33,7 @@ export async function sendProformaReminder({
       from: 'Mùza Hair <info@mail.muzahair.cz>',
       replyTo: 'muzahaircz@gmail.com',
       to: customerEmail,
-      subject: `Připomínka platby — Proforma ${invoiceNumber}`,
+      subject: `Připomínka platby — faktura ${invoiceNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: #722F37; color: white; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -41,11 +41,11 @@ export async function sendProformaReminder({
           </div>
           <div style="background: #fff; padding: 24px; border: 1px solid #e5e5e5; border-top: none;">
             <p>Dobrý den, ${customerName},</p>
-            <p>připomínáme, že proforma faktura <strong>${invoiceNumber}</strong> na částku <strong>${amount.toLocaleString('cs-CZ')} Kč</strong> je splatná <strong>zítra (${dueDate.toLocaleDateString('cs-CZ')})</strong>.</p>
+            <p>připomínáme, že faktura <strong>${invoiceNumber}</strong> na částku <strong>${amount.toLocaleString('cs-CZ')} Kč</strong> je splatná <strong>zítra (${dueDate.toLocaleDateString('cs-CZ')})</strong>.</p>
             <p>Pokud nebude uhrazena včas, bude objednávka automaticky zrušena a zboží uvolněno.</p>
             <p style="text-align: center; margin: 24px 0;">
               <a href="${invoiceUrl}" style="display: inline-block; padding: 14px 32px; background: #722F37; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                📄 Zobrazit proformu a zaplatit
+                Zobrazit fakturu a zaplatit
               </a>
             </p>
             <p style="color: #666; font-size: 13px;">Číslo účtu: 321286011/0300 (ČSOB)<br/>Variabilní symbol: číslo faktury</p>

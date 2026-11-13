@@ -64,6 +64,14 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // Které objednávky se právě teď stávají zaplacenými (kvůli faktuře a potvrzení)
+      const newlyPaid = value === 'paid'
+        ? await prisma.order.findMany({
+            where: { id: { in: orderIds }, paymentStatus: { not: 'paid' } },
+            select: { id: true, orderStatus: true },
+          })
+        : [];
+
       result = await prisma.order.updateMany({
         where: {
           id: { in: orderIds },
@@ -73,6 +81,25 @@ export async function POST(request: NextRequest) {
           updatedAt: new Date(),
         },
       });
+
+      if (newlyPaid.length > 0) {
+        const { settleOrderPaid } = await import('@/lib/order-invoice');
+        for (const o of newlyPaid) {
+          try {
+            await prisma.order.update({
+              where: { id: o.id },
+              data: {
+                paidAt: new Date(),
+                ...(o.orderStatus === 'pending' ? { orderStatus: 'processing' } : {}),
+                lastStatusChangeAt: new Date(),
+              },
+            });
+            await settleOrderPaid(o.id, 'admin');
+          } catch (settleError) {
+            console.error(`Failed to settle paid order ${o.id}:`, settleError);
+          }
+        }
+      }
 
       return NextResponse.json(
         {

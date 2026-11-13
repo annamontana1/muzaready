@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
  * Merges registered Users with guest emails from Orders
  *
  * Query Parameters:
- * - search: Search by name, email, phone, company name
+ * - search: Search by name, email, phone, company name, Instagram handle
  * - filter: "all" | "b2c" | "b2b" | "wholesale"
  * - sort: Sort field (default -createdAt). Prefix with - for descending
  *   Allowed: name, email, totalSpent, orderCount, createdAt
@@ -265,8 +265,80 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // ----- 4b. CRM zákazníci zadaní v adminu (tabulka customers) -----
+    // Mají přednost před „hosty“ odvozenými z objednávek a jdou najít i bez e-mailu
+    // (podle Instagramu nebo telefonu).
+    let crmCustomers: typeof registeredCustomers = [];
+
+    if (filter !== 'wholesale') try {
+      const crmRows = await prisma.customer.findMany({
+        where: search
+          ? {
+              OR: [
+                { email: { contains: search, mode: 'insensitive' } },
+                { firstName: { contains: search, mode: 'insensitive' } },
+                { lastName: { contains: search, mode: 'insensitive' } },
+                { phone: { contains: search.replace(/\s/g, ''), mode: 'insensitive' } },
+                { companyName: { contains: search, mode: 'insensitive' } },
+                { instagramHandle: { contains: search.replace(/^@/, ''), mode: 'insensitive' } },
+              ],
+            }
+          : {},
+        orderBy: { createdAt: 'desc' },
+      });
+
+      // Objednávky zákazníka = navázané přes customerId + všechny se stejným e-mailem
+      const orderRows = crmRows.length
+        ? await prisma.order.findMany({
+            where: { orderStatus: { notIn: ['cancelled', 'draft'] } },
+            select: { id: true, email: true, customerId: true, total: true, createdAt: true },
+          })
+        : [];
+
+      crmCustomers = crmRows
+        .filter((c) => !(c.email && registeredEmails.has(c.email.toLowerCase())))
+        .filter((c) => {
+          const isB2B = !!(c.companyName || c.ico);
+          if (filter === 'b2b') return isB2B;
+          if (filter === 'b2c') return !isB2B;
+          return true;
+        })
+        .map((c) => {
+          const email = c.email?.toLowerCase() || null;
+          const own = orderRows.filter(
+            (o) => o.customerId === c.id || (email !== null && o.email.toLowerCase() === email)
+          );
+          const times = own.map((o) => o.createdAt.getTime());
+          return {
+            id: `cust_${c.id}`,
+            source: 'customer' as any,
+            email: c.email || '',
+            firstName: c.firstName,
+            lastName: c.lastName,
+            phone: c.phone,
+            instagramHandle: c.instagramHandle,
+            companyName: c.companyName,
+            isWholesale: false,
+            taxId: c.ico,
+            type: (c.companyName || c.ico ? 'B2B' : 'B2C') as any,
+            orderCount: own.length,
+            totalSpent: own.reduce((sum, o) => sum + o.total, 0),
+            firstOrder: times.length ? new Date(Math.min(...times)) : null,
+            lastOrder: times.length ? new Date(Math.max(...times)) : null,
+            createdAt: c.createdAt,
+          };
+        });
+
+      // Host se stejným e-mailem jako CRM zákazník je tentýž člověk — neukazovat dvakrát
+      const crmEmails = new Set(crmCustomers.map((c) => c.email.toLowerCase()).filter(Boolean));
+      guestCustomers = guestCustomers.filter((g) => !crmEmails.has(g.email.toLowerCase()));
+    } catch (crmError) {
+      // Tabulka customers nedostupná → seznam se zobrazí jako dřív (registrovaní + hosté)
+      console.error('CRM customers unavailable:', crmError);
+    }
+
     // ----- 5. Merge and sort -----
-    let allCustomers = [...registeredCustomers, ...guestCustomers];
+    let allCustomers = [...registeredCustomers, ...crmCustomers, ...guestCustomers];
 
     // Sort
     const allowedSorts = ['name', 'email', 'totalSpent', 'orderCount', 'createdAt'];

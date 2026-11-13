@@ -96,6 +96,7 @@ export async function POST(
           where: { id },
           data: {
             paymentStatus,
+            ...(paymentStatus === 'paid' ? { paidAt: new Date() } : {}),
             orderStatus: paymentStatus === 'paid' && currentOrder.orderStatus === 'pending'
               ? 'processing'
               : currentOrder.orderStatus,
@@ -162,6 +163,16 @@ export async function POST(
         return order;
       });
 
+      // Plně zaplaceno → úhrada do Fakturoidu + potvrzení platby zákazníkovi
+      if (paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid') {
+        try {
+          const { settleOrderPaid } = await import('@/lib/order-invoice');
+          await settleOrderPaid(id, 'admin');
+        } catch (settleError) {
+          console.error('Failed to settle paid order:', settleError);
+        }
+      }
+
       const transformedOrder = {
         ...updatedOrder,
         orderStatus: (updatedOrder as any).orderStatus || 'draft',
@@ -201,6 +212,7 @@ export async function POST(
         where: { id },
         data: {
           paymentStatus: 'paid',
+          paidAt: new Date(),
           orderStatus: currentOrder.orderStatus === 'pending'
             ? 'processing'
             : currentOrder.orderStatus,
@@ -264,6 +276,16 @@ export async function POST(
 
       return order;
     });
+
+    // Zaplaceno → úhrada do Fakturoidu + potvrzení platby zákazníkovi
+    if (currentOrder.paymentStatus !== 'paid') {
+      try {
+        const { settleOrderPaid } = await import('@/lib/order-invoice');
+        await settleOrderPaid(id, 'admin');
+      } catch (settleError) {
+        console.error('Failed to settle paid order:', settleError);
+      }
+    }
 
     const transformedOrder = {
       ...updatedOrder,

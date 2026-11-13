@@ -156,7 +156,8 @@ export const sendPaymentConfirmationEmail = async (
   email: string,
   orderId: string,
   amount: number,
-  orderNumber?: number
+  orderNumber?: number,
+  invoice?: { invoiceUrl?: string; invoiceNumber?: string }
 ) => {
   const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
@@ -164,44 +165,40 @@ export const sendPaymentConfirmationEmail = async (
     return;
   }
 
+  // Potvrzení platby = doklad o zaplacení: odkaz vede na fakturu ve stavu „uhrazeno“
+  const invoiceBlock = invoice?.invoiceUrl
+    ? `
+            <p style="text-align: center; margin: 24px 0;">
+              <a href="${invoice.invoiceUrl}" style="display: inline-block; padding: 14px 32px; background: #722F37; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                Zobrazit uhrazenou fakturu${invoice.invoiceNumber ? ` ${invoice.invoiceNumber}` : ''}
+              </a>
+            </p>
+            <p style="color: #666; font-size: 13px;">Faktura je označena jako uhrazená a slouží jako doklad o zaplacení. Na stejné stránce si ji můžete stáhnout v PDF.</p>`
+    : '';
+
   try {
     const html = `
       <!DOCTYPE html>
       <html>
-        <head>
-          <meta charset="UTF-8">
-          <style>
-            body { font-family: Arial, sans-serif; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #28a745; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
-            .content { background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; }
-            .success-icon { font-size: 48px; margin: 20px 0; }
-            .info-box { background-color: #e8f5e9; padding: 15px; border-left: 4px solid #28a745; margin: 15px 0; }
-            .footer { color: #666; font-size: 12px; margin-top: 20px; padding-top: 10px; border-top: 1px solid #eee; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <div class="success-icon">✓</div>
-              <h1>Platba byla přijata</h1>
+        <head><meta charset="UTF-8"></head>
+        <body style="margin: 0; background: #f8f4ef;">
+          <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+            <div style="background: #722F37; color: white; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
+              <h1 style="margin: 0; font-size: 22px;">💎 Mùza Hair</h1>
             </div>
-            <div class="content">
+            <div style="background: #fff; padding: 24px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 8px 8px;">
               <p>Dobrý den,</p>
-              <p>Potvrzujeme, že vaše platba byla úspěšně zpracována.</p>
+              <p>děkujeme, Vaši platbu jsme přijali 🤍</p>
 
-              <div class="info-box">
-                <p><strong>Číslo objednávky:</strong> ${orderNum}</p>
-                <p><strong>Zaplacená částka:</strong> ${amount.toLocaleString('cs-CZ')} Kč</p>
+              <div style="background: #f8f4ef; padding: 14px 16px; border-radius: 6px; margin: 16px 0;">
+                <p style="margin: 4px 0;"><strong>Objednávka č.:</strong> ${orderNum}</p>
+                <p style="margin: 4px 0;"><strong>Zaplaceno:</strong> ${amount.toLocaleString('cs-CZ')} Kč</p>
+                ${invoice?.invoiceNumber ? `<p style="margin: 4px 0;"><strong>Faktura č.:</strong> ${invoice.invoiceNumber}</p>` : ''}
               </div>
-
-              <p>Vaše objednávka je nyní zaplacena a připravena k odeslání. Brzy vám pošleme informace o odesílání balíčku.</p>
-
-              <p>Děkujeme vám za vašich nákup v obchodě <strong>Mùza Hair</strong>.</p>
-
-              <div class="footer">
-                <p>Tento email byl odeslán automaticky. Prosím neodpovídejte na něj.</p>
-              </div>
+${invoiceBlock}
+              <p>Objednávku nyní připravujeme. O dalším postupu Vás budeme informovat.</p>
+              <p>Rádi Vám pomůžeme s čímkoli dalším — stačí odpovědět na tento e-mail.</p>
+              <p>Děkujeme,<br/><strong>tým Mùza Hair</strong></p>
             </div>
           </div>
         </body>
@@ -209,10 +206,10 @@ export const sendPaymentConfirmationEmail = async (
     `;
 
     const result = await resend.emails.send({
-      from: 'objednavky@mail.muzahair.cz',
+      from: 'Mùza Hair <objednavky@mail.muzahair.cz>',
       replyTo: 'muzahaircz@gmail.com',
       to: email,
-      subject: `Potvrzení platby #${orderNum}`,
+      subject: `Platba přijata — objednávka č. ${orderNum}`,
       html,
     });
 
@@ -221,6 +218,60 @@ export const sendPaymentConfirmationEmail = async (
   } catch (error) {
     console.error('Error sending payment confirmation email:', error);
     throw error;
+  }
+};
+
+/**
+ * Faktura k úhradě — záložní e-mail z e-shopu, když ji Fakturoid neodeslal sám.
+ * Odkaz vede na webovou fakturu s platebními údaji a QR kódem.
+ */
+export const sendInvoiceLinkEmail = async (
+  email: string,
+  data: {
+    customerName?: string;
+    orderNumber: number | string;
+    invoiceNumber?: string;
+    invoiceUrl: string;
+    amount: number;
+    dueDate?: Date;
+  }
+): Promise<boolean> => {
+  if (!resend) {
+    console.warn('RESEND_API_KEY not configured; skipping email send for sendInvoiceLinkEmail');
+    return false;
+  }
+
+  try {
+    await resend.emails.send({
+      from: 'Mùza Hair <objednavky@mail.muzahair.cz>',
+      replyTo: 'muzahaircz@gmail.com',
+      to: email,
+      subject: `Faktura${data.invoiceNumber ? ` ${data.invoiceNumber}` : ''} — objednávka č. ${data.orderNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+          <div style="background: #722F37; color: white; padding: 24px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="margin: 0; font-size: 22px;">💎 Mùza Hair</h1>
+          </div>
+          <div style="background: #fff; padding: 24px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 8px 8px;">
+            <p>Dobrý den${data.customerName ? `, ${data.customerName}` : ''},</p>
+            <p>děkujeme za Vaši objednávku 🤍 Posíláme fakturu na částku <strong>${data.amount.toLocaleString('cs-CZ')} Kč</strong>${
+              data.dueDate ? ` se splatností <strong>${data.dueDate.toLocaleDateString('cs-CZ')}</strong>` : ''
+            }.</p>
+            <p style="text-align: center; margin: 24px 0;">
+              <a href="${data.invoiceUrl}" style="display: inline-block; padding: 14px 32px; background: #722F37; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                Zobrazit fakturu a zaplatit
+              </a>
+            </p>
+            <p style="color: #666; font-size: 13px;">Na faktuře najdete číslo účtu, variabilní symbol i QR kód pro platbu. Po přijetí platby Vám pošleme potvrzení.</p>
+            <p>Děkujeme,<br/><strong>tým Mùza Hair</strong></p>
+          </div>
+        </div>
+      `,
+    });
+    return true;
+  } catch (error) {
+    console.error('Error sending invoice link email:', error);
+    return false;
   }
 };
 
@@ -546,8 +597,11 @@ export const sendPaymentReminderEmail = async (
   email: string,
   orderId: string,
   total: number,
-  daysSinceOrder: number
+  daysSinceOrder: number,
+  orderNumber?: number
 ) => {
+  // Dřív tu `orderNum` chybělo → funkce spadla na ReferenceError a připomínka neodešla
+  const orderNum = orderNumber ?? orderId.substring(0, 8);
   if (!resend) {
     console.warn('RESEND_API_KEY not configured; skipping email send for sendPaymentReminderEmail');
     return;

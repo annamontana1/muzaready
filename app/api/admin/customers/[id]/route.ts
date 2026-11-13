@@ -94,6 +94,71 @@ export async function GET(
           lastOrder: orders[0].createdAt,
         },
       };
+    } else if (id.startsWith('cust_')) {
+      // CRM zákazník zadaný v adminu (tabulka customers)
+      const crm = await prisma.customer.findUnique({ where: { id: id.replace('cust_', '') } });
+
+      if (!crm) {
+        return NextResponse.json(
+          { error: 'Zakaznik nebyl nalezen' },
+          { status: 404 }
+        );
+      }
+
+      // Objednávky navázané přes customerId + všechny se stejným e-mailem
+      orders = await prisma.order.findMany({
+        where: {
+          OR: [
+            { customerId: crm.id },
+            ...(crm.email ? [{ email: { equals: crm.email, mode: 'insensitive' as const } }] : []),
+          ],
+          orderStatus: { notIn: ['cancelled', 'draft'] },
+        },
+        include: {
+          items: {
+            select: {
+              id: true,
+              nameSnapshot: true,
+              grams: true,
+              pricePerGram: true,
+              lineTotal: true,
+              saleMode: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      const totalSpent = orders.reduce((sum, o) => sum + o.total, 0);
+
+      customer = {
+        id,
+        source: 'customer',
+        email: crm.email || '',
+        firstName: crm.firstName,
+        lastName: crm.lastName,
+        phone: crm.phone,
+        companyName: crm.companyName,
+        taxId: crm.ico,
+        streetAddress: crm.street,
+        city: crm.city,
+        zipCode: crm.zipCode,
+        country: crm.country,
+        instagram: crm.instagramHandle,
+        note: crm.note,
+        isWholesale: false,
+        type: crm.companyName || crm.ico ? 'B2B' : 'B2C',
+        status: null,
+        createdAt: crm.createdAt,
+        updatedAt: crm.updatedAt,
+        stats: {
+          totalSpent,
+          orderCount: orders.length,
+          avgOrder: orders.length > 0 ? Math.round(totalSpent / orders.length) : 0,
+          firstOrder: orders.length > 0 ? orders[orders.length - 1].createdAt : null,
+          lastOrder: orders.length > 0 ? orders[0].createdAt : null,
+        },
+      };
     } else {
       // Registered user
       const user = await prisma.user.findUnique({

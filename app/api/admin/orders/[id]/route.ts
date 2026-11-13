@@ -255,6 +255,7 @@ export async function PUT(
 
     // Automatic workflow: Set orderStatus to 'processing' when payment is marked as 'paid'
     if (body.paymentStatus === 'paid' && currentOrder.paymentStatus !== 'paid') {
+      if (!currentOrder.paidAt) updateData.paidAt = new Date().toISOString();
       if (currentOrder.orderStatus === 'pending' || currentOrder.orderStatus === 'draft') {
         updateData.orderStatus = 'processing';
       }
@@ -387,135 +388,16 @@ export async function PUT(
       await logOrderChange(id, 'stock', 'deducted', 'returned', 'stock_return', adminEmail, logNote);
     }
 
-    // --- Invoice generation when marked as paid ---
+    // --- Zaplaceno: úhrada do Fakturoidu + jedno potvrzení platby zákazníkovi ---
+    // (Interní PDF faktura s DPH se už negeneruje — prodávající je neplátce DPH
+    //  a jediným zdrojem dokladů je Fakturoid.)
+    let settlement: Awaited<ReturnType<typeof import('@/lib/order-invoice').settleOrderPaid>> | null = null;
     if (isChangingToPaid) {
       try {
-        const { sendPaymentConfirmationEmail } = await import('@/lib/email');
-        await sendPaymentConfirmationEmail(updatedOrder.email, id, updatedOrder.total);
-      } catch (emailError) {
-        console.error('Failed to send payment confirmation email:', emailError);
-      }
-
-      try {
-        const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');
-        const { sendInvoiceEmail } = await import('@/lib/email');
-
-        const { data: existingInvoice } = await supabase
-          .from('invoices')
-          .select('id')
-          .eq('orderId', id)
-          .maybeSingle();
-
-        if (!existingInvoice) {
-          const { data: lastInvoiceRow } = await supabase
-            .from('invoices')
-            .select('invoiceNumber')
-            .order('invoiceNumber', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-
-          const invoiceNumber = generateInvoiceNumber(lastInvoiceRow?.invoiceNumber);
-          const vatRate = 21.0;
-          const subtotal = updatedOrder.total / (1 + vatRate / 100);
-          const vatAmount = updatedOrder.total - subtotal;
-          const invoiceId = randomUUID();
-          const now = new Date().toISOString();
-
-          const { data: invoice, error: invoiceError } = await supabase.from('invoices').insert({
-            id: invoiceId,
-            invoiceNumber,
-            orderId: id,
-            supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Anna Zvinchuk — Mùza Hair Praha',
-            supplierStreet: process.env.INVOICE_SUPPLIER_STREET || 'Revoluční 8',
-            supplierCity: process.env.INVOICE_SUPPLIER_CITY || 'Praha 1',
-            supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP || '110 00',
-            supplierCountry: 'CZ',
-            supplierIco: process.env.INVOICE_SUPPLIER_ICO || '17989230',
-            supplierDic: process.env.INVOICE_SUPPLIER_DIC,
-            supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'muzahaircz@gmail.com',
-            supplierPhone: process.env.INVOICE_SUPPLIER_PHONE || '+420 728 722 880',
-            customerName: updatedOrder.companyName || `${updatedOrder.firstName} ${updatedOrder.lastName}`,
-            customerEmail: updatedOrder.email,
-            customerPhone: updatedOrder.phone,
-            customerStreet: updatedOrder.billingStreet || updatedOrder.streetAddress,
-            customerCity: updatedOrder.billingCity || updatedOrder.city,
-            customerZipCode: updatedOrder.billingZipCode || updatedOrder.zipCode,
-            customerCountry: updatedOrder.billingCountry || updatedOrder.country,
-            customerIco: updatedOrder.ico,
-            customerDic: updatedOrder.dic,
-            subtotal,
-            vatRate,
-            vatAmount,
-            total: updatedOrder.total,
-            paymentMethod: updatedOrder.paymentMethod || 'manual',
-            variableSymbol: invoiceNumber,
-            bankAccount: process.env.INVOICE_BANK_ACCOUNT,
-            iban: process.env.INVOICE_IBAN,
-            swift: process.env.INVOICE_SWIFT,
-            issueDate: now,
-            dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-            taxDate: now,
-            paidDate: now,
-            status: 'paid',
-            pdfGenerated: false,
-            createdAt: now,
-            updatedAt: now,
-          }).select().single();
-
-          if (!invoiceError && invoice) {
-            const invoiceData = {
-              invoiceNumber: invoice.invoiceNumber,
-              issueDate: new Date(invoice.issueDate),
-              dueDate: new Date(invoice.dueDate),
-              taxDate: new Date(invoice.taxDate),
-              orderId: invoice.orderId,
-              supplierName: invoice.supplierName,
-              supplierStreet: invoice.supplierStreet,
-              supplierCity: invoice.supplierCity,
-              supplierZipCode: invoice.supplierZipCode,
-              supplierCountry: invoice.supplierCountry,
-              supplierIco: invoice.supplierIco,
-              supplierDic: invoice.supplierDic,
-              supplierEmail: invoice.supplierEmail,
-              supplierPhone: invoice.supplierPhone,
-              customerName: invoice.customerName,
-              customerEmail: invoice.customerEmail,
-              customerPhone: invoice.customerPhone,
-              customerStreet: invoice.customerStreet,
-              customerCity: invoice.customerCity,
-              customerZipCode: invoice.customerZipCode,
-              customerCountry: invoice.customerCountry,
-              customerIco: invoice.customerIco,
-              customerDic: invoice.customerDic,
-              items: orderItems.map((item: any) => ({
-                name: (item.nameSnapshot && item.nameSnapshot !== 'undefined')
-                  ? item.nameSnapshot
-                  : buildSkuDisplayName({ name: item.skus?.name ?? null, sku: item.skus?.sku ?? item.skuId, customerCategory: item.skus?.customerCategory ?? null, shade: item.skus?.shade ?? null }),
-                quantity: item.saleMode === 'BULK_G' ? `${item.grams}g` : '1',
-                unitPrice: item.pricePerGram,
-                total: item.lineTotal + (item.assemblyFeeTotal || 0),
-              })),
-              subtotal: invoice.subtotal,
-              vatRate: invoice.vatRate,
-              vatAmount: invoice.vatAmount,
-              total: invoice.total,
-              paymentMethod: invoice.paymentMethod,
-              variableSymbol: invoice.variableSymbol,
-              bankAccount: invoice.bankAccount,
-              iban: invoice.iban,
-              swift: invoice.swift,
-            };
-
-            const pdfBase64 = generateInvoicePDF(invoiceData);
-            await supabase.from('invoices').update({ pdfGenerated: true }).eq('id', invoice.id);
-            sendInvoiceEmail(updatedOrder.email, invoiceNumber, pdfBase64).catch((err) => {
-              console.error('Failed to send invoice email:', err);
-            });
-            console.log(`Invoice ${invoiceNumber} generated for order ${id}`);
-          }
-        }
-      } catch (invoiceError) {
-        console.error('Failed to generate invoice (non-critical):', invoiceError);
+        const { settleOrderPaid } = await import('@/lib/order-invoice');
+        settlement = await settleOrderPaid(id, 'admin');
+      } catch (settleError) {
+        console.error('Failed to settle paid order:', settleError);
       }
     }
 
@@ -569,6 +451,7 @@ export async function PUT(
 
     const transformedOrder = {
       ...updatedOrder,
+      settlement,
       orderStatus: updatedOrder.orderStatus || 'draft',
       paymentStatus: updatedOrder.paymentStatus || 'unpaid',
       deliveryStatus: updatedOrder.deliveryStatus || 'pending',

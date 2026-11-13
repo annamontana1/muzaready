@@ -127,12 +127,42 @@ model Order {
   shippedAt          DateTime?
   lastStatusChangeAt DateTime  @default(now())
 
+  // CRM — zákazník zadaný v adminu (Instagram, showroom…); u web objednávek null
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
   items   OrderItem[]
   invoice Invoice?
   history OrderHistory[]
   reviews Review[]
 
   @@map("orders")
+}
+
+// Zákazníci zadaní v adminu (CRM). E-mail a IG jméno se ukládají malými písmeny.
+// Tabulka vznikla migrací supabase/migrations/20261112000000_customers_table.sql
+model Customer {
+  id              String   @id @default(uuid())
+  firstName       String   @default("")
+  lastName        String   @default("")
+  email           String?
+  phone           String?
+  instagramHandle String?
+  companyName     String?
+  ico             String?
+  dic             String?
+  street          String?
+  city            String?
+  zipCode         String?
+  country         String   @default("CZ")
+  note            String?
+  source          String   @default("admin") // instagram | store | web | admin
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  orders Order[]
+
+  @@map("customers")
 }
 
 model OrderItem {

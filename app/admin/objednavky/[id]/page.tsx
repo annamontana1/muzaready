@@ -92,13 +92,55 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
   const [depositAmount, setDepositAmount] = useState('');
   const [depositNote, setDepositNote] = useState('');
   const [creatingDeposit, setCreatingDeposit] = useState(false);
+  const [markingPaid, setMarkingPaid] = useState(false);
 
   const isCancelled = order.orderStatus === 'cancelled';
   const isInstagram = order.channel === 'instagram';
   const isStore = order.channel === 'store';
   const paymentLabel = order.paymentMethod === 'bank_transfer' ? 'Převod' : order.paymentMethod === 'cash' ? 'Hotovost' : order.paymentMethod || '—';
 
+  // Zaplaceno: objednávka → zaplacená, faktura ve Fakturoidu → uhrazená,
+  // zákazníkovi odejde potvrzení platby s odkazem na doklad.
+  async function markPaid() {
+    const who = order.email && order.email !== 'prodejna@muzahair.cz' ? ` na ${order.email}` : '';
+    if (!confirm(`Potvrdit přijetí platby ${formatPrice(order.total)}?\n\nFaktura se označí jako uhrazená${who ? ` a potvrzení platby odejde${who}` : ''}.`)) return;
+    setMarkingPaid(true); setResult(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentStatus: 'paid' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setResult({ error: data.error || 'Platbu se nepodařilo potvrdit' });
+        return;
+      }
+      const st = data.settlement;
+      if (st?.warning) {
+        setResult({ error: `Objednávka je zaplacená, ale: ${st.warning}` });
+      } else {
+        setResult({
+          success: true,
+          message: [
+            'Platba potvrzena',
+            st?.invoiceNumber ? `faktura ${st.invoiceNumber} uhrazena` : '',
+            st?.emailSent ? 'potvrzení odesláno zákazníkovi' : 'zákazník nemá e-mail — pošlete mu odkaz na fakturu',
+          ].filter(Boolean).join(' · '),
+        });
+      }
+      if (st?.invoiceUrl) setInvoiceUrl(st.invoiceUrl);
+      setIsProforma(false);
+      onRefresh();
+    } catch (err: any) {
+      setResult({ error: err.message || 'Chyba' });
+    } finally { setMarkingPaid(false); }
+  }
+
   async function generateInvoice() {
+    if (order.fakturoidInvoiceId && !confirm(
+      `Objednávka už fakturu ${order.fakturoidInvoiceNum || ''} má.\n\nOpravdu vystavit NOVOU fakturu? Původní zůstane ve Fakturoidu — stornujte ji, pokud nemá platit.`
+    )) return;
     setLoading(true); setResult(null);
     try {
       const res = await fetch(`/api/admin/orders/${order.id}/resend-invoice`, { method: 'POST' });
@@ -212,7 +254,11 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
               {isProforma ? '📄 Proforma faktura' : '📄 Faktura'}
             </h3>
             <p className="text-sm text-stone-500">
-              {isInstagram ? 'Zálohová faktura — převod na účet' : isStore ? 'Pokladní doklad' : 'Faktura'}
+              {isProforma
+                ? 'Zálohová faktura — převod na účet'
+                : order.fakturoidInvoiceNum
+                  ? `Faktura ${order.fakturoidInvoiceNum}${order.paymentMethod === 'bank_transfer' ? ' — převod na účet' : ''}`
+                  : isStore ? 'Pokladní doklad' : isInstagram ? 'Faktura zatím nevznikla' : 'Faktura'}
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -302,7 +348,7 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
               {order.fakturoidInvoiceId && (
                 <button onClick={() => setShowExtend(v => !v)}
                   className="px-4 py-1.5 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition whitespace-nowrap">
-                  📅 Prodloužit splatnost proformy
+                  📅 Prodloužit splatnost faktury
                 </button>
               )}
             </div>
@@ -325,6 +371,19 @@ function InvoiceSection({ order, onRefresh }: { order: Order; onRefresh: () => v
               {extending ? '⏳ Ukládám...' : '✅ Uložit'}
             </button>
             <button onClick={() => setShowExtend(false)} className="text-sm text-stone-500 hover:text-stone-700">Zrušit</button>
+          </div>
+        )}
+
+        {/* Čeká na platbu — běžná faktura */}
+        {!isProforma && !isCancelled && order.fakturoidInvoiceId && order.paymentStatus !== 'paid' && order.paymentStatus !== 'refunded' && (
+          <div className="px-6 py-3 bg-yellow-50 border-b border-yellow-200 flex items-center justify-between gap-4 flex-wrap">
+            <span className="text-sm text-yellow-800 font-medium">
+              ⏳ Faktura {order.fakturoidInvoiceNum || ''} čeká na platbu ({formatPrice(order.total)})
+            </span>
+            <button onClick={markPaid} disabled={markingPaid}
+              className="px-4 py-1.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition disabled:opacity-50 whitespace-nowrap">
+              {markingPaid ? '⏳ Potvrzuji...' : '✅ Zaplaceno'}
+            </button>
           </div>
         )}
 
