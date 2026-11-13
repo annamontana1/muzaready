@@ -71,6 +71,16 @@ export async function GET(request: NextRequest) {
 
     // Test DB connection with simple SELECT 1 query
     await prisma.$queryRaw`SELECT 1`;
+
+    // CRM: je tabulka zákazníků dostupná stejným připojením, jaké používá admin?
+    // (Vrací se jen ok/error, žádná data.)
+    let crm: 'ok' | 'error' = 'ok';
+    try {
+      await prisma.$queryRaw`SELECT 1 FROM "customers" LIMIT 1`;
+    } catch (crmError) {
+      console.error('[Health Check] customers table not accessible:', crmError);
+      crm = 'error';
+    }
     await prisma.$disconnect();
 
     // Production: Minimal response without infrastructure details
@@ -78,6 +88,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           status: 'ok',
+          crm,
         },
         { status: 200 }
       );

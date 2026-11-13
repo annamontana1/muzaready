@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { sendPaymentReminderEmail } from '@/lib/email';
+import { customerEmailOf } from '@/lib/order-invoice';
 
 const prisma = new PrismaClient();
 
@@ -44,9 +45,16 @@ export async function GET(request: NextRequest) {
         orderStatus: {
           notIn: ['cancelled'],
         },
+        // Objednávky s fakturou k úhradě převodem mají vlastní připomínku
+        // (cron proforma-reminders, den před splatností) — neposílat dvě.
+        NOT: {
+          fakturoidInvoiceId: { not: null },
+          paymentMethod: 'bank_transfer',
+        },
       },
       select: {
         id: true,
+        orderNumber: true,
         email: true,
         total: true,
         createdAt: true,
@@ -80,12 +88,17 @@ export async function GET(request: NextRequest) {
           (now.getTime() - order.createdAt.getTime()) / (1000 * 60 * 60 * 24)
         );
 
+        // Objednávky bez e-mailu jsou uložené na adresu prodejny — tam neposílat
+        const reminderEmail = customerEmailOf(order);
+        if (!reminderEmail) continue;
+
         // Send reminder email
         await sendPaymentReminderEmail(
-          order.email,
+          reminderEmail,
           order.id,
           order.total,
-          daysSinceOrder
+          daysSinceOrder,
+          order.orderNumber
         );
 
         results.push({
@@ -99,12 +112,10 @@ export async function GET(request: NextRequest) {
         await prisma.orderHistory.create({
           data: {
             orderId: order.id,
-            action: 'payment_reminder_sent',
-            details: JSON.stringify({
-              daysSinceOrder,
-              sentAt: new Date().toISOString(),
-            }),
-            performedBy: 'system',
+            field: 'payment',
+            changeType: 'payment_reminder_sent',
+            note: `Připomínka platby odeslána (${daysSinceOrder}. den)`,
+            changedBy: 'system',
           },
         });
 

@@ -57,6 +57,7 @@ async function handleNotification(gopayPaymentId: string | null): Promise<NextRe
     }
 
     // Process payment confirmation in a transaction
+    let justPaid = false as boolean; // true jen když tato notifikace objednávku přepnula na „zaplaceno“
     const result = await prisma.$transaction(async (tx) => {
       const order = await tx.order.findFirst({
         where: {
@@ -110,6 +111,7 @@ async function handleNotification(gopayPaymentId: string | null): Promise<NextRe
         });
       }
 
+      justPaid = true;
       return updatedOrder;
     });
 
@@ -138,157 +140,57 @@ async function handleNotification(gopayPaymentId: string | null): Promise<NextRe
       console.error('Meta conversion tracking failed (non-critical):', e);
     }
 
-    // Payment confirmation email
+    // Faktura — jediným zdrojem dokladů je Fakturoid (prodávající je neplátce DPH,
+    // interní PDF s DPH se nevystavuje). Když Fakturoid není nakonfigurovaný nebo
+    // selže, jen logujeme; fakturu pak lze vystavit ručně v detailu objednávky.
+    let invoiceUrl: string | undefined = result.fakturoidInvoiceUrl || undefined;
+    let invoiceNumber: string | undefined = result.fakturoidInvoiceNum || undefined;
     try {
-      const { sendPaymentConfirmationEmail } = await import('@/lib/email');
-      await sendPaymentConfirmationEmail(result.email, result.id, result.total);
-    } catch (e) {
-      console.error('Payment confirmation email failed (non-critical):', e);
-    }
-
-    // Invoice generation (PDF + Fakturoid)
-    try {
-      const { generateInvoicePDF, generateInvoiceNumber } = await import('@/lib/invoice-generator');
-      const { sendInvoiceEmail } = await import('@/lib/email');
-
-      const existingInvoice = await prisma.invoice.findUnique({ where: { orderId: result.id } });
-
-      if (!existingInvoice) {
-        const lastInvoice = await prisma.invoice.findFirst({
-          orderBy: { invoiceNumber: 'desc' },
-          select: { invoiceNumber: true },
-        });
-        const invoiceNumber = generateInvoiceNumber(lastInvoice?.invoiceNumber);
-        const vatRate = 21.0;
-        const subtotal = result.total / (1 + vatRate / 100);
-        const vatAmount = result.total - subtotal;
-
-        const invoice = await prisma.invoice.create({
-          data: {
-            invoiceNumber,
-            orderId: result.id,
-            supplierName: process.env.INVOICE_SUPPLIER_NAME || 'Anna Zvinchuk — Mùza Hair Praha',
-            supplierStreet: process.env.INVOICE_SUPPLIER_STREET || 'Revoluční 8',
-            supplierCity: process.env.INVOICE_SUPPLIER_CITY || 'Praha 1',
-            supplierZipCode: process.env.INVOICE_SUPPLIER_ZIP || '110 00',
-            supplierCountry: 'CZ',
-            supplierIco: process.env.INVOICE_SUPPLIER_ICO || '17989230',
-            supplierDic: process.env.INVOICE_SUPPLIER_DIC,
-            supplierEmail: process.env.INVOICE_SUPPLIER_EMAIL || 'muzahaircz@gmail.com',
-            supplierPhone: process.env.INVOICE_SUPPLIER_PHONE || '+420 728 722 880',
-            customerName: result.companyName || `${result.firstName} ${result.lastName}`,
-            customerEmail: result.email,
-            customerPhone: result.phone,
-            customerStreet: result.billingStreet || result.streetAddress,
-            customerCity: result.billingCity || result.city,
-            customerZipCode: result.billingZipCode || result.zipCode,
-            customerCountry: result.billingCountry || result.country,
-            customerIco: result.ico,
-            customerDic: result.dic,
-            subtotal,
-            vatRate,
-            vatAmount,
-            total: result.total,
-            paymentMethod: 'gopay',
-            variableSymbol: invoiceNumber,
-            bankAccount: process.env.INVOICE_BANK_ACCOUNT,
-            iban: process.env.INVOICE_IBAN,
-            swift: process.env.INVOICE_SWIFT,
-            issueDate: new Date(),
-            dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-            taxDate: new Date(),
-            paidDate: new Date(),
-            status: 'paid',
-          },
-        });
-
-        const pdfBase64 = generateInvoicePDF({
-          invoiceNumber: invoice.invoiceNumber,
-          issueDate: invoice.issueDate,
-          dueDate: invoice.dueDate,
-          taxDate: invoice.taxDate,
-          supplierName: invoice.supplierName,
-          supplierStreet: invoice.supplierStreet,
-          supplierCity: invoice.supplierCity,
-          supplierZipCode: invoice.supplierZipCode,
-          supplierCountry: invoice.supplierCountry,
-          supplierIco: invoice.supplierIco,
-          supplierDic: invoice.supplierDic,
-          supplierEmail: invoice.supplierEmail,
-          supplierPhone: invoice.supplierPhone,
-          customerName: invoice.customerName,
-          customerEmail: invoice.customerEmail,
-          customerPhone: invoice.customerPhone,
-          customerStreet: invoice.customerStreet,
-          customerCity: invoice.customerCity,
-          customerZipCode: invoice.customerZipCode,
-          customerCountry: invoice.customerCountry,
-          customerIco: invoice.customerIco,
-          customerDic: invoice.customerDic,
-          items: result.items.map((item: any) => ({
-            name: item.nameSnapshot || item.sku?.name || 'Product',
-            quantity: item.grams / 100,
-            unitPrice: item.pricePerGram * 100,
-            total: item.lineTotal,
-          })),
-          subtotal: invoice.subtotal,
-          vatRate: invoice.vatRate,
-          vatAmount: invoice.vatAmount,
-          total: invoice.total,
-          paymentMethod: invoice.paymentMethod,
-          variableSymbol: invoice.variableSymbol,
-          bankAccount: invoice.bankAccount,
-          iban: invoice.iban,
-          swift: invoice.swift,
-        });
-
-        await prisma.invoice.update({ where: { id: invoice.id }, data: { pdfGenerated: true } });
-
-        sendInvoiceEmail(result.email, invoiceNumber, pdfBase64).catch((err) => {
-          console.error('Invoice email failed:', err);
-        });
-
-        console.log(`Invoice ${invoiceNumber} generated for order ${result.id}`);
-      }
-    } catch (e) {
-      console.error('Invoice generation failed (non-critical):', e);
-    }
-
-    // Fakturoid
-    try {
-      const { createInvoiceFromOrder, isFakturoidConfigured } = await import('@/lib/fakturoid');
-      if (isFakturoidConfigured()) {
-        const fakturoidResult = await createInvoiceFromOrder({
-          orderId: result.id.substring(0, 12),
-          customerName:
-            result.companyName || `${result.firstName || ''} ${result.lastName || ''}`.trim(),
-          customerEmail: result.email,
-          customerPhone: result.phone || undefined,
-          customerStreet: result.billingStreet || result.streetAddress || undefined,
-          customerCity: result.billingCity || result.city || undefined,
-          customerZip: result.billingZipCode || result.zipCode || undefined,
-          customerCountry: result.billingCountry || result.country || 'CZ',
-          customerIco: result.ico || undefined,
-          customerDic: result.dic || undefined,
-          items: result.items.map((item: any) => ({
-            name: item.sku?.name || item.skuId,
-            quantity: item.quantity || 1,
-            unitPrice: item.totalPrice || item.grams * (item.sku?.pricePerGramCzk || 0),
-            unit: item.sku?.saleMode === 'PIECE_BY_WEIGHT' ? 'ks' : 'g',
-          })),
-          shippingPrice: result.shippingPrice || 0,
-          shippingName: result.deliveryMethod || 'Doprava',
-          paymentMethod: 'gopay',
-          isPaid: true,
-        });
-        if (fakturoidResult.success) {
-          console.log(`Fakturoid invoice ${fakturoidResult.invoiceNumber} created for order ${result.id}`);
+      if (!result.fakturoidInvoiceId) {
+        // E-mail z Fakturoidu neposíláme — odkaz na fakturu jde v potvrzení platby níže.
+        const { createFakturoidInvoiceForOrder } = await import('@/lib/order-invoice');
+        const invoice = await createFakturoidInvoiceForOrder(result.id, { sendEmail: false });
+        if (invoice.success) {
+          invoiceUrl = invoice.invoiceUrl;
+          invoiceNumber = invoice.invoiceNumber;
+          console.log(`Fakturoid invoice ${invoice.invoiceNumber} created for order ${result.id}`);
         } else {
-          console.error('Fakturoid invoice failed:', fakturoidResult.error);
+          console.error(`Fakturoid invoice not created for order ${result.id}:`, invoice.error);
+        }
+      } else if (justPaid) {
+        // Objednávka už doklad má (vystavený dřív v adminu) → zapsat k němu úhradu
+        if (result.fakturoidIsProforma) {
+          console.error(
+            `Order ${result.id} paid via GoPay but has a proforma ${invoiceNumber || result.fakturoidInvoiceId} — settle it manually in Fakturoid`
+          );
+        } else {
+          const { markInvoicePaid } = await import('@/lib/fakturoid');
+          const paid = await markInvoicePaid(Number(result.fakturoidInvoiceId), result.paidAt ?? undefined);
+          if (!paid.success) {
+            console.error(`Fakturoid invoice ${invoiceNumber} not marked as paid:`, paid.error);
+          }
         }
       }
     } catch (e) {
       console.error('Fakturoid integration failed (non-critical):', e);
+    }
+
+    // Payment confirmation email (jedno potvrzení s odkazem na uhrazenou fakturu).
+    // Jen při přechodu na „zaplaceno“ — opakovaná notifikace e-mail neposílá znovu.
+    if (justPaid) {
+      try {
+        const { sendPaymentConfirmationEmail } = await import('@/lib/email');
+        const { customerEmailOf } = await import('@/lib/order-invoice');
+        const email = customerEmailOf(result);
+        if (email) {
+          await sendPaymentConfirmationEmail(email, result.id, result.total, result.orderNumber, {
+            invoiceUrl,
+            invoiceNumber,
+          });
+        }
+      } catch (e) {
+        console.error('Payment confirmation email failed (non-critical):', e);
+      }
     }
 
     // Auto-create Zásilkovna shipment

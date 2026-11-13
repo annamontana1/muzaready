@@ -104,52 +104,12 @@ const getDeliveryMethodLabel = (method: string) => {
 };
 
 export default function PaymentSection({ order }: PaymentSectionProps) {
-  const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isEditingPayment, setIsEditingPayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(order.paymentMethod || 'gopay');
   const [isEditingDelivery, setIsEditingDelivery] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState(order.deliveryMethod || 'standard');
-
-  const handleGenerateInvoice = async () => {
-    setIsGenerating(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const res = await fetch('/api/invoices/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: order.id }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Nepodařilo se vygenerovat fakturu');
-      }
-
-      // Download PDF
-      if (data.pdfBase64) {
-        const link = document.createElement('a');
-        link.href = data.pdfBase64;
-        link.download = `faktura_${data.invoice.invoiceNumber}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-
-      setSuccess(`Faktura ${data.invoice.invoiceNumber} byla vygenerována a odeslána na ${order.email}`);
-
-      // Reload page to show updated invoice info
-      setTimeout(() => window.location.reload(), 2000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Chyba při generování faktury');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const handleSavePaymentMethod = async () => {
     setError(null);
@@ -205,11 +165,24 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
 
   return (
     <div className="space-y-6">
-      {/* Faktura Section */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Faktura</h2>
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-800">{error}</p>
+        </div>
+      )}
 
-        {order.invoice ? (
+      {success && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <p className="text-green-800">{success}</p>
+        </div>
+      )}
+
+      {/* Starý interní doklad (před přechodem na Fakturoid). Nové faktury se
+          vystavují jen ve Fakturoidu — záložka „Faktura“. */}
+      {order.invoice && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Faktura</h2>
+
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -249,46 +222,8 @@ export default function PaymentSection({ order }: PaymentSectionProps) {
               )}
             </div>
           </div>
-        ) : (
-          <div>
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-red-800">{error}</p>
-              </div>
-            )}
-
-            {success && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                <p className="text-green-800">{success}</p>
-              </div>
-            )}
-
-            <p className="text-sm text-gray-600 mb-4">
-              Pro tuto objednávku zatím nebyla vygenerována faktura.
-            </p>
-
-            <button
-              onClick={handleGenerateInvoice}
-              disabled={isGenerating || order.paymentStatus !== 'paid'}
-              className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                order.paymentStatus !== 'paid'
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : isGenerating
-                  ? 'bg-blue-400 text-white cursor-wait'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              {isGenerating ? 'Generuji...' : 'Vygenerovat fakturu'}
-            </button>
-
-            {order.paymentStatus !== 'paid' && (
-              <p className="text-sm text-amber-600 mt-2">
-                ⚠️ Fakturu lze vygenerovat pouze pro zaplacené objednávky
-              </p>
-            )}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Platba a doprava */}
       <div className="bg-white rounded-lg shadow p-6">
