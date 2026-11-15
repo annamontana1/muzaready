@@ -6,6 +6,9 @@ let _supabase: SupabaseClient | null = null;
 // Admin client with service role key — bypasses RLS, uses HTTPS (works regardless of IPv4/IPv6)
 let _supabaseAdmin: SupabaseClient | null = null;
 
+/** fetch bez datové mezipaměti Next.js — databázová data se nesmí kešovat. */
+const noStoreFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: 'no-store' });
+
 export function getSupabaseAdminClient(): SupabaseClient {
   if (!_supabaseAdmin) {
     const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -15,6 +18,9 @@ export function getSupabaseAdminClient(): SupabaseClient {
     }
     _supabaseAdmin = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
+      // Next.js ukládá GET požadavky `fetch` do datové mezipaměti — čtení z databáze
+      // by pak vracelo stará data (např. cenu po změně ceníku). Vždy číst čerstvě.
+      global: { fetch: noStoreFetch },
     });
   }
   return _supabaseAdmin;
@@ -27,7 +33,7 @@ export function getSupabaseClient(): SupabaseClient {
     if (!url || !key) {
       throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY');
     }
-    _supabase = createClient(url, key);
+    _supabase = createClient(url, key, { global: { fetch: noStoreFetch } });
   }
   return _supabase;
 }
