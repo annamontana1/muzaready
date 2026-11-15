@@ -243,6 +243,8 @@ export default function UnifiedNewSalePage() {
   const [customerSearchLoading, setCustomerSearchLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const customerSearchRef = useRef<HTMLDivElement>(null);
+  // Text, který do pole doplnil výběr z našeptávače — pro něj se znovu nehledá
+  const selectedQueryRef = useRef<string | null>(null);
 
   // Zavřít dropdown při kliknutí mimo
   useEffect(() => {
@@ -261,6 +263,7 @@ export default function UnifiedNewSalePage() {
       setCustomerSuggestions([]);
       return;
     }
+    if (customerQuery === selectedQueryRef.current) return;
     const timer = setTimeout(async () => {
       setCustomerSearchLoading(true);
       try {
@@ -278,15 +281,20 @@ export default function UnifiedNewSalePage() {
   }, [customerQuery]);
 
   function selectCustomer(s: CustomerSuggestion) {
+    const fullName = `${s.firstName || ''} ${s.lastName || ''}`.trim();
+    const label = s.companyName || fullName;
+    selectedQueryRef.current = label;
+    setCustomerSuggestions([]);
     setCustomer({
-      firstName: s.firstName,
-      lastName: s.lastName,
+      // Formulář má jedno pole „Celé jméno“ (ukládá se do firstName)
+      firstName: fullName,
+      lastName: '',
       email: s.email,
       phone: s.phone,
       companyName: s.companyName,
       ico: s.ico,
       dic: s.dic || '',
-      contactPerson: s.companyName ? s.firstName + ' ' + s.lastName : '',
+      contactPerson: s.companyName ? fullName : '',
       street: s.street || '',
       city: s.city || '',
       zipCode: s.zipCode || '',
@@ -294,7 +302,7 @@ export default function UnifiedNewSalePage() {
     });
     if (s.isB2B) setCustomerType('b2b');
     else setCustomerType('new');
-    setCustomerQuery(s.companyName || `${s.firstName} ${s.lastName}`.trim());
+    setCustomerQuery(label);
     setShowSuggestions(false);
   }
 
@@ -822,7 +830,7 @@ export default function UnifiedNewSalePage() {
               type="text"
               className={inputClass + ' pr-8'}
               value={customerQuery}
-              onChange={(e) => { setCustomerQuery(e.target.value); if (!e.target.value) setShowSuggestions(false); }}
+              onChange={(e) => { selectedQueryRef.current = null; setCustomerQuery(e.target.value); if (!e.target.value) setShowSuggestions(false); }}
               onFocus={() => { if (customerSuggestions.length > 0) setShowSuggestions(true); }}
               placeholder="Začněte psát…"
               autoComplete="off"

@@ -39,6 +39,22 @@ export async function GET(request: NextRequest) {
       isB2B: !!(c.companyName || c.ico),
     }));
 
+    // Čárky a závorky by rozbily PostgREST .or() filtr
+    const safe = q.replace(/[,()%*]/g, ' ').replace(/\s+/g, ' ').trim();
+    const orderFilters = [
+      `email.ilike.%${safe}%`,
+      `firstName.ilike.%${safe}%`,
+      `lastName.ilike.%${safe}%`,
+      `phone.ilike.%${safe.replace(/\s/g, '')}%`,
+      `companyName.ilike.%${safe}%`,
+      `ico.ilike.%${safe}%`,
+    ];
+    // „Aneta Lorencová“ — jméno a příjmení jsou ve dvou sloupcích
+    if (safe.includes(' ')) {
+      const [first, ...rest] = safe.split(' ');
+      orderFilters.push(`and(firstName.ilike.%${first}%,lastName.ilike.%${rest.join(' ')}%)`);
+    }
+
     // 2) Starší zákazníci, kteří jsou zatím jen v objednávkách
     // Search orders — match name, email, phone, company, ICO
     // Use ilike for case-insensitive partial match
@@ -46,9 +62,7 @@ export async function GET(request: NextRequest) {
       .from('orders')
       .select('email, firstName, lastName, phone, companyName, ico, dic, streetAddress, city, zipCode, createdAt')
       .neq('email', STORE_EMAIL)
-      .or(
-        `email.ilike.%${q}%,firstName.ilike.%${q}%,lastName.ilike.%${q}%,phone.ilike.%${q}%,companyName.ilike.%${q}%,ico.ilike.%${q}%`
-      )
+      .or(orderFilters.join(','))
       .order('createdAt', { ascending: false })
       .limit(40);
 
