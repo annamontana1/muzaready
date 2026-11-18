@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPriceMatrixLookup } from '@/lib/stock';
+import { matrixPriceFor } from '@/lib/price-matrix-bands';
 import { MATRIX_TIER, matrixCategory } from '@/lib/sale-rule';
 import prisma from '@/lib/prisma';
 import { skuPhotos } from '@/lib/sku-image';
@@ -144,8 +145,12 @@ export async function GET(request: NextRequest) {
           : sku.customerCategory === 'STANDARD'
           ? 'Standard'
           : ''; // bez kategorie
-        const matrixPerGram = priceMatrixMap.get(
-          `${matrixCategory(sku)}_${MATRIX_TIER[sku.customerCategory || 'STANDARD'] || 'standard'}_${sku.lengthCm}`,
+        const matrixPerGram = matrixPriceFor(
+          priceMatrixMap,
+          matrixCategory(sku),
+          MATRIX_TIER[sku.customerCategory || 'STANDARD'] || 'standard',
+          sku.lengthCm,
+          sku.shade,
         );
         const perGram = matrixPerGram ?? sku.pricePerGramCzk ?? 0;
         const computedPriceCzk = weight ? Number((perGram * weight).toFixed(2)) : Number(perGram.toFixed(2));

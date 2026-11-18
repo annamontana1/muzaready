@@ -1,22 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { requireAdmin } from '@/lib/admin-auth';
+import { pickMatrixRow, type MatrixRow } from '@/lib/price-matrix-bands';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-function resolveShadeRange(
-  tier: string,
-  category: string,
-  shade: number | null
-): { shadeRangeStart: number; shadeRangeEnd: number } {
-  if (tier === 'baby_shades') return { shadeRangeStart: 7, shadeRangeEnd: 10 };
-  if (category === 'barvene') return { shadeRangeStart: 5, shadeRangeEnd: 10 };
-  if (tier === 'platinum' && shade !== null && shade >= 5) {
-    return { shadeRangeStart: 5, shadeRangeEnd: 7 };
-  }
-  return { shadeRangeStart: 1, shadeRangeEnd: 4 };
-}
 
 export async function GET(request: NextRequest) {
   const authError = await requireAdmin(request);
@@ -43,17 +31,14 @@ export async function GET(request: NextRequest) {
 
     const tier = tierRaw === 'platinum_edition' ? 'platinum' : tierRaw;
     const shade = shadeRaw ? parseInt(shadeRaw, 10) : null;
-    const { shadeRangeStart, shadeRangeEnd } = resolveShadeRange(tier, category, shade);
-
-    const { data: row, error } = await getSupabaseAdminClient()
+    // Všechny řádky ceníku pro kategorii × typ × délku; pásmo se vybere podle odstínu
+    // (pásmo obsahující odstín → nejbližší pásmo → jediný řádek).
+    const { data: rows, error } = await getSupabaseAdminClient()
       .from('price_matrix')
-      .select('pricePerGramCzk')
+      .select('category, tier, lengthCm, shadeRangeStart, shadeRangeEnd, pricePerGramCzk')
       .eq('category', category)
       .eq('tier', tier)
-      .eq('lengthCm', lengthCm)
-      .eq('shadeRangeStart', shadeRangeStart)
-      .eq('shadeRangeEnd', shadeRangeEnd)
-      .maybeSingle();
+      .eq('lengthCm', lengthCm);
 
     if (error) {
       console.error('Price-check error:', error.message);
@@ -63,9 +48,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!row) {
+    const row = pickMatrixRow((rows || []) as MatrixRow[], shade);
+
+    if (!row || !Number(row.pricePerGramCzk)) {
       return NextResponse.json(
-        { error: `Cena není v matici (${tier} ${category} ${shadeRangeStart}-${shadeRangeEnd} ${lengthCm}cm)` },
+        { error: `Cena není v ceníku (${tier} ${category} ${lengthCm} cm) — zadejte ji ručně` },
         { status: 404 }
       );
     }

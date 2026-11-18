@@ -37,9 +37,16 @@ export function pieceGramOptions(): number[] {
 }
 
 /** Ceník (price_matrix): kategorie podle druhu kusu, tier podle kategorie zákazníka */
-export function matrixCategory(sku: { saleMode: string; isDyed?: boolean | null; shade?: string | null }): 'barvene' | 'nebarvene' {
+export function matrixCategory(sku: {
+  saleMode: string;
+  isDyed?: boolean | null;
+  shade?: string | null;
+  customerCategory?: string | null;
+}): 'barvene' | 'nebarvene' {
   if (sku.saleMode === 'PIECE_BY_WEIGHT') return sku.isDyed ? 'barvene' : 'nebarvene';
-  return parseInt(sku.shade || '1', 10) >= 5 ? 'barvene' : 'nebarvene';
+  // Zásoba na gramy: podle odstínu. Luxe má nebarvené 1–5 a barvené od 6, ostatní od 5.
+  const dyedFrom = sku.customerCategory === 'LUXE' ? 6 : 5;
+  return parseInt(sku.shade || '1', 10) >= dyedFrom ? 'barvene' : 'nebarvene';
 }
 export const MATRIX_TIER: Record<string, string> = {
   STANDARD: 'standard',

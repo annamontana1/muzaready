@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { buildPriceMatrixMap, matrixPriceFor } from '@/lib/price-matrix-bands';
 import { pieceCode, pieceTitle } from '@/lib/piece-title';
 import { GRAM_STEP, MATRIX_TIER, PIECE_DEFAULT_GRAMS, PIECE_MAX_GRAMS, PIECE_MIN_GRAMS, matrixCategory, pieceGramsLeft, soldByGrams, validPieceGrams } from '@/lib/sale-rule';
 
@@ -86,26 +87,9 @@ export function calculateAssemblyFee(
 }
 
 export async function getPriceMatrixLookup(): Promise<Map<string, number>> {
+  // Klíče `kategorie_tier_délka` (+ `_s<odstín>` tam, kde má ceník pásma podle odstínu)
   const entries = await prisma.priceMatrix.findMany();
-  const map = new Map<string, number>();
-
-  for (const entry of entries) {
-    const key = `${entry.category}_${entry.tier}_${entry.lengthCm}`;
-    let price: number;
-
-    if (typeof entry.pricePerGramCzk === 'string') {
-      price = parseFloat(entry.pricePerGramCzk);
-    } else if (typeof entry.pricePerGramCzk === 'number') {
-      price = entry.pricePerGramCzk;
-    } else {
-      // Handle Decimal type from Prisma
-      price = parseFloat(entry.pricePerGramCzk.toString());
-    }
-
-    map.set(key, price);
-  }
-
-  return map;
+  return buildPriceMatrixMap(entries);
 }
 
 export async function quoteCartLines(
@@ -137,8 +121,8 @@ export async function quoteCartLines(
 
     // Use selectedLength from the line if provided (configurator choice), else fall back to SKU's own length
     const lookupLength = line.selectedLength ?? sku.lengthCm;
-    const matrixKey = `${category}_${tier}_${lookupLength}`;
-    const matrixPrice = priceMatrixMap.get(matrixKey);
+    // Platinum nebarvené má cenová pásma podle odstínu kusu (lib/price-matrix-bands.ts)
+    const matrixPrice = matrixPriceFor(priceMatrixMap, category, tier, lookupLength, sku.shade);
     if (matrixPrice) {
       pricePerGram = matrixPrice;
     }
