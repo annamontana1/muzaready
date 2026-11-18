@@ -72,6 +72,9 @@ interface Order {
   fakturoidInvoiceUrl: string | null;
   fakturoidInvoiceNum: string | null;
   naklad: number | null;
+  depositAmount: number | null;
+  depositPaidAt: string | null;
+  depositMethod: string | null;
   invoiceUrl?: string | null;
 }
 

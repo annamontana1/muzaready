@@ -90,21 +90,65 @@ export async function PATCH(
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const { naklad } = await req.json();
+  const body = await req.json();
   const supabase = getSupabaseAdminClient();
+  const now = new Date().toISOString();
+
+  const toNumberOrNull = (v: unknown): number | null => {
+    if (v === null || v === undefined || v === '') return null;
+    const n = typeof v === 'number' ? v : parseFloat(String(v));
+    return Number.isFinite(n) ? n : null;
+  };
+
+  // Update only the fields that were sent
+  const update: Record<string, unknown> = { updatedAt: now };
+  if ('naklad' in body) update.naklad = toNumberOrNull(body.naklad);
+
+  if ('depositAmount' in body) {
+    const { data: current, error: fetchError } = await supabase
+      .from('orders')
+      .select('total, paymentStatus, paidAt, depositPaidAt')
+      .eq('id', params.id)
+      .single();
+    if (fetchError || !current) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    const deposit = toNumberOrNull(body.depositAmount);
+    update.depositAmount = deposit && deposit > 0 ? deposit : null;
+    if ('depositMethod' in body) update.depositMethod = body.depositMethod || null;
+    update.depositPaidAt = deposit && deposit > 0
+      ? (body.depositPaidAt || current.depositPaidAt || now)
+      : null;
+
+    // Keep payment status in sync with the deposit (refunded orders are left alone)
+    if (current.paymentStatus !== 'refunded') {
+      if (deposit && deposit >= current.total) {
+        update.paymentStatus = 'paid';
+        update.paidAt = current.paidAt || now;
+      } else if (deposit && deposit > 0) {
+        update.paymentStatus = 'partial';
+        update.paidAt = null;
+      } else if (current.paymentStatus === 'partial') {
+        update.paymentStatus = 'unpaid';
+      }
+    }
+  } else if ('depositMethod' in body) {
+    update.depositMethod = body.depositMethod || null;
+  }
 
   const { data: order, error } = await supabase
     .from('orders')
-    .update({ naklad: naklad !== undefined ? parseFloat(naklad) : null, updatedAt: new Date().toISOString() })
+    .update(update)
     .eq('id', params.id)
-    .select('naklad')
+    .select('naklad, depositAmount, depositPaidAt, depositMethod, paymentStatus')
     .single();
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to update naklad', details: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update order', details: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true, naklad: order.naklad });
+  return NextResponse.json({ success: true, ...order });
 }
 
 /**

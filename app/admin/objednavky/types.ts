@@ -29,6 +29,9 @@ export interface Order {
   deliveryStatus: string;
   channel: string;
   naklad: number | null;
+  depositAmount?: number | null;
+  depositPaidAt?: string | null;
+  depositMethod?: string | null;
   notesInternal: string | null;
   tags: string[];
   riskScore: number;
