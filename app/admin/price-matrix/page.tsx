@@ -12,7 +12,7 @@ export default function PriceMatrixPage() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Matice cen</h1>
         <p className="mt-2 text-gray-600">
-          Spravuj ceník vlasů. Všechny ceny jsou za 1 gram. Při uložení se automaticky přepočítávají na EUR.
+          Ceník vlasů pro celý e-shop. Co tu uložíte, platí v katalogu, v košíku i ve formuláři Nový prodej.
         </p>
       </div>
       <PriceMatrixTab />
