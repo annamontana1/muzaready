@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       .from('orders')
       .select(`
         id, orderNumber, email, firstName, lastName, phone, streetAddress, city, zipCode, total, subtotal, shippingCost, discountAmount,
-        orderStatus, paymentStatus, deliveryStatus, channel, tags, riskScore, naklad, depositAmount,
+        orderStatus, paymentStatus, deliveryStatus, channel, tags, riskScore, naklad, depositAmount, customerType,
         notesInternal, createdAt, updatedAt, lastStatusChangeAt,
         order_items(id)
       `, { count: 'exact' });
@@ -103,6 +103,7 @@ export async function GET(request: NextRequest) {
       riskScore: order.riskScore || 0,
       naklad: order.naklad ?? null,
       depositAmount: order.depositAmount ?? null,
+      customerType: order.customerType ?? null,
       notesInternal: order.notesInternal || null,
       itemCount: (order.order_items || []).length,
       createdAt: order.createdAt,

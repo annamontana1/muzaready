@@ -32,6 +32,7 @@ export interface Order {
   depositAmount?: number | null;
   depositPaidAt?: string | null;
   depositMethod?: string | null;
+  customerType?: 'B2B' | 'B2C' | null;
   notesInternal: string | null;
   tags: string[];
   riskScore: number;

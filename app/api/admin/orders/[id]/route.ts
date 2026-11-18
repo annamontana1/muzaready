@@ -103,6 +103,9 @@ export async function PATCH(
   // Update only the fields that were sent
   const update: Record<string, unknown> = { updatedAt: now };
   if ('naklad' in body) update.naklad = toNumberOrNull(body.naklad);
+  if ('customerType' in body) {
+    update.customerType = body.customerType === 'B2B' || body.customerType === 'B2C' ? body.customerType : null;
+  }
 
   if ('depositAmount' in body) {
     const { data: current, error: fetchError } = await supabase
@@ -141,7 +144,7 @@ export async function PATCH(
     .from('orders')
     .update(update)
     .eq('id', params.id)
-    .select('naklad, depositAmount, depositPaidAt, depositMethod, paymentStatus')
+    .select('naklad, depositAmount, depositPaidAt, depositMethod, paymentStatus, customerType')
     .single();
 
   if (error) {
