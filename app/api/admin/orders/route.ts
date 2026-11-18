@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('orders')
       .select(`
-        id, email, firstName, lastName, phone, total, subtotal, shippingCost, discountAmount,
+        id, orderNumber, email, firstName, lastName, phone, streetAddress, city, zipCode, total, subtotal, shippingCost, discountAmount,
         orderStatus, paymentStatus, deliveryStatus, channel, tags, riskScore, naklad, depositAmount,
         notesInternal, createdAt, updatedAt, lastStatusChangeAt,
         order_items(id)
@@ -83,7 +83,12 @@ export async function GET(request: NextRequest) {
 
     const transformedOrders = (orders || []).map((order: any) => ({
       id: order.id,
+      orderNumber: order.orderNumber,
       email: order.email,
+      phone: order.phone || null,
+      streetAddress: order.streetAddress || null,
+      city: order.city || null,
+      zipCode: order.zipCode || null,
       firstName: order.firstName,
       lastName: order.lastName,
       total: order.total,
