@@ -417,7 +417,9 @@ export async function createInvoiceFromOrder(order: OrderForInvoice): Promise<{
     // 3. Create invoice (proforma or regular)
     const invoice = await createInvoice({
       subject_id: subjectId,
-      order_number: order.orderId,
+      // Číslo objednávky se na fakturu netiskne (Anna ho tam nechce). Vazba na objednávku
+      // jde přes custom_id — interní pole Fakturoidu, které na dokladu není vidět.
+      custom_id: order.orderId,
       payment_method: order.paymentMethod === 'gopay' ? 'card' : 'bank',
       currency: 'CZK',
       due: order.dueDays ?? (order.proforma ? 3 : 14),
