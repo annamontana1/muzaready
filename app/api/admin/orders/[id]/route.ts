@@ -107,6 +107,9 @@ export async function PATCH(
     update.customerType = body.customerType === 'B2B' || body.customerType === 'B2C' ? body.customerType : null;
   }
 
+  // true = tímto uložením se objednávka stala zaplacenou (záloha pokryla celou částku)
+  let becamePaid = false;
+
   if ('depositAmount' in body) {
     const { data: current, error: fetchError } = await supabase
       .from('orders')
@@ -124,9 +127,13 @@ export async function PATCH(
       ? (body.depositPaidAt || current.depositPaidAt || now)
       : null;
 
-    // Keep payment status in sync with the deposit (refunded orders are left alone)
-    if (current.paymentStatus !== 'refunded') {
+    // Keep payment status in sync with the deposit (refunded orders are left alone).
+    // Objednávku zaplacenou jinak než zálohou (hotově, kartou, převodem) záloha nemění —
+    // jinak by dopsání částky do pole Záloha udělalo ze zaplacené „částečně zaplaceno“.
+    const paidWithoutDeposit = current.paymentStatus === 'paid' && !current.depositPaidAt;
+    if (current.paymentStatus !== 'refunded' && !paidWithoutDeposit) {
       if (deposit && deposit >= current.total) {
+        becamePaid = current.paymentStatus !== 'paid';
         update.paymentStatus = 'paid';
         update.paidAt = current.paidAt || now;
       } else if (deposit && deposit > 0) {
@@ -149,6 +156,17 @@ export async function PATCH(
 
   if (error) {
     return NextResponse.json({ error: 'Failed to update order', details: error.message }, { status: 500 });
+  }
+
+  // Záloha doplatila celou objednávku → stejný postup jako u tlačítka Zaplaceno:
+  // faktura ve Fakturoidu se označí jako uhrazená a zákazníkovi odejde potvrzení platby.
+  if (becamePaid) {
+    try {
+      const { settleOrderPaid } = await import('@/lib/order-invoice');
+      await settleOrderPaid(params.id, 'admin');
+    } catch (settleError) {
+      console.error('Failed to settle paid order:', settleError);
+    }
   }
 
   return NextResponse.json({ success: true, ...order });
