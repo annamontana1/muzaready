@@ -57,6 +57,107 @@ function PoznamkaCell({
   );
 }
 
+// Click to switch customer type: – → B2C → B2B → –
+function TypZakaznikaCell({
+  orderId,
+  value,
+  onUpdate,
+}: {
+  orderId: string;
+  value: 'B2B' | 'B2C' | null;
+  onUpdate: (v: 'B2B' | 'B2C' | null) => void;
+}) {
+  const next = value === null ? 'B2C' : value === 'B2C' ? 'B2B' : null;
+  const save = async () => {
+    onUpdate(next);
+    await fetch(`/api/admin/orders/${orderId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ customerType: next }),
+    });
+  };
+  const style =
+    value === 'B2B'
+      ? 'bg-violet-100 text-violet-800'
+      : value === 'B2C'
+        ? 'bg-emerald-100 text-emerald-800'
+        : 'bg-stone-100 text-stone-400 hover:text-stone-600';
+  return (
+    <button
+      type="button"
+      onClick={save}
+      title="Kliknutím přepneš B2C / B2B"
+      className={`mt-1 px-2 py-0.5 rounded-full text-[11px] font-semibold ${style}`}
+    >
+      {value ?? '+ B2B/B2C'}
+    </button>
+  );
+}
+
+// Inline editable Záloha (deposit) cell — saves amount, shows what is left to pay
+function ZalohaCell({
+  orderId,
+  total,
+  deposit,
+  onUpdate,
+}: {
+  orderId: string;
+  total: number;
+  deposit: number | null;
+  onUpdate: (v: number | null) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(deposit ? deposit.toString() : '');
+
+  const save = async () => {
+    const num = value ? parseFloat(value) : null;
+    await fetch(`/api/admin/orders/${orderId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ depositAmount: num }),
+    });
+    onUpdate(num && num > 0 ? num : null);
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <input
+        type="number"
+        min="0"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={save}
+        onKeyDown={(e) => { if (e.key === 'Enter') save(); if (e.key === 'Escape') setEditing(false); }}
+        autoFocus
+        placeholder="záloha Kč"
+        className="w-28 px-2 py-1 border border-sky-400 rounded text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+      />
+    );
+  }
+
+  const remaining = deposit ? Math.max(total - deposit, 0) : null;
+
+  return (
+    <span onClick={() => setEditing(true)} className="cursor-pointer block text-xs">
+      {deposit ? (
+        <span className="inline-flex flex-col gap-0.5">
+          <span className="text-sky-800 font-medium bg-sky-50 px-2 py-0.5 rounded">
+            Záloha {deposit.toLocaleString('cs-CZ')} Kč
+          </span>
+          <span className={remaining ? 'text-red-600 px-2' : 'text-green-600 px-2'}>
+            {remaining ? `zbývá ${remaining.toLocaleString('cs-CZ')} Kč` : 'doplaceno'}
+          </span>
+        </span>
+      ) : (
+        <span className="text-stone-300 hover:text-stone-500">+ záloha</span>
+      )}
+    </span>
+  );
+}
+
 // Inline editable Náklad cell (owner only)
 function NakladCell({
   orderId,
@@ -154,6 +255,7 @@ export default function AdminOrdersPage() {
   const [filterMonth, setFilterMonth] = useState('');
   const [filterDay, setFilterDay] = useState('');
   const [filterChannelLocal, setFilterChannelLocal] = useState('');
+  const [filterTypeLocal, setFilterTypeLocal] = useState('');
 
   const { showToast } = useToast();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -198,6 +300,29 @@ export default function AdminOrdersPage() {
     });
   };
 
+  const updateOrderDeposit = (orderId: string, depositAmount: number | null, total: number) => {
+    const paymentStatus = depositAmount && depositAmount >= total ? 'paid' : depositAmount ? 'partial' : undefined;
+    queryClient.setQueriesData({ queryKey: orderKeys.lists() }, (old: any) => {
+      if (!old?.orders) return old;
+      return {
+        ...old,
+        orders: old.orders.map((o: any) =>
+          o.id === orderId
+            ? { ...o, depositAmount, ...(paymentStatus ? { paymentStatus } : {}) }
+            : o
+        ),
+      };
+    });
+    queryClient.invalidateQueries({ queryKey: orderKeys.lists() });
+  };
+
+  const updateOrderType = (orderId: string, customerType: 'B2B' | 'B2C' | null) => {
+    queryClient.setQueriesData({ queryKey: orderKeys.lists() }, (old: any) => {
+      if (!old?.orders) return old;
+      return { ...old, orders: old.orders.map((o: any) => (o.id === orderId ? { ...o, customerType } : o)) };
+    });
+  };
+
   const updateOrderNaklad = (orderId: string, naklad: number | null) => {
     queryClient.setQueryData(
       orderKeys.list({
@@ -223,9 +348,24 @@ export default function AdminOrdersPage() {
   };
 
   // Client-side channel filter (month/day filtered server-side)
-  const filteredOrders = filterChannelLocal
+  const channelOrders = filterChannelLocal
     ? orders.filter((order) => order.channel === filterChannelLocal)
     : orders;
+  const filteredOrders = filterTypeLocal
+    ? channelOrders.filter((order) =>
+        filterTypeLocal === 'none' ? !order.customerType : order.customerType === filterTypeLocal
+      )
+    : channelOrders;
+
+  // B2B vs B2C split (respects month/day/channel filters, not the type filter)
+  const typeSummary = (['B2B', 'B2C'] as const).map((t) => {
+    const list = channelOrders.filter(
+      (o) => o.customerType === t && o.orderStatus !== 'cancelled' && o.paymentStatus !== 'refunded'
+    );
+    const revenue = list.reduce((sum, o) => sum + (o.total || 0), 0);
+    const cost = list.reduce((sum, o) => sum + ((o as any).naklad ?? 0), 0);
+    return { type: t, count: list.length, revenue, margin: revenue - cost };
+  });
 
   // Summary totals — exclude cancelled and refunded orders
   const activeOrders = filteredOrders.filter(
@@ -234,6 +374,9 @@ export default function AdminOrdersPage() {
   const totalRevenue = activeOrders.reduce((sum, o) => sum + (o.total || 0), 0);
   const totalNaklad = activeOrders.reduce((sum, o) => sum + ((o as any).naklad ?? 0), 0);
   const totalMarze = totalRevenue - totalNaklad;
+  const totalNedoplaceno = activeOrders
+    .filter((o) => o.paymentStatus === 'partial' && ((o as any).depositAmount ?? 0) > 0)
+    .reduce((sum, o) => sum + Math.max((o.total || 0) - ((o as any).depositAmount ?? 0), 0), 0);
 
   // Calculate stats from current page (acknowledged limitation: per-page, not global)
   const stats = {
@@ -584,11 +727,17 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Filtered summary totals (náklad/marže owner only) */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-lg p-4 border border-stone-200">
           <p className="text-xs text-stone-500">Celkový příjem</p>
           <p className="text-xl font-bold text-stone-800">
             {totalRevenue.toLocaleString('cs-CZ')} Kč
+          </p>
+        </div>
+        <div className="bg-white rounded-lg p-4 border border-stone-200">
+          <p className="text-xs text-stone-500">Nedoplaceno (zálohy)</p>
+          <p className="text-xl font-bold text-sky-700">
+            {totalNedoplaceno.toLocaleString('cs-CZ')} Kč
           </p>
         </div>
         {currentUser?.role === 'owner' && (
@@ -607,6 +756,24 @@ export default function AdminOrdersPage() {
             </div>
           </>
         )}
+      </div>
+
+      {/* B2B / B2C split */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {typeSummary.map((t) => (
+          <div
+            key={t.type}
+            className={`rounded-lg p-4 border ${t.type === 'B2B' ? 'bg-violet-50 border-violet-200' : 'bg-emerald-50 border-emerald-200'}`}
+          >
+            <p className={`text-xs font-semibold ${t.type === 'B2B' ? 'text-violet-800' : 'text-emerald-800'}`}>
+              {t.type === 'B2B' ? 'B2B – salony a odběratelé' : 'B2C – koncové zákaznice'} · {t.count} obj.
+            </p>
+            <p className="text-lg font-bold text-stone-800">{t.revenue.toLocaleString('cs-CZ')} Kč</p>
+            {currentUser?.role === 'owner' && (
+              <p className="text-xs text-stone-600">Marže {t.margin.toLocaleString('cs-CZ')} Kč</p>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Month / day / channel quick-filters */}
@@ -637,12 +804,23 @@ export default function AdminOrdersPage() {
           <option value="web">E-shop</option>
           <option value="whatsapp">WhatsApp</option>
         </select>
-        {(filterMonth || filterDay || filterChannelLocal) && (
+        <select
+          value={filterTypeLocal}
+          onChange={(e) => setFilterTypeLocal(e.target.value)}
+          className="px-3 py-2 border border-stone-200 rounded-lg text-sm"
+        >
+          <option value="">B2B i B2C</option>
+          <option value="B2B">Jen B2B</option>
+          <option value="B2C">Jen B2C</option>
+          <option value="none">Nezařazené</option>
+        </select>
+        {(filterMonth || filterDay || filterChannelLocal || filterTypeLocal) && (
           <button
             onClick={() => {
               setFilterMonth('');
               setFilterDay('');
               setFilterChannelLocal('');
+              setFilterTypeLocal('');
             }}
             className="px-3 py-2 text-sm text-stone-500 hover:text-stone-800"
           >
@@ -766,13 +944,34 @@ export default function AdminOrdersPage() {
                       ? `${order.firstName ?? ''} ${order.lastName ?? ''}`.trim()
                       : <span className="text-gray-400 italic">Bez jména</span>}
                   </div>
-                  <div className="text-xs text-gray-400 font-mono">#{String(order.orderNumber)}</div>
+                  <TypZakaznikaCell
+                    orderId={order.id}
+                    value={order.customerType ?? null}
+                    onUpdate={(v) => updateOrderType(order.id, v)}
+                  />
+                  {order.orderNumber != null && (
+                    <div className="text-xs text-gray-400 font-mono">#{order.orderNumber}</div>
+                  )}
                   {order.phone && <div className="text-xs text-gray-500">{order.phone}</div>}
+                  {order.email && !order.email.endsWith('@muzahair.cz') && (
+                    <div className="text-xs text-gray-500 truncate max-w-[200px]" title={order.email}>{order.email}</div>
+                  )}
+                  {((order as any).streetAddress || (order as any).city) && (
+                    <div className="text-xs text-gray-400 truncate max-w-[200px]">
+                      {[(order as any).streetAddress, (order as any).city].filter(Boolean).join(', ')}
+                    </div>
+                  )}
                   {order.channel === 'whatsapp' && (
                     <span className="mt-1 inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700">WhatsApp</span>
                   )}
                 </td>
-                <td className="px-4 py-4">
+                <td className="px-4 py-4 space-y-1">
+                  <ZalohaCell
+                    orderId={order.id}
+                    total={order.total}
+                    deposit={(order as any).depositAmount ?? null}
+                    onUpdate={(v) => updateOrderDeposit(order.id, v, order.total)}
+                  />
                   <PoznamkaCell
                     orderId={order.id}
                     note={order.notesInternal ?? null}

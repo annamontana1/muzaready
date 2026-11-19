@@ -47,6 +47,9 @@ interface Order {
   discountAmount: number;
   total: number;
   naklad: number | null;
+  depositAmount?: number | null;
+  depositPaidAt?: string | null;
+  depositMethod?: string | null;
   trackingNumber: string | null;
   createdAt: string;
   updatedAt: string;
@@ -91,6 +94,30 @@ export default function MetadataSection({ order, onUpdate }: MetadataSectionProp
       setSavingNaklad(false);
     }
   };
+
+  const [depositValue, setDepositValue] = useState<string>((order.depositAmount ?? '').toString());
+  const [depositMethod, setDepositMethod] = useState<string>(order.depositMethod ?? 'cash');
+  const [savingDeposit, setSavingDeposit] = useState(false);
+
+  const saveDeposit = async (amount: string, method: string) => {
+    setSavingDeposit(true);
+    try {
+      await fetch(`/api/admin/orders/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          depositAmount: amount === '' ? null : parseFloat(amount),
+          depositMethod: method,
+        }),
+      });
+      onUpdate();
+    } finally {
+      setSavingDeposit(false);
+    }
+  };
+
+  const deposit = parseFloat(depositValue) || 0;
+  const remaining = Math.max(order.total - deposit, 0);
 
   const naklad = parseFloat(nakladValue) || 0;
   const marze = order.total - naklad;
@@ -145,6 +172,62 @@ export default function MetadataSection({ order, onUpdate }: MetadataSectionProp
             </div>
           </div>
           <p className="text-xs text-amber-600 mt-2">Uloží se automaticky po opuštění pole nebo stisknutí Enter</p>
+        </div>
+
+        {/* Záloha */}
+        <div className="mb-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+          <h3 className="text-sm font-semibold text-sky-800 mb-3">💳 Záloha</h3>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label htmlFor="deposit-amount" className="text-sm text-sky-700 font-medium">Záloha (Kč):</label>
+              <input
+                id="deposit-amount"
+                type="number"
+                min="0"
+                value={depositValue}
+                onChange={e => setDepositValue(e.target.value)}
+                onBlur={() => saveDeposit(depositValue, depositMethod)}
+                onKeyDown={e => e.key === 'Enter' && saveDeposit(depositValue, depositMethod)}
+                placeholder="0"
+                className="w-28 px-3 py-1.5 border border-sky-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 bg-white"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="deposit-method" className="text-sm text-sky-700 font-medium">Jak:</label>
+              <select
+                id="deposit-method"
+                value={depositMethod}
+                onChange={e => {
+                  setDepositMethod(e.target.value);
+                  if (depositValue !== '') saveDeposit(depositValue, e.target.value);
+                }}
+                className="px-2 py-1.5 border border-sky-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+              >
+                <option value="cash">Hotově</option>
+                <option value="card">Kartou</option>
+                <option value="transfer">Převodem</option>
+              </select>
+            </div>
+            {savingDeposit && <span className="text-xs text-sky-600">Ukládám...</span>}
+            <div className="flex gap-4 text-sm">
+              <span className="text-sky-700">
+                Celkem: <strong>{order.total.toLocaleString('cs-CZ')} Kč</strong>
+              </span>
+              <span className={remaining > 0 ? 'text-red-700' : 'text-green-700'}>
+                {remaining > 0
+                  ? <>Zbývá doplatit: <strong>{remaining.toLocaleString('cs-CZ')} Kč</strong></>
+                  : <strong>Doplaceno</strong>}
+              </span>
+            </div>
+          </div>
+          {order.depositPaidAt && deposit > 0 && (
+            <p className="text-xs text-sky-600 mt-2">
+              Záloha zaplacena {new Date(order.depositPaidAt).toLocaleDateString('cs-CZ')}
+            </p>
+          )}
+          <p className="text-xs text-sky-600 mt-1">
+            Po uložení se stav platby nastaví sám: část = „Částečně zaplaceno“, celá částka = „Zaplaceno“.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

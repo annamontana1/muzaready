@@ -91,6 +91,13 @@ model Order {
   // Channel & metadata
   channel   String  @default("web") // web, pos, ig_dm
   naklad    Float?  // Náklad (cost) - owner only
+
+  // Záloha (deposit) - částečná platba předem
+  depositAmount Float?    // Kolik zákaznice zaplatila zálohou (Kč)
+  depositPaidAt DateTime? // Kdy byla záloha zaplacena
+  depositMethod String?   // cash, card, transfer
+
+  customerType String? // B2B (salony, technicky, odběratelky) nebo B2C (koncová zákaznice)
   tags      String? // JSON string of tags for filtering/organization
   riskScore Int     @default(0) // fraud detection score
 
