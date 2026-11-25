@@ -432,16 +432,33 @@ export default function VarkaPage() {
         </button>
       </div>
 
-      {keratinovy && (
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 max-w-lg text-[15px] tabular-nums">
-          <h3 className="text-base font-semibold text-stone-800 mb-2">Souhrn várky</h3>
-          <div className="flex justify-between gap-3 py-1"><span>Cena za vlasy</span><b>{formatKc(souhrn.vlasy)}</b></div>
-          <div className="flex justify-between gap-3 py-1"><span>Cena za keratinování</span><b>{formatKc(souhrn.keratin)}</b></div>
-          <div className="flex justify-between gap-3 border-t-2 border-[#722F37] mt-2 pt-2.5 text-lg font-bold">
-            <span>Celkem za várku</span><span className="text-[#722F37]">{formatKc(souhrn.celkem)}</span>
+      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 max-w-lg text-[15px] tabular-nums">
+        <h3 className="text-base font-semibold text-stone-800 mb-2">Souhrn várky</h3>
+        {keratinovy && (
+          <>
+            <div className="flex justify-between gap-3 py-1"><span>Cena za vlasy</span><b>{formatKc(souhrn.vlasy)}</b></div>
+            <div className="flex justify-between gap-3 py-1"><span>Cena za keratinování</span><b>{formatKc(souhrn.keratin)}</b></div>
+          </>
+        )}
+        <div className={`flex justify-between gap-3 text-lg font-bold ${keratinovy ? 'border-t-2 border-[#722F37] mt-2 pt-2.5' : 'py-1'}`}>
+          <span>Celkem za várku</span><span className="text-[#722F37]">{formatKc(souhrn.celkem)}</span>
+        </div>
+        <div className="mt-3 pt-3 border-t border-stone-200">
+          <div className="flex justify-between gap-3 py-1"><span>Zaplacené culíky</span><b className="text-emerald-700">− {formatKc(souhrn.zaplaceno)}</b></div>
+          {souhrn.vraceno > 0 && (
+            <div className="flex justify-between gap-3 py-1"><span>Vrácené culíky</span><b className="text-stone-500">− {formatKc(souhrn.vraceno)}</b></div>
+          )}
+          <div className="flex justify-between gap-3 py-1 text-base font-bold">
+            <span>Zbývá za tuto várku</span><span className="text-amber-600">{formatKc(souhrn.nezaplaceno)}</span>
           </div>
         </div>
-      )}
+        <p className="text-[13px] text-stone-500 mt-3">
+          Počítá se podle stavu culíků. Z celkového dluhu odběratele se částka odečte, až když zapíšete platbu nebo zálohu.{' '}
+          <Link href={`/admin/odberatele/${id}#platby`} className="font-semibold text-[#722F37] underline whitespace-nowrap">
+            Zapsat platbu nebo zálohu
+          </Link>
+        </p>
+      </div>
 
       <div className="sticky bottom-0 bg-stone-50/95 backdrop-blur border-t border-stone-200 -mx-4 px-4 lg:-mx-6 lg:px-6 py-3 flex items-center justify-between gap-3 flex-wrap pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
         <span className="text-[13px] text-stone-500">

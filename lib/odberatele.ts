@@ -125,17 +125,37 @@ export interface VarkaSouhrn {
   celkem: number;
   /** celkem bez vrácených culíků – tahle částka jde do dluhu */
   celkemBezVracenych: number;
+  /** culíky ve stavu „zaplaceno“ (jen přehled – z dluhu odečítají až zapsané platby) */
+  zaplaceno: number;
+  /** culíky ve stavu „vráceno“ */
+  vraceno: number;
+  /** celkem − zaplaceno − vráceno */
+  nezaplaceno: number;
 }
 
 export function souhrnVarky(items: CulikCeny[]): VarkaSouhrn {
-  const s: VarkaSouhrn = { pocet: items.length, gramy: 0, vlasy: 0, keratin: 0, celkem: 0, celkemBezVracenych: 0 };
+  const s: VarkaSouhrn = {
+    pocet: items.length,
+    gramy: 0,
+    vlasy: 0,
+    keratin: 0,
+    celkem: 0,
+    celkemBezVracenych: 0,
+    zaplaceno: 0,
+    vraceno: 0,
+    nezaplaceno: 0,
+  };
   for (const r of items) {
+    const cena = cenaCelkem(r);
     s.gramy += r.gramaz || 0;
     s.vlasy += cenaVlasy(r);
     s.keratin += cenaKeratin(r);
-    s.celkem += cenaCelkem(r);
-    if (!jeVraceno(r)) s.celkemBezVracenych += cenaCelkem(r);
+    s.celkem += cena;
+    if (jeVraceno(r)) s.vraceno += cena;
+    else s.celkemBezVracenych += cena;
+    if (r.stav === 'zaplaceno') s.zaplaceno += cena;
   }
+  s.nezaplaceno = s.celkem - s.zaplaceno - s.vraceno;
   return s;
 }
 

@@ -31,7 +31,7 @@ export interface Varka {
   id: string;
   date: string;
   pocitaSe: boolean;
-  souhrn: { pocet: number; gramy: number; vlasy: number; keratin: number; celkem: number; celkemBezVracenych: number };
+  souhrn: { pocet: number; gramy: number; vlasy: number; keratin: number; celkem: number; celkemBezVracenych: number; zaplaceno: number; vraceno: number; nezaplaceno: number };
   items: Culik[];
 }
 

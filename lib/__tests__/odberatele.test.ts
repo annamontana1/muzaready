@@ -48,6 +48,16 @@ describe('souhrn várky', () => {
   });
 });
 
+describe('zaplacené culíky ve várce', () => {
+  it('rozdělí várku na zaplaceno, vráceno a zbývá', () => {
+    const s = souhrnVarky([c(150, 95, 10), c(200, 100, 10, 'zaplaceno'), c(100, 50, 0, 'vraceno')]);
+    expect(s.celkem).toBe(42750);
+    expect(s.zaplaceno).toBe(22000);
+    expect(s.vraceno).toBe(5000);
+    expect(s.nezaplaceno).toBe(15750);
+  });
+});
+
 describe('dluh', () => {
   // čísla z artefaktu „Odběratelé várky“ (Salon Cool, 5. 11. 2026)
   const varka = [c(258, 100), c(168, 97), c(153, 107), c(87, 97), c(228, 100), c(167, 115), c(128, 145), c(200, 150)];

@@ -132,6 +132,15 @@ export default function OdberatelPage() {
     [opening, debtFrom, platby, detail]
   );
 
+  // culíky označené „zaplaceno“ ve várkách, které jdou do dluhu (bez data „počítat od“ ve všech)
+  const zaplaceneCuliky = useMemo(
+    () =>
+      (detail?.varky || [])
+        .filter((v) => !debtFrom || pocitaSeDoDluhu(debtFrom, v.date))
+        .reduce((a, v) => a + v.souhrn.zaplaceno, 0),
+    [detail, debtFrom]
+  );
+
   function switchTab(t: 'varky' | 'platby') {
     setTab(t);
     window.history.replaceState(null, '', t === 'platby' ? '#platby' : window.location.pathname);
@@ -285,6 +294,13 @@ export default function OdberatelPage() {
         </div>
       )}
 
+      {zaplaceneCuliky > dluh.zaplaceno && (
+        <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl px-4 py-3 text-sm">
+          Culíky označené jako zaplacené mají hodnotu {formatKc(zaplaceneCuliky)}, ale zapsané platby jsou jen {formatKc(dluh.zaplaceno)}.
+          Z dluhu se odečítají jen platby a zálohy zapsané v záložce Dluh a platby.
+        </div>
+      )}
+
       <div className="inline-flex bg-stone-100 rounded-lg p-1 gap-0.5">
         {(['varky', 'platby'] as const).map((t) => (
           <button
@@ -338,6 +354,9 @@ export default function OdberatelPage() {
                   </span>
                   <span className="row-span-2 lg:row-span-1 text-right font-bold tabular-nums text-stone-800">
                     {formatKc(v.souhrn.celkem)}
+                    {v.souhrn.zaplaceno > 0 && (
+                      <small className="block font-normal text-xs text-emerald-700">zaplaceno {formatKc(v.souhrn.zaplaceno)}</small>
+                    )}
                     <small className="block lg:hidden font-normal text-xs text-stone-500">{inDebt ? 'počítá se do dluhu' : 'v dluhu z minula'}</small>
                   </span>
                   <span className="lg:hidden text-[13px] text-stone-500">
