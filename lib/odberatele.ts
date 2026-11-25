@@ -10,6 +10,12 @@
  */
 
 export const MODULE_VARKY = 'varky';
+/**
+ * Odběratel odebraný ze stránky Odběratelé (data zůstávají v databázi, jen se
+ * nikde neukazují a nepočítají). Hodnoty b2b_partners.module:
+ * 'legacy' = archiv starého B2B, 'varky' = Odběratelé, 'skryto' = odebraný.
+ */
+export const MODULE_SKRYTO = 'skryto';
 
 export const TYPY_ODBERATELE = [
   { key: 'splatky', label: 'Splátky' },

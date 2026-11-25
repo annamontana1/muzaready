@@ -14,7 +14,8 @@ export async function GET(req: NextRequest) {
   try {
     const partners = await prisma.b2bPartner.findMany({
       // archiv = jen starý komisní modul; odběratelé s várkami mají vlastní stránku
-      where: { module: { not: 'varky' } },
+      // a skrytí odběratelé (module 'skryto') se neukazují nikde
+      where: { module: 'legacy' },
       include: {
         shipments: {
           include: {

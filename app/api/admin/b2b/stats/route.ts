@@ -16,6 +16,13 @@ export async function GET(req: NextRequest) {
     const supabase = getSupabaseAdminClient();
 
     let paymentsQuery = supabase.from('b2b_payments').select('amount');
+    // platby odběratelů odebraných ze stránky Odběratelé se nepočítají
+    // (jejich prodeje jsou vedené v Objednávkách)
+    const { data: skryti } = await supabase.from('b2b_partners').select('id').eq('module', 'skryto');
+    const skrytiIds = (skryti || []).map((p) => p.id).filter((id) => /^[A-Za-z0-9_-]+$/.test(id));
+    if (skrytiIds.length > 0) {
+      paymentsQuery = paymentsQuery.not('partnerId', 'in', `(${skrytiIds.join(',')})`);
+    }
     let salesQuery = supabase.from('b2b_sales').select('totalAmount');
 
     if (month) {

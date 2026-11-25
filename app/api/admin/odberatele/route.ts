@@ -19,8 +19,8 @@ export async function GET(req: NextRequest) {
         include: partnerInclude,
         orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       }),
-      prisma.b2bPartner.count({ where: { module: { not: MODULE_VARKY } } }),
-      prisma.b2bShipment.count({ where: { partner: { module: { not: MODULE_VARKY } } } }),
+      prisma.b2bPartner.count({ where: { module: 'legacy' } }),
+      prisma.b2bShipment.count({ where: { partner: { module: 'legacy' } } }),
     ]);
 
     const mesic = currentMonthPrague();
