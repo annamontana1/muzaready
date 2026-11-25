@@ -259,8 +259,8 @@ export default function AdminDashboard() {
                   {monthlyTotal.toLocaleString('cs-CZ')}
                   <span className="text-sm text-[#722F37]/60 ml-1">Kč</span>
                 </p>
-                <Link href="/admin/b2b" className="text-xs text-[#722F37] font-medium mt-1 inline-block hover:underline">
-                  B2B přehled →
+                <Link href="/admin/odberatele" className="text-xs text-[#722F37] font-medium mt-1 inline-block hover:underline">
+                  Odběratelé →
                 </Link>
               </div>
             </div>

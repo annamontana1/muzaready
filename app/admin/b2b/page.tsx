@@ -152,6 +152,11 @@ export default function B2bPartnersPage() {
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 space-y-6">
+      <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl px-4 py-3 text-sm">
+        <strong>Archiv starého B2B.</strong> Data jsou jen ke čtení, nic se tu už neukládá ani neodesílá.
+        Nové várky a platby zapisujte v sekci{' '}
+        <Link href="/admin/odberatele" className="font-semibold text-[#722F37] underline">Odběratelé</Link>.
+      </div>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

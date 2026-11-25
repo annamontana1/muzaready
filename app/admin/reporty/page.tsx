@@ -1,5 +1,6 @@
 'use client';
 
+import MarzeMesic from './MarzeMesic';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -230,6 +231,8 @@ export default function ReportyPage() {
 
   return (
     <div className="space-y-6">
+      <MarzeMesic />
+
       {/* ── Filters ───────────────────────────────────────────────── */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <div className="flex flex-wrap items-end gap-4">

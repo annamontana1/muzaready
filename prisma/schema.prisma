@@ -971,6 +971,10 @@ model B2bPartner {
   ico         String?
   address     String?
   notes       String?
+  module      String   @default("legacy") // legacy (starý komisní modul = archiv) | varky (stránka Odběratelé)
+  openingDebt Float    @default(0)        // Dluh z minula
+  debtFrom    DateTime?                   // Várky počítat od
+  sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   shipments   B2bShipment[]
@@ -979,6 +983,7 @@ model B2bPartner {
   returns     B2bReturn[]
   events      B2bEvent[]
 
+  @@index([module])
   @@map("b2b_partners")
 }
 
@@ -1005,7 +1010,10 @@ model B2bItem {
   gramaz      Float
   cenaPerGram Float
   celkem      Float
-  stav        String   @default("skladem") // skladem, prodano, vraceni, zaplaceno
+  keratinPerGram Float  @default(0) // keratinování Kč/g (jen keratinoví odběratelé)
+  nakladPerGram  Float?             // interní náklad Kč/g – nikdy v PDF pro odběratele
+  sortOrder      Int    @default(0)
+  stav        String   @default("skladem") // starý modul: skladem, prodano, vraceni, zaplaceno · várky: predano, zaplaceno, vraceno, skladem, prodano
   notes       String?
   soldAt      DateTime?
   returnedAt  DateTime?
@@ -1022,7 +1030,8 @@ model B2bPayment {
   partner     B2bPartner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
   date        DateTime
   amount      Float
-  method      String   // airbank, hotovost, jiny
+  method      String   // starý modul: airbank, hotovost, jiny · várky: hotove, kartou, prevodem
+  type        String   @default("platba") // platba | zaloha | doplatek
   note        String?
   createdAt   DateTime @default(now())
 

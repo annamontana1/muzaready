@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin-auth';
+import { archivJenKeCteni } from '@/lib/b2b-archiv';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,6 +12,8 @@ export async function PATCH(
 ) {
   const admin = await requireAdmin(req);
   if (admin instanceof NextResponse) return admin;
+  const archiv = archivJenKeCteni();
+  if (archiv) return archiv;
 
   try {
     const { id } = await params;
