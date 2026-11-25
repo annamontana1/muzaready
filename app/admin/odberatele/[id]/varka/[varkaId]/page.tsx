@@ -14,6 +14,8 @@ import {
   formatKc,
   num,
   pocitaSeDoDluhu,
+  prazdnaMarze,
+  pridejCulikDoMarze,
   souhrnVarky,
   spocitejDluh,
 } from '@/lib/odberatele';
@@ -80,7 +82,7 @@ export default function VarkaPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [showCosts, setShowCosts] = useState(false);
+  const [showCosts, setShowCosts] = useState(true);
   const [armed, setArmed] = useState<string | null>(null);
 
   const fill = useCallback(
@@ -134,6 +136,12 @@ export default function VarkaPage() {
 
   const keratinovy = detail?.type === 'keratin';
   const souhrn = useMemo(() => souhrnVarky(rows.map(calc)), [rows]);
+  // interní: náklad a čistá marže várky (bez vrácených culíků, jen culíky s vyplněným nákladem)
+  const marze = useMemo(() => {
+    const m = prazdnaMarze();
+    rows.forEach((r) => pridejCulikDoMarze(m, { ...calc(r), nakladPerGram: r.nakladPerGram.trim() === '' ? null : num(r.nakladPerGram) }));
+    return m;
+  }, [rows]);
   const pocitaSe = pocitaSeDoDluhu(detail?.debtFrom, date);
 
   function setRow(key: string, patch: Partial<Row>) {
@@ -328,7 +336,7 @@ export default function VarkaPage() {
 
       <label className="inline-flex items-center gap-2 text-sm text-stone-700">
         <input type="checkbox" className="w-[18px] h-[18px] accent-[#722F37]" checked={showCosts} onChange={(e) => setShowCosts(e.target.checked)} />
-        Zobrazit náklad Kč/g (interní, v PDF nikdy není)
+        Zobrazit náklad a marži (interní, v PDF nikdy není)
       </label>
 
       <div className="flex flex-col gap-2.5 xl:gap-0 xl:bg-white xl:rounded-xl xl:shadow-sm xl:overflow-hidden" style={gridVars}>
@@ -452,6 +460,19 @@ export default function VarkaPage() {
             <span>Zbývá za tuto várku</span><span className="text-amber-600">{formatKc(souhrn.nezaplaceno)}</span>
           </div>
         </div>
+        {showCosts && (
+          <div className="mt-3 pt-3 border-t border-stone-200">
+            <div className="flex justify-between gap-3 py-1"><span>Náklad várky <span className="text-stone-500">(interní)</span></span><b>{formatKc(marze.naklady)}</b></div>
+            <div className="flex justify-between gap-3 py-1 text-base font-bold">
+              <span>Čistá marže várky</span><span className="text-[#722F37]">{formatKc(marze.marze)}</span>
+            </div>
+            {marze.chybiNaklad > 0 && (
+              <p className="text-[13px] text-amber-700 mt-1">
+                U {marze.chybiNaklad} z {marze.pocet} culíků chybí náklad Kč/g, do marže se zatím nepočítají.
+              </p>
+            )}
+          </div>
+        )}
         <p className="text-[13px] text-stone-500 mt-3">
           Počítá se podle stavu culíků. Z celkového dluhu odběratele se částka odečte, až když zapíšete platbu nebo zálohu.{' '}
           <Link href={`/admin/odberatele/${id}#platby`} className="font-semibold text-[#722F37] underline whitespace-nowrap">

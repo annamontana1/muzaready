@@ -218,3 +218,83 @@ export function monthRange(month: string): { start: Date; end: Date } | null {
   if (mo < 1 || mo > 12) return null;
   return { start: new Date(Date.UTC(y, mo - 1, 1)), end: new Date(Date.UTC(y, mo, 1)) };
 }
+
+// ── Marže ──────────────────────────────────────────────────────────────────
+
+export interface MarzeRadek {
+  trzby: number;
+  /** tržby položek, u kterých známe náklad – jen z nich se počítá marže */
+  trzbySNakladem: number;
+  naklady: number;
+  marze: number;
+  pocet: number;
+  chybiNaklad: number;
+}
+
+export const prazdnaMarze = (): MarzeRadek => ({ trzby: 0, trzbySNakladem: 0, naklady: 0, marze: 0, pocet: 0, chybiNaklad: 0 });
+
+/** Přičte jednu položku. Bez nákladu (null nebo 0) se do marže nepočítá, jen do tržeb. */
+export function pridejDoMarze(r: MarzeRadek, trzba: number, naklad: number | null): void {
+  r.pocet += 1;
+  r.trzby += trzba;
+  if (naklad === null || naklad <= 0) {
+    r.chybiNaklad += 1;
+    return;
+  }
+  r.trzbySNakladem += trzba;
+  r.naklady += naklad;
+  r.marze += trzba - naklad;
+}
+
+export function sectiMarze(a: MarzeRadek, b: MarzeRadek): MarzeRadek {
+  return {
+    trzby: a.trzby + b.trzby,
+    trzbySNakladem: a.trzbySNakladem + b.trzbySNakladem,
+    naklady: a.naklady + b.naklady,
+    marze: a.marze + b.marze,
+    pocet: a.pocet + b.pocet,
+    chybiNaklad: a.chybiNaklad + b.chybiNaklad,
+  };
+}
+
+export interface CulikMarze extends CulikCeny {
+  nakladPerGram?: number | null;
+}
+
+/** Čistá marže culíku = gramy × (cena + keratinování) − gramy × náklad. Vrácené culíky se nepočítají. */
+export function pridejCulikDoMarze(r: MarzeRadek, c: CulikMarze): void {
+  if (jeVraceno(c)) return;
+  const naklad = c.nakladPerGram === null || c.nakladPerGram === undefined ? null : (c.gramaz || 0) * c.nakladPerGram;
+  pridejDoMarze(r, cenaCelkem(c), naklad);
+}
+
+export interface MarzeMesice {
+  mesic: string; // YYYY-MM
+  celkem: MarzeRadek;
+  odberatele: Array<{ id: string; name: string; marze: MarzeRadek }>;
+}
+
+/** Marže odběratelů po měsících podle data várky (předání), od nejnovějšího měsíce. */
+export function marzePoMesicich(
+  odberatele: Array<{ id: string; name: string; varky: Array<{ date: Date | string | null | undefined; items: CulikMarze[] }> }>
+): MarzeMesice[] {
+  const mesice = new Map<string, MarzeMesice>();
+  for (const o of odberatele) {
+    for (const v of o.varky) {
+      const mesic = dateKey(v.date).slice(0, 7);
+      if (!mesic || v.items.length === 0) continue;
+      if (!mesice.has(mesic)) mesice.set(mesic, { mesic, celkem: prazdnaMarze(), odberatele: [] });
+      const m = mesice.get(mesic)!;
+      let radek = m.odberatele.find((x) => x.id === o.id);
+      if (!radek) {
+        radek = { id: o.id, name: o.name, marze: prazdnaMarze() };
+        m.odberatele.push(radek);
+      }
+      for (const c of v.items) {
+        pridejCulikDoMarze(radek.marze, c);
+        pridejCulikDoMarze(m.celkem, c);
+      }
+    }
+  }
+  return Array.from(mesice.values()).sort((a, b) => b.mesic.localeCompare(a.mesic));
+}

@@ -4,6 +4,7 @@ import {
   cenaKeratin,
   cenaVlasy,
   czDate,
+  marzePoMesicich,
   dateKey,
   monthRange,
   num,
@@ -136,5 +137,46 @@ describe('pomocné funkce', () => {
   it('slug', () => {
     expect(slug('Jaroslav Vlček')).toBe('jaroslav-vlcek');
     expect(slug('Said Kate (Káťa)')).toBe('said-kate-kata');
+  });
+});
+
+describe('marže odběratelů po měsících', () => {
+  const k = (gramaz: number, cenaPerGram: number, nakladPerGram: number | null, stav = 'predano', keratinPerGram = 0) => ({
+    gramaz,
+    cenaPerGram,
+    keratinPerGram,
+    nakladPerGram,
+    stav,
+  });
+
+  it('marže = prodejní cena − gramy × náklad, podle měsíce várky', () => {
+    const m = marzePoMesicich([
+      {
+        id: 'a',
+        name: 'Salon',
+        varky: [
+          { date: '2026-11-05', items: [k(100, 100, 60), k(200, 90, 50)] },
+          { date: '2026-10-28', items: [k(100, 95, 45)] },
+        ],
+      },
+      { id: 'b', name: 'Zuzka', varky: [{ date: '2026-11-20', items: [k(100, 80, 40)] }] },
+    ]);
+    expect(m.map((x) => x.mesic)).toEqual(['2026-11', '2026-10']);
+    expect(m[0].celkem).toMatchObject({ trzby: 36000, naklady: 20000, marze: 16000, pocet: 3, chybiNaklad: 0 });
+    expect(m[0].odberatele.find((o) => o.id === 'a')?.marze.marze).toBe(12000);
+    expect(m[0].odberatele.find((o) => o.id === 'b')?.marze.marze).toBe(4000);
+    expect(m[1].celkem.marze).toBe(5000);
+  });
+
+  it('culík bez nákladu je v tržbách, ale ne v marži; vrácený se nepočítá vůbec', () => {
+    const m = marzePoMesicich([
+      { id: 'a', name: 'Salon', varky: [{ date: '2026-11-05', items: [k(100, 100, 60), k(100, 100, null), k(100, 100, 60, 'vraceno')] }] },
+    ]);
+    expect(m[0].celkem).toMatchObject({ trzby: 20000, trzbySNakladem: 10000, naklady: 6000, marze: 4000, pocet: 2, chybiNaklad: 1 });
+  });
+
+  it('keratinování je součást tržby', () => {
+    const m = marzePoMesicich([{ id: 'a', name: 'K', varky: [{ date: '2026-11-06', items: [k(150, 95, 45, 'predano', 10)] }] }]);
+    expect(m[0].celkem).toMatchObject({ trzby: 15750, naklady: 6750, marze: 9000 });
   });
 });

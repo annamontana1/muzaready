@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/ToastProvider';
 import { czDate, formatKc } from '@/lib/odberatele';
 import { NovyOdberatelForm, OdberatelSummary, Tile, TypBadge, api, btnPriCls } from './ui';
+import MarzeOdberatelu from './MarzeOdberatelu';
 
 interface ListData {
   odberatele: OdberatelSummary[];
@@ -105,6 +106,8 @@ export default function OdberatelePage() {
               </Link>
             ))}
           </div>
+
+          <MarzeOdberatelu />
 
           {data.archiv.partneri > 0 && (
             <Link
