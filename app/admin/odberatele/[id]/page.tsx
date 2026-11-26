@@ -30,6 +30,7 @@ import {
   btnPriCls,
   inputCls,
 } from '../ui';
+import { stahniPdfVyberu } from '../pdf';
 
 interface PlatbaForm {
   key: string;
@@ -74,6 +75,9 @@ export default function OdberatelPage() {
   const [dirty, setDirty] = useState(false);
   const [armed, setArmed] = useState<string | null>(null);
 
+  // várky vybrané do společného PDF
+  const [vybrane, setVybrane] = useState<string[]>([]);
+
   const fill = useCallback((d: OdberatelDetail) => {
     setDetail(d);
     setEdit({ name: d.name, type: d.type, notes: d.notes || '', vObjednavkach: !!d.vObjednavkach });
@@ -101,6 +105,7 @@ export default function OdberatelPage() {
     let alive = true;
     setDetail(null);
     setError('');
+    setVybrane([]);
     Promise.all([api<OdberatelDetail>(`/api/admin/odberatele/${id}`), api<{ odberatele: OdberatelSummary[] }>('/api/admin/odberatele')])
       .then(([d, l]) => {
         if (!alive) return;
@@ -176,6 +181,57 @@ export default function OdberatelPage() {
     }
   }
 
+  function prepniVyber(varkaId: string) {
+    setVybrane((v) => (v.includes(varkaId) ? v.filter((x) => x !== varkaId) : [...v, varkaId]));
+  }
+
+  async function pdfVyberu() {
+    if (!detail) return;
+    if (dirty) return showToast('Nejdřív uložte změny v záložce Dluh a platby', 'error');
+    const vyber = detail.varky.filter((v) => vybrane.includes(v.id));
+    if (vyber.length === 0) return showToast('Zaškrtněte aspoň jednu várku', 'error');
+    setBusy(true);
+    try {
+      const maDluh = !!detail.debtFrom || detail.openingDebt !== 0 || detail.platby.length > 0;
+      await stahniPdfVyberu({
+        odberatel: detail.name,
+        keratinovy: detail.type === 'keratin',
+        // do PDF jdou jen pole, která smí vidět odběratel – náklad se sem neposílá
+        varky: vyber.map((v) => ({
+          datum: v.date,
+          culiky: v.items.map((i) => ({
+            druh: i.druh,
+            barva: i.barva,
+            delkaCm: i.delkaCm,
+            gramaz: i.gramaz,
+            cenaPerGram: i.cenaPerGram,
+            keratinPerGram: detail.type === 'keratin' ? i.keratinPerGram : 0,
+            stav: i.stav,
+            notes: i.notes || '',
+          })),
+        })),
+        dluh: maDluh
+          ? {
+              dluhZMinula: detail.dluh.dluhZMinula,
+              debtFrom: detail.debtFrom,
+              varky: detail.varky
+                .filter((v) => pocitaSeDoDluhu(detail.debtFrom, v.date))
+                .map((v) => ({ date: v.date, castka: v.souhrn.celkemBezVracenych, tato: vybrane.includes(v.id) })),
+              tatoVMinulem: false,
+              platby: detail.platby.map((p) => ({ date: p.date, amount: p.amount, method: p.method, type: p.type })),
+              zbyva: detail.dluh.zbyva,
+            }
+          : null,
+        varkyVMinulem: maDluh ? vyber.filter((v) => !pocitaSeDoDluhu(detail.debtFrom, v.date)).map((v) => v.date) : [],
+      });
+    } catch (err) {
+      console.error('PDF error:', err);
+      showToast('PDF se nepodařilo vytvořit', 'error');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function saveDluh() {
     if (platby.some((p) => !p.date)) return showToast('U každé platby doplňte datum', 'error');
     setBusy(true);
@@ -223,7 +279,7 @@ export default function OdberatelPage() {
   }
   if (!detail) return <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-10 text-sm text-stone-500">Načítám…</div>;
 
-  const varkyCols = 'lg:grid-cols-[140px_90px_100px_minmax(0,1fr)_140px_140px_16px]';
+  const varkyCols = 'lg:grid-cols-[170px_80px_100px_minmax(0,1fr)_140px_140px_16px]';
   const platbaCols = 'lg:grid-cols-[150px_130px_140px_140px_minmax(0,1fr)_auto]';
 
   return (
@@ -333,8 +389,23 @@ export default function OdberatelPage() {
 
       {tab === 'varky' && (
         <>
+          {detail.varky.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <button type="button" className={btnCls} onClick={() => setVybrane(detail.varky.slice(0, 3).map((v) => v.id))}>
+                Označit poslední {Math.min(3, detail.varky.length)}
+              </button>
+              {vybrane.length > 0 && (
+                <button type="button" className="px-2 py-2 text-sm font-medium text-stone-500 hover:text-stone-700" onClick={() => setVybrane([])}>
+                  Zrušit výběr
+                </button>
+              )}
+              <button type="button" className={`${btnPriCls} ml-auto`} disabled={busy || vybrane.length === 0} onClick={pdfVyberu}>
+                {busy ? 'Připravuji PDF…' : vybrane.length > 0 ? `PDF z vybraných várek (${vybrane.length})` : 'PDF z vybraných várek'}
+              </button>
+            </div>
+          )}
           <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className={`hidden lg:grid ${varkyCols} gap-3 px-5 py-2.5 text-xs uppercase tracking-wide text-stone-500 bg-stone-50 border-b border-stone-200`}>
+            <div className={`hidden lg:grid ${varkyCols} gap-3 pl-[52px] pr-5 py-2.5 text-xs uppercase tracking-wide text-stone-500 bg-stone-50 border-b border-stone-200`}>
               <span>Datum várky</span>
               <span className="text-right">Culíků</span>
               <span className="text-right">Gramů</span>
@@ -353,13 +424,23 @@ export default function OdberatelPage() {
                 </span>
               ));
               const inDebt = pocitaSeDoDluhu(debtFrom, v.date);
+              const vybrana = vybrane.includes(v.id);
               return (
+                <div key={v.id} className={`flex items-stretch border-t first:border-t-0 border-stone-200 ${vybrana ? 'bg-[#722F37]/5' : ''}`}>
+                  <label className="flex items-center pl-4 pr-2 cursor-pointer" title="Vybrat do společného PDF">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 accent-[#722F37]"
+                      checked={vybrana}
+                      onChange={() => prepniVyber(v.id)}
+                      aria-label={`Vybrat várku ${czDate(v.date)} do PDF`}
+                    />
+                  </label>
                 <Link
-                  key={v.id}
                   href={`/admin/odberatele/${detail.id}/varka/${v.id}`}
-                  className={`grid grid-cols-[minmax(0,1fr)_auto] ${varkyCols} gap-x-3 gap-y-1 items-center px-4 lg:px-5 py-3.5 border-t first:border-t-0 border-stone-200 hover:bg-stone-50`}
+                  className={`flex-1 min-w-0 grid grid-cols-[minmax(0,1fr)_auto] ${varkyCols} gap-x-3 gap-y-1 items-center pl-2 pr-4 lg:pr-5 py-3.5 hover:bg-stone-50`}
                 >
-                  <span className="font-semibold text-stone-800">Várka {czDate(v.date)}</span>
+                  <span className="font-semibold text-stone-800 whitespace-nowrap">Várka {czDate(v.date)}</span>
                   <span className="hidden lg:block text-right tabular-nums">{v.souhrn.pocet}</span>
                   <span className="hidden lg:block text-right tabular-nums">{Math.round(v.souhrn.gramy).toLocaleString('cs-CZ')} g</span>
                   <span className="hidden lg:block">{chips}</span>
@@ -383,6 +464,7 @@ export default function OdberatelPage() {
                   </span>
                   <span className="hidden lg:block text-stone-400">›</span>
                 </Link>
+                </div>
               );
             })}
           </div>

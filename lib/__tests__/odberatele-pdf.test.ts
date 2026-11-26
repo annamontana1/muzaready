@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sestavStrany, PdfVarka } from '../../app/admin/odberatele/pdf';
+import { sestavStrany, sestavStranyVyberu, PdfVarka } from '../../app/admin/odberatele/pdf';
 
 const culik = (over: Record<string, unknown> = {}) => ({
   druh: 'Platinum',
@@ -108,5 +108,93 @@ describe('PDF várky pro odběratele', () => {
     const html = sestavStrany(varka({ culiky: [culik({ barva: '<b>x</b>', notes: '"a"' })] }), '25. 11. 2026').join('');
     expect(html).toContain('&lt;b&gt;x&lt;/b&gt;');
     expect(html).not.toContain('<b>x</b>');
+  });
+});
+
+describe('PDF z několika várek', () => {
+  const c = (gramaz: number, cenaPerGram: number, over: Record<string, unknown> = {}) =>
+    culik({ gramaz, cenaPerGram, keratinPerGram: 0, ...over });
+
+  const vyber = () => ({
+    odberatel: 'Said Kate (Káťa)',
+    keratinovy: false,
+    varky: [
+      { datum: '2026-11-24', culiky: [c(116, 95), c(100, 55), c(52, 65)] },
+      { datum: '2026-11-05', culiky: [c(90, 85), c(101, 150), c(150, 85)] },
+      { datum: '2026-11-19', culiky: [c(265, 90), c(104, 95)] },
+    ],
+    dluh: {
+      dluhZMinula: 40000,
+      debtFrom: '2026-11-05',
+      varky: [
+        { date: '2026-11-05', castka: 35550, tato: true },
+        { date: '2026-11-19', castka: 33730, tato: true },
+        { date: '2026-11-24', castka: 19900, tato: true },
+      ],
+      tatoVMinulem: false,
+      platby: [{ date: '2026-11-07', amount: 40000, method: 'hotove', type: 'platba' }],
+      zbyva: 89180,
+    },
+    varkyVMinulem: [] as string[],
+  });
+
+  it('várky jdou za sebou podle data, každá má svůj součet a na konci je součet za všechny', () => {
+    const html = sestavStranyVyberu(vyber(), '26. 11. 2026').join('');
+    expect(html).toContain('Várky vlasů – Said Kate (Káťa)');
+    expect(html).toContain('Várky 5. 11. 2026, 19. 11. 2026 a 24. 11. 2026');
+    const i5 = html.indexOf('>Várka 5. 11. 2026');
+    const i19 = html.indexOf('>Várka 19. 11. 2026');
+    const i24 = html.indexOf('>Várka 24. 11. 2026');
+    expect(i5).toBeGreaterThan(-1);
+    expect(i5).toBeLessThan(i19);
+    expect(i19).toBeLessThan(i24);
+    expect(html).toContain('35\u00a0550 Kč');
+    expect(html).toContain('33\u00a0730 Kč');
+    expect(html).toContain('19\u00a0900 Kč');
+    expect(html).toContain('Celkem za 3 várky');
+    expect(html).toContain('8 culíků');
+    expect(html).toContain('89\u00a0180 Kč'); // 35 550 + 33 730 + 19 900 i zbývá doplatit
+  });
+
+  it('přehled dluhu označí vybrané várky a má zaplaceno celkem', () => {
+    const html = sestavStranyVyberu(vyber(), '26. 11. 2026').join('');
+    expect(html).toContain('v tomto přehledu');
+    expect(html).toContain('Dluh celkem');
+    expect(html).toContain('129\u00a0180 Kč'); // 40 000 + 89 180
+    expect(html).toContain('Zaplaceno celkem');
+    expect(html).toContain('Zbývá doplatit celkem');
+  });
+
+  it('náklad se nedostane ani do PDF z více várek', () => {
+    const v = vyber();
+    (v.varky[0].culiky[0] as any).nakladPerGram = 61.37;
+    const html = sestavStranyVyberu(v, 'x').join('');
+    expect(html).not.toContain('61,37');
+    expect(html.toLowerCase()).not.toContain('náklad');
+    expect(html.toLowerCase()).not.toContain('marž');
+  });
+
+  it('hodně culíků se rozdělí na strany a nic se neztratí', () => {
+    const v = vyber();
+    v.varky = [
+      { datum: '2026-11-05', culiky: Array.from({ length: 25 }, () => c(100, 100)) },
+      { datum: '2026-11-19', culiky: Array.from({ length: 12 }, () => c(100, 100)) },
+    ];
+    const strany = sestavStranyVyberu(v, 'x');
+    expect(strany.length).toBeGreaterThan(2);
+    const html = strany.join('');
+    expect(html).toContain('pokračování');
+    expect(html).toContain('Celkem 25 culíků');
+    expect(html).toContain('Celkem 12 culíků');
+    expect(html).toContain('37 culíků');
+    expect(html).toContain('370\u00a0000 Kč');
+    expect(html).toContain(`strana ${strany.length} / ${strany.length}`);
+  });
+
+  it('starší vybrané várky dostanou poznámku, že jsou v dluhu z minula', () => {
+    const v = vyber();
+    v.varkyVMinulem = ['2024-12-04', '2024-09-03'];
+    const html = sestavStranyVyberu(v, 'x').join('');
+    expect(html).toContain('Várky z 4. 12. 2024 a 3. 9. 2024 jsou už započtené v dluhu z minula.');
   });
 });
