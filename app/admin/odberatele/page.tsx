@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/ToastProvider';
 import { czDate, formatKc, pocetVarek } from '@/lib/odberatele';
-import { NovyOdberatelForm, OdberatelSummary, Tile, TypBadge, api, btnPriCls } from './ui';
+import { NovyOdberatelForm, OdberatelSummary, Tile, TypBadge, VObjednavkachBadge, api, btnPriCls } from './ui';
 import MarzeOdberatelu from './MarzeOdberatelu';
 
 interface ListData {
@@ -90,6 +90,7 @@ export default function OdberatelePage() {
                 <span className="font-semibold text-stone-800 flex items-center gap-2 flex-wrap">
                   {o.name}
                   <span className="lg:hidden"><TypBadge type={o.type} /></span>
+                  {o.vObjednavkach && <VObjednavkachBadge />}
                 </span>
                 <span className="hidden lg:block"><TypBadge type={o.type} /></span>
                 <span className="hidden lg:block text-right tabular-nums">{o.pocetVarek}</span>

@@ -32,11 +32,12 @@ export async function GET(req: NextRequest) {
         select: { total: true, naklad: true },
       }),
       prisma.b2bShipment.findMany({
-        where: { date: inMonth, partner: { module: MODULE_VARKY } },
+        // odběratelé vedení v Objednávkách se tu nepočítají (byli by v marži dvakrát)
+        where: { date: inMonth, partner: { module: MODULE_VARKY, vObjednavkach: false } },
         select: { items: { select: { gramaz: true, cenaPerGram: true, keratinPerGram: true, nakladPerGram: true, stav: true } } },
       }),
       prisma.b2bPayment.aggregate({
-        where: { date: inMonth, partner: { module: MODULE_VARKY } },
+        where: { date: inMonth, partner: { module: MODULE_VARKY, vObjednavkach: false } },
         _sum: { amount: true },
       }),
     ]);

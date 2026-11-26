@@ -27,14 +27,19 @@ const bez = (r: Radek) => (r.chybiNaklad > 0 ? `${r.chybiNaklad} z ${r.pocet}` :
 /** Čistá marže odběratelů po měsících (interní přehled, podle data várky). */
 export default function MarzeOdberatelu() {
   const [mesice, setMesice] = useState<Mesic[] | null>(null);
+  const [vynechani, setVynechani] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [open, setOpen] = useState<string | null>(null);
   const [all, setAll] = useState(false);
 
   useEffect(() => {
     let alive = true;
-    api<{ mesice: Mesic[] }>('/api/admin/odberatele/marze')
-      .then((d) => alive && setMesice(d.mesice))
+    api<{ mesice: Mesic[]; vObjednavkach?: string[] }>('/api/admin/odberatele/marze')
+      .then((d) => {
+        if (!alive) return;
+        setMesice(d.mesice);
+        setVynechani(d.vObjednavkach || []);
+      })
       .catch((err) => alive && setError(err instanceof Error ? err.message : 'Marži se nepodařilo načíst'));
     return () => {
       alive = false;
@@ -54,6 +59,11 @@ export default function MarzeOdberatelu() {
         </p>
       </div>
 
+      {vynechani.length > 0 && (
+        <p className="text-[13px] text-stone-500">
+          Nepočítá se sem: {vynechani.join(', ')}. Prodeje má v Objednávkách, tady se u ní vede jen dluh a splátky.
+        </p>
+      )}
       {error && <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 text-sm">{error}</div>}
       {!mesice && !error && <div className="text-sm text-stone-500">Načítám…</div>}
       {mesice && mesice.length === 0 && <div className="text-sm text-stone-500">Zatím žádné várky.</div>}

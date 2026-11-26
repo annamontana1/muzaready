@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
       select: {
         id: true,
         name: true,
+        vObjednavkach: true,
         shipments: {
           select: {
             date: true,
@@ -31,8 +32,10 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const mesice = marzePoMesicich(partners.map((p) => ({ id: p.id, name: p.name, varky: p.shipments })));
-    return NextResponse.json({ mesice });
+    // odběratelé vedení v Objednávkách mají tržby a marži tam – tady by se počítali podruhé
+    const pocitani = partners.filter((p) => !p.vObjednavkach);
+    const mesice = marzePoMesicich(pocitani.map((p) => ({ id: p.id, name: p.name, varky: p.shipments })));
+    return NextResponse.json({ mesice, vObjednavkach: partners.filter((p) => p.vObjednavkach).map((p) => p.name) });
   } catch (error) {
     console.error('Odberatele marze error:', error);
     return NextResponse.json({ error: 'Marži se nepodařilo spočítat' }, { status: 500 });

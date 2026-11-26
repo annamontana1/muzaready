@@ -974,6 +974,7 @@ model B2bPartner {
   module      String   @default("legacy") // legacy (starý komisní modul = archiv) | varky (stránka Odběratelé)
   openingDebt Float    @default(0)        // Dluh z minula
   debtFrom    DateTime?                   // Várky počítat od
+  vObjednavkach Boolean @default(false)   // prodeje se počítají v Objednávkách; tady jen evidence dluhu (mimo marži)
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

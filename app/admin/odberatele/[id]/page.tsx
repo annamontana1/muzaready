@@ -24,6 +24,7 @@ import {
   STAV_CLS,
   Tile,
   TypBadge,
+  VObjednavkachBadge,
   api,
   btnCls,
   btnPriCls,
@@ -64,7 +65,7 @@ export default function OdberatelPage() {
 
   // úprava odběratele
   const [editing, setEditing] = useState(false);
-  const [edit, setEdit] = useState({ name: '', type: 'keratin', notes: '' });
+  const [edit, setEdit] = useState({ name: '', type: 'keratin', notes: '', vObjednavkach: false });
 
   // karta Dluh a platby
   const [opening, setOpening] = useState('0');
@@ -75,7 +76,7 @@ export default function OdberatelPage() {
 
   const fill = useCallback((d: OdberatelDetail) => {
     setDetail(d);
-    setEdit({ name: d.name, type: d.type, notes: d.notes || '' });
+    setEdit({ name: d.name, type: d.type, notes: d.notes || '', vObjednavkach: !!d.vObjednavkach });
     setOpening(String(d.openingDebt || 0));
     setDebtFrom(d.debtFrom || '');
     setPlatby(
@@ -154,7 +155,7 @@ export default function OdberatelPage() {
       const d = await api<OdberatelDetail>(`/api/admin/odberatele/${id}`, { method: 'PUT', body: JSON.stringify(edit) });
       // rozpracované platby nepřepisovat – měníme jen jméno, typ a poznámku
       setDetail(d);
-      setList((l) => l.map((o) => (o.id === d.id ? { ...o, name: d.name, type: d.type } : o)));
+      setList((l) => l.map((o) => (o.id === d.id ? { ...o, name: d.name, type: d.type, vObjednavkach: d.vObjednavkach } : o)));
       setEditing(false);
       showToast('Odběratel uložen', 'success');
     } catch (err) {
@@ -249,9 +250,13 @@ export default function OdberatelPage() {
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-xl font-semibold text-stone-800 flex items-center gap-2 flex-wrap">
-            {detail.name} <TypBadge type={detail.type} />
+            {detail.name} <TypBadge type={detail.type} /> {detail.vObjednavkach && <VObjednavkachBadge />}
           </h2>
-          <p className="text-sm text-stone-500 mt-0.5">{POPIS[detail.type] || ''}</p>
+          <p className="text-sm text-stone-500 mt-0.5">
+            {detail.vObjednavkach
+              ? 'Prodeje se počítají v Objednávkách. Tady se vede jen dluh a splátky, do marže odběratelů se nepočítá.'
+              : POPIS[detail.type] || ''}
+          </p>
           {detail.notes && <p className="text-sm text-stone-600 mt-1">{detail.notes}</p>}
         </div>
         <button onClick={() => setEditing((v) => !v)} className={btnCls}>Upravit odběratele</button>
@@ -274,6 +279,18 @@ export default function OdberatelPage() {
           <label className="flex flex-col gap-1 text-xs text-stone-500 sm:col-span-2">
             Poznámka (jen pro vás)
             <input className={inputCls} value={edit.notes} onChange={(e) => setEdit({ ...edit, notes: e.target.value })} />
+          </label>
+          <label className="flex items-start gap-2 text-sm text-stone-700 sm:col-span-2">
+            <input
+              type="checkbox"
+              className="w-[18px] h-[18px] mt-0.5 accent-[#722F37]"
+              checked={edit.vObjednavkach}
+              onChange={(e) => setEdit({ ...edit, vObjednavkach: e.target.checked })}
+            />
+            <span>
+              Prodeje vedu v Objednávkách
+              <span className="block text-[13px] text-stone-500">Tady se pak vede jen dluh a splátky. Do marže odběratelů se nepočítá, aby nebyla v marži dvakrát.</span>
+            </span>
           </label>
           <div className="flex gap-2 sm:col-span-2">
             <button type="submit" disabled={busy} className={btnPriCls}>Uložit</button>

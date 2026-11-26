@@ -8,6 +8,7 @@ export interface OdberatelSummary {
   id: string;
   name: string;
   type: string;
+  vObjednavkach?: boolean;
   pocetVarek: number;
   posledniVarka: string;
   zaplaceno: number;
@@ -49,6 +50,7 @@ export interface OdberatelDetail {
   name: string;
   type: string;
   notes: string | null;
+  vObjednavkach: boolean;
   openingDebt: number;
   debtFrom: string;
   dluh: { dluhZMinula: number; varkyOdData: number; zaplaceno: number; zbyva: number };
@@ -73,6 +75,18 @@ export function TypBadge({ type }: { type: string }) {
   return (
     <span className={`inline-block text-xs font-semibold rounded-full px-2.5 py-0.5 whitespace-nowrap ${TYP_BADGE[type] || 'bg-stone-100 text-stone-600'}`}>
       {labelOf(TYPY_ODBERATELE, type)}
+    </span>
+  );
+}
+
+/** Odběratel, jehož prodeje se počítají v Objednávkách – tady jen evidence dluhu. */
+export function VObjednavkachBadge() {
+  return (
+    <span
+      title="Tržby a marže se počítají v Objednávkách. Tady se vede jen dluh a splátky."
+      className="inline-block text-xs font-semibold rounded-full px-2.5 py-0.5 whitespace-nowrap bg-stone-100 text-stone-600"
+    >
+      počítá se v Objednávkách
     </span>
   );
 }

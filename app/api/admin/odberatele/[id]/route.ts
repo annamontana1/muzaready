@@ -45,6 +45,7 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
         name,
         type: isTypOdberatele(body?.type) ? body.type : partner.type,
         notes: String(body?.notes ?? '').trim().slice(0, 1000) || null,
+        ...(typeof body?.vObjednavkach === 'boolean' ? { vObjednavkach: body.vObjednavkach } : {}),
       },
     });
 
