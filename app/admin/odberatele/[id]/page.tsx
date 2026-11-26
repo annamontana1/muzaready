@@ -12,6 +12,7 @@ import {
   czDate,
   formatKc,
   num,
+  pocetCuliku,
   pocitaSeDoDluhu,
   spocitejDluh,
 } from '@/lib/odberatele';
@@ -360,7 +361,7 @@ export default function OdberatelPage() {
                     <small className="block lg:hidden font-normal text-xs text-stone-500">{inDebt ? 'počítá se do dluhu' : 'v dluhu z minula'}</small>
                   </span>
                   <span className="lg:hidden text-[13px] text-stone-500">
-                    {v.souhrn.pocet} culíků · {Math.round(v.souhrn.gramy).toLocaleString('cs-CZ')} g
+                    {pocetCuliku(v.souhrn.pocet)} · {Math.round(v.souhrn.gramy).toLocaleString('cs-CZ')} g
                     <span className="block">{chips}</span>
                   </span>
                   <span className="hidden lg:block text-stone-400">›</span>

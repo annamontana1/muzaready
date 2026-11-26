@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/ToastProvider';
-import { czDate, formatKc } from '@/lib/odberatele';
+import { czDate, formatKc, pocetVarek } from '@/lib/odberatele';
 import { NovyOdberatelForm, OdberatelSummary, Tile, TypBadge, api, btnPriCls } from './ui';
 import MarzeOdberatelu from './MarzeOdberatelu';
 
@@ -100,7 +100,7 @@ export default function OdberatelePage() {
                   <small className="block lg:hidden font-normal text-xs text-stone-500">zbývá zaplatit</small>
                 </span>
                 <span className="lg:hidden text-[13px] text-stone-500">
-                  {o.pocetVarek} várek{o.posledniVarka ? ` · poslední ${czDate(o.posledniVarka)}` : ''}
+                  {pocetVarek(o.pocetVarek)}{o.posledniVarka ? ` · poslední ${czDate(o.posledniVarka)}` : ''}
                 </span>
                 <span className="hidden lg:block text-stone-400">›</span>
               </Link>

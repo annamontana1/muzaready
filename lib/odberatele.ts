@@ -105,6 +105,15 @@ export function czDate(d: Date | string | null | undefined): string {
   return `${Number(day)}. ${Number(m)}. ${y}`;
 }
 
+/** Česká množná čísla: sklonuj(1, 'culík', 'culíky', 'culíků') → "1 culík" */
+export function sklonuj(n: number, jeden: string, dvaAzCtyri: string, vice: string): string {
+  const abs = Math.abs(n);
+  const slovo = abs === 1 ? jeden : abs >= 2 && abs <= 4 ? dvaAzCtyri : vice;
+  return `${n} ${slovo}`;
+}
+export const pocetCuliku = (n: number) => sklonuj(n, 'culík', 'culíky', 'culíků');
+export const pocetVarek = (n: number) => sklonuj(n, 'várka', 'várky', 'várek');
+
 export function formatKc(n: number): string {
   return `${Math.round(n).toLocaleString('cs-CZ')} Kč`;
 }

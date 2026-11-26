@@ -244,7 +244,6 @@ export default function VarkaPage() {
       }));
       const varky = detail.varky.map((v) => (v.id === varkaId ? { date, items: culiky } : { date: v.date, items: v.items }));
       const d = spocitejDluh({ openingDebt: detail.openingDebt, debtFrom: detail.debtFrom, varky, platby: detail.platby });
-      const tatoVarka = pocitaSe ? souhrnVarky(culiky).celkemBezVracenych : 0;
       const maDluh = !!detail.debtFrom || detail.openingDebt !== 0 || detail.platby.length > 0;
       await stahniPdfVarky({
         odberatel: detail.name,
@@ -254,9 +253,11 @@ export default function VarkaPage() {
         dluh: maDluh
           ? {
               dluhZMinula: d.dluhZMinula,
-              tatoVarka,
-              dalsiVarky: d.varkyOdData - tatoVarka,
               debtFrom: detail.debtFrom,
+              varky: varky
+                .map((v, i) => ({ date: v.date, castka: souhrnVarky(v.items).celkemBezVracenych, tato: detail.varky[i].id === varkaId }))
+                .filter((v) => pocitaSeDoDluhu(detail.debtFrom, v.date)),
+              tatoVMinulem: !pocitaSe,
               platby: detail.platby.map((p) => ({ date: p.date, amount: p.amount, method: p.method, type: p.type })),
               zbyva: d.zbyva,
             }

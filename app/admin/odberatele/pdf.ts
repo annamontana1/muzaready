@@ -6,7 +6,7 @@
  * DŮLEŽITÉ: do PDF nikdy nesmí náklady ani marže. Typ PdfCulik proto pole
  * s nákladem vůbec nemá – volající ho sem nemůže poslat ani omylem.
  */
-import { cenaCelkem, cenaKeratin, cenaVlasy, czDate, labelOf, slug, STAVY, TYPY_PLATBY, ZPUSOBY_PLATBY } from '@/lib/odberatele';
+import { cenaCelkem, cenaKeratin, cenaVlasy, czDate, labelOf, pocetCuliku, slug, STAVY, TYPY_PLATBY, ZPUSOBY_PLATBY } from '@/lib/odberatele';
 
 export interface PdfCulik {
   druh: string;
@@ -21,11 +21,11 @@ export interface PdfCulik {
 
 export interface PdfDluh {
   dluhZMinula: number;
-  /** tato várka, jen pokud se počítá do dluhu (bez vrácených culíků) */
-  tatoVarka: number;
-  /** ostatní várky od data „počítat od“ */
-  dalsiVarky: number;
   debtFrom: string;
+  /** várky, které se počítají do dluhu (od data „počítat od“, bez vrácených culíků) */
+  varky: Array<{ date: string; castka: number; tato: boolean }>;
+  /** tato várka je starší než „počítat od“ – je už započtená v dluhu z minula */
+  tatoVMinulem: boolean;
   platby: Array<{ date: string; amount: number; method: string; type: string }>;
   zbyva: number;
 }
@@ -83,7 +83,7 @@ function tabulka(v: PdfVarka, rows: PdfCulik[], offset: number, posledni: boolea
     const f = `padding:11px 8px;background:#f7eeef;border-top:2px solid ${BRAND};font-weight:700;`;
     const all = v.culiky;
     foot =
-      `<tfoot><tr><td style="${f}"></td><td style="${f}">Celkem ${all.length} culíků</td><td style="${f}"></td>` +
+      `<tfoot><tr><td style="${f}"></td><td style="${f}">Celkem ${pocetCuliku(all.length)}</td><td style="${f}"></td>` +
       `<td style="${f}${r}">${cislo(all.reduce((a, c) => a + c.gramaz, 0))} g</td><td style="${f}"></td>` +
       (k
         ? `<td style="${f}${r}">${kc(all.reduce((a, c) => a + cenaVlasy(c), 0))}</td><td style="${f}${r}">${kc(all.reduce((a, c) => a + cenaKeratin(c), 0))}</td>`
@@ -97,24 +97,38 @@ function prehledDluhu(v: PdfVarka): string {
   const d = v.dluh;
   if (!d) return '';
   const td = `padding:9px 8px;border-top:1px solid ${LINE};`;
+  const sub = `padding:10px 8px;border-top:1px solid #d6d3d1;background:#fafaf9;font-weight:600;`;
   const r = 'text-align:right;white-space:nowrap;';
-  let rows = `<tr><td style="${td}">Dluh z minula</td><td style="${td}"></td><td style="${td}${r}">${kc(d.dluhZMinula)}</td></tr>`;
-  rows += `<tr><td style="${td}">Tato várka (${esc(czDate(v.datum))})</td><td style="${td}"></td><td style="${td}${r}">${kc(d.tatoVarka)}</td></tr>`;
-  if (d.dalsiVarky > 0) {
-    rows += `<tr><td style="${td}">Další várky od ${esc(czDate(d.debtFrom))}</td><td style="${td}"></td><td style="${td}${r}">${kc(d.dalsiVarky)}</td></tr>`;
-  }
-  rows += [...d.platby]
-    .sort((a, b) => a.date.localeCompare(b.date))
+  const radek = (popis: string, jak: string, castka: string, st = td) =>
+    `<tr><td style="${st}">${popis}</td><td style="${st}">${jak}</td><td style="${st}${r}">${castka}</td></tr>`;
+
+  const varky = [...d.varky].sort((a, b) => a.date.localeCompare(b.date));
+  const platby = [...d.platby].sort((a, b) => a.date.localeCompare(b.date));
+  const dluhCelkem = d.dluhZMinula + varky.reduce((a, x) => a + x.castka, 0);
+  const zaplaceno = platby.reduce((a, p) => a + p.amount, 0);
+
+  let rows = radek('Dluh z minula', d.debtFrom ? `před ${esc(czDate(d.debtFrom))}` : '', kc(d.dluhZMinula));
+  rows += varky
+    .map((x) => radek(`Várka ${esc(czDate(x.date))}`, x.tato ? 'tato várka' : '', kc(x.castka)))
+    .join('');
+  rows += radek('Dluh celkem', '', kc(dluhCelkem), sub);
+  rows += platby
     .map((p) => {
       const jak = [p.type && p.type !== 'platba' ? labelOf(TYPY_PLATBY, p.type) : '', labelOf(ZPUSOBY_PLATBY, p.method)].filter(Boolean).join(', ');
-      return `<tr><td style="${td}">Platba ${esc(czDate(p.date))}</td><td style="${td}">${esc(jak)}</td><td style="${td}${r}">− ${kc(p.amount)}</td></tr>`;
+      return radek(`Platba ${esc(czDate(p.date))}`, esc(jak), `− ${kc(p.amount)}`);
     })
     .join('');
+  rows += radek('Zaplaceno celkem', platby.length === 0 ? 'zatím žádná platba' : '', `− ${kc(zaplaceno)}`, sub);
+
   const f = `padding:12px 8px;background:#f7eeef;border-top:2px solid ${BRAND};font-weight:700;font-size:16px;`;
+  const poznamka = d.tatoVMinulem
+    ? `<div style="font-size:12px;color:${MUTE};margin-top:8px">Várka z ${esc(czDate(v.datum))} je už započtená v dluhu z minula.</div>`
+    : '';
   return (
     `<div style="font-size:18px;font-weight:600;margin:26px 0 8px">Přehled dluhu</div>` +
     `<table style="width:100%;border-collapse:collapse;border:1px solid ${LINE}"><tbody>${rows}</tbody>` +
-    `<tfoot><tr><td style="${f}">Zbývá doplatit celkem</td><td style="${f}"></td><td style="${f}${r}">${kc(d.zbyva)}</td></tr></tfoot></table>`
+    `<tfoot><tr><td style="${f}">Zbývá doplatit celkem</td><td style="${f}"></td><td style="${f}${r}">${kc(d.zbyva)}</td></tr></tfoot></table>` +
+    poznamka
   );
 }
 
